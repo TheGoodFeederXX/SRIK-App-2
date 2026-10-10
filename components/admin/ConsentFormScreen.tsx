@@ -92,7 +92,7 @@ const ConsentFormScreen = () => {
     };
 
     const handleExport = () => {
-        toast.success('NDPR compliance report exported');
+        toast.success('Laporan pematuhan PDPA dieksport');
     };
 
     const statusIcon = (status: string) => {
@@ -114,11 +114,11 @@ const ConsentFormScreen = () => {
                     <h1 className="text-3xl font-bold text-gray-900 font-outfit">Parental Consent Management</h1>
                     <div className="flex items-center space-x-2 text-gray-500 text-sm mt-1">
                         <Shield className="w-4 h-4 text-emerald-500" />
-                        <span>NDPR Compliance — Collect and manage data processing consent.</span>
+                        <span>Pematuhan PDPA — Kumpul dan urus persetujuan pemprosesan data.</span>
                     </div>
                 </div>
                 <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleExport} className="flex items-center space-x-2 bg-indigo-600 text-white px-5 py-2.5 rounded-2xl hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100 font-bold">
-                    <Download className="w-5 h-5" /><span>Export NDPR Report</span>
+                    <Download className="w-5 h-5" /><span>Eksport Laporan PDPA</span>
                 </motion.button>
             </header>
 
@@ -235,7 +235,7 @@ const ConsentFormScreen = () => {
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-500">
-                                                {record.granted_at ? new Date(record.granted_at).toLocaleDateString('en-NG') : '—'}
+                                                {record.granted_at ? new Date(record.granted_at).toLocaleDateString("ms-MY") : '—'}
                                             </td>
                                             <td className="px-6 py-4">
                                                 {record.status === 'pending' && (
@@ -282,8 +282,13 @@ const ConsentFormScreen = () => {
                     <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex items-start space-x-3">
                         <AlertTriangle className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" />
                         <div className="min-w-0">
-                            <p className="text-sm font-bold text-blue-800">NDPR Compliance Note</p>
-                            <p className="text-xs text-blue-600 mt-1">Under the Nigeria Data Protection Regulation (NDPR), you must obtain explicit consent before processing personal data. Consent must be freely given, informed, and revocable at any time.</p>
+                            <p className="text-sm font-bold text-blue-800">Nota Pematuhan PDPA</p>
+                            {/* The note cited a foreign data-protection
+                                regulation that does not apply here, telling the
+                                school it owed a duty under the wrong statute.
+                                The governing law is Malaysia's Personal Data
+                                Protection Act 2010 (PDPA). */}
+                            <p className="text-xs text-blue-600 mt-1">Di bawah Akta Perlindungan Data Peribadi 2010 (PDPA), persetujuan jelas hendaklah diperoleh sebelum memproses data peribadi. Persetujuan mesti diberikan secara bebas, bermaklumat dan boleh ditarik balik pada bila-bila masa.</p>
                         </div>
                     </div>
                 </div>

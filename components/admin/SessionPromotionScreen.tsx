@@ -29,9 +29,13 @@ const SessionPromotionScreen: React.FC<SessionPromotionScreenProps> = ({ schoolI
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [result, setResult] = useState<{ promoted: number; graduated: number; unplaced: number; total: number } | null>(null);
 
+    // The school year is the calendar year, so the NEXT session is simply next
+    // year. This used to treat August as the year boundary and name the session
+    // as a span, which for a Malaysian school named a school year that had not
+    // started and would not end when it said it would.
     const now = new Date();
-    const startYear = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
-    const [toSession, setToSession] = useState(`${startYear + 1}/${startYear + 2}`);
+    const currentYear = now.getFullYear();
+    const [toSession, setToSession] = useState(`${currentYear + 1}`);
 
     useEffect(() => {
         if (!sid) return;

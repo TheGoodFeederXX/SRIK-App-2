@@ -9,10 +9,10 @@ const ValidationConsole: React.FC = () => {
     const { currentSchool } = useAuth();
     const [runningTest, setRunningTest] = useState<string | null>(null);
     const [testResults, setTestResults] = useState<{ id: string, name: string, status: 'pass' | 'fail' | 'pending' | 'running', result?: string }[]>([
-        { id: 'SCEN-001', name: 'Curriculum Data Isolation (NGN vs BRI)', status: 'pending' },
+        { id: 'SCEN-001', name: 'Curriculum Data Isolation (KSSR vs BRI)', status: 'pending' },
         { id: 'SCEN-002', name: 'Inspector Read-Only Permission Scope', status: 'pending' },
         { id: 'SCEN-003', name: 'Audit Trail Immutability Verification', status: 'pending' },
-        { id: 'SCEN-004', name: 'NDPR Data Retention Auto-Purge', status: 'pending' },
+        { id: 'SCEN-004', name: 'PDPA Data Retention Auto-Purge', status: 'pending' },
     ]);
 
     const [stats, setStats] = useState({

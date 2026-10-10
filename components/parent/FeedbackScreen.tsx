@@ -128,7 +128,7 @@ const StatusTimeline: React.FC<{ complaint: Complaint }> = ({ complaint }) => {
                             {index < complaint.timeline.length - 1 && <div className="w-0.5 flex-grow bg-gray-300"></div>}
                         </div>
                         <div className="pb-6">
-                            <p className="font-bold text-gray-800">{update.status} <span className="text-xs text-gray-500 font-normal">- {new Date(update.timestamp).toLocaleDateString()}</span></p>
+                            <p className="font-bold text-gray-800">{update.status} <span className="text-xs text-gray-500 font-normal">- {new Date(update.timestamp).toLocaleDateString("ms-MY")}</span></p>
                             <p className="text-sm text-gray-600 mt-1">{update.comment}</p>
                             <p className="text-xs text-gray-400 mt-1">by {update.by}</p>
                         </div>

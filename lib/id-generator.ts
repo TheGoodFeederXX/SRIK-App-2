@@ -8,7 +8,7 @@ export function generateCustomId(options: {
     role: string;
     sequenceNumber: number;
 }): string {
-    const sch = options.schoolShortName || 'OLISKEY';
+    const sch = options.schoolShortName || 'SRIK';
     const branch = options.branch || 'MAIN';
 
     // Map roles to standard short codes (uppercase)

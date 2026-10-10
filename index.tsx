@@ -57,7 +57,7 @@ if (!rootElement) {
 import { BrowserRouter } from 'react-router';
 import { AuthProvider } from './context/AuthContext';
 import { ProfileProvider } from './context/ProfileContext';
-import { BranchProvider } from './context/BranchContext';
+import { SchoolScopeProvider } from './context/SchoolScopeContext';
 import { SocketProvider } from './context/SocketContext';
 
 const root = ReactDOM.createRoot(rootElement);
@@ -70,11 +70,11 @@ i18nReady.then(() => {
         <BrowserRouter>
           <AuthProvider>
             <ProfileProvider>
-              <BranchProvider>
+              <SchoolScopeProvider>
                 <SocketProvider>
                   <App />
                 </SocketProvider>
-              </BranchProvider>
+              </SchoolScopeProvider>
             </ProfileProvider>
           </AuthProvider>
         </BrowserRouter>

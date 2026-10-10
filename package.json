@@ -37,6 +37,10 @@
     "setup": "npm install && echo '\nâœ… Dependencies installed!\n\nNext steps:\n1. Run: npm run db:migrate\n2. Run: npm run db:seed\n3. Run: npm run start:all\n4. Visit: http://localhost:5173\n'",
     "dark-theme": "node scripts/generate-dark-theme.mjs"
   },
+  "engines": {
+    "node": ">=24.21.0 <25",
+    "npm": ">=11.19.0"
+  },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"
   },
@@ -64,6 +68,7 @@
     "@sentry/node": "^10.56.0",
     "@sentry/react": "^10.56.0",
     "@socket.io/redis-adapter": "^8.3.0",
+    "@supabase/supabase-js": "^2.117.3",
     "@tanstack/react-query": "5.90.16",
     "@tanstack/react-query-persist-client": "5.90.18",
     "@types/bcrypt": "^6.0.0",

@@ -20,7 +20,7 @@ interface LiveClassRoomProps {
     onExit: () => void;
 }
 
-const roomNameFor = (sessionId: string) => `OliskeyClass${sessionId.replace(/-/g, '')}`;
+const roomNameFor = (sessionId: string) => `SRIKClass${sessionId.replace(/-/g, '')}`;
 
 // Loads https://{domain}/external_api.js once and caches the promise so
 // multiple LiveClassRoom mounts (e.g. re-joining) don't re-fetch the script.

@@ -145,7 +145,7 @@ const BANK: Record<string, Partial<Record<Band, Curated[]>>> = {
             { prompt: 'Where do you go to borrow books?', correct: 'Library', distractors: ['Market', 'Farm', 'Airport'], explanation: 'A library lends books to readers.' },
         ],
         mid: [
-            { prompt: 'The capital city of Nigeria is:', correct: 'Abuja', distractors: ['Lagos', 'Kano', 'Ibadan'], explanation: 'Abuja became the capital in 1991.' },
+            { prompt: 'Ibu kota Malaysia ialah:', correct: 'Kuala Lumpur', distractors: ['Putrajaya', 'Johor Bahru', 'Kuching'], explanation: 'Kuala Lumpur ialah ibu kota negara.' },
             { prompt: 'A map shows direction using a:', correct: 'Compass', distractors: ['Ruler', 'Clock', 'Calendar'], explanation: 'A compass shows north, south, east and west.' },
             { prompt: 'Which is the largest continent by land area?', correct: 'Asia', distractors: ['Africa', 'Europe', 'Australia'], explanation: 'Asia is the largest continent, covering about 30% of Earth\'s land.' },
             { prompt: 'A large group of islands is called an:', correct: 'Archipelago', distractors: ['Isthmus', 'Peninsula', 'Plateau'], explanation: 'An archipelago is a chain or cluster of islands.' },
@@ -153,7 +153,7 @@ const BANK: Record<string, Partial<Record<Band, Curated[]>>> = {
         ],
         jss: [
             { prompt: 'The three arms of government are Executive, Legislature and:', correct: 'Judiciary', distractors: ['Military', 'Police', 'Civil Service'], explanation: 'The judiciary interprets the law.' },
-            { prompt: 'Which continent is Nigeria in?', correct: 'Africa', distractors: ['Asia', 'Europe', 'South America'], explanation: 'Nigeria is in West Africa.' },
+            { prompt: 'Malaysia terletak di benua mana?', correct: 'Asia', distractors: ['Afrika', 'Eropah', 'Australia'], explanation: 'Malaysia terletak di Asia Tenggara.' },
             { prompt: 'The world\'s largest desert (by area) is the:', correct: 'Sahara', distractors: ['Gobi', 'Kalahari', 'Atacama'], explanation: 'The Sahara in North Africa is the largest hot desert on Earth.' },
             { prompt: 'Mount Everest, the world\'s tallest mountain, is located in:', correct: 'Nepal', distractors: ['Kenya', 'Peru', 'Switzerland'], explanation: 'Mount Everest sits on the border of Nepal and Tibet (China).' },
             { prompt: 'Which ocean is the largest on Earth?', correct: 'Pacific Ocean', distractors: ['Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean'], explanation: 'The Pacific Ocean covers more area than any other ocean.' },

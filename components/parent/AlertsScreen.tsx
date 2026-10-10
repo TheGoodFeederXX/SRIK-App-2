@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
-import { fetchStudentById, fetchStudentFeeSummary } from '../../lib/database';
+import { fetchStudentById } from '../../lib/database';
 import { NOTIFICATION_CATEGORY_CONFIG } from '../../constants';
 import { Notification } from '../../types';
 import { useNotifications, NOTIFICATIONS_QUERY_KEY } from '../../hooks/useNotifications';
@@ -19,7 +19,7 @@ const formatDistanceToNow = (isoDate: string): string => {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days === 1) return 'Yesterday';
-  return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+  return date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' });
 };
 
 interface AlertsScreenProps {
@@ -55,10 +55,9 @@ const AlertsScreen: React.FC<AlertsScreenProps> = ({ navigateTo }) => {
 
     switch (notification.category) {
       case 'Fees':
-        if (notification.studentId) {
-          const feeSummary = await fetchStudentFeeSummary(notification.studentId);
-          navigateTo('feeStatus', 'Fee Status', { student: { id: notification.studentId, ...feeSummary } });
-        }
+        // The school-fee screens were removed and are being rebuilt on the new
+        // finance tables. Until then, a fee alert is marked read above but
+        // opens nothing, rather than opening a screen that no longer exists.
         break;
       case 'Attendance':
         if (notification.studentId) {

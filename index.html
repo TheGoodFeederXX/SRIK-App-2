@@ -1,110 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/icons/app-icon-180.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oliskey School App | School Management &amp; Engagement Platform</title>
+  <title>SRI Al-Khairiah | Sistem Pengurusan Sekolah</title>
 
   <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json" />
 
   <!-- Theme colors for mobile browsers -->
-  <meta name="theme-color" content="#4F46E5" />
-  <meta name="msapplication-TileColor" content="#4F46E5" />
+  <meta name="theme-color" content="#0F766E" />
+  <meta name="msapplication-TileColor" content="#0F766E" />
 
   <!-- iOS PWA Support -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="SchoolApp" />
-  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <meta name="apple-mobile-web-app-title" content="SRIK" />
+  <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
 
   <!-- Description for SEO and PWA -->
   <meta name="description"
-    content="Oliskey School App connects administrators, teachers, students and parents in one school management and engagement platform. Manage academics, attendance, results, communication and everyday school work with AI-powered tools." />
-  <meta name="robots" content="index, follow" />
-  <meta name="author" content="Oliskey" />
-  <link rel="canonical" href="https://app.oliskey.com/" />
+    content="Sistem pengurusan Sekolah Rendah Islam Al-Khairiah — kehadiran, markah, kad laporan, yuran dan pengumuman sekolah untuk guru, ibu bapa dan pejabat." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="author" content="SRI Al-Khairiah" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Oliskey School App | School Management &amp; Engagement Platform" />
-  <meta property="og:description" content="Oliskey School App connects administrators, teachers, students and parents in one school management and engagement platform. Change how school feels." />
-  <meta property="og:url" content="https://app.oliskey.com/" />
+  <meta property="og:title" content="SRI Al-Khairiah | Sistem Pengurusan Sekolah" />
+  <meta property="og:description" content="Sistem pengurusan Sekolah Rendah Islam Al-Khairiah — kehadiran, markah, kad laporan, yuran dan pengumuman sekolah." />
   <!-- 1200x630: the card below declares summary_large_image, which the old
        180x180 PWA icon could not satisfy (previews rendered tiny or not at all). -->
-  <meta property="og:image" content="https://app.oliskey.com/oliskey-school-app-social-card.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Oliskey School App — change how school feels. For administrators, teachers, students and parents." />
-  <meta property="og:site_name" content="Oliskey" />
-  <meta property="og:locale" content="en_NG" />
+  <meta property="og:image" content="/school-logo.png" />
+      <meta property="og:image:alt" content="Logo Sekolah Rendah Islam Al-Khairiah" />
+  <meta property="og:site_name" content="SRI Al-Khairiah" />
+  <meta property="og:locale" content="ms_MY" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Oliskey School App | School Management &amp; Engagement Platform" />
-  <meta name="twitter:description" content="Oliskey School App connects administrators, teachers, students and parents in one school management and engagement platform." />
-  <meta name="twitter:image" content="https://app.oliskey.com/oliskey-school-app-social-card.png" />
-  <meta name="twitter:image:alt" content="Oliskey School App — change how school feels." />
+  <meta name="twitter:title" content="SRI Al-Khairiah | Sistem Pengurusan Sekolah" />
+  <meta name="twitter:description" content="Sistem pengurusan Sekolah Rendah Islam Al-Khairiah." />
+  <meta name="twitter:image" content="/school-logo.png" />
+  <meta name="twitter:image:alt" content="Logo Sekolah Rendah Islam Al-Khairiah" />
 
   <!-- Structured data.
-       Two distinct entities, deliberately kept separate:
-         Organization        = Oliskey, the company        -> www.oliskey.com
-         SoftwareApplication = Oliskey School App, the app -> app.oliskey.com
-       The publisher previously pointed at app.oliskey.com, which told search
-       engines the application WAS the company and left the real company site
-       unconnected to the product. www.oliskey.com is used because oliskey.com
-       permanently redirects (308) there, so it is the resolvable canonical.
-       Only facts that can be verified from the product are asserted: no
-       ratings, reviews, counts, awards or social profiles are claimed.
-
-       sameAs lists third-party profiles that are the SAME product entity, so
-       search engines can reconcile them with this one. It is an identity link,
-       NOT a quality claim: no aggregateRating, ratingValue or reviewCount is
-       published here, and none may be added until a verified rating actually
-       exists on that profile. Schema.org rating fields describe ratings the
-       publisher can substantiate — asserting G2's numbers from here would be
-       both unverifiable and a structured-data violation. -->
+       SRIK is ONE school, not a software vendor. An earlier version of this
+       block described a company, a second website, a foreign-country locale and
+       a third-party review profile — all facts about the company this app was
+       originally built for. Claiming them would have told search engines
+       something untrue about this school, so the block now describes only the
+       school itself. No ratings, reviews or counts are asserted anywhere: such
+       fields describe claims a publisher must be able to substantiate. -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.oliskey.com/#organization",
-        "name": "Oliskey",
-        "url": "https://www.oliskey.com/",
-        "logo": "https://app.oliskey.com/icons/app-icon-512.png"
+    {
+      "@context": "https://schema.org",
+      "@type": "School",
+      "name": "Sekolah Rendah Islam Al-Khairiah",
+      "alternateName": "SRIK",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jalan Pedu",
+        "postalCode": "06300",
+        "addressLocality": "Kuala Nerang",
+        "addressRegion": "Kedah",
+        "addressCountry": "MY"
       },
-      {
-        "@type": "WebSite",
-        "@id": "https://app.oliskey.com/#website",
-        "name": "Oliskey School App",
-        "url": "https://app.oliskey.com/",
-        "inLanguage": "en-NG",
-        "publisher": { "@id": "https://www.oliskey.com/#organization" }
-      },
-      {
-        "@type": "SoftwareApplication",
-        "@id": "https://app.oliskey.com/#software",
-        "name": "Oliskey School App",
-        "url": "https://app.oliskey.com/",
-        "applicationCategory": "EducationalApplication",
-        "operatingSystem": "Web",
-        "description": "Oliskey School App connects administrators, teachers, students and parents in one school management and engagement platform. Manage academics, attendance, results, communication and everyday school work.",
-        "inLanguage": "en-NG",
-        "isAccessibleForFree": true,
-        "publisher": { "@id": "https://www.oliskey.com/#organization" },
-        "brand": { "@id": "https://www.oliskey.com/#organization" },
-        "sameAs": [
-          "https://www.g2.com/products/oliskey-school-app/reviews"
-        ]
-      }
-    ]
-  }
+      "email": "srialkhairiah@gmail.com",
+      "telephone": "+60105119582"
+    }
   </script>
 
   <!-- Colour scheme, applied before first paint so there is no flash. The
@@ -127,23 +93,17 @@
     }
   </style>
 
-  <!-- Google Identity Services -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 
 <body class="bg-gray-100">
   <noscript>
     <div style="padding:24px;font-family:system-ui,sans-serif;text-align:center;max-width:44rem;margin:0 auto">
-      <h1>Oliskey School App</h1>
-      <p><strong>Change how school feels.</strong> Less stress. More connection. A better school day.</p>
-      <p>Oliskey School App connects administrators, teachers, students and parents in one school
-        management and engagement platform &mdash; academics, attendance, results, communication and
-        the everyday work of running a school.</p>
-      <p>This application needs JavaScript. Please enable it in your browser settings and reload the page.</p>
-      <p><a href="https://www.oliskey.com/" rel="noopener">Learn more about Oliskey on the company website</a></p>
+      <h1>SRI Al-Khairiah</h1>
+      <p>Sistem pengurusan Sekolah Rendah Islam Al-Khairiah &mdash; kehadiran, markah, kad laporan, yuran dan pengumuman sekolah.</p>
+      <p>Aplikasi ini memerlukan JavaScript. Sila hidupkannya dalam tetapan pelayar dan muat semula halaman ini.</p>
     </div>
   </noscript>
-  <div id="root" role="main" aria-label="Oliskey School Management application"></div>
+  <div id="root" role="main" aria-label="Sistem pengurusan Sekolah Rendah Islam Al-Khairiah"></div>
   <script type="module" src="/index.tsx"></script>
 </body>
 

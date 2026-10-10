@@ -41,7 +41,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
     const [students, setStudents] = useState<Student[]>([]);
     const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
     const [loading, setLoading] = useState(true);
-    const [currentTerm, setCurrentTerm] = useState<{ name: string; academic_year: string }>({ name: 'First Term', academic_year: '' });
+    const [currentTerm, setCurrentTerm] = useState<{ name: string; academic_year: string }>({ name: 'Penggal 1', academic_year: '' });
     // One debounce timer PER STUDENT. A single shared timer meant that typing a
     // score for the next student cancelled the pending save for the previous one,
     // silently discarding it.
@@ -62,9 +62,10 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
     // Fallback-only class name parser. exam.classId (the real class UUID) is the
     // authoritative source of the roster — see fetchData below. This regex guess
     // is kept only for legacy exams saved before class_id was persisted, and it
-    // is unreliable for Nigerian curriculum names: "JSS 1" contains digit "1"
-    // (not the true numeric grade, which is offset by +6 for JSS / +9 for SSS)
-    // and its first capital letter "J" (from "JSS", not an actual section).
+    // is unreliable for the foreign (JSS/SSS-style) class names this app was
+    // first built around: "JSS 1" contains digit "1" (not the true numeric
+    // grade, which was offset by +6 for JSS / +9 for SSS) and its first capital
+    // letter "J" (from "JSS", not an actual section).
     const gradeSection = React.useMemo(() => {
         if (!exam?.className) return { grade: 0, section: 'A' };
         const gradeMatch = exam.className.match(/\d+/);
@@ -77,7 +78,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
     }, [exam?.className]);
 
     // The school's actual current term/session — grades used to be saved
-    // under hardcoded 'First Term'/'2024/2025' literals regardless of what
+    // under hardcoded 'Penggal 1'/'2024/2025' literals regardless of what
     // term the school was actually in, permanently mislabeling records.
     useEffect(() => {
         if (!currentSchool?.id) return;
@@ -87,11 +88,11 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
                 setCurrentTerm({ name: current.name, academic_year: current.academic_year });
             } else {
                 const nowYear = new Date().getFullYear();
-                setCurrentTerm({ name: 'First Term', academic_year: `${nowYear}/${nowYear + 1}` });
+                setCurrentTerm({ name: 'Penggal 1', academic_year: `${nowYear}/${nowYear + 1}` });
             }
         }).catch(() => {
             const nowYear = new Date().getFullYear();
-            setCurrentTerm({ name: 'First Term', academic_year: `${nowYear}/${nowYear + 1}` });
+            setCurrentTerm({ name: 'Penggal 1', academic_year: `${nowYear}/${nowYear + 1}` });
         });
     }, [currentSchool?.id]);
 

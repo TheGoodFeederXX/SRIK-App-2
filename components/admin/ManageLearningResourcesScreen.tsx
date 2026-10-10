@@ -193,7 +193,7 @@ const ManageLearningResourcesScreen: React.FC = () => {
                                     </div>
                                     <h3 className="font-bold text-gray-800 line-clamp-2 mb-2 text-sm leading-snug" title={res.title}>{res.title}</h3>
                                     <div className="mt-auto pt-3 border-t border-gray-50 flex justify-between items-center text-xs text-gray-400">
-                                        <span>{new Date(res.created_at).toLocaleDateString()}</span>
+                                        <span>{new Date(res.created_at).toLocaleDateString("ms-MY")}</span>
                                     </div>
                                 </div>
                             </motion.div>

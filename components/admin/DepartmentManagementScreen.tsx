@@ -4,6 +4,7 @@ import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Building2, Users, Wallet, CalendarClock, PlusCircle, X, ChevronRight } from 'lucide-react';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 const DEFAULT_NAMES = ['Science', 'Mathematics', 'Languages', 'ICT', 'Arts', 'Commercial', 'Agricultural Science'];
 
@@ -157,7 +158,7 @@ const DepartmentManagementScreen = () => {
                             <p className="text-xs text-gray-400 mb-3">HOD: {d.head_teacher?.full_name || 'Not assigned'}</p>
                             <div className="flex items-center gap-4 text-xs text-gray-500">
                                 <span className="flex items-center gap-1"><Users className="w-3.5 h-3.5" /> {d.teacher_count}</span>
-                                <span className="flex items-center gap-1"><Wallet className="w-3.5 h-3.5" /> ₦{d.total_spent.toLocaleString()}/₦{d.total_allocated.toLocaleString()}</span>
+                                <span className="flex items-center gap-1"><Wallet className="w-3.5 h-3.5" /> {formatMoney(d.total_spent)}/{formatMoney(d.total_allocated)}</span>
                                 <span className="flex items-center gap-1"><CalendarClock className="w-3.5 h-3.5" /> {d.meeting_count}</span>
                             </div>
                         </motion.button>
@@ -198,11 +199,11 @@ const DepartmentManagementScreen = () => {
                             </div>
 
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">Budget — ₦{report.total_spent.toLocaleString()} / ₦{report.total_allocated.toLocaleString()}</p>
+                                <p className="text-xs font-bold text-gray-400 uppercase mb-2">Budget — {formatMoney(report.total_spent)} / {formatMoney(report.total_allocated)}</p>
                                 <div className="flex items-center gap-2">
                                     <input value={budgetForm.fiscal_year} onChange={e => setBudgetForm(f => ({ ...f, fiscal_year: e.target.value }))} placeholder="2026/2027"
                                         className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-28 outline-none focus:ring-2 focus:ring-indigo-400" />
-                                    <input value={budgetForm.allocated_amount} onChange={e => setBudgetForm(f => ({ ...f, allocated_amount: e.target.value }))} placeholder="Amount (₦)" type="number"
+                                    <input value={budgetForm.allocated_amount} onChange={e => setBudgetForm(f => ({ ...f, allocated_amount: e.target.value }))} placeholder="Amount (RM)" type="number"
                                         className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-1 outline-none focus:ring-2 focus:ring-indigo-400" />
                                     <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddBudget} className="text-sm font-semibold text-indigo-600">Add</motion.button>
                                 </div>
@@ -213,7 +214,7 @@ const DepartmentManagementScreen = () => {
                                 <div className="space-y-1 mb-2">
                                     {report.meetings.map((m: any) => (
                                         <div key={m.id} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-1.5 flex justify-between">
-                                            <span>{m.title}</span><span className="text-gray-400">{new Date(m.date).toLocaleDateString()}</span>
+                                            <span>{m.title}</span><span className="text-gray-400">{new Date(m.date).toLocaleDateString("ms-MY")}</span>
                                         </div>
                                     ))}
                                 </div>

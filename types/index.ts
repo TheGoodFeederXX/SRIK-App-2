@@ -41,20 +41,37 @@ export interface SchoolUser {
   schoolId: string;
   email: string;
   fullName: string;
-  role: 'super_admin' | 'proprietor' | 'admin' | 'teacher' | 'student' | 'parent' | 'bursar';
+  role: 'admin' | 'teacher' | 'guardian' | 'student';
 }
 
+/**
+ * The dashboards this app can render.
+ *
+ * These values MUST match the role codes in the `roles` table, because a role
+ * code from the database is compared against them. The live database has exactly
+ * three: ADMIN, TEACHER, GUARDIAN.
+ *
+ * WHAT USED TO BE HERE. Six more values came from the product this code was
+ * adapted from — SUPER_ADMIN, PROPRIETOR, INSPECTOR, EXAM_OFFICER,
+ * COMPLIANCE_OFFICER and COUNSELOR. None is a role at this school, so every
+ * branch that tested for one was unreachable, and each carried a theme, a menu
+ * and a dashboard file that had to be maintained and reasoned about.
+ *
+ * WHY `Parent` IS SPELLED THAT WAY, AND WHY `Guardian` WAS ADDED. The database
+ * says GUARDIAN; the original enum said PARENT. Nothing reconciled the two, so a
+ * guardian's role code matched no case and fell through to a default — which is
+ * how a parent could be handed an ADMIN or TEACHER dashboard. Both names are now
+ * present so that a lookup by either succeeds, and `Parent` remains the
+ * dashboard a guardian lands on.
+ */
 export enum DashboardType {
   Admin = 'ADMIN',
-  SuperAdmin = 'SUPER_ADMIN',
   Teacher = 'TEACHER',
+  /** The role code as the database stores it. A guardian's real value. */
+  Guardian = 'GUARDIAN',
+  /** The guardian dashboard. Kept as the name the UI is built around. */
   Parent = 'PARENT',
   Student = 'STUDENT',
-  Proprietor = 'PROPRIETOR',
-  Inspector = 'INSPECTOR',
-  ExamOfficer = 'EXAM_OFFICER',
-  ComplianceOfficer = 'COMPLIANCE_OFFICER',
-  Counselor = 'COUNSELOR',
 }
 
 export interface Exam {
@@ -106,8 +123,8 @@ export interface ReportCardAcademicRecord {
 
 export interface ReportCard {
   id?: string; // From database (optional for new drafts)
-  term: string; // e.g., "Second Term"
-  session: string; // e.g., "2023/2024"
+  term: string; // e.g., "Penggal 2"
+  session: string; // e.g., "2026" — the school year is the calendar year
   academicRecords: ReportCardAcademicRecord[];
   skills: Record<string, Rating>;
   psychomotor: Record<string, Rating>;
@@ -130,7 +147,7 @@ export interface Student {
   user_id?: string; // UUID FK to auth.users(id)
   schoolId?: string; // school_id UUID FK
   branchId?: string; // branch_id UUID FK
-  schoolGeneratedId?: string; // e.g. OLISKEY_MAIN_STD_0001
+  schoolGeneratedId?: string; // e.g. SRIK_STU_0001
   name: string; // TEXT NOT NULL
   full_name?: string; // Alias for name (from DB column)
   email: string; // TEXT
@@ -234,7 +251,7 @@ export interface Parent {
   user_id?: string; // UUID FK to auth.users(id)
   schoolId?: string; // school_id UUID FK
   branchId?: string; // branch_id UUID FK
-  schoolGeneratedId?: string; // e.g. OLISKEY_MAIN_PAR_0001
+  schoolGeneratedId?: string; // e.g. SRIK_PAR_0001
   name: string; // TEXT NOT NULL
   email?: string; // TEXT
   phone?: string; // TEXT

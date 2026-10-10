@@ -26,7 +26,7 @@ interface SuspensionNoticeBannerProps {
 function fmtDate(value: string | null | undefined): string {
     if (!value) return '—';
     const d = new Date(value);
-    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString();
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString("ms-MY");
 }
 
 const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode }) => {

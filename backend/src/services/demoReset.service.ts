@@ -29,7 +29,7 @@ export class DemoResetService {
             return;
         }
 
-        console.log(`🕒 [DemoReset] Service initialized. Reset scheduled daily at 00:00 Africa/Lagos.`);
+        console.log(`🕒 [DemoReset] Service initialized. Reset scheduled daily at 00:00 Asia/Kuala_Lumpur.`);
         this.isRunning = true;
 
         // setInterval only starts counting from THIS process's own boot, not
@@ -55,7 +55,7 @@ export class DemoResetService {
         scheduleMidnight();
     }
 
-    /** Milliseconds until the next 00:00 in Africa/Lagos (UTC+1, no DST). */
+    /** Milliseconds until the next 00:00 in Asia/Kuala_Lumpur (UTC+8, no DST). */
     static msUntilNextLagosMidnight(now: Date = new Date()): number {
         const LAGOS_OFFSET_MS = 60 * 60 * 1000;
         const lagosNow = now.getTime() + LAGOS_OFFSET_MS;

@@ -68,7 +68,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
         }
         try {
             const rec = new SR();
-            rec.lang = 'en-NG';
+            rec.lang = 'ms-MY';
             rec.interimResults = false;
             rec.continuous = false;
             rec.onresult = (e: any) => {
@@ -136,7 +136,11 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
             // something real (the old code set Gemini-only "tools" that our AI
             // provider ignores, and Deep Thinker was an empty block).
             const sysLines = [
-                'You are a friendly AI assistant inside a Nigerian school app, helping students, teachers, parents and admins. Be accurate, age-appropriate and encouraging. Use clear examples relevant to Nigerian schools when helpful.',
+                // The country matters to the ANSWER: a Nigerian curriculum assistant gives
+        // examples about the naira and Nigerian states, which are not this
+        // school's. SRIK is a Malaysian primary school in Kedah, and its children
+        // and parents read Malay.
+        'You are a friendly AI assistant inside a Malaysian primary school app (Sekolah Rendah Islam Al-Khairiah, in Kedah), helping students, teachers, parents and admins. Reply in Bahasa Melayu. Be accurate, age-appropriate and encouraging, and use clear examples relevant to a Malaysian primary school when helpful.',
             ];
             // Deep Thinker → a stronger reasoning model + step-by-step working
             let modelName: string | undefined;
@@ -145,9 +149,9 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
                 sysLines.push('Deep-Thinking mode: reason step by step. Briefly show your working (numbered steps) before the final answer — like a good teacher on a whiteboard.');
             }
             if (useGrounding === 'search') {
-                sysLines.push('Research mode: answer like a research assistant. You do NOT have live internet access, so be upfront when a fact could be outdated (prices, current officials, recent events), and end with 2-3 reliable places to verify (e.g. official websites, WAEC/NECO resources, textbooks).');
+                sysLines.push('Research mode: answer like a research assistant. You do NOT have live internet access, so be upfront when a fact could be outdated (prices, current officials, recent events), and end with 2-3 reliable places to verify (e.g. official websites, Malaysian textbook and curriculum resources, textbooks).');
             } else if (useGrounding === 'maps') {
-                sysLines.push('Places mode: answer geography and location questions descriptively (landmarks, distances, regions, travel context — Nigeria-aware). You cannot access live maps, so for directions or current travel times, advise checking a maps app and focus on teaching the geography.');
+                sysLines.push('Places mode: answer geography and location questions descriptively (landmarks, distances, regions, travel context — Malaysia-aware). You cannot access live maps, so for directions or current travel times, advise checking a maps app and focus on teaching the geography.');
             }
 
             const response = await ai.models.generateContent({

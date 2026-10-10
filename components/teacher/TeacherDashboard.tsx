@@ -41,7 +41,7 @@ import CreateForumTopicScreen from './CreateForumTopicScreen';
 import ForumTopicScreen from './ForumTopicScreen';
 import GlobalTeacherCommunityScreen from './GlobalTeacherCommunityScreen';
 import GlobalForumTopicScreen from './GlobalForumTopicScreen';
-import TimetableScreen from '../shared/TimetableScreen';
+import TimetableScreen from '../admin/TimetableScreen';
 import ChatScreen from '../shared/ChatScreen';
 import TeacherReportsScreen from './TeacherReportsScreen';
 import TeacherSettingsScreen from './TeacherSettingsScreen';
@@ -91,7 +91,6 @@ import TeacherAttendanceHistoryScreen from './TeacherAttendanceHistoryScreen';
 import LeaveRequest from './LeaveRequest';
 import PayslipViewer from './PayslipViewer';
 import TeacherSalaryProfile from './TeacherSalaryProfile';
-import MyPaymentHistory from './MyPaymentHistory';
 import { QuickAttendance } from './QuickAttendance';
 import AssessmentsHub from './AssessmentsHub';
 
@@ -331,7 +330,6 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
     leaveRequest: (props: any) => <LeaveRequest {...props} teacherId={teacherId || ''} />,
     payslips: (props: any) => <PayslipViewer {...props} teacherId={teacherId || ''} />,
     salaryProfile: (props: any) => <TeacherSalaryProfile {...props} teacherId={teacherId || ''} />,
-    paymentHistory: (props: any) => <MyPaymentHistory {...props} teacherId={teacherId || ''} />,
     assessmentsHub: (props: any) => <AssessmentsHub {...props} teacherId={teacherId || ''} />,
 
     // Additional Audit Registered Views

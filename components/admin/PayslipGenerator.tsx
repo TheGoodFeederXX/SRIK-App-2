@@ -12,6 +12,7 @@ import {
     CalendarIcon
 } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface Teacher {
     id: string;
@@ -271,7 +272,7 @@ const PayslipGenerator: React.FC = () => {
                             {allowances.map((item, idx) => (
                                 <div key={idx} className="flex justify-between text-sm p-2 bg-green-50 rounded">
                                     <span>{item.description}</span>
-                                    <span className="font-medium">₦{item.amount.toLocaleString()}</span>
+                                    <span className="font-medium">{formatMoney(item.amount)}</span>
                                 </div>
                             ))}
                         </div>
@@ -292,7 +293,7 @@ const PayslipGenerator: React.FC = () => {
                             {bonuses.map((item, idx) => (
                                 <div key={idx} className="flex justify-between text-sm p-2 bg-blue-50 rounded">
                                     <span>{item.description}</span>
-                                    <span className="font-medium">₦{item.amount.toLocaleString()}</span>
+                                    <span className="font-medium">{formatMoney(item.amount)}</span>
                                 </div>
                             ))}
                         </div>
@@ -313,7 +314,7 @@ const PayslipGenerator: React.FC = () => {
                             {deductions.map((item, idx) => (
                                 <div key={idx} className="flex justify-between text-sm p-2 bg-red-50 rounded">
                                     <span>{item.description}</span>
-                                    <span className="font-medium">₦{item.amount.toLocaleString()}</span>
+                                    <span className="font-medium">{formatMoney(item.amount)}</span>
                                 </div>
                             ))}
                         </div>
@@ -338,7 +339,7 @@ const PayslipGenerator: React.FC = () => {
                             <div className="p-4 bg-gray-50 rounded-lg">
                                 <h4 className="font-semibold text-gray-900">{preview.teacher_name}</h4>
                                 <p className="text-sm text-gray-600">
-                                    {new Date(preview.period_start).toLocaleDateString()} - {new Date(preview.period_end).toLocaleDateString()}
+                                    {new Date(preview.period_start).toLocaleDateString("ms-MY")} - {new Date(preview.period_end).toLocaleDateString("ms-MY")}
                                 </p>
                             </div>
 
@@ -347,12 +348,12 @@ const PayslipGenerator: React.FC = () => {
                                 {preview.items.filter((i: PayslipItem) => i.type === 'earning').map((item: PayslipItem, idx: number) => (
                                     <div key={idx} className="flex justify-between text-sm">
                                         <span>{item.description}</span>
-                                        <span className="font-medium">₦{item.amount.toLocaleString()}</span>
+                                        <span className="font-medium">{formatMoney(item.amount)}</span>
                                     </div>
                                 ))}
                                 <div className="flex justify-between font-semibold pt-2 border-t">
                                     <span>Gross Salary</span>
-                                    <span>₦{preview.gross_salary.toLocaleString()}</span>
+                                    <span>{formatMoney(preview.gross_salary)}</span>
                                 </div>
                             </div>
 
@@ -361,7 +362,7 @@ const PayslipGenerator: React.FC = () => {
                                 {preview.items.filter((i: PayslipItem) => i.type === 'deduction').map((item: PayslipItem, idx: number) => (
                                     <div key={idx} className="flex justify-between text-sm">
                                         <span>{item.description}</span>
-                                        <span className="font-medium text-red-600">₦{item.amount.toLocaleString()}</span>
+                                        <span className="font-medium text-red-600">{formatMoney(item.amount)}</span>
                                     </div>
                                 ))}
                             </div>
@@ -369,7 +370,7 @@ const PayslipGenerator: React.FC = () => {
                             <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-lg">
                                 <div className="flex justify-between font-bold text-lg">
                                     <span>Net Salary</span>
-                                    <span className="text-indigo-600">₦{preview.net_salary.toLocaleString()}</span>
+                                    <span className="text-indigo-600">{formatMoney(preview.net_salary)}</span>
                                 </div>
                             </div>
 

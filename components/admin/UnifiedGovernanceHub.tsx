@@ -147,7 +147,7 @@ const UnifiedGovernanceHub: React.FC = () => {
                                 <Zap className="w-8 h-8 text-indigo-600" />
                             </div>
                             <div className="space-y-1">
-                                <p className="text-gray-900 font-black text-lg">NDPR Compliant</p>
+                                <p className="text-gray-900 font-black text-lg">PDPA Compliant</p>
                                 <p className="text-gray-500 text-sm italic">Verified January 2026. Secure data controller status active.</p>
                                 <div className="pt-2">
                                     <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold ring-1 ring-emerald-200">Active Audit</span>

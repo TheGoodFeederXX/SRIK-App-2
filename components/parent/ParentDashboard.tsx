@@ -30,7 +30,6 @@ import { formatSchoolId } from '../../utils/idFormatter';
 import PremiumLoader, { BOOT_MESSAGE } from '../ui/PremiumLoader';
 import PremiumModal from '../ui/PremiumModal';
 import ErrorBoundary from '../ui/ErrorBoundary';
-import SchoolContextSwitcher from '../ui/SchoolContextSwitcher';
 import AIChatScreen from '../shared/AIChatScreen';
 import AIChatWidget from '../shared/AIChatWidget';
 
@@ -40,17 +39,18 @@ import { realtimeService } from '../../services/RealtimeService';
 import { useDashboardRouting } from '../../hooks/useDashboardRouting';
 
 const formatCurriculumLabel = (curriculumType?: string) =>
-    curriculumType === 'Both' ? 'Nigerian & British Curriculum' : `${curriculumType} Curriculum`;
+    // A parent sees which track their child is on. The dual label used to say
+    // "Nigerian & British"; the national track here is KSSR.
+    curriculumType === 'Both' ? 'KSSR & British Curriculum' : `${curriculumType} Curriculum`;
 import { syncEngine } from '../../lib/syncEngine';
 import { useAutoSync } from '../../hooks/useAutoSync';
 
 // Import all view components
 import AttendanceScreen from '../student/AttendanceScreen';
-import FeeStatusScreen from './FeeStatusScreen';
 import SelectChildForReportScreen from './SelectChildForReportScreen';
 import ReportCardScreen from './ReportCardScreen';
 import SelectReportTermScreen from '../shared/SelectReportTermScreen';
-import TimetableScreen from '../shared/TimetableScreen';
+import TimetableScreen from '../admin/TimetableScreen';
 import PickupAuthorizationScreen from './PickupAuthorizationScreen';
 import ParentProfileScreen from './ParentProfileScreen';
 import EditParentProfileScreen from './EditParentProfileScreen';
@@ -73,13 +73,13 @@ import ChatScreen from '../shared/ChatScreen';
 import SchoolUtilitiesScreen from './SchoolUtilitiesScreen';
 import LinkChildScreen from './LinkChildScreen';
 import GlobalSearchScreen from '../shared/GlobalSearchScreen';
-import EmailVerificationPrompt from '../auth/EmailVerificationPrompt';
 import ParentTodayWidget from './ParentTodayWidget';
 import ParentChangePasswordScreen from './ParentChangePasswordScreen';
 import { UnifiedParentHome } from './UnifiedParentHome';
-import { FeesPiggyBank } from './FeesPiggyBank';
 import { SmartCalendar } from './SmartCalendar';
 import StudentProfileEnhanced from '../student/StudentProfileEnhanced';
+import MyChildrenFeesScreen from './MyChildrenFeesScreen';
+import MyAnnouncementsScreen from './MyAnnouncementsScreen';
 
 // Shared View Components
 import ExamSchedule from '../shared/ExamSchedule';
@@ -254,7 +254,7 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
                             const status = getHomeworkStatus(hw);
                             return (
                                 <motion.div key={hw.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.04 }} className="flex justify-between items-center border-b pb-2 last:border-b-0">
-                                    <div><p className="font-bold text-gray-800">{hw.title}</p><p className="text-sm text-gray-700">{hw.subject} &bull; Due {new Date(hw.dueDate).toLocaleDateString('en-GB')}</p></div>
+                                    <div><p className="font-bold text-gray-800">{hw.title}</p><p className="text-sm text-gray-700">{hw.subject} &bull; Due {new Date(hw.dueDate).toLocaleDateString("ms-MY")}</p></div>
                                     <div className={`flex items-center space-x-2 text-xs font-semibold px-2 py-1 rounded-full ${status.bg} ${status.color}`}>
                                         {React.cloneElement(status.icon as any, { className: `h-4 w-4 ${status.isComplete ? 'animate-checkmark-pop' : ''}`.trim() })}<span>{status.text}</span>
                                     </div>
@@ -306,7 +306,7 @@ const BehaviorTab = ({ student }: { student: Student }) => {
                         >
                             <div className="flex justify-between items-start">
                                 <h5 className={`font-bold ${isPositive ? 'text-green-800' : 'text-red-800'}`}>{note.title}</h5>
-                                <p className="text-xs text-gray-700 font-medium flex-shrink-0 ml-2">{new Date(note.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                                <p className="text-xs text-gray-700 font-medium flex-shrink-0 ml-2">{new Date(note.date).toLocaleDateString('ms-MY', { month: 'short', day: 'numeric' })}</p>
                             </div>
                             <p className="text-sm text-gray-700 mt-1">{note.note}</p>
                             {note.suggestions && (
@@ -393,7 +393,7 @@ const AttendanceTab = ({ student }: { student: Student }) => {
                         transition={{ duration: 0.15 }}
                         className="font-bold text-lg text-gray-800"
                     >
-                        {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                        {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
                     </motion.h3>
                 </AnimatePresence>
                 <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-3 rounded-full hover:bg-gray-100"><ChevronRightIcon className="h-5 w-5 text-gray-600" /></motion.button>
@@ -627,7 +627,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         setActiveBottomNav(screen);
         switch (screen) {
             case 'home': replaceView('dashboard', 'Parent Dashboard'); break;
-            case 'fees': replaceView('feeStatus', 'Fee Status'); break;
+            case 'fees': replaceView('myFees', 'Yuran Anak'); break;
             case 'reports': replaceView('selectReport', 'Select Report Card'); break;
             case 'messages': replaceView('messages', 'Messages'); break;
             case 'more': replaceView('more', 'More Options'); break;
@@ -640,9 +640,10 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         // The one assistant: free chat, plus the "My School" tab that answers
         // from this parent's own children's records.
         aiAssistant: (props: any) => <AIChatScreen {...props} dashboardType={DashboardType.Parent} />,
-        piggyBank: (props: any) => <FeesPiggyBank {...props} />,
         smartCalendar: SmartCalendar,
         todaySummary: (props: any) => <ParentTodayWidget {...props} />,
+        myFees: MyChildrenFeesScreen,
+        announcements: MyAnnouncementsScreen,
         childDetail: (props: any) => (
             <StudentProfileEnhanced 
                 studentId={props.studentId || props.student?.id} 
@@ -658,7 +659,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         calendar: CalendarScreen,
         library: LibraryScreen,
         busRoute: BusRouteScreen,
-        feeStatus: (props: any) => <FeeStatusScreen {...props} parentId={parentId} />,
         selectReport: (props: any) => <SelectChildForReportScreen {...props} parentId={parentId} />,
         selectReportTerm: (props: any) => <SelectReportTermScreen {...props} targetView="reportCard" changeChildView="selectReport" />,
         reportCard: ReportCardScreen,
@@ -803,12 +803,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
             hideBottomNav={hideBottomNav}
         >
             <div key={`${view}-${version}`} className="w-full h-full flex flex-col">
-                <div className="absolute top-0 right-0 p-4 z-30 pointer-events-none">
-                    <div className="pointer-events-auto">
-                        <SchoolContextSwitcher currentSchoolName={currentSchool?.name || 'My School'} />
-                    </div>
-                </div>
-
                 <ErrorBoundary
                     key={view}
                     title={`${title} Error`}

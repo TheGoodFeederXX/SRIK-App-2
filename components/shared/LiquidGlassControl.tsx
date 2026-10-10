@@ -18,7 +18,7 @@ export type Appearance = { mode: 'normal' | 'glass'; accent: string; glass: Glas
 
 export const DEFAULT_GLASS: GlassParams = { blur: 18, opacity: 0.62, sheen: 0.55, saturate: 180, shadow: 0.12 };
 export const DEFAULTS: Appearance = { mode: 'glass', accent: 'indigo', glass: DEFAULT_GLASS };
-const KEY_BASE = 'oliskey:appearance';
+const KEY_BASE = 'srik:appearance';
 /** Per-user (+role) storage key, so each person's look is isolated — even on a
  *  shared device, Teacher A's choice never affects Teacher B or a student. */
 const scopeKey = (scope: string) => `${KEY_BASE}:${scope || 'guest'}`;

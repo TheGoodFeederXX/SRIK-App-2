@@ -41,7 +41,7 @@ const RadioContentScheduler: React.FC = () => {
                 </div>
 
                 <p className="text-sm text-gray-500 mt-6">
-                    Contact <span className="font-semibold text-purple-600">support@oliskey.com</span> to enable radio broadcasting for your school.
+                    Contact <span className="font-semibold text-purple-600">srialkhairiah@gmail.com</span> to enable radio broadcasting for your school.
                 </p>
             </motion.div>
         </div>

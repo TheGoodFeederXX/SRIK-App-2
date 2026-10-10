@@ -127,7 +127,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
                                                 <div className="flex-1">
                                                     <p className="font-semibold text-gray-900 text-sm">{e.title}</p>
                                                     {e.description && <p className="text-xs text-gray-500">{e.description}</p>}
-                                                    <p className="text-xs text-gray-400">{new Date(e.event_date).toLocaleDateString()}</p>
+                                                    <p className="text-xs text-gray-400">{new Date(e.event_date).toLocaleDateString("ms-MY")}</p>
                                                 </div>
                                                 {canEdit && e.source === 'manual' && (
                                                     <button onClick={() => handleDelete(e.id)} className="opacity-0 group-hover:opacity-100 transition-opacity">

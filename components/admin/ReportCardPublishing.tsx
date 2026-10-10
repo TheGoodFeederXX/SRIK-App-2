@@ -21,7 +21,6 @@ interface ReportCardPublishingProps {
   schoolId?: string;
   currentBranchId?: string | null;
   currentBranchName?: string;
-  isMainBranch?: boolean;
 }
 
 // A student re-shaped so its ONE relevant report card (for the currently
@@ -32,7 +31,7 @@ interface TermStudent extends StudentReportInfo {
   hasReport: boolean;
 }
 
-const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: propSchoolId, currentBranchId, currentBranchName, isMainBranch }) => {
+const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: propSchoolId, currentBranchId, currentBranchName }) => {
   const { currentSchool, user } = useAuth();
   const activeSchoolId = propSchoolId || currentSchool?.id || user?.user_metadata?.school_id;
 
@@ -68,7 +67,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
   });
 
   // Fetch students with EVERY report card they have (not just the latest) —
-  // a student can have a First, Second AND Third Term report all at once,
+  // a student can have a First, Second AND Penggal 3 report all at once,
   // and each needs to stay reachable, not just whichever sorts first.
   useEffect(() => {
     if (activeSchoolId) {
@@ -299,9 +298,9 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
               {selectedClass ? `Grade ${selectedClass.grade}${selectedClass.section}` : 'Active Registry Context'}
             </p>
             <h2 className="text-base md:text-xl font-black text-gray-900 tracking-tight truncate flex flex-wrap items-center gap-2">
-              {selectedClass ? 'Class Report Cards' : (currentBranchName ? currentBranchName : 'Global Academic Registry')}
+              {selectedClass ? 'Class Report Cards' : 'Report Cards'}
               <span className="px-2 py-0.5 rounded-lg bg-white border border-gray-200 text-[8px] md:text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
-                {currentBranchId ? 'Branch Restricted' : 'Universal Access'}
+                SRI Al-Khairiah
               </span>
             </h2>
           </div>
@@ -670,7 +669,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                 const grades = (h.new_values && h.new_values.grades) || {};
                 const before = (h.old_values && h.old_values.grades) || {};
                 const who = h.user?.full_name || h.metadata?.actor_role || 'Unknown';
-                const when = new Date(h.performed_at || h.created_at).toLocaleString();
+                const when = new Date(h.performed_at || h.created_at).toLocaleString('ms-MY');
                 const label = String(h.action || '').replace('report_card.', '').replace(/_/g, ' ');
                 return (
                   <div key={h.id} className="rounded-2xl border border-gray-100 bg-gray-50 p-4">

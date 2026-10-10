@@ -3,9 +3,8 @@ import { motion } from 'framer-motion';
 import { SearchIcon, PlusIcon, FilterIcon, UsersIcon, AcademicCapIcon, ClipboardListIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
-import { api } from '../../lib/api';
+import { listTeachers } from '../../src/lib/supabase/teachers';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { formatSchoolId } from '../../utils/idFormatter';
 import { toast } from 'react-hot-toast';
 import LowDataImage from '../ui/LowDataImage';
 
@@ -53,7 +52,7 @@ const TeacherCard: React.FC<{ teacher: Teacher; onSelect: (teacher: Teacher) => 
             {/* Info */}
             <div className="flex-1 min-w-0">
                 <p className="font-bold text-lg text-gray-900 truncate">{teacher.name}</p>
-                <p className="text-xs text-gray-500 mb-1 font-mono">{formatSchoolId(teacher.schoolGeneratedId || teacher.id, 'Teacher')}</p>
+                <p className="text-xs text-gray-500 mb-1 font-mono">{teacher.schoolGeneratedId || teacher.id}</p>
                 {teacher.email && <p className="text-xs text-gray-400 truncate mb-1">{teacher.email}</p>}
                 <div className="mt-1">
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
@@ -85,63 +84,34 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const schoolId = propSchoolId || profile?.schoolId || user?.user_metadata?.school_id;
-
     useEffect(() => {
-        // Resolve schoolId more robustly within the effect, prioritizing prop, then profile, then user metadata
-        const effectiveSchoolId = propSchoolId || profile?.schoolId || profile?.school_id || user?.user_metadata?.school_id;
-
-        if (effectiveSchoolId) {
-            console.log('🔄 [TeacherList] Context Status:', {
-                propSchoolId,
-                schoolIdFromProfile: profile?.schoolId,
-                schoolIdFromProfileSnake: profile?.school_id,
-                schoolIdFromMetadata: user?.user_metadata?.school_id,
-                resolvedSchoolId: effectiveSchoolId,
-                branchId: currentBranchId
-            });
-            loadTeachers(effectiveSchoolId); // Pass effectiveSchoolId to loadTeachers
-        }
-    }, [propSchoolId, profile?.schoolId, profile?.school_id, user?.user_metadata?.school_id, currentBranchId]); // Add all dependencies
+        // The school's identity no longer needs to be resolved here. SRIK is a
+        // single school, so the database decides what this user may see; asking
+        // the screen to compute a school id would reintroduce a tenancy concept
+        // the product does not have.
+        loadTeachers();
+    }, []);
 
     useAutoSync(['teachers'], () => {
-        const effectiveSchoolId = propSchoolId || profile?.schoolId || profile?.school_id || user?.user_metadata?.school_id;
-        if (effectiveSchoolId) {
-            console.log('🔄 [TeacherList] Real-time auto-sync triggered');
-            loadTeachers(effectiveSchoolId);
-        }
+        loadTeachers();
     });
 
-    const loadTeachers = async (id: string) => { // Accept schoolId as a parameter
+    const loadTeachers = async () => {
         try {
-            console.log('🔍 [TeacherList] Loading teachers for school:', id, 'Branch:', currentBranchId);
-            console.log('📦 [TeacherList] sessionStorage is_demo_mode:', sessionStorage.getItem('is_demo_mode'));
-            console.log('📦 [TeacherList] api.isDemoMode():', (api as any).isDemoMode?.());
-
             setLoading(true);
-            const rawData = await api.getTeachers(id, currentBranchId || undefined);
-            console.log('[TeacherList] Fetched Teachers Result:', rawData?.length || 0, rawData);
+            const rows = await listTeachers();
 
-            // Map raw data to Teacher interface with safe defaults
-            const mappedData: Teacher[] = (rawData || []).map((t: any) => ({
+            // Mapped to the screen's vocabulary: the database stores ACTIVE /
+            // INACTIVE / ARCHIVED, the card shows 'Active' / 'Inactive'.
+            const mappedData: Teacher[] = rows.map(t => ({
                 id: t.id,
-                name: t.full_name || t.name || 'Unknown Teacher',
-                avatarUrl: t.avatar_url || t.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${t.full_name || t.name || t.id}`,
+                name: t.fullName || 'Unknown Teacher',
+                avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${t.fullName || t.id}`,
                 email: t.email || '',
-                status: t.status === 'Inactive' ? 'Inactive' : 'Active',
-                schoolGeneratedId: t.school_generated_id || t.schoolGeneratedId,
-                subjects: Array.isArray(t.subjects) ? t.subjects :
-                    Array.isArray(t.subject_specialty) ? t.subject_specialty :
-                    (Array.isArray(t.teacher_subjects) ? t.teacher_subjects.map((s: any) => s.subject) : []),
-                // The backend now returns the real Department relation (an
-                // object), not a plain string — unwrap it to the name so the
-                // Departments stat card counts actual assigned departments
-                // instead of always seeing `undefined` and showing 0.
-                department: t.department?.name,
-                joinDate: t.joinDate || t.created_at,
-                classes: Array.isArray(t.classes) ? t.classes.map((c: any) => 
-                    typeof c === 'string' ? c : (c?.class?.name || c?.name || 'Unknown Class')
-                ) : []
+                status: t.status === 'INACTIVE' || t.status === 'ARCHIVED' ? 'Inactive' : 'Active',
+                schoolGeneratedId: t.staffCode,
+                subjects: t.subjects,
+                joinDate: t.employmentStart || undefined,
             }));
 
             setTeachers(mappedData);
@@ -170,7 +140,10 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
     }), [teachers, searchTerm, filterSubject, filterStatus]);
 
     const activeTeacherCount = useMemo(() => teachers.filter(t => t.status === 'Active').length, [teachers]);
-    const departmentCount = useMemo(() => [...new Set(teachers.map(t => t.department).filter(Boolean))].length, [teachers]);
+    // Departments are not part of the SRIK schema, so this card always reads 0.
+    // Kept as a constant rather than deleting the card, because removing visible
+    // elements is a UI change and needs the owner's decision, not a refactor's.
+    const departmentCount = 0;
 
     const handleSelectTeacher = useCallback((t: Teacher) => {
         navigateTo('TeacherDetailAdminView', t.name, { teacher: t });

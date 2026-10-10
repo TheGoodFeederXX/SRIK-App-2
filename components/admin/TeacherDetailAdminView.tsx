@@ -182,11 +182,6 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                                 )}
                             </div>
                             <p className={`text-sm font-semibold inline-block px-2 py-0.5 rounded mt-2 ${SUBJECT_COLORS[teacher.subjects?.[0] || ''] || 'bg-gray-200'}`}>{(teacher.subjects || []).join(', ')}</p>
-                            {((teacher as any).branch_name || (teacher as any).branchName) && (
-                                <p className="text-xs text-gray-500 mt-1">
-                                    <span className="font-medium">Branch:</span> {(teacher as any).branch_name || (teacher as any).branchName}
-                                </p>
-                            )}
                             {(teacher as any).curriculum_eligibility?.length > 0 && (
                                 <div className="flex flex-wrap gap-1 mt-2 justify-center sm:justify-start">
                                     {((teacher as any).curriculum_eligibility as string[]).map((c: string) => (

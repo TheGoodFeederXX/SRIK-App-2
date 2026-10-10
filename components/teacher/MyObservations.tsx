@@ -69,7 +69,7 @@ const MyObservations = () => {
                         <div key={o.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
                             <div className="flex items-center justify-between cursor-pointer" onClick={() => setExpanded(expanded === o.id ? null : o.id)}>
                                 <div>
-                                    <p className="font-bold text-gray-900">{new Date(o.date).toLocaleDateString()}</p>
+                                    <p className="font-bold text-gray-900">{new Date(o.date).toLocaleDateString("ms-MY")}</p>
                                     {o.notes && <p className="text-sm text-gray-500">{o.notes}</p>}
                                 </div>
                                 <span className={`text-sm font-bold px-3 py-1.5 rounded-full ${GRADE_STYLES[o.overall_grade] || 'bg-gray-100 text-gray-600'}`}>

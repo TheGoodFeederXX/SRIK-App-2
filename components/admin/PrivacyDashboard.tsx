@@ -104,7 +104,7 @@ const PrivacyDashboard: React.FC = () => {
     const formatDate = (iso?: string | null) => {
         if (!iso) return '—';
         try {
-            return new Date(iso).toLocaleDateString('en-NG', { year: 'numeric', month: 'short', day: '2-digit' });
+            return new Date(iso).toLocaleDateString('ms-MY', { year: 'numeric', month: 'short', day: '2-digit' });
         } catch { return '—'; }
     };
 
@@ -179,7 +179,7 @@ const PrivacyDashboard: React.FC = () => {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `ndpr-compliance-export-${new Date().toISOString().slice(0, 10)}.csv`;
+        a.download = `pdpa-compliance-export-${new Date().toISOString().slice(0, 10)}.csv`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -216,7 +216,7 @@ const PrivacyDashboard: React.FC = () => {
         <div className="p-6 max-w-6xl mx-auto space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Privacy & NDPR Compliance</h1>
+                    <h1 className="text-2xl font-bold text-gray-900">Privacy & PDPA Compliance</h1>
                     <p className="text-gray-500">Manage data protection and subject access requests.</p>
                 </div>
                 {complianceBadge()}
@@ -253,11 +253,14 @@ const PrivacyDashboard: React.FC = () => {
                                     Privacy Impact Assessment (DPIA)
                                 </h3>
                                 <div className="p-4 bg-orange-50 rounded-xl border border-orange-100 space-y-3">
-                                    <p className="text-sm text-orange-800">Nigerian Data Protection Commission guidance recommends a documented DPIA for any processing that poses a high risk to data subjects. Starting one creates a tracked policy record below.</p>
+                                    {/* Guidance source. This quoted a foreign data
+                                        protection commission with no jurisdiction
+                                        here; Malaysia's law is the PDPA 2010. */}
+                                    <p className="text-sm text-orange-800">Guidance under Malaysia's Personal Data Protection Act 2010 (PDPA) recommends a documented DPIA for any processing that poses a high risk to data subjects. Starting one creates a tracked policy record below.</p>
                                     <motion.button
                                         whileHover={{ scale: 1.03 }}
                                         whileTap={{ scale: 0.97 }}
-                                        onClick={() => { setNewPolicyDefaults({ title: `Data Protection Impact Assessment — ${new Date().toLocaleDateString('en-NG', { year: 'numeric', month: 'short' })}`, category: 'DPIA' }); setEditingPolicy('new'); }}
+                                        onClick={() => { setNewPolicyDefaults({ title: `Data Protection Impact Assessment — ${new Date().toLocaleDateString('ms-MY', { year: 'numeric', month: 'short' })}`, category: 'DPIA' }); setEditingPolicy('new'); }}
                                         className="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-bold"
                                     >
                                         Start Assessment
@@ -293,7 +296,7 @@ const PrivacyDashboard: React.FC = () => {
                                 <p className="text-indigo-200 text-sm font-medium mb-1">DPO Contact</p>
                                 <p className="text-lg font-bold">{currentSchool?.name || 'School Admin'}</p>
                                 <p className="text-indigo-300 text-sm">{currentSchool?.contactEmail || 'Set a contact email in School Settings'}</p>
-                                <p className="text-indigo-300 text-xs mt-4">Required by NDPR for data controller classification.</p>
+                                <p className="text-indigo-300 text-xs mt-4">Required by PDPA for data controller classification.</p>
                             </div>
                             <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 text-center">
                                 <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">

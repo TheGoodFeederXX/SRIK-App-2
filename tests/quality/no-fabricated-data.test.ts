@@ -14,7 +14,7 @@
  * flowing into a field whose NAME claims it is a measurement.
  */
 import { describe, it, expect } from 'vitest';
-import { readdirSync, statSync, readFileSync } from 'fs';
+import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const root = join(__dirname, '..', '..');
@@ -62,12 +62,40 @@ describe('no fabricated statistics in product code', () => {
     });
 
     it('the curriculum performance figure is not invented', () => {
+        // The screen that produced this figure has been DELETED, along with the
+        // rest of the vendor's proprietor console — `PROPRIETOR` is not a role in
+        // this school, so the screen was unreachable and the fabricated number
+        // could never reach anyone. The guard changes from "the file states null"
+        // to "the file is gone", which is the stronger claim: an absent file
+        // cannot fabricate anything, and a reinstated one fails this test.
         const file = join(root, 'components', 'proprietor', 'CurriculumToggle.tsx');
-        const src = readFileSync(file, 'utf8');
-        // It must be null (no verified source) rather than a number pulled from thin air.
-        expect(src).toMatch(/averagePerformance:\s*null/);
-        expect(src, 'a random performance value came back').not.toMatch(/averagePerformance:\s*Math\.random/);
-        // And the UI must say so instead of rendering a confident percentage.
-        expect(src).toContain("'No data'");
+        expect(existsSync(file), 'the vendor console returned — check what it renders').toBe(false);
+    });
+
+    it('THE RULE: no screen derives a measurement from Math.random', () => {
+        // The original bug: a dashboard showed `Math.random() * 30 + 70` as an
+        // "Avg Performance" percentage, with a progress bar, indistinguishable
+        // from a real figure. The first test above scans for the same pattern;
+        // this one states the rule in the words a reviewer would search for.
+        const offenders: string[] = [];
+        const walk = (dir: string) => {
+            for (const name of readdirSync(dir)) {
+                if (['node_modules', 'dist', 'build', '.git', 'coverage', '__tests__'].includes(name)) continue;
+                const full = join(dir, name);
+                if (statSync(full).isDirectory()) walk(full);
+                else if (/\.tsx?$/.test(name)) {
+                    readFileSync(full, 'utf8').split('\n').forEach((line, i) => {
+                        // A random value assigned to something NAMED as a measurement.
+                        if (/(performance|average|score|grade|percentage|rate|accuracy)\s*[:=]\s*[^;]*Math\.random/i.test(line)) {
+                            offenders.push(`${full.replace(root + '/', '')}:${i + 1}: ${line.trim().slice(0, 90)}`);
+                        }
+                    });
+                }
+            }
+        };
+        walk(join(root, 'components'));
+        walk(join(root, 'src'));
+        walk(join(root, 'lib'));
+        expect(offenders, `fabricated measurement:\n${offenders.join('\n')}`).toEqual([]);
     });
 });

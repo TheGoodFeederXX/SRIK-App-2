@@ -1,5 +1,6 @@
 import { api } from './api';
 import { sendSMS } from './notifications';
+import { formatMoney } from '../src/lib/supabase/finance';
 
 /**
  * Automatically triggers an SMS to parents if a student is marked 'Absent'.
@@ -45,7 +46,7 @@ export async function sendBulkFeeReminders(schoolId: string) {
 
     for (const inv of invoices) {
         if (inv.parents?.phone_number) {
-            const msg = `Fee Reminder: A pending payment of ₦${inv.amount.toLocaleString()} for ${inv.title} is due soon. Pay via app or use USSD.`;
+            const msg = `Fee Reminder: A pending payment of ${formatMoney(inv.amount)} for ${inv.title} is due soon. Pay via app or use USSD.`;
             await sendSMS(inv.parents.phone_number, msg);
         }
     }

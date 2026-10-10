@@ -137,17 +137,3 @@ export const ProprietorBottomNav = ({ activeScreen, setActiveScreen }: { activeS
   );
 };
 
-export const InspectorBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
-  const navItems = [
-    { id: 'overview', icon: <HomeIcon />, label: 'Home' },
-    { id: 'schoolSearch', icon: <BookOpen />, label: 'Search' },
-    { id: 'inspectionHistory', icon: <ShieldCheck />, label: 'History' },
-  ];
-  return (
-    <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">
-      {navItems.map(item => (
-        <NavItem key={item.id} icon={item.icon} label={item.label} navId={item.id} isActive={activeScreen === item.id} onClick={() => setActiveScreen(item.id)} activeColor="text-indigo-600" />
-      ))}
-    </div>
-  );
-};

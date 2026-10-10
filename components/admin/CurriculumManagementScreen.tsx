@@ -4,28 +4,30 @@ import { toast } from 'react-hot-toast';
 import { Globe, CheckCircle2, Search } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
 import CenteredLoader from '../ui/CenteredLoader';
 
 // One hub for the three separate places curriculum is set across the app:
 // 1. School.curricula_config   — which curricula the school is accredited to offer at all
-// 2. Branch.curriculum_type    — a branch's own focus (nigerian/british/american/dual)
 // 3. Student.curriculum_type   — the actual track each individual student is enrolled in
 // (Teachers' "Mark by Curriculum Track" attendance screen filters students by #3.)
 
+// These are the school's own codes and labels. They used to be the Nigerian
+// curriculum codes (NIGERIAN / "Nigerian (NERDC)") — NERDC is Nigeria's
+// curriculum body, and SRIK is accredited for KSSR, so the school was listed
+// as offering a curriculum it does not teach.
 const SCHOOL_CURRICULA = [
-    { code: 'NIGERIAN', label: 'Nigerian (NERDC)' },
+    { code: 'KSSR', label: 'KSSR' },
     { code: 'BRITISH', label: 'British (UK NC)' },
 ];
 
 const BRANCH_FOCUS_OPTIONS = [
-    { value: 'nigerian', label: 'Nigerian (NERDC)' },
+    { value: 'kssr', label: 'KSSR' },
     { value: 'british', label: 'British (UK NC)' },
     { value: 'american', label: 'American (Common Core)' },
     { value: 'dual', label: 'Dual Curriculum' },
 ];
 
-const STUDENT_TRACK_OPTIONS = ['Nigerian', 'British', 'Both'];
+const STUDENT_TRACK_OPTIONS = ['KSSR', 'British', 'Both'];
 
 interface CurriculumManagementScreenProps {
     navigateTo?: (view: string, title: string, props?: any) => void;
@@ -33,13 +35,10 @@ interface CurriculumManagementScreenProps {
 
 const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = () => {
     const { currentSchool, currentBranchId } = useAuth();
-    const { branches, refreshBranches } = useBranch();
 
     const [schoolCurricula, setSchoolCurricula] = useState<string[]>([]);
     const [savingSchool, setSavingSchool] = useState(false);
 
-    const [branchDrafts, setBranchDrafts] = useState<Record<string, string>>({});
-    const [savingBranchId, setSavingBranchId] = useState<string | null>(null);
 
     const [students, setStudents] = useState<any[]>([]);
     const [studentsLoading, setStudentsLoading] = useState(true);
@@ -52,9 +51,9 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         if (!currentSchool?.id) return;
         try {
             const data = await api.getSchoolById?.(currentSchool.id) ?? currentSchool;
-            setSchoolCurricula((data as any)?.curricula_config || ['NIGERIAN']);
+            setSchoolCurricula((data as any)?.curricula_config || ['KSSR']);
         } catch {
-            setSchoolCurricula((currentSchool as any)?.curricula_config || ['NIGERIAN']);
+            setSchoolCurricula((currentSchool as any)?.curricula_config || ['KSSR']);
         }
     }, [currentSchool]);
 
@@ -74,12 +73,6 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             setStudentsLoading(false);
         }
     }, [currentSchool?.id, currentBranchId]);
-
-    useEffect(() => {
-        setBranchDrafts(
-            branches.reduce((acc, b: any) => ({ ...acc, [b.id]: b.curriculum_type || 'nigerian' }), {})
-        );
-    }, [branches]);
 
     useEffect(() => {
         (async () => {
@@ -106,20 +99,6 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             toast.error('Failed to save school curricula.');
         } finally {
             setSavingSchool(false);
-        }
-    };
-
-    const saveBranchFocus = async (branchId: string) => {
-        setSavingBranchId(branchId);
-        try {
-            await api.updateBranch(branchId, { curriculum_type: branchDrafts[branchId] });
-            toast.success('Branch curriculum focus updated.');
-            await refreshBranches();
-        } catch (err) {
-            console.error('Error saving branch curriculum:', err);
-            toast.error('Failed to save branch curriculum.');
-        } finally {
-            setSavingBranchId(null);
         }
     };
 
@@ -179,46 +158,6 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                 </div>
             </div>
 
-            {/* 2. Per-branch curriculum focus */}
-            <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="font-bold text-lg text-gray-800 mb-1">Branch Curriculum Focus</h2>
-                <p className="text-sm text-gray-500 mb-4">
-                    Set each branch to a single curriculum, or "Dual Curriculum" to let teachers mark
-                    attendance separately per curriculum track for that branch.
-                </p>
-                <div className="space-y-3">
-                    {branches.map((b: any) => (
-                        <div key={b.id} className="flex items-center justify-between gap-3 p-3 border border-gray-200 rounded-lg">
-                            <div className="min-w-0">
-                                <p className="font-semibold text-gray-800 truncate">{b.name}</p>
-                                <p className="text-xs text-gray-500">{b.code}</p>
-                            </div>
-                            <div className="flex items-center gap-2 flex-shrink-0">
-                                <select
-                                    value={branchDrafts[b.id] || 'nigerian'}
-                                    onChange={(e) => setBranchDrafts(prev => ({ ...prev, [b.id]: e.target.value }))}
-                                    className="text-sm border border-gray-300 rounded-lg px-2 py-1.5 bg-white"
-                                >
-                                    {BRANCH_FOCUS_OPTIONS.map(o => (
-                                        <option key={o.value} value={o.value}>{o.label}</option>
-                                    ))}
-                                </select>
-                                <button
-                                    disabled={savingBranchId === b.id || branchDrafts[b.id] === (b.curriculum_type || 'nigerian')}
-                                    onClick={() => saveBranchFocus(b.id)}
-                                    className="px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs font-semibold disabled:opacity-40"
-                                >
-                                    {savingBranchId === b.id ? 'Saving...' : 'Save'}
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                    {branches.length === 0 && (
-                        <p className="text-sm text-gray-500 text-center py-4">No branches found.</p>
-                    )}
-                </div>
-            </div>
-
             {/* 3. Per-student curriculum track */}
             <div className="bg-white rounded-xl shadow-sm p-5">
                 <h2 className="font-bold text-lg text-gray-800 mb-1">Student Curriculum Tracks</h2>
@@ -248,7 +187,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                                     </p>
                                 </div>
                                 <select
-                                    value={s.curriculum_type || 'Nigerian'}
+                                    value={s.curriculum_type || 'KSSR'}
                                     disabled={savingStudentId === s.id}
                                     onChange={(e) => changeStudentTrack(s.id, e.target.value)}
                                     className="text-sm border border-gray-300 rounded-lg px-2 py-1.5 bg-white flex-shrink-0 disabled:opacity-50"

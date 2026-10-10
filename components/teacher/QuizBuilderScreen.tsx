@@ -5,7 +5,7 @@ import { PlusIcon, TrashIcon, SaveIcon, CheckCircleIcon, XCircleIcon, ClockIcon,
 import { Question, QuestionOption } from '../../types';
 import { useAuth } from '../../context/AuthContext';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { usePersistentForm } from '../../hooks/usePersistentForm';
 
 interface QuizBuilderScreenProps {
@@ -25,7 +25,7 @@ const INITIAL_FORM_DATA = {
 
 const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherId: passedTeacherId }) => {
     const { user, currentSchool } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     
     const { formData, setFormData, updateField, clearDraft } = usePersistentForm(
         `quiz_builder_draft_${user?.id}`,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { toast } from 'react-hot-toast';
 import { SearchIcon, GraduationCap, User } from 'lucide-react';
 
@@ -32,7 +32,7 @@ interface PastStudentsScreenProps {
 
 const PastStudentsScreen: React.FC<PastStudentsScreenProps> = ({ navigateTo }) => {
     const { currentSchool } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const [students, setStudents] = useState<PastStudent[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');

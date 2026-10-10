@@ -7,17 +7,12 @@ import { useRealtimeNotifications } from '../../hooks/useRealtimeNotifications';
 import { DashboardType } from '../../types';
 import { THEME_CONFIG } from '../../constants';
 import { useTranslation } from 'react-i18next';
-import { AdminSidebar, TeacherSidebar, ParentSidebar, StudentSidebar, InspectorSidebar } from '../ui/DashboardSidebar';
-import { AdminBottomNav, TeacherBottomNav, ParentBottomNav, StudentBottomNav, InspectorBottomNav } from '../ui/DashboardBottomNav';
+import { AdminSidebar, TeacherSidebar, ParentSidebar, StudentSidebar } from '../ui/DashboardSidebar';
+import { AdminBottomNav, TeacherBottomNav, ParentBottomNav, StudentBottomNav } from '../ui/DashboardBottomNav';
 import { X } from 'lucide-react';
 import InstallAppButton from '../shared/InstallAppButton';
-import { BranchSwitcher } from '../shared/BranchSwitcher';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { formatSchoolId } from '../../utils/idFormatter';
-import { DEMO_ROLES_ORDER, DEMO_ACCOUNTS } from '../../lib/mockAuth';
-import RenewalBanner from '../shared/RenewalBanner';
-import { usePlanStatus } from '../../lib/hooks/usePlanStatus';
-import PlanLockScreen from '../shared/PlanLockScreen';
 
 interface DashboardLayoutProps {
     children: React.ReactNode;
@@ -95,12 +90,10 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
         scrollPositions.current.set(scrollKey, e.currentTarget.scrollTop);
     };
 
-    const { user, role, signOut, currentSchool, isDemo, switchDemoRole } = useAuth();
+    const { user, role, signOut, currentSchool, isDemo } = useAuth();
     const { profile, refreshProfile } = useProfile(); // Use Profile Context
-    const { activeBranchGeneratedId } = useBranch(); // Branch-aware Global ID for the header
-    const { planStatus } = usePlanStatus();
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [switchingRole, setSwitchingRole] = useState<string | null>(null);
+    const { activeBranchGeneratedId } = useSchoolScope(); // Branch-aware Global ID for the header
+      const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const notificationCount = useRealtimeNotifications(role?.toLowerCase() as any || 'admin');
 
     // Auto-sync profile data when any user-related table changes
@@ -108,16 +101,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
         console.log('🔄 [DashboardLayout] Sync event detected, refreshing profile...');
         refreshProfile();
     });
-
-    const handleDemoRoleSwitch = async (roleKey: string) => {
-        if (roleKey === role?.toLowerCase()) return;
-        setSwitchingRole(roleKey);
-        try {
-            await switchDemoRole(roleKey);
-        } finally {
-            setSwitchingRole(null);
-        }
-    };
 
     const handleLogout = async () => {
         if (onLogout) {
@@ -152,20 +135,17 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
                 });
             },
             onLogout: handleLogout,
-            schoolName: currentSchool?.name || user?.school?.name || user?.user_metadata?.school_name || 'Oliskey School',
+            schoolName: currentSchool?.name || user?.school?.name || user?.user_metadata?.school_name || 'SRI Al-Khairiah',
             logoUrl: currentSchool?.logoUrl || user?.school?.logo_url || user?.user_metadata?.logo_url || ''
         };
 
         switch (role) {
             case DashboardType.Admin:
-            case DashboardType.SuperAdmin:
-            case DashboardType.Proprietor:
                 return <AdminSidebar {...props} />;
-            case DashboardType.Inspector:
-                return <InspectorSidebar {...props} />;
             case DashboardType.Teacher:
                 return <TeacherSidebar {...props} />;
             case DashboardType.Parent:
+            case DashboardType.Guardian:
                 return <ParentSidebar {...props} />;
             case DashboardType.Student:
                 return <StudentSidebar {...props} />;
@@ -185,14 +165,11 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
         };
         switch (role) {
             case DashboardType.Admin:
-            case DashboardType.SuperAdmin:
-            case DashboardType.Proprietor:
                 return <AdminBottomNav {...props} />;
-            case DashboardType.Inspector:
-                return <InspectorBottomNav {...props} />;
             case DashboardType.Teacher:
                 return <TeacherBottomNav {...props} />;
             case DashboardType.Parent:
+            case DashboardType.Guardian:
                 return <ParentBottomNav {...props} />;
             case DashboardType.Student:
                 return <StudentBottomNav {...props} />;
@@ -201,10 +178,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
         }
     };
 
-    const isAdmin = role === DashboardType.Admin || role === DashboardType.SuperAdmin || role === DashboardType.Proprietor;
+    const isAdmin = role === DashboardType.Admin;
     // Hard lock: app blocked for all roles when term 2+ payment is overdue. Demo schools are exempt.
-    const isLocked = planStatus.app_locked && !isDemo;
-
+  
     const theme = role ? THEME_CONFIG[role as keyof typeof THEME_CONFIG] : THEME_CONFIG[DashboardType.Admin];
 
     return (
@@ -235,9 +211,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
                         <motion.button whileTap={{ scale: 0.9 }} onClick={() => setIsMobileMenuOpen(false)} className="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
                             <X className="h-5 w-5" />
                         </motion.button>
-                    </div>
-                    <div className="p-4 border-b border-gray-50 bg-gray-50/30">
-                        <BranchSwitcher align="left" />
                     </div>
                     {getSidebar(true)}
                 </aside>
@@ -295,20 +268,13 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
                 <div
                     ref={scrollContainerRef}
                     onScroll={handleContentScroll}
-                    className={`flex-1 ${(hidePadding || stickyFooterLayout) && !isLocked ? 'overflow-hidden' : 'overflow-y-auto'} overflow-x-hidden relative ${!hideHeader ? '-mt-8 sm:-mt-10 md:-mt-12 lg:-mt-16' : ''} ${!hidePadding && !stickyFooterLayout ? 'pb-36 lg:pb-24' : 'pb-0'}`}
+                    className={`flex-1 ${(hidePadding || stickyFooterLayout) ? 'overflow-hidden' : 'overflow-y-auto'} overflow-x-hidden relative ${!hideHeader ? '-mt-8 sm:-mt-10 md:-mt-12 lg:-mt-16' : ''} ${!hidePadding && !stickyFooterLayout ? 'pb-36 lg:pb-24' : 'pb-0'}`}
                 >
-                    {isLocked ? (
-                        <div className={`w-full min-h-full ${!hideHeader ? 'pt-8 sm:pt-10 md:pt-12 lg:pt-16' : ''}`}>
-                            <PlanLockScreen isAdmin={isAdmin} schoolName={currentSchool?.name} />
+                    <main className={`${hidePadding || stickyFooterLayout ? 'h-full flex flex-col' : 'min-h-full'} ${!hideHeader ? 'pt-8 sm:pt-10 md:pt-12 lg:pt-16' : ''} ${!hidePadding ? 'px-4 sm:px-6 lg:px-8 max-w-7xl' : 'px-0 max-w-none'} mx-auto w-full`}>
+                        <div className={`animate-content-fade w-full ${hidePadding || stickyFooterLayout ? 'flex-1 min-h-0' : 'h-full'}`}>
+                            {children}
                         </div>
-                    ) : (
-                        <main className={`${hidePadding || stickyFooterLayout ? 'h-full flex flex-col' : 'min-h-full'} ${!hideHeader ? 'pt-8 sm:pt-10 md:pt-12 lg:pt-16' : ''} ${!hidePadding ? 'px-4 sm:px-6 lg:px-8 max-w-7xl' : 'px-0 max-w-none'} mx-auto w-full`}>
-                            <RenewalBanner />
-                            <div className={`animate-content-fade w-full ${hidePadding || stickyFooterLayout ? 'flex-1 min-h-0' : 'h-full'}`}>
-                                {children}
-                            </div>
-                        </main>
-                    )}
+                    </main>
                 </div>
 
                 {/* Flex spacer — reserves nav height in overflow-hidden layouts so content never slides under the fixed nav */}

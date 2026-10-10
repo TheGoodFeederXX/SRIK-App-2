@@ -41,7 +41,7 @@ interface TodayRecord {
 
 function formatTime(iso: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
 }
 
 const ScanClassroomScreen = () => {

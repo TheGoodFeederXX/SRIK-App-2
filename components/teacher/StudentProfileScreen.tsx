@@ -167,7 +167,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                     </div>
                     <div className="space-y-2">
                         {(() => {
-                            const terms = ['First Term', 'Second Term', 'Third Term'];
+                            const terms = ['Penggal 1', 'Penggal 2', 'Penggal 3'];
                             return terms.map(termName => {
                                 const record = academicRecords.find(r =>
                                     (r.term || '').toLowerCase() === termName.toLowerCase() &&
@@ -260,7 +260,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                                                 <h5 className={`font-bold ${isPositive ? 'text-green-800' : 'text-red-800'}`}>{note.title}</h5>
                                             </div>
                                             <div className="flex items-center space-x-2 flex-shrink-0 ml-2">
-                                                <p className="text-xs text-gray-500 font-medium">{new Date(note.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                                                <p className="text-xs text-gray-500 font-medium">{new Date(note.date).toLocaleDateString('ms-MY', { month: 'short', day: 'numeric' })}</p>
                                                 <button
                                                     onClick={() => setNoteToDelete(note.id)}
                                                     className="p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-red-500"

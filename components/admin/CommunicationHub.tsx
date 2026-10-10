@@ -260,7 +260,7 @@ const CommunicationHub: React.FC = () => {
                                     <div className="flex justify-between items-start mb-1">
                                         <h4 className="font-bold text-gray-900">{notice.title}</h4>
                                         <span className="text-xs text-gray-400">
-                                            {new Date(notice.timestamp).toLocaleDateString()}
+                                            {new Date(notice.timestamp).toLocaleDateString("ms-MY")}
                                         </span>
                                     </div>
                                     <p className="text-sm text-gray-600 line-clamp-2 mb-2">{notice.content}</p>

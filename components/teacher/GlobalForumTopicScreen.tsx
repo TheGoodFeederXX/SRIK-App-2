@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh';
 
 const formatTimestamp = (isoDate: string): string =>
-    new Date(isoDate).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    new Date(isoDate).toLocaleString('ms-MY', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 interface Props {
     topicId: string;

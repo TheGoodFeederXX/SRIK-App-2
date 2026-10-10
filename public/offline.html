@@ -1,131 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ms">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline - School App</title>
+    <title>Tiada sambungan — SRI Al-Khairiah</title>
+    <link rel="icon" href="/favicon.ico">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f8fafc;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            padding: 20px;
+            color: #1e293b;
+            padding: 24px;
         }
-        
-        .container {
+
+        .card {
             text-align: center;
-            max-width: 500px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
+            max-width: 440px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            padding: 40px 32px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
         }
-        
-        .icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: pulse 2s ease-in-out infinite;
+
+        .mark {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: #0f766e;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 20px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
         }
-        
-        h1 {
-            font-size: 32px;
-            margin-bottom: 16px;
-            font-weight: 700;
-        }
-        
-        p {
-            font-size: 18px;
+
+        h1 { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+
+        p { font-size: 15px; line-height: 1.65; color: #475569; margin-bottom: 16px; }
+
+        .note {
+            font-size: 13px;
+            color: #64748b;
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 12px 14px;
+            text-align: left;
             line-height: 1.6;
-            margin-bottom: 24px;
-            opacity: 0.9;
         }
-        
-        .retry-btn {
-            background: white;
-            color: #667eea;
-            border: none;
-            padding: 14px 32px;
-            font-size: 16px;
-            font-weight: 600;
-            border-radius: 10px;
+
+        button {
+            margin-top: 22px;
+            width: 100%;
+            padding: 12px 20px;
+            border: 0;
+            border-radius: 12px;
+            background: #0f766e;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            font-family: inherit;
         }
-        
-        .retry-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
-        }
-        
-        .retry-btn:active {
-            transform: translateY(0);
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-        }
-        
-        .status {
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            font-size: 14px;
-        }
-        
-        .online {
-            background: rgba(76, 175, 80, 0.3);
-        }
+
+        button:hover { background: #0d5f59; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">📡</div>
-        <h1>You're Offline</h1>
-        <p>It looks like you've lost your internet connection. Don't worry, some features may still work while offline.</p>
-        <button class="retry-btn" onclick="location.reload()">Try Again</button>
-        <div class="status" id="status">Waiting for connection...</div>
+    <div class="card">
+        <div class="mark">SRIK</div>
+        <h1>Tiada sambungan internet</h1>
+        <p>
+            Halaman ini tidak dapat dibuka sekarang. Sila periksa sambungan internet
+            telefon atau komputer anda.
+        </p>
+        <div class="note">
+            <strong>Nota penting:</strong> markah, kehadiran dan bayaran hanya boleh
+            disimpan apabila ada sambungan internet, supaya rekod anak-anak tidak
+            bercanggah. Jadual dan maklumat yang telah dibuka mungkin masih boleh
+            dilihat.
+        </div>
+        <button type="button" onclick="window.location.reload()">Cuba lagi</button>
     </div>
-    
-    <script>
-        // Monitor online/offline status
-        function updateStatus() {
-            const status = document.getElementById('status');
-            if (navigator.onLine) {
-                status.textContent = '✓ Connection restored!';
-                status.classList.add('online');
-                setTimeout(() => location.reload(), 1000);
-            } else {
-                status.textContent = '⚠ Still offline';
-                status.classList.remove('online');
-            }
-        }
-        
-        window.addEventListener('online', updateStatus);
-        window.addEventListener('offline', updateStatus);
-        
-        // Check connection every 5 seconds
-        setInterval(() => {
-            if (navigator.onLine) {
-                updateStatus();
-            }
-        }, 5000);
-    </script>
 </body>
 </html>

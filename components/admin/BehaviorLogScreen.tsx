@@ -197,7 +197,7 @@ const BehaviorLogScreen = () => {
                                     <p className="text-sm text-gray-600 mt-2">{log.note}</p>
                                     <div className="flex items-center space-x-4 mt-3">
                                         <span className="text-xs text-gray-400">{log.teacher?.full_name}</span>
-                                        <span className="text-xs text-gray-400">{new Date(log.created_at).toLocaleString('en-NG')}</span>
+                                        <span className="text-xs text-gray-400">{new Date(log.created_at).toLocaleString('ms-MY')}</span>
                                     </div>
                                 </div>
                             </div>

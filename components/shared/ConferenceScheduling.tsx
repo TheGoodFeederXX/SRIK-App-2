@@ -227,7 +227,7 @@ const ConferenceScheduling: React.FC = () => {
                                     <div className="space-y-2 mb-4">
                                         <div className="flex items-center space-x-2 text-sm text-gray-600">
                                             <Calendar className="h-4 w-4" />
-                                            <span>{new Date(slot.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
+                                            <span>{new Date(slot.date).toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}</span>
                                         </div>
                                         <div className="flex items-center space-x-2 text-sm text-gray-600">
                                             <Clock className="h-4 w-4" />
@@ -294,7 +294,7 @@ const ConferenceScheduling: React.FC = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
                                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                                         <Calendar className="h-4 w-4" />
-                                        <span>{new Date(conf.scheduled_date).toLocaleDateString()}</span>
+                                        <span>{new Date(conf.scheduled_date).toLocaleDateString("ms-MY")}</span>
                                     </div>
                                     <div className="flex items-center space-x-2 text-sm text-gray-600">
                                         <Clock className="h-4 w-4" />
@@ -363,7 +363,7 @@ const ConferenceScheduling: React.FC = () => {
                         <div className="mb-4">
                             <p className="text-sm font-semibold text-gray-700">Date & Time:</p>
                             <p className="text-gray-900">
-                                {new Date(selectedSlot.date).toLocaleDateString()} at {selectedSlot.time_start}
+                                {new Date(selectedSlot.date).toLocaleDateString("ms-MY")} at {selectedSlot.time_start}
                             </p>
                         </div>
 

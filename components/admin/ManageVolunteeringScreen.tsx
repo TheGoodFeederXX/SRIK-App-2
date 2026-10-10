@@ -203,7 +203,7 @@ const ManageVolunteeringScreen: React.FC = () => {
                                         <div>
                                             <div className="flex justify-between items-start mb-2">
                                                 <div className="bg-teal-50 text-teal-700 text-xs font-bold px-2 py-1 rounded upercase tracking-wide">
-                                                    {new Date(opp.date).toLocaleDateString()}
+                                                    {new Date(opp.date).toLocaleDateString("ms-MY")}
                                                 </div>
                                                 <span className="text-xs text-gray-400 flex items-center">
                                                     <ClockIcon className="w-3 h-3 mr-1" />

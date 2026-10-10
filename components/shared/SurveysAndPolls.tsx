@@ -287,7 +287,7 @@ const SurveysAndPolls: React.FC<SurveysAndPollsProps> = ({ schoolId }) => {
                                             </span>
                                         )}
                                         <span className="text-xs">
-                                            Ends: {new Date(survey.end_date).toLocaleDateString()}
+                                            Ends: {new Date(survey.end_date).toLocaleDateString("ms-MY")}
                                         </span>
                                     </div>
                                 </div>

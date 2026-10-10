@@ -53,6 +53,6 @@ export function dayLabels(isoDay: string): { short: string; long: string } {
     const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(isoDay || '');
     if (!m) return { short: isoDay, long: isoDay };
     const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-    const longDay = d.toLocaleDateString('en-GB', { weekday: 'long' });
+    const longDay = d.toLocaleDateString('ms-MY', { weekday: 'long' });
     return { short: `${DAYS[d.getDay()]} ${d.getDate()}`, long: `${longDay} ${d.getDate()} ${MONTHS[d.getMonth()]}` };
 }

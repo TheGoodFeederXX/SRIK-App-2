@@ -37,10 +37,14 @@ const MasterReportingHub: React.FC = () => {
         }
     };
 
+    // The teacher register is for the school's own records. It was labelled as
+    // a TRCN export — the Teachers Registration Council of NIGERIA — so the
+    // school was exporting a register to a foreign council it does not answer
+    // to. The document is kept under a neutral Malay name.
     const handleTeacherRegistry = () => {
-        setGenerating('trcn');
+        setGenerating('sijil');
         setTimeout(() => {
-            toast.success("Teacher Registry (TRCN) export complete.");
+            toast.success("Eksport Daftar Perguruan selesai.");
             setGenerating(null);
         }, 1000);
     };
@@ -82,18 +86,18 @@ const MasterReportingHub: React.FC = () => {
                         <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
                             <Users className="w-6 h-6 text-emerald-600" />
                         </div>
-                        <h3 className="text-lg font-bold">Teacher Registry (TRCN)</h3>
-                        <p className="text-sm text-gray-500 mt-2">Export certified teacher lists for TRCN national certification tracking.</p>
+                        <h3 className="text-lg font-bold">Daftar Perguruan</h3>
+                        <p className="text-sm text-gray-500 mt-2">Export the school's certified teacher list with its Sijil Perguruan records.</p>
                     </div>
                     <motion.button
-                        whileHover={generating !== 'trcn' ? { scale: 1.02 } : {}}
-                        whileTap={generating !== 'trcn' ? { scale: 0.98 } : {}}
+                        whileHover={generating !== 'sijil' ? { scale: 1.02 } : {}}
+                        whileTap={generating !== 'sijil' ? { scale: 0.98 } : {}}
                         onClick={handleTeacherRegistry}
-                        disabled={generating === 'trcn'}
+                        disabled={generating === 'sijil'}
                         className="mt-6 w-full flex items-center justify-center gap-2 border border-emerald-200 text-emerald-700 py-2 rounded-xl font-bold hover:bg-emerald-50 transition disabled:opacity-50"
                     >
-                        {generating === 'trcn' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                        Export TRCN List
+                        {generating === 'sijil' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+                        Export Senarai
                     </motion.button>
                 </motion.div>
 

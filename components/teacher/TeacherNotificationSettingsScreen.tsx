@@ -93,7 +93,7 @@ const TeacherNotificationSettingsScreen: React.FC<TeacherNotificationSettingsScr
             <SettingToggle
                 icon={<NotificationIcon className="text-sky-500" />}
                 label="Weekly Performance Summary"
-                description="Get a class summary every Friday."
+                description="Get a class summary every Thursday."
                 enabled={settings.weeklySummary}
                 onToggle={() => toggleSetting('weeklySummary')}
             />

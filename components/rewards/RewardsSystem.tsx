@@ -143,7 +143,7 @@ const RewardsSystem: React.FC<RewardsSystemProps> = ({ student }) => {
                                     🏆
                                 </div>
                                 <p className="text-sm font-semibold text-gray-800 text-center">{studentBadge.badge?.name}</p>
-                                <p className="text-xs text-gray-500 text-center">{new Date(studentBadge.earnedAt).toLocaleDateString()}</p>
+                                <p className="text-xs text-gray-500 text-center">{new Date(studentBadge.earnedAt).toLocaleDateString("ms-MY")}</p>
                             </div>
                         ))}
                     </div>
@@ -165,7 +165,7 @@ const RewardsSystem: React.FC<RewardsSystemProps> = ({ student }) => {
                             <div className="flex-1">
                                 <p className="font-medium text-gray-800">{transaction.reason}</p>
                                 <p className="text-xs text-gray-500">
-                                    {new Date(transaction.createdAt).toLocaleString()}
+                                    {new Date(transaction.createdAt).toLocaleString('ms-MY')}
                                     {transaction.awardedByUser && ` • by ${transaction.awardedByUser.name}`}
                                 </p>
                             </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { GlobeIcon, PlusIcon, ShieldCheckIcon, XIcon } from '../../constants';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
+import { DashboardType } from '../../types';
 import { api } from '../../lib/api';
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh';
 import ConfirmationModal from '../ui/ConfirmationModal';
@@ -22,8 +23,15 @@ interface Props {
 }
 
 const GlobalTeacherCommunityScreen: React.FC<Props> = ({ navigateTo }) => {
-    const { user } = useAuth();
-    const isSuperAdmin = (user?.role || '').toUpperCase() === 'SUPER_ADMIN';
+    const { role } = useAuth();
+    // THE MODERATOR IS AN ADMINISTRATOR.
+    //
+    // Two faults in one line. It tested for a super-admin, which is not a role at
+    // this school, so the moderator button was never shown to anyone. And it read
+    // `user?.role`, but `role` is a SIBLING of `user` on the auth context — so the
+    // lookup was undefined even before the name was wrong. `role` is now read from
+    // the context and compared against the real administrative role.
+    const isAdmin = role === DashboardType.Admin;
     const [topics, setTopics] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [showCreate, setShowCreate] = useState(false);
@@ -107,7 +115,7 @@ const GlobalTeacherCommunityScreen: React.FC<Props> = ({ navigateTo }) => {
                                     <span className="bg-gray-100 px-2 py-1 rounded-full">{topic.post_count || 0} replies</span>
                                     <span>{timeAgo(topic.last_activity)}</span>
                                 </div>
-                                {isSuperAdmin && (
+                                {isAdmin && (
                                     <button
                                         type="button"
                                         onClick={(e) => { e.stopPropagation(); setTopicToDelete(topic.id); }}

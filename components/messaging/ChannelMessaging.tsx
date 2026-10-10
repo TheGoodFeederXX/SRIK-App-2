@@ -146,7 +146,7 @@ export function ChannelMessaging() {
                                         <div className="flex items-baseline gap-2">
                                             <span className="font-semibold text-gray-900">{message.sender?.full_name || 'Unknown'}</span>
                                             <span className="text-xs text-gray-500">
-                                                {new Date(message.created_at).toLocaleTimeString()}
+                                                {new Date(message.created_at).toLocaleTimeString("ms-MY")}
                                             </span>
                                             {message.priority === 'high' && (
                                                 <span className="bg-orange-100 text-orange-800 text-xs px-2 py-0.5 rounded">High Priority</span>

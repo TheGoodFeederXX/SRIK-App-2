@@ -15,7 +15,7 @@ interface SubstituteRequest {
 
 function fmtDate(value: string): string {
     const d = new Date(value);
-    return isNaN(d.getTime()) ? value : d.toLocaleDateString();
+    return isNaN(d.getTime()) ? value : d.toLocaleDateString("ms-MY");
 }
 
 const STATUS_STYLES: Record<string, string> = {

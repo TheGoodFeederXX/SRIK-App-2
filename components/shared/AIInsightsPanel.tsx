@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../../lib/api';
 import { Sparkles, AlertCircle } from 'lucide-react';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 const STAT_LABELS: Record<string, string> = {
     today_attendance_pct: "Today's Attendance",
@@ -86,7 +87,7 @@ const AIInsightsPanel = () => {
                             <span className="font-semibold text-gray-800 text-sm">{c.name}</span>
                             <span className="text-xs text-gray-500">
                                 {c.attendance_pct_30d !== null ? `${c.attendance_pct_30d}% attendance` : 'No attendance data'}
-                                {c.unpaid_fees > 0 ? ` · ₦${c.unpaid_fees.toLocaleString()} owing` : ''}
+                                {c.unpaid_fees > 0 ? ` · ${formatMoney(c.unpaid_fees)} owing` : ''}
                             </span>
                         </motion.div>
                     ))}

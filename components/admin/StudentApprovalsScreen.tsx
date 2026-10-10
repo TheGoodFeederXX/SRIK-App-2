@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
+import { SCHOOL_SHORT_NAME } from '../../src/lib/branding';
 import { toast } from 'react-hot-toast';
 import {
     CheckCircleIcon,
@@ -324,12 +325,15 @@ const StudentApprovalsScreen: React.FC<StudentApprovalsScreenProps> = ({ handleB
                                                     <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded-md text-xs font-bold">
                                                         GRADE {student.grade}{student.section}
                                                     </span>
-                                                    <span className="text-xs text-gray-400 font-medium">{student.branch_name || 'Main Campus'}</span>
+                                                    {/* This used to show the branch name, falling back to a
+                                                        generic campus label. This school has no branches, so the
+                                                        school name is the useful thing to show. */}
+                                                    <span className="text-xs text-gray-400 font-medium">{SCHOOL_SHORT_NAME}</span>
                                                 </div>
                                             </td>
                                             <td className="p-4 hidden sm:table-cell">
                                                 <p className="text-[11px] font-bold text-gray-600">{new Date(student.created_at || student.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                                                <p className="text-xs text-gray-400">{new Date(student.created_at || student.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                <p className="text-xs text-gray-400">{new Date(student.created_at || student.createdAt).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}</p>
                                             </td>
                                             <td className="p-4 text-right">
                                                 <div className="flex items-center justify-end gap-1 sm:gap-2">

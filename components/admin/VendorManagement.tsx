@@ -206,7 +206,7 @@ const VendorManagement = () => {
                                     value={form.vendor_name}
                                     onChange={e => setForm({ ...form, vendor_name: e.target.value })}
                                     className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                    placeholder="e.g. Lagos Stationery Ltd"
+                                    placeholder="cth. Kedai Buku Kuala Nerang"
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-3">
@@ -258,7 +258,7 @@ const VendorManagement = () => {
                                         value={form.phone}
                                         onChange={e => setForm({ ...form, phone: e.target.value })}
                                         className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none"
-                                        placeholder="+234 ..."
+                                        placeholder="+60 ..."
                                     />
                                 </div>
                             </div>

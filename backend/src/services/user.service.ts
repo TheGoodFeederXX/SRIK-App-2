@@ -110,7 +110,7 @@ export class UserService {
         }
 
         // The id may be the UUID primary key OR the readable school_generated_id (e.g.
-        // OLISKEY_MAIN_ADM_0001 — demo tokens carry the readable id). Match either.
+        // SRIK_MAIN_ADM_0001 — demo tokens carry the readable id). Match either.
         // STRICT tenant scoping: only update if the target user belongs to the caller's school.
         const where = { OR: [{ id: userId }, { school_generated_id: userId }], school_id };
 

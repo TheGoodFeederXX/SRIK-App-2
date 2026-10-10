@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
 import { useProfile } from '../../context/ProfileContext';
 import { NOTIFICATION_CATEGORY_CONFIG } from '../../constants';
-import { fetchStudentById, fetchStudentFeeSummary } from '../../lib/database';
+import { fetchStudentById } from '../../lib/database';
 
 interface Notification {
   id: string;
@@ -31,7 +31,7 @@ const formatDistanceToNow = (isoDate: string): string => {
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days === 1) return 'Yesterday';
-  return date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+  return date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' });
 };
 
 interface NotificationsScreenProps {
@@ -131,10 +131,9 @@ const NotificationsScreen: React.FC<NotificationsScreenProps> = ({ userType, nav
     if (userType === 'parent') {
       switch (notification.category) {
         case 'Fees':
-          if (notification.student_id) {
-            const feeSummary = await fetchStudentFeeSummary(notification.student_id);
-            navigateTo('feeStatus', 'Fee Status', { student: { id: notification.student_id, ...feeSummary } });
-          }
+          // The school-fee screens were removed and are being rebuilt on the
+          // new finance tables. The alert is still marked read above; it simply
+          // opens nothing rather than a screen that no longer exists.
           break;
         case 'Attendance':
           if (notification.student_id) {

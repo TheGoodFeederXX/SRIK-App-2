@@ -56,7 +56,7 @@ const TABS = [
 function fmtDate(value: string | null | undefined): string {
     if (!value) return '—';
     const d = new Date(value);
-    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString();
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString("ms-MY");
 }
 
 function todayStr(): string {
@@ -316,7 +316,12 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         {infoRow('Subject Specialty', (t.subject_specialty || []).join(', '))}
                         {infoRow('Curriculum Eligibility', (t.curriculum_eligibility || []).join(', '))}
                         {infoRow('Degree Certificate', t.degree_certificate ? <a className="text-indigo-600 underline" href={t.degree_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
-                        {infoRow('TRCN Certificate', t.trcn_certificate ? <a className="text-indigo-600 underline" href={t.trcn_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
+                        {/* The certificate named was the teaching licence of a
+                            foreign country. A Malaysian teacher does not hold
+                            one, so the file listed every teacher as missing a
+                            foreign licence; the document is kept under the
+                            neutral Malay term. */}
+                        {infoRow('Sijil Perguruan', t.trcn_certificate ? <a className="text-indigo-600 underline" href={t.trcn_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
                         {infoRow('British Qualification', t.british_qualification)}
                     </div>
                 </div>

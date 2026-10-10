@@ -93,7 +93,7 @@ const BadgeSystem: React.FC = () => {
                                         <span className="text-sm font-medium text-gray-700">{badge.points} points</span>
                                     </div>
                                     <p className="text-xs text-green-600 mt-2">
-                                        ✓ Earned {new Date(badge.earned_at!).toLocaleDateString()}
+                                        ✓ Earned {new Date(badge.earned_at!).toLocaleDateString("ms-MY")}
                                     </p>
                                 </div>
                             </div>

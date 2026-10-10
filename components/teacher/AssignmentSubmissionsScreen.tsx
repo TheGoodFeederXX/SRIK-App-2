@@ -35,7 +35,7 @@ const SubmissionCard: React.FC<{ student: Student; submission: Submission; moved
         <div className="flex-grow">
             <p className="font-bold text-gray-800">{student.name || 'Unknown Student'}</p>
             <div className="flex items-center text-sm text-gray-500 space-x-2">
-                <span>{new Date(submission.submittedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
+                <span>{new Date(submission.submittedAt).toLocaleString('ms-MY', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}</span>
                 <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${submission.isLate ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                     {submission.isLate ? 'Late' : 'On Time'}
                 </span>

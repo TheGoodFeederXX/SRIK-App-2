@@ -25,45 +25,45 @@ export default function TeacherCurriculumBadges({
             <div className="flex items-center gap-2">
                 <Badge variant="outline" className={`${sizeClasses[size]} border-red-300 text-red-700`}>
                     <AlertCircle className="h-3 w-3 mr-1" />
-                    No Curriculum Assigned
+                    Belum Ada Kurikulum Ditetapkan
                 </Badge>
                 {showWarning && (
-                    <span className="text-xs text-red-600">⚠️ Cannot be assigned to classes</span>
+                    <span className="text-xs text-red-600">⚠️ Tidak boleh ditugaskan ke kelas</span>
                 )}
             </div>
         );
     }
 
-    const isNigerian = Array.isArray(curriculumEligibility) 
-        ? curriculumEligibility.includes('Nigerian') 
-        : (curriculumEligibility === 'Nigerian' || curriculumEligibility === 'Both');
-    
-    const isBritish = Array.isArray(curriculumEligibility) 
-        ? curriculumEligibility.includes('British') 
+    const isKssr = Array.isArray(curriculumEligibility)
+        ? curriculumEligibility.includes('KSSR')
+        : (curriculumEligibility === 'KSSR' || curriculumEligibility === 'Both');
+
+    const isBritish = Array.isArray(curriculumEligibility)
+        ? curriculumEligibility.includes('British')
         : (curriculumEligibility === 'British' || curriculumEligibility === 'Both');
 
-    const isBoth = (isNigerian && isBritish) || curriculumEligibility === 'Both';
+    const isBoth = (isKssr && isBritish) || curriculumEligibility === 'Both';
 
     return (
         <div className="flex items-center gap-2 flex-wrap">
-            {isNigerian && (
+            {isKssr && (
                 <Badge className={`${sizeClasses[size]} bg-green-600 hover:bg-green-700 text-white`}>
                     <CheckCircle className="h-3 w-3 mr-1" />
-                    🇳🇬 Nigerian
+                    KSSR
                 </Badge>
             )}
 
             {isBritish && (
                 <Badge className={`${sizeClasses[size]} bg-blue-600 hover:bg-blue-700 text-white`}>
                     <CheckCircle className="h-3 w-3 mr-1" />
-                    🇬🇧 British
+                    British
                 </Badge>
             )}
 
             {isBoth && (
                 <Badge className={`${sizeClasses[size]} bg-purple-600 hover:bg-purple-700 text-white`}>
                     <BookOpen className="h-3 w-3 mr-1" />
-                    Dual Qualified
+                    Kedua-duanya
                 </Badge>
             )}
         </div>
@@ -73,7 +73,7 @@ export default function TeacherCurriculumBadges({
 // Validation helper to check if teacher can be assigned to a curriculum
 export function canTeacherTeachCurriculum(
     teacherEligibility: string[] | string | null,
-    requiredCurriculum: 'Nigerian' | 'British'
+    requiredCurriculum: 'KSSR' | 'British'
 ): boolean {
     if (!teacherEligibility) return false;
     if (Array.isArray(teacherEligibility)) {
@@ -87,7 +87,7 @@ export function canTeacherTeachCurriculum(
 interface CurriculumMismatchWarningProps {
     teacherName: string;
     teacherEligibility: string[] | string | null;
-    requiredCurriculum: 'Nigerian' | 'British';
+    requiredCurriculum: 'KSSR' | 'British';
 }
 
 export function CurriculumMismatchWarning({
@@ -103,14 +103,14 @@ export function CurriculumMismatchWarning({
         <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
             <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
             <div className="flex-1">
-                <p className="text-sm font-semibold text-red-900">Curriculum Mismatch</p>
+                <p className="text-sm font-semibold text-red-900">Kurikulum Tidak Sepadan</p>
                 <p className="text-xs text-red-700 mt-1">
-                    <strong>{teacherName}</strong> is qualified for{' '}
-                    <strong>{teacherEligibility || 'No Curriculum'}</strong> but this class requires{' '}
-                    <strong>{requiredCurriculum}</strong> curriculum knowledge.
+                    <strong>{teacherName}</strong> berkelayakan untuk{' '}
+                    <strong>{teacherEligibility || 'tiada kurikulum'}</strong> tetapi kelas ini memerlukan{' '}
+                    <strong>{requiredCurriculum}</strong>.
                 </p>
                 <p className="text-xs text-red-600 mt-2">
-                    ⚠️ This assignment may violate curriculum standards and impact exam preparation.
+                    ⚠️ Penugasan ini mungkin tidak menepati piawaian kurikulum dan menjejaskan persediaan peperiksaan.
                 </p>
             </div>
         </div>

@@ -85,7 +85,7 @@ const NotificationsSettingsScreen: React.FC = () => {
                 index={2}
                 icon={<NotificationIcon className="text-purple-500 w-6 h-6" />}
                 label="Weekly Summary"
-                description="Get a summary report every Monday."
+                description="Get a summary report every Thursday."
                 enabled={settings.weeklySummary}
                 onToggle={() => toggleSetting('weeklySummary')}
             />

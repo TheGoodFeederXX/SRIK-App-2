@@ -36,7 +36,9 @@ const AcademicSettingsScreen: React.FC = () => {
 
   const [calendar, setCalendar] = useState({ start: '2024-09-05', end: '2025-06-20' });
   const [grading, setGrading] = useState({ scale: 'percentage', weighted: true });
-  const [curriculumType, setCurriculumType] = useState<'Nigerian' | 'British' | 'Both'>('Nigerian');
+  // Default curriculum. The default was 'Nigerian', so a fresh school saved a
+  // curriculum this school does not follow; SRIK follows KSSR.
+  const [curriculumType, setCurriculumType] = useState<'KSSR' | 'British' | 'Both'>('KSSR');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -160,7 +162,7 @@ const AcademicSettingsScreen: React.FC = () => {
                 onChange={e => setCurriculumType(e.target.value as any)} 
                 className="w-full p-2 border border-gray-300 rounded-md bg-gray-50"
               >
-                <option value="Nigerian">Nigerian Curriculum</option>
+                <option value="KSSR">Kurikulum KSSR</option>
                 <option value="British">British Curriculum</option>
                 <option value="Both">Both (Dual Curriculum)</option>
               </select>

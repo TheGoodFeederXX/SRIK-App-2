@@ -149,7 +149,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                             <ChevronLeftIcon className="h-6 w-6" />
                         </button>
                         <h3 className="font-black text-xl text-gray-800 tracking-tight">
-                            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                            {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
                         </h3>
                         <button onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-50 text-gray-400">
                             <ChevronRightIcon className="h-6 w-6" />
@@ -247,13 +247,13 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                                 <div className="flex items-center gap-6">
                                     <div className="text-center bg-purple-50 rounded-2xl p-4 min-w-[85px] border border-purple-100 shadow-sm">
                                         <p className="text-xs font-black text-purple-400 uppercase tracking-widest mb-1">
-                                            {new Date(record.date).toLocaleDateString('en-US', { month: 'short' })}
+                                            {new Date(record.date).toLocaleDateString('ms-MY', { month: 'short' })}
                                         </p>
                                         <p className="text-3xl font-black text-purple-700 leading-none">
                                             {new Date(record.date).getDate()}
                                         </p>
                                         <p className="text-xs font-black text-purple-400 mt-2 uppercase tracking-widest">
-                                            {new Date(record.date).toLocaleDateString('en-US', { weekday: 'short' })}
+                                            {new Date(record.date).toLocaleDateString('ms-MY', { weekday: 'short' })}
                                         </p>
                                     </div>
                                     <div>

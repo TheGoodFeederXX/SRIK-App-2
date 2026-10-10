@@ -48,9 +48,9 @@ export const EVENT_TYPE_CONFIG: Record<CalendarEventType, { label: string; color
 };
 
 const DEFAULT_TERMS: CalendarTerm[] = [
-    { name: 'First Term',  start_date: '', end_date: '', events: [] },
-    { name: 'Second Term', start_date: '', end_date: '', events: [] },
-    { name: 'Third Term',  start_date: '', end_date: '', events: [] },
+    { name: 'Penggal 1',  start_date: '', end_date: '', events: [] },
+    { name: 'Penggal 2', start_date: '', end_date: '', events: [] },
+    { name: 'Penggal 3',  start_date: '', end_date: '', events: [] },
 ];
 
 const DEFAULT_FULL_YEAR: CalendarTerm[] = [
@@ -210,8 +210,6 @@ const CalendarManager: React.FC = () => {
         terms: DEFAULT_TERMS,
     });
     const [saving, setSaving] = useState(false);
-    const [pushing, setPushing] = useState(false);
-    const [branches, setBranches] = useState<any[]>([]);
 
     // Load calendar from school settings when year or school changes
     useEffect(() => {
@@ -229,14 +227,6 @@ const CalendarManager: React.FC = () => {
             });
         }
     }, [currentSchool, selectedYear]);
-
-    // Load branches for "push" feature
-    useEffect(() => {
-        if (!schoolId) return;
-        (api as any).getBranches?.(schoolId)
-            .then((data: any[]) => setBranches(data || []))
-            .catch(() => setBranches([]));
-    }, [schoolId]);
 
     const handleModeChange = (mode: 'term' | 'year') => {
         setCalendar(prev => ({
@@ -276,33 +266,6 @@ const CalendarManager: React.FC = () => {
         }
     };
 
-    const handlePushToAllBranches = async () => {
-        if (!schoolId || branches.length === 0) {
-            toast('No other branches found.');
-            return;
-        }
-        setPushing(true);
-        try {
-            const existingSettings = (currentSchool as any)?.settings || {};
-            const allCalendars = { ...(existingSettings.calendars || {}), [selectedYear]: calendar };
-            const calendarPayload = { settings: { calendars: allCalendars } };
-
-            await Promise.all(
-                branches
-                    .filter(b => b.id !== currentBranchId)
-                    .map(b => (api as any).updateBranch?.(b.id, calendarPayload)
-                        .catch(() => console.warn(`Failed to push to branch ${b.name}`))
-                    )
-            );
-            toast.success(`Calendar pushed to ${branches.length - 1 > 0 ? branches.length - 1 : 'all'} branch(es). Each branch admin can now edit their own copy.`);
-        } catch (err) {
-            console.error(err);
-            toast.error('Push failed for some branches.');
-        } finally {
-            setPushing(false);
-        }
-    };
-
     return (
         <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
             {/* Header */}
@@ -311,7 +274,7 @@ const CalendarManager: React.FC = () => {
                     <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
                         <span className="text-xl">📅</span> School Calendar
                     </h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Set term dates, breaks, exams, and activities. Each branch can have its own calendar.</p>
+                    <p className="text-sm text-gray-500 mt-0.5">Set term dates, breaks, exams, and activities.</p>
                 </div>
 
                 {/* Year Selector */}
@@ -369,19 +332,6 @@ const CalendarManager: React.FC = () => {
                         <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Saving…</>
                     ) : (
                         <><span>💾</span> Save Calendar</>
-                    )}
-                </button>
-
-                <button
-                    onClick={handlePushToAllBranches}
-                    disabled={pushing || branches.length <= 1}
-                    className="flex-1 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 disabled:opacity-40 transition-all shadow-sm flex items-center justify-center gap-2"
-                    title={branches.length <= 1 ? 'No other branches found' : `Push to ${branches.length - 1} branch(es)`}
-                >
-                    {pushing ? (
-                        <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Pushing…</>
-                    ) : (
-                        <><span>📤</span> Push to All Branches</>
                     )}
                 </button>
             </div>

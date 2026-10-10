@@ -79,7 +79,7 @@ const ClassAssignmentsScreen: React.FC<ClassAssignmentsScreenProps> = ({ classNa
                             </div>
                         </div>
                         <p className="text-xs text-gray-500 font-medium">
-                            Due: {new Date(assignment.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            Due: {new Date(assignment.dueDate).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })}
                         </p>
                         <div className="border-t border-gray-100 pt-3">
                             <motion.button

@@ -197,7 +197,7 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
                                         <p className="font-medium text-gray-900 truncate">{alert.title}</p>
                                         <p className="text-sm text-gray-500 truncate">{alert.message}</p>
                                         <p className="text-xs text-gray-400 mt-0.5">
-                                            {new Date(alert.sent_at).toLocaleString()} · to {alert.target_audiences?.join(', ')}
+                                            {new Date(alert.sent_at).toLocaleString('ms-MY')} · to {alert.target_audiences?.join(', ')}
                                         </p>
                                     </div>
                                 </motion.div>

@@ -25,7 +25,7 @@ vi.mock('react-hot-toast', () => ({
 // questions the browser receives never carry correct_answer / isCorrect.
 const QUESTIONS_WITHOUT_ANSWER_KEY = [
     { id: 'q1', question_text: 'What is 2 + 2?', options: ['3', '4', '5'], points: 1 },
-    { id: 'q2', question_text: 'Capital of Nigeria?', options: ['Lagos', 'Abuja'], points: 1 }
+    { id: 'q2', question_text: 'Ibu kota Malaysia?', options: ['Kuala Lumpur', 'Putrajaya'], points: 1 }
 ];
 
 const TEST: any = { id: 'quiz-1', title: 'Maths CBT', duration: 30, questions: [] };
@@ -121,14 +121,14 @@ describe('StudentCBTPlayerScreen — exam integrity', () => {
 
         await click(/4/);
         await click(/Next/i);
-        await click(/Abuja/);
+        await click(/Putrajaya/);
         await click(/Submit Test/i);
 
         await waitFor(() => expect(mockApi.submitQuiz).toHaveBeenCalledTimes(1));
         const [, payload] = mockApi.submitQuiz.mock.calls[0];
         expect(payload).toEqual({
             quiz_id: 'quiz-1',
-            answers: { q1: '4', q2: 'Abuja' },
+            answers: { q1: '4', q2: 'Putrajaya' },
             focus_violations: 0
         });
         expect(payload).not.toHaveProperty('score');

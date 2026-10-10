@@ -44,7 +44,7 @@ const NoticeCard: React.FC<{ notice: Notice; index: number }> = ({ notice, index
           )}
         </div>
         <p className="text-sm text-gray-700 mt-1">
-          {new Date(notice.timestamp).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          {new Date(notice.timestamp).toLocaleDateString('ms-MY', { month: 'long', day: 'numeric', year: 'numeric' })}
         </p>
       </div>
       <div className="p-4 bg-white">

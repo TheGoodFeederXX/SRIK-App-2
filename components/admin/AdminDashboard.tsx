@@ -9,10 +9,9 @@ import { syncEngine } from '../../lib/syncEngine';
 import { DashboardType } from '../../types';
 import { realtimeService } from '../../services/RealtimeService';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { useRealtimeNotifications } from '../../hooks/useRealtimeNotifications';
 import { useDemoRealtime } from '../../hooks/useDemoRealtime';
-import EmailVerificationPrompt from '../auth/EmailVerificationPrompt';
 import DashboardSkeletonLoader from '../ui/DashboardSkeletonLoader';
 import { lazyWithRetry } from '../../lib/lazyRetry';
 import { useDashboardRouting } from '../../hooks/useDashboardRouting';
@@ -27,10 +26,6 @@ const StudentListScreen = lazyWithRetry(() => import('./StudentListScreen'));
 const AddStudentScreen = lazyWithRetry(() => import('./AddStudentScreen'));
 const TeacherListScreen = lazyWithRetry(() => import('./TeacherListScreen'));
 const TeacherPerformanceScreen = lazyWithRetry(() => import('./TeacherPerformanceScreen'));
-const TimetableGeneratorScreen = lazyWithRetry(() => import('./TimetableGeneratorScreen'));
-const TimetableCreationPage = lazyWithRetry(() => import('./TimetableCreationPage'));
-const TimetableDeskBuilder = lazyWithRetry(() => import('./TimetableDeskBuilder'));
-const TimetableEditor = lazyWithRetry(() => import('./TimetableEditor'));
 const TeacherAttendanceScreen = lazyWithRetry(() => import('./TeacherAttendanceScreen'));
 const ClassroomManagementScreen = lazyWithRetry(() => import('./ClassroomManagementScreen'));
 const TeacherPersonnelFileScreen = lazyWithRetry(() => import('./TeacherPersonnelFileScreen'));
@@ -48,8 +43,6 @@ const PastStudentsScreen = lazyWithRetry(() => import('./PastStudentsScreen'));
 const AlumniHistoryScreen = lazyWithRetry(() => import('./AlumniHistoryScreen'));
 const ClassVerificationScreen = lazyWithRetry(() => import('./ClassVerificationScreen'));
 const TeacherAttendanceApproval = lazyWithRetry(() => import('./TeacherAttendanceApproval'));
-const FeeManagement = lazyWithRetry(() => import('./FeeManagement'));
-const FeeDetailsScreen = lazyWithRetry(() => import('./FeeDetailsScreen'));
 const ExamManagement = lazyWithRetry(() => import('./ExamManagement'));
 const AddExamScreen = lazyWithRetry(() => import('./AddExamScreen'));
 const ReportCardPublishing = lazyWithRetry(() => import('./ReportCardPublishing'));
@@ -71,7 +64,6 @@ const SystemSettingsScreen = lazyWithRetry(() => import('./SystemSettingsScreen'
 const AcademicSettingsScreen = lazyWithRetry(() => import('./AcademicSettingsScreen'));
 const LearningHubManagementScreen = lazyWithRetry(() => import('./LearningHubManagementScreen'));
 const LearningHubResourceViewer = lazyWithRetry(() => import('../shared/LearningHubResourceViewer'));
-const BranchAcademicsScreen = lazyWithRetry(() => import('./BranchAcademicsScreen'));
 const FinancialSettingsScreen = lazyWithRetry(() => import('./FinancialSettingsScreen'));
 const CommunicationSettingsScreen = lazyWithRetry(() => import('./CommunicationSettingsScreen'));
 const BrandingSettingsScreen = lazyWithRetry(() => import('./BrandingSettingsScreen'));
@@ -79,6 +71,15 @@ const PersonalSecuritySettingsScreen = lazyWithRetry(() => import('./PersonalSec
 const TeacherDetailAdminView = lazyWithRetry(() => import('./TeacherDetailAdminView'));
 const TeacherAttendanceDetail = lazyWithRetry(() => import('./TeacherAttendanceDetail'));
 const AttendanceOverviewScreen = lazyWithRetry(() => import('./AttendanceOverviewScreen'));
+const AttendanceRegisterScreen = lazyWithRetry(() => import('./AttendanceRegisterScreen'));
+const MarkEntryScreen = lazyWithRetry(() => import('./MarkEntryScreen'));
+const FeeCollectionScreen = lazyWithRetry(() => import('./FeeCollectionScreen'));
+const FeeManagementScreen = lazyWithRetry(() => import('./FeeManagementScreen'));
+const StudentFeesScreen = lazyWithRetry(() => import('./StudentFeesScreen'));
+const GuardianAccountsScreen = lazyWithRetry(() => import('./GuardianAccountsScreen'));
+const AnnouncementsScreen = lazyWithRetry(() => import('./AnnouncementsScreen'));
+const AuditTrailScreen = lazyWithRetry(() => import('./AuditTrailScreen'));
+const ReportCardScreen = lazyWithRetry(() => import('./ReportCardScreen'));
 const ClassAttendanceDetailScreen = lazyWithRetry(() => import('./ClassAttendanceDetailScreen'));
 const AdminSelectTermForReport = lazyWithRetry(() => import('./AdminSelectTermForReport'));
 const HealthLogScreen = lazyWithRetry(() => import('./HealthLogScreen'));
@@ -98,7 +99,6 @@ const SchoolOnboardingScreen = lazyWithRetry(() => import('./SchoolOnboardingScr
 const CurriculumSettingsScreen = lazyWithRetry(() => import('./CurriculumSettingsScreen'));
 const StudentEnrollmentPage = lazyWithRetry(() => import('./StudentEnrollmentPage'));
 const ExamCandidateRegistration = lazyWithRetry(() => import('./ExamCandidateRegistration'));
-const BranchTransferScreen = lazyWithRetry(() => import('./BranchTransferScreen'));
 const UserAccountsScreen = lazyWithRetry(() => import('./UserAccountsScreen'));
 const PermissionSlips = lazyWithRetry(() => import('../shared/PermissionSlips'));
 const MentalHealthResources = lazyWithRetry(() => import('../shared/MentalHealthResources'));
@@ -112,7 +112,6 @@ const ScholarshipManagement = lazyWithRetry(() => import('./ScholarshipManagemen
 const SponsorshipMatching = lazyWithRetry(() => import('./SponsorshipMatching'));
 const ConferenceScheduling = lazyWithRetry(() => import('../shared/ConferenceScheduling'));
 const AttendanceHeatmap = lazyWithRetry(() => import('./AttendanceHeatmap'));
-const FinanceDashboard = lazyWithRetry(() => import('./FinanceDashboard'));
 const AcademicAnalytics = lazyWithRetry(() => import('./AcademicAnalytics'));
 const BudgetPlanner = lazyWithRetry(() => import('./BudgetPlanner'));
 const AuditTrailViewer = lazyWithRetry(() => import('./AuditTrailViewer'));
@@ -135,7 +134,6 @@ const ComplianceChecklist = lazyWithRetry(() => import('./ComplianceChecklist'))
 const MaintenanceTickets = lazyWithRetry(() => import('./MaintenanceTickets'));
 const MasterReportingHub = lazyWithRetry(() => import('./MasterReportingHub'));
 const ValidationConsole = lazyWithRetry(() => import('./ValidationConsole'));
-const PilotOnboardingPage = lazyWithRetry(() => import('./PilotOnboardingPage'));
 const UnifiedGovernanceHub = lazyWithRetry(() => import('./UnifiedGovernanceHub'));
 const EnhancedEnrollmentPage = lazyWithRetry(() => import('./EnhancedEnrollmentPage'));
 const ComplianceOnboardingPage = lazyWithRetry(() => import('./ComplianceOnboardingPage'));
@@ -154,15 +152,11 @@ const ParentChatAccessScreen = lazyWithRetry(() => import('./ParentChatAccessScr
 const ChatScreen = lazyWithRetry(() => import('../shared/ChatScreen'));
 const EmergencyAlert = lazyWithRetry(() => import('./EmergencyAlert'));
 const InviteStaffScreen = lazyWithRetry(() => import('./InviteStaffScreen'));
-const TimetableCreator = lazyWithRetry(() => import('./TimetableCreator'));
 const StudentApprovalsScreen = lazyWithRetry(() => import('./StudentApprovalsScreen'));
-const AddBranchAdminScreen = lazyWithRetry(() => import('./AddBranchAdminScreen'));
-const AssignFeePage = lazyWithRetry(() => import('./AssignFeePage'));
 const AdminActionsScreen = lazyWithRetry(() => import('./AdminActionsScreen'));
-const SchoolManagementScreen = lazyWithRetry(() => import('./SchoolManagementScreen'));
 const CurriculumManagementScreen = lazyWithRetry(() => import('./CurriculumManagementScreen'));
 const ClassFormScreen = lazyWithRetry(() => import('./ClassFormScreen'));
-const RecordPaymentScreen = lazyWithRetry(() => import('./RecordPaymentScreen'));
+const SubjectListScreen = lazyWithRetry(() => import('./SubjectListScreen'));
 const HostelManagementScreen = lazyWithRetry(() => import('./HostelManagementScreen'));
 const TransportManagementScreen = lazyWithRetry(() => import('./TransportManagementScreen'));
 const CustomReportBuilder = lazyWithRetry(() => import('./CustomReportBuilder'));
@@ -171,7 +165,6 @@ const SessionManagementScreen = lazyWithRetry(() => import('./SessionManagementS
 const SessionPromotionScreen = lazyWithRetry(() => import('./SessionPromotionScreen'));
 const BehaviorLogScreen = lazyWithRetry(() => import('./BehaviorLogScreen'));
 const ConsentFormScreen = lazyWithRetry(() => import('./ConsentFormScreen'));
-const AutoInvoiceGenerator = lazyWithRetry(() => import('./AutoInvoiceGenerator'));
 const LateArrivalConfig = lazyWithRetry(() => import('./LateArrivalConfig'));
 const DataExportScreen = lazyWithRetry(() => import('./DataExportScreen'));
 const NotificationDigestSettings = lazyWithRetry(() => import('../shared/NotificationDigestSettings'));
@@ -179,15 +172,10 @@ const ProjectBoardScreen = lazyWithRetry(() => import('../shared/ProjectBoardScr
 const EnrollmentTrendsWidget = lazyWithRetry(() => import('./EnrollmentTrendsWidget'));
 const ArrearsTracker = lazyWithRetry(() => import('./ArrearsTracker'));
 const AwardPoints = lazyWithRetry(() => import('./AwardPoints'));
-const ComplianceOfficerDashboard = lazyWithRetry(() => import('./ComplianceOfficerDashboard'));
-const CounselorDashboard = lazyWithRetry(() => import('./CounselorDashboard'));
 const CustomGamesListScreen = lazyWithRetry(() => import('./CustomGamesListScreen'));
 const IDVerificationPanel = lazyWithRetry(() => import('./IDVerificationPanel'));
 const LeaveApproval = lazyWithRetry(() => import('./LeaveApproval'));
 const LeaveBalance = lazyWithRetry(() => import('./LeaveBalance'));
-const PaymentHistory = lazyWithRetry(() => import('./PaymentHistory'));
-const PaymentPlanModal = lazyWithRetry(() => import('./PaymentPlanModal'));
-const PaymentRecording = lazyWithRetry(() => import('./PaymentRecording'));
 const PayrollDashboard = lazyWithRetry(() => import('./PayrollDashboard'));
 const PayslipGenerator = lazyWithRetry(() => import('./PayslipGenerator'));
 const ReportCardPreview = lazyWithRetry(() => import('./ReportCardPreview'));
@@ -197,12 +185,11 @@ const SchoolInfoScreen = lazyWithRetry(() => import('./SchoolInfoScreen'));
 const StudentApprovalScreen = lazyWithRetry(() => import('./StudentApprovalScreen'));
 const StudentDetailReport = lazyWithRetry(() => import('./StudentDetailReport'));
 const StudentProfileDashboard = lazyWithRetry(() => import('./StudentProfileDashboard'));
-const SuperAdminDashboard = lazyWithRetry(() => import('./SuperAdminDashboard'));
 const TimetableScreen = lazyWithRetry(() => import('./TimetableScreen'));
+const TimetableEditorScreen = lazyWithRetry(() => import('./TimetableEditorScreen'));
 const UserSeeder = lazyWithRetry(() => import('./UserSeeder'));
 const VisitorLog = lazyWithRetry(() => import('./VisitorLog'));
 const VersionSettings = lazyWithRetry(() => import('./VersionSettings'));
-const SubscriptionPage = lazyWithRetry(() => import('../subscription/SubscriptionPage'));
 
 interface AdminDashboardProps {
     onLogout?: () => void;
@@ -223,7 +210,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
 
     const forceUpdate = () => setVersion(v => v + 1);
     const { currentSchool, currentBranchId, user, loading: authLoading } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const { profile } = useProfile();
 
     // Memoize schoolId derivation to prevent unnecessary recalculations
@@ -322,12 +309,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         addStudent: AddStudentScreen,
         teacherList: TeacherListScreen,
         teacherPerformance: TeacherPerformanceScreen,
-        timetable: TimetableGeneratorScreen,
-        timetableGenerator: TimetableGeneratorScreen,
-        timetableBuilder: TimetableDeskBuilder,
-        timetableEditor: TimetableEditor,
-        timetableCreator: TimetableCreator,
-        aiTimetableCreator: TimetableCreationPage,
+        // One timetable screen. The six legacy ones built their grid from the
+        // old API and only ever navigated to each other.
+        timetable: TimetableScreen,
+        timetableEditor: TimetableEditorScreen,
         teacherAttendance: TeacherAttendanceScreen,
         teacherAttendanceApproval: TeacherAttendanceApproval,
         classroomManagement: ClassroomManagementScreen,
@@ -345,8 +330,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         markStudentExit: MarkStudentExitScreen,
         pastStudents: PastStudentsScreen,
         alumniHistory: AlumniHistoryScreen,
-        feeManagement: FeeManagement,
-        feeDetails: FeeDetailsScreen,
         examManagement: ExamManagement,
         addExam: AddExamScreen,
         reportCardPublishing: ReportCardPublishing,
@@ -368,8 +351,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         academicSettings: AcademicSettingsScreen,
         learningHubManagement: LearningHubManagementScreen,
         learningHubResource: LearningHubResourceViewer,
-        branchAcademics: BranchAcademicsScreen,
-        termsAndGrading: BranchAcademicsScreen,
         financialSettings: FinancialSettingsScreen,
         communicationSettings: CommunicationSettingsScreen,
         brandingSettings: BrandingSettingsScreen,
@@ -378,6 +359,15 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         TeacherDetailAdminView: TeacherDetailAdminView,
         teacherAttendanceDetail: TeacherAttendanceDetail,
         attendanceOverview: AttendanceOverviewScreen,
+        attendanceRegister: AttendanceRegisterScreen,
+        markEntry: MarkEntryScreen,
+        reportCard: ReportCardScreen,
+        feeCollection: FeeCollectionScreen,
+        feeSetup: FeeManagementScreen,
+        studentFees: StudentFeesScreen,
+        guardianAccounts: GuardianAccountsScreen,
+        announcements: AnnouncementsScreen,
+        auditTrail: AuditTrailScreen,
         classAttendanceDetail: ClassAttendanceDetailScreen,
         adminSelectTermForReport: AdminSelectTermForReport,
         adminReportCardInput: ReportCardInputScreen,
@@ -399,7 +389,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         lessonNotes: AdminLessonNotesScreen,
         enrollmentPage: StudentEnrollmentPage,
         exams: ExamCandidateRegistration,
-        branchTransfer: BranchTransferScreen,
         userAccounts: UserAccountsScreen,
         permissionSlips: PermissionSlips,
         mentalHealthResources: MentalHealthResources,
@@ -412,7 +401,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         sponsorshipMatching: SponsorshipMatching,
         conferenceScheduling: ConferenceScheduling,
         attendanceHeatmap: AttendanceHeatmap,
-        financeDashboard: FinanceDashboard,
         academicAnalytics: AcademicAnalytics,
         budgetPlanner: BudgetPlanner,
         auditTrailViewer: AuditTrailViewer,
@@ -436,7 +424,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         maintenanceTickets: MaintenanceTickets,
         masterReports: MasterReportingHub,
         validationConsole: ValidationConsole,
-        onboardingPage: PilotOnboardingPage,
         governanceHub: UnifiedGovernanceHub,
         enhancedEnrollment: EnhancedEnrollmentPage,
         complianceOnboarding: ComplianceOnboardingPage,
@@ -458,13 +445,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         inviteStaff: InviteStaffScreen,
         idCardManagement: StudentIDCardDashboard,
         studentApprovals: StudentApprovalsScreen,
-        addBranchAdmin: AddBranchAdminScreen,
-        assignFee: AssignFeePage,
         adminActions: AdminActionsScreen,
-        schoolManagement: SchoolManagementScreen,
         curriculumManagement: CurriculumManagementScreen,
         classForm: ClassFormScreen,
-        recordPayment: RecordPaymentScreen,
+        subjectList: SubjectListScreen,
         hostelManagement: HostelManagementScreen,
         transportManagement: TransportManagementScreen,
         customReportBuilder: CustomReportBuilder,
@@ -473,7 +457,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         sessionPromotion: SessionPromotionScreen,
         behaviorLog: BehaviorLogScreen,
         consentForms: ConsentFormScreen,
-        autoInvoice: AutoInvoiceGenerator,
         lateArrivalConfig: LateArrivalConfig,
         dataExport: DataExportScreen,
         notificationDigest: NotificationDigestSettings,
@@ -481,15 +464,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         enrollmentTrends: EnrollmentTrendsWidget,
         arrearsTracker: ArrearsTracker,
         awardPoints: AwardPoints,
-        complianceOfficerDashboard: ComplianceOfficerDashboard,
-        counselorDashboard: CounselorDashboard,
         customGamesList: CustomGamesListScreen,
         idVerification: IDVerificationPanel,
         leaveApproval: LeaveApproval,
         leaveBalance: LeaveBalance,
-        paymentHistory: PaymentHistory,
-        paymentPlanModal: PaymentPlanModal,
-        paymentRecording: PaymentRecording,
         payrollDashboard: PayrollDashboard,
         payslipGenerator: PayslipGenerator,
         reportCardPreview: ReportCardPreview,
@@ -499,9 +477,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         studentApproval: StudentApprovalScreen,
         studentDetailReport: StudentDetailReport,
         studentProfileDashboard: StudentProfileDashboard,
-        subscription: SubscriptionPage,
-        upgrade: SubscriptionPage,
-        superAdmin: SuperAdminDashboard,
         timetableScreen: TimetableScreen,
         userSeeder: UserSeeder,
         visitorLog: VisitorLog,
@@ -542,12 +517,22 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         switch (screen) {
             case 'actions': replaceView('adminActions', 'Quick Actions'); break;
             case 'home': replaceView('overview', 'Admin Dashboard'); break;
-            case 'branches': replaceView('schoolManagement', 'Manage Branches'); break;
             case 'studentList': replaceView('studentList', 'Students'); break;
             case 'teacherList': replaceView('teacherList', 'Teachers'); break;
-            case 'parentList': replaceView('parentList', 'Parents'); break;
+            case 'parentList': replaceView('parentList', 'Guardians'); break;
             case 'studentApprovals': replaceView('studentApprovals', 'Student Approvals'); break;
             case 'classList': replaceView('classList', 'Classes'); break;
+            case 'subjectList': replaceView('subjectList', 'Subjects'); break;
+            case 'attendanceOverview': replaceView('attendanceOverview', 'Attendance'); break;
+            case 'attendanceRegister': replaceView('attendanceRegister', 'Attendance'); break;
+            case 'markEntry': replaceView('markEntry', 'Mark Entry'); break;
+            case 'reportCard': replaceView('reportCard', 'Report Cards'); break;
+            case 'feeCollection': replaceView('feeCollection', 'Fee Collection'); break;
+            case 'feeSetup': replaceView('feeSetup', 'Fee Setup'); break;
+            case 'studentFees': replaceView('studentFees', 'Student Fees'); break;
+            case 'guardianAccounts': replaceView('guardianAccounts', 'Guardian Accounts'); break;
+            case 'announcements': replaceView('announcements', 'Announcements'); break;
+            case 'auditTrail': replaceView('auditTrail', 'Audit Trail'); break;
             case 'timetable': replaceView('timetable', 'Timetable'); break;
             case 'examManagement': replaceView('examManagement', 'Exams'); break;
             case 'results': replaceView('resultsEntry', 'Results'); break;
@@ -557,7 +542,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
             case 'communication': replaceView('communicationHub', 'Communication Hub'); break;
             case 'analytics': replaceView('analytics', 'School Analytics'); break;
             case 'settings': replaceView('profileSettings', 'Profile Settings'); break;
-            case 'feeManagement': replaceView('feeManagement', 'Fee Management'); break;
             case 'staffManagement': replaceView('teacherList', 'Manage Teachers'); break;
             default: replaceView('overview', 'Admin Dashboard');
         }
@@ -575,7 +559,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         schoolId,
         currentBranchId: currentBranch?.id || currentBranchId,
         currentBranchName: currentBranch?.name,
-        isMainBranch: currentBranch?.is_main || !currentBranch?.id // True if it's the main branch or 'All Branches'
     };
 
     const renderContent = () => {
@@ -636,15 +619,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
             </Suspense>
         );
 
-        if (view === 'onboardingPage') return (
-            <Suspense fallback={<DashboardSkeletonLoader type="overview" />}>
-                <PilotOnboardingPage {...routeProps} {...commonProps} onComplete={handleBack} />
-            </Suspense>
-        );
-
         // schoolInfo excluded: branch admins need calendar access within it.
         // Backend still rejects school-wide field writes from non-main admins.
-        const MAIN_ADMIN_ONLY_VIEWS = ['schoolManagement', 'curriculumManagement', 'brandingSettings', 'manageSchoolInfo', 'subscription', 'upgrade'];
+        const MAIN_ADMIN_ONLY_VIEWS = ['curriculumManagement', 'brandingSettings', 'manageSchoolInfo', 'subscription', 'upgrade'];
         // Named renderedView, not `view` — a local `const view` here previously
         // shadowed the screen-name variable for the rest of this function, so
         // the MAIN_ADMIN_ONLY_VIEWS check below was comparing the array against
@@ -662,13 +639,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         );
     };
 
-    // Hide header and sidebar for upgrade/subscription views
+    // The two vendor billing addresses still resolve to an explanatory page, so
+    // they keep the full-width layout that page was designed for.
     const hideLayoutNav = view === 'upgrade' || view === 'subscription';
     // The timetable grids want the full width (no side padding / max-width), but keep
     // the header + sidebar.
     const fullWidthViews = ['timetableEditor', 'timetableBuilder', 'chat', 'adminNewChat', 'adminMessages', 'learningHubResource'];
-    // upgrade/subscription have their own internal layout and need overflow-y-auto to scroll,
-    // so they must NOT be included in hidePadding (which triggers overflow-hidden in DashboardLayout).
+    // The /upgrade and /subscription pages scroll their own content, so they are
+    // deliberately not in hidePadding (which triggers overflow-hidden).
     const hidePadding = fullWidthViews.includes(view);
     // Views with their own docked/sticky bottom action bar manage their own internal
     // scroll + bottom spacing, so the layout's blanket pb-24/lg:pb-12 stacks on top of
@@ -716,7 +694,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
                     onReset={forceUpdate}
                 >
                     <div className="px-4 sm:px-0">
-                        <EmailVerificationPrompt />
                     </div>
                     {renderContent()}
                 </ErrorBoundary>

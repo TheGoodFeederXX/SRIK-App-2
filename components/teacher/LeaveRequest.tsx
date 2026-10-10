@@ -382,7 +382,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         </div>
                                         <p className="text-sm text-gray-600 mt-1">{request.reason}</p>
                                         <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                                            <span>📅 {new Date(request.start_date).toLocaleDateString()} - {new Date(request.end_date).toLocaleDateString()}</span>
+                                            <span>📅 {new Date(request.start_date).toLocaleDateString("ms-MY")} - {new Date(request.end_date).toLocaleDateString("ms-MY")}</span>
                                             <span>⏱ {request.days_requested} day(s)</span>
                                         </div>
                                         {request.admin_comments && (

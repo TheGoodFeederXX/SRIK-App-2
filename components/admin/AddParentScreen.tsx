@@ -37,7 +37,6 @@ const AddParentScreen: React.FC<AddParentScreenProps> = ({ parentToEdit, forceUp
         password: string;
         email: string;
     } | null>(null);
-    const [branches, setBranches] = useState<any[]>([]);
     const [selectedBranchId, setSelectedBranchId] = useState<string>(currentBranchId || '');
 
     // School and Branch IDs
@@ -74,23 +73,6 @@ const AddParentScreen: React.FC<AddParentScreenProps> = ({ parentToEdit, forceUp
         };
         loadParentData();
     }, [parentToEdit]);
-
-    useEffect(() => {
-        const loadBranches = async () => {
-            if (schoolId) {
-                try {
-                    const data = await api.getBranches(schoolId);
-                    setBranches(data || []);
-                    if (!selectedBranchId && data.length > 0) {
-                        setSelectedBranchId(data[0].id);
-                    }
-                } catch (err) {
-                    console.error("Error loading branches:", err);
-                }
-            }
-        };
-        loadBranches();
-    }, [schoolId]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
@@ -268,23 +250,6 @@ const AddParentScreen: React.FC<AddParentScreenProps> = ({ parentToEdit, forceUp
                                         <option value="Mother">Mother</option>
                                         <option value="Guardian">Guardian</option>
                                         <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label htmlFor="branchId" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Primary Branch *
-                                    </label>
-                                    <select
-                                        id="branchId"
-                                        value={selectedBranchId}
-                                        onChange={(e) => setSelectedBranchId(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        required
-                                    >
-                                        <option value="">Select Branch...</option>
-                                        {branches.map(b => (
-                                            <option key={b.id} value={b.id}>{b.name}</option>
-                                        ))}
                                     </select>
                                 </div>
                                 <InputField

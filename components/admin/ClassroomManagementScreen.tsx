@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { toast } from 'react-hot-toast';
 import { QRCodeCanvas } from 'qrcode.react';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -30,7 +30,7 @@ interface Classroom {
 
 const ClassroomManagementScreen = () => {
     const { currentSchool } = useAuth();
-    const { currentBranch, branches } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const [classrooms, setClassrooms] = useState<Classroom[]>([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -60,7 +60,7 @@ const ClassroomManagementScreen = () => {
     }, [currentSchool, currentBranch?.id, fetchClassrooms]);
 
     const openAdd = () => {
-        setForm({ name: '', description: '', capacity: '', branch_id: currentBranch?.id || branches[0]?.id || '' });
+        setForm({ name: '', description: '', capacity: '', branch_id: currentBranch?.id || '' });
         setIsAdding(true);
     };
 
@@ -156,7 +156,7 @@ const ClassroomManagementScreen = () => {
                     <h1>${currentSchool?.name || 'School'}</h1>
                     <h2>${qrRoom.branch?.name ? qrRoom.branch.name + ' — ' : ''}${qrRoom.name}</h2>
                     <img src="${url}" alt="Classroom QR code" />
-                    <p>Teachers: scan this code in the Oliskey app when your lesson starts and again when it ends.</p>
+                    <p>Guru: imbas kod ini apabila kelas bermula dan apabila kelas tamat.</p>
                 </div>
                 <script>window.onload = function() { window.print(); }</script>
             </body>
@@ -273,21 +273,6 @@ const ClassroomManagementScreen = () => {
                                     onChange={e => setForm({ ...form, name: e.target.value })}
                                 />
                             </div>
-                            {!editing && (
-                                <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Branch</label>
-                                    <select
-                                        className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                                        value={form.branch_id}
-                                        onChange={e => setForm({ ...form, branch_id: e.target.value })}
-                                    >
-                                        <option value="">Select branch...</option>
-                                        {branches.map(b => (
-                                            <option key={b.id} value={b.id}>{b.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                            )}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">Description (optional)</label>
                                 <input

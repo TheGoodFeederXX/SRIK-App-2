@@ -1,5 +1,5 @@
 /**
- * Oliskey AI knowledge layer.
+ * The school's AI knowledge layer.
  *
  * The point of these tests is not "does the model answer well" — that depends
  * on a live provider. It is that the knowledge, the security rules and the
@@ -12,7 +12,7 @@
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
-    loadSections, retrieveSections, buildSystemMessages, withOliskeyKnowledge, lastUserQuestion,
+    loadSections, retrieveSections, buildSystemMessages, withSchoolKnowledge, lastUserQuestion,
 } from '../../src/services/aiKnowledge.service';
 
 const sysText = (msgs: Array<{ role: string; content: string }>) =>
@@ -27,9 +27,9 @@ describe('knowledge base document', () => {
 
     it('contains the sections the assistant always needs', () => {
         const headings = loadSections().map(s => s.heading);
-        expect(headings).toContain('What Oliskey School is');
-        expect(headings).toContain('What the assistant must never do');
-        expect(headings).toContain('Approving and publishing results');
+        expect(headings).toContain('What this app is');
+        expect(headings).toContain("The assistant's limits");
+        expect(headings).toContain('Publishing report cards');
     });
 });
 
@@ -44,8 +44,8 @@ describe('retrieval', () => {
     it('finds the right section for each role question', () => {
         const cases: Array<[string, string, string]> = [
             ['How do I take attendance?', 'TEACHER', 'Attendance'],
-            ['How do I enter results?', 'TEACHER', 'Entering results'],
-            ['How do I publish a report card?', 'ADMIN', 'Approving and publishing results'],
+            ['How do I enter results?', 'TEACHER', 'Entering marks'],
+            ['How do I publish a report card?', 'ADMIN', 'Publishing report cards'],
             ['How do I add a student?', 'ADMIN', 'Adding a student'],
             ['How do I manage fees?', 'ADMIN', 'Fees and payments'],
             ['How do I use the demo school?', 'ADMIN', 'Demo School'],
@@ -62,19 +62,19 @@ describe('retrieval', () => {
 
     it('answers "why can\'t a parent see the result" with the publishing workflow', () => {
         const headings = retrieveSections("Why can't the parent see the result?", { role: 'TEACHER' }).map(s => s.heading);
-        expect(headings).toContain('Approving and publishing results');
+        expect(headings).toContain('Publishing report cards');
     });
 
     it('uses the current page when the question alone is vague', () => {
-        const headings = retrieveSections('What do I do here?', { role: 'TEACHER', page: 'Teacher → Results → JSS3 → Mathematics' })
+        const headings = retrieveSections('What do I do here?', { role: 'TEACHER', page: 'Teacher → Marks → 4 Al-Junaidi → Matematik' })
             .map(s => s.heading);
-        expect(headings.some(h => h.includes('results')), `page context ignored: ${headings.join(', ')}`).toBe(true);
+        expect(headings.some(h => /mark|result/i.test(h)), `page context ignored: ${headings.join(', ')}`).toBe(true);
     });
 
     it('always carries the product identity and the hard limits', () => {
         const headings = retrieveSections('something completely unrelated to school', {}).map(s => s.heading);
-        expect(headings).toContain('What Oliskey School is');
-        expect(headings).toContain('What the assistant must never do');
+        expect(headings).toContain('What this app is');
+        expect(headings).toContain("The assistant's limits");
     });
 });
 
@@ -90,12 +90,12 @@ describe('system messages', () => {
     it('carry the server-verified context and say it cannot be overridden', () => {
         const text = sysText(buildSystemMessages('What do I do here?', {
             role: 'teacher', page: 'Teacher Results', module: 'Result Entry',
-            schoolId: 'school-1', branchId: 'branch-1', session: '2026/2027', term: 'First Term',
+            schoolId: 'school-1', branchId: 'branch-1', session: '2026', term: 'Penggal 1',
         }));
         expect(text).toContain('USER ROLE: TEACHER');
         expect(text).toContain('CURRENT PAGE: Teacher Results');
         expect(text).toContain('CURRENT FEATURE: Result Entry');
-        expect(text).toContain('TERM: First Term');
+        expect(text).toContain('TERM: Penggal 1');
         expect(text).toMatch(/does not change any of this/);
         // Raw tenant identifiers are not useful to the model and should not be echoed.
         expect(text, 'raw school id leaked into the prompt').not.toContain('school-1');
@@ -109,8 +109,8 @@ describe('system messages', () => {
 });
 
 describe('request assembly', () => {
-    it('puts Oliskey knowledge before the conversation and keeps the user turn last', () => {
-        const body = withOliskeyKnowledge(
+    it('puts the school knowledge before the conversation and keeps the user turn last', () => {
+        const body = withSchoolKnowledge(
             { messages: [{ role: 'user', content: 'How do I enter results?' }], temperature: 0.2 },
             { role: 'TEACHER' });
         expect(body.messages[0].role).toBe('system');
@@ -119,7 +119,7 @@ describe('request assembly', () => {
     });
 
     it('keeps a caller’s own system prompt, after the security rules', () => {
-        const body = withOliskeyKnowledge({
+        const body = withSchoolKnowledge({
             messages: [
                 { role: 'system', content: 'You generate lesson plans.' },
                 { role: 'user', content: 'Make me a lesson plan.' },
@@ -127,7 +127,7 @@ describe('request assembly', () => {
         }, { role: 'TEACHER' });
         const systems = body.messages.filter(m => m.role === 'system').map(m => m.content as string);
         expect(systems.some(s => s.includes('You generate lesson plans.'))).toBe(true);
-        expect(systems[0], 'Oliskey rules must come first').toContain('Oliskey AI');
+        expect(systems[0], 'the school rules must come first').toContain('school');
     });
 
     it('reads the newest user turn as the query, including multimodal content', () => {
@@ -162,7 +162,7 @@ describe('provider parity (NVIDIA primary, Gemini fallback)', () => {
         }));
 
         const { AIGateway } = await import('../../src/services/aiGateway.service');
-        const { withOliskeyKnowledge: wrap } = await import('../../src/services/aiKnowledge.service');
+        const { withSchoolKnowledge: wrap } = await import('../../src/services/aiKnowledge.service');
 
         const body = wrap({ messages: [{ role: 'user', content: 'How do I publish a report card?' }] }, {
             role: 'ADMIN', page: 'Report Cards',
@@ -176,7 +176,7 @@ describe('provider parity (NVIDIA primary, Gemini fallback)', () => {
         expect(seen.gemini, 'the fallback received a different payload from the primary').toEqual(seen.nvidia);
 
         const sys = (seen.gemini.messages as any[]).filter(m => m.role === 'system').map(m => m.content).join('\n');
-        expect(sys).toContain('Oliskey AI');
+        expect(sys).toContain('school');
         expect(sys).toContain('USER ROLE: ADMIN');
         expect(sys.toLowerCase()).toContain('never');
     });

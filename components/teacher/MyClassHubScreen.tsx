@@ -24,12 +24,29 @@ const TABS = [
     { key: 'monitoring', label: 'Lesson Monitoring', icon: <QrCode className="w-4 h-4" /> },
 ];
 
-const DAY_NAMES: Record<number, string> = { 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 7: 'Sun' };
+/**
+ * The stored day name -> a short Malay label.
+ *
+ * `day_of_week` holds 'SUNDAY' ... 'THURSDAY', so the lookup is BY NAME. It used
+ * to be keyed by number (1=Mon ... 7=Sun), which never matched, so the day was
+ * always blank.
+ */
+const DAY_LABELS: Record<string, string> = {
+    SUNDAY: 'Aha', MONDAY: 'Isn', TUESDAY: 'Sel', WEDNESDAY: 'Rab',
+    THURSDAY: 'Kha', FRIDAY: 'Jum', SATURDAY: 'Sab',
+};
+
+/** Label for a stored day value, or null when it is not a day we know. */
+function dayLabel(value: unknown): string | null {
+    if (value === null || value === undefined) return null;
+    const key = String(value).trim().toUpperCase();
+    return DAY_LABELS[key] ?? null;
+}
 
 function fmtDate(value: string | null | undefined): string {
     if (!value) return '—';
     const d = new Date(value);
-    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString();
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString("ms-MY");
 }
 
 const MyClassHubScreen: React.FC<MyClassHubScreenProps> = ({ classId, navigateTo, teacherId, schoolId }) => {
@@ -211,7 +228,7 @@ const MyClassHubScreen: React.FC<MyClassHubScreenProps> = ({ classId, navigateTo
                                         <p className="text-sm font-semibold text-gray-800">{t.subject}</p>
                                         <p className="text-xs text-gray-400">{t.teacher?.full_name || 'Unassigned'}</p>
                                     </div>
-                                    <p className="text-xs text-gray-500 font-semibold">{DAY_NAMES[t.day_of_week] || ''} · {t.start_time}–{t.end_time}</p>
+                                    <p className="text-xs text-gray-500 font-semibold">{dayLabel(t.day_of_week) ? `${dayLabel(t.day_of_week)} · ` : ''}{t.start_time}–{t.end_time}</p>
                                 </div>
                             ))}
                         </div>}

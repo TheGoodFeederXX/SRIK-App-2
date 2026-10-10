@@ -119,7 +119,7 @@ const RecognitionPlatform: React.FC = () => {
                                             <span>•</span>
                                             <span>Recognized by {rec.recognized_by_name}</span>
                                             <span>•</span>
-                                            <span>{new Date(rec.created_at).toLocaleDateString()}</span>
+                                            <span>{new Date(rec.created_at).toLocaleDateString("ms-MY")}</span>
                                         </div>
                                     </div>
                                 </div>

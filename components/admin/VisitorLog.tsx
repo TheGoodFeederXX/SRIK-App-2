@@ -190,9 +190,9 @@ const VisitorLog: React.FC = () => {
                                             <strong>Phone:</strong> {visitor.contact_phone}
                                         </p>
                                         <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                                            <span>In: {new Date(visitor.check_in).toLocaleString()}</span>
+                                            <span>In: {new Date(visitor.check_in).toLocaleString('ms-MY')}</span>
                                             {visitor.check_out && (
-                                                <span>Out: {new Date(visitor.check_out).toLocaleString()}</span>
+                                                <span>Out: {new Date(visitor.check_out).toLocaleString('ms-MY')}</span>
                                             )}
                                         </div>
                                     </div>

@@ -39,7 +39,6 @@ import { useUserIdentity } from '../../lib/hooks/useUserIdentity';
 import { Copy, UserPlus } from 'lucide-react';
 import LinkChildScreen from './LinkChildScreen';
 import VersionStatusCard from '../shared/VersionStatusCard';
-import AIUnlockCard from '../shared/AIUnlockCard';
 import { onImageClick } from '../shared/ImageLightbox';
 
 interface ParentProfileScreenProps {
@@ -86,6 +85,7 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
   if (!profile) return <div className="p-8 text-center text-gray-500">Profile not found.</div>;
 
   const menuItems = [
+    { id: 'announcements', icon: <MegaphoneIcon />, label: 'Pengumuman Sekolah' },
     { id: 'linkChild', icon: <UserPlus />, label: 'Link Child Account' },
     { id: 'editParentProfile', icon: <EditIcon />, label: 'Edit Profile' },
     { id: 'learningResources', icon: <BookOpenIcon />, label: 'Learning Resources' },
@@ -177,9 +177,6 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
           </div>
 
           <VersionStatusCard />
-
-          {/* AI Plan */}
-          <AIUnlockCard navigateTo={navigateTo} />
 
           <div className="bg-white rounded-xl shadow-sm p-2">
             {menuItems.map((item, index) => (

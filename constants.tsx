@@ -395,14 +395,24 @@ export const WifiIcon = ({ className }: { className?: string }) => <svg xmlns="h
 export const CalculatorIcon = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" className={cn('h-6 w-6', className)} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 3m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z" /><path d="M8 7h8" /><path d="M8 11h8" /><path d="M8 15h2" /><path d="M14 15h2" /></svg>;
 export const ExclamationIcon = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" className={cn('h-6 w-6', className)} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 9v4" /><path d="M12 16v.01" /></svg>;
 
+/**
+ * The timezones this app offers.
+ *
+ * The list used to be a global one inherited from the original product, with
+ * Lagos, Cairo and Nairobi on it — and Kuala Lumpur, the school's own timezone,
+ * absent. It also had no consumer, so nothing was visibly wrong; the trap was
+ * that the first screen to use it would have offered a Malaysian school a
+ * dropdown that could not express where it is.
+ *
+ * The school's own timezone is first because it is the only one this school
+ * needs, and it is where every date in the app is pinned (`src/lib/branding.ts`).
+ * The others are kept for a school that has staff abroad.
+ */
 export const STATIC_TIMEZONES = [
-  "UTC",
-  "Africa/Lagos",
-  "Africa/Cairo",
-  "Africa/Johannesburg",
-  "Africa/Nairobi",
-  "Europe/London",
-  "Europe/Paris",
-  "America/New_York",
+  "Asia/Kuala_Lumpur",
+  "Asia/Singapore",
+  "Asia/Jakarta",
   "Asia/Dubai",
+  "Europe/London",
+  "UTC",
 ] as const;

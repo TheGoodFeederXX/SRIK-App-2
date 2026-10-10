@@ -1,11 +1,11 @@
 /**
  * SMS and Phone Verification Service
- * Supports Africa's Talking and Twilio for Nigerian schools
+ * Supports Africa's Talking and Twilio for SMS delivery
  */
 
 import { api } from './api';
 
-// Africa's Talking configuration (preferred for Nigeria)
+// Africa's Talking configuration
 const AT_API_KEY = (import.meta.env as any).VITE_AFRICASTALKING_API_KEY;
 const AT_USERNAME = (import.meta.env as any).VITE_AFRICASTALKING_USERNAME;
 
@@ -31,10 +31,10 @@ export async function sendOTPCode(
     try {
         // Validate phone number format
         const cleanPhone = cleanPhoneNumber(phone);
-        if (!isValidNigerianPhone(cleanPhone)) {
+        if (!isValidMalaysianPhone(cleanPhone)) {
             return {
                 success: false,
-                message: 'Invalid Nigerian phone number format. Use format: +234XXXXXXXXXX'
+                message: 'Format nombor telefon tidak sah. Guna format: +60XXXXXXXXX'
             };
         }
 
@@ -132,31 +132,35 @@ export async function verifyOTPCode(
 }
 
 /**
- * Clean phone number to standard format
+ * Clean phone number to standard format.
+ *
+ * The country code is MALAYSIA's (+60). It used to be Nigeria's (+234), so a
+ * parent typing their own Malaysian number had it rewritten to a Nigerian one
+ * and the OTP was sent to a number that does not exist.
  */
 function cleanPhoneNumber(phone: string): string {
     // Remove all non-digit characters except +
     let cleaned = phone.replace(/[^\d+]/g, '');
 
-    // If starts with 0, replace with +234
+    // If starts with 0, replace the trunk 0 with the country code
     if (cleaned.startsWith('0')) {
-        cleaned = '+234' + cleaned.substring(1);
+        cleaned = '+60' + cleaned.substring(1);
     }
 
-    // If doesn't start with +, add +234
+    // If doesn't start with +, add the country code
     if (!cleaned.startsWith('+')) {
-        cleaned = '+234' + cleaned;
+        cleaned = '+60' + cleaned;
     }
 
     return cleaned;
 }
 
 /**
- * Validate Nigerian phone number format
+ * Validate Malaysian phone number format
  */
-function isValidNigerianPhone(phone: string): boolean {
-    // Nigerian numbers: +234XXXXXXXXXX (13 digits total)
-    const pattern = /^\+234\d{10}$/;
+function isValidMalaysianPhone(phone: string): boolean {
+    // Malaysian numbers: +60XXXXXXXXX or +60XXXXXXXXXX (11-12 digits total)
+    const pattern = /^\+60\d{8,10}$/;
     return pattern.test(phone);
 }
 

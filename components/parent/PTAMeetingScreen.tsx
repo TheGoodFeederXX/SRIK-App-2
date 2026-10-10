@@ -110,7 +110,7 @@ const PTAMeetingScreen: React.FC = () => {
                                 <div>
                                     <p className="text-xs text-gray-500 uppercase font-bold">Date</p>
                                     <p className="font-bold text-gray-800">
-                                        {meetingDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+                                        {meetingDate.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
                                     </p>
                                 </div>
                             </div>

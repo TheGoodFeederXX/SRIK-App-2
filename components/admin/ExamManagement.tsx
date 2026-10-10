@@ -66,7 +66,10 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
 
         if (selectedCurriculum !== 'all') {
             filtered = filtered.filter(exam => {
-                if (selectedCurriculum === 'Nigerian') return ['WAEC', 'NECO', 'MOCK-NGN'].includes(exam.type);
+                // WAEC, NECO and JAMB are NIGERIAN exam boards and 'MOCK-NGN'
+                // is their mock. This school has no such exams, so the filter
+                // matched nothing; KSSR school exams are the national track.
+                if (selectedCurriculum === 'KSSR') return ['KSSR', 'PEPERIKSAAN', 'MOCK'].includes(exam.type);
                 if (selectedCurriculum === 'British') return ['IGCSE', 'CHECKPOINT', 'MOCK-BRI'].includes(exam.type);
                 return true;
             });
@@ -180,7 +183,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                         className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
                     >
                         <option value="all">All Tracks</option>
-                        <option value="Nigerian">Nigerian (WAEC/NECO)</option>
+                        <option value="KSSR">KSSR</option>
                         <option value="British">British (Cambridge/IGCSE)</option>
                     </select>
                 </div>
@@ -206,7 +209,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                                         : <span className="text-amber-600 ml-1">Pending</span>
                                     }
                                 </p>
-                                <p className="text-sm text-gray-600 font-medium">{exam.date ? new Date(exam.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not scheduled'}</p>
+                                <p className="text-sm text-gray-600 font-medium">{exam.date ? new Date(exam.date).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not scheduled'}</p>
                             </div>
                             <div className="flex justify-end items-center border-t border-gray-100 pt-3 space-x-3">
                                 {!exam.isPublished && <button onClick={() => handlePublish(exam.id)} className="flex items-center space-x-1 text-sm font-semibold text-sky-600 p-1"><PublishIcon className="w-4 h-4" /><span>Publish</span></button>}

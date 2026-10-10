@@ -11,7 +11,7 @@ import { NotificationDeliveryService } from './notificationDelivery.service';
  * one email here.
  *
  * Runs once a minute and matches users whose digest_time equals the current
- * HH:MM in Africa/Lagos — the timezone the rest of the scheduling in this app
+ * HH:MM in Asia/Kuala_Lumpur — the timezone the rest of the scheduling in this app
  * uses. A minute tick is cheap: it is one indexed query on NotificationSetting
  * and does nothing for the ~1439 minutes a given user does not match.
  */
@@ -33,10 +33,10 @@ export class NotificationDigestCron {
         this.task = cron.schedule('* * * * *', async () => {
             const now = new Date();
             const hhmm = new Intl.DateTimeFormat('en-GB', {
-                timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: false,
+                timeZone: 'Asia/Kuala_Lumpur', hour: '2-digit', minute: '2-digit', hour12: false,
             }).format(now);
             const weekday = new Intl.DateTimeFormat('en-GB', {
-                timeZone: 'Africa/Lagos', weekday: 'short',
+                timeZone: 'Asia/Kuala_Lumpur', weekday: 'short',
             }).format(now);
 
             try {

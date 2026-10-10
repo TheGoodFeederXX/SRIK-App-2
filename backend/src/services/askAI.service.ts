@@ -89,7 +89,10 @@ const CATALOG: CatalogEntry[] = [
                 include: { student: { select: { full_name: true } } }, take: 20, orderBy: { due_date: 'asc' },
             });
             const total = rows.reduce((s, r) => s + (r.amount - r.paid_amount), 0);
-            return { summary: `${rows.length} unpaid fee record(s) totalling ₦${total.toLocaleString()}.`, data: rows.map(r => ({ student: r.student.full_name, title: r.title, outstanding: r.amount - r.paid_amount, due_date: r.due_date })) };
+            // Money is Ringgit. This summary stated a Naira total, so a parent asking an
+            // AI question about fees was told an amount in a currency the school
+            // does not use and which no receipt will match.
+            return { summary: `${rows.length} rekod yuran belum dibayar, berjumlah RM${total.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}.`, data: rows.map(r => ({ student: r.student.full_name, title: r.title, outstanding: r.amount - r.paid_amount, due_date: r.due_date })) };
         },
     },
     {

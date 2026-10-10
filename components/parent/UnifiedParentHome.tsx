@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { Student } from '../../types';
 import SuspensionNoticeBanner from '../shared/SuspensionNoticeBanner';
 import ChildRiskBanner from '../shared/ChildRiskBanner';
@@ -51,10 +51,11 @@ const ATTENDANCE_LABEL: Record<string, string> = {
 
 export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, schoolId, navigateTo, loading: studentsLoading }) => {
     const { user, currentSchool } = useAuth();
-    const { switchBranch, currentBranch } = useBranch();
     const [children, setChildren] = useState<ChildOverview[]>([]);
     // True once a load has completed, so background refreshes never flash a skeleton.
     const hasLoadedOnceRef = useRef(false);
+    // `currentBranch.id` is a scope parameter for the notices call below.
+    const { currentBranch } = useSchoolScope();
     const [activeChildIndex, setActiveChildIndex] = useState(0);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState(false);
@@ -194,19 +195,6 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                                             onClick={() => {
                                                 setActiveChildIndex(idx);
                                                 setIsSwitcherOpen(false);
-
-                                                // Switch Branch Context only when the selected child is
-                                                // actually in a different branch. switchBranch() does a
-                                                // full page reload (to re-init under the new branch),
-                                                // which was firing on every click regardless — wiping
-                                                // activeChildIndex back to its default on remount, so
-                                                // switching always appeared to "just reload" back to the
-                                                // first child. Same-branch siblings (the common case)
-                                                // now switch instantly with no reload.
-                                                const selectedStudent = students.find(s => s.id === c.id);
-                                                if (selectedStudent?.branchId && selectedStudent.branchId !== currentBranch?.id) {
-                                                    switchBranch(selectedStudent.branchId);
-                                                }
                                             }}
                                             className={`w-full text-left p-4 hover:bg-gray-50 transition-colors flex items-center justify-between ${idx === activeChildIndex ? 'bg-indigo-50/50' : ''}`}
                                         >

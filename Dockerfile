@@ -3,7 +3,10 @@
 # Backend runs via tsx (no pre-compile step) to match the existing `npm start` script.
 
 # ---------- Stage 1: install full deps + generate Prisma client ----------
-FROM node:20-alpine AS deps
+# Node 24 LTS to match .nvmrc / package.json engines. Do not revert to node:20 -
+# AsyncLocalStorage propagation differs between Node 20 and 24, and the RLS
+# tenant context in backend/src/lib/tenantContext.ts depends on it.
+FROM node:24.21.0-alpine AS deps
 WORKDIR /app
 
 RUN apk add --no-cache libc6-compat openssl
@@ -18,7 +21,7 @@ RUN npm ci --ignore-scripts && \
     npx prisma generate --schema=backend/prisma/schema.prisma
 
 # ---------- Stage 2: runtime ----------
-FROM node:20-alpine AS runtime
+FROM node:24.21.0-alpine AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production \

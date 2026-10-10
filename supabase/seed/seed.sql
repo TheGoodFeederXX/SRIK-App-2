@@ -1,0 +1,54 @@
+-- =============================================================================
+-- SRIK — synthetic seed data
+-- =============================================================================
+-- Reference: docs/srik/02_PHASE_0_AUDIT.md ("Seed hanya data sintetik").
+--
+-- This file MUST contain synthetic data only. Never put real student, guardian,
+-- teacher or payment data here, and never copy a production dump into it.
+--
+-- Phase 1 scope: the permission registry and role grants live in the migration
+-- (they are schema, not sample data), so this seed only provisions the first
+-- administrator account. Later phases add synthetic students/classes/etc.
+--
+-- The first administrator cannot be created by the seed as an auth.users row:
+-- passwords are managed by Supabase Auth (GoTrue), not by SQL. Create the user
+-- through the Supabase dashboard or the Admin API, then run the GRANT block
+-- below with that user's id. This keeps the "no custom password store" rule
+-- from 03_PHASE_1 intact.
+-- =============================================================================
+
+-- ---------------------------------------------------------------------------
+-- Bootstrap the first ADMIN
+-- ---------------------------------------------------------------------------
+-- Replace the email with the real administrator's address, then uncomment and
+-- run. It is left commented so an accidental `supabase db reset` cannot
+-- silently promote a test account.
+--
+-- do $$
+-- declare
+--     v_user uuid;
+-- begin
+--     select id into v_user from auth.users where email = 'admin@srik.edu.my';
+--     if v_user is null then
+--         raise exception 'Create the admin user in Supabase Auth first, then re-run';
+--     end if;
+--
+--     -- Promote to ACTIVE with the ADMIN role.
+--     update public.profiles
+--        set status = 'ACTIVE', full_name = coalesce(nullif(full_name, ''), 'Pentadbir')
+--      where id = v_user;
+--
+--     insert into public.user_roles (user_id, role_code)
+--     values (v_user, 'ADMIN')
+--     on conflict do nothing;
+--
+--     raise notice 'ADMIN bootstrapped: %', v_user;
+-- end
+-- $$;
+
+-- ---------------------------------------------------------------------------
+-- SchoolProfile (Phase 2 creates the table; recorded here as a reminder)
+-- ---------------------------------------------------------------------------
+-- SchoolProfile is a SINGLE configuration row, not a tenant. It will be seeded
+-- with the school's real name/address in Phase 2, from data the school supplies
+-- — not invented here.

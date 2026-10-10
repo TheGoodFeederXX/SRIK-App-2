@@ -68,15 +68,15 @@ const mockUseTenantLimit = vi.fn(() => ({
   isPremium: false
 }));
 
-const mockUseBranch = vi.fn(() => ({
-  currentBranch: { id: 'branch-123', name: 'Test Branch' },
+// The school-scope context. It used to advertise a branch-switching API; that is
+// gone, because this school has one school and no branch feature.
+const mockUseSchoolScope = vi.fn(() => ({
+  currentBranch: { id: 'school-123', name: 'SRI Al-Khairiah', is_main: true },
   branches: [],
-  switchBranch: vi.fn(),
   refreshBranches: vi.fn(),
   isLoading: false,
-  canSwitchBranches: false,
-  allowAllOption: true,
-  activeBranchGeneratedId: 'GEN-123'
+  activeBranchGeneratedId: 'GEN-123',
+  isMainAdmin: true,
 }));
 
 vi.mock('../../../context/AuthContext', () => ({
@@ -91,17 +91,29 @@ vi.mock('../../../hooks/useTenantLimit', () => ({
   useTenantLimit: () => mockUseTenantLimit(),
 }));
 
-vi.mock('../../../context/BranchContext', () => ({
-  useBranch: () => mockUseBranch(),
+vi.mock('../../../context/SchoolScopeContext', () => ({
+  useSchoolScope: () => mockUseSchoolScope(),
 }));
 
 // Mock Toasts
-vi.mock('react-hot-toast', () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-  },
+// The student form now reads from Supabase, not the legacy API. Without this
+// the real module would be loaded and would attempt live network calls.
+vi.mock('../../../src/lib/supabase/students', () => ({
+  listClassOptions: vi.fn().mockResolvedValue([]),
+  suggestNextAdmissionNo: vi.fn().mockResolvedValue('S-0001'),
+  createStudentWithDetails: vi.fn().mockResolvedValue({ success: true, studentId: 's1' }),
+  updateStudent: vi.fn(),
+  enrollStudent: vi.fn(),
+  getStudent: vi.fn(),
 }));
+
+vi.mock('react-hot-toast', () => {
+  // Both shapes are used in the codebase: some screens import the named
+  // `toast`, others the default export. The mock must provide both or a screen
+  // using the default would silently call the real library.
+  const toast = { success: vi.fn(), error: vi.fn() };
+  return { default: toast, toast };
+});
 
 // Mock Icons to avoid rendering issues
 vi.mock('../../../constants', () => ({
@@ -168,23 +180,18 @@ describe('Admin Security Audit', () => {
   });
 
   describe('AddStudentScreen', () => {
-    it('Should block student creation if Tenant Limit is reached', () => {
-      // Setup Mocks
+    it('cannot register a student with a blank admission number or name', async () => {
+      // The old test here asserted a SaaS tenant LIMIT blocked creation. SRIK
+      // has no plans or seat limits, so that gate is gone by design; the checks
+      // that remain are the ones that protect the data itself.
       mockUseAuth.mockReturnValue({
-        currentSchool: { id: 'school-123' },
-        currentBranchId: 'branch-123',
-        user: { id: 'user-123' }
+        currentSchool: { id: '' },
+        currentBranchId: '',
+        user: { id: 'user-123' },
       });
       mockUseProfile.mockReturnValue({
-        profile: { schoolId: 'school-123' },
+        profile: { schoolId: '' },
         refreshProfile: vi.fn(),
-      });
-      // CRITICAL: Simulate Limit Reached
-      mockUseTenantLimit.mockReturnValue({
-        isLimitReached: true, 
-        currentCount: 100, 
-        maxLimit: 100, 
-        isPremium: false
       });
 
       render(withQuery(
@@ -193,32 +200,36 @@ describe('Admin Security Audit', () => {
         </BrowserRouter>
       ));
 
-      // Fill form (minimal)
-      fireEvent.change(screen.getByPlaceholderText('Adebayo Adewale'), { target: { value: 'Test Student' } });
-      
-      // Click Save
-      const saveBtn = screen.getByText('Save Student');
-      fireEvent.click(saveBtn);
+      // Submit the form directly. Clicking the button would be stopped by the
+      // browser's own `required` check before the screen's own guard runs, so
+      // submitting the form exercises the code that actually decides.
+      const nameField = await screen.findByLabelText("Student's full name");
+      fireEvent.change(nameField, { target: { value: '   ' } });
+      const form = nameField.closest('form')!;
+      fireEvent.submit(form);
 
-      // Expect Upgrade Modal (or logic that stops submission)
-      // The component sets `setShowUpgradeModal(true)`. 
-      // We can check if the mock tenant limit hook's state was used to block the submission logic.
-      // The best way to check is that the data-layer `insert` was NOT called.
-      expect(api.from).not.toHaveBeenCalledWith('students');
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalled();
+      });
+      // No record may be written for a student with no usable name.
+      expect(api.from).not.toHaveBeenCalled();
     });
 
-    it('Should block interaction if School ID is missing (Tenancy Leak Prevention)', () => {
-      // Setup Mocks: No School ID
+    it('never asks for a school or branch, because there is only one school', () => {
+      // SRIK is single-school: a missing "school id" is not an error condition
+      // any more, and asking the user for one would be meaningless. The genuine
+      // protection moved to the database, where every row is denied unless the
+      // signed-in user holds the matching permission — enforced by RLS, not by
+      // a screen refusing to render.
       mockUseAuth.mockReturnValue({
-        currentSchool: null,
-        currentBranchId: null,
-        user: { id: 'user-123' }
+        currentSchool: { id: '' },
+        currentBranchId: '',
+        user: { id: 'user-123' },
       });
       mockUseProfile.mockReturnValue({
-        profile: { schoolId: null }, // Missing ID
+        profile: { schoolId: '' },
         refreshProfile: vi.fn(),
       });
-      mockUseTenantLimit.mockReturnValue({ isLimitReached: false, currentCount: 0, maxLimit: 100, isPremium: false });
 
       render(withQuery(
         <BrowserRouter>
@@ -226,11 +237,10 @@ describe('Admin Security Audit', () => {
         </BrowserRouter>
       ));
 
-      // Expect Error Message
-      expect(screen.getByText('Tenancy Handshake Missing')).toBeInTheDocument();
-      
-      // Ensure Form is NOT present
-      expect(screen.queryByPlaceholderText('Adebayo Adewale')).not.toBeInTheDocument();
+      const body = document.body.textContent ?? '';
+      expect(body).not.toMatch(/tenancy/i);
+      expect(body).not.toMatch(/school id/i);
+      expect(body).not.toMatch(/branch/i);
     });
   });
 });

@@ -79,7 +79,7 @@ export default defineConfig(async ({ mode }) => {
       // same stale constant. Vite already restarts itself when the config or
       // .env files change; package.json belongs in that set for the same reason.
       {
-        name: 'oliskey:restart-on-package-json-change',
+        name: 'srik:restart-on-package-json-change',
         apply: 'serve',
         configureServer(server) {
           const packageJsonPath = path.resolve(__dirname, 'package.json');
@@ -118,6 +118,14 @@ export default defineConfig(async ({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{css,html,ico,png,svg,webp,json}'],
+          // Offline is read-only, by the school's decision: nothing that changes
+          // a record is queued and synced later, because a mark or an attendance
+          // entry saved in two places is a mark or an entry that disagrees with
+          // itself. When the network is gone, this page says so plainly.
+          navigateFallback: '/offline.html',
+          // The app's own startup assets must be reachable, or the fallback
+          // would also swallow the very requests that rebuild the page.
+          navigateFallbackDenylist: [/^\/api\//, /\.(?:js|css|png|ico|svg|webp|json|woff2?)$/],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           runtimeCaching: [
             {
@@ -132,10 +140,11 @@ export default defineConfig(async ({ mode }) => {
           ],
         },
         manifest: {
-          name: 'Smart School Management App',
-          short_name: 'SchoolApp',
-          description: 'Complete school management system for students, teachers, parents and administrators. Works offline!',
-          theme_color: '#4F46E5',
+          name: 'SRI Al-Khairiah',
+          short_name: 'SRIK',
+          description: 'Sistem pengurusan Sekolah Rendah Islam Al-Khairiah.',
+          theme_color: '#0F766E',
+          lang: 'ms-MY',
           background_color: '#ffffff',
           display: 'standalone',
           orientation: 'portrait-primary',

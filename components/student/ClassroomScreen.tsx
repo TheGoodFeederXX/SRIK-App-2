@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { Student, Teacher } from '../../types';
@@ -145,7 +145,10 @@ const ClassroomScreen: React.FC<ClassroomScreenProps> = ({ subjectName, navigate
           <div className="relative z-10">
             <div className="flex items-center gap-2 mb-2">
               <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
-                {subjectInfo?.curriculum_type || 'Nigerian'} Curriculum
+                {/* Fallback track label shown to a pupil. It defaulted to a
+                    foreign curriculum this school does not follow; the national
+                    track is KSSR. */}
+                {subjectInfo?.curriculum_type || 'KSSR'} Curriculum
               </span>
               <span className="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest">
                 {(student as any)?.class_name || 'Classroom'}

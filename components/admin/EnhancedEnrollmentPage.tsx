@@ -11,8 +11,10 @@ import {
     ChevronRight, ChevronLeft, BookOpen, AlertCircle
 } from 'lucide-react';
 import { DEFAULT_STANDARD_CLASSES } from '../../constants';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
-type CurriculumType = 'Nigerian' | 'British' | 'Both' | null;
+// The national track this school offers is KSSR, not the Nigerian curriculum.
+type CurriculumType = 'KSSR' | 'British' | 'Both' | null;
 
 interface EnrollmentData {
     // Step 1: Basic Details
@@ -61,9 +63,9 @@ export default function EnhancedEnrollmentPage({
     });
 
     // Pricing for dual-track (example)
-    const nigerianFee = 250000;
+    const kssrFee = 250000;
     const britishFee = 450000;
-    const dualTrackFee = nigerianFee + britishFee;
+    const dualTrackFee = kssrFee + britishFee;
 
     const handleInputChange = (field: keyof EnrollmentData, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -137,7 +139,7 @@ export default function EnhancedEnrollmentPage({
                 parentPhone: formData.parentPhone,
                 grade: Number(formData.grade),
                 section: formData.section,
-                curriculumType: formData.curriculumType || 'Nigerian',
+                curriculumType: formData.curriculumType || 'KSSR',
                 documentUrls: documentUrls
             });
 
@@ -272,7 +274,7 @@ export default function EnhancedEnrollmentPage({
                                         id="parentPhone"
                                         value={formData.parentPhone}
                                         onChange={(e) => handleInputChange('parentPhone', e.target.value)}
-                                        placeholder="+234 800 000 0000"
+                                        placeholder="+60 10 511 9582"
                                     />
                                 </div>
                                 <div>
@@ -320,22 +322,22 @@ export default function EnhancedEnrollmentPage({
                             </h3>
 
                             <div className="space-y-3">
-                                {/* Nigerian Curriculum */}
+                                {/* KSSR — the national curriculum this school follows */}
                                 <Card
-                                    className={`cursor-pointer transition-all ${formData.curriculumType === 'Nigerian' ? 'border-primary border-2 bg-primary/5' : 'hover:border-gray-400'
+                                    className={`cursor-pointer transition-all ${formData.curriculumType === 'KSSR' ? 'border-primary border-2 bg-primary/5' : 'hover:border-gray-400'
                                         }`}
-                                    onClick={() => handleInputChange('curriculumType', 'Nigerian')}
+                                    onClick={() => handleInputChange('curriculumType', 'KSSR')}
                                 >
                                     <CardContent className="p-4">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <h4 className="font-semibold text-lg">🇳🇬 Nigerian Curriculum</h4>
-                                                <p className="text-sm text-gray-600 mt-1">WAEC, NECO, JAMB preparation</p>
+                                                <h4 className="font-semibold text-lg">Kurikulum KSSR</h4>
+                                                <p className="text-sm text-gray-600 mt-1">Kurikulum Standard Sekolah Rendah</p>
                                                 <p className="text-sm text-gray-500 mt-2">Subjects: English, Mathematics, Civic Education, Basic Science, etc.</p>
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-sm text-gray-600">Annual Fee</p>
-                                                <p className="text-xl font-bold text-primary">₦{nigerianFee.toLocaleString()}</p>
+                                                <p className="text-xl font-bold text-primary">{formatMoney(kssrFee)}</p>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -356,7 +358,7 @@ export default function EnhancedEnrollmentPage({
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-sm text-gray-600">Annual Fee</p>
-                                                <p className="text-xl font-bold text-primary">₦{britishFee.toLocaleString()}</p>
+                                                <p className="text-xl font-bold text-primary">{formatMoney(britishFee)}</p>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -371,8 +373,8 @@ export default function EnhancedEnrollmentPage({
                                     <CardContent className="p-4">
                                         <div className="flex items-start justify-between">
                                             <div className="flex-1">
-                                                <h4 className="font-semibold text-lg">🌍 Dual Curriculum (Nigerian + British)</h4>
-                                                <p className="text-sm text-gray-600 mt-1">Best of both worlds - WAEC + Cambridge preparation</p>
+                                                <h4 className="font-semibold text-lg">🌍 Dual Curriculum (KSSR + British)</h4>
+                                                <p className="text-sm text-gray-600 mt-1">Best of both worlds - KSSR + Cambridge preparation</p>
                                                 <div className="flex items-start gap-2 mt-2 p-2 bg-amber-50 border border-amber-200 rounded">
                                                     <AlertCircle className="h-4 w-4 text-amber-600 mt-0.5" />
                                                     <p className="text-xs text-amber-800">
@@ -382,7 +384,7 @@ export default function EnhancedEnrollmentPage({
                                             </div>
                                             <div className="text-right">
                                                 <p className="text-sm text-gray-600">Annual Fee</p>
-                                                <p className="text-xl font-bold text-primary">₦{dualTrackFee.toLocaleString()}</p>
+                                                <p className="text-xl font-bold text-primary">{formatMoney(dualTrackFee)}</p>
                                                 <p className="text-xs text-green-600 mt-1">Save 10%</p>
                                             </div>
                                         </div>
@@ -511,7 +513,7 @@ export default function EnhancedEnrollmentPage({
                                     <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded">
                                         <p className="text-sm font-semibold text-amber-900">⚠️ Dual Curriculum Reminder</p>
                                         <p className="text-xs text-amber-800 mt-1">
-                                            This student will be enrolled in both Nigerian and British tracks. They will receive separate report cards and maintain independent academic records for each curriculum.
+                                            This student will be enrolled in both KSSR and British tracks. They will receive separate report cards and maintain independent academic records for each curriculum.
                                         </p>
                                     </div>
                                 )}

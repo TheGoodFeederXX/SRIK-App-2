@@ -125,7 +125,7 @@ const VolunteeringScreen: React.FC = () => {
 
                                     <p className="text-sm text-gray-500 font-medium flex items-center mb-3">
                                         <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></span>
-                                        {new Date(opp.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                        {new Date(opp.date).toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
                                     </p>
 
                                     <p className="text-sm text-gray-600 mb-6 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100 break-words">

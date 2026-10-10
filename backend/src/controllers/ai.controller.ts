@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { withOliskeyKnowledge } from '../services/aiKnowledge.service';
+import { withSchoolKnowledge } from '../services/aiKnowledge.service';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { AiService } from '../services/ai.service';
 import { NvidiaAIService, NVIDIA_MODELS } from '../services/nvidiaAI.service';
@@ -29,12 +29,12 @@ export const aiChat = async (req: AuthRequest, res: Response) => {
         // Central gateway: NVIDIA first, Gemini on a transient failure. The
         // user id scopes in-flight de-duplication so two users with the same
         // prompt never share a response.
-        // Oliskey product knowledge, the security rules and the user's context
+        // The school knowledge, the security rules and the user's context
         // are attached HERE, before the gateway picks a provider — so NVIDIA and
         // the Gemini fallback receive exactly the same system messages. Role,
         // school and branch come from the verified session; the client may only
         // supply presentational hints (which page/module it is showing).
-        const body = withOliskeyKnowledge(req.body || {}, {
+        const body = withSchoolKnowledge(req.body || {}, {
             role: req.user?.role,
             userId: req.user?.id,
             schoolId: req.user?.school_id,

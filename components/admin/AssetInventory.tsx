@@ -7,6 +7,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 import { useAuth } from '../../context/AuthContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 const AssetInventory = () => {
     const { currentSchool } = useAuth();
@@ -166,7 +167,7 @@ const AssetInventory = () => {
                                 <div className="mt-6 pt-4 border-t border-gray-50 flex justify-between items-center">
                                     <div>
                                         <p className="text-xs text-gray-400 font-bold uppercase">Current Value</p>
-                                        <p className="text-sm font-bold text-gray-900">₦{asset.current_value?.toLocaleString()}</p>
+                                        <p className="text-sm font-bold text-gray-900">{formatMoney(asset.current_value)}</p>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-xs text-gray-400 font-bold uppercase">Condition</p>
@@ -250,7 +251,7 @@ const AssetInventory = () => {
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1.5">Value (₦)</label>
+                                    <label className="block text-xs font-black text-gray-400 uppercase tracking-widest mb-1.5">Value (RM)</label>
                                     <input
                                         type="number"
                                         value={formData.current_value}

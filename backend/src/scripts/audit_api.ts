@@ -236,7 +236,7 @@ async function run() {
             subject: 'Mathematics',
             date: new Date().toISOString(),
             total_marks: 100,
-            term: 'First Term'
+            term: 'Penggal 1'
         }, { headers });
 
         if (addRes.status !== 201) throw new Error(`Add failed: ${addRes.status}`);
@@ -254,7 +254,7 @@ async function run() {
     if (await testFeature('Report Card Publishing API', async () => {
         const res = await axios.post(`${API_URL}/report-cards/publish`, {
             schoolId: SCHOOL_ID,
-            term: 'First Term',
+            term: 'Penggal 1',
             session: '2024/2025'
         }, { headers });
         // publishing might return 200 or 201

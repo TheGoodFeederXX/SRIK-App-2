@@ -17,10 +17,10 @@ export const useTenantLimit = (entity: 'users' | 'students' | 'teachers' = 'user
     const [count, setCount] = useState(0);
     const [loading, setLoading] = useState(true);
 
-    const OLISKEY_DEMO_SCHOOL_ID = 'd0ff3e95-9b4c-4c12-989c-e5640d3cacd1';
+    const LEGACY_DEMO_SCHOOL_ID = 'd0ff3e95-9b4c-4c12-989c-e5640d3cacd1';
     const subscriptionStatus = (currentSchool as any)?.subscription_status;
     const isOnTrial = subscriptionStatus === 'trial';
-    const isDemoSchool = currentSchool?.id === OLISKEY_DEMO_SCHOOL_ID;
+    const isDemoSchool = currentSchool?.id === LEGACY_DEMO_SCHOOL_ID;
     const isPremium = currentSchool?.is_premium || isDemoSchool;
     const planType = isDemoSchool ? 'premium' : (currentSchool?.plan_type || 'free');
 

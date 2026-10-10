@@ -231,7 +231,7 @@ const FacilityRegisterScreen = () => {
                                     </span>
                                 </div>
                                 <span className="text-xs text-gray-400 italic">
-                                    Last Inspected: {new Date(facility.last_inspected_at).toLocaleDateString()}
+                                    Last Inspected: {new Date(facility.last_inspected_at).toLocaleDateString("ms-MY")}
                                 </span>
                             </div>
                         </motion.div>

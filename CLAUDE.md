@@ -116,118 +116,20 @@ Claude does not proceed until confirmed. Claude does not make "small" or "minor"
 
 ## Project Overview
 
-**Oliskey School Management System** - A multi-tenant SaaS platform for Nigerian schools. It is a PWA (Progressive Web App) with offline-first capabilities, supporting multiple user roles across a React frontend and an Express backend, both connected to the database.
+**SRIK — Sekolah Rendah Islam Al-Khairiah.** A **single-school** management application (target ~250 users): lower-primary religious school administration covering students, teachers, guardians, classes, subjects, timetable, attendance, assessments, report cards and finance.
+
+The code in this repository is the **Oliskey** multi-tenant SaaS project, which serves as **reference code — not the target architecture**. The SRIK refactor replaces its tenancy, auth and backend in stages.
+
+> **Scope authority:** `AGENTS.md` + `docs/srik/01_DECISIONS.md` + the current phase file. Where this file describes architecture that conflicts with them, **they win** — see "Legacy Architecture (reference only)" below.
 
 ---
 
-## Product Vision (Owner-Confirmed)
+## Product Scope (LOCKED — see docs/srik/01_DECISIONS.md)
 
-### Refined Vision Statement
-
-> "I am building a multi-tenant School Management System with a hierarchical branch structure. I need a robust architecture where a 'School Owner' can enter a 'Try Demo' environment that fully simulates the live app. In this demo, they must be able to perform Admin tasks and see those changes reflected in real-time when switching to Teacher, Student, or Parent roles within that same demo instance."
-
-### Four Non-Negotiable Core Requirements
-
-These are the owner's confirmed pillars. Every decision Claude makes — architecture, database design, feature logic, security rules — must serve and protect these four requirements:
-
-**1. Strict Isolation**
-School A must never access School B's data. This is absolute. No shared queries, no cross-school lookups, no exceptions. Every single database table is scoped by `school_id` and all security rules enforce this at the data layer — not just the application layer.
-
-**2. Branch Hierarchy**
-Within a single school, the Main Branch and all Sub-Branches have isolated data environments. A branch admin sees only their branch. A main branch admin sees all branches within their school. Teachers and parents follow their assignment — they see only the branches their students/children belong to.
-
-**3. Standardized Identity — The Global ID Format**
-Every user across the entire platform must have one unified ID in this exact format:
-```
-{SCHOOL_CODE}_{BRANCH_CODE}_{ROLE_CODE}_{NUMBER}
-```
-Example: `SCH01_BR02_TCH_005` — Teacher #5 in Branch 2 of School 01.
-
-This ID is the **primary identifier** used everywhere: in the database, across all API calls, displayed in the UI, and referenced in every feature. It is never a raw UUID. It is stored in `school_generated_id` and is always generated automatically by the backend the moment a user is created.
-
-**4. Conversion Flow — Demo to Live**
-After a school owner tests the platform using demo data, they must be able to smoothly transition into creating a real live account with their own school data. The demo experience must feel identical to the live product so the owner knows exactly what they are signing up for.
-
----
-
-### Claude's Standing Architecture Audit Instruction
-
-Whenever Claude is working on any feature, database change, or API update, it must:
-
-1. **Use the MCP server to audit the relevant code** before proposing any solution
-2. **Verify the current schema and security rules** support the `School_Branch_Role_Number` ID structure and branch-level isolation
-3. **Propose a plan first** — describing what will change in the data structure and security rules — and wait for owner approval before writing any code
-4. **Flag any gaps** found during the audit where the current code does not yet fully implement one of the four core requirements above
-
----
-
-### Core Purpose
-A school owner visits the Oliskey platform, tries the fully interactive demo, sees the product working end-to-end across all roles, and then creates a real account for their school — each school getting a completely isolated, independent space on the platform.
-
-### Demo Mode (Try Before You Sign Up)
-- Any visitor can click "Try Demo" and immediately enter a fully working demo school environment
-- The demo is **fully interactive**: the visitor can create students, mark attendance, enter grades, publish notices, assign classes — all real actions on real demo data
-- All four roles share the **same demo school** and **same Socket.io subscriptions**: an action by the demo Admin is immediately visible when the visitor switches to the Teacher, Student, or Parent role — no logout needed
-- A **floating role-switcher pill** is always visible in demo mode: the visitor switches roles with one tap without re-authenticating
-- The demo school data **auto-resets every 24 hours** to a clean baseline state so it is always presentable for new visitors
-- The demo school ID is `d0ff3e95-9b4c-4c12-989c-e5640d3cacd1` (Oliskey Demo School, branch `7601cbea-e1ba-49d6-b59b-412a584cb94f`)
-
-### School Onboarding (Creating a Real Account)
-- After the demo a clear CTA "Create Your School" launches a 5-step wizard
-- Step 1: School info — name, address, state, phone, email, and the owner **types their own school code** (e.g. "EXCEL") — this becomes the prefix for all IDs in that school
-- Step 2: Branch setup — first branch is always "Main Branch". Owner types the branch code (e.g. "MAIN"). More branches can be added, each with a unique code
-- Step 3: Owner admin account — full name, email, password — this becomes the school Admin/Proprietor
-- Step 4: Plan selection — all schools start on a **30-day free trial**, then choose Free / Basic / Premium / Enterprise
-- Step 5: Review and Launch
-- Every new school starts completely **empty** (no sample or demo data)
-- The backend endpoint `POST /api/schools/onboard` creates the school, branch, and owner user in one transaction and returns the first generated ID
-
-### Multi-Tenancy & Isolation Rules
-- Every school is completely isolated: School A can never see School B data — enforced by `school_id` scoping on every DB table and Prisma-enforced scoping
-- Within a school, branch isolation is enforced: Branch A admin cannot see Branch B data
-- **Main branch admin** (school-level admin) can see and manage **all branches** within their school
-- **Branch admin** can only see their own branch
-- **Teacher**: If assigned to multiple branches, they see data from all their assigned branches
-- **Parent**: If their children are enrolled in different branches, they see all their children regardless of branch
-- **Super Admin** (Oliskey platform owner): Can log in and see all schools across the platform for support purposes
-
-### Standard User ID Format
-Every user in every school gets a single, unified ID that follows this exact format:
-
-```
-{SCHOOL_CODE}_{BRANCH_CODE}_{ROLE_CODE}_{NUMBER}
-```
-
-Examples:
-- `EXCEL_MAIN_STU_0001` — Student #1 in Main Branch of Excellence Academy
-- `EXCEL_BRN2_TCH_0004` — Teacher #4 in Branch 2
-- `EXCEL_MAIN_ADM_0001` — Admin #1 in Main Branch
-
-**Role codes (canonical, used in both frontend and backend):**
-| Role | Code |
-|---|---|
-| Student | STU |
-| Teacher | TCH |
-| Parent | PAR |
-| Admin | ADM |
-| Super Admin | SADM |
-| Proprietor | PRO |
-| Inspector | INS |
-| Exam Officer | EXM |
-| Compliance Officer | CMP |
-| Counselor | CNS |
-
-**ID rules:**
-- The school code comes from what the **owner types** at setup (not auto-generated)
-- The branch code comes from what the **owner types** when creating a branch
-- The number **restarts from 0001 per branch per role** (Main Branch has its own STU_0001, Branch 2 also has its own STU_0001)
-- There is ONE unified field for this ID everywhere: `school_generated_id` — stored in the role-specific table (`students`, `teachers`, `parents`) AND mirrored in the `users` table (replacing the old `custom_id` and `staff_id` fields which are being unified)
-- The ID is generated **automatically by the backend** at the moment a user is created — never null, never a UUID shown to users
-
-### Plans & Trial
-- All new schools get a **30-day free trial** on signup (subscription_status = 'trial')
-- After trial: Free (≤50 students) / Basic / Premium / Enterprise
-- The `schools` table `plan_type` and `subscription_status` fields control feature gates
+- **Single school.** No `school_id`, no `branch_id`, no tenant routing, no cross-school admin, no SaaS subscription/billing. `SchoolProfile` is configuration, not a tenant.
+- **Roles:** `ADMIN` and `TEACHER`, plus a permission table. Do **not** create extra roles for Guru Data / Jadual / Peperiksaan — those are extra permissions on a TEACHER.
+- **Deferred:** parent portal, student login, offline attendance/score writes, discipline, SEGAK, transport, native app, full PBD, automatic timetable generation. Do not build these without a scope change.
+- **Removed:** hostel, scholarship, sponsorship, alumni-as-module, inspector/proprietor/compliance/exam-officer/counselor workflows, Paystack, Flutterwave, gamification, transport, shop/vendor, Nigerian compliance, TRCN, British-curriculum assumptions, demo-reset infrastructure, multi-branch SaaS.
 
 ---
 
@@ -236,149 +138,127 @@ Examples:
 ### Development
 
 ```bash
-# Install dependencies
-npm run setup
-
-# Run everything (frontend + backend) concurrently
-npm run start:all
-
-# Frontend only (Vite dev server on port 3000)
-npm run dev
-
-# Backend only (Express server on port 5000, with hot-reload)
-npm run server
+npm run dev        # Frontend only (Vite), port 3000
+npm run server     # Backend only (Express), port 5000
+npm run start:all  # Frontend + backend concurrently
 ```
 
-### Build & Preview
+### Build
 
 ```bash
-npm run build
-npm run preview
+npm run build            # Frontend production build
+npm run build:backend    # Backend TypeScript → backend/dist (CommonJS)
 ```
 
 ### Testing
 
 ```bash
-# Frontend unit tests (Vitest, watch mode)
-npm test
+npm run test:run   # Frontend unit tests (Vitest, single run)
+npx vitest run components/admin/__tests__/StudentListScreen.test.tsx   # one file
 
-# Frontend unit tests (single run)
-npm run test:run
-
-# Run a specific test file
-npx vitest run components/admin/__tests__/StudentListScreen.test.tsx
-
-# Backend integration tests (uses supertest)
-npx tsx --tsconfig backend/tsconfig.json node_modules/.bin/vitest run backend/tests/integration/student.test.ts
+# Backend integration tests — REQUIRES a live PostgreSQL and DATABASE_URL set.
+# Without it the fixture setup fails and most tests skip (see docs/srik/IMPLEMENTATION_STATUS.md).
+npx vitest run --config backend/vitest.config.ts
 ```
 
 ### Database
 
 ```bash
-# Push database migrations
-npm run db:migrate
+npm run db:migrate   # Prisma migrate (legacy path — being replaced by Supabase SQL migrations)
+npm run db:seed      # Synthetic seed only. Never seed real school data.
 ```
 
-## Environment Setup
+---
 
-Two separate `.env` files are required:
+## Environment
 
-**Root `.env`** (frontend, Vite):
+**Root `.env`** (frontend — `VITE_` vars are bundled and public):
 ```
-VITE_API_URL=              # Optional; defaults to same-origin /api behind the proxy
-VITE_GEMINI_API_KEY=       # For AI features
-VITE_PAYSTACK_PUBLIC_KEY=  # For payments
-VITE_FLUTTERWAVE_PUBLIC_KEY=
-VITE_RESEND_API_KEY=
+VITE_API_URL=                # optional; defaults to same-origin /api
 VITE_APP_NAME=
+VITE_APP_VERSION=
 ```
 
-**`backend/.env`** (Express server):
+Supabase (target — see docs/srik/03_PHASE_1_SUPABASE_AUTH.md):
 ```
-DATABASE_URL=              # PostgreSQL connection string (Prisma)
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+```
+
+**`backend/.env`** (server-only, legacy until replaced):
+```
+DATABASE_URL=
+DIRECT_URL=
 JWT_SECRET=
+REFRESH_TOKEN_SECRET=
 BACKEND_PORT=5000
+SMTP_USER=
+SMTP_PASS=
 ```
 
-## Architecture
+**Never** put a server secret behind a `VITE_` prefix, in `.env.example`, in the bundle, or in public logs. Use the Supabase publishable key in the browser and keep secret keys server-side only. Remove provider keys (`VITE_PAYSTACK_PUBLIC_KEY`, `VITE_FLUTTERWAVE_PUBLIC_KEY`, `VITE_GEMINI_API_KEY`) as their modules are removed — do not keep them for compatibility.
 
-### Dual-Process Architecture
+**Runtime:** Node 24 LTS, pinned to `24.21.0` in `.nvmrc` / `.node-version` and `package.json` `engines`. CI and the Dockerfile read the same pin. Do not revert to Node 20 or 22 — `AsyncLocalStorage` propagation changed between Node 20 and 24, and the RLS tenant context depends on it.
 
-The app runs as two separate processes:
-1. **Frontend**: Vite + React SPA on port 3000. Proxies `/api/*` to `http://localhost:5000`.
-2. **Backend**: Express server on port 5000 (`backend/src/server.ts`).
+---
 
-The frontend uses a **hybrid API client** (`lib/api.ts` → `HybridApiClient`) that can either call the backend database directly (RLS enforced) or go through the Express backend. Most data access uses the backend database directly from the frontend.
+## Architecture (current, transitional)
 
-### Multi-Tenant Data Model
+The app currently runs as two processes:
+1. **Frontend** — Vite + React SPA, port 3000, proxies `/api/*` to `:5000`.
+2. **Backend** — Express on port 5000 (`backend/src/server.ts`), Prisma + custom JWT.
 
-Every record is scoped by `school_id` and often `branch_id`. Schools can have multiple branches. Prisma-enforced scoping enforce tenant isolation. The demo school ID is `d0ff3e95-9b4c-4c12-989c-e5640d3cacd1`.
+**Target architecture:** React + Vite + TypeScript frontend, TanStack Query, Tailwind, React Router; backend entirely on **Supabase** (Auth, PostgreSQL, Data API, RLS, RPC, Storage, Realtime, selective Edge Functions/Cron). No Express, Prisma, custom JWT, Socket.io, Redis or BullMQ in the target.
 
-### User Roles & Routing
-
-Roles are defined in `types.ts` as `DashboardType` enum:
-`admin`, `superadmin`, `teacher`, `parent`, `student`, `proprietor`, `inspector`, `examofficer`, `complianceofficer`, `counselor`
-
-`AuthContext` (`context/AuthContext.tsx`) reads the role from `app_metadata.role` in the the backend database JWT. `DashboardRouter` (`components/DashboardRouter.tsx`) lazy-loads the correct dashboard component for each role.
-
-### Authentication Flow
-
-- Real users: the backend auth service with PKCE flow. Sessions stored in `sessionStorage` with tab-specific keys to prevent cross-tab sync.
-- Demo users: Identified by email domain (`@demo.com`, `@school.com`) or `is_demo` metadata. Demo tokens (`demo-auth-token-{role}`) bypass JWT verification in the backend middleware (`backend/src/middleware/auth.middleware.ts`).
-- The backend middleware tries local JWT first, then the backend database's `auth.getUser()` for real tokens.
-
-### Frontend Structure
-
-```
-App.tsx                    # Root: offline init, service worker, PWA setup
-context/
-  AuthContext.tsx           # Auth state, role detection, school context
-  BranchContext.tsx         # Active branch state
-  ProfileContext.tsx        # User profile data
-components/
-  DashboardRouter.tsx       # Role-based routing after login
-  admin/                    # Admin & SuperAdmin screens
-  teacher/                  # Teacher screens
-  student/                  # Student screens
-  parent/                   # Parent screens
-  auth/                     # Login, Signup, AuthCallback
-  shared/                   # Cross-role shared screens
-  ui/                       # Generic UI primitives
-lib/
-  api.ts                    # HybridApiClient (REST + chainable query shim over Express)
-  database.ts               # query helpers
-  apiHelpers.ts             # Shared fetch utilities, isDemoMode(), getAuthToken()
+Target layout:
+```text
+src/app/  src/components/  src/lib/supabase/  src/types/
+src/features/{auth,students,teachers,guardians,classes,subjects,
+              timetable,attendance,assessments,reports,finance}/
+supabase/{config.toml,migrations,functions,tests,seed.sql}
+docs/srik/
 ```
 
-### Backend Structure
+### Data and authorization rules (apply to all new work)
 
-```
-backend/src/
-  app.ts                    # Express app setup (helmet, rate-limit, CORS, routes)
-  server.ts                 # Entry point
-  config/env.ts             # Env vars with validation
-  middleware/auth.middleware.ts  # JWT token verification
-  routes/index.ts           # Mounts all route modules under /api
-  routes/*.routes.ts        # Route definitions per domain
-  controllers/*.controller.ts  # Request handlers
-  services/*.service.ts     # Business logic (the backend database queries)
-```
+- **Database authorization is authoritative.** Frontend checks improve UX only. **Deny by default.**
+- Every table exposed through the Data API must enable RLS with explicit grants and tested policies. Operations that are not permitted must remain denied — never add permissive CRUD policies just to complete a checklist.
+- Use SQL migrations as the schema source of truth. No untracked production dashboard changes.
+- Multi-row business operations must be atomic RPC / database transactions. Privileged or external operations belong in authenticated, authorized Edge Functions.
+- Money uses exact `NUMERIC`/Decimal, never Float. Never compute authoritative totals with JavaScript floating-point.
+- Academic years, classes and subjects are relational: class derives from enrollment, subjects are referenced by ID (never subject-name strings as FK substitutes).
+- Published report cards are immutable snapshots with explicit revisions. PBD TP is not auto-derived from exam score.
+- Audit sensitive mutations at the authoritative backend; clients cannot edit audit history.
+- Remove dead legacy code only **after** the replacement works, and never delete real data, secrets or live migrations without verifying scope and authorization.
 
-### Database Migrations
+### Migration discipline
 
-Database access is via Prisma (`backend/prisma/schema.prisma`); apply changes with `npm run db:migrate`. This app is not on Supabase — it's a self-hosted PostgreSQL database, with Row-Level Security applied via real Prisma migrations (`backend/prisma/migrations/`), not Supabase's tooling.
+- Cut over in stages and never leave **two auth sources** or two write paths for a feature already migrated.
+- Before removing legacy, record what the replacement validates. Inspect actual code before claiming a dependency is gone.
+- Legacy RLS is **tenant** RLS (school/branch) with a blanket `bypass_rls`. It is not permission RLS and it is not a security baseline to preserve. Replace it before removing Prisma, or the authorization layer goes with it.
 
-### Offline-First Features
+---
 
-On startup (`App.tsx`), the app runs `runMigrations()` (IndexedDB schema), registers a service worker, and initializes `syncEngine` and `cacheCleanupScheduler`. The service worker caches API responses using a NetworkFirst strategy.
+## Legacy Architecture (reference only — do not extend)
 
-### Payments
+Everything below describes the **Oliskey** code being replaced. Read it to understand existing code, never to plan new work.
 
-Two payment integrations: Paystack (`react-paystack`, `VITE_PAYSTACK_PUBLIC_KEY`) and Flutterwave (`components/payments/FlutterwaveWrapper.tsx`, `VITE_FLUTTERWAVE_PUBLIC_KEY`). Both are wrapped in `services/PaymentService.ts`.
+- **Multi-tenancy:** every record scoped by `school_id` and often `branch_id`; `Branch`, `SchoolMembership`, `BranchUserIdentity`, `Plan` models; `middleware/tenant.middleware.ts`; `lib/tenantContext.ts` (`AsyncLocalStorage`); RLS via `app.current_school_id` / `app.current_branch_ids` / `app.bypass_rls`. **All of this is to be removed.**
+- **Auth:** custom `bcrypt` + `jsonwebtoken` HS256 + refresh tokens + MFA (`otplib`), CSRF middleware, demo tokens that bypass JWT verification, sessions in `sessionStorage`. Replaced by Supabase Auth.
+- **Roles:** `types.ts` `DashboardType` — `admin`, `superadmin`, `teacher`, `parent`, `student`, `proprietor`, `inspector`, `examofficer`, `complianceofficer`, `counselor`. Reduced to `ADMIN`, `TEACHER` + permissions.
+- **API client:** `lib/api.ts` (`HybridApiClient`, ~3,900 lines, ~600 domain methods) plus `lib/api/core.ts`. This is a singular shared node — it cannot be cut per-folder; it must be split per feature with parity verified.
+- **Backend shape:** `routes/index.ts` mounts 98 paths across ~93 route files, ~94 controllers and ~115 services.
+- **Schema:** `backend/prisma/schema.prisma` — 198 models, 57 migrations.
+- **Realtime/queues:** Socket.io + Redis adapter, BullMQ, cron services, PM2, `cluster.ts`. Replaced by Supabase Realtime and selective Cron/Edge Functions.
+- **Storage:** AWS S3 SDK + `fileStorage.service.ts`. Replaced by Supabase Storage.
+- **PWA:** `vite-plugin-pwa`, `public/sw.ts`, IndexedDB (`dexie`/`idb-keyval`), in-app `syncEngine`. v1 keeps app-shell + read-only reference-data cache only.
+- **Removed modules and their routes/components** — see `docs/srik/AUDIT.md` §5 for the full inventory with file counts.
+- **PostGIS:** declared in `init-db/init-extensions.sql` but **never used** — zero geometry/geography columns in the Prisma schema and zero spatial queries. Do not add PostGIS to new schema; audit dependency before removing the extension from a legacy database.
 
-### AI Features
+### Known baseline failures (recorded, not regressions)
 
-Google Gemini is used for AI features (`lib/ai.ts`, `@google/generative-ai`). The API key is exposed via `VITE_GEMINI_API_KEY` / `process.env.GEMINI_API_KEY` (bridged in `vite.config.mts`).
+- `npx vitest run` — 1 failure, in the SaaS-subscription/Paystack test, i.e. a module scheduled for removal. Do not fix it.
+- `npx vitest run --config backend/vitest.config.ts` — fails without a live database (fixtures cannot connect, so most tests skip). The legacy suite is **not** required to be green before its replacement is built; the **new Supabase tests must pass**.
 
 ## graphify
 

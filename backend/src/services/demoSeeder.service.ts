@@ -27,7 +27,7 @@ export class DemoSeederService {
      * Runs quickly on server startup or when trigged to ensure the Demo subset is seeded.
      */
     static async ensureDemoData() {
-        console.log('🌱 [Maintenance] Ensuring Oliskey School App Baseline...');
+        console.log('🌱 [Maintenance] Ensuring the demo baseline...');
         try {
             const demoSchoolId = AuthService.DEMO_SCHOOL_ID;
             const demoBranchId = AuthService.DEMO_BRANCH_ID;
@@ -36,17 +36,20 @@ export class DemoSeederService {
             await prisma.school.upsert({
                 where: { id: demoSchoolId },
                 update: {
-                    name: 'Oliskey School App',
-                    code: 'OLISKEY',
-                    slug: 'global-demo-school',
+                    // The demo school is a sandbox, and it used to be named after
+                    // the vendor with the vendor's code. Anyone shown the demo
+                    // saw another company's product on the sign-in screen.
+                    name: 'Sekolah Demo SRIK',
+                    code: 'SRIK',
+                    slug: 'sekolah-demo-srik',
                     is_active: true,
                     is_onboarded: true,
                 },
                 create: {
                     id: demoSchoolId,
-                    name: 'Oliskey School App',
-                    code: 'OLISKEY',
-                    slug: 'global-demo-school',
+                    name: 'Sekolah Demo SRIK',
+                    code: 'SRIK',
+                    slug: 'sekolah-demo-srik',
                     ...DEMO_PLAN_BASELINE,
                     is_active: true,
                     is_onboarded: true,
@@ -141,7 +144,7 @@ export class DemoSeederService {
     /**
      * Adopt-or-create a demo identity. ROOT CAUSE this replaces: prisma/seed.ts
      * creates the demo admin under a RANDOM id while already owning the global
-     * ID the seeder derives (OLISKEY_MAIN_ADM_0001); `upsert({ where: { id } })`
+     * ID the seeder derives (SRIK_MAIN_ADM_0001); `upsert({ where: { id } })`
      * then INSERTed a second row with the same school_generated_id → P2002 →
      * the whole seed transaction rolled back → every demo login answered 503
      * "warming up" and re-triggered the same failing seed.
@@ -208,10 +211,13 @@ export class DemoSeederService {
             const school = await prisma.school.findUnique({ where: { id: schoolId }, select: { code: true } });
             const branch = await prisma.branch.findUnique({ where: { id: branchId }, select: { code: true } });
             
-            const schoolCode = school?.code?.toUpperCase() || 'OLISKEY';
+            // The fallback is the school's own code. It used to be the vendor's,
+            // so a demo account with no school row was generated an ID carrying
+            // another company's name.
+            const schoolCode = school?.code?.toUpperCase() || 'SRIK';
             // Use the branch's real code; the demo "virtual" branch has none, so fall
             // back to a clean MAIN code rather than an opaque IP hash. This keeps the
-            // global ID readable: e.g. OLISKEY_MAIN_ADM_0001 (not OLISKEY_EFF8E7CA_...).
+            // global ID readable: e.g. SRIK_MAIN_ADM_0001 (not SRIK_EFF8E7CA_...).
             const branchCode = branch?.code?.toUpperCase() || 'MAIN';
 
             if (!this.cachedPasswordHash) {
@@ -486,7 +492,7 @@ export class DemoSeederService {
                                         school_id: schoolId,
                                         student_id: sp.id,
                                         subject: sub.name,
-                                        term: 'First Term',
+                                        term: 'Penggal 1',
                                         session: '2025/2026'
                                     }
                                 },
@@ -497,7 +503,7 @@ export class DemoSeederService {
                                     student_id: sp.id,
                                     subject: sub.name,
                                     score,
-                                    term: 'First Term',
+                                    term: 'Penggal 1',
                                     session: '2025/2026'
                                 }
                             });
@@ -529,7 +535,7 @@ export class DemoSeederService {
                                 student_id: sp.id,
                                 class_id: sss1ClassId,
                                 session: '2025/2026',
-                                term: 'First Term',
+                                term: 'Penggal 1',
                                 academic_records: { grades: academicRecords } as any,
                                 is_published: true,
                                 status: 'Published',
@@ -718,7 +724,7 @@ export class DemoSeederService {
                     const personnelSeed = [
                         {
                             id: `pr-${ipHash}-commendation`,
-                            type: 'commendation', title: 'Outstanding WAEC results',
+                            type: 'commendation', title: 'Outstanding peperiksaan results',
                             details: '92% of students passed Mathematics with credit or above.',
                             effective_date: '2026-05-20',
                         },
@@ -751,7 +757,7 @@ export class DemoSeederService {
                             reason: 'Lesson notes for the week of 2 June were submitted three days after the deadline. Please explain in writing.',
                             issue_date: '2026-06-08', response_deadline: '2026-06-12',
                             status: 'resolved', issued_by_name: 'School Admin',
-                            response_text: 'I apologise for the delay. I was attending the approved WAEC marking exercise and have since submitted all outstanding notes.',
+                            response_text: 'I apologise for the delay. I was attending an approved school workshop and have since submitted all outstanding notes.',
                             responded_at: new Date('2026-06-10T09:30:00Z'),
                             outcome_note: 'Explanation accepted — absence was pre-approved.',
                             closed_at: new Date('2026-06-11T14:00:00Z'),
@@ -766,7 +772,7 @@ export class DemoSeederService {
                         update: {},
                         create: {
                             id: alumniId,
-                            email: `alumni-${ipHash}@demo.oliskey.app`,
+                            email: `alumni-${ipHash}@demo.srik.local`,
                             password_hash: passwordHash,
                             full_name: 'Amaka Okafor',
                             role: 'STUDENT',

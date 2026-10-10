@@ -15,16 +15,21 @@ import { CheckCircle, XCircle, Loader2, School } from 'lucide-react';
 
 type Status = 'processing' | 'success' | 'error';
 
+/**
+ * Where an invited person lands after accepting.
+ *
+ * The vendor roles that used to be listed here — proprietor, inspector,
+ * examofficer, complianceofficer, counselor — are not roles at this school, so
+ * they were unreachable. `guardian` was MISSING, which is the database's real
+ * name for a parent: an invited guardian matched no entry at all. Both names are
+ * accepted so a code arriving from either side still works.
+ */
 const ROLE_DASHBOARD: Record<string, string> = {
-    admin:               '/admin/dashboard',
-    proprietor:          '/admin/dashboard',
-    teacher:             '/teacher/dashboard',
-    parent:              '/parent/dashboard',
-    student:             '/student/dashboard',
-    inspector:           '/inspector/dashboard',
-    examofficer:         '/admin/dashboard',
-    complianceofficer:   '/admin/dashboard',
-    counselor:           '/admin/dashboard',
+    admin:     '/admin/dashboard',
+    teacher:   '/teacher/dashboard',
+    guardian:  '/parent/dashboard',
+    parent:    '/parent/dashboard',
+    student:   '/student/dashboard',
 };
 
 const InviteAcceptScreen: React.FC = () => {

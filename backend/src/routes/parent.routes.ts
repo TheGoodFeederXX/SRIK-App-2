@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getParents, createParent, getParentById, updateParent, deleteParent, getMyChildren, getChildrenForParent, createAppointment, getMyAppointments, volunteerSignup, markNotificationRead, getParentsByClassId, getMyProfile, getChildOverview, getStudentFees, recordPayment, getPTAMeetings, getLearningResources, getParentMessages, sendMessage, getNotifications, getVolunteeringOpportunities, linkChild, unlinkChild, getComplaints, createComplaint, getParentTodayUpdate, getTeacherAvailability } from '../controllers/parent.controller';
+import { getParents, createParent, getParentById, updateParent, deleteParent, getMyChildren, getChildrenForParent, createAppointment, getMyAppointments, volunteerSignup, markNotificationRead, getParentsByClassId, getMyProfile, getChildOverview, getStudentFees, getPTAMeetings, getLearningResources, getParentMessages, sendMessage, getNotifications, getVolunteeringOpportunities, linkChild, unlinkChild, getComplaints, createComplaint, getParentTodayUpdate, getTeacherAvailability } from '../controllers/parent.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { requireTenant } from '../middleware/tenant.middleware';
 
@@ -22,7 +22,6 @@ router.get('/me/appointments', getMyAppointments);
 router.post('/volunteer-signup', volunteerSignup);
 router.get('/me/children/:studentId/overview', getChildOverview);
 router.get('/me/children/:studentId/fees', getStudentFees);
-router.post('/me/payments', recordPayment);
 router.put('/notifications/:id/read', markNotificationRead);
 
 // Phase 2 Supplementary Routes

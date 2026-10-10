@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { Heart, User, TrendingUp, MessageCircle, CheckCircle } from 'lucide-react';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface SponsorshipRequest {
     id: number;
@@ -247,7 +248,7 @@ const SponsorshipMatching: React.FC = () => {
                             <TrendingUp className="h-6 w-6 text-purple-600" />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold text-gray-900">₦{totalCommitted.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-gray-900">{formatMoney(totalCommitted)}</p>
                             <p className="text-sm text-gray-600">Total Committed</p>
                         </div>
                     </div>
@@ -322,7 +323,7 @@ const SponsorshipMatching: React.FC = () => {
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm text-gray-600">Amount Needed</p>
-                                        <p className="text-2xl font-bold text-rose-600">₦{req.amount_needed.toLocaleString()}</p>
+                                        <p className="text-2xl font-bold text-rose-600">{formatMoney(req.amount_needed)}</p>
                                     </div>
                                     {req.status === 'Pending' && (
                                         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} className="px-4 py-2 bg-rose-600 text-white rounded-lg hover:bg-rose-700 font-semibold">
@@ -332,7 +333,7 @@ const SponsorshipMatching: React.FC = () => {
                                 </div>
 
                                 <div className="mt-3 text-xs text-gray-500">
-                                    Created: {new Date(req.created_at).toLocaleDateString()}
+                                    Created: {new Date(req.created_at).toLocaleDateString("ms-MY")}
                                 </div>
                             </motion.div>
                         ))
@@ -367,12 +368,12 @@ const SponsorshipMatching: React.FC = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <p className="text-sm text-gray-600">Amount Committed</p>
-                                        <p className="text-xl font-bold text-gray-900">₦{sponsorship.amount_committed.toLocaleString()}</p>
+                                        <p className="text-xl font-bold text-gray-900">{formatMoney(sponsorship.amount_committed)}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm text-gray-600">Start Date</p>
                                         <p className="text-sm font-semibold text-gray-900">
-                                            {new Date(sponsorship.start_date).toLocaleDateString()}
+                                            {new Date(sponsorship.start_date).toLocaleDateString("ms-MY")}
                                         </p>
                                     </div>
                                 </div>
@@ -409,7 +410,7 @@ const SponsorshipMatching: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Amount Needed (₦) *</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Amount Needed (RM) *</label>
                             <input
                                 type="number"
                                 value={amountNeeded}

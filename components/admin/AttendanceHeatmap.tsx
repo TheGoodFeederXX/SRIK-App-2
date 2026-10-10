@@ -239,15 +239,15 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
         if (mode === 'monthly') {
             // "year: 'numeric'" (not '2-digit') so "Aug 2026" can't be misread
             // as day-26 — "Aug 26" looked like a date, not a year.
-            return { key: dateStr.slice(0, 7), label: date.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) };
+            return { key: dateStr.slice(0, 7), label: date.toLocaleDateString('ms-MY', { month: 'short', year: 'numeric' }) };
         }
         if (mode === 'weekly') {
             const weekStart = new Date(date);
             weekStart.setDate(date.getDate() - date.getDay());
             const key = weekStart.toISOString().split('T')[0];
-            return { key, label: `Wk of ${weekStart.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}` };
+            return { key, label: `Wk of ${weekStart.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' })}` };
         }
-        return { key: dateStr, label: date.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) };
+        return { key: dateStr, label: date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' }) };
     };
 
     // Re-aggregates the raw daily rows into the columns the current view mode

@@ -146,7 +146,7 @@ const AdminLessonNotesScreen: React.FC<AdminLessonNotesScreenProps> = ({ schoolI
                                                 <span className="ml-1 text-gray-400 font-mono text-xs">({note.teacher.school_generated_id})</span>
                                             )}
                                             {' · '}
-                                            {new Date(note.created_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                                            {new Date(note.created_at).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })}
                                         </p>
                                     </div>
                                     <svg

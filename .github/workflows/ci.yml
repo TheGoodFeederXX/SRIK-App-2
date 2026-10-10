@@ -1,0 +1,143 @@
+# Continuous integration — what runs on every push and pull request.
+#
+# WHAT THIS REPLACES. Four workflows were removed with this one:
+#   - `deploy.yml` ran on a SELF-HOSTED VPS runner and reloaded a server at
+#     /var/www/School-app. There is no such server any more.
+#   - `build-prisma-engine.yml` compiled a Prisma engine binary and committed it
+#     back to the repo.
+#   - `migration-safety.yml` proved claims about `prisma migrate deploy` against a
+#     throwaway PostgreSQL, for a migration path that is no longer how this app is
+#     deployed.
+#   - `playwright.yml` ran browser tests against the legacy tenant database.
+#
+# All four belonged to the Oliskey architecture. None of them could pass here.
+#
+# WHAT THIS DOES. Two jobs, both fast:
+#   1. `verify` — the checks that catch real mistakes: type-checking the frontend
+#      and the backend, running the unit test suite, building the app, and
+#      building the API function that Vercel serves.
+#   2. `deploy` — hands the commit to Vercel. It runs only after `verify` passes
+#      and only on the main branch, so a pull request is checked but never
+#      deployed.
+#
+# WHY THE BUILD IS PART OF CI, NOT ONLY THE DEPLOY. The unit suite can be green
+# while the app does not build — a missing export, a bad import path. Building
+# here means a broken build is caught on the commit that caused it, rather than
+# being discovered as a failed deployment.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A new push to the same branch makes the previous run's result irrelevant. Cancel
+# it rather than paying for both. `main` is excluded so a release is never left
+# half-checked by its own follow-up commit.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Check, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # The Node version comes from .nvmrc so the runner, the local machine and
+      # the pin in package.json cannot drift apart.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      # `npm ci` installs exactly what the lockfile says, so CI cannot pass on a
+      # dependency version that no one has. It also fails loudly if the lockfile
+      # and package.json disagree.
+      - name: Install dependencies
+        run: npm ci
+
+      # The backend is compiled by TypeScript, and the generated database client
+      # has to exist before it can be type-checked.
+      - name: Prepare the database client
+        run: npm run prisma:generate
+
+      - name: Type-check the frontend
+        run: npx tsc --noEmit
+
+      - name: Type-check the backend
+        run: npx tsc --noEmit -p backend/tsconfig.json
+
+      - name: Run the unit tests
+        run: npm run test:run
+
+      - name: Build the app
+        run: npm run build
+
+      # The API that Vercel serves is built from the compiled backend, so this
+      # proves the deployable artefact is produced here rather than on Vercel.
+      - name: Build the API function
+        run: npm run build:backend
+
+      - name: Confirm the API entry point was produced
+        run: |
+          set -e
+          if [ ! -f backend/dist/backend/src/app.js ]; then
+            echo "::error::The API entry point backend/dist/backend/src/app.js was not produced."
+            exit 1
+          fi
+          echo "API entry point is present."
+
+  deploy:
+    name: Deploy to Vercel
+    needs: verify
+    # Only from the main branch. A pull request is verified above and stops there.
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    # The deployment is created here rather than through Vercel's own Git
+    # integration, so that a deployment cannot happen unless the checks above
+    # passed. Vercel's integration would deploy on push regardless of CI.
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # A secret cannot be read before it has been added to the repository. The
+      # explicit check turns "the secret is missing" into a message that says so,
+      # instead of a confusing failure from the deploy command.
+      - name: Check the deployment secrets exist
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          set -e
+          missing=""
+          [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
+          if [ -n "$missing" ]; then
+            echo "::error::Missing repository secret(s):$missing"
+            echo "Add them under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "Deployment secrets are present."
+
+      - name: Deploy to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          set -e
+          # `--prod` makes this the live site. Without it Vercel creates a preview
+          # URL and the real address keeps serving the previous version.
+          npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"

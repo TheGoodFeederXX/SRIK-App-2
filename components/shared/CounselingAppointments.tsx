@@ -113,7 +113,7 @@ const CounselingAppointments: React.FC = () => {
                                         <span className="text-sm text-gray-600">{apt.appointment_type}</span>
                                     </div>
                                     <p className="text-sm text-gray-700 mb-1">
-                                        <strong>Date:</strong> {new Date(apt.requested_date).toLocaleDateString()}
+                                        <strong>Date:</strong> {new Date(apt.requested_date).toLocaleDateString("ms-MY")}
                                     </p>
                                     {apt.reason && (
                                         <p className="text-sm text-gray-600 mt-2">{apt.reason}</p>

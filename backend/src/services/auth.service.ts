@@ -248,7 +248,7 @@ export class AuthService {
         // Find ALL accounts matching the identifier (email OR school_generated_id).
         // A generated ID can legitimately collide across schools/branches — e.g. in
         // the SHARED demo school every visitor's "Lekki" branch admin is
-        // OLISKEY_LEKKI_ADM_0001 (same branch code, number resets per branch). So we
+        // SRIK_MAIN_ADM_0001 (same branch code, number resets per branch). So we
         // must not assume the first match is the right person: we pick the candidate
         // whose PASSWORD actually matches. This is also correct for live schools that
         // happen to share a school/branch code.
@@ -1176,14 +1176,16 @@ export class AuthService {
         try {
             // Lead DevSecOps: Dynamic Persistence ID Calculation
             const school = await prisma.school.findUnique({ where: { id: this.DEMO_SCHOOL_ID }, select: { code: true } });
-            const schoolCode = school?.code?.toUpperCase() || 'OLISKEY';
+            // The fallback carries the SCHOOL's code. It was the vendor's, so a user
+            // with no school row was issued an ID bearing another company's name.
+            const schoolCode = school?.code?.toUpperCase() || 'SRIK';
             
             // IP-Based Session Isolation (the branch id stays per-session for sandboxing,
             // but the branch CODE shown in the global ID must be a clean, readable code —
-            // not an opaque IP hash. So all demo IDs read e.g. OLISKEY_MAIN_ADM_0001.
+            // not an opaque IP hash. So all demo IDs read e.g. SRIK_MAIN_ADM_0001.
             const ipHash = crypto.createHash('sha256').update(ip).digest('hex').substring(0, 8);
             const virtualBranchId = `demo-v-${ipHash}`;
-            // Name matches the branch code shown in IDs (OLISKEY_MAIN_...).
+            // Name matches the branch code shown in IDs (SRIK_MAIN_...).
             const virtualBranchName = 'MAIN';
             const branchCode = 'MAIN';
 

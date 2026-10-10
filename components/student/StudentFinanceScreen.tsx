@@ -8,7 +8,7 @@ interface StudentFinanceScreenProps {
     studentId: number;
 }
 
-const formatter = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 2 });
+const formatter = new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 2 });
 
 const StudentFinanceScreen: React.FC<StudentFinanceScreenProps> = ({ studentId }) => {
     const [fees, setFees] = useState<any[]>([]);
@@ -105,7 +105,7 @@ const StudentFinanceScreen: React.FC<StudentFinanceScreenProps> = ({ studentId }
                                         </div>
                                         <div className="flex-grow">
                                             <p className="font-semibold text-gray-700">{p.title}</p>
-                                            <p className="text-xs text-gray-500">{new Date(p.created_at || new Date()).toLocaleDateString()}</p>
+                                            <p className="text-xs text-gray-500">{new Date(p.created_at || new Date()).toLocaleDateString("ms-MY")}</p>
                                         </div>
                                         <p className="font-bold text-green-600">{formatter.format(p.amount)}</p>
                                     </motion.li>

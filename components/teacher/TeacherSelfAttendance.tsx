@@ -127,7 +127,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                     <div>
                         <h2 className="text-xl font-bold text-gray-800">Today's Attendance</h2>
                         <p className="text-sm text-gray-500 font-medium">
-                            {currentTime.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                            {currentTime.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
                         </p>
                     </div>
                     <motion.button
@@ -223,7 +223,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                                 <div className="flex items-center gap-4">
                                     <div className="text-center bg-gray-50 rounded-lg p-2 min-w-[50px]">
                                         <p className="text-xs font-bold text-gray-400 uppercase">
-                                            {new Date(record.date).toLocaleDateString('en-US', { month: 'short' })}
+                                            {new Date(record.date).toLocaleDateString('ms-MY', { month: 'short' })}
                                         </p>
                                         <p className="text-lg font-bold text-gray-700">
                                             {new Date(record.date).getDate()}

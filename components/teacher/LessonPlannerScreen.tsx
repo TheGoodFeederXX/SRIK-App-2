@@ -97,7 +97,7 @@ const HistoryModal: React.FC<{ isOpen: boolean; onClose: () => void; history: Hi
                             <div>
                                 <p className="font-bold text-gray-800">{entry.subject}</p>
                                 <p className="text-sm text-gray-600">{entry.className}</p>
-                                <p className="text-xs text-gray-400 mt-1">Last saved: {new Date(entry.lastUpdated).toLocaleString()}</p>
+                                <p className="text-xs text-gray-400 mt-1">Last saved: {new Date(entry.lastUpdated).toLocaleString('ms-MY')}</p>
                             </div>
                             <button onClick={() => onLoad(entry)} className="px-3 py-1.5 text-sm font-semibold bg-gray-800 text-white rounded-lg hover:bg-gray-900">Load</button>
                         </div>
@@ -124,7 +124,7 @@ const GeneratedHistoryModal: React.FC<{ isOpen: boolean; onClose: () => void; hi
                             <div>
                                 <p className="font-bold text-gray-800">{entry.subject}</p>
                                 <p className="text-sm text-gray-600">{entry.className}</p>
-                                <p className="text-xs text-gray-400 mt-1">Generated: {new Date(entry.lastUpdated).toLocaleString()}</p>
+                                <p className="text-xs text-gray-400 mt-1">Generated: {new Date(entry.lastUpdated).toLocaleString('ms-MY')}</p>
                             </div>
                             <button onClick={() => onLoad(entry)} className="px-3 py-1.5 text-sm font-semibold bg-purple-600 text-white rounded-lg hover:bg-purple-700">View</button>
                         </div>
@@ -396,15 +396,17 @@ const LessonPlannerScreen: React.FC<{
 
         setIsGenerating(true);
         try {
-            const prompt = `As an expert curriculum designer for the Nigerian school system, generate a comprehensive lesson plan resource.
+            // The prompt named the NIGERIAN school system, so the generated plan
+            // followed the wrong syllabus. SRIK follows KSSR.
+            const prompt = `As an expert curriculum designer for the Malaysian KSSR primary school system, generate a comprehensive lesson plan resource.
             
             Subject: ${subject}
             Class: ${className}
             
             Here are the schemes of work provided by the user:
-            - First Term: ${JSON.stringify(term1Scheme)}
-            - Second Term: ${JSON.stringify(term2Scheme)}
-            - Third Term: ${JSON.stringify(term3Scheme)}
+            - Penggal 1: ${JSON.stringify(term1Scheme)}
+            - Penggal 2: ${JSON.stringify(term2Scheme)}
+            - Penggal 3: ${JSON.stringify(term3Scheme)}
 
             Task:
             1. Analyze the topics provided for each term.
@@ -421,13 +423,13 @@ const LessonPlannerScreen: React.FC<{
                 "className": "${className}",
                 "terms": [
                     {
-                        "term": "First Term",
+                        "term": "Penggal 1",
                         "weeks": [
                             { "week": 1, "topic": "...", "learningObjectives": ["..."], "resources": ["..."] }
                         ]
                     },
-                    { "term": "Second Term", "weeks": [] },
-                    { "term": "Third Term", "weeks": [] }
+                    { "term": "Penggal 2", "weeks": [] },
+                    { "term": "Penggal 3", "weeks": [] }
                 ]
             }`;
 
@@ -436,7 +438,7 @@ const LessonPlannerScreen: React.FC<{
 
             // Construct the messages structure for chat
             const history = [
-                { role: 'user', parts: [{ text: 'You are an expert curriculum designer for the Nigerian school system.' }] },
+                { role: 'user', parts: [{ text: 'You are an expert curriculum designer for the Malaysian KSSR primary school system.' }] },
                 { role: 'model', parts: [{ text: 'I am ready to help design the curriculum.' }] },
                 { role: 'user', parts: [{ text: prompt }] }
             ];
@@ -621,9 +623,9 @@ const LessonPlannerScreen: React.FC<{
 
                 <div className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg mb-4">
-                        <button onClick={() => setActiveTerm('term1')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term1' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>First Term</button>
-                        <button onClick={() => setActiveTerm('term2')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term2' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>Second Term</button>
-                        <button onClick={() => setActiveTerm('term3')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term3' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>Third Term</button>
+                        <button onClick={() => setActiveTerm('term1')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term1' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>Penggal 1</button>
+                        <button onClick={() => setActiveTerm('term2')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term2' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>Penggal 2</button>
+                        <button onClick={() => setActiveTerm('term3')} className={`w-1/3 py-2 text-sm font-semibold rounded-md ${activeTerm === 'term3' ? 'bg-white shadow text-gray-900' : 'text-gray-700'}`}>Penggal 3</button>
                     </div>
                     <SchemeInput scheme={currentScheme} setScheme={setCurrentScheme} />
                 </div>

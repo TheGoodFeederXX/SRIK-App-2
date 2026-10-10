@@ -9,6 +9,7 @@ import {
     DollarSignIcon,
     DownloadIcon
 } from '../../constants';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface Payslip {
     id: string;
@@ -100,8 +101,8 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
     // Print a clean, single payslip — opens a print-ready window so the teacher
     // gets a proper PDF via the browser's "Save as PDF", not the whole app.
     const printPayslip = (p: Payslip) => {
-        const money = (n: number) => `₦${Math.abs(n).toLocaleString()}`;
-        const period = new Date(p.period_start).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        const money = (n: number) => formatMoney(Math.abs(n));
+        const period = new Date(p.period_start).toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
         const rows = p.items.map(it => `
             <tr>
                 <td style="padding:6px 0;color:#374151">${it.name}</td>
@@ -121,14 +122,14 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                 .tot{border-top:1px solid #e5e7eb;margin-top:8px;padding-top:8px;font-weight:600}
             </style></head><body>
             <h1>Payslip</h1>
-            <p class="muted">Pay period: ${period} (${new Date(p.period_start).toLocaleDateString()} – ${new Date(p.period_end).toLocaleDateString()})</p>
+            <p class="muted">Pay period: ${period} (${new Date(p.period_start).toLocaleDateString("ms-MY")} – ${new Date(p.period_end).toLocaleDateString("ms-MY")})</p>
             <p class="muted">Employee ID: ${teacherId} · Status: ${p.status}</p>
             <table><tbody>${rows}
                 <tr class="tot"><td style="padding-top:10px">Gross Salary</td><td style="padding-top:10px;text-align:right">${money(p.gross_salary)}</td></tr>
                 <tr><td style="color:#dc2626">Total Deductions</td><td style="text-align:right;color:#dc2626">-${money(p.total_deductions)}</td></tr>
             </tbody></table>
             <div class="net"><p>Net Payout</p><p class="big">${money(p.net_salary)}</p></div>
-            <p class="muted" style="margin-top:24px">Generated ${new Date().toLocaleString()}</p>
+            <p class="muted" style="margin-top:24px">Generated ${new Date().toLocaleString('ms-MY')}</p>
             <script>window.onload=function(){window.print();}</script>
             </body></html>`);
         w.document.close();
@@ -179,13 +180,13 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                             <div className="flex items-start justify-between mb-4">
                                 <div>
                                     <h3 className="font-semibold text-gray-900">
-                                        {new Date(payslip.period_start).toLocaleDateString('en-US', {
+                                        {new Date(payslip.period_start).toLocaleDateString('ms-MY', {
                                             month: 'long',
                                             year: 'numeric'
                                         })}
                                     </h3>
                                     <p className="text-sm text-gray-600">
-                                        {new Date(payslip.period_start).toLocaleDateString()} - {new Date(payslip.period_end).toLocaleDateString()}
+                                        {new Date(payslip.period_start).toLocaleDateString("ms-MY")} - {new Date(payslip.period_end).toLocaleDateString("ms-MY")}
                                     </p>
                                 </div>
                                 <PaymentStatusBadge status={getStatusBadgeStatus(payslip.status)} size="sm" />
@@ -194,17 +195,17 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">Gross Salary</span>
-                                    <span className="font-medium">₦{payslip.gross_salary.toLocaleString()}</span>
+                                    <span className="font-medium">{formatMoney(payslip.gross_salary)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-gray-600">Deductions</span>
                                     <span className="font-medium text-red-600">
-                                        ₦{payslip.total_deductions.toLocaleString()}
+                                        {formatMoney(payslip.total_deductions)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between font-bold pt-2 border-t">
                                     <span>Net Salary</span>
-                                    <span className="text-green-600">₦{payslip.net_salary.toLocaleString()}</span>
+                                    <span className="text-green-600">{formatMoney(payslip.net_salary)}</span>
                                 </div>
                             </div>
 
@@ -226,7 +227,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                 <div>
                                     <h3 className="text-xl font-bold text-gray-900">Payslip Details</h3>
                                     <p className="text-sm text-gray-600">
-                                        {new Date(selectedPayslip.period_start).toLocaleDateString('en-US', {
+                                        {new Date(selectedPayslip.period_start).toLocaleDateString('ms-MY', {
                                             month: 'long',
                                             year: 'numeric'
                                         })}
@@ -245,7 +246,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                     <div>
                                         <p className="text-gray-600">Period</p>
                                         <p className="font-semibold">
-                                            {new Date(selectedPayslip.period_start).toLocaleDateString()} - {new Date(selectedPayslip.period_end).toLocaleDateString()}
+                                            {new Date(selectedPayslip.period_start).toLocaleDateString("ms-MY")} - {new Date(selectedPayslip.period_end).toLocaleDateString("ms-MY")}
                                         </p>
                                     </div>
                                 </div>
@@ -259,18 +260,18 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                         <div key={idx} className="flex justify-between items-center text-sm">
                                             <span className="text-gray-700">{item.name}</span>
                                             <span className={`font-medium ${item.category === 'Earning' ? 'text-green-600' : 'text-red-600'}`}>
-                                                {item.category === 'Earning' ? '+' : '-'}₦{Math.abs(item.amount).toLocaleString()}
+                                                {item.category === 'Earning' ? '+' : '-'}{formatMoney(Math.abs(item.amount))}
                                             </span>
                                         </div>
                                     ))}
                                     <div className="pt-4 mt-2 border-t space-y-2">
                                         <div className="flex justify-between font-semibold">
                                             <span className="text-gray-700">Gross Salary</span>
-                                            <span>₦{selectedPayslip.gross_salary.toLocaleString()}</span>
+                                            <span>{formatMoney(selectedPayslip.gross_salary)}</span>
                                         </div>
                                         <div className="flex justify-between font-semibold text-red-600">
                                             <span>Total Deductions</span>
-                                            <span>-₦{selectedPayslip.total_deductions.toLocaleString()}</span>
+                                            <span>-{formatMoney(selectedPayslip.total_deductions)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -279,7 +280,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                             {/* Net Salary */}
                             <div className="p-6 bg-gradient-to-r from-green-600 to-green-800 rounded-lg text-white mb-6">
                                 <p className="text-sm text-green-100 font-medium">Net Payout</p>
-                                <p className="text-3xl font-bold mt-1">₦{selectedPayslip.net_salary.toLocaleString()}</p>
+                                <p className="text-3xl font-bold mt-1">{formatMoney(selectedPayslip.net_salary)}</p>
                             </div>
 
                             {/* Actions */}

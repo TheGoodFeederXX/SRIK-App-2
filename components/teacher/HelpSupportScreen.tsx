@@ -129,7 +129,7 @@ const HelpSupportScreen: React.FC = () => {
                                             <div className="flex items-center space-x-4 mt-3 text-xs text-gray-400">
                                                 <span>Category: {ticket.category}</span>
                                                 <span>ID: {ticket.id.split('-')[0]}</span>
-                                                <span>{new Date(ticket.created_at).toLocaleDateString()}</span>
+                                                <span>{new Date(ticket.created_at).toLocaleDateString("ms-MY")}</span>
                                             </div>
                                         </div>
                                         <div className="ml-4 flex flex-col items-end">

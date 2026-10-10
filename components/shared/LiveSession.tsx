@@ -142,7 +142,7 @@ const LiveSession: React.FC<LiveSessionProps> = ({ onClose }) => {
 
                 // Continuous local speech recognition
                 const rec = new SR();
-                rec.lang = 'en-NG';
+                rec.lang = 'ms-MY';
                 rec.continuous = false;      // one utterance at a time; we restart
                 rec.interimResults = false;
                 rec.onresult = (e: any) => {

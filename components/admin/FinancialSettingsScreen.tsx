@@ -26,12 +26,12 @@ const Accordion: React.FC<{ title: string; children: React.ReactNode; defaultOpe
 
 const FinancialSettingsScreen: React.FC = () => {
   const { currentSchool } = useAuth();
-  const [currency, setCurrency] = useState('NGN');
+  const [currency, setCurrency] = useState('MYR');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (currentSchool?.settings?.financial) {
-      setCurrency(currentSchool.settings.financial.currency || 'NGN');
+      setCurrency(currentSchool.settings.financial.currency || 'MYR');
     }
   }, [currentSchool]);
 
@@ -60,7 +60,7 @@ const FinancialSettingsScreen: React.FC = () => {
         <div className="flex items-center justify-between p-2">
           <label className="text-sm font-medium">Default Currency</label>
           <select value={currency} onChange={e => setCurrency(e.target.value)} className="border rounded-md p-1">
-            <option value="NGN">NGN (₦)</option>
+            <option value="MYR">Ringgit Malaysia (RM)</option>
             <option value="USD">USD ($)</option>
             <option value="GBP">GBP (£)</option>
           </select>

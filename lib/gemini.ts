@@ -57,8 +57,12 @@ export async function generateTimetableAI(data: TimetableRequest): Promise<Gener
   const ptTeachers = data.teachers.filter(t => t.employment_type === 'PT');
   const ftTeachers = data.teachers.filter(t => t.employment_type !== 'PT');
 
+  // The prompt decides the school the model schedules for. It used to say
+  // "Nigerian secondary school", so the generated timetable followed the wrong
+  // school week and term structure — SRIK is a Malaysian primary school whose
+  // week runs Sunday–Thursday.
   const prompt = `
-    You are an expert Nigerian secondary school timetable scheduler with deep knowledge of pedagogical best practices.
+    You are an expert Malaysian primary school timetable scheduler with deep knowledge of pedagogical best practices.
 
     Create a conflict-free weekly timetable following these STRICT requirements:
 
@@ -186,8 +190,11 @@ export interface AIQuestion {
 }
 
 export async function generateExamQuestions(subject: string, topic: string = "General", difficulty: string = "Medium", count: number = 10): Promise<AIQuestion[]> {
+  // JAMB/WAEC are NIGERIAN exam boards; SRIK's pupils sit KSSR-based school
+  // exams, not Nigerian national exams. Naming the wrong board made the model
+  // produce questions pitched at a syllabus this school does not teach.
   const prompt = `
-    You are an expert exam question generator for Nigerian Senior Secondary School students (SS1-SS3), preparing for JAMB/WAEC.
+    You are an expert exam question generator for Malaysian primary school students following the KSSR curriculum.
     Create ${count} multiple-choice questions on the subject "${subject}" focusing on the topic "${topic}".
     Difficulty Level: ${difficulty}.
 

@@ -20,7 +20,7 @@ async function main() {
         adminEmail: `admin-${uniqueId}@test.com`,
         adminPassword: 'Password123!',
         address: '123 Test Street',
-        state: 'Lagos',
+        state: 'Kedah',
         planType: 'free'
     };
 

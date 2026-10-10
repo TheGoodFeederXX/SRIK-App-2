@@ -1,510 +1,622 @@
-import React, { useState, useEffect, useCallback } from 'react';
+/**
+ * Teacher duties — SRIK.
+ *
+ * Rewritten from the multi-tenant original. It posted to raw REST endpoints
+ * (`/teacher-assignments/class-teacher`, `/subject-teacher`), kept a
+ * "co-class teachers" setting, and modelled a school year as a "session" with
+ * numbered terms. None of that applies here: SRIK uses academic years, and a
+ * teacher's duties are a set that is replaced as a whole.
+ *
+ * Why the whole set is replaced at once: a teacher's duties are edited as a
+ * list ("these are your classes and subjects"). Applying the list wholesale is
+ * what the owner means, and it is also what the `set_teacher_assignments` RPC
+ * does — closing the previous duties and opening the new ones in one audited
+ * step, so the old set is kept as history rather than deleted.
+ */
+
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
-    Users, BookOpen, BarChart3, PlusIcon, Trash2, ArrowRightLeft,
-    UserCheck, GraduationCap, Settings, ArrowLeft
+    BookOpen, BarChart3, UserCheck, Users, PlusIcon, ArrowLeft, XIcon, Trash2,
 } from 'lucide-react';
+import CenteredLoader from '../ui/CenteredLoader';
+import { useAuth } from '../../context/AuthContext';
+import {
+    listTeachers,
+    listAssignments,
+    setTeacherAssignments,
+    getCurrentAcademicYearId,
+    getTeacherDuties,
+    type TeacherRecord,
+    type AssignmentRecord,
+} from '../../src/lib/supabase/teachers';
+import { listClassOptions, listSubjectOptions, type ClassOption } from '../../src/lib/supabase/academics';
 
-interface Assignment {
-    id: string;
-    role: 'class_teacher' | 'subject_teacher';
-    session: string | null;
-    term: number | null;
-    periods_per_week: number | null;
-    teacher: { id: string; full_name: string; school_generated_id: string | null; avatar_url: string | null };
-    class: { id: string; name: string } | null;
-    subject: { id: string; name: string } | null;
-}
-
-interface WorkloadRow {
-    teacher_id: string;
-    teacher_name: string;
-    teacher_generated_id: string | null;
-    class_teacher_of: string[];
-    subject_classes: { subject: string; class: string; periods_per_week: number | null }[];
-    total_periods: number;
-    duties: string[];
-    clubs: string[];
-    workload_level: 'Low' | 'Balanced' | 'High';
+interface TeacherAssignmentsScreenProps {
+    /** When opened from a teacher's page: scopes everything to that teacher. */
+    teacherId?: string;
+    teacherName?: string;
+    handleBack?: () => void;
 }
 
 const TABS = [
     { key: 'class', label: 'Class Teachers', icon: <UserCheck className="w-4 h-4" /> },
     { key: 'subject', label: 'Subject Teachers', icon: <BookOpen className="w-4 h-4" /> },
     { key: 'workload', label: 'Workload', icon: <BarChart3 className="w-4 h-4" /> },
-];
+] as const;
 
-interface TeacherAssignmentsScreenProps {
-    /** When opened from a specific teacher's Edit page: scopes the list to
-     * just that teacher and pre-fills the assign forms with them locked in. */
-    teacherId?: string;
-    teacherName?: string;
-    handleBack?: () => void;
+type TabKey = typeof TABS[number]['key'];
+
+/** A teacher's duties summarised for the workload view. */
+interface WorkloadRow {
+    teacherId: string;
+    teacherName: string;
+    staffCode: string;
+    /** Classes this teacher is responsible for. */
+    classTeacherOf: string[];
+    /** What they teach, e.g. "Matematik · 3 Al-Junaidi". */
+    subjectClasses: string[];
+    totalPeriods: number;
+    level: 'Light' | 'Balanced' | 'Heavy';
 }
 
-const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({ teacherId, teacherName, handleBack }) => {
-    const { currentSchool } = useAuth();
-    const { currentBranch } = useBranch();
-    const [tab, setTab] = useState<'class' | 'subject' | 'workload'>('class');
-    const [assignments, setAssignments] = useState<Assignment[]>([]);
-    const [workload, setWorkload] = useState<WorkloadRow[]>([]);
-    const [teachers, setTeachers] = useState<any[]>([]);
-    const [classes, setClasses] = useState<any[]>([]);
-    const [subjects, setSubjects] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [showAssignClass, setShowAssignClass] = useState(false);
-    const [showAssignSubject, setShowAssignSubject] = useState(false);
-    const [allowCoTeachers, setAllowCoTeachers] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [saving, setSaving] = useState(false);
+const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
+    teacherId,
+    teacherName,
+    handleBack,
+}) => {
+    const queryClient = useQueryClient();
+    const { user } = useAuth();
 
-    const [classForm, setClassForm] = useState({ teacher_id: teacherId || '', class_id: '', effective_date: '' });
-    const [subjectForm, setSubjectForm] = useState({ teacher_id: teacherId || '', subject_id: '', class_ids: [] as string[], periods_per_week: '' });
-    const [dutyFormFor, setDutyFormFor] = useState<string | null>(null);
-    const [dutyName, setDutyName] = useState('');
+    const [tab, setTab] = useState<TabKey>(teacherId ? 'class' : 'class');
+    const [showAssign, setShowAssign] = useState(false);
+    const [form, setForm] = useState<{ teacherId: string; classIds: string[]; subjectIds: string[]; isClassTeacher: boolean }>(
+        { teacherId: teacherId ?? '', classIds: [], subjectIds: [], isClassTeacher: false }
+    );
+    const [isSaving, setIsSaving] = useState(false);
 
-    const fetchAll = useCallback(async () => {
-        setLoading(true);
-        try {
-            const roleParam = tab === 'workload' ? '' : tab === 'class' ? 'class_teacher' : 'subject_teacher';
-            const teacherParam = teacherId ? `&teacherId=${teacherId}` : '';
-            const [assignRes, teachersRes, classesRes, subjectsRes, coSetting] = await Promise.all([
-                api.get<Assignment[]>(`/teacher-assignments?role=${roleParam}${teacherParam}`),
-                api.getTeachers(currentSchool?.id, currentBranch?.id),
-                api.getClasses(currentSchool?.id, currentBranch?.id),
-                api.getSubjects(currentSchool?.id, currentBranch?.id),
-                api.get<{ allow_co_class_teachers: boolean }>('/teacher-assignments/settings/co-class-teachers'),
-            ]);
-            setAssignments(Array.isArray(assignRes) ? assignRes : []);
-            setTeachers(Array.isArray(teachersRes) ? teachersRes : []);
-            setClasses(Array.isArray(classesRes) ? classesRes : []);
-            setSubjects(Array.isArray(subjectsRes) ? subjectsRes : []);
-            setAllowCoTeachers(!!coSetting?.allow_co_class_teachers);
+    const teachersQuery = useQuery({
+        queryKey: ['teachers'],
+        queryFn: () => listTeachers(),
+        enabled: Boolean(user),
+    });
 
-            if (tab === 'workload') {
-                const w = await api.get<WorkloadRow[]>('/teacher-assignments/workload');
-                setWorkload(Array.isArray(w) ? w.filter(row => !teacherId || row.teacher_id === teacherId) : []);
-            }
-        } catch (err) {
-            console.error('Error loading teacher assignments:', err);
-            toast.error('Failed to load teacher assignments');
-        } finally {
-            setLoading(false);
-        }
-    }, [tab, currentSchool?.id, currentBranch?.id, teacherId]);
+    const assignmentsQuery = useQuery({
+        queryKey: ['assignments'],
+        queryFn: () => listAssignments(),
+        enabled: Boolean(user),
+    });
 
-    useEffect(() => { if (currentSchool) fetchAll(); }, [currentSchool, fetchAll]);
+    const classesQuery = useQuery({
+        queryKey: ['classOptions'],
+        queryFn: () => listClassOptions(),
+        enabled: Boolean(user),
+    });
 
-    const handleAddDuty = async (targetTeacherId: string) => {
-        if (!dutyName.trim()) { toast.error('Enter a duty name'); return; }
-        try {
-            await api.addTeacherDuty({ teacher_id: targetTeacherId, name: dutyName.trim() });
-            toast.success('Duty added');
-            setDutyName('');
-            setDutyFormFor(null);
-            fetchAll();
-        } catch (err: any) {
-            toast.error(err?.message || 'Failed to add duty');
-        }
+    const subjectsQuery = useQuery({
+        queryKey: ['subjectOptions'],
+        queryFn: () => listSubjectOptions(),
+        enabled: Boolean(user),
+    });
+
+    const teachers = teachersQuery.data ?? [];
+    const assignments = assignmentsQuery.data ?? [];
+    const classes: ClassOption[] = classesQuery.data ?? [];
+    const subjects: ClassOption[] = subjectsQuery.data ?? [];
+
+    const isLoading =
+        teachersQuery.isLoading || assignmentsQuery.isLoading ||
+        classesQuery.isLoading || subjectsQuery.isLoading;
+
+    const refreshAll = async () => {
+        await queryClient.invalidateQueries({ queryKey: ['assignments'] });
+        await queryClient.invalidateQueries({ queryKey: ['teachers'] });
     };
 
-    const handleAssignClass = async (force = false) => {
-        if (!classForm.teacher_id || !classForm.class_id) { toast.error('Please select a teacher and a class'); return; }
-        setSaving(true);
-        try {
-            await api.post('/teacher-assignments/class-teacher', { ...classForm, force });
-            toast.success('Class Teacher assigned');
-            setShowAssignClass(false);
-            setClassForm({ teacher_id: '', class_id: '', effective_date: '' });
-            fetchAll();
-        } catch (err: any) {
-            // The backend asks "Replace them?" in the message when a different
-            // teacher is already the active Class Teacher and co-teachers are
-            // off — the API client only surfaces the message text, not the
-            // structured 409 body, so we match on that phrasing to re-confirm.
-            if (/Replace them\?$/.test(err?.message || '')) {
-                if (window.confirm(err.message)) {
-                    await handleAssignClass(true);
-                    return;
-                }
-            } else {
-                toast.error(err?.message || 'Failed to assign class teacher');
-            }
-        } finally {
-            setSaving(false);
-        }
+    /** The current duties grouped for display. */
+    const classTeacherRows = useMemo(
+        () => assignments.filter(a => a.type === 'CLASS_TEACHER'),
+        [assignments]
+    );
+    const subjectTeacherRows = useMemo(
+        () => assignments.filter(a => a.type === 'SUBJECT_TEACHER'),
+        [assignments]
+    );
+
+    /**
+     * One row per teacher, summarising their load.
+     *
+     * "Balanced" thresholds are a guide for the owner, not a rule the system
+     * enforces: what counts as heavy depends on the school, so nothing is
+     * blocked based on this.
+     */
+    const workload = useMemo<WorkloadRow[]>(() => {
+        const rows: WorkloadRow[] = teachers.map(t => {
+            const mine = assignments.filter(a => a.teacherId === t.id);
+            const periods = mine.reduce((n, a) => n + (a.periodsPerWeek ?? 0), 0);
+            return {
+                teacherId: t.id,
+                teacherName: t.fullName,
+                staffCode: t.staffCode,
+                classTeacherOf: mine.filter(a => a.type === 'CLASS_TEACHER').map(a => a.className),
+                subjectClasses: mine
+                    .filter(a => a.type === 'SUBJECT_TEACHER')
+                    .map(a => `${a.subjectName ?? 'Subject'} · ${a.className}`),
+                totalPeriods: periods,
+                level: periods === 0 ? 'Light' : periods <= 20 ? 'Balanced' : 'Heavy',
+            };
+        });
+        return rows.sort((a, b) => b.totalPeriods - a.totalPeriods);
+    }, [teachers, assignments]);
+
+    const teacherById = useMemo(
+        () => new Map(teachers.map(t => [t.id, t])),
+        [teachers]
+    );
+
+    const openAssign = (type: 'class' | 'subject', forTeacherId?: string) => {
+        setForm({
+            teacherId: forTeacherId ?? teacherId ?? '',
+            classIds: [],
+            subjectIds: [],
+            isClassTeacher: type === 'class',
+        });
+        setShowAssign(true);
     };
 
-    const handleAssignSubject = async (force = false) => {
-        if (!subjectForm.teacher_id || !subjectForm.subject_id || subjectForm.class_ids.length === 0) {
-            toast.error('Please select a teacher, subject, and at least one class'); return;
-        }
-        setSaving(true);
+    /** Opens the form pre-filled with what the teacher already has. */
+    const editTeacher = async (t: TeacherRecord) => {
         try {
-            const res: any = await api.post('/teacher-assignments/subject-teacher', {
-                ...subjectForm,
-                periods_per_week: subjectForm.periods_per_week ? Number(subjectForm.periods_per_week) : undefined,
-                force,
+            const duties = await getTeacherDuties(t.id);
+            setForm({
+                teacherId: t.id,
+                classIds: duties.classIds,
+                subjectIds: duties.subjectIds,
+                isClassTeacher: classTeacherRows.some(a => a.teacherId === t.id),
             });
-            toast.success(`Subject Teacher assigned to ${res.created?.length || 0} class(es)`);
-            setShowAssignSubject(false);
-            setSubjectForm({ teacher_id: '', subject_id: '', class_ids: [], periods_per_week: '' });
-            fetchAll();
-        } catch (err: any) {
-            if (/conflicts with the teacher's existing timetable/.test(err?.message || '')) {
-                if (window.confirm(`${err.message}. Assign anyway?`)) {
-                    await handleAssignSubject(true);
-                    return;
-                }
-            } else {
-                toast.error(err?.message || 'Failed to assign subject teacher');
+            setShowAssign(true);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Could not load this teacher\'s duties.');
+        }
+    };
+
+    const handleSave = async (e?: React.FormEvent) => {
+        e?.preventDefault();
+        if (!form.teacherId) {
+            toast.error('Please choose a teacher.');
+            return;
+        }
+        if (form.classIds.length === 0 && form.subjectIds.length === 0) {
+            toast.error('Choose at least one class or subject.');
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            const yearId = await getCurrentAcademicYearId();
+            if (!yearId) {
+                toast.error('No academic year is set as current.');
+                return;
             }
+
+            const result = await setTeacherAssignments(
+                form.teacherId,
+                yearId,
+                form.classIds,
+                form.isClassTeacher ? [] : form.subjectIds
+            );
+
+            if (!result.success) {
+                toast.error(result.error ?? 'Could not save the duties.');
+                return;
+            }
+
+            toast.success('Duties saved.');
+            await refreshAll();
+            setShowAssign(false);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
         } finally {
-            setSaving(false);
+            setIsSaving(false);
         }
     };
 
-    const handleRemove = async (id: string) => {
-        if (!window.confirm('End this assignment? It stays on record as teaching history.')) return;
-        try {
-            await api.delete(`/teacher-assignments/${id}`);
-            toast.success('Assignment ended');
-            fetchAll();
-        } catch (err: any) {
-            toast.error(err?.message || 'Failed to end assignment');
+    /** Clears every duty for a teacher, keeping the old set as history. */
+    const handleClear = async (t: TeacherRecord) => {
+        if (!window.confirm(`Remove all duties for ${t.fullName}? The previous duties are kept on record.`)) return;
+
+        const yearId = await getCurrentAcademicYearId();
+        if (!yearId) {
+            toast.error('No academic year is set as current.');
+            return;
         }
+
+        const result = await setTeacherAssignments(t.id, yearId, [], []);
+        if (!result.success) {
+            toast.error(result.error ?? 'Could not clear the duties.');
+            return;
+        }
+        toast.success(`${t.fullName}'s duties were cleared.`);
+        await refreshAll();
     };
 
-    const handleToggleCoTeachers = async () => {
-        setSaving(true);
-        try {
-            await api.put('/teacher-assignments/settings/co-class-teachers', { allow_co_class_teachers: !allowCoTeachers });
-            setAllowCoTeachers(!allowCoTeachers);
-            toast.success(`Co-class teachers ${!allowCoTeachers ? 'enabled' : 'disabled'}`);
-        } catch (err: any) {
-            toast.error(err?.message || 'Failed to update setting');
-        } finally {
-            setSaving(false);
-        }
-    };
+    if (isLoading) {
+        return <CenteredLoader fullScreen={false} message="Loading teacher duties..." className="h-screen" />;
+    }
+
+    const selectedTeacher = teacherById.get(form.teacherId);
 
     return (
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    {teacherId && handleBack && (
-                        <button onClick={handleBack} className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-700 mb-1">
-                            <ArrowLeft className="w-4 h-4" /> Back to {teacherName || 'Teacher'}
-                        </button>
-                    )}
-                    <h1 className="text-2xl font-bold text-gray-900 font-outfit">
-                        {teacherId ? `${teacherName || 'Teacher'}'s Assignments` : 'Teacher Assignments'}
-                    </h1>
-                    <p className="text-gray-500">
-                        {teacherId
-                            ? 'Class Teacher and Subject Teacher roles for this teacher, with full teaching history.'
-                            : 'Assign Class Teachers and Subject Teachers, and track workload.'}
-                    </p>
-                </div>
-                <div className="flex gap-2">
-                    <motion.button whileHover={{ y: -1 }} whileTap={{ scale: 0.96 }} onClick={() => setShowSettings(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm hover:bg-gray-200 transition-colors">
-                        <Settings className="w-4 h-4" /> Settings
-                    </motion.button>
-                    <motion.button whileHover={{ y: -1 }} whileTap={{ scale: 0.96 }} onClick={() => setShowAssignClass(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition-colors">
-                        <UserCheck className="w-4 h-4" /> Assign Class Teacher
-                    </motion.button>
-                    <motion.button whileHover={{ y: -1 }} whileTap={{ scale: 0.96 }} onClick={() => setShowAssignSubject(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 bg-emerald-600 text-white rounded-xl font-semibold text-sm hover:bg-emerald-700 transition-colors">
-                        <BookOpen className="w-4 h-4" /> Assign Subject Teacher
-                    </motion.button>
-                </div>
-            </div>
-
-            <div className="bg-white p-1.5 rounded-2xl shadow-sm border border-gray-100 flex gap-1 w-fit">
-                {TABS.map(t => (
-                    <motion.button key={t.key} whileTap={{ scale: 0.96 }} onClick={() => setTab(t.key as any)}
-                        className={`relative flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold ${
-                            tab === t.key ? 'text-white' : 'text-gray-500 hover:bg-gray-50'}`}>
-                        {tab === t.key && (
-                            <motion.div layoutId="teacherAssignmentsTab" transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="absolute inset-0 bg-indigo-600 rounded-xl" />
+        <div className="flex flex-col h-full bg-gray-100">
+            <main className="flex-grow p-4 space-y-4 overflow-y-auto pb-32 lg:pb-4">
+                <div className="flex items-start justify-between gap-3 px-1">
+                    <div>
+                        {teacherId && handleBack && (
+                            <button
+                                onClick={handleBack}
+                                className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-700 mb-1"
+                            >
+                                <ArrowLeft className="w-4 h-4" />
+                                Back
+                            </button>
                         )}
-                        <span className="relative z-10 flex items-center gap-1.5">{t.icon} {t.label}</span>
-                    </motion.button>
-                ))}
-            </div>
-
-            {loading ? (
-                <div className="text-center py-12 text-gray-500">Loading assignments...</div>
-            ) : tab === 'workload' ? (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm">
-                            <thead>
-                                <tr className="text-left text-gray-400 uppercase text-xs tracking-wider border-b border-gray-100">
-                                    <th className="px-5 py-3 font-semibold">Teacher</th>
-                                    <th className="px-5 py-3 font-semibold">Class Teacher Of</th>
-                                    <th className="px-5 py-3 font-semibold">Subjects Taught</th>
-                                    <th className="px-5 py-3 font-semibold">Duties & Clubs</th>
-                                    <th className="px-5 py-3 font-semibold text-center">Periods/Week</th>
-                                    <th className="px-5 py-3 font-semibold text-center">Workload</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {workload.map(w => (
-                                    <tr key={w.teacher_id} className="border-b border-gray-50 hover:bg-gray-50/50">
-                                        <td className="px-5 py-3">
-                                            <p className="font-semibold text-gray-900">{w.teacher_name}</p>
-                                            {w.teacher_generated_id && <p className="text-xs text-gray-400 font-mono">{w.teacher_generated_id}</p>}
-                                        </td>
-                                        <td className="px-5 py-3 text-gray-600">{w.class_teacher_of.join(', ') || '—'}</td>
-                                        <td className="px-5 py-3 text-gray-600">
-                                            {w.subject_classes.length === 0 ? '—' : w.subject_classes.map((s, i) => (
-                                                <span key={i} className="inline-block bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full mr-1 mb-1">
-                                                    {s.subject} · {s.class}
-                                                </span>
-                                            ))}
-                                        </td>
-                                        <td className="px-5 py-3 text-gray-600">
-                                            {w.duties.map((d, i) => (
-                                                <span key={`d-${i}`} className="inline-block bg-amber-50 text-amber-700 text-xs font-semibold px-2 py-0.5 rounded-full mr-1 mb-1">{d}</span>
-                                            ))}
-                                            {w.clubs.map((c, i) => (
-                                                <span key={`c-${i}`} className="inline-block bg-purple-50 text-purple-700 text-xs font-semibold px-2 py-0.5 rounded-full mr-1 mb-1">{c}</span>
-                                            ))}
-                                            {dutyFormFor === w.teacher_id ? (
-                                                <div className="flex items-center gap-1 mt-1">
-                                                    <input value={dutyName} onChange={e => setDutyName(e.target.value)} placeholder="Duty name"
-                                                        className="border border-gray-200 rounded px-2 py-1 text-xs w-28 outline-none focus:ring-1 focus:ring-indigo-400" />
-                                                    <button onClick={() => handleAddDuty(w.teacher_id)} className="text-xs font-semibold text-indigo-600">Add</button>
-                                                </div>
-                                            ) : (
-                                                <button onClick={() => setDutyFormFor(w.teacher_id)} className="text-xs font-semibold text-gray-400 hover:text-indigo-600">+ Duty</button>
-                                            )}
-                                        </td>
-                                        <td className="px-5 py-3 text-center font-bold text-gray-900">{w.total_periods || '—'}</td>
-                                        <td className="px-5 py-3 text-center">
-                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${w.workload_level === 'High' ? 'bg-red-50 text-red-700' : w.workload_level === 'Low' ? 'bg-blue-50 text-blue-700' : 'bg-green-50 text-green-700'}`}>
-                                                {w.workload_level}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                ))}
-                                {workload.length === 0 && (
-                                    <tr><td colSpan={6} className="px-5 py-10 text-center text-gray-400">No active assignments yet.</td></tr>
-                                )}
-                            </tbody>
-                        </table>
+                        <h1 className="text-lg font-bold text-gray-800">
+                            {teacherId ? `Duties — ${teacherName ?? 'Teacher'}` : 'Teacher Duties'}
+                        </h1>
+                        <p className="text-xs text-gray-500">
+                            Who is responsible for which class, and who teaches which subject.
+                        </p>
                     </div>
+                    <button
+                        onClick={() => openAssign(tab === 'subject' ? 'subject' : 'class')}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all shrink-0"
+                    >
+                        <PlusIcon className="w-4 h-4" />
+                        Assign
+                    </button>
                 </div>
-            ) : (
-                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    {assignments.length === 0 ? (
-                        <div className="p-12 text-center">
-                            <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                            <p className="text-gray-500 font-semibold">No {tab === 'class' ? 'Class' : 'Subject'} Teacher assignments yet.</p>
-                        </div>
-                    ) : (
-                        <div className="divide-y divide-gray-50">
-                            {assignments.map((a, i) => (
-                                <motion.div key={a.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(i, 12) * 0.03 }} className="px-5 py-4 flex items-center justify-between gap-3">
-                                    <div className="flex items-center gap-3">
-                                        {a.teacher.avatar_url
-                                            ? <img src={a.teacher.avatar_url} alt={a.teacher.full_name} className="w-9 h-9 rounded-full object-cover" />
-                                            : <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center"><Users className="w-4 h-4 text-indigo-600" /></div>}
-                                        <div>
-                                            <p className="font-semibold text-gray-900">{a.teacher.full_name}</p>
-                                            <p className="text-xs text-gray-400">
-                                                {a.role === 'class_teacher'
-                                                    ? `Class Teacher · ${a.class?.name}`
-                                                    : `${a.subject?.name} · ${a.class?.name}${a.periods_per_week ? ` · ${a.periods_per_week} periods/week` : ''}`}
-                                                {a.session ? ` · ${a.session} Term ${a.term}` : ''}
+
+                <div className="flex gap-1 bg-white rounded-xl p-1 shadow-sm">
+                    {TABS.map(t => (
+                        <button
+                            key={t.key}
+                            onClick={() => setTab(t.key)}
+                            className={`flex-1 flex items-center justify-center gap-2 py-2 text-sm font-semibold rounded-lg transition-colors ${
+                                tab === t.key ? 'bg-indigo-50 text-indigo-600' : 'text-gray-500 hover:bg-gray-50'
+                            }`}
+                        >
+                            {t.icon}
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+
+                {tab === 'class' && (
+                    <DutyList
+                        emptyText="No class teachers yet."
+                        rows={classTeacherRows}
+                        teachers={teachers}
+                        renderDetail={a => a.className}
+                        renderCount={a => (a.periodsPerWeek ? `${a.periodsPerWeek} periods/week` : 'Responsible for this class')}
+                        onEdit={editTeacher}
+                        onClear={handleClear}
+                    />
+                )}
+
+                {tab === 'subject' && (
+                    <DutyList
+                        emptyText="No subject teachers yet."
+                        rows={subjectTeacherRows}
+                        teachers={teachers}
+                        renderDetail={a => `${a.subjectName ?? 'Subject'} · ${a.className}`}
+                        renderCount={a => (a.periodsPerWeek ? `${a.periodsPerWeek} periods/week` : '—')}
+                        onEdit={editTeacher}
+                        onClear={handleClear}
+                    />
+                )}
+
+                {tab === 'workload' && (
+                    <div className="space-y-2">
+                        {workload.length === 0 ? (
+                            <EmptyCard text="No teachers to show." />
+                        ) : (
+                            workload.map((row, i) => (
+                                <motion.div
+                                    key={row.teacherId}
+                                    initial={{ opacity: 0, y: 6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.18, delay: Math.min(i, 10) * 0.03 }}
+                                    className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4"
+                                >
+                                    <div className="flex items-center justify-between gap-3">
+                                        <div className="min-w-0">
+                                            <p className="font-bold text-gray-800 truncate">{row.teacherName}</p>
+                                            <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
+                                                {row.staffCode}
                                             </p>
                                         </div>
+                                        <span className={`px-2 py-1 rounded-lg text-xs font-bold shrink-0 ${
+                                            row.level === 'Heavy' ? 'bg-amber-100 text-amber-700'
+                                                : row.level === 'Balanced' ? 'bg-green-100 text-green-700'
+                                                    : 'bg-gray-100 text-gray-500'
+                                        }`}>
+                                            {row.totalPeriods} periods
+                                        </span>
                                     </div>
-                                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => handleRemove(a.id)}
-                                        className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500 transition-colors" title="End assignment">
-                                        <Trash2 className="w-4 h-4" />
-                                    </motion.button>
+
+                                    {(row.classTeacherOf.length > 0 || row.subjectClasses.length > 0) && (
+                                        <div className="mt-2 flex flex-wrap gap-1">
+                                            {row.classTeacherOf.map((c, k) => (
+                                                <span key={`c-${k}`} className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                                    {c}
+                                                </span>
+                                            ))}
+                                            {row.subjectClasses.map((c, k) => (
+                                                <span key={`s-${k}`} className="bg-indigo-50 text-indigo-700 text-xs font-semibold px-2 py-0.5 rounded-full">
+                                                    {c}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </motion.div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            )}
+                            ))
+                        )}
+                    </div>
+                )}
+            </main>
 
-            {/* Assign Class Teacher modal */}
             <AnimatePresence>
-            {showAssignClass && (
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-                    onClick={() => setShowAssignClass(false)}
-                >
+                {showAssign && (
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setShowAssign(false)}
+                        className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center p-0 sm:p-4 z-50"
                     >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Assign Class Teacher</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Teacher</label>
-                                {teacherId ? (
-                                    <div className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-semibold">{teacherName}</div>
-                                ) : (
-                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                                        value={classForm.teacher_id} onChange={e => setClassForm({ ...classForm, teacher_id: e.target.value })}>
-                                        <option value="">Select teacher...</option>
-                                        {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.full_name || t.name}</option>)}
-                                    </select>
-                                )}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 20 }}
+                            onClick={e => e.stopPropagation()}
+                            className="bg-white rounded-t-3xl sm:rounded-3xl p-6 w-full max-w-lg space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
+                        >
+                            <div className="flex items-start justify-between">
+                                <h2 className="text-lg font-bold text-gray-900">Assign duties</h2>
+                                <button
+                                    onClick={() => setShowAssign(false)}
+                                    aria-label="Close"
+                                    className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                                >
+                                    <XIcon className="w-4 h-4" />
+                                </button>
                             </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Class</label>
-                                <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    value={classForm.class_id} onChange={e => setClassForm({ ...classForm, class_id: e.target.value })}>
-                                    <option value="">Select class...</option>
-                                    {classes.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Effective Date</label>
-                                <input type="date" className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
-                                    value={classForm.effective_date} onChange={e => setClassForm({ ...classForm, effective_date: e.target.value })} />
-                            </div>
-                            {allowCoTeachers && (
-                                <p className="text-xs text-indigo-600 bg-indigo-50 px-3 py-2 rounded-xl">Co-class teachers are enabled — this class may have more than one active Class Teacher.</p>
-                            )}
-                        </div>
-                        <div className="flex space-x-3">
-                            <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowAssignClass(false)} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
-                            <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={() => handleAssignClass(false)} disabled={saving}
-                                className="flex-grow py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">
-                                {saving ? 'Assigning...' : 'Assign'}
-                            </motion.button>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
-            </AnimatePresence>
 
-            {/* Assign Subject Teacher modal */}
-            <AnimatePresence>
-            {showAssignSubject && (
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-                    onClick={() => setShowAssignSubject(false)}
-                >
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto"
-                    >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Assign Subject Teacher</h2>
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Teacher</label>
-                                {teacherId ? (
-                                    <div className="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-gray-700 font-semibold">{teacherName}</div>
-                                ) : (
-                                    <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                                        value={subjectForm.teacher_id} onChange={e => setSubjectForm({ ...subjectForm, teacher_id: e.target.value })}>
-                                        <option value="">Select teacher...</option>
-                                        {teachers.map((t: any) => <option key={t.id} value={t.id}>{t.full_name || t.name}</option>)}
+                            <form onSubmit={handleSave} className="space-y-4">
+                                <div>
+                                    <label htmlFor="dutyTeacher" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Teacher
+                                    </label>
+                                    <select
+                                        id="dutyTeacher"
+                                        value={form.teacherId}
+                                        onChange={e => setForm({ ...form, teacherId: e.target.value })}
+                                        disabled={Boolean(teacherId)}
+                                        className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-60"
+                                        required
+                                    >
+                                        <option value="">Choose a teacher</option>
+                                        {teachers.filter(t => t.status === 'ACTIVE').map(t => (
+                                            <option key={t.id} value={t.id}>{t.fullName}</option>
+                                        ))}
                                     </select>
-                                )}
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Subject</label>
-                                <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                                    value={subjectForm.subject_id} onChange={e => setSubjectForm({ ...subjectForm, subject_id: e.target.value })}>
-                                    <option value="">Select subject...</option>
-                                    {subjects.map((s: any) => <option key={s.id} value={s.id}>{s.name}</option>)}
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Classes (select all that apply)</label>
-                                <div className="max-h-40 overflow-y-auto border border-gray-200 rounded-xl p-2 space-y-1">
-                                    {classes.map((c: any) => (
-                                        <label key={c.id} className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded-lg cursor-pointer">
-                                            <input type="checkbox"
-                                                checked={subjectForm.class_ids.includes(c.id)}
-                                                onChange={e => setSubjectForm({
-                                                    ...subjectForm,
-                                                    class_ids: e.target.checked
-                                                        ? [...subjectForm.class_ids, c.id]
-                                                        : subjectForm.class_ids.filter(id => id !== c.id),
-                                                })} />
-                                            <span className="text-sm text-gray-700">{c.name}</span>
-                                        </label>
-                                    ))}
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Periods per Week (optional)</label>
-                                <input type="number" min="1" className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none"
-                                    value={subjectForm.periods_per_week} onChange={e => setSubjectForm({ ...subjectForm, periods_per_week: e.target.value })} />
-                            </div>
-                        </div>
-                        <div className="flex space-x-3">
-                            <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowAssignSubject(false)} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
-                            <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={() => handleAssignSubject(false)} disabled={saving}
-                                className="flex-grow py-3 px-4 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-200 disabled:opacity-60">
-                                {saving ? 'Assigning...' : 'Assign'}
-                            </motion.button>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
-            </AnimatePresence>
 
-            {/* Settings modal */}
-            <AnimatePresence>
-            {showSettings && (
-                <motion.div
-                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                    className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
-                    onClick={() => setShowSettings(false)}
-                >
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 10 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="bg-white rounded-3xl p-6 max-w-sm w-full space-y-5 shadow-2xl"
-                    >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Assignment Settings</h2>
-                        <div className="flex items-center justify-between bg-gray-50 rounded-xl p-4">
-                            <div>
-                                <p className="font-semibold text-gray-800 text-sm">Allow Co-Class Teachers</p>
-                                <p className="text-xs text-gray-500 mt-0.5">Let a class have more than one active Class Teacher.</p>
-                            </div>
-                            <motion.button whileTap={{ scale: 0.94 }} onClick={handleToggleCoTeachers} disabled={saving}
-                                className={`w-12 h-7 rounded-full relative flex-shrink-0 transition-colors ${allowCoTeachers ? 'bg-indigo-600' : 'bg-gray-300'}`}>
-                                <motion.span layout transition={{ type: 'spring', stiffness: 500, damping: 30 }} className={`absolute top-1 w-5 h-5 bg-white rounded-full shadow ${allowCoTeachers ? 'translate-x-6' : 'translate-x-1'}`} />
-                            </motion.button>
-                        </div>
-                        <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowSettings(false)} className="w-full py-3 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-colors">Close</motion.button>
+                                <label className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl border border-gray-200 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={form.isClassTeacher}
+                                        onChange={e => setForm({ ...form, isClassTeacher: e.target.checked })}
+                                        className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                                    />
+                                    <span className="text-sm text-gray-700">
+                                        Responsible for a class (class teacher)
+                                    </span>
+                                </label>
+
+                                <div>
+                                    <p className="text-sm font-medium text-gray-700 mb-2">Classes</p>
+                                    {classes.length === 0 ? (
+                                        <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                            No classes are set up for the current year.
+                                        </p>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {classes.map(c => {
+                                                const checked = form.classIds.includes(c.id);
+                                                return (
+                                                    <label
+                                                        key={c.id}
+                                                        className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                                                            checked ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-300 hover:bg-gray-100'
+                                                        }`}
+                                                    >
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={checked}
+                                                            onChange={() => setForm({
+                                                                ...form,
+                                                                classIds: checked
+                                                                    ? form.classIds.filter(x => x !== c.id)
+                                                                    : [c.id],
+                                                            })}
+                                                            className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                                                        />
+                                                        <span className="text-sm text-gray-700">{c.label}</span>
+                                                    </label>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                    {form.isClassTeacher && form.classIds.length > 1 && (
+                                        <p className="text-xs text-amber-600 mt-2">
+                                            A class teacher is usually responsible for one class. Only the first will be used.
+                                        </p>
+                                    )}
+                                </div>
+
+                                {!form.isClassTeacher && (
+                                    <div>
+                                        <p className="text-sm font-medium text-gray-700 mb-2">Subjects taught</p>
+                                        {subjects.length === 0 ? (
+                                            <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg p-3">
+                                                No subjects have been set up yet.
+                                            </p>
+                                        ) : (
+                                            <div className="space-y-2">
+                                                {subjects.map(s => {
+                                                    const checked = form.subjectIds.includes(s.id);
+                                                    return (
+                                                        <label
+                                                            key={s.id}
+                                                            className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${
+                                                                checked ? 'bg-indigo-50 border-indigo-200' : 'bg-gray-50 border-gray-300 hover:bg-gray-100'
+                                                            }`}
+                                                        >
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={checked}
+                                                                onChange={() => setForm({
+                                                                    ...form,
+                                                                    subjectIds: checked
+                                                                        ? form.subjectIds.filter(x => x !== s.id)
+                                                                        : [...form.subjectIds, s.id],
+                                                                })}
+                                                                className="h-4 w-4 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500"
+                                                            />
+                                                            <span className="text-sm text-gray-700">{s.label}</span>
+                                                        </label>
+                                                    );
+                                                })}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+
+                                {selectedTeacher && (
+                                    <p className="text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
+                                        Saving replaces everything {selectedTeacher.fullName} currently has.
+                                        The previous duties stay on record as history.
+                                    </p>
+                                )}
+
+                                <div className="flex gap-3 pt-1">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowAssign(false)}
+                                        className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isSaving}
+                                        className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+                                    >
+                                        {isSaving ? 'Saving...' : 'Save duties'}
+                                    </button>
+                                </div>
+                            </form>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            )}
+                )}
             </AnimatePresence>
         </div>
     );
 };
+
+/** A list of duty rows, grouped by teacher. */
+const DutyList: React.FC<{
+    rows: AssignmentRecord[];
+    teachers: TeacherRecord[];
+    emptyText: string;
+    renderDetail: (a: AssignmentRecord) => string;
+    renderCount: (a: AssignmentRecord) => string;
+    onEdit: (t: TeacherRecord) => void;
+    onClear: (t: TeacherRecord) => void;
+}> = ({ rows, teachers, emptyText, renderDetail, renderCount, onEdit, onClear }) => {
+    const byTeacher = useMemo(() => {
+        const map = new Map<string, AssignmentRecord[]>();
+        for (const a of rows) {
+            if (!map.has(a.teacherId)) map.set(a.teacherId, []);
+            map.get(a.teacherId)!.push(a);
+        }
+        return [...map.entries()];
+    }, [rows]);
+
+    if (byTeacher.length === 0) return <EmptyCard text={emptyText} />;
+
+    return (
+        <div className="space-y-2">
+            {byTeacher.map(([id, list]) => {
+                const teacher = teachers.find(t => t.id === id);
+                return (
+                    <motion.div
+                        key={id}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.18 }}
+                        className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4"
+                    >
+                        <div className="flex items-start justify-between gap-3">
+                            <div className="min-w-0">
+                                <p className="font-bold text-gray-800 truncate">{list[0].teacherName}</p>
+                                <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
+                                    {list[0].teacherStaffCode}
+                                </p>
+                            </div>
+                            {teacher && (
+                                <div className="flex items-center gap-1 shrink-0">
+                                    <button
+                                        onClick={() => onEdit(teacher)}
+                                        aria-label={`Edit duties for ${teacher.fullName}`}
+                                        className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                                    >
+                                        <Users className="w-4 h-4" />
+                                    </button>
+                                    <button
+                                        onClick={() => onClear(teacher)}
+                                        aria-label={`Clear duties for ${teacher.fullName}`}
+                                        className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="mt-2 space-y-1">
+                            {list.map(a => (
+                                <div key={a.id} className="flex items-center justify-between gap-2 text-sm">
+                                    <span className="text-gray-700">{renderDetail(a)}</span>
+                                    <span className="text-xs text-gray-400 shrink-0">{renderCount(a)}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </motion.div>
+                );
+            })}
+        </div>
+    );
+};
+
+const EmptyCard: React.FC<{ text: string }> = ({ text }) => (
+    <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-300">
+        <UserCheck className="w-12 h-12 mx-auto mb-3 text-gray-300" />
+        <p className="text-gray-500 font-medium">{text}</p>
+    </div>
+);
 
 export default TeacherAssignmentsScreen;

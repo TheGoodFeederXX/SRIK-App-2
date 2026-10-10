@@ -18,8 +18,8 @@ vi.mock('../../../context/ProfileContext', () => ({
     useProfile: () => ({ profile: { role: 'student' }, loading: false })
 }));
 
-vi.mock('../../../context/BranchContext', () => ({
-    useBranch: () => ({ currentBranch: null, branches: [] })
+vi.mock('../../../context/SchoolScopeContext', () => ({
+    useSchoolScope: () => ({ currentBranch: null, branches: [] })
 }));
 
 // Mock API and Storage to bypass loaders

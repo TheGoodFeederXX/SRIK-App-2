@@ -18,8 +18,8 @@ vi.mock('../../../context/ProfileContext', () => ({
     useProfile: () => ({ profile: { role: 'parent' }, loading: false })
 }));
 
-vi.mock('../../../context/BranchContext', () => ({
-    useBranch: () => ({ currentBranch: null, branches: [] })
+vi.mock('../../../context/SchoolScopeContext', () => ({
+    useSchoolScope: () => ({ currentBranch: null, branches: [] })
 }));
 
 // Mock layout and child components

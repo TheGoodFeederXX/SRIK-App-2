@@ -32,7 +32,7 @@ app.use(compression({
 
 // Identify our own traffic so a WAF can allow-list it and cut false positives on
 // legitimate API calls (large base64 photo uploads, JSON with rich text, etc.).
-app.use((_req, res, next) => { res.setHeader('X-App', 'oliskey-api'); next(); });
+app.use((_req, res, next) => { res.setHeader('X-App', 'srik-api'); next(); });
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
@@ -181,7 +181,10 @@ const baseCspDirectives: Record<string, any> = {
     imgSrc: ["'self'", "data:", "blob:", "https://api.dicebear.com", "https://cdn-icons-png.flaticon.com"],
     // *.daily.co (+ wss) powers the embedded live-class video call; Daily's
     // media/signaling run over WebSocket, so both schemes must be allowed.
-    connectSrc: ["'self'", "https://generativelanguage.googleapis.com", "https://api.paystack.co", "https://*.ingest.sentry.io", "https://*.daily.co", "wss://*.daily.co"],
+    // No payment-gateway hosts: this app has no online payment. A Content-Security-
+// Policy entry is a permission, and permitting a host the app never calls is a
+// standing invitation for injected content to reach it.
+    connectSrc: ["'self'", "https://generativelanguage.googleapis.com", "https://*.ingest.sentry.io", "https://*.daily.co", "wss://*.daily.co"],
     mediaSrc: ["'self'", "blob:", "https://*.daily.co"],
     // Payment widgets + Learning Hub OER content render in iframes. The Learning
     // Hub domains here MUST match deploy/nginx.conf's frame-src (that's what
@@ -191,7 +194,7 @@ const baseCspDirectives: Record<string, any> = {
     // TODO if you self-host Jitsi (see deploy/jitsi/README.md): add your Jitsi
     // domain here too (e.g. "https://meet.yourschooldomain.com") — the embedded
     // video call is an iframe, same as the Learning Hub resources above.
-    frameSrc: ["'self'", "https://js.paystack.co", "https://checkout.flutterwave.com", "https://phet.colorado.edu", "https://www.adaptedmind.com", "https://scratch.mit.edu", "https://www.youtube.com", "https://www.geogebra.org", "https://www.desmos.com", "https://www.mathsisfun.com", "https://www.shodor.org", "https://blockly.games", "https://code.org", "https://kids.nationalgeographic.com", "https://www.commonlit.org", "https://www.gutenberg.org", "https://www.khanacademy.org", "https://openstax.org", "https://*.daily.co"],
+    frameSrc: ["'self'", "https://phet.colorado.edu", "https://www.adaptedmind.com", "https://scratch.mit.edu", "https://www.youtube.com", "https://www.geogebra.org", "https://www.desmos.com", "https://www.mathsisfun.com", "https://www.shodor.org", "https://blockly.games", "https://code.org", "https://kids.nationalgeographic.com", "https://www.commonlit.org", "https://www.gutenberg.org", "https://www.khanacademy.org", "https://openstax.org", "https://*.daily.co"],
     objectSrc: ["'none'"],
     frameAncestors: ["'none'"],
     baseUri: ["'self'"],

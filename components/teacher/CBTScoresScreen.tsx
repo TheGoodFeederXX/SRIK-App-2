@@ -112,7 +112,7 @@ const CBTScoresScreen: React.FC<CBTScoresScreenProps> = ({ test }) => {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {new Date(result.submittedAt).toLocaleDateString()}
+                                            {new Date(result.submittedAt).toLocaleDateString("ms-MY")}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             {result.status === 'Passed' ? (

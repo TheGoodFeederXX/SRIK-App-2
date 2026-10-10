@@ -224,7 +224,7 @@ const AppointmentScreen: React.FC<AppointmentScreenProps> = ({ parentId, student
                         recipient_type: 'teacher',
                         recipient_id: selectedTeacher.user_id,
                         title: 'New Appointment Request',
-                        message: `Parent of ${selectedStudent.name} has requested an appointment for ${startsAt.toLocaleDateString()}.`,
+                        message: `Parent of ${selectedStudent.name} has requested an appointment for ${startsAt.toLocaleDateString("ms-MY")}.`,
                         metadata: {
                             appointmentId: appointmentData?.id,
                             studentId: selectedStudent.id,
@@ -281,7 +281,7 @@ const AppointmentScreen: React.FC<AppointmentScreenProps> = ({ parentId, student
                         <div className="flex justify-between items-center">
                             <div>
                                 <p className="text-xs text-gray-500 uppercase font-semibold">Date</p>
-                                <p className="font-bold text-gray-800 text-sm">{selectedDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                                <p className="font-bold text-gray-800 text-sm">{selectedDate.toLocaleDateString('ms-MY', { month: 'short', day: 'numeric' })}</p>
                             </div>
                             <div className="text-right">
                                 <p className="text-xs text-gray-500 uppercase font-semibold">Time</p>
@@ -407,7 +407,7 @@ const AppointmentScreen: React.FC<AppointmentScreenProps> = ({ parentId, student
                                                         <h3 className="font-bold text-lg text-gray-900 break-words">{apt.title || 'Meeting'}</h3>
                                                         <p className="text-sm font-medium text-gray-500 mt-1 flex items-center gap-1.5">
                                                             <ClockIcon className="w-4 h-4" />
-                                                            {appointmentDate(apt)?.toLocaleString('en-US', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) ?? 'Date not set'}
+                                                            {appointmentDate(apt)?.toLocaleString('ms-MY', { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) ?? 'Date not set'}
                                                         </p>
                                                     </div>
                                                     <span className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${(() => { const st = String(apt.status || '').toLowerCase(); return st === 'confirmed' || st === 'approved' ? 'bg-green-100 text-green-700' : st === 'rejected' || st === 'declined' ? 'bg-red-100 text-red-700' : st === 'cancelled' || st === 'canceled' ? 'bg-gray-100 text-gray-600' : 'bg-amber-100 text-amber-700'; })()}`}>
@@ -551,7 +551,7 @@ const AppointmentScreen: React.FC<AppointmentScreenProps> = ({ parentId, student
                                                             : 'text-gray-500 hover:bg-gray-50'
                                                             }`}
                                                     >
-                                                        <span className="text-xs font-medium uppercase">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                                                        <span className="text-xs font-medium uppercase">{date.toLocaleDateString('ms-MY', { weekday: 'short' })}</span>
                                                         <span className="text-lg font-bold mt-1">{date.getDate()}</span>
                                                     </motion.button>
                                                 );

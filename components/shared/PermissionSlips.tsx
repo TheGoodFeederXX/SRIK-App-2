@@ -162,7 +162,7 @@ const PermissionSlips: React.FC = () => {
                                         <strong>Student:</strong> {slip.student_name}
                                     </p>
                                     <p className="text-sm text-gray-600 mb-1">
-                                        <strong>Date:</strong> {new Date(slip.event_date).toLocaleDateString()}
+                                        <strong>Date:</strong> {new Date(slip.event_date).toLocaleDateString("ms-MY")}
                                     </p>
                                     <p className="text-sm text-gray-600 mb-1">
                                         <strong>Location:</strong> {slip.event_location}

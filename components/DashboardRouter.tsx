@@ -9,21 +9,32 @@ import PremiumLoader, { BOOT_MESSAGE } from './ui/PremiumLoader';
 
 const PremiumErrorPage = lazyWithRetry(() => import('./ui/PremiumErrorPage'));
 
+/**
+ * Shown at /subscription and /upgrade.
+ *
+ * There is no plan to buy and no renewal to make: the school runs its own system
+ * and bills its own families in Ringgit at the office. The reader gets a plain
+ * sentence rather than a payment page for a company that has nothing to do with
+ * their school.
+ */
+const NotApplicablePage: React.FC = () => (
+    <div className="flex flex-col items-center justify-center h-full px-6 py-16 text-center">
+        <h2 className="text-xl font-bold text-gray-900 mb-2">Tiada apa-apa untuk dibayar di sini</h2>
+        <p className="text-sm text-gray-500 max-w-md leading-relaxed">
+            Sistem ini dimiliki dan diuruskan oleh sekolah. Yuran murid dijelaskan di pejabat
+            sekolah, bukan melalui halaman ini.
+        </p>
+    </div>
+);
+
 const AdminDashboard = lazyWithRetry(() => import('./admin/AdminDashboard'));
-const SuperAdminDashboard = lazyWithRetry(() => import('./admin/SuperAdminDashboard'));
 const TeacherDashboard = lazyWithRetry(() => import('./teacher/TeacherDashboard'));
 const StudentDashboard = lazyWithRetry(() => import('./student/StudentDashboard'));
 const ParentDashboard = lazyWithRetry(() => import('./parent/ParentDashboard'));
-const ProprietorDashboard = lazyWithRetry(() => import('./proprietor/ProprietorDashboard'));
-const InspectorDashboard = lazyWithRetry(() => import('./inspector/InspectorDashboard'));
-const ComplianceOfficerDashboard = lazyWithRetry(() => import('./admin/ComplianceOfficerDashboard'));
-const ExamOfficerDashboard = lazyWithRetry(() => import('./admin/ExamOfficerDashboard'));
-const CounselorDashboard = lazyWithRetry(() => import('./admin/CounselorDashboard'));
-const SubscriptionPage = lazyWithRetry(() => import('./subscription/SubscriptionPage'));
 const ExternalExamsPage = lazyWithRetry(() => import('./admin/ExternalExamsPage'));
 
 /**
- * The router shows the same Oliskey loader as the rest of the app.
+ * The router shows the same school loader as the rest of the app.
  *
  * It used to render a bare indigo spinner on grey. Starting the app crosses this
  * router between two phases that both show the branded loader, so the sequence
@@ -84,23 +95,12 @@ const DashboardRouter: React.FC<DashboardRouterProps> = (props) => {
         switch (role) {
             case DashboardType.Admin:
                 return <VerifiedAdminRoute><AdminDashboard {...props} /></VerifiedAdminRoute>;
-            case DashboardType.SuperAdmin:
-                return <SuperAdminDashboard {...props} />;
-            case DashboardType.Proprietor:
-                return <ProprietorDashboard {...props} />;
-            case DashboardType.Inspector:
-                return <InspectorDashboard {...props} />;
-            case DashboardType.ComplianceOfficer:
-                return <ComplianceOfficerDashboard {...props} />;
-            case DashboardType.ExamOfficer:
-                return <ExamOfficerDashboard {...props} />;
-            case DashboardType.Counselor:
-                return <CounselorDashboard {...props} />;
             case DashboardType.Teacher:
                 return <TeacherDashboard {...props} />;
             case DashboardType.Student:
                 return <StudentDashboard {...props} />;
             case DashboardType.Parent:
+            case DashboardType.Guardian:
                 return <ParentDashboard {...props} />;
             default:
                 return (
@@ -123,8 +123,13 @@ const DashboardRouter: React.FC<DashboardRouterProps> = (props) => {
                 } as React.CSSProperties}
             >
                 <Routes>
-                    <Route path="/subscription" element={<SubscriptionPage {...(props as any)} />} />
-                    <Route path="/upgrade" element={<SubscriptionPage {...(props as any)} />} />
+                    {/* Nothing to pay. These paths were the vendor's plan/renewal
+                        pages, which charged the school for access to the app it
+                        runs. They are real addresses people may have bookmarked,
+                        so they answer honestly instead of 404-ing or showing a
+                        blank dashboard. */}
+                    <Route path="/subscription" element={<NotApplicablePage />} />
+                    <Route path="/upgrade" element={<NotApplicablePage />} />
                     <Route path="/external-exams" element={<ExternalExamsPage {...(props as any)} />} />
                     {/* Every other path (including bare "/") renders the same
                         role dashboard shell — each dashboard now reads its own

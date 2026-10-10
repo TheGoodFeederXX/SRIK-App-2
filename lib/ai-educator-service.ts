@@ -7,11 +7,14 @@ import { syncEngine } from './syncEngine';
  */
 export class AIEducatorService {
     /**
-     * Generates a lesson plan draft based on Nigerian/British curriculum.
+     * Generates a lesson plan draft based on the KSSR/British curriculum.
      */
     static async generateLessonDraft(subject: string, topic: string, grade: string) {
         const ai = getAIClient();
-        const prompt = `Act as an expert Nigerian/British curriculum designer. 
+        // The prompt named the NIGERIAN curriculum, so drafts came back with
+        // objectives from a syllabus this school does not teach. SRIK follows
+        // KSSR (the Malaysian national primary curriculum).
+        const prompt = `Act as an expert KSSR/British curriculum designer. 
         Draft a lesson plan for ${subject} on the topic "${topic}" for ${grade}. 
         Include: Objectives, Introduction, Development, and Evaluation questions. 
         Format as JSON.`;

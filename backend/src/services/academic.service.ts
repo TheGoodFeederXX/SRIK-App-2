@@ -31,11 +31,13 @@ export class AcademicService {
             select: { curricula_config: true }
         });
 
-        const curricula = school?.curricula_config || ['NIGERIAN'];
-        
-        // Default to Nigerian settings if multiple are selected but first one is Nigerian
-        // In a real system, this might be more complex (per-class or per-student track)
-        if (curricula.includes('BRITISH') && !curricula.includes('NIGERIAN')) {
+        const curricula = school?.curricula_config || ['KSSR'];
+
+        // The Malaysian national curriculum is the default. The branch below kept
+        // a British alternative, which is a real option for a school that follows
+        // it — but 'NIGERIAN' as the FALLBACK meant a school with nothing
+        // configured was graded on another country's scale.
+        if (curricula.includes('BRITISH') && !curricula.includes('KSSR')) {
             return {
                 ca_percent: 0.3,
                 exam_percent: 0.7,
@@ -51,18 +53,24 @@ export class AcademicService {
             };
         }
 
-        // Default Nigerian Settings
+        // The school's own scale, as agreed in phase 4: A 80, B 65, C 50, D 35,
+        // E below that. There is no F — the scale ends at E, and a sixth letter
+        // would be a grade the school never issues.
+        //
+        // This was a THIRD, different scale (A 70, B 60, C 50, D 45, F). Two
+        // scales disagreed inside one backend, and a mark of 70 was an A here and
+        // a B in `academicSettings.service.ts`.
         return {
             ca_percent: 0.4,
             exam_percent: 0.6,
             grading: (score: number) => {
-                if (score >= 70) return { grade: 'A', remark: 'Excellent' };
-                if (score >= 60) return { grade: 'B', remark: 'Very Good' };
-                if (score >= 50) return { grade: 'C', remark: 'Good' };
-                if (score >= 45) return { grade: 'D', remark: 'Pass' };
-                return { grade: 'F', remark: 'Fail' };
+                if (score >= 80) return { grade: 'A', remark: 'Cemerlang' };
+                if (score >= 65) return { grade: 'B', remark: 'Baik' };
+                if (score >= 50) return { grade: 'C', remark: 'Memuaskan' };
+                if (score >= 35) return { grade: 'D', remark: 'Perlu Usaha' };
+                return { grade: 'E', remark: 'Perlu Bimbingan' };
             },
-            gradeLabels: ['A', 'B', 'C', 'D', 'F'],
+            gradeLabels: ['A', 'B', 'C', 'D', 'E'],
         };
     }
 
@@ -134,7 +142,7 @@ export class AcademicService {
                 branch_id: branchId && branchId !== 'all' ? branchId : undefined,
                 subject: subject,
                 term: term,
-                // Without the session, "First Term" matched every year's First Term
+                // Without the session, "Penggal 1" matched every year's Penggal 1
                 // and the grade screen could show a previous session's score.
                 ...(session ? { session } : {}),
                 student_id: { in: ids }
@@ -280,7 +288,7 @@ export class AcademicService {
         // compare against); otherwise there's no honest baseline, so it's 0
         // rather than a fabricated number.
         let improvement = 0;
-        const CANONICAL_TERMS = ['First Term', 'Second Term', 'Third Term'];
+        const CANONICAL_TERMS = ['Penggal 1', 'Penggal 2', 'Penggal 3'];
         const termIndex = CANONICAL_TERMS.indexOf(selectedTerm);
         if (termIndex > 0) {
             const previousTermWhere = { ...whereClause, term: CANONICAL_TERMS[termIndex - 1] };
@@ -587,7 +595,7 @@ export class AcademicService {
         const eff = await AcademicSettingsService.getEffective(schoolId, branchId);
         const TERM_NAMES = (Array.isArray(eff.terms) && eff.terms.length)
             ? [...eff.terms].sort((a, b) => (a.order || 0) - (b.order || 0)).map(t => t.name)
-            : ['First Term', 'Second Term', 'Third Term'];
+            : ['Penggal 1', 'Penggal 2', 'Penggal 3'];
         const result: any[] = [];
         for (const session of sessions) {
             const sy = parseInt(String(session).split('/')[0], 10) || startYear;
@@ -634,7 +642,7 @@ export class AcademicService {
      */
     static async upsertReportCard(studentId: string, schoolId: string, data: any, actor?: { id?: string; role?: string }) {
         const { academicRecords, status, attendance, skills, psychomotor, teacherComment, principalComment } = data;
-        const term = data.term || 'First Term';
+        const term = data.term || 'Penggal 1';
         const session = this.resolveSession(data.session);
         const actorId = actor?.id || null;
         const actorRole = (actor?.role || '').toLowerCase();

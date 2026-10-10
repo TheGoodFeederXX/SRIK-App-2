@@ -223,7 +223,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
     // Every session that has at least one published report gets all three
     // canonical term tabs, not just the ones already published — a term the
     // school hasn't published yet still shows as a tab (with a "not
-    // published yet" message), and Third Term always shows a combined
+    // published yet" message), and Penggal 3 always shows a combined
     // annual view built from whichever terms ARE published, rather than
     // being missing entirely until someone separately publishes it.
     const tabEntries = useMemo(() => {
@@ -234,7 +234,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
                 const real = publishedReportsSummary.find(r => r.term === termName && r.session === sessionName);
                 if (real) {
                     entries.push({ term: termName, session: sessionName, synthetic: false, published: true });
-                } else if (termName === 'Third Term') {
+                } else if (termName === 'Penggal 3') {
                     entries.push({ term: termName, session: sessionName, synthetic: true, published: false });
                 } else {
                     entries.push({ term: termName, session: sessionName, synthetic: false, published: false });
@@ -269,7 +269,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
         const entry = tabEntries.find(r => r.term === term && r.session === session);
         if (!entry) return;
 
-        // A genuinely unpublished term (not the computed Third Term annual)
+        // A genuinely unpublished term (not the computed Penggal 3 annual)
         // has nothing to fetch — show the "not published yet" state instead.
         if (!entry.published && !entry.synthetic) {
             setActiveReport(null);

@@ -4,7 +4,7 @@ import { ParentWatchdogService } from './parentWatchdog.service';
 /**
  * Runs the parent watchdog once a day.
  *
- * 07:00 Africa/Lagos — the same timezone the rest of the scheduling in this app
+ * 07:00 Asia/Kuala_Lumpur — the same timezone the rest of the scheduling in this app
  * uses, and early enough that "homework due tomorrow" and "a fee falls due this
  * week" still leave the family time to act.
  *
@@ -32,10 +32,10 @@ export class ParentWatchdogCron {
             } catch (e: any) {
                 console.warn('[ParentWatchdog] run failed:', e?.message);
             }
-        }, { timezone: 'Africa/Lagos' });
+        }, { timezone: 'Asia/Kuala_Lumpur' });
 
         this.started = true;
-        console.log('🕒 [ParentWatchdog] scheduled — daily at 07:00 Africa/Lagos.');
+        console.log('🕒 [ParentWatchdog] scheduled — daily at 07:00 Asia/Kuala_Lumpur.');
     }
 
     static stop() {

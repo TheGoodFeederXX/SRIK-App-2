@@ -24,11 +24,11 @@ import {
 import { DashboardType } from '../../types';
 import { THEME_CONFIG } from '../../constants';
 import { useTeacherStats } from '../../hooks/useTeacherStats';
-import EmailVerificationPrompt from '../auth/EmailVerificationPrompt';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { api } from '../../lib/api';
 import { loadSchedule } from '../../lib/timetableSchedule';
+import { toSchoolDayEnum } from '../../src/lib/branding';
 
 interface TeacherOverviewProps {
   navigateTo: (view: string, title: string, props?: any) => void;
@@ -123,7 +123,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
             try {
                 setLoading(true);
-                const todayName = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+                const todayName = new Date().toLocaleDateString('ms-MY', { weekday: 'long' });
                 const [scheduleRes, assignmentsRes] = await Promise.all([
                     api.getTimetable(
                         currentBranchId && currentBranchId !== 'all' ? currentBranchId : undefined,
@@ -139,10 +139,17 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                 // "Today's Schedule" = only the lessons assigned to THIS teacher for
                 // the current weekday. getTimetable returns the teacher's whole week, so
                 // filter to today's day (1=Mon..7=Sun), drop duplicate rows, and sort by time.
-                const todayNum = (() => { const d = new Date().getDay(); return d === 0 ? 7 : d; })();
+                // `day_of_week` holds the ENGLISH DAY NAME ('SUNDAY' … 'THURSDAY'),
+                // not a number. This used to compute a number (1=Mon..7=Sun) and
+                // compare it to that column, so the comparison could never be true
+                // and "Today's Schedule" was empty on every day of the week — with
+                // no error to show for it. Comparing a name to a name fixes it, and
+                // the Sunday-first indexing comes from branding.ts rather than being
+                // re-derived here.
+                const todayEnum = toSchoolDayEnum(new Date());
                 const seen = new Set<string>();
                 const todays = (Array.isArray(scheduleRes) ? scheduleRes : [])
-                    .filter((e: any) => Number(e.day_of_week) === todayNum)
+                    .filter((e: any) => String(e.day_of_week).toUpperCase() === todayEnum)
                     .filter((e: any) => {
                         const k = `${e.class_id || e.class_name}|${e.start_time}|${e.subject}|${e.notes || ''}`;
                         if (seen.has(k)) return false;
@@ -211,8 +218,12 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
   // Recomputes every minute via the `now` dependency
   const scheduleStatus = useMemo(() => {
-    const day = now.getDay(); // 0=Sun, 6=Sat
-    if (day === 0 || day === 6) return { type: 'weekend' as const };
+    const day = now.getDay(); // 0=Ahad … 6=Sabtu
+    // The school week is Sunday to Thursday, so the days WITHOUT school are
+    // Friday and Saturday — not Sunday. Treating Sunday as a weekend told a
+    // teacher on a working day that there was no school today, and would have
+    // shown no classes on a day they were teaching.
+    if (day === 5 || day === 6) return { type: 'weekend' as const };
     if (todaySchedule.length === 0) return { type: 'no_classes' as const };
 
     const nowMins = now.getHours() * 60 + now.getMinutes();
@@ -305,7 +316,6 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
   return (
     <div className="p-4 lg:p-6 space-y-6 bg-gray-50">
-      {!currentUser?.user_metadata?.email_verified && <EmailVerificationPrompt />}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className={`p-5 rounded-2xl text-white shadow-lg ${theme.mainBg}`}>
         <h3 className="text-2xl font-bold">Welcome, {teacherProfile?.name || 'Teacher'}!</h3>
         <p className="text-sm opacity-90 mt-1">Ready to inspire today?</p>

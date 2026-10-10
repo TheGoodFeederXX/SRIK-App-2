@@ -18,7 +18,7 @@ interface LessonNotesUploadScreenProps {
 const INITIAL_FORM_DATA = {
     selectedClassId: '',
     selectedSubjectId: '',
-    term: 'First Term',
+    term: 'Penggal 1',
     week: 1,
     title: '',
     content: '',
@@ -162,9 +162,9 @@ const LessonNotesUploadScreen: React.FC<LessonNotesUploadScreenProps> = ({ handl
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Term</label>
                                 <select value={term} onChange={e => updateField('term', e.target.value)} className="w-full p-2 border rounded-lg">
-                                    <option>First Term</option>
-                                    <option>Second Term</option>
-                                    <option>Third Term</option>
+                                    <option>Penggal 1</option>
+                                    <option>Penggal 2</option>
+                                    <option>Penggal 3</option>
                                 </select>
                             </div>
                             <div>

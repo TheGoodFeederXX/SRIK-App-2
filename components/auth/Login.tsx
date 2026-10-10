@@ -1,13 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { DashboardType } from '../../types';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { SchoolLogoIcon } from '../../components/shared/SchoolLogoIcon';
 import { THEME_CONFIG } from '../../lib/themeConfig';
-import { authenticateUser } from '../../lib/auth';
+import { signInWithEmail } from '../../src/lib/supabase/auth';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import SchoolSignup from './SchoolSignup';
-import EmailVerificationScreen from './EmailVerificationScreen';
 import LanguageSwitcher from '../shared/LanguageSwitcher';
 
 const EyeIcon = ({ size = 20 }: { size?: number }) => (
@@ -24,218 +21,25 @@ const EyeOffIcon = ({ size = 20 }: { size?: number }) => (
   </svg>
 );
 
-import { DEMO_ACCOUNTS, DEMO_ROLES_ORDER, DEMO_SCHOOL_ID, DEMO_BRANCH_ID } from '../../lib/mockAuth';
 
-// Global state to prevent multiple initializations of Google Identity Services
-let googleIdentityInitialized = false;
-let googleResponseHandler: ((resp: any) => void) | null = null;
-
-const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool?: () => void }> = ({ onNavigateToSignup, onNavigateToCreateSchool }) => {
-  const [view, setView] = useState<'login' | 'school_signup' | 'demo' | 'verify' | 'forgot-password' | 'reset-password'>('login');
+// `onNavigateToSignup` / `onNavigateToCreateSchool` are accepted but
+// deliberately unused: self-service signup was removed, because accounts are
+// created by an administrator. The props stay in the signature so the router
+// that renders this screen does not need to change in the same step.
+const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchool?: () => void }> = () => {
+  const [view, setView] = useState<'login' | 'forgot-password' | 'reset-password'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const { signIn, signInWithGoogle, switchDemoRole, forgotPassword, resetPassword } = useAuth();
+  const { forgotPassword } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [showGoogleMock, setShowGoogleMock] = useState(false);
   
   // Verification state
-  const [verificationEmail, setVerificationEmail] = useState('');
-  const [verificationUserId, setVerificationUserId] = useState('');
   const [otpCode, setOtpCode] = useState('');
-  const [resetCode, setResetCode] = useState('');
-  const [codeCountdown, setCodeCountdown] = useState(0);
-  const [newPassword, setNewPassword] = useState('');
-  const [googleInitialized, setGoogleInitialized] = useState(googleIdentityInitialized);
 
-  const googleInitRef = useRef(false);
-  const googleButtonRef = useRef<HTMLDivElement>(null);
-
-  // Render the official Google button once GIS initializes — this always forces account picker.
-  // We use a requestAnimationFrame so the div has a real layout width before renderButton fires.
-  useEffect(() => {
-    if (!googleInitialized || !googleButtonRef.current) return;
-    const gis = (window as any).google?.accounts?.id;
-    if (!gis) return;
-    const el = googleButtonRef.current;
-    requestAnimationFrame(() => {
-      const width = el.clientWidth > 0 ? el.clientWidth : 360;
-      gis.renderButton(el, {
-        type: 'standard',
-        shape: 'rectangular',
-        theme: 'outline',
-        text: 'signin_with',
-        size: 'large',
-        logo_alignment: 'center',
-        width,
-      });
-    });
-  }, [googleInitialized]);
-
-  // Start 60-second countdown when entering reset-password view
-  useEffect(() => {
-    if (view === 'reset-password') setCodeCountdown(60);
-  }, [view]);
-  useEffect(() => {
-    if (codeCountdown <= 0) return;
-    const t = setTimeout(() => setCodeCountdown(c => c - 1), 1000);
-    return () => clearTimeout(t);
-  }, [codeCountdown]);
-
-  // Initialize Google Identity Services
-  useEffect(() => {
-    // Update the global handler to point to this component instance's handler
-    googleResponseHandler = handleGoogleResponse;
-
-    const initializeGoogle = () => {
-      if ((window as any).google && !googleIdentityInitialized) {
-        console.log('🛡️ [Google] Initializing Identity Services...');
-        const clientId = (import.meta.env as any).VITE_GOOGLE_CLIENT_ID || "1036010453198-q6c7pjf53uqus1j3o85bfud2gebe4rcu.apps.googleusercontent.com";
-        console.log(`🛡️ [Google] Using Client ID: ${clientId.substring(0, 10)}...`);
-        (window as any).google.accounts.id.initialize({
-          client_id: clientId,
-          callback: (response: any) => {
-            if (googleResponseHandler) googleResponseHandler(response);
-          },
-          auto_select: false,
-          cancel_on_tap_outside: true,
-        });
-        googleIdentityInitialized = true;
-        setGoogleInitialized(true);
-      } else if (googleIdentityInitialized) {
-        setGoogleInitialized(true);
-      }
-    };
-
-    // Load Google script check
-    if (!(window as any).google) {
-      const interval = setInterval(() => {
-        if ((window as any).google) {
-          initializeGoogle();
-          clearInterval(interval);
-        }
-      }, 500);
-      return () => clearInterval(interval);
-    } else {
-      initializeGoogle();
-    }
-
-    return () => {
-      // Don't reset googleIdentityInitialized, but we can clear the handler if needed
-      // Actually, keep it for the next mount if it's the same logical flow
-    };
-  }, []);
-
-  const handleGoogleResponse = async (response: any) => {
-    setIsLoading(true);
-    setError('');
-
-    try {
-      // Send the raw signed ID token straight to the backend — it verifies the
-      // signature, audience, and expiry against Google directly. We never trust
-      // a client-side JWT decode for the actual email/identity used to log in.
-      await signInWithGoogle(response.credential);
-      // No navigate('/') here on purpose: whatever URL the browser already
-      // has (e.g. a deep link someone tried to open before being shown this
-      // login screen) should stay exactly where it is. App.tsx's own
-      // `!user || !role` check swaps this component out for the dashboard
-      // on the very next render once auth state updates — forcing a URL
-      // change to '/' would discard that deep link instead of honoring it.
-    } catch (err: any) {
-      console.error('❌ [Google] Auth Error:', err);
-      setError(err.message || 'No Data');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGoogleClick = () => {
-    if (googleInitialized) {
-      // Trigger the Google Account Picker
-      (window as any).google.accounts.id.prompt((notification: any) => {
-        if (notification.isNotDisplayed()) {
-          const reason = notification.getNotDisplayedReason();
-          console.warn('One Tap not displayed:', reason);
-          if (reason === 'invalid_client') {
-            setError('INVALID_CLIENT: The Google Client ID provided is not recognized by Google. Using manual fallback for testing.');
-            setShowGoogleMock(true); // Show a manual email entry only if ID is invalid
-          } else {
-            setError(`Google account selection could not be displayed: ${reason}. Try refreshing.`);
-          }
-        }
-      });
-    } else {
-      // Robustness: If not initialized, try one rapid check before giving up
-      if ((window as any).google?.accounts?.id) {
-        setGoogleInitialized(true);
-        setError('Google Services ready. Please click again.');
-      } else {
-        setError('Google Sign-In is still initializing (Slow Connection). If this persists, verify your Client ID.');
-        // If it takes too long, offer manual entry for dev testing
-        setTimeout(() => setShowGoogleMock(true), 2000);
-      }
-    }
-  };
-
-  useEffect(() => {
-    const lastMode = localStorage.getItem('last_login_mode');
-    // Deep links from the marketing site: app.oliskey.com/demo and /signup open
-    // the matching screen directly instead of landing on the login form first.
-    const path = window.location.pathname.replace(/\/+$/, '');
-    const wantsDemo = path === '/demo' || new URLSearchParams(window.location.search).get('demo') === '1';
-    if (wantsDemo && view !== 'demo') {
-      setView('demo');
-    } else if (path === '/signup' && view === 'login') {
-      setView('school_signup');
-    } else if (lastMode === 'demo' && view !== 'demo') {
-      setView('demo');
-    }
-  }, []);
-
-  // School Signup flow
-  if (view === 'school_signup') {
-    return <SchoolSignup
-      onBack={() => setView('login')}
-      onComplete={(email, role) => {
-        setEmail(email);
-        setPassword('');
-        setView('login');
-      }}
-    />;
-  }
-
-  // Email Verification flow
-  if (view === 'verify') {
-    return (
-      <EmailVerificationScreen
-        email={verificationEmail}
-        userId={verificationUserId}
-        onBack={() => {
-          setView('login');
-          setVerificationEmail('');
-          setVerificationUserId('');
-          setOtpCode('');
-          setError('');
-        }}
-        onVerified={async (token, user) => {
-          const dashboardType = mapRoleToDashboard(user.role);
-          await signIn(dashboardType, {
-            userId: user.id,
-            email: user.email,
-            userType: user.role,
-            token: token,
-            schoolGeneratedId: user.school_generated_id,
-            school: user.school_id ? { id: user.school_id } : undefined
-          });
-          // Same reasoning as handleGoogleResponse above — leave the URL
-          // (the deep link that brought the user here) alone.
-        }}
-      />
-    );
-  }
 
   // Forgot Password flow - Step 1: Request Code
   if (view === 'forgot-password') {
@@ -291,7 +95,15 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
     );
   }
 
-  // Forgot Password flow - Step 2: Reset Password
+  // Sent-confirmation view.
+  //
+  // Supabase emails a LINK; it does not send a code. The previous view asked the
+  // user to type a 6-digit code and a new password, which could never succeed
+  // once Supabase owned identity — the code simply never arrived, so the reset
+  // flow was broken while appearing to work.
+  //
+  // The screen now tells the user what to do rather than collecting input it
+  // cannot act on.
   if (view === 'reset-password') {
     return (
       <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4">
@@ -299,103 +111,51 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 mb-6 self-center">
             <SchoolLogoIcon className="w-7 h-7 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Reset Password</h2>
-          <p className="text-xs text-slate-500 text-center mb-4">Enter the 6-digit code sent to your email and your new password.</p>
+          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Check Your Email</h2>
+          <p className="text-xs text-slate-500 text-center mb-6">
+            We have sent a password reset link to <span className="font-semibold text-slate-700">{email}</span>.
+            Open it to choose a new password.
+          </p>
 
-          {/* Countdown timer */}
-          <div className={`text-center text-xs font-semibold mb-6 ${codeCountdown > 0 ? 'text-amber-600' : 'text-red-600'}`}>
-            {codeCountdown > 0
-              ? `Code expires in ${codeCountdown}s`
-              : 'Code expired — request a new one below'}
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              The link expires after a short time. If it has expired, request a new one below.
+            </p>
           </div>
 
-          {codeCountdown === 0 ? (
-            <div className="space-y-3">
-              <button
-                type="button"
-                onClick={async () => {
-                  setIsLoading(true);
-                  setError('');
-                  try {
-                    await forgotPassword(email);
-                    setCodeCountdown(60);
-                    setResetCode('');
-                  } catch (err: any) {
-                    setError(err.message || 'Failed to resend code');
-                  } finally {
-                    setIsLoading(false);
-                  }
-                }}
-                disabled={isLoading}
-                className="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-70 text-sm"
-              >
-                {isLoading ? 'Sending...' : 'Send New Code'}
-              </button>
-              <button type="button" onClick={() => setView('forgot-password')} className="w-full py-2 text-slate-400 text-xs font-semibold hover:text-slate-600 transition-colors">Back</button>
-            </div>
-          ) : (
-          <form className="space-y-4" onSubmit={async (e) => {
-            e.preventDefault();
-            if (!resetCode || !newPassword) { setError('All fields are required'); return; }
-            setIsLoading(true);
-            setError('');
-            try {
-              await resetPassword({ email, code: resetCode, newPassword });
-              setError('Password reset successful! You can now log in.');
-              setTimeout(() => {
-                setView('login');
-                setError('');
-                setPassword('');
-              }, 3000);
-            } catch (err: any) {
-              setError(err.message || 'Failed to reset password');
-            } finally {
-              setIsLoading(false);
-            }
-          }}>
-            <input
-              type="text"
-              value={resetCode}
-              onChange={(e) => setResetCode(e.target.value)}
-              placeholder="6-Digit Reset Code"
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-center text-lg font-bold tracking-widest focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
-              maxLength={6}
-              required
-            />
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="New Password"
-                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
-              >
-                {showPassword ? <EyeOffIcon size={18} /> : <EyeIcon size={18} />}
-              </button>
-            </div>
+          {error && (
+            <p className="text-center text-xs text-red-600 bg-red-50 border border-red-100 rounded-lg p-3 mb-4">
+              {error}
+            </p>
+          )}
+
+          <div className="space-y-3">
             <button
-              type="submit"
+              type="button"
+              onClick={async () => {
+                setIsLoading(true);
+                setError('');
+                try {
+                  await forgotPassword(email);
+                } catch (err: any) {
+                  setError(err.message || 'Failed to send reset link');
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
               disabled={isLoading}
-              className="w-full py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-70 text-sm"
+              className="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-70 text-sm"
             >
-              {isLoading ? 'Resetting...' : 'Update Password'}
+              {isLoading ? 'Sending...' : 'Send New Link'}
             </button>
             <button
               type="button"
-              onClick={() => setView('forgot-password')}
+              onClick={() => { setView('login'); setError(''); }}
               className="w-full py-2 text-slate-400 text-xs font-semibold hover:text-slate-600 transition-colors"
             >
-              Back
+              Back to Sign In
             </button>
-          </form>
-          )}
-          {error && <div className={`mt-4 p-3 ${error.includes('successful') ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100'} text-xs rounded-lg border shadow-sm animate-fade-in`}>{error}</div>}
+          </div>
         </div>
       </div>
     );
@@ -413,35 +173,23 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
     setIsLoading(true);
 
     try {
-      // 1. Attempt Unified Auth (Backend handles Email or Username)
-      const result = await authenticateUser(email, password);
+      // Sign-in goes to Supabase Auth (email + password). The visible contract
+      // is unchanged: the same error text ("Invalid credentials"), the same
+      // loading state, the same redirect behaviour.
+      const result = await signInWithEmail(email, password);
 
       if (!result.success) {
-        // If real auth fails, we might check for mock credentials if configured
-        console.warn("Auth Failed:", result.error);
-
+        // An unconfirmed email is not a wrong password, so the message says so
+        // instead of showing a generic failure. Supabase confirms email via a
+        // LINK, not a typed code, so there is no code-entry screen to route to:
+        // the user is told to check their inbox and the message stays on screen.
         throw new Error(result.error || 'Invalid credentials');
       }
 
-      // 3. Success - Backend Auth
-      if (result.success) {
-        const dashboardType = mapRoleToDashboard(result.userType || 'student');
-
-        await signIn(dashboardType, {
-          userId: result.userId,
-          email: result.email,
-          userType: result.userType,
-          token: result.token, // Pass the JWT from backend
-          refreshToken: result.refreshToken || result.token, // Ensure refresh token is passed
-          schoolGeneratedId: result.schoolGeneratedId,
-          school: result.userData?.school_id ? { id: result.userData.school_id } : undefined
-
-        });
-        // Same reasoning as handleGoogleResponse above — leave the URL (the
-        // deep link that brought the user here) alone; App.tsx swaps this
-        // screen for the real dashboard the moment auth state updates.
-      }
-
+      // The Supabase session is already persisted. AuthContext restores it and
+      // resolves the role from the database, so there is no token to forward
+      // here. App.tsx swaps this screen for the dashboard once auth state
+      // settles, which is why there is no navigate() call.
     } catch (err: any) {
       console.error("Login Error", err);
       setError(err.message || 'Invalid credentials');
@@ -449,103 +197,6 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
       setIsLoading(false);
     }
   };
-
-  const handleQuickLogin = async (roleKey: string) => {
-    setError('');
-    setIsLoading(true);
-
-    try {
-      console.log(`🚀 [Demo] Switching to Demo Role: ${roleKey}...`);
-      await switchDemoRole(roleKey);
-      // Unlike the real sign-in flows above, this one DOES navigate to '/':
-      // picking a demo role is a deliberate "start fresh as this role"
-      // action, not "continue where I left off", and whatever screen name
-      // was in the URL almost certainly doesn't exist for the newly chosen
-      // role anyway.
-      navigate('/');
-    } catch (err: any) {
-      console.error("❌ [Demo] Quick Login Error:", err);
-      setError(err.message || 'Demo login failed');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Demo View — centered role switcher
-  if (view === 'demo') {
-    return (
-      <div className="min-h-screen w-full bg-slate-50 flex flex-col items-center justify-center p-4">
-        {/* Centered Card */}
-        <div className="w-full max-w-[440px] bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-8 flex flex-col items-center">
-
-          {/* Header */}
-          <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-200 mb-6">
-            <SchoolLogoIcon className="w-8 h-8 text-white" />
-          </div>
-
-          <h2 className="text-2xl font-bold text-slate-800">{t('auth.welcomeBack')}</h2>
-          <p className="text-sm text-slate-500 mt-1 mb-8">{t('auth.demoPortalSubtitle')}</p>
-
-          {/* Featured Roles Section */}
-          <div className="w-full mb-6">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">{t('auth.featuredPortals')}</h3>
-            <div className="grid grid-cols-2 gap-3 w-full">
-              {['admin', 'teacher', 'student', 'parent'].map((key) => {
-                const account = DEMO_ACCOUNTS[key];
-                if (!account) return null;
-                return (
-                  <button
-                    key={key}
-                    disabled={isLoading}
-                    onClick={() => handleQuickLogin(key)}
-                    className={`flex flex-col items-center justify-center p-4 rounded-2xl text-sm font-bold border-2 border-transparent transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 ${account.color} ${account.textColor} group relative overflow-hidden shadow-sm hover:shadow-md`}
-                  >
-                    <div className="absolute top-0 right-0 p-1 opacity-10 group-hover:scale-110 transition-transform">
-                      <SchoolLogoIcon className="w-8 h-8" />
-                    </div>
-                    <span className="text-lg mb-1">{t(`roles.${key}`, { defaultValue: key })}</span>
-                    <span className="text-[10px] font-medium opacity-70 line-clamp-1">{account.name}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Other Roles Section */}
-          <div className="w-full">
-            <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">{t('auth.specializedPortals')}</h3>
-            <div className="grid grid-cols-2 gap-2 w-full">
-              {DEMO_ROLES_ORDER.filter(k => !['admin', 'teacher', 'student', 'parent'].includes(k)).map((key) => {
-                const account = DEMO_ACCOUNTS[key];
-                return (
-                  <button
-                    key={key}
-                    disabled={isLoading}
-                    onClick={() => handleQuickLogin(key)}
-                    className={`flex items-center justify-center px-4 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 border border-slate-100 bg-slate-50 text-slate-600 hover:bg-white hover:border-blue-200 hover:text-blue-600`}
-                  >
-                    <span className="capitalize">{key === 'examofficer' ? 'Exam Officer' : key === 'complianceofficer' ? 'Compliance' : key}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Footer Link */}
-          <button
-            type="button"
-            onClick={() => setView('login')}
-            className="mt-8 px-4 py-2.5 rounded-lg text-blue-600 text-sm font-semibold hover:text-blue-700 hover:bg-blue-50 transition-colors"
-          >
-            {t('auth.backToSchoolSignIn')}
-          </button>
-
-        </div>
-
-
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full bg-slate-100 p-4 sm:p-6">
@@ -573,14 +224,13 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
                 type="text"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                placeholder={t('auth.emailOrUsername')}
+                placeholder={t('auth.email')}
                 className="w-full px-4 py-2.5 sm:py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
                 required
                 autoComplete="off"
                 name="email_prevent_autofill"
               />
             </div>
-            {/* Real Google Account Picker handled via GSI prompt */}
 
             <div className="relative">
               <input
@@ -610,23 +260,6 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
               {isLoading ? `${t('auth.signIn')}…` : t('auth.signIn')}
             </button>
 
-            {/* Google Sign-In — rendered by Google Identity Services (always shows account picker).
-                The target div is always in the DOM so it has a real layout width when renderButton fires. */}
-            <div className="relative w-full flex justify-center">
-              {/* Target div — always mounted so clientWidth is non-zero when renderButton runs */}
-              <div ref={googleButtonRef} className="w-full" />
-              {/* Loading placeholder overlaid until GIS injects the real button */}
-              {!googleInitialized && (
-                <div className="absolute inset-0 bg-white border border-slate-200 text-slate-400 font-bold rounded-xl shadow-sm flex items-center justify-center gap-2 text-sm pointer-events-none">
-                  <svg className="w-4 h-4 animate-spin text-slate-300" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-                  </svg>
-                  Loading Google…
-                </div>
-              )}
-            </div>
-
             <div className="text-center">
               <button 
                 type="button"
@@ -640,28 +273,6 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
               </button>
             </div>
           </form>
-
-          {/* Separator */}
-          <hr className="my-5 sm:my-6 border-slate-100" />
-
-          {/* Bottom Actions */}
-          <div className="space-y-2 sm:space-y-3">
-            <button
-              type="button"
-              onClick={() => setView('demo')}
-              className="w-full flex items-center justify-center gap-2 py-2 sm:py-2.5 text-blue-700 font-bold text-xs sm:text-sm hover:bg-blue-50 rounded-lg transition-colors group"
-            >
-              <span className="group-hover:translate-x-1 transition-transform">{'>'}</span> {t('auth.tryDemo')}
-            </button>
-
-            <button
-              type="button"
-              onClick={onNavigateToCreateSchool}
-              className="w-full flex items-center justify-center gap-2 py-2 sm:py-2.5 text-amber-600 font-bold text-xs sm:text-sm hover:bg-amber-50 rounded-lg transition-colors group"
-            >
-              <span className="group-hover:translate-x-1 transition-transform">{'>'}</span> {t('auth.createSchool')}
-            </button>
-          </div>
         </div>
 
         {/* Error Message */}
@@ -681,27 +292,5 @@ const Login: React.FC<{ onNavigateToSignup: () => void; onNavigateToCreateSchool
     </div>
   );
 };
-
-function mapRoleToDashboard(role: string): DashboardType {
-  const map: any = {
-    'admin': DashboardType.Admin,
-    'schooladmin': DashboardType.Admin,
-    'teacher': DashboardType.Teacher,
-    'student': DashboardType.Student,
-    'parent': DashboardType.Parent,
-    'superadmin': DashboardType.SuperAdmin,
-    'proprietor': DashboardType.Proprietor,
-    'inspector': DashboardType.Inspector,
-    'examofficer': DashboardType.ExamOfficer,
-    'complianceofficer': DashboardType.ComplianceOfficer,
-    'compliance': DashboardType.ComplianceOfficer,
-    'counselor': DashboardType.Counselor,
-  };
-  // Prisma's Role enum uses underscores (EXAM_OFFICER, SUPER_ADMIN, ...) —
-  // stripping only spaces silently missed every underscored role and dropped
-  // real (non-demo) Exam Officer / Super Admin logins onto the Student
-  // dashboard instead, since an unmatched role falls back to Student below.
-  return map[role.toLowerCase().replace(/[_\s]/g, '')] || DashboardType.Student;
-}
 
 export default Login;

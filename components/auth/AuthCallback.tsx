@@ -1,85 +1,101 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../../lib/api';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { supabase, isSupabaseConfigured } from '../../src/lib/supabase/client';
 
 /**
- * AuthCallback Component
- * Refactored to use custom backend API for verification.
- * Extracts tokens from the URL and verifies them with our server.
+ * AuthCallback — handles links that Supabase sends by email
+ * (password recovery, email confirmation).
+ *
+ * WHY THIS WAS REWRITTEN
+ * ----------------------
+ * This screen used to POST the token from the URL to the legacy Express
+ * endpoint `/auth/verify-email`. Supabase issues the link now, and its token is
+ * signed and understood by Supabase alone. Posting it to the legacy backend
+ * could only ever fail, which meant a teacher clicking "reset your password"
+ * reached an error page and could not recover their account. That was a broken
+ * feature, not merely dead code.
+ *
+ * WHAT IT DOES NOW
+ * ----------------
+ * Supabase parses the token itself. Two shapes arrive here:
+ *   * a URL fragment  (#access_token=...&type=recovery)  — the default flow
+ *   * a query string  (?code=...)                        — PKCE flow
+ * Supabase's client reads both, provided URL detection is enabled, so this
+ * screen no longer parses or validates anything by hand. Hand-parsing was how
+ * the old bug hid: it looked like careful work while validating the wrong
+ * thing against the wrong service.
+ *
+ * The only job left is to confirm a session exists and send the user onward.
+ * For a recovery link the destination is the password screen, because a
+ * recovery session may change a password but must not be treated as a normal
+ * login.
  */
 const AuthCallback: React.FC = () => {
     const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
-    const [message, setMessage] = useState('Verifying your credentials...');
+    const [message, setMessage] = useState('Verifying your link…');
     const [errorDetails, setErrorDetails] = useState<string | null>(null);
 
     useEffect(() => {
-        const handleAuthCallback = async () => {
+        const settle = async () => {
             try {
-                console.log('🔄 AuthCallback triggered. Parsing URL...');
-
-                const fullUrl = window.location.href;
-                let params = new URLSearchParams();
-
-                if (fullUrl.includes('access_token')) {
-                    const fragment = fullUrl.substring(fullUrl.indexOf('access_token'));
-                    params = new URLSearchParams(fragment);
-                } else if (window.location.search) {
-                    params = new URLSearchParams(window.location.search);
+                if (!isSupabaseConfigured || !supabase) {
+                    throw new Error('Authentication is not configured yet.');
                 }
 
-                const accessToken = params.get('access_token') || params.get('token') || params.get('code');
-                const type = params.get('type') || 'signup';
-                const errorCode = params.get('error');
-                const errorDescription = params.get('error_description');
-
-                if (errorCode || errorDescription) {
-                    throw new Error(errorDescription?.replace(/\+/g, ' ') || 'Authentication failed');
+                // Any error Supabase passed back in the URL (expired link, etc.).
+                const query = new URLSearchParams(window.location.search);
+                const hashParams = new URLSearchParams(
+                    window.location.hash.startsWith('#') ? window.location.hash.slice(1) : ''
+                );
+                const errorDescription =
+                    query.get('error_description') || hashParams.get('error_description');
+                if (errorDescription) {
+                    throw new Error(errorDescription.replace(/\+/g, ' '));
                 }
 
-                if (!accessToken) {
-                    throw new Error('No valid session or tokens found in verification link.');
+                // Supabase reads the session from the URL as the client loads.
+                // getSession() here waits for that to settle, and is also what
+                // proves the link was genuinely valid.
+                const { data, error } = await supabase.auth.getSession();
+                if (error) throw new Error(error.message);
+
+                const session = data.session;
+                if (!session?.user) {
+                    throw new Error('This link is invalid or has expired. Please request a new one.');
                 }
 
-                console.log('🔑 Token found, verifying with backend...');
-                
-                // Verify with our custom backend
-                const response = await api.verifyToken(accessToken, type);
+                // `type=recovery` marks a password-reset link. Such a session is
+                // only good for setting a new password, so the user is sent
+                // there rather than into the app.
+                const type = hashParams.get('type') || query.get('type');
+                const isRecovery = type === 'recovery';
 
-                if (response.user) {
-                    if (response.token) {
-                        sessionStorage.setItem('auth_token', response.token);
-                    }
-                    if (response.refreshToken) {
-                        sessionStorage.setItem('auth_refresh_token', response.refreshToken);
-                    }
+                setStatus('success');
+                setMessage(
+                    isRecovery
+                        ? 'Verified. Please choose a new password.'
+                        : 'Verification successful! Welcome.'
+                );
 
-                    const role = response.user.role || 'admin';
-                    console.log(`✅ Verified. User Role: ${role}`);
+                // Replace the URL so the token is not left in the address bar or
+                // in browser history, where it could be replayed or shared.
+                window.history.replaceState(null, '', isRecovery ? '/set-password' : '/');
 
-                    setStatus('success');
-                    setMessage('Verification successful! Welcome.');
-                    localStorage.setItem('show_welcome_toast', 'true');
-
-                    setTimeout(() => {
-                        if (role.toLowerCase().includes('admin') || role.toLowerCase() === 'proprietor') {
-                            window.location.href = '/'; // DashboardRouter handles it
-                        } else {
-                            window.location.href = '/'; 
-                        }
-                    }, 1500);
-                } else {
-                    throw new Error('Verification succeeded but no user data returned.');
-                }
-
+                setTimeout(() => {
+                    // A fragment-based token must be cleared by a real navigation
+                    // (replaceState cannot strip a fragment before the router
+                    // reads it), so send the user onward explicitly.
+                    window.location.href = isRecovery ? '/set-password' : '/';
+                }, 1200);
             } catch (err: any) {
-                console.error('❌ AuthCallback Error:', err);
+                console.error('AuthCallback error:', err);
                 setStatus('error');
                 setMessage('Verification Failed');
                 setErrorDetails(err.message || 'The link may be expired or invalid.');
             }
         };
 
-        handleAuthCallback();
+        void settle();
     }, []);
 
     return (
@@ -127,7 +143,7 @@ const AuthCallback: React.FC = () => {
                             {errorDetails}
                         </p>
                         <button
-                            onClick={() => window.location.href = '/login'}
+                            onClick={() => window.location.href = '/'}
                             className="mt-6 w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-indigo-200"
                         >
                             Back to Login

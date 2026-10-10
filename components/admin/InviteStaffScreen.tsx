@@ -43,7 +43,6 @@ interface InviteStaffScreenProps {
 const InviteStaffScreen: React.FC<InviteStaffScreenProps> = ({ handleBack, navigateTo }) => {
     const { profile } = useProfile();
     const [isInviting, setIsInviting] = useState(false);
-    const [branches, setBranches] = useState<any[]>([]);
 
     const [invitationForm, setInvitationForm] = useState({
         email: '',
@@ -52,26 +51,6 @@ const InviteStaffScreen: React.FC<InviteStaffScreenProps> = ({ handleBack, navig
         branchId: ''
     });
     const [credentials, setCredentials] = useState<{ userName: string; username: string; password: string; email: string; userType: string } | null>(null);
-
-    useEffect(() => {
-        if (profile?.schoolId) {
-            fetchBranches(profile.schoolId);
-        }
-    }, [profile?.schoolId]);
-
-    const fetchBranches = async (schoolId: string) => {
-        try {
-            const data = await api.getBranches(schoolId);
-            setBranches(data || []);
-            // Set main or first branch as default if available
-            if (data && data.length > 0) {
-                const main = data.find((b: any) => b.is_main) || data[0];
-                setInvitationForm(prev => ({ ...prev, branchId: main.id }));
-            }
-        } catch (error) {
-            console.error('Error fetching branches:', error);
-        }
-    };
 
     const handleInviteStaff = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -110,7 +89,7 @@ const InviteStaffScreen: React.FC<InviteStaffScreenProps> = ({ handleBack, navig
                 email: invitationForm.email,
                 userType: roleOptions.find(r => r.value === invitationForm.role)?.label || invitationForm.role
             });
-            setInvitationForm({ email: '', role: 'teacher', fullName: '', branchId: branches.length > 0 ? (branches.find(b => b.is_main)?.id || branches[0].id) : '' });
+            setInvitationForm({ email: '', role: 'teacher', fullName: '', branchId: '' });
 
         } catch (error: any) {
             console.error('Error inviting staff:', error);
@@ -173,29 +152,6 @@ const InviteStaffScreen: React.FC<InviteStaffScreenProps> = ({ handleBack, navig
                             />
                         </div>
 
-                        {/* Branch Selection */}
-                        {branches.length > 0 && (
-                            <div className="space-y-2 md:col-span-2">
-                                <label className="text-sm font-semibold text-gray-700">
-                                    Assign to Branch (Optional)
-                                </label>
-                                <div className="relative">
-                                    <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                    <select
-                                        value={invitationForm.branchId}
-                                        onChange={(e) => setInvitationForm({ ...invitationForm, branchId: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none cursor-pointer"
-                                    >
-                                        <option value="">All Branches / Main Hub</option>
-                                        {branches.map(branch => (
-                                            <option key={branch.id} value={branch.id}>
-                                                {branch.name} {branch.is_main ? '(Main Campus)' : ''}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                            </div>
-                        )}
                     </div>
 
                     {/* Role Selection */}

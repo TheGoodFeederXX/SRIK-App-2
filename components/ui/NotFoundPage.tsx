@@ -62,7 +62,7 @@ const NotFoundPage: React.FC = () => {
 
                     <div className="mt-8 pt-8 border-t border-gray-100 flex items-center justify-center space-x-1 text-sm text-gray-400">
                         <span>Need help?</span>
-                        <a href="mailto:support@oliskey.com" className="text-indigo-600 font-bold hover:underline">
+                        <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">
                             Contact Support
                         </a>
                     </div>

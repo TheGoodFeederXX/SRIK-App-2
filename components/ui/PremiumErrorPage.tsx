@@ -24,7 +24,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
 
     const handleContactSupport = () => {
         // Integrate with a support link or chat
-        window.open('https://support.oliskey.com', '_blank');
+        window.open('mailto:srialkhairiah@gmail.com', '_blank');
     };
 
     return (
@@ -109,7 +109,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                     </div>
 
                     <p className="mt-8 text-sm text-gray-400 text-center">
-                        Need help? <a href="mailto:support@oliskey.com" className="text-indigo-600 font-bold hover:underline">Contact our technical team</a>
+                        Need help? <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">Contact our technical team</a>
                     </p>
                 </div>
             </div>

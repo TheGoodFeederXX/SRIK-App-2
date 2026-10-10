@@ -43,9 +43,9 @@ export default function TeacherProfileEnhanced({ teacherId }: TeacherProfileProp
 
     useAutoSync(['teachers'], fetchTeacher);
 
-    const handleCurriculumUpdate = async (value: 'Nigerian' | 'British' | 'Both') => {
+    const handleCurriculumUpdate = async (value: 'KSSR' | 'British' | 'Both') => {
         try {
-            const newValue = value === 'Both' ? ['Nigerian', 'British'] : [value];
+            const newValue = value === 'Both' ? ['KSSR', 'British'] : [value];
             await api.updateTeacher(teacherId, { curriculum_eligibility: newValue });
 
             setCurriculumEligibility(newValue);
@@ -91,18 +91,18 @@ export default function TeacherProfileEnhanced({ teacherId }: TeacherProfileProp
         return <CenteredLoader message="Loading teacher profile..." className="p-6" />;
     }
 
-    const hasNigerianQualification = !!teacher.trcn_certificate;
+    const hasNationalQualification = !!teacher.trcn_certificate;
     const hasBritishQualification = !!teacher.british_qualification;
     
-    const isEligibleNigerian = curriculumEligibility.includes('Nigerian');
+    const isEligibleNational = curriculumEligibility.includes('KSSR');
     const isEligibleBritish = curriculumEligibility.includes('British');
 
-    const isCompliant = (isEligibleNigerian ? hasNigerianQualification : true) &&
+    const isCompliant = (isEligibleNational ? hasNationalQualification : true) &&
                         (isEligibleBritish ? hasBritishQualification : true) &&
                         curriculumEligibility.length > 0;
     
     const displayEligibility = curriculumEligibility.length === 2 ? 'Both' : 
-                               curriculumEligibility.includes('Nigerian') ? 'Nigerian' :
+                               curriculumEligibility.includes('KSSR') ? 'KSSR' :
                                curriculumEligibility.includes('British') ? 'British' : null;
 
     return (
@@ -193,13 +193,13 @@ export default function TeacherProfileEnhanced({ teacherId }: TeacherProfileProp
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                         <Card
-                            className={`cursor-pointer transition-all ${displayEligibility === 'Nigerian' ? 'border-green-500 border-2 bg-green-50' : 'hover:border-gray-400'
+                            className={`cursor-pointer transition-all ${displayEligibility === 'KSSR' ? 'border-green-500 border-2 bg-green-50' : 'hover:border-gray-400'
                                 }`}
-                            onClick={() => handleCurriculumUpdate('Nigerian')}
+                            onClick={() => handleCurriculumUpdate('KSSR')}
                         >
                             <CardContent className="p-4 text-center">
-                                <h4 className="font-semibold">🇳🇬 Nigerian</h4>
-                                <p className="text-xs text-gray-600 mt-1">WAEC/NECO</p>
+                                <h4 className="font-semibold">KSSR</h4>
+                                <p className="text-xs text-gray-600 mt-1">Kurikulum Kebangsaan</p>
                             </CardContent>
                         </Card>
                         </motion.div>
@@ -242,28 +242,35 @@ export default function TeacherProfileEnhanced({ teacherId }: TeacherProfileProp
                     </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    {/* Nigerian Qualifications */}
+                    {/* Qualification documents. The certificate named below was
+                        the teaching licence of a foreign country (its council is
+                        not one a Malaysian teacher belongs to). Every teacher in
+                        the school was therefore reported as missing a foreign
+                        licence.
+                        The document itself is kept (it may hold a Malaysian
+                        teaching certificate), under a name that makes sense
+                        here. */}
                     <div className="p-4 border rounded-lg">
                         <h4 className="font-semibold text-sm mb-3 flex items-center gap-2">
-                            🇳🇬 Nigerian Qualifications
+                            Sijil Perguruan
                         </h4>
                         <div className="space-y-3">
                                     <div>
-                                        <Label htmlFor="trcn">TRCN Certificate</Label>
+                                        <Label htmlFor="sijil_perguruan">Sijil Perguruan</Label>
                                         <div className="flex flex-col gap-2 mt-1">
                                             {teacher.trcn_certificate ? (
                                                 <div className="flex items-center gap-2">
                                                     <CheckCircle className="h-4 w-4 text-green-600" />
-                                                    <span className="text-sm text-green-600">Uploaded</span>
+                                                    <span className="text-sm text-green-600">Sudah dimuat naik</span>
                                                     <Button size="sm" variant="link" onClick={() => window.open(teacher.trcn_certificate, '_blank')}>
-                                                        View
+                                                        Lihat
                                                     </Button>
                                                 </div>
                                             ) : (
-                                                <span className="text-sm text-amber-600">Missing TRCN</span>
+                                                <span className="text-sm text-amber-600">Belum dimuat naik</span>
                                             )}
                                             <Input
-                                                id="trcn"
+                                                id="sijil_perguruan"
                                                 type="file"
                                                 accept=".pdf,.jpg,.jpeg,.png"
                                                 onChange={(e) => e.target.files && handleDocumentUpload('trcn_certificate', e.target.files[0])}

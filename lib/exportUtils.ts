@@ -61,7 +61,7 @@ export const exportToPDF = async (
 
     // Add date
     doc.setFontSize(10);
-    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Generated: ${new Date().toLocaleString('ms-MY')}`, 14, 30);
 
     // Prepare table data
     const tableData = data.map(row =>
@@ -86,8 +86,8 @@ export const exportToPDF = async (
     doc.save(`${filename}_${new Date().toISOString().split('T')[0]}.pdf`);
 };
 
-export const formatCurrency = (value: number, currency: string = 'NGN') => {
-    return new Intl.NumberFormat('en-NG', {
+export const formatCurrency = (value: number, currency: string = 'MYR') => {
+    return new Intl.NumberFormat('ms-MY', {
         style: 'currency',
         currency: currency,
         minimumFractionDigits: 0
@@ -104,11 +104,11 @@ export const formatDate = (dateString: string, includeTime: boolean = false) => 
             minute: '2-digit'
         })
     };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    return new Date(dateString).toLocaleDateString('ms-MY', options);
 };
 
 export const formatNumber = (value: number) => {
-    return new Intl.NumberFormat('en-US').format(value);
+    return new Intl.NumberFormat('ms-MY').format(value);
 };
 
 // Pagination utility

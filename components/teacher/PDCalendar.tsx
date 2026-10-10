@@ -128,11 +128,11 @@ const PDCalendar: React.FC = () => {
                                     <div className="grid grid-cols-2 gap-4 mt-4 text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">
                                             <CalendarIcon className="w-4 h-4" />
-                                            <span>{new Date(event.start_date).toLocaleDateString()}</span>
+                                            <span>{new Date(event.start_date).toLocaleDateString("ms-MY")}</span>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <ClockIcon className="w-4 h-4" />
-                                            <span>{new Date(event.start_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                            <span>{new Date(event.start_date).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}</span>
                                         </div>
                                         {!event.is_virtual && (
                                             <div className="flex items-center space-x-2">

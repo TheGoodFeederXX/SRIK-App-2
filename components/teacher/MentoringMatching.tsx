@@ -181,7 +181,7 @@ const MentoringMatching: React.FC = () => {
                                             <strong>Subject:</strong> {match.subject_area}
                                         </p>
                                         <p className="text-xs text-gray-500 mt-1">
-                                            Started: {new Date(match.started_at).toLocaleDateString()}
+                                            Started: {new Date(match.started_at).toLocaleDateString("ms-MY")}
                                         </p>
                                     </div>
                                     <CheckCircleIcon className="w-6 h-6 text-green-600" />

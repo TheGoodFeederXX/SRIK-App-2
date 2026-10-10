@@ -25,7 +25,7 @@ const TABS = [
 function fmtDate(value: string | null | undefined): string {
     if (!value) return '—';
     const d = new Date(value);
-    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString();
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleDateString("ms-MY");
 }
 
 const AlumniHistoryScreen: React.FC<AlumniHistoryScreenProps> = ({ studentId }) => {

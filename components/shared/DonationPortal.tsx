@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { Heart, TrendingUp, Users, Gift, Award } from 'lucide-react';
 import PremiumLoader from '../ui/PremiumLoader';
 import { initializePaystackPayment } from '../../lib/paymentGateways';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface Campaign {
     id: number;
@@ -75,7 +76,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
 
         // Validation
         if (!amount || amount < 100) {
-            toast.error('Minimum donation is ₦100');
+            toast.error('Minimum donation is RM100');
             return;
         }
 
@@ -101,7 +102,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
             await initializePaystackPayment({
                 email: donorEmail,
                 amount,
-                currency: 'NGN',
+                currency: 'MYR',
                 reference,
                 customizations: {
                     title: 'School Donation',
@@ -117,7 +118,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
                             donor_phone: donorPhone,
                             is_anonymous: isAnonymous,
                             message,
-                            currency: 'NGN',
+                            currency: 'MYR',
                             payment_reference: response?.reference || reference,
                             status: 'Paid',
                         });
@@ -183,7 +184,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
             {/* Header */}
             <div className="bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl p-8 text-white mb-8">
                 <h1 className="text-4xl font-bold mb-2">💙 Support Our School</h1>
-                <p className="text-lg text-pink-100">Every ₦100 makes a difference in a child's education</p>
+                <p className="text-lg text-pink-100">Every RM100 makes a difference in a child's education</p>
             </div>
 
             {/* Recognition Wall */}
@@ -207,7 +208,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
                                     {index + 1}
                                 </div>
                                 <p className="font-semibold text-gray-900 mt-2">{donor.donor_name}</p>
-                                <p className="text-sm text-gray-600">₦{donor.total_donated.toLocaleString()}</p>
+                                <p className="text-sm text-gray-600">{formatMoney(donor.total_donated)}</p>
                             </motion.div>
                         ))}
                     </div>
@@ -249,8 +250,8 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
                                     {/* Progress Bar */}
                                     <div className="mb-4">
                                         <div className="flex justify-between text-sm text-gray-600 mb-2">
-                                            <span>Raised: ₦{campaign.raised_amount.toLocaleString()}</span>
-                                            <span>Goal: ₦{campaign.goal_amount.toLocaleString()}</span>
+                                            <span>Raised: {formatMoney(campaign.raised_amount)}</span>
+                                            <span>Goal: {formatMoney(campaign.goal_amount)}</span>
                                         </div>
                                         <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                                             <motion.div
@@ -322,7 +323,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
                                                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                                 }`}
                                         >
-                                            ₦{amount.toLocaleString()}
+                                            {formatMoney(amount)}
                                         </motion.button>
                                     ))}
                                 </div>
@@ -330,7 +331,7 @@ const DonationPortal: React.FC<DonationPortalProps> = ({ schoolId }) => {
 
                             {/* Custom amount */}
                             <div className="mb-4">
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Or Enter Custom Amount (Minimum ₦100)</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Or Enter Custom Amount (Minimum RM100)</label>
                                 <input
                                     type="number"
                                     min="100"

@@ -12,8 +12,11 @@ import {
     Bell,
     Settings,
     Shield,
-    QrCode,
-    ScanLine,
+    BookOpen,
+    CalendarCheck,
+    ClipboardList,
+    Megaphone,
+    ShieldCheck,
     GraduationCap as GraduationCapIcon,
     UsersRound as UsersCogIcon
 } from 'lucide-react';
@@ -43,12 +46,22 @@ const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) =
         {
             title: "Academic",
             items: [
-                { label: "Reports", icon: <FileText className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('reports', 'Reports'), bg: "bg-blue-50" },
+                { label: "Attendance", icon: <CalendarCheck className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('attendanceOverview', 'Attendance'), bg: "bg-blue-50" },
+                { label: "Classes", icon: <GraduationCapIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classList', 'Classes'), bg: "bg-blue-50" },
+                { label: "Subjects", icon: <BookOpen className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('subjectList', 'Subjects'), bg: "bg-blue-50" },
+                { label: "Marks", icon: <ClipboardList className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('markEntry', 'Marks'), bg: "bg-blue-50" },
+                { label: "Report Cards", icon: <FileText className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('reportCard', 'Report Cards'), bg: "bg-blue-50" },
                 { label: "Timetable", icon: <Calendar className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('timetable', 'Timetable'), bg: "bg-blue-50" },
-                { label: "Classrooms & QR", icon: <QrCode className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classroomManagement', 'Classrooms & QR Codes'), bg: "bg-blue-50" },
-                { label: "Class Verification", icon: <ScanLine className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classVerification', 'Class Verification'), bg: "bg-blue-50" },
-                { label: "Past Students", icon: <GraduationCapIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('pastStudents', 'Past Students'), bg: "bg-blue-50" },
                 { label: "Teacher Assignments", icon: <UsersCogIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('teacherAssignments', 'Teacher Assignments'), bg: "bg-blue-50" },
+            ]
+        },
+        {
+            title: "Finance",
+            items: [
+                { label: "Fee Collection", icon: <CreditCard className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeCollection', 'Fee Collection'), bg: "bg-teal-50" },
+                { label: "Student Fees", icon: <FileText className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('studentFees', 'Student Fees'), bg: "bg-teal-50" },
+                { label: "Fee Setup", icon: <Settings className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeSetup', 'Fee Setup'), bg: "bg-teal-50" },
+                { label: "Parent Accounts", icon: <Users className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('guardianAccounts', 'Parent Accounts'), bg: "bg-teal-50" },
             ]
         },
         {
@@ -59,9 +72,15 @@ const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) =
             ]
         },
         {
+            title: "Communication",
+            items: [
+                { label: "Announcements", icon: <Megaphone className="w-5 h-5 text-amber-600" />, onClick: () => navigateTo('announcements', 'Announcements'), bg: "bg-amber-50" },
+            ]
+        },
+        {
             title: "System",
             items: [
-                { label: "Announcements", icon: <Bell className="w-5 h-5 text-amber-600" />, onClick: () => navigateTo('communicationHub', 'Communication'), bg: "bg-amber-50" },
+                { label: "Audit Trail", icon: <ShieldCheck className="w-5 h-5 text-slate-600" />, onClick: () => navigateTo('auditTrail', 'Audit Trail'), bg: "bg-slate-50" },
                 { label: "Roles", icon: <Shield className="w-5 h-5 text-emerald-600" />, onClick: () => navigateTo('userRoles', 'User Roles'), bg: "bg-emerald-50" },
                 { label: "Settings", icon: <Settings className="w-5 h-5 text-gray-600" />, onClick: () => navigateTo('systemSettings', 'Settings'), bg: "bg-gray-50" },
             ]

@@ -66,18 +66,39 @@ async function main() {
         }
     }
 
-    // The dedicated app role, whether or not we are currently using it.
-    const appRole = await prisma.$queryRawUnsafe<Array<{
+    // THE ROLES THAT MATTER HERE.
+    //
+    // This check looked for a database role called `oliskey_app`. No such role
+    // exists in this project — not in the SRIK migrations, and not on the live
+    // database — so the check reported a WARN that could never be resolved and
+    // never examined anything real.
+    //
+    // What DOES matter is the two roles the app actually runs as. `authenticated`
+    // is every signed-in user, and it must not be able to bypass row security;
+    // if it can, RLS is decorative and every policy in the schema is advice.
+    const appRoles = await prisma.$queryRawUnsafe<Array<{
         rolname: string; rolsuper: boolean; rolbypassrls: boolean; rolcanlogin: boolean;
-    }>>(`SELECT rolname, rolsuper, rolbypassrls, rolcanlogin FROM pg_roles WHERE rolname = 'oliskey_app'`);
-    if (!appRole.length) {
-        add('WARN', 'oliskey_app role', 'does not exist in this database (migration 20260919150000 not applied here?)');
+    }>>(`SELECT rolname, rolsuper, rolbypassrls, rolcanlogin
+         FROM pg_roles WHERE rolname IN ('authenticated', 'anon', 'service_role')`);
+
+    if (!appRoles.length) {
+        add('FAIL', 'application roles', 'no Supabase API roles found — is DATABASE_URL pointing at the project database?');
     } else {
-        const a = appRole[0];
-        console.log(`oliskey_app           : bypassrls=${a.rolbypassrls} super=${a.rolsuper} login=${a.rolcanlogin}`);
-        if (a.rolbypassrls || a.rolsuper) add('FAIL', 'oliskey_app hardening', 'oliskey_app can bypass RLS');
-        else add('PASS', 'oliskey_app hardening', 'NOSUPERUSER + NOBYPASSRLS');
-        if (!a.rolcanlogin) add('WARN', 'oliskey_app login', 'role cannot LOGIN — DATABASE_URL cannot be pointed at it yet');
+        for (const a of appRoles) {
+            console.log(`${a.rolname.padEnd(14)}: bypassrls=${a.rolbypassrls} super=${a.rolsuper} login=${a.rolcanlogin}`);
+            // `service_role` legitimately bypasses RLS: it is the server-side key
+            // and is never shipped to a browser. `authenticated` and `anon` are
+            // user-facing and must not.
+            if (a.rolname === 'service_role') {
+                add('PASS', 'service_role', 'bypasses RLS by design; must never reach a browser');
+                continue;
+            }
+            if (a.rolbypassrls || a.rolsuper) {
+                add('FAIL', `${a.rolname} hardening`, `${a.rolname} can bypass RLS — every policy is unenforced for it`);
+            } else {
+                add('PASS', `${a.rolname} hardening`, 'NOSUPERUSER + NOBYPASSRLS');
+            }
+        }
     }
 
     // ── 2. Server version (migrations use PG15-only syntax) ─────────────────

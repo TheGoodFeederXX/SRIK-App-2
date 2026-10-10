@@ -172,7 +172,7 @@ export function AttendanceAnalytics() {
 
                                         <div className="flex items-center gap-4 text-sm text-gray-500">
                                             <span>
-                                                📅 {new Date(alert.created_at).toLocaleDateString()}
+                                                📅 {new Date(alert.created_at).toLocaleDateString("ms-MY")}
                                             </span>
                                             <span>
                                                 🔔 Alert Type: {alert.alert_type.replace('_', ' ')}
@@ -236,7 +236,7 @@ export function AttendanceAnalytics() {
                                         )}
                                         <div>
                                             <p className="text-gray-600">Created</p>
-                                            <p className="font-medium">{new Date(selectedAlert.created_at).toLocaleString()}</p>
+                                            <p className="font-medium">{new Date(selectedAlert.created_at).toLocaleString('ms-MY')}</p>
                                         </div>
                                     </div>
                                 </div>

@@ -14,7 +14,6 @@ import { api } from '../../lib/api';
 import { syncEngine } from '../../lib/syncEngine';
 import { useProfile } from '../../context/ProfileContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { useBranch } from '../../context/BranchContext';
 
 
 const AttendanceStatusButtons = ({ status, onStatusChange }: { status: AttendanceStatus, onStatusChange: (newStatus: AttendanceStatus) => void }) => {
@@ -54,7 +53,6 @@ interface TeacherMarkAttendanceScreenProps {
 const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = ({ classInfo, currentBranchId }) => {
     const theme = THEME_CONFIG[DashboardType.Teacher];
     const { profile } = useProfile();
-    const { branches } = useBranch();
     const [students, setStudents] = useState<Student[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     // Each student's days this term (school days / present / absent / late) from
@@ -62,15 +60,6 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
     const [termDays, setTermDays] = useState<{ term: string; students: Record<string, { total: number; present: number; absent: number; late: number }> } | null>(null);
     const now = new Date();
     const [selectedDate, setSelectedDate] = useState(`${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`);
-    const [selectedCurriculum, setSelectedCurriculum] = useState<'All' | 'Nigerian' | 'British'>('All');
-
-    // Only branches actually running two curricula side by side need this filter —
-    // showing it on every single-curriculum branch would just add noise.
-    const effectiveBranchId = currentBranchId || profile?.branchId;
-    const isDualCurriculumBranch = useMemo(
-        () => branches.find(b => b.id === effectiveBranchId)?.curriculum_type?.toLowerCase() === 'dual',
-        [branches, effectiveBranchId]
-    );
 
     const fetchData = useCallback(async () => {
         if (!classInfo) return;
@@ -124,7 +113,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                     section: s.section,
                     avatarUrl: s.avatar_url,
                     attendanceStatus: displayStatus as AttendanceStatus,
-                    curriculum_type: s.curriculum_type || 'Nigerian',
+                    curriculum_type: s.curriculum_type || 'KSSR',
                 } as unknown as Student;
             });
 
@@ -148,15 +137,10 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
     useAutoSync(['attendance', 'students'], fetchData);
 
 
-    const visibleStudents = useMemo(() => {
-        if (selectedCurriculum === 'All') return students;
-        // 'Both' students belong to every track — they must show up whichever
-        // track is selected, not just an exact string match on one track.
-        return students.filter(s => {
-            const track = (s as any).curriculum_type || 'Nigerian';
-            return track === selectedCurriculum || track === 'Both';
-        });
-    }, [students, selectedCurriculum]);
+    // This used to filter by curriculum track (KSSR / British). This school runs
+    // one curriculum, and its student records have no track field at all — so the
+    // filter could only ever pass every student through unchanged.
+    const visibleStudents = students;
 
     const handleStatusChange = useCallback((studentId: string | number, status: AttendanceStatus) => {
         setStudents(currentStudents =>
@@ -246,8 +230,14 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         const date = new Date(dateVal);
         const day = date.getDay();
 
-        if (day === 0 || day === 6) {
-            toast.error("Weekends are disabled! Please select a working day (Mon-Fri).");
+        // THE SCHOOL WEEK IS SUNDAY TO THURSDAY.
+        //
+        // This check blocked `day === 0` and allowed Friday — the exact opposite
+        // of the school's own week. A teacher taking the register on Sunday, a
+        // normal school day, was refused with "Weekends are disabled", while
+        // Friday, when there is no school, was accepted. `day === 5` is Friday.
+        if (day === 5 || day === 6) {
+            toast.error('Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis).');
             return;
         }
         // A teacher marks a register for today or a past day — never the future.
@@ -271,17 +261,6 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                         <p className="text-sm text-gray-500">Select a date to view or mark attendance.</p>
                     </div>
                     <div className="flex items-center gap-3">
-                        {isDualCurriculumBranch && (
-                            <select
-                                value={selectedCurriculum}
-                                onChange={(e) => setSelectedCurriculum(e.target.value as 'All' | 'Nigerian' | 'British')}
-                                className="block pl-3 pr-8 py-2 text-sm border-gray-300 focus:outline-none focus:ring-purple-500 focus:border-purple-500 rounded-md bg-white"
-                            >
-                                <option value="All">All Curricula</option>
-                                <option value="Nigerian">🇳🇬 Nigerian Track</option>
-                                <option value="British">🇬🇧 British Track</option>
-                            </select>
-                        )}
                         <input
                             type="date"
                             value={selectedDate}
@@ -356,9 +335,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                         {visibleStudents.length === 0 && (
                             <div className="text-center py-10 bg-white">
                                 <p className="text-gray-500">
-                                    {selectedCurriculum === 'All'
-                                        ? 'No students found for this class.'
-                                        : `No students on the ${selectedCurriculum} track for this class.`}
+                                    Tiada murid dijumpai untuk kelas ini.
                                 </p>
                             </div>
                         )}
@@ -374,7 +351,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                     onClick={submitAttendance}
                     className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                 >
-                    Save Attendance for {selectedDate}{selectedCurriculum !== 'All' ? ` (${selectedCurriculum} Track)` : ''}
+                    Simpan Kehadiran untuk {selectedDate}
                 </motion.button>
             </div>
         </div>

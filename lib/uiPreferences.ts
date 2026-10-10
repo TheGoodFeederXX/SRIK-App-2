@@ -92,8 +92,8 @@ export function watchSystemScheme(): void {
 // marker was set by the first, role-less run of the sign-in effect and then
 // blocked the real (user:role) run — so a new device silently stayed on the
 // defaults even though the account held the saved look.
-const appliedKey = (scope: string) => `oliskey:prefs_applied_at:${scope || 'guest'}`;
-export const PREFERENCES_APPLIED_EVENT = 'oliskey:preferences-applied';
+const appliedKey = (scope: string) => `srik:prefs_applied_at:${scope || 'guest'}`;
+export const PREFERENCES_APPLIED_EVENT = 'srik:preferences-applied';
 
 let pending: Record<string, unknown> = {};
 let timer: number | undefined;
@@ -138,7 +138,7 @@ export function applyAccountPreferences(prefs: UiPreferences | null | undefined,
     }
     if (prefs.appearance && typeof prefs.appearance === 'object') {
         // Same storage the appearance control reads, keyed per user+role.
-        try { localStorage.setItem(`oliskey:appearance:${appearanceScope || 'guest'}`, JSON.stringify(prefs.appearance)); } catch { /* ignore */ }
+        try { localStorage.setItem(`srik:appearance:${appearanceScope || 'guest'}`, JSON.stringify(prefs.appearance)); } catch { /* ignore */ }
     }
     localStorage.setItem(appliedKey(appearanceScope), prefs.updated_at);
     window.dispatchEvent(new CustomEvent(PREFERENCES_APPLIED_EVENT, { detail: prefs }));

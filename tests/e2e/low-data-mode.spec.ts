@@ -26,7 +26,7 @@ test('switch lives in Settings > Data Usage and persists', async ({ page, baseUR
     await expect(sw).toHaveAttribute('aria-checked', 'false');
     await sw.click();
     await expect(sw).toHaveAttribute('aria-checked', 'true');
-    expect(await page.evaluate(() => localStorage.getItem('oliskey:low_data_mode'))).toBe('1');
+    expect(await page.evaluate(() => localStorage.getItem('srik:low_data_mode'))).toBe('1');
     await sw.click();
     await expect(sw).toHaveAttribute('aria-checked', 'false');
 });
@@ -41,7 +41,7 @@ test('with the mode on: avatars defer until tapped and no socket is opened', asy
         if (/socket\.io\//.test(u)) socketAttempts += 1; // long-polling transport
     });
     page.on('websocket', (ws) => { if (/socket.io/.test(ws.url())) socketAttempts += 1; }); // websocket transport (ignore Vite HMR)
-    await page.addInitScript(() => localStorage.setItem('oliskey:low_data_mode', '1'));
+    await page.addInitScript(() => localStorage.setItem('srik:low_data_mode', '1'));
     await loginAdmin(page, baseURL!);
     await page.waitForTimeout(3000);
     expect(socketAttempts, 'a realtime socket was opened despite Low Data Mode').toBe(0);

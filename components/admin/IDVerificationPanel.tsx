@@ -176,7 +176,7 @@ export default function IDVerificationPanel() {
                                     <span className="font-medium">Document:</span> {request.document_type.replace('_', ' ')}
                                 </p>
                                 <p className="text-xs text-gray-500">
-                                    Submitted: {new Date(request.created_at).toLocaleDateString()}
+                                    Submitted: {new Date(request.created_at).toLocaleDateString("ms-MY")}
                                 </p>
                             </div>
 
@@ -246,7 +246,7 @@ export default function IDVerificationPanel() {
                                 </div>
                                 <div>
                                     <p className="text-sm text-gray-600">Submitted</p>
-                                    <p className="font-medium">{new Date(selectedRequest.created_at).toLocaleString()}</p>
+                                    <p className="font-medium">{new Date(selectedRequest.created_at).toLocaleString('ms-MY')}</p>
                                 </div>
                             </div>
 

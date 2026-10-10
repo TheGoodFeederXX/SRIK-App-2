@@ -1,13 +1,12 @@
-# app.oliskey.com is the application. Only the entry screens are public;
-# every other path is a signed-in view (dashboards, records, uploads).
-# This is guidance for crawlers, not access control — auth + RLS are.
+# Sistem pengurusan Sekolah Rendah Islam Al-Khairiah.
+#
+# Ini aplikasi SEKOLAH, bukan laman web awam. Di belakang halaman masuk ada
+# markah, kehadiran dan baki yuran setiap keluarga — perkara yang tidak patut
+# muncul dalam hasil carian. Semuanya disekat, dan tiada sitemap diserahkan.
+#
+# Nota: robots.txt ialah panduan kepada crawler yang mematuhinya, BUKAN kawalan
+# akses. Yang benar-benar melindungi data ialah log masuk dan RLS di pangkalan
+# data. Fail ini hanya memastikan tiada crawler yang menyenaraikan halaman itu
+# secara tidak sengaja.
 User-agent: *
-Allow: /$
-Allow: /login
-Allow: /signup
-Allow: /demo
-Allow: /assets/
-Allow: /manifest.json
 Disallow: /
-
-Sitemap: https://app.oliskey.com/sitemap.xml

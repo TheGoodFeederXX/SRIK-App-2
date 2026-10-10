@@ -33,8 +33,9 @@ interface DocumentData {
     buildingApproval?: File;
     buildingExpiry: string;
 
-    // Curriculum Declaration
-    curriculumType: 'Nigerian' | 'British' | 'Both' | '';
+    // Curriculum Declaration. The stored keys were 'Nigerian' | 'British':
+    // this school declares KSSR, so the option list now offers KSSR.
+    curriculumType: 'KSSR' | 'British' | 'Both' | '';
 }
 
 // Map frontend keys to DB document types
@@ -532,13 +533,13 @@ export default function ComplianceOnboardingPage({
 
                             <div className="space-y-3">
                                 <Card
-                                    className={`cursor-pointer transition-all ${formData.curriculumType === 'Nigerian' ? 'border-primary border-2 bg-primary/5' : 'hover:border-gray-400'
+                                    className={`cursor-pointer transition-all ${formData.curriculumType === 'KSSR' ? 'border-primary border-2 bg-primary/5' : 'hover:border-gray-400'
                                         }`}
-                                    onClick={() => handleInputChange('curriculumType', 'Nigerian')}
+                                    onClick={() => handleInputChange('curriculumType', 'KSSR')}
                                 >
                                     <CardContent className="p-4">
-                                        <h4 className="font-semibold">🇳🇬 Nigerian Curriculum Only</h4>
-                                        <p className="text-sm text-gray-600 mt-1">WAEC, NECO, JAMB standard</p>
+                                        <h4 className="font-semibold">Kurikulum KSSR</h4>
+                                        <p className="text-sm text-gray-600 mt-1">Kurikulum Standard Sekolah Rendah</p>
                                     </CardContent>
                                 </Card>
 
@@ -560,7 +561,7 @@ export default function ComplianceOnboardingPage({
                                 >
                                     <CardContent className="p-4">
                                         <h4 className="font-semibold">🌍 Dual Curriculum</h4>
-                                        <p className="text-sm text-gray-600 mt-1">Nigerian + British parallel tracks</p>
+                                        <p className="text-sm text-gray-600 mt-1">KSSR + British parallel tracks</p>
                                     </CardContent>
                                 </Card>
                             </div>

@@ -4,6 +4,7 @@
  */
 
 import { api } from './api';
+import { formatMoney } from '../src/lib/supabase/finance';
 
 interface PaymentReminderParams {
     feeId: number;
@@ -68,7 +69,7 @@ export const sendPaymentReminder = async (params: PaymentReminderParams): Promis
         }
 
         const balance = feeData.amount - (feeData.paid_amount || 0);
-        const dueDate = new Date(feeData.due_date).toLocaleDateString();
+        const dueDate = new Date(feeData.due_date).toLocaleDateString("ms-MY");
 
         // Send reminders to parents
         for (const parent of (parents as any[])) {
@@ -77,7 +78,7 @@ export const sendPaymentReminder = async (params: PaymentReminderParams): Promis
             // Send SMS reminder (high priority)
             if (parent.phone && prefs.sms !== false) {
                 try {
-                    const smsMessage = `Payment Reminder: ${feeData.title} - ₦${balance.toLocaleString()} due on ${dueDate}. Pay online via the school portal.`;
+                    const smsMessage = `Payment Reminder: ${feeData.title} - ${formatMoney(balance)} due on ${dueDate}. Pay online via the school portal.`;
 
                     // In our backend, we use api.sendNotification or specific functions
                     await api.functions.invoke('send-notification', {

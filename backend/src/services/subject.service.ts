@@ -5,17 +5,26 @@ import { SocketService } from './socket.service';
 // subjects of its own yet. From then on the school's Subject rows are the
 // single source of truth everywhere (palette, class form, student form,
 // gradebook); admin adds/deletes change those rows for their school only.
+/**
+ * The subjects this school actually teaches.
+ *
+ * WHAT WAS HERE: a 37-subject list from the original product — Nigerian Language
+ * (Hausa/Igbo/Yoruba), Christian Religious Studies, Agricultural Science,
+ * Government, Commerce, Further Mathematics. Not one of those is taught at SRIK,
+ * and the subjects SRIK DOES teach were all absent: Bahasa Melayu, Jawi, Khat,
+ * Tajwid, Hafazan, Feqah, Tauhid, Sirah, Tafsir, Akhlak, Bahasa Arab.
+ *
+ * The codes are the school's own (BM, JW, KH, ...), because a teacher reads them
+ * on the timetable and the office uses them on report cards — they are the
+ * school's shorthand, not ours.
+ */
 const STANDARD_SUBJECTS = [
-    'English Language', 'General Mathematics', 'Mathematics', 'Civic Education',
-    'Basic Science', 'Basic Science and Technology (BST)', 'Social Studies',
-    'Agricultural Science', 'Computer Studies/ICT', 'Physical and Health Education (PHE)',
-    'Cultural and Creative Arts (CCA)', 'Christian Religious Studies (CRS)',
-    'Islamic Studies (IRS)', 'French', 'Nigerian Language (Hausa/Igbo/Yoruba)',
-    'Business Studies', 'Home Economics', 'Physics', 'Chemistry', 'Biology',
-    'Further Mathematics', 'Additional Mathematics', 'Economics', 'Geography',
-    'Government', 'Literature in English', 'History', 'Commerce',
-    'Financial Accounting', 'Marketing', 'Office Practice', 'Entrepreneurship',
-    'Food and Nutrition', 'Technical Drawing', 'Fine Arts', 'Music', 'English Studies',
+    'Bahasa Melayu (BM)', 'Bahasa Inggeris (BI)', 'Matematik (MT)', 'Sains (SN)',
+    'Sejarah (SJ)', 'Bahasa Arab (BA)', 'Al-Quran (AQ)', 'Tajwid (TJ)',
+    'Hafazan (HFZ)', 'Tafsir (TF)', 'Hadis (HD)', 'Feqah (FQ)', 'Tauhid (TH)',
+    'Sirah (SR)', 'Akhlak (AK)', 'Jawi (JW)', 'Khat (KH)',
+    'Pendidikan Jasmani dan Kesihatan (PJK)', 'Pendidikan Seni Visual (PSV)',
+    'Reka Bentuk dan Teknologi (RBT)',
 ];
 
 export class SubjectService {

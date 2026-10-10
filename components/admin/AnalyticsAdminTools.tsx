@@ -59,7 +59,7 @@ const AnalyticsAdminTools: React.FC<AnalyticsAdminToolsProps> = ({ navigateTo, s
                 {
                     view: 'integrationHub',
                     title: 'Integration Hub',
-                    description: 'WAEC, NECO, JAMB & third-party apps',
+                    description: 'Government systems & third-party apps',
                     icon: '🔌',
                     color: 'text-teal-600 bg-teal-100'
                 },
@@ -86,7 +86,7 @@ const AnalyticsAdminTools: React.FC<AnalyticsAdminToolsProps> = ({ navigateTo, s
                 },
                 {
                     view: 'privacyDashboard',
-                    title: 'Privacy (NDPR)',
+                    title: 'Privacy (PDPA)',
                     description: 'Data protection & consent',
                     icon: '🛡️',
                     color: 'text-slate-600 bg-slate-100'

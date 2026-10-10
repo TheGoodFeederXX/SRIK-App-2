@@ -292,7 +292,7 @@ const GamesHubScreen: React.FC<GamesHubScreenProps> = ({ navigateTo, student }) 
         },
         {
             title: 'CBT Simulator',
-            description: 'Ace your JAMB exams.',
+            description: 'Ace your school exams.',
             icon: <TrophyIcon className="w-7 h-7 text-white" />,
             bgColor: 'bg-orange-500 bg-gradient-to-br from-orange-500 to-red-600',
             action: () => navigateTo('cbtExamGame', 'CBT Exam Master')

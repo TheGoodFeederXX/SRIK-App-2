@@ -1,3 +1,9 @@
+// The subject lists below were written for a Nigerian school: they offered
+// "Nigerian Language" (Hausa/Igbo/Yoruba). SRIK teaches the Malaysian
+// curriculum, whose language subject is Bahasa Melayu — a pupil enrolled with
+// the old list was offered a subject the school does not teach and had no
+// Bahasa Melayu at all.
+
 // Helper function to get display name for grade levels
 export function getGradeDisplayName(grade: number): string {
     const gradeNames: { [key: number]: string } = {
@@ -57,7 +63,7 @@ export function getSubjectsForGrade(grade: number, department?: string): string[
             'Civic Education',
             'Security Education',
             'Cultural and Creative Arts (CCA)',
-            'Nigerian Language',
+            'Bahasa Melayu',
             'Physical and Health Education (PHE)',
             'Computer Studies/ICT',
             'Agriculture/Home Economics',
@@ -92,7 +98,7 @@ export function getSubjectsForGrade(grade: number, department?: string): string[
             // Arts & Languages
             'Cultural & Creative Arts (CCA)',
             'French Language',
-            'Nigerian Language',
+            'Bahasa Melayu',
             'Music',
 
             // Religion
@@ -137,7 +143,7 @@ export function getSubjectsForGrade(grade: number, department?: string): string[
                 'History',
                 'Christian Religious Studies (CRS)',
                 'Islamic Studies (IRS)',
-                'Nigerian Language (Hausa/Igbo/Yoruba)',
+                'Bahasa Melayu',
                 'Fine Arts',
                 'Geography'
             ];
@@ -196,7 +202,7 @@ export function getSubjectsByCategory(grade: number, department?: string): {
             {
                 category: 'Languages & Arts',
                 subjects: [
-                    'Nigerian Language',
+                    'Bahasa Melayu',
                     'Cultural and Creative Arts (CCA)',
                     ...(grade >= 6 ? ['French Language'] : [])
                 ]
@@ -247,7 +253,7 @@ export function getSubjectsByCategory(grade: number, department?: string): {
                 subjects: [
                     'Cultural & Creative Arts (CCA)',
                     'French Language',
-                    'Nigerian Language',
+                    'Bahasa Melayu',
                     'Music'
                 ]
             },
@@ -301,7 +307,7 @@ export function getSubjectsByCategory(grade: number, department?: string): {
                     'History',
                     'Christian Religious Studies (CRS)',
                     'Islamic Studies (IRS)',
-                    'Nigerian Language (Hausa/Igbo/Yoruba)',
+                    'Bahasa Melayu',
                     'Fine Arts',
                     'Geography'
                 ]

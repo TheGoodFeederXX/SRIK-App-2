@@ -10,7 +10,7 @@ import { MemoryRouter } from 'react-router';
 
 import { AuthProvider } from './context/AuthContext';
 import { ProfileProvider } from './context/ProfileContext';
-import { BranchProvider } from './context/BranchContext';
+import { SchoolScopeProvider } from './context/SchoolScopeContext';
 
 const defaultQueryClient = new QueryClient({
     defaultOptions: {
@@ -25,9 +25,9 @@ function AllProviders({ children }: { children: React.ReactNode }) {
             <MemoryRouter>
                 <AuthProvider>
                     <ProfileProvider>
-                        <BranchProvider>
+                        <SchoolScopeProvider>
                             {children}
-                        </BranchProvider>
+                        </SchoolScopeProvider>
                     </ProfileProvider>
                 </AuthProvider>
             </MemoryRouter>

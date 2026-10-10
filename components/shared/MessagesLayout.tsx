@@ -14,9 +14,9 @@ const formatTimestamp = (isoDate: string): string => {
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const startOfYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
-    if (date >= startOfToday) return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    if (date >= startOfToday) return date.toLocaleTimeString('ms-MY', { hour: 'numeric', minute: '2-digit', hour12: true });
     if (date >= startOfYesterday) return 'Yesterday';
-    return date.toLocaleDateString('en-GB');
+    return date.toLocaleDateString("ms-MY");
 };
 
 type ThemeColor = 'orange' | 'purple' | 'green' | 'indigo' | 'blue';

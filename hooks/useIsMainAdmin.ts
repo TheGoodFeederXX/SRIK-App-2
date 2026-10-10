@@ -1,5 +1,5 @@
 import { useAuth } from '../context/AuthContext';
-import { useBranch } from '../context/BranchContext';
+import { useSchoolScope } from '../context/SchoolScopeContext';
 import { DashboardType } from '../types';
 
 /**
@@ -14,8 +14,11 @@ import { DashboardType } from '../types';
  */
 export function useIsMainAdmin(): boolean {
     const { role } = useAuth() as any;
-    const { isMainAdmin } = useBranch();
-    if (role === DashboardType.Proprietor || role === DashboardType.SuperAdmin) return true;
+    const { isMainAdmin } = useSchoolScope();
+    // PROPRIETOR and SUPER_ADMIN are not roles at this school, so this hook is
+    // now simply "is an administrator". The branch-level check below is kept: the
+    // server still distinguishes a school-wide administrator from a branch one,
+    // and this hook's name and callers depend on that answer.
     if (role !== DashboardType.Admin) return false;
     return isMainAdmin !== false;
 }

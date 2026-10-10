@@ -1,28 +1,33 @@
 /**
  * App-wide internationalization (i18next + react-i18next).
  *
- * - All `locales/<code>.json` files are auto-registered via Vite glob, so adding a
- *   language is just dropping in a file + a row in languages.ts.
- * - Missing keys/languages fall back to English (fallbackLng), so an untranslated
- *   language still renders a fully usable English UI instead of blank keys.
- * - Language is detected from (1) explicit choice in localStorage, (2) the browser,
- *   and applied app-wide; RTL languages flip <html dir>.
+ * MALAY IS THE STARTING LANGUAGE, AND IT SHIPS IN THE FIRST BUNDLE. That inverts
+ * what was here before: English was the fallback and the only eagerly bundled
+ * locale, so a Malay user saw English until a translation round-trip happened to
+ * succeed — and if it failed, English stayed. A school whose first language is
+ * Malay should never open in another language and wait.
+ *
+ * Language is detected from (1) an explicit choice in localStorage, (2) the
+ * device's language, and applied app-wide. A device set to English still gets
+ * English, because a relief teacher or an inspector may not read Malay — but a
+ * device set to anything else gets Malay rather than a silent fall-through to
+ * English, and a device set to Malay finally gets Malay.
  */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { DEFAULT_LANGUAGE, isRtlLanguage, LANGUAGES } from './languages';
 
-// English is the fallback for every language, so it is the one locale that is
-// always needed and ships in the initial bundle. Every other locale is loaded
-// on demand: previously all of them were bundled eagerly, so every visitor
-// downloaded nine languages' worth of strings to use one.
-const englishModule = import.meta.glob('./locales/en.json', { eager: true }) as Record<string, any>;
+// The school's own language is the fallback for every other, so it is the one
+// locale that is always needed and ships in the initial bundle. English is loaded
+// on demand: most of this school never needs it, and bundling it eagerly would
+// make every visitor download strings they will not read.
+const baseModules = import.meta.glob('./locales/ms.json', { eager: true }) as Record<string, any>;
 const localeLoaders = import.meta.glob('./locales/*.json') as Record<string, () => Promise<any>>;
 
 const resources: Record<string, { translation: any }> = {};
-for (const path in englishModule) {
-  resources[DEFAULT_LANGUAGE] = { translation: englishModule[path].default || englishModule[path] };
+for (const path in baseModules) {
+  resources[DEFAULT_LANGUAGE] = { translation: baseModules[path].default || baseModules[path] };
 }
 
 const loaderFor = (code: string) => localeLoaders[`./locales/${code}.json`];
@@ -61,9 +66,15 @@ i18n
     resources,
     fallbackLng: DEFAULT_LANGUAGE,
     supportedLngs: LANGUAGES.map((l) => l.code),
-    nonExplicitSupportedLngs: true, // 'en-US' resolves to 'en'
+    // A device set to 'ms-MY' resolves to 'ms', and 'en-GB' to 'en'. Without this
+    // a region-suffixed tag matches nothing and everything falls to the fallback,
+    // which is how a Malay phone ended up reading English.
+    nonExplicitSupportedLngs: true,
     interpolation: { escapeValue: false }, // React already escapes
     detection: {
+      // An explicit choice wins, then the device's own language, then the page's
+      // `lang` attribute. `htmlTag` is last because `index.html` declares `ms` for
+      // the document, which would otherwise override a device set to English.
       order: ['localStorage', 'navigator', 'htmlTag'],
       lookupLocalStorage: STORAGE_KEY,
       caches: ['localStorage'],
@@ -74,14 +85,15 @@ applyDirection(i18n.language || DEFAULT_LANGUAGE);
 i18n.on('languageChanged', applyDirection);
 
 /**
- * Resolves once the detected language's strings are available. English users
- * (the fallback is already bundled) resolve immediately; anyone else waits for
- * exactly one small locale file. index.tsx awaits this before the first render
- * so a non-English user never sees English strings swap out beneath them —
- * text direction is already applied above, from the code alone.
+ * Resolves once the detected language's strings are available. Malay — the
+ * fallback, and the language most of this school reads — is already bundled and
+ * resolves immediately; an English user waits for exactly one small locale file.
+ * `index.tsx` awaits this before the first render, so nobody sees one language
+ * swap out beneath them for another. Text direction is applied above, from the
+ * code alone, so even the waiting period is laid out correctly.
  */
 export const i18nReady: Promise<void> = ensureLanguageLoaded(i18n.language || DEFAULT_LANGUAGE)
-  .catch((err) => { console.warn('[i18n] Locale load failed, falling back to English:', err); });
+  .catch((err) => { console.warn('[i18n] Locale load failed, falling back to Malay:', err); });
 
 /** Change language everywhere, persist locally, and flip direction. */
 export async function setAppLanguage(code: string) {

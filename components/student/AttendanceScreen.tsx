@@ -153,7 +153,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
         const monthlyTrends: { [month: string]: { present: number, total: number } } = {};
         studentData.forEach(d => {
             if (d.status !== 'Leave') {
-                const month = new Date(d.date).toLocaleString('default', { month: 'short' });
+                const month = new Date(d.date).toLocaleString('ms-MY', { month: 'short' });
                 if (!monthlyTrends[month]) {
                     monthlyTrends[month] = { present: 0, total: 0 };
                 }
@@ -208,7 +208,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
                             transition={{ duration: 0.15 }}
                             className="font-bold text-lg text-gray-800"
                         >
-                            {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                            {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
                         </motion.h3>
                     </AnimatePresence>
                     <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Next month"><ChevronRightIcon className="h-5 w-5 text-gray-600" /></motion.button>

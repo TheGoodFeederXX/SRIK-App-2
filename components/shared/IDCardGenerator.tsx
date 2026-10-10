@@ -240,7 +240,7 @@ const IDCardGenerator: React.FC<IDCardGeneratorProps> = ({ user, userType }) => 
 
                                 <div className="min-w-0">
                                     <p className="text-[10px] opacity-70 uppercase font-black tracking-[0.2em]">Expiry Date</p>
-                                    <p className="text-lg font-bold">{new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString()}</p>
+                                    <p className="text-lg font-bold">{new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toLocaleDateString("ms-MY")}</p>
                                 </div>
 
                                 <div className="min-w-0">

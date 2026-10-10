@@ -6,9 +6,23 @@
  * text node into the active language, so any screen the user visits appears in
  * their chosen language — even text that was never hand-wired.
  *
+ * THIS ENGINE IS NOW VERY NEARLY IDLE, AND THAT IS THE POINT. It exists to turn
+ * hand-written English into another language at runtime. SRIK's screens are
+ * written in Malay, so a Malay user has nothing to translate — the text they see
+ * is already the text that was authored. The engine is kept, not deleted, because
+ * the English option is still offered and a handful of legacy screens have not
+ * been rewritten yet.
+ *
+ * The FIRST LANGUAGE is now Malay, not English. Everything below that said
+ * "English source" is a description of the mechanism, which is unchanged: it
+ * remembers whatever text it first saw and restores it exactly. It is worth
+ * remembering that the source was English by accident, not by design, and the
+ * accident is what made an English school app for a Malay school.
+ *
  * Design goals (owner-confirmed):
- *  - English-first: text shows immediately in English, then quietly swaps to the
- *    chosen language once translated (never blanks, never blocks render).
+ *  - Words-first: text shows immediately in the language it was written in, then
+ *    quietly swaps to the chosen language once translated (never blanks, never
+ *    blocks render).
  *  - Translate once, forever: every translated phrase is cached in localStorage
  *    per language, so repeat views are instant and work offline.
  *  - Names stay original: anything inside [data-no-translate] (student/teacher/

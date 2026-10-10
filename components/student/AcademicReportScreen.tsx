@@ -187,7 +187,7 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
                         <motion.div key={note.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: idx * 0.04 }} className="bg-orange-50 p-3 rounded-lg">
                             <p className="font-semibold text-orange-800">{note.title} ({note.type})</p>
                             <p className="text-sm text-gray-700">{note.note}</p>
-                            <p className="text-xs text-gray-500 text-right mt-1">- {note.by} on {new Date(note.date).toLocaleDateString()}</p>
+                            <p className="text-xs text-gray-500 text-right mt-1">- {note.by} on {new Date(note.date).toLocaleDateString("ms-MY")}</p>
                         </motion.div>
                     )) : performance.every(r => !r.teacherRemark) && <p className="text-sm text-gray-400 text-center py-4">No remarks recorded.</p>}
                 </div>

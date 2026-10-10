@@ -30,11 +30,14 @@ export interface CachedData {
     updated_at: string;
 }
 
-export class OliskeyOfflineDB extends Dexie {
+export class SrikOfflineDB extends Dexie {
     sync_queue!: Table<SyncAction>;
     roster_cache!: Table<CachedData>;
 
     constructor() {
+        // The database name is the STORED key, so renaming it would strand every
+        // record already saved on a teacher's device — the offline cache would look
+        // empty and silently refill. The class is renamed; the stored name is kept.
         super('OliskeyOfflineDB');
         this.version(1).stores({
             sync_queue: '++id, action_type, synced, created_at',
@@ -43,4 +46,4 @@ export class OliskeyOfflineDB extends Dexie {
     }
 }
 
-export const offlineDB = new OliskeyOfflineDB();
+export const offlineDB = new SrikOfflineDB();

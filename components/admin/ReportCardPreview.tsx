@@ -17,7 +17,7 @@ import { StudentReportInfo, ReportCard } from '../../types';
 import { api } from '../../lib/api';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 
 interface ReportCardPreviewProps {
     student: StudentReportInfo;
@@ -58,7 +58,7 @@ const SKILL_BEHAVIOUR_DOMAINS = ['Neatness', 'Punctuality', 'Politeness', 'Respe
 
 const ReportCardPreview: React.FC<ReportCardPreviewProps> = ({ student, schoolId: propSchoolId, onClose }) => {
     const { user, currentSchool } = useAuth();
-    const { branches } = useBranch();
+    const { branches } = useSchoolScope();
     const [isLoading, setIsLoading] = useState(true);
     const [dynamicReport, setDynamicReport] = useState<ReportCard | null>(null);
     const [academicPerformance, setAcademicPerformance] = useState<any[]>([]);
@@ -104,7 +104,7 @@ const ReportCardPreview: React.FC<ReportCardPreviewProps> = ({ student, schoolId
     }, [measureFrom]);
     useEffect(() => () => roRef.current?.disconnect(), []);
 
-    const term = student?.reportCards?.[0]?.term || "First Term";
+    const term = student?.reportCards?.[0]?.term || "Penggal 1";
     const session = student?.reportCards?.[0]?.session || "2025/2026";
     const branchInfo = branches?.find(b => b.id === student?.branchId);
     const schoolLogo = (currentSchool as any)?.logoUrl || (currentSchool as any)?.logo_url || (currentSchool as any)?.logo;

@@ -12,12 +12,23 @@ class ValidationError extends Error {
     }
 }
 
+/**
+ * The current school year.
+ *
+ * The rule here was "Nigerian school sessions run September–July; before
+ * September, the session that started last calendar year is still current". A
+ * Malaysian school year IS the calendar year, so for most of January to August
+ * this returned the PREVIOUS year's session — the transport route list would
+ * have been titled with a school year that had already ended.
+ *
+ * The date is read in the school's timezone, so a parent looking at a route at
+ * 7am on 1 January sees the new year and not the old one.
+ */
 function currentAcademicYear(): string {
-    // Nigerian school sessions run September–July; before September, the
-    // session that started last calendar year is still current.
-    const now = new Date();
-    const startYear = now.getMonth() >= 8 ? now.getFullYear() : now.getFullYear() - 1;
-    return `${startYear}/${startYear + 1}`;
+    const y = new Intl.DateTimeFormat('en-CA', {
+        year: 'numeric', timeZone: 'Asia/Kuala_Lumpur',
+    }).format(new Date());
+    return y;
 }
 
 export class TransportService {

@@ -26,7 +26,7 @@ const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeho
             const recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = true;
-            recognition.lang = 'en-NG';
+            recognition.lang = 'ms-MY';
             recognition.onresult = (event: any) => {
                 const current = event.results[event.results.length - 1];
                 const text = current[0].transcript;

@@ -41,7 +41,6 @@ import {
 } from '../controllers/student.controller';
 import { authenticate } from '../middleware/auth.middleware';
 import { enforceTenant } from '../middleware/tenant.middleware';
-import { requirePlanCapacity } from '../middleware/plan.middleware';
 import { studentSchema } from '../../../shared/utils/validation';
 
 const router = Router();
@@ -70,7 +69,7 @@ router.get('/:id/behavior-notes', authenticate, getStudentBehaviorNotes);
 router.get('/:id/subjects', authenticate, getStudentSubjects);
 router.get('/:id/report-cards', authenticate, getReportCardsByStudentId);
 
-router.post('/enroll', authenticate, requirePlanCapacity('student'), enforceTenant(studentSchema), enrollStudent);
+router.post('/enroll', authenticate, enforceTenant(studentSchema), enrollStudent);
 router.post('/:id/approve', authenticate, approveStudent);
 router.post('/link-guardian', authenticate, linkGuardian);
 router.post('/unlink-guardian', authenticate, unlinkGuardian);

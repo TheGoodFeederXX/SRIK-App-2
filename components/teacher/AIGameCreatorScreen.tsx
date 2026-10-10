@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react';
-import AIFeatureLock from '../shared/AIFeatureLock';
 import { toast } from 'react-hot-toast';
 import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../lib/ai';
 import { AIGame, AIGameQuestion, GameLevel } from '../../types';
@@ -158,7 +157,6 @@ const AIGameCreatorScreen: React.FC<AIGameCreatorScreenProps> = ({ navigateTo, h
     );
 
     return (
-        <AIFeatureLock featureName="AI Game Creator">
         <div className="flex flex-col h-full bg-gray-100 relative">
             {isGenerating && <GeneratingScreen />}
             <main className="flex-grow p-4 space-y-5 overflow-y-auto pb-24">
@@ -209,7 +207,6 @@ const AIGameCreatorScreen: React.FC<AIGameCreatorScreenProps> = ({ navigateTo, h
                 )}
             </footer>
         </div>
-        </AIFeatureLock>
     );
 };
 

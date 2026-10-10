@@ -24,6 +24,7 @@ import {
     ClipboardCheck
 } from 'lucide-react';
 import { api } from '../../lib/api';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface ReportField {
     id: string;
@@ -236,7 +237,7 @@ const CustomReportBuilder = () => {
             const raw = row[f.field];
             const cell = raw == null ? '' : String(raw);
             const val = f.value || '';
-            const cellNum = parseFloat(cell.replace(/[₦,]/g, ''));
+            const cellNum = parseFloat(cell.replace(/[RM,]/g, ''));
             const valNum = parseFloat(val);
             switch (f.operator) {
                 case 'equals': return cell.toLowerCase() === val.toLowerCase();
@@ -335,7 +336,7 @@ const CustomReportBuilder = () => {
                                 <h3 className="font-bold text-gray-800 group-hover:text-indigo-600">{report.name}</h3>
                                 <p className="text-sm text-gray-500 mt-1">{report.description}</p>
                                 <div className="flex items-center justify-between mt-3">
-                                    <span className="text-xs font-bold text-gray-400">{new Date(report.created_at).toLocaleDateString()}</span>
+                                    <span className="text-xs font-bold text-gray-400">{new Date(report.created_at).toLocaleDateString("ms-MY")}</span>
                                     <span className="text-xs font-bold bg-white px-2 py-1 rounded-lg text-gray-500">{report.fields.length} columns</span>
                                 </div>
                                 <button onClick={(e) => handleDeleteReport(report.id, e)} className="absolute top-3 right-3 p-1.5 opacity-0 group-hover:opacity-100 hover:bg-red-50 rounded-lg text-red-500 transition-all">
@@ -514,7 +515,7 @@ const CustomReportBuilder = () => {
                                                 {selectedFields.map(field => (
                                                     <td key={field} className="px-4 py-3 text-sm font-medium text-gray-700 whitespace-nowrap">
                                                         {typeof row[field] === 'number' && (field.includes('Amount') || field === 'Balance')
-                                                            ? `₦${Number(row[field]).toLocaleString()}`
+                                                            ? formatMoney(Number(row[field]))
                                                             : String(row[field] ?? '—')}
                                                     </td>
                                                 ))}

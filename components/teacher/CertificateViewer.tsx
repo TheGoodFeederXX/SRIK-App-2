@@ -69,7 +69,7 @@ const CertificateViewer: React.FC = () => {
                 <p style="color:#6b7280">for successfully completing</p>
                 <h1>${cert.course_title}</h1>
                 <div class="meta">
-                    Certificate #${cert.certificate_number} &nbsp;·&nbsp; Issued ${new Date(cert.issued_at).toLocaleDateString()}
+                    Certificate #${cert.certificate_number} &nbsp;·&nbsp; Issued ${new Date(cert.issued_at).toLocaleDateString("ms-MY")}
                 </div>
             </div>
             <script>window.onload=function(){window.print();}</script>
@@ -128,7 +128,7 @@ const CertificateViewer: React.FC = () => {
                                 <div className="mt-4 pt-4 border-t border-gray-300">
                                     <p className="text-xs text-gray-500">Certificate #{cert.certificate_number}</p>
                                     <p className="text-xs text-gray-500 mt-1">
-                                        Issued: {new Date(cert.issued_at).toLocaleDateString()}
+                                        Issued: {new Date(cert.issued_at).toLocaleDateString("ms-MY")}
                                     </p>
                                 </div>
                             </div>

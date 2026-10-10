@@ -151,7 +151,7 @@ const ClassroomObservationScreen = () => {
                             {history.map((h: any, i: number) => (
                                 <motion.div key={h.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, delay: Math.min(i, 15) * 0.02 }} className="px-5 py-4 flex items-center justify-between gap-3">
                                     <div>
-                                        <p className="font-semibold text-gray-900 text-sm">{new Date(h.date).toLocaleDateString()}</p>
+                                        <p className="font-semibold text-gray-900 text-sm">{new Date(h.date).toLocaleDateString("ms-MY")}</p>
                                         {h.notes && <p className="text-xs text-gray-500">{h.notes}</p>}
                                     </div>
                                     <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${GRADE_STYLES[h.overall_grade] || 'bg-gray-100 text-gray-600'}`}>

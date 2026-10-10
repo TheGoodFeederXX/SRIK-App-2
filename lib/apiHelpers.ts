@@ -133,8 +133,12 @@ export async function backendFetch<T>(endpoint: string): Promise<T> {
                         school_id: 'd0ff3e95-9b4c-4c12-989c-e5640d3cacd1',
                         name: 'Main Campus (Demo)',
                         is_main: true,
-                        curriculum_type: 'nigerian',
-                        location: 'Lagos, Nigeria'
+                        // Demo fallback data. It described a branch in Lagos
+                        // with a Nigerian curriculum, which is not this school:
+                        // shown to a user while the API is down it named the
+                        // wrong country and the wrong curriculum.
+                        curriculum_type: 'KSSR',
+                        location: 'Kuala Nerang, Kedah'
                     }
                 ] as any;
             }

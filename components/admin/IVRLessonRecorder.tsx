@@ -31,8 +31,13 @@ const IVRLessonRecorder: React.FC = () => {
                         <Info className="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" />
                         <div>
                             <p className="text-sm font-semibold text-gray-800 mb-1">Supported providers (any one required):</p>
+                            {/* Descriptions of where each provider operates. The
+                                first line previously placed the target market in
+                                a foreign country; this school is in Malaysia, so
+                                a provider is described by whether it covers
+                                Malaysia. */}
                             <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                                <li><span className="font-medium">Africa's Talking</span> — popular across Nigeria & West Africa</li>
+                                <li><span className="font-medium">Africa's Talking</span> — covers parts of Africa; check Malaysia coverage before use</li>
                                 <li><span className="font-medium">Twilio</span> — global IVR platform</li>
                                 <li><span className="font-medium">Infobip</span> — enterprise voice messaging</li>
                             </ul>
@@ -41,7 +46,7 @@ const IVRLessonRecorder: React.FC = () => {
                 </div>
 
                 <p className="text-sm text-gray-500 mt-6">
-                    Contact <span className="font-semibold text-blue-600">support@oliskey.com</span> to activate IVR phone lessons for your school.
+                    Contact <span className="font-semibold text-blue-600">srialkhairiah@gmail.com</span> to activate IVR phone lessons for your school.
                 </p>
             </div>
         </motion.div>

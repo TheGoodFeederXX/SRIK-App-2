@@ -176,7 +176,7 @@ const EmergencyAlert: React.FC = () => {
                                         </div>
                                         <div className="flex items-center space-x-2 text-gray-700">
                                             <ClockIcon className="w-4 h-4" />
-                                            <span>{new Date(alert.sent_at).toLocaleString()}</span>
+                                            <span>{new Date(alert.sent_at).toLocaleString('ms-MY')}</span>
                                         </div>
                                         {alert.response_time && (
                                             <div className="flex items-center space-x-2 text-gray-700">

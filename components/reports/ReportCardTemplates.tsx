@@ -29,8 +29,8 @@ interface ReportCardProps {
     principalSignature?: string;
 }
 
-// Nigerian Report Card (WAEC/NECO Format)
-export function NigerianReportCard({
+// KSSR Report Card (Malaysian national curriculum format)
+export function KssrReportCard({
     student,
     results,
     term,
@@ -60,7 +60,10 @@ export function NigerianReportCard({
                 )}
                 <h1 className="text-3xl font-bold text-green-800">{schoolName}</h1>
                 <p className="text-sm text-gray-600">{schoolAddress}</p>
-                <p className="text-sm text-gray-600">Nigerian Curriculum (WAEC/NECO)</p>
+                {/* The report card header named a foreign curriculum and its
+                    exam boards. A report card is handed to a parent, so it was
+                    the most visible place the wrong country appeared. */}
+                <p className="text-sm text-gray-600">Kurikulum KSSR</p>
                 <h2 className="text-xl font-semibold mt-4 text-green-700">TERMLY REPORT CARD</h2>
             </div>
 
@@ -74,7 +77,7 @@ export function NigerianReportCard({
                 <div className="space-y-1">
                     <p><strong>Term:</strong> {term}</p>
                     <p><strong>Session:</strong> {academicYear}</p>
-                    <p><strong>Date of Birth:</strong> {new Date(student.date_of_birth).toLocaleDateString()}</p>
+                    <p><strong>Date of Birth:</strong> {new Date(student.date_of_birth).toLocaleDateString("ms-MY")}</p>
                 </div>
             </div>
 
@@ -164,8 +167,8 @@ export function NigerianReportCard({
 
             {/* Footer */}
             <div className="text-center text-xs text-gray-500 mt-8 pt-4 border-t">
-                <p>🇳🇬 Nigerian Curriculum | WAEC/NECO Standard Format</p>
-                <p>Generated on {new Date().toLocaleDateString()}</p>
+                <p>Kurikulum KSSR</p>
+                <p>Generated on {new Date().toLocaleDateString("ms-MY")}</p>
             </div>
         </div>
     );
@@ -217,7 +220,7 @@ export function BritishReportCard({
                 <div className="space-y-1">
                     <p><strong>Term:</strong> {term}</p>
                     <p><strong>Academic Year:</strong> {academicYear}</p>
-                    <p><strong>Date of Birth:</strong> {new Date(student.date_of_birth).toLocaleDateString()}</p>
+                    <p><strong>Date of Birth:</strong> {new Date(student.date_of_birth).toLocaleDateString("ms-MY")}</p>
                 </div>
             </div>
 
@@ -307,7 +310,7 @@ export function BritishReportCard({
             {/* Footer */}
             <div className="text-center text-xs text-gray-500 mt-8 pt-4 border-t">
                 <p>🇬🇧 British Curriculum | Cambridge International Examinations</p>
-                <p>Report generated on {new Date().toLocaleDateString()}</p>
+                <p>Report generated on {new Date().toLocaleDateString("ms-MY")}</p>
             </div>
         </div>
     );
@@ -318,7 +321,7 @@ export function DualCurriculumReportCard(props: ReportCardProps & { curriculumTy
     return (
         <div className="space-y-8">
             <div className="page-break-after">
-                <NigerianReportCard {...props} />
+                <KssrReportCard {...props} />
             </div>
             <div>
                 <BritishReportCard {...props} />

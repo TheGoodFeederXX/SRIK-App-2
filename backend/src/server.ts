@@ -161,15 +161,7 @@ const start = async () => {
                 // dev (npm run server / npm run start), so crons still run there.
                 const isCronOwner = process.env.NODE_APP_INSTANCE === undefined || process.env.NODE_APP_INSTANCE === '0';
 
-                // Subscription cron — production-only by default.
                 if (isCronOwner) {
-                    try {
-                        const { startSubscriptionCron } = require('./services/subscriptionCron.service');
-                        startSubscriptionCron();
-                    } catch (cronErr: any) {
-                        console.warn('⚠️ [SubscriptionCron] start skipped:', cronErr.message);
-                    }
-
                     // Daily notification digests, at each user's chosen time.
                     try {
                         const { NotificationDigestCron } = require('./services/notificationDigestCron.service');

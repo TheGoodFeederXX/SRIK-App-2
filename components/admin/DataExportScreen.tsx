@@ -117,7 +117,7 @@ const DataExportScreen = () => {
                 <h1 className="text-3xl font-bold text-gray-900 font-outfit">Data Export & Deletion</h1>
                 <div className="flex items-center space-x-2 text-gray-500 text-sm mt-1">
                     <Shield className="w-4 h-4 text-emerald-500" />
-                    <span>NDPR / GDPR Right-to-Access & Right-to-Erasure Compliance</span>
+                    <span>PDPA / GDPR Right-to-Access & Right-to-Erasure Compliance</span>
                 </div>
             </header>
 
@@ -224,7 +224,7 @@ const DataExportScreen = () => {
                     {newRequest.type === 'deletion' && (
                         <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-3 flex items-start space-x-3">
                             <AlertTriangle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
-                            <p className="text-sm text-red-700 min-w-0"><strong>Warning:</strong> Data deletion is irreversible. Deleted data cannot be recovered. Under NDPR, you have 72 hours to process deletion requests.</p>
+                            <p className="text-sm text-red-700 min-w-0"><strong>Warning:</strong> Data deletion is irreversible. Deleted data cannot be recovered. Under PDPA, you have 72 hours to process deletion requests.</p>
                         </div>
                     )}
                     <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={handleSubmit} className="w-full py-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100">

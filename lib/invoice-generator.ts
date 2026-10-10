@@ -1,3 +1,4 @@
+import { formatMoney } from '../src/lib/supabase/finance';
 /**
  * Invoice Generator
  * Generates professional PDF invoices for fees using html2pdf.js
@@ -24,7 +25,7 @@ export interface InvoiceData {
 
 export const generateInvoice = async (data: InvoiceData): Promise<void> => {
     const html2pdf = (await import('html2pdf.js')).default;
-    const schoolName  = data.schoolName || 'Oliskey School App';
+    const schoolName  = data.schoolName || 'SRI Al-Khairiah';
     const classInfo   = data.section ? `${data.grade} ${data.section}` : (data.grade || 'N/A');
 
     const isPaid    = data.balance === 0;
@@ -35,10 +36,10 @@ export const generateInvoice = async (data: InvoiceData): Promise<void> => {
     const statusBorder = isPaid ? '#6ee7b7'  : isPartial ? '#fcd34d' : '#fca5a5';
     const statusLabel  = isPaid ? 'PAID IN FULL' : isPartial ? 'PARTIALLY PAID' : 'PAYMENT DUE';
 
-    const fmt = (n: number) => '₦' + n.toLocaleString('en-NG', { minimumFractionDigits: 2 });
+    const fmt = (n: number) => 'RM' + n.toLocaleString('ms-MY', { minimumFractionDigits: 2 });
     const now  = new Date();
-    const genDate = now.toLocaleDateString('en-GB');
-    const genTime = now.toLocaleTimeString('en-GB');
+    const genDate = now.toLocaleDateString("ms-MY");
+    const genTime = now.toLocaleTimeString("ms-MY");
 
     const invoiceHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -364,7 +365,7 @@ export const generateInvoice = async (data: InvoiceData): Promise<void> => {
   .footer-note   { font-size: 10px; color: #64748b; line-height: 1.6; }
   .footer-gen    { font-size: 10px; color: #475569; margin-bottom: 6px; }
   .footer-gen span { display: block; color: #64748b; }
-  .oliskey-badge {
+  .srik-badge {
     display: inline-block;
     margin-top: 6px;
     padding: 3px 12px;
@@ -504,7 +505,7 @@ export const generateInvoice = async (data: InvoiceData): Promise<void> => {
                 </td>
                 <td class="pay-content-cell">
                   <div class="pay-title" style="color:#92400e;">Payment Instructions</div>
-                  <div class="pay-body">Log in to the parent portal and pay securely online using your debit or credit card via Paystack.</div>
+                  <div class="pay-body">Sila jelaskan bayaran di pejabat sekolah, atau hubungi pejabat untuk cara pembayaran.</div>
                   <div class="pay-due">Due by ${data.dueDate}</div>
                 </td>
               </tr>
@@ -566,7 +567,7 @@ export const generateInvoice = async (data: InvoiceData): Promise<void> => {
             Generated on ${genDate}
             <span>${genTime}</span>
           </div>
-          <span class="oliskey-badge">OLISKEY</span>
+          <span class="srik-badge">SRIK</span>
         </td>
       </tr>
     </table>

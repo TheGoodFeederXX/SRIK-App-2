@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 type TabType = 'routes' | 'stops' | 'assignments';
 
@@ -248,7 +249,7 @@ const TransportManagementScreen = () => {
                                                 </div>
                                                 <div>
                                                     <p className="text-xs uppercase font-bold text-gray-400">Fee/Month</p>
-                                                    <p className="font-bold text-gray-700">₦{route.monthly_fee?.toLocaleString()}</p>
+                                                    <p className="font-bold text-gray-700">{formatMoney(route.monthly_fee)}</p>
                                                 </div>
                                             </div>
                                             <div className="flex items-center justify-between pt-2">
@@ -393,7 +394,7 @@ const TransportManagementScreen = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Monthly Fee (₦)</label>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Monthly Fee (RM)</label>
                                         <input type="number" className="w-full px-5 py-3 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none font-bold" value={formData.monthly_fee || ''} onChange={e => setFormData({ ...formData, monthly_fee: parseFloat(e.target.value) || 0 })} />
                                     </div>
                                 </>

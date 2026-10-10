@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { ParentService } from '../services/parent.service';
-import { TransactionService } from '../services/transaction.service';
 import prisma from '../config/database';
 import { getEffectiveBranchId } from '../utils/branchScope';
 import { sendError } from '../utils/httpError';
@@ -447,51 +446,6 @@ export const getStudentFees = async (req: AuthRequest, res: Response) => {
         res.json(result);
     } catch (error: any) {
         res.status(error.message === 'Student not found' ? 404 : 500).json({ message: error.message });
-    }
-};
-
-export const recordPayment = async (req: AuthRequest, res: Response) => {
-    try {
-        const { student_id, reference, gateway } = req.body;
-        if (!student_id) return res.status(400).json({ message: 'student_id is required' });
-        await assertParentOwnsStudent(req, student_id);
-
-        // Never trust a client-supplied amount/status for a payment — verify the
-        // reference against the real gateway (same check used in
-        // transaction.controller.ts) and only record what the gateway confirms.
-        if (!reference || !gateway) {
-            return res.status(400).json({ message: 'A verified gateway reference is required to record a payment' });
-        }
-        const branchId = getEffectiveBranchId(req.user, req.body.branch_id);
-        // Throws (402/503) unless the gateway confirms a successful transaction.
-        const verified = await TransactionService.verifyPayment(reference, gateway);
-
-        // The gateway reports the currency it actually collected, and that value
-        // was previously read and thrown away: only `amount` was carried over. A
-        // Paystack/Flutterwave account enabled for more than one currency would
-        // therefore credit "5000" against a ₦5,000 fee even when the 5000 was
-        // collected in a weaker currency. Credit only the currencies this
-        // deployment actually bills in.
-        const allowedCurrencies = (process.env.PAYMENT_ALLOWED_CURRENCIES || 'NGN')
-            .split(',').map(c => c.trim().toUpperCase()).filter(Boolean);
-        const paidCurrency = String(verified.currency || '').toUpperCase();
-        if (!allowedCurrencies.includes(paidCurrency)) {
-            return res.status(422).json({
-                message: `Payment was collected in ${paidCurrency || 'an unknown currency'}, which this school does not bill in.`,
-            });
-        }
-
-        const result = await ParentService.recordPayment(req.user.school_id, branchId, {
-            ...req.body,
-            student_id,
-            reference: verified.reference,
-            payment_method: gateway,
-            amount: verified.amount, // the amount the gateway saw, never the client's
-        });
-        res.status(201).json(result);
-    } catch (error: any) {
-        const status = error.status || (error.message === 'Student not found' ? 404 : 500);
-        res.status(status).json({ message: error.message });
     }
 };
 

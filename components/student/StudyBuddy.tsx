@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
-import AIFeatureLock from '../shared/AIFeatureLock';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { CameraIcon } from '../../constants';
@@ -144,7 +143,6 @@ const StudyBuddy: React.FC = () => {
     };
 
     return (
-        <AIFeatureLock featureName="AI Study Buddy">
         <div className="flex flex-col h-screen w-full" style={{ backgroundImage: "url('https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg')", backgroundRepeat: 'repeat', backgroundSize: 'auto' }}>
             {/* Chat Area - Scrollable */}
             <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4 pb-24">
@@ -202,7 +200,6 @@ const StudyBuddy: React.FC = () => {
                 </form>
             </div>
         </div>
-        </AIFeatureLock>
     );
 };
 

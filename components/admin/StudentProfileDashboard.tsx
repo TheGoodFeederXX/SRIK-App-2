@@ -376,7 +376,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                     <span className="text-xs font-semibold text-gray-500 uppercase">Date of Birth</span>
                                     <span className="text-sm font-bold text-gray-800">
                                         {s?.dob || s?.birthday || s?.date_of_birth || s?.dateOfBirth
-                                            ? new Date(s?.dob || s?.birthday || s?.date_of_birth || s?.dateOfBirth || '').toLocaleDateString()
+                                            ? new Date(s?.dob || s?.birthday || s?.date_of_birth || s?.dateOfBirth || '').toLocaleDateString("ms-MY")
                                             : 'Not Specified'}
                                     </span>
                                 </div>
@@ -478,7 +478,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                             {(note.by || note.date) && (
                                                 <div className="flex justify-between items-center mt-3 pt-3 border-t border-white text-xs font-bold text-gray-400 uppercase tracking-wider">
                                                     <span>{note.by || 'Staff'}</span>
-                                                    <span>{note.date ? new Date(note.date).toLocaleDateString() : ''}</span>
+                                                    <span>{note.date ? new Date(note.date).toLocaleDateString("ms-MY") : ''}</span>
                                                 </div>
                                             )}
                                         </motion.div>

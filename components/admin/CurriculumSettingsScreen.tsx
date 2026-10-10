@@ -63,7 +63,8 @@ const CurriculumSettingsScreen: React.FC<{
     const handleSync = async (subject: Subject) => {
         setIsSyncing(true);
         try {
-            const source = selectedTemplate?.name.includes('Nigerian') ? 'Nigerian' : 'British';
+            // The template names are the school's own; a KSSR template is the national track.
+            const source = selectedTemplate?.name.includes('KSSR') ? 'KSSR' : 'British';
             const result = await api.syncCurriculumData(subject.id, source);
             if (result.success) {
                 toast.success(result.message);
@@ -116,7 +117,10 @@ const CurriculumSettingsScreen: React.FC<{
                                 }`}
                         >
                             <div className="flex items-center gap-2">
-                                <span>{temp.name.includes('Nigerian') ? '🇳🇬' : '🇬🇧'}</span>
+                                {/* The national-curriculum template once carried
+                                    a foreign country's flag, on a Malaysian
+                                    school's own curriculum. */}
+                                <span>{temp.name.includes('KSSR') ? '🇲🇾' : '🇬🇧'}</span>
                                 <span>{temp.name}</span>
                             </div>
                         </button>
@@ -159,7 +163,7 @@ const CurriculumSettingsScreen: React.FC<{
                                         <div className="flex justify-between items-start">
                                             <div className="flex items-start gap-4">
                                                 <div className="text-3xl filter grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-110">
-                                                    {temp.name.includes('Nigerian') ? '🇳🇬' : '🇬🇧'}
+                                                    {temp.name.includes('KSSR') ? '🇲🇾' : '🇬🇧'}
                                                 </div>
                                                 <div>
                                                     <p className={`font-bold transition-colors ${selectedTemplate?.id === temp.id ? 'text-indigo-900' : 'text-gray-700'}`}>
@@ -211,7 +215,7 @@ const CurriculumSettingsScreen: React.FC<{
                                 <div className="relative bg-white/80 backdrop-blur-sm rounded-[2.4rem] p-8 md:p-10">
                                     <div className="flex flex-col md:flex-row items-center md:items-start gap-8">
                                         <div className="text-7xl md:text-8xl drop-shadow-md animate-float">
-                                            {selectedTemplate.name.includes('Nigerian') ? '🇳🇬' : '🇬🇧'}
+                                            {selectedTemplate.name.includes('KSSR') ? '🇲🇾' : '🇬🇧'}
                                         </div>
                                         <div className="text-center md:text-left">
                                             <div className="flex flex-col md:flex-row items-center gap-3 mb-3">

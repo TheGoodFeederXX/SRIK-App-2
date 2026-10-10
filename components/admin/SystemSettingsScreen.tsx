@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheckIcon, CalendarIcon, DollarSignIcon, MegaphoneIcon, BriefcaseIcon, PaintBrushIcon, ChevronRightIcon, UserGroupIcon, UserIcon as ProfileIcon, ElearningIcon, ClockIcon, DocumentTextIcon } from '../../constants';
 import { UserPlus, Sparkles, CreditCard } from 'lucide-react';
-import TermBillingStatus from './TermBillingStatus';
 
 interface SystemSettingsScreenProps {
   navigateTo: (view: string, title: string, props?: any) => void;
@@ -35,7 +34,6 @@ const settingsCategories = [
 const SystemSettingsScreen: React.FC<SystemSettingsScreenProps> = ({ navigateTo }) => {
   return (
     <div className="p-4 space-y-3 bg-gray-50 pb-32 lg:pb-4">
-      <TermBillingStatus navigateTo={navigateTo} />
       {settingsCategories.map((cat, ci) => (
         <motion.button
           key={cat.view}

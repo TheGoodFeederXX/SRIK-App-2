@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion';
  * Mounted once at the app root; any screen opens it with `viewImage(src, alt)`
  * — no prop drilling, no per-screen modal. Closes on tap, Escape or the ✕.
  */
-const EVENT = 'oliskey:view-image';
+const EVENT = 'srik:view-image';
 
 export function viewImage(src: string | null | undefined, alt = 'Photo') {
     if (!src) return;

@@ -16,7 +16,7 @@ interface SOPCaseDetailViewProps {
 function fmtDateTime(value: string | null | undefined): string {
     if (!value) return '—';
     const d = new Date(value);
-    return isNaN(d.getTime()) ? String(value) : d.toLocaleString();
+    return isNaN(d.getTime()) ? String(value) : d.toLocaleString('ms-MY');
 }
 
 const STATUS_STYLES: Record<string, string> = {

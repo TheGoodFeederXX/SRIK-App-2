@@ -31,7 +31,6 @@ import { useSocket } from '../../context/SocketContext';
 
 // Lazy load all view components
 const GlobalSearchScreen = lazyWithRetry(() => import('../shared/GlobalSearchScreen'));
-import EmailVerificationPrompt from '../auth/EmailVerificationPrompt';
 import SuspensionNoticeBanner from '../shared/SuspensionNoticeBanner';
 const StudyBuddy = lazyWithRetry(() => import('../student/StudyBuddy'));
 const AdventureQuestHost = lazyWithRetry(() => import('../student/adventure/AdventureQuestHost'));
@@ -42,7 +41,8 @@ const AnonymousReporting = lazyWithRetry(() => import('./AnonymousReporting'));
 const DiscreetReporting = lazyWithRetry(() => import('./DiscreetReporting'));
 const LibraryScreen = lazyWithRetry(() => import('../shared/LibraryScreen'));
 const CurriculumScreen = lazyWithRetry(() => import('../shared/CurriculumScreen'));
-const TimetableScreen = lazyWithRetry(() => import('../shared/TimetableScreen'));
+// The school week is Sunday to Thursday, which this screen knows.
+const TimetableScreen = lazyWithRetry(() => import('../admin/TimetableScreen'));
 const AssignmentsScreen = lazyWithRetry(() => import('../student/AssignmentsScreen'));
 const SubjectsScreen = lazyWithRetry(() => import('../student/SubjectsScreen'));
 const ClassroomScreen = lazyWithRetry(() => import('../student/ClassroomScreen'));
@@ -132,7 +132,7 @@ const TodayFocus: React.FC<{
             return {
                 title: hw.title,
                 subject: hw.subject || 'General',
-                dueDate: dueDate.toLocaleDateString(),
+                dueDate: dueDate.toLocaleDateString("ms-MY"),
                 timeRemaining: daysLeft > 0 ? `${daysLeft}d` : 'Today',
                 daysLeft,
                 type: 'assignment' as const,
@@ -150,7 +150,7 @@ const TodayFocus: React.FC<{
             return {
                 title: quiz.title,
                 subject: quiz.subject_id || 'General',
-                dueDate: dueDate.toLocaleDateString(),
+                dueDate: dueDate.toLocaleDateString("ms-MY"),
                 timeRemaining: daysLeft > 0 ? `${daysLeft}d` : 'Soon',
                 daysLeft,
                 type: 'quiz' as const,
@@ -367,10 +367,6 @@ const Overview: React.FC<{
                 {/* Main content */}
                 <div className="lg:col-span-2 space-y-6">
                     <SuspensionNoticeBanner mode="student" />
-                    {!currentUser?.user_metadata?.email_verified && (
-                        <EmailVerificationPrompt />
-                    )}
-
 
                     <TodayFocus
                         schedule={todaySchedule}

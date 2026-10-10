@@ -158,7 +158,7 @@ const BackupRestoreScreen = () => {
                                     <td className="px-6 py-5">
                                         <span className={`text-xs font-bold px-3 py-1 rounded-full ${backup.status.includes('Completed') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{backup.status}</span>
                                     </td>
-                                    <td className="px-6 py-5 text-sm text-gray-500">{new Date(backup.created_at).toLocaleString('en-NG')}</td>
+                                    <td className="px-6 py-5 text-sm text-gray-500">{new Date(backup.created_at).toLocaleString('ms-MY')}</td>
                                     <td className="px-6 py-5">
                                         <div className="flex items-center space-x-2">
                                             <button onClick={() => handleRestore(backup.id)} disabled={isRestoring}

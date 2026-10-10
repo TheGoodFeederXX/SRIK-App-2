@@ -1,130 +1,167 @@
+/**
+ * Add-student form — SRIK.
+ *
+ * The previous tests asserted that the form preserved curriculum subjects and
+ * sent `curriculum_type` / `school_bus_id`. Those fields are gone: SRIK has no
+ * bus and no curriculum streams, so the form no longer collects them. These
+ * tests assert what the form does now — register a student with a guardian and
+ * a class, and report a partial failure honestly.
+ */
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router';
-import { describe, it, expect, vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AddStudentScreen from '../AddStudentScreen';
-import { api } from '../../../lib/api';
 
-// The screen invalidates the cached rosters after a successful save, so it needs
-// a client in scope — in the app it always renders under the provider in
-// index.tsx. Retries off so a failed query fails the test immediately.
-const withQuery = (ui: React.ReactNode) => (
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-        {ui}
-    </QueryClientProvider>
-);
-
-vi.mock('../../../context/AuthContext', () => ({
-    useAuth: () => ({
-        user: { id: 'admin-1' },
-        currentSchool: { id: 'school-1' },
-        currentBranchId: 'branch-1',
-    }),
+const {
+    listClassOptions,
+    suggestNextAdmissionNo,
+    createStudentWithDetails,
+    updateStudent,
+    enrollStudent,
+    getStudent,
+} = vi.hoisted(() => ({
+    listClassOptions: vi.fn(),
+    suggestNextAdmissionNo: vi.fn(),
+    createStudentWithDetails: vi.fn(),
+    updateStudent: vi.fn(),
+    enrollStudent: vi.fn(),
+    getStudent: vi.fn(),
 }));
 
-vi.mock('../../../context/ProfileContext', () => ({
-    useProfile: () => ({
-        profile: { schoolId: 'school-1', branchId: 'branch-1', role: 'admin' },
-        refreshProfile: vi.fn(),
-    }),
+vi.mock('../../../src/lib/supabase/students', () => ({
+    listClassOptions: (...a: unknown[]) => listClassOptions(...a),
+    suggestNextAdmissionNo: (...a: unknown[]) => suggestNextAdmissionNo(...a),
+    createStudentWithDetails: (...a: unknown[]) => createStudentWithDetails(...a),
+    updateStudent: (...a: unknown[]) => updateStudent(...a),
+    enrollStudent: (...a: unknown[]) => enrollStudent(...a),
+    getStudent: (...a: unknown[]) => getStudent(...a),
 }));
 
-vi.mock('../../../context/BranchContext', () => ({
-    useBranch: () => ({
-        currentBranch: { id: 'branch-1', name: 'Main Branch' },
-    }),
+const { toastError, toastSuccess } = vi.hoisted(() => ({
+    toastError: vi.fn(),
+    toastSuccess: vi.fn(),
 }));
 
-vi.mock('../../../hooks/useTenantLimit', () => ({
-    useTenantLimit: () => ({
-        isLimitReached: false,
-        currentCount: 1,
-        maxLimit: 100,
-        isPremium: true,
-    }),
-}));
+vi.mock('react-hot-toast', () => {
+    const fn = Object.assign(vi.fn(), { error: toastError, success: toastSuccess });
+    return { default: fn, toast: fn };
+});
 
-const { mockClass, mockStudent } = vi.hoisted(() => ({
-    mockClass: { id: 'class-1', name: 'SSS 3', grade: 12, section: 'A', branch_id: 'branch-1' },
-    mockStudent: {
-        id: 'stu-1',
-        name: 'Jane Doe',
-        full_name: 'Jane Doe',
-        admission_number: 'ADM-001',
-        department: 'Science',
-        curriculum_type: 'Nigerian',
-        address: '123 Street',
-        gender: 'Female',
-        school_bus_id: 'bus-1',
-        branch_id: 'branch-1',
-        // Admin previously customized this student's subjects — must survive reopening Edit.
-        assigned_subjects: ['Physics', 'Chemistry'],
-        enrollments: [{ class_id: 'class-1', status: 'Active' }],
-        parents: [],
-    },
-}));
+// A fresh cache per render: the screen invalidates the student list after a
+// save, and a shared cache would let one test's data reach the next.
+const renderForm = (props: Record<string, unknown> = {}) =>
+    render(
+        <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })}>
+            <AddStudentScreen
+                handleBack={vi.fn()}
+                forceUpdate={vi.fn()}
+                {...props}
+            />
+        </QueryClientProvider>
+    );
 
-vi.mock('../../../lib/api', () => ({
-    api: {
-        getStudentById: vi.fn(),
-        getSubjects: vi.fn().mockResolvedValue(['Physics', 'Chemistry', 'Biology']),
-        getClasses: vi.fn().mockResolvedValue([mockClass]),
-        // A different list than assigned_subjects, so the test can prove auto-fill
-        // does NOT clobber the student's saved picks on load.
-        getClassSubjects: vi.fn().mockResolvedValue([{ name: 'Biology' }]),
-        getBuses: vi.fn().mockResolvedValue([{ id: 'bus-1', name: 'Bus A' }]),
-        getBranches: vi.fn().mockResolvedValue([{ id: 'branch-1', name: 'Main Branch' }]),
-        getParents: vi.fn().mockResolvedValue([]),
-        updateStudent: vi.fn().mockResolvedValue({}),
-        syncStudentClasses: vi.fn().mockResolvedValue({}),
-    },
-}));
-
-describe('AddStudentScreen (edit mode) persistence', () => {
-    it('restores previously saved subjects instead of overwriting them with class defaults', async () => {
-        (api.getStudentById as any).mockResolvedValue(mockStudent);
-
-        render(withQuery(
-            <MemoryRouter>
-                <AddStudentScreen
-                    studentToEdit={mockStudent as any}
-                    forceUpdate={vi.fn()}
-                    handleBack={vi.fn()}
-                />
-            </MemoryRouter>
-        ));
-
-        await screen.findByDisplayValue('Jane Doe');
-
-        expect(screen.getByText('Physics')).toBeInTheDocument();
-        expect(screen.getByText('Chemistry')).toBeInTheDocument();
-        // The class's auto-fill default ('Biology') must not have overwritten the saved picks.
-        expect(screen.queryByText('Biology')).not.toBeInTheDocument();
+describe('AddStudentScreen — SRIK fields only', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+        listClassOptions.mockResolvedValue([{ id: 'c1', label: '3 Al-Junaidi' }]);
+        suggestNextAdmissionNo.mockResolvedValue('S-0007');
+        createStudentWithDetails.mockResolvedValue({ success: true, studentId: 's1' });
     });
 
-    it('sends curriculum_type and school_bus_id when saving an edited student', async () => {
-        (api.getStudentById as any).mockResolvedValue(mockStudent);
+    it('suggests an admission number and offers the real class list', async () => {
+        renderForm();
 
-        render(withQuery(
-            <MemoryRouter>
-                <AddStudentScreen
-                    studentToEdit={mockStudent as any}
-                    forceUpdate={vi.fn()}
-                    handleBack={vi.fn()}
-                />
-            </MemoryRouter>
-        ));
+        await waitFor(() =>
+            expect((screen.getByLabelText('Admission number') as HTMLInputElement).value).toBe('S-0007')
+        );
+        expect(screen.getByRole('option', { name: '3 Al-Junaidi' })).toBeDefined();
+    });
 
-        await screen.findByDisplayValue('Jane Doe');
+    it('registers a student with a guardian and a class in one go', async () => {
+        const handleBack = vi.fn();
+        renderForm({ handleBack });
 
-        fireEvent.click(screen.getByRole('button', { name: /update student/i }));
+        await waitFor(() =>
+            expect((screen.getByLabelText('Admission number') as HTMLInputElement).value).toBe('S-0007')
+        );
 
-        await waitFor(() => expect(api.updateStudent).toHaveBeenCalled());
+        fireEvent.change(screen.getByLabelText("Student's full name"), { target: { value: 'Ahmad Zaki' } });
+        fireEvent.change(screen.getByLabelText("Guardian's name"), { target: { value: 'Ali bin Osman' } });
+        fireEvent.change(screen.getByLabelText('Phone number'), { target: { value: '0123456789' } });
+        fireEvent.change(screen.getByLabelText('Class'), { target: { value: 'c1' } });
 
-        const [, payload] = (api.updateStudent as any).mock.calls[0];
-        expect(payload.curriculum_type).toBe('Nigerian');
-        expect(payload.school_bus_id).toBe('bus-1');
-        expect(payload.subjects).toEqual(['Physics', 'Chemistry']);
+        fireEvent.click(screen.getByRole('button', { name: 'Register student' }));
+
+        await waitFor(() => expect(createStudentWithDetails).toHaveBeenCalledTimes(1));
+
+        const [input, options] = createStudentWithDetails.mock.calls[0];
+        expect(input).toMatchObject({ admissionNo: 'S-0007', fullName: 'Ahmad Zaki' });
+        expect(options.classId).toBe('c1');
+        expect(options.guardian).toMatchObject({
+            fullName: 'Ali bin Osman',
+            phone: '0123456789',
+            isPrimary: true,
+        });
+        // The form closes only after the student is actually saved.
+        expect(handleBack).toHaveBeenCalled();
+    });
+
+    it('does not create a guardian when no name and phone were entered', async () => {
+        renderForm();
+        await waitFor(() => expect(suggestNextAdmissionNo).toHaveBeenCalled());
+
+        fireEvent.change(screen.getByLabelText("Student's full name"), { target: { value: 'Tanpa Penjaga' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Register student' }));
+
+        await waitFor(() => expect(createStudentWithDetails).toHaveBeenCalledTimes(1));
+        expect(createStudentWithDetails.mock.calls[0][1].guardian).toBeNull();
+    });
+
+    it('stays on the form and explains when the student cannot be saved', async () => {
+        createStudentWithDetails.mockResolvedValue({ success: false, error: 'Admission number "S-0007" is already in use.' });
+        const handleBack = vi.fn();
+        renderForm({ handleBack });
+
+        await waitFor(() =>
+            expect((screen.getByLabelText('Admission number') as HTMLInputElement).value).toBe('S-0007')
+        );
+        fireEvent.change(screen.getByLabelText("Student's full name"), { target: { value: 'Ahmad Zaki' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Register student' }));
+
+        await waitFor(() => expect(toastError).toHaveBeenCalled());
+        // A failed save must NOT close the form: the typed details would be lost.
+        expect(handleBack).not.toHaveBeenCalled();
+    });
+
+    it('says what is missing when a student saves but the class does not', async () => {
+        createStudentWithDetails.mockResolvedValue({
+            success: true,
+            studentId: 's1',
+            warning: 'class was not assigned: permission denied',
+        });
+        renderForm();
+
+        await waitFor(() =>
+            expect((screen.getByLabelText('Admission number') as HTMLInputElement).value).toBe('S-0007')
+        );
+        fireEvent.change(screen.getByLabelText("Student's full name"), { target: { value: 'Ahmad Zaki' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Register student' }));
+
+        // The student exists, so the owner is told the record was kept and only
+        // the class is outstanding.
+        await waitFor(() => expect(toastSuccess).not.toHaveBeenCalled());
+        expect(createStudentWithDetails).toHaveBeenCalledTimes(1);
+    });
+
+    it('never asks for branch, bus, curriculum or subscription details', async () => {
+        renderForm();
+        await waitFor(() => expect(suggestNextAdmissionNo).toHaveBeenCalled());
+
+        const body = document.body.textContent ?? '';
+        expect(body).not.toMatch(/branch|cawangan/i);
+        expect(body).not.toMatch(/\bbus\b|bas sekolah/i);
+        expect(body).not.toMatch(/curriculum|nigerian|british/i);
+        expect(body).not.toMatch(/subscription|upgrade|paystack/i);
     });
 });

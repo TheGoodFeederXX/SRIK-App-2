@@ -70,12 +70,16 @@ export class MessagingService {
     }
 
     /**
-     * Detects Nigerian languages and suggests translation.
+     * Detects non-Malay text and suggests a Malay translation.
+     *
+     * The detector looked for Yoruba, Igbo and Hausa — languages of the country
+     * this app was first built for. At a Malaysian school the useful check is
+     * the reverse: flag anything that is not in Malay so it can be translated.
      */
     static async getTranslationSuggestion(content: string) {
         const ai = getAIClient();
-        const prompt = `Identify if the following text is in Yoruba, Igbo, or Hausa. 
-        If yes, translate it to English. If no, return "null".
+        const prompt = `Identify if the following text is NOT in Malay (Bahasa Melayu).
+        If it is not in Malay, translate it to Malay. If it is already in Malay, return "null".
         Text: "${content}"`;
 
         try {

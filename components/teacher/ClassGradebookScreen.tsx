@@ -30,20 +30,24 @@ interface GradebookEntry {
     offersSubject: boolean;
 }
 
+// This school's agreed scale has FIVE bands and NO F: A 80-100, B 65-79,
+// C 50-64, D 35-49, E 0-34. The previous function used a NIGERIAN scale with
+// an A at 70 and an F below 45, so a mark of 75 was reported as a B and every
+// score under 45 branded the pupil a fail — a letter this school never issues.
 const getGrade = (score: number): string => {
-    if (score >= 70) return 'A';
-    if (score >= 60) return 'B';
+    if (score >= 80) return 'A';
+    if (score >= 65) return 'B';
     if (score >= 50) return 'C';
-    if (score >= 45) return 'D';
-    return 'F';
+    if (score >= 35) return 'D';
+    return 'E';
 };
 
 const getRemark = (score: number, grade: string): string => {
-    if (grade === 'A') return 'Excellent';
-    if (grade === 'B') return 'Very Good';
-    if (grade === 'C') return 'Good';
-    if (grade === 'D') return 'Fair';
-    return 'Needs Improvement';
+    if (grade === 'A') return 'Cemerlang';
+    if (grade === 'B') return 'Baik';
+    if (grade === 'C') return 'Memuaskan';
+    if (grade === 'D') return 'Perlu Perbaikan';
+    return 'Lemah';
 };
 
 type ScoreChangeHandler = (index: number, field: 'test1' | 'test2' | 'exam', value: string) => void;
@@ -289,9 +293,12 @@ const ClassGradebookScreen: React.FC<{
                     setCurrentTerm(current);
                 } else {
                     setSessions(allYears);
+                    // A fallback for a class with no terms set up yet. It used to
+                    // be a September-to-July year named "Penggal 1" in English; it
+                    // is now the Malaysian year, named in Malay.
                     const nowYear = new Date().getFullYear();
-                    const currentAcademicYear = `${nowYear}/${nowYear + 1}`;
-                    const fallbackTerm = { name: "First Term", academic_year: currentAcademicYear, start_date: `${nowYear}-09-01`, end_date: `${nowYear + 1}-07-30` };
+                    const currentAcademicYear = `${nowYear}`;
+                    const fallbackTerm = { name: "Penggal 1", academic_year: currentAcademicYear, start_date: `${nowYear}-01-01`, end_date: `${nowYear}-03-20` };
                     setTerms([fallbackTerm]);
                     setCurrentSession(currentAcademicYear);
                     setCurrentTerm(fallbackTerm);
@@ -810,28 +817,27 @@ const ClassGradebookScreen: React.FC<{
                     <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
                         <h4 className="font-bold text-gray-800 mb-3 flex items-center text-sm"><CalculatorIcon className="w-4 h-4 mr-2 text-purple-600" /> Grading Scale</h4>
                         <div className="space-y-2 text-xs sm:text-sm text-gray-600">
-                            {/* Bands MUST match getGrade() above (and the backend's
-                                default Nigerian scale) — a legend that disagrees with
-                                the computed grade misleads teachers. */}
+                            {/* Bands MUST match getGrade() above — a legend that
+                                disagrees with the computed grade misleads teachers. */}
                             <div className="flex justify-between items-center p-1 hover:bg-gray-50 rounded">
-                                <span className="font-medium">A (Excellent)</span>
-                                <span className="text-gray-900 font-bold bg-green-50 px-2 py-0.5 rounded">70 - 100</span>
+                                <span className="font-medium">A (Cemerlang)</span>
+                                <span className="text-gray-900 font-bold bg-green-50 px-2 py-0.5 rounded">80 - 100</span>
                             </div>
                             <div className="flex justify-between items-center p-1 hover:bg-gray-50 rounded">
-                                <span className="font-medium">B (Very Good)</span>
-                                <span className="text-gray-900 font-bold bg-blue-50 px-2 py-0.5 rounded">60 - 69</span>
+                                <span className="font-medium">B (Baik)</span>
+                                <span className="text-gray-900 font-bold bg-blue-50 px-2 py-0.5 rounded">65 - 79</span>
                             </div>
                             <div className="flex justify-between items-center p-1 hover:bg-gray-50 rounded">
-                                <span className="font-medium">C (Good)</span>
-                                <span className="text-gray-900 font-bold bg-yellow-50 px-2 py-0.5 rounded">50 - 59</span>
+                                <span className="font-medium">C (Memuaskan)</span>
+                                <span className="text-gray-900 font-bold bg-yellow-50 px-2 py-0.5 rounded">50 - 64</span>
                             </div>
                             <div className="flex justify-between items-center p-1 hover:bg-gray-50 rounded">
-                                <span className="font-medium">D (Fair)</span>
-                                <span className="text-gray-900 font-bold bg-orange-50 px-2 py-0.5 rounded">45 - 49</span>
+                                <span className="font-medium">D (Perlu Perbaikan)</span>
+                                <span className="text-gray-900 font-bold bg-orange-50 px-2 py-0.5 rounded">35 - 49</span>
                             </div>
                             <div className="flex justify-between items-center p-1 hover:bg-gray-50 rounded">
-                                <span className="font-medium text-red-600">F (Fail)</span>
-                                <span className="text-red-700 font-bold bg-red-50 px-2 py-0.5 rounded">0 - 44</span>
+                                <span className="font-medium text-red-600">E (Lemah)</span>
+                                <span className="text-red-700 font-bold bg-red-50 px-2 py-0.5 rounded">0 - 34</span>
                             </div>
                         </div>
                     </div>

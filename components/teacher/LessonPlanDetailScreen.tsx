@@ -259,13 +259,16 @@ export const AIActivitySuggester: React.FC<{ topic: string, subject: string, han
         const generate = async () => {
             try {
                 const ai = getAIClient();
-                const prompt = `Generate 3 creative learning activities for the topic "${topic}" in the subject "${subject}" for a Nigerian classroom. 
+                // The prompt asked for a NIGERIAN classroom and for materials
+                // available in Nigeria, so suggested activities and shopping lists
+                // did not fit a Malaysian school. SRIK teaches in Malaysia.
+                const prompt = `Generate 3 creative learning activities for the topic "${topic}" in the subject "${subject}" for a Malaysian primary classroom. 
                 Include:
                 1. A Group Activity
                 2. A Creative/Artistic Activity
                 3. A Quick Quiz/Game
                 
-                For each, provide a title, duration, materials needed, and step-by-step instructions. Focus on low-cost materials available in Nigeria.`;
+                For each, provide a title, duration, materials needed, and step-by-step instructions. Focus on low-cost materials available in Malaysia.`;
 
                 const response = await ai.models.generateContent({
                     contents: [{ role: 'user', parts: [{ text: prompt }] }],

@@ -287,7 +287,7 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
                                     {student.birthday && (
                                         <div className="flex items-center space-x-1.5 mt-1 sm:mt-0">
                                             <CakeIcon className="w-4 h-4 text-pink-400" />
-                                            <span>{new Date(student.birthday.replace(/-/g, '/')).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+                                            <span>{new Date(student.birthday.replace(/-/g, '/')).toLocaleDateString('ms-MY', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
                                         </div>
                                     )}
                                 </div>
@@ -404,7 +404,7 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
                                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-2">
                                     <p className="text-sm font-bold text-amber-900">Currently Suspended</p>
                                     <p className="text-xs text-amber-700 mt-0.5">
-                                        {new Date(activeSuspension.start_date).toLocaleDateString()} – {new Date(activeSuspension.return_date).toLocaleDateString()}
+                                        {new Date(activeSuspension.start_date).toLocaleDateString("ms-MY")} – {new Date(activeSuspension.return_date).toLocaleDateString("ms-MY")}
                                         {activeSuspension.is_overdue ? ' · return date passed' : ''}
                                     </p>
                                     <button
@@ -474,7 +474,7 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
                                         <p className="text-sm text-gray-700 font-medium italic">"{note.note}"</p>
                                         <div className="flex items-center justify-between mt-3">
                                             <span className="text-xs font-black text-purple-600 uppercase bg-purple-100 px-2 py-0.5 rounded-full">{note.type}</span>
-                                            <p className="text-xs text-gray-400 font-bold">{new Date(note.date).toLocaleDateString()}</p>
+                                            <p className="text-xs text-gray-400 font-bold">{new Date(note.date).toLocaleDateString("ms-MY")}</p>
                                         </div>
                                     </div>
                                 )) : <p className="text-sm text-gray-400 text-center py-6 font-medium italic">Perfect conduct record.</p>}

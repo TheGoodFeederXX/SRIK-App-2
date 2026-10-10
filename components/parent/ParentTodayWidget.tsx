@@ -151,7 +151,6 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                 {[
                     { onClick: () => navigateTo('attendanceOverview', 'Attendance'), iconBg: 'bg-emerald-50', icon: <CircleCheck className="w-5 h-5 text-emerald-600" />, corner: <span className="text-2xl">{attendanceIcon}</span>, value: <span className="capitalize">{child.attendance_status.replace('_', ' ')}</span>, label: 'Attendance' },
                     { onClick: () => navigateTo('assignments', 'Homework'), iconBg: 'bg-indigo-50', icon: <BookOpen className="w-5 h-5 text-indigo-600" />, corner: child.homework_pending > 0 && <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{child.homework_pending}</span>, value: `${child.homework_pending} Pending`, label: 'Homework' },
-                    { onClick: () => navigateTo('feeStatus', 'Fees'), iconBg: 'bg-amber-50', icon: <CreditCard className="w-5 h-5 text-amber-600" />, corner: child.fee_due > 0 && <AlertTriangle className="w-4 h-4 text-red-400" />, value: child.fee_due > 0 ? `₦${child.fee_due.toLocaleString()}` : '✅ Paid', label: 'Fee Balance' },
                     { onClick: () => navigateTo('busRoute', 'Bus Tracker', { studentId: child.id }), iconBg: 'bg-blue-50', icon: <Bus className="w-5 h-5 text-blue-600" />, corner: null, value: <span className="text-sm">{child.bus_status}</span>, label: 'Bus Status' },
                 ].map((card, i) => (
                     <motion.button

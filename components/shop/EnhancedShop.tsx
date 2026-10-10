@@ -3,6 +3,7 @@ import { api } from '../../lib/api';
 import { EnhancedStoreProduct, ShoppingCartItem, StoreOrderFull } from '../../types-additional';
 import { toast } from 'react-hot-toast';
 import { ShoppingCartIcon } from '../../constants';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 const EnhancedShop: React.FC = () => {
     const [products, setProducts] = useState<EnhancedStoreProduct[]>([]);
@@ -194,7 +195,7 @@ const EnhancedShop: React.FC = () => {
                                     <p className="text-sm text-gray-500">{product.category}</p>
                                     <div className="flex items-center justify-between mt-3">
                                         <span className="text-xl font-bold text-indigo-600">
-                                            ₦{product.price.toLocaleString()}
+                                            {formatMoney(product.price)}
                                         </span>
                                         <button
                                             onClick={() => addToCart(product.id)}
@@ -229,7 +230,7 @@ const EnhancedShop: React.FC = () => {
                                         </div>
                                         <div className="flex items-center space-x-4">
                                             <span className="font-bold text-lg">
-                                                ₦{((item.product?.price || 0) * item.quantity).toLocaleString()}
+                                                {formatMoney(((item.product?.price || 0) * item.quantity))}
                                             </span>
                                             <button
                                                 onClick={() => removeFromCart(item.id)}
@@ -245,7 +246,7 @@ const EnhancedShop: React.FC = () => {
                                     <div className="flex justify-between items-center mb-4">
                                         <span className="text-lg font-semibold">Total</span>
                                         <span className="text-2xl font-bold text-indigo-600">
-                                            ₦{cartTotal.toLocaleString()}
+                                            {formatMoney(cartTotal)}
                                         </span>
                                     </div>
                                     <button

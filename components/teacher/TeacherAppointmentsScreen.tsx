@@ -29,7 +29,7 @@ const AppointmentCard: React.FC<{
             </div>
             <p className="text-sm text-gray-700 italic bg-purple-50 border border-purple-100 rounded-lg px-3 py-2">"{appointment.description || appointment.reason || 'No reason provided'}"</p>
             <div className="flex justify-between items-center text-sm font-semibold text-gray-700 pt-2 border-t">
-                <span>{new Date(appointment.date).toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
+                <span>{new Date(appointment.date).toLocaleDateString('ms-MY', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
                 {appointment.status === 'Pending' ? (
                     <div className="flex space-x-2">
                         <button onClick={() => onUpdateStatus(appointment.id, 'Cancelled')} className="p-2 bg-red-100 rounded-full hover:bg-red-200" aria-label="Reject appointment request"><XCircleIcon className="w-5 h-5 text-red-600" /></button>

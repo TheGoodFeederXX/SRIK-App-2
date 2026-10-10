@@ -6,7 +6,7 @@ import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import CenteredLoader from '../ui/CenteredLoader';
 
-const formatter = new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', minimumFractionDigits: 0 });
+const formatter = new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', minimumFractionDigits: 0 });
 
 // The backend returns snake_case rows straight from Prisma; the screen's own
 // StoreProduct/StoreOrder types (types/index.ts) are camelCase. Normalize here
@@ -280,7 +280,7 @@ const OnlineStoreScreen: React.FC = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-500 mb-1">Price (₦)</label>
+                                        <label className="block text-xs font-semibold text-gray-500 mb-1">Price (RM)</label>
                                         <input
                                             type="number"
                                             value={form.price}

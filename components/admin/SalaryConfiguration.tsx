@@ -45,7 +45,7 @@ const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ navigateTo, h
     const [formData, setFormData] = useState<SalaryConfig>({
         teacher_id: '',
         base_salary: 0,
-        currency: 'NGN',
+        currency: 'MYR',
         payment_frequency: 'Monthly',
         effective_date: new Date().toISOString().split('T')[0],
         is_active: true
@@ -111,7 +111,7 @@ const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ navigateTo, h
         setFormData({
             teacher_id: '',
             base_salary: 0,
-            currency: 'NGN',
+            currency: 'MYR',
             payment_frequency: 'Monthly',
             effective_date: new Date().toISOString().split('T')[0],
             is_active: true
@@ -195,7 +195,7 @@ const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ navigateTo, h
                                             onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                         >
-                                            <option value="NGN">Nigerian Naira (₦)</option>
+                                            <option value="MYR">Ringgit Malaysia (RM)</option>
                                             <option value="USD">US Dollar ($)</option>
                                             <option value="GBP">British Pound (£)</option>
                                             <option value="EUR">Euro (€)</option>

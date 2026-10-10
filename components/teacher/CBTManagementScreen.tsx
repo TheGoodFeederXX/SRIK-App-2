@@ -181,7 +181,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
 
             const quizPayload = {
                 title: file.name.replace('.xlsx', '').replace('.xls', ''),
-                description: `${uploadType} created via Excel upload on ${new Date().toLocaleDateString()}`,
+                description: `${uploadType} created via Excel upload on ${new Date().toLocaleDateString("ms-MY")}`,
                 status: 'draft',
                 class_id: selectedClassId,
                 subject_id: selectedSubjectId,

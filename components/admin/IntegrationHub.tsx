@@ -195,8 +195,13 @@ const IntegrationHub: React.FC = () => {
                             transition={{ duration: 0.2 }}
                         >
                             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                                {/* WAEC, NECO and JAMB are foreign exam boards.
+                                    Advertising integration with them offered the
+                                    school data exchange with bodies it is not
+                                    registered with; the national body here is
+                                    KPM (Kementerian Pendidikan Malaysia). */}
                                 <p className="text-sm text-blue-900">
-                                    <strong>Nigerian Education Integration:</strong> Connect with WAEC, NECO, JAMB, and other regulatory bodies for seamless data exchange and compliance reporting.
+                                    <strong>Malaysian Education Integration:</strong> Connect with KPM (Kementerian Pendidikan Malaysia) and other regulatory bodies for data exchange and compliance reporting.
                                 </p>
                             </div>
 
@@ -230,7 +235,7 @@ const IntegrationHub: React.FC = () => {
                                                             <div>
                                                                 <span className="text-gray-600">Last Synced:</span>
                                                                 <span className="ml-2 font-semibold text-gray-900">
-                                                                    {new Date(integration.last_sync_at).toLocaleDateString()}
+                                                                    {new Date(integration.last_sync_at).toLocaleDateString("ms-MY")}
                                                                 </span>
                                                             </div>
                                                         )}

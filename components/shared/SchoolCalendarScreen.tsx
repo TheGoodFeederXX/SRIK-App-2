@@ -13,7 +13,7 @@ function generateYears(appStartYear: number): string[] {
 
 function formatDate(iso: string): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    return new Date(iso).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
 function daysLeft(dateStr: string): number | null {

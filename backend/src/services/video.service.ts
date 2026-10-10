@@ -28,7 +28,9 @@ export class VideoService {
     private static roomNameFor(sessionId: string): string {
         // Daily room names allow letters, numbers, dashes and underscores.
         const safe = String(sessionId).replace(/[^a-zA-Z0-9]/g, '').slice(0, 40);
-        return `oliskey-${safe}`;
+        // Prefix renamed: this string appears in the call's URL, which teachers,
+        // pupils and parents all see.
+        return `srik-${safe}`;
     }
 
     private static headers() {

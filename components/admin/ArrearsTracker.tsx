@@ -12,6 +12,7 @@ import {
 } from '../../constants';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface Arrears {
     id: string;
@@ -131,7 +132,7 @@ const ArrearsTracker: React.FC = () => {
                 </div>
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                     <p className="text-sm text-gray-600">Total Amount</p>
-                    <p className="text-2xl font-bold text-gray-900">₦{stats.totalAmount.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-gray-900">{formatMoney(stats.totalAmount)}</p>
                 </div>
                 <div className="bg-red-50 rounded-lg p-4 border border-red-200">
                     <p className="text-sm text-red-700">Pending</p>
@@ -139,7 +140,7 @@ const ArrearsTracker: React.FC = () => {
                 </div>
                 <div className="bg-red-50 rounded-lg p-4 border border-red-200">
                     <p className="text-sm text-red-700">Pending Amount</p>
-                    <p className="text-2xl font-bold text-red-800">₦{stats.pendingAmount.toLocaleString()}</p>
+                    <p className="text-2xl font-bold text-red-800">{formatMoney(stats.pendingAmount)}</p>
                 </div>
             </div>
 
@@ -186,16 +187,16 @@ const ArrearsTracker: React.FC = () => {
                                         </div>
                                         <div className="space-y-1 text-sm">
                                             <p className="text-gray-700">
-                                                <strong>Amount Owed:</strong> ₦{arrear.amount_owed.toLocaleString()}
+                                                <strong>Amount Owed:</strong> {formatMoney(arrear.amount_owed)}
                                             </p>
                                             <p className="text-gray-600">
                                                 <strong>Reason:</strong> {arrear.reason}
                                             </p>
                                             <p className="text-gray-600">
-                                                <strong>Due Date:</strong> {new Date(arrear.due_date).toLocaleDateString()}
+                                                <strong>Due Date:</strong> {new Date(arrear.due_date).toLocaleDateString("ms-MY")}
                                             </p>
                                             <p className="text-gray-500 text-xs">
-                                                Created: {new Date(arrear.created_at).toLocaleDateString()}
+                                                Created: {new Date(arrear.created_at).toLocaleDateString("ms-MY")}
                                             </p>
                                         </div>
                                     </div>
@@ -232,7 +233,7 @@ const ArrearsTracker: React.FC = () => {
                                 <div>
                                     <p className="text-sm text-gray-600">Amount Owed</p>
                                     <p className="font-semibold text-lg text-red-600">
-                                        ₦{selectedArrear.amount_owed.toLocaleString()}
+                                        {formatMoney(selectedArrear.amount_owed)}
                                     </p>
                                 </div>
 

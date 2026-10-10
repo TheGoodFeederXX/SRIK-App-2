@@ -6,6 +6,7 @@ import { DollarSign, Plus, TrendingUp, TrendingDown, BarChart2 } from 'lucide-re
 import { useAuth } from '../../context/AuthContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface BudgetEntry {
     id: string;
@@ -184,16 +185,16 @@ const BudgetPlanner: React.FC = () => {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-blue-50 rounded-xl shadow-sm p-6 border border-blue-100">
                             <p className="text-sm text-gray-500 mb-1">Total Allocated</p>
-                            <p className="text-2xl font-bold text-gray-900">₦{totalAllocated.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-gray-900">{formatMoney(totalAllocated)}</p>
                         </motion.div>
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-orange-50 rounded-xl shadow-sm p-6 border border-orange-100">
                             <p className="text-sm text-gray-500 mb-1">Total Spent</p>
-                            <p className="text-2xl font-bold text-orange-600">₦{totalSpent.toLocaleString()}</p>
+                            <p className="text-2xl font-bold text-orange-600">{formatMoney(totalSpent)}</p>
                         </motion.div>
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className={`rounded-xl shadow-sm p-6 border ${totalRemaining >= 0 ? 'bg-green-50 border-green-100' : 'bg-red-50 border-red-100'}`}>
                             <p className="text-sm text-gray-500 mb-1">Remaining</p>
                             <p className={`text-2xl font-bold ${totalRemaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                ₦{Math.abs(totalRemaining).toLocaleString()}
+                                {formatMoney(Math.abs(totalRemaining))}
                                 {totalRemaining < 0 && ' (over)'}
                             </p>
                         </motion.div>
@@ -230,10 +231,10 @@ const BudgetPlanner: React.FC = () => {
                                             >
                                                 <td className="px-4 py-3 text-sm text-gray-700 font-mono">{entry.fiscal_year}</td>
                                                 <td className="px-4 py-3 text-sm font-medium text-gray-900">{entry.category}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-gray-900">₦{(entry.allocated_amount || 0).toLocaleString()}</td>
-                                                <td className="px-4 py-3 text-sm text-right text-orange-600">₦{(entry.spent_amount || 0).toLocaleString()}</td>
+                                                <td className="px-4 py-3 text-sm text-right text-gray-900">{formatMoney((entry.allocated_amount || 0))}</td>
+                                                <td className="px-4 py-3 text-sm text-right text-orange-600">{formatMoney((entry.spent_amount || 0))}</td>
                                                 <td className={`px-4 py-3 text-sm text-right font-semibold ${remaining >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                                    ₦{Math.abs(remaining).toLocaleString()}{remaining < 0 && ' (over)'}
+                                                    {formatMoney(Math.abs(remaining))}{remaining < 0 && ' (over)'}
                                                 </td>
                                                 <td className="px-4 py-3">
                                                     <div className="flex flex-col items-center">
@@ -289,7 +290,7 @@ const BudgetPlanner: React.FC = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Allocated Amount (₦) *</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Allocated Amount (RM) *</label>
                                 <input
                                     type="number"
                                     value={newAllocated}
@@ -299,7 +300,7 @@ const BudgetPlanner: React.FC = () => {
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-2">Spent Amount (₦)</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">Spent Amount (RM)</label>
                                 <input
                                     type="number"
                                     value={newSpent}

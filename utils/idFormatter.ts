@@ -1,11 +1,11 @@
 /**
- * Oliskey ID Formatter
- * Format: school_branch_role_numbers (e.g., oliskey_main_STU_0001)
+ * School ID Formatter
+ * Format: school_branch_role_numbers (e.g., srik_STU_0001)
  */
 
 export type UserRolePrefix = 'ADM' | 'TCH' | 'STU' | 'PAR' | 'PRN';
 
-export async function generateOliskeyId(
+export async function generateSchoolId(
     schoolSlug: string,
     branchSlug: string,
     role: UserRolePrefix,
@@ -16,13 +16,13 @@ export async function generateOliskeyId(
 }
 
 /**
- * Utility to format a raw ID or number into the Oliskey standard format.
+ * Utility to format a raw ID or number into the school standard format.
  * Synchronous version for UI formatting.
  */
 export function formatSchoolId(
     id: string | number | null | undefined,
     role: string,
-    schoolCode: string = 'OLISKEY',
+    schoolCode: string = 'SRIK',
     branchCode: string = 'MAIN'
 ): string {
     if (id === null || id === undefined || id === '') return '';
@@ -54,7 +54,7 @@ export function formatSchoolId(
 /**
  * Extracts info from a formatted ID for verification.
  */
-export function parseOliskeyId(id: string) {
+export function parseSchoolId(id: string) {
     if (!id) return null;
     const parts = id.split('_');
     if (parts.length < 4) return null;

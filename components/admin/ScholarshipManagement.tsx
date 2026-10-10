@@ -5,6 +5,7 @@ import { toast } from 'react-hot-toast';
 import { Award, Users, DollarSign, CheckCircle, XCircle, Clock, TrendingUp } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import CenteredLoader from '../ui/CenteredLoader';
+import { formatMoney } from '../../src/lib/supabase/finance';
 
 interface Scholarship {
     id: number;
@@ -209,7 +210,7 @@ const ScholarshipManagement: React.FC = () => {
                     scholarship_name: scholarshipName,
                     description,
                     amount: Number(amount),
-                    currency: 'NGN',
+                    currency: 'MYR',
                     scholarship_type: scholarshipType,
                     eligibility_criteria: eligibilityCriteria,
                     application_deadline: applicationDeadline,
@@ -440,7 +441,7 @@ const ScholarshipManagement: React.FC = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Amount (₦) *</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">Amount (RM) *</label>
                                     <input
                                         type="number"
                                         value={amount}
@@ -544,7 +545,7 @@ const ScholarshipManagement: React.FC = () => {
                                 <div className="space-y-2 mb-4">
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-600">Amount:</span>
-                                        <span className="font-bold text-lg text-amber-600">₦{scholarship.amount.toLocaleString()}</span>
+                                        <span className="font-bold text-lg text-amber-600">{formatMoney(scholarship.amount)}</span>
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-600">Type:</span>
@@ -556,7 +557,7 @@ const ScholarshipManagement: React.FC = () => {
                                     </div>
                                     <div className="flex items-center justify-between text-sm">
                                         <span className="text-gray-600">Deadline:</span>
-                                        <span className="font-semibold text-gray-900">{new Date(scholarship.application_deadline).toLocaleDateString()}</span>
+                                        <span className="font-semibold text-gray-900">{new Date(scholarship.application_deadline).toLocaleDateString("ms-MY")}</span>
                                     </div>
                                 </div>
 
@@ -585,7 +586,7 @@ const ScholarshipManagement: React.FC = () => {
                                 <div className="flex items-start justify-between mb-4">
                                     <div>
                                         <h3 className="text-lg font-bold text-gray-900">{app.students?.name}</h3>
-                                        <p className="text-sm text-gray-600">{app.students?.class} • Applied: {new Date(app.applied_date).toLocaleDateString()}</p>
+                                        <p className="text-sm text-gray-600">{app.students?.class} • Applied: {new Date(app.applied_date).toLocaleDateString("ms-MY")}</p>
                                     </div>
                                     <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(app.status)}`}>
                                         {app.status}
@@ -594,7 +595,7 @@ const ScholarshipManagement: React.FC = () => {
 
                                 <div className="mb-4">
                                     <p className="text-sm font-semibold text-gray-700">Scholarship:</p>
-                                    <p className="text-gray-900">{app.scholarships?.scholarship_name} - ₦{app.scholarships?.amount.toLocaleString()}</p>
+                                    <p className="text-gray-900">{app.scholarships?.scholarship_name} - {formatMoney(app.scholarships?.amount)}</p>
                                 </div>
 
                                 {app.status === 'Pending' && (
@@ -639,13 +640,13 @@ const ScholarshipManagement: React.FC = () => {
                                         <h3 className="text-lg font-bold text-gray-900">{recipient.students?.name}</h3>
                                         <p className="text-sm text-gray-600">{recipient.students?.class}</p>
                                         <p className="text-sm font-semibold text-amber-600 mt-2">{recipient.scholarships?.scholarship_name}</p>
-                                        <p className="text-lg font-bold text-gray-900">₦{recipient.scholarships?.amount.toLocaleString()}</p>
+                                        <p className="text-lg font-bold text-gray-900">{formatMoney(recipient.scholarships?.amount)}</p>
                                     </div>
                                     <div className="text-right">
                                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(recipient.status)}`}>
                                             {recipient.status}
                                         </span>
-                                        <p className="text-xs text-gray-500 mt-2">Awarded: {new Date(recipient.award_date).toLocaleDateString()}</p>
+                                        <p className="text-xs text-gray-500 mt-2">Awarded: {new Date(recipient.award_date).toLocaleDateString("ms-MY")}</p>
                                     </div>
                                 </div>
                             </motion.div>

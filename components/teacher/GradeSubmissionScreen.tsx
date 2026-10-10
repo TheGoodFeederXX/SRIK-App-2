@@ -176,7 +176,7 @@ const GradeSubmissionScreen: React.FC<GradeSubmissionScreenProps> = ({ submissio
                 <div>
                   <p className="font-bold text-xl text-gray-800">{submission.student?.name || 'Unknown student'}</p>
                   <p className="text-sm text-gray-500">
-                    Submitted: {new Date(submission.submittedAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                    Submitted: {new Date(submission.submittedAt).toLocaleString('ms-MY', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                   </p>
                   <span className={`mt-1 inline-block px-2 py-0.5 text-xs font-semibold rounded-full ${submission.isLate ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                     {submission.isLate ? 'Late' : 'On Time'}

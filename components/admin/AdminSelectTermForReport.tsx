@@ -11,7 +11,7 @@ interface AdminSelectTermForReportProps {
 }
 
 const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ student, navigateTo }) => {
-  const terms = ["First Term", "Second Term", "Third Term"];
+  const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
 
   // The editor keys everything (load, save, local draft) by term + SESSION. This
   // screen used to open it without a session, so it read "session=undefined"

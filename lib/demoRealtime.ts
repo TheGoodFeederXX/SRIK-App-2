@@ -13,8 +13,8 @@
 
 import { api } from './api';
 
-const DEMO_CHANNEL_NAME = 'oliskey-demo-realtime';
-const DEMO_STORAGE_KEY = 'oliskey-demo-broadcast';
+const DEMO_CHANNEL_NAME = 'srik-demo-realtime';
+const DEMO_STORAGE_KEY = 'srik-demo-broadcast';
 
 interface DemoBroadcastMessage {
   type: 'INSERT' | 'UPDATE' | 'DELETE' | 'CACHE_INVALIDATE';

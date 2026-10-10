@@ -2,6 +2,56 @@ import nodemailer from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
 
+/**
+ * Who these emails come FROM, and what they are signed with.
+ *
+ * The sender address was hardcoded NINE times as
+ * `no-reply@oliskey.com` from `"Oliskey Admin"`, `"Oliskey School Management"`.
+ * Nothing failed visibly, because a mail server will happily send from any
+ * address it is authorised for — so every verification code, password reset and
+ * invitation reached a real parent or teacher branded with a company that has
+ * nothing to do with their school, and told them to contact a support address at
+ * a domain the school does not own.
+ *
+ * It is configurable rather than hardcoded because the sender must be a mailbox
+ * the school's SMTP account can actually send as; hardcoding the school's address
+ * would break the day it changed. The default is the school's own published
+ * address, so an unconfigured deployment still sends something truthful.
+ */
+const MAIL_FROM_ADDRESS = process.env.MAIL_FROM_ADDRESS?.trim() || 'no-reply@srialkhairiah.my';
+const MAIL_FROM_NAME = process.env.MAIL_FROM_NAME?.trim() || 'SRI Al-Khairiah';
+
+/** The name and address shown in the body of every email. */
+const SCHOOL_NAME = process.env.SCHOOL_DISPLAY_NAME?.trim() || 'SRI Al-Khairiah';
+/** The school's real published address, used for "contact us" lines. */
+const SCHOOL_EMAIL = process.env.SCHOOL_EMAIL?.trim() || 'srialkhairiah@gmail.com';
+
+/**
+ * Where the "open the portal" links point.
+ *
+ * These appeared in password-reset and invitation emails as
+ * `https://app.oliskey.com` — a domain this school does not own. That is the
+ * most serious of the vendor leaks, because it is not cosmetic: a parent
+ * following "reset your password" was handed to a third party's website. The
+ * fallback is now configurable and MUST be set to the app's real address in
+ * production, because a wrong fallback here is a security problem, not a typo.
+ */
+const SCHOOL_PORTAL_URL = process.env.APP_URL?.trim() || 'https://srialkhairiah.my';
+
+/**
+ * Money as a Malaysian school writes it, for the amounts inside these emails.
+ *
+ * A receipt is the one document where a wrong currency is not cosmetic: it looks
+ * authoritative and no bank statement will ever match it. `ms-MY` gives the Malay
+ * thousands separator, and the amount is fixed to two decimals because money is.
+ */
+const rm = (n: number) =>
+    `RM${Number(n || 0).toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+/** One sender string, so the name and address cannot drift apart. */
+const fromHeader = (suffix?: string) =>
+    `"${suffix ? `${SCHOOL_NAME} ${suffix}` : MAIL_FROM_NAME}" <${MAIL_FROM_ADDRESS}>`;
+
 let transporter: nodemailer.Transporter | null = null;
 
 async function initTransporter() {
@@ -50,12 +100,12 @@ export class EmailService {
             const code = Math.floor(100000 + Math.random() * 900000).toString();
 
             const info = await transport.sendMail({
-                from: '"Oliskey Admin" <no-reply@oliskey.com>',
+                from: fromHeader('Pentadbir'),
                 to: email,
-                subject: 'Your Oliskey Verification Code',
+                subject: `Your ${SCHOOL_NAME} Verification Code`,
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
-                        <h2 style="color: #4f46e5;">Welcome to Oliskey, ${fullName}!</h2>
+                        <h2 style="color: #4f46e5;">Welcome to ${SCHOOL_NAME}, ${fullName}!</h2>
                         <p>We're excited to have your school onboard.</p>
                         <p>Your 6-digit confirmation code is:</p>
                         <div style="margin: 30px 0; padding: 20px; background-color: #f3f4f6; border-radius: 8px; text-align: center;">
@@ -104,12 +154,12 @@ export class EmailService {
         const body = esc(message).split(String.fromCharCode(10)).join('<br>');
 
         await transport.sendMail({
-            from: '"Oliskey School Management" <no-reply@oliskey.com>',
+            from: fromHeader(),
             to: email,
             subject: title,
             html: `
                 <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
-                    <h1 style="color: #4f46e5; font-size: 22px; margin: 0 0 16px;">Oliskey</h1>
+                    <h1 style="color: #4f46e5; font-size: 22px; margin: 0 0 16px;">${SCHOOL_NAME}</h1>
                     <p style="color: #1f2937; margin: 0 0 8px;">Hello ${esc(fullName)},</p>
                     <h2 style="color: #111827; font-size: 18px; margin: 16px 0 8px;">${esc(title)}</h2>
                     <div style="color: #4b5563; line-height: 1.6;">${body}</div>
@@ -139,7 +189,7 @@ export class EmailService {
             ).join('');
 
             await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: email,
                 subject: 'Account Lookup: Accounts linked to your email',
                 html: `
@@ -168,13 +218,13 @@ export class EmailService {
             const transport = await initTransporter();
 
             const info = await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: email,
                 subject: 'Your Verification Code',
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                         </div>
                         <h2 style="color: #1f2937; margin-bottom: 16px;">Hello ${fullName},</h2>
                         <p style="color: #4b5563; line-height: 1.6;">
@@ -214,13 +264,13 @@ export class EmailService {
             const transport = await initTransporter();
 
             const info = await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: email,
                 subject: 'Password Reset Request',
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                         </div>
                         <h2 style="color: #1f2937; margin-bottom: 16px;">Password Reset Request</h2>
                         <p style="color: #4b5563; line-height: 1.6;">
@@ -266,17 +316,17 @@ export class EmailService {
             const transport = await initTransporter();
 
             const info = await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: oldEmail,
                 subject: 'Security Alert: Email change requested on your account',
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                         </div>
                         <h2 style="color: #1f2937; margin-bottom: 16px;">Hello ${fullName},</h2>
                         <p style="color: #4b5563; line-height: 1.6;">
-                            We received a request to change the email on your Oliskey account from
+                            We received a request to change the email on your ${SCHOOL_NAME} account from
                             <strong>${oldEmail}</strong> to <strong>${newEmail}</strong>.
                         </p>
                         <p style="color: #4b5563; line-height: 1.6;">
@@ -291,7 +341,7 @@ export class EmailService {
                         </div>
                         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
                         <p style="color: #9ca3af; font-size: 12px; text-align: center;">
-                            This is an automated security notification from Oliskey.
+                            This is an automated security notification from ${SCHOOL_NAME}.
                         </p>
                     </div>
                 `
@@ -322,16 +372,16 @@ export class EmailService {
     }): Promise<void> {
         try {
             const transport = await initTransporter();
-            const portalUrl = process.env.APP_URL || 'https://app.oliskey.com';
+            const portalUrl = process.env.APP_URL || SCHOOL_PORTAL_URL;
 
             await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: params.email,
                 subject: `💰 New Fee Assigned - ${params.feeTitle}`,
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                         </div>
                         <h2 style="color: #1f2937;">Hello ${params.parentName},</h2>
                         <p style="color: #4b5563; line-height: 1.6;">
@@ -340,7 +390,7 @@ export class EmailService {
                         <div style="margin: 24px 0; padding: 20px; background-color: #f9fafb; border-radius: 8px; border: 1px solid #e5e7eb;">
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fee:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.feeTitle}</td></tr>
-                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">₦${params.amount.toLocaleString()}</td></tr>
+                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${rm(params.amount)}</td></tr>
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Due Date:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.dueDate}</td></tr>
                             </table>
                             ${params.description ? `<p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb; color: #4b5563;">${params.description}</p>` : ''}
@@ -374,16 +424,16 @@ export class EmailService {
     }): Promise<void> {
         try {
             const transport = await initTransporter();
-            const portalUrl = process.env.APP_URL || 'https://app.oliskey.com';
+            const portalUrl = process.env.APP_URL || SCHOOL_PORTAL_URL;
 
             await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: params.email,
                 subject: `✅ Payment Received - ${params.feeTitle}`,
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                         </div>
                         <h2 style="color: #1f2937;">Hello ${params.parentName},</h2>
                         <div style="margin: 16px 0; padding: 14px; background-color: #d1fae5; border-left: 4px solid #10b981; border-radius: 6px; color: #065f46;">
@@ -393,10 +443,10 @@ export class EmailService {
                             <table style="width: 100%; border-collapse: collapse;">
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Student:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.studentName}</td></tr>
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Fee:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.feeTitle}</td></tr>
-                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount Paid:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">₦${params.amountPaid.toLocaleString()}</td></tr>
+                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Amount Paid:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${rm(params.amountPaid)}</td></tr>
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Transaction Ref:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.transactionReference}</td></tr>
                                 <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Payment Date:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${params.paymentDate}</td></tr>
-                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Remaining Balance:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">₦${params.balance.toLocaleString()}</td></tr>
+                                <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Remaining Balance:</td><td style="padding: 8px 0; color: #1f2937; font-size: 14px; font-weight: bold; text-align: right;">${rm(params.balance)}</td></tr>
                             </table>
                         </div>
                         <div style="margin: 24px 0;">
@@ -429,13 +479,13 @@ export class EmailService {
             const roleDisplay = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
 
             const info = await transport.sendMail({
-                from: '"Oliskey School Management" <no-reply@oliskey.com>',
+                from: fromHeader(),
                 to: email,
-                subject: `Welcome to ${schoolName || 'Oliskey'} - Your Login Credentials`,
+                subject: `Welcome to ${schoolName || SCHOOL_NAME} - Your Login Credentials`,
                 html: `
                     <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px;">
                         <div style="text-align: center; margin-bottom: 24px;">
-                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">Oliskey</h1>
+                            <h1 style="color: #4f46e5; font-size: 24px; margin: 0;">${SCHOOL_NAME}</h1>
                             <p style="color: #6b7280; font-size: 14px; margin-top: 8px;">School Management System</p>
                         </div>
                         
@@ -463,7 +513,7 @@ export class EmailService {
                         </div>
                         
                         <div style="margin: 24px 0;">
-                            <a href="${process.env.APP_URL || 'https://app.oliskey.com'}" 
+                            <a href="${process.env.APP_URL || SCHOOL_PORTAL_URL}" 
                                style="display: inline-block; padding: 12px 24px; background-color: #4f46e5; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
                                 Login to Your Account
                             </a>

@@ -356,7 +356,7 @@ const IncidentTab = ({ incidents, setIsAdding }: IncidentTabProps) => (
                         <div className="flex-grow min-w-0">
                             <div className="flex justify-between">
                                 <h3 className="font-bold text-gray-900">{inc.incident_type} - {inc.student?.full_name || 'Unknown Student'}</h3>
-                                <span className="text-xs font-bold text-gray-400">{new Date(inc.incident_date).toLocaleString()}</span>
+                                <span className="text-xs font-bold text-gray-400">{new Date(inc.incident_date).toLocaleString('ms-MY')}</span>
                             </div>
                             <p className="text-sm text-gray-600 mt-1">{inc.description}</p>
                             <div className="flex items-center space-x-4 mt-3">
@@ -407,7 +407,7 @@ const DrillTab = ({ drills, setIsAdding }: DrillTabProps) => (
                         <h3 className="font-bold text-xl text-gray-900">{drill.drill_type} Drill</h3>
                         <div className="flex items-center space-x-2 text-gray-400 text-xs mt-1">
                             <Calendar className="w-3 h-3" />
-                            <span>{new Date(drill.drill_date).toLocaleDateString()}</span>
+                            <span>{new Date(drill.drill_date).toLocaleDateString("ms-MY")}</span>
                         </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-50">
@@ -465,7 +465,7 @@ const PolicyTab = ({ policies, setIsAdding }: PolicyTabProps) => (
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 text-sm font-medium text-gray-500">v{policy.version}</td>
-                                <td className="px-6 py-4 text-sm font-medium text-gray-600">{new Date(policy.effective_date).toLocaleDateString()}</td>
+                                <td className="px-6 py-4 text-sm font-medium text-gray-600">{new Date(policy.effective_date).toLocaleDateString("ms-MY")}</td>
                                 <td className="px-6 py-4 text-right">
                                     <a
                                         href={policy.document_url}
@@ -518,7 +518,7 @@ const StudentReportsTab = ({ reports, requests, onReportStatus, onRequestStatus 
                         <div className="flex-grow min-w-0">
                             <div className="flex justify-between gap-3">
                                 <h3 className="font-bold text-gray-900">{r.category}{r.location ? ` — ${r.location}` : ''}</h3>
-                                <span className="text-xs font-bold text-gray-400 whitespace-nowrap">{new Date(r.created_at).toLocaleString()}</span>
+                                <span className="text-xs font-bold text-gray-400 whitespace-nowrap">{new Date(r.created_at).toLocaleString('ms-MY')}</span>
                             </div>
                             <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{r.description_encrypted || r.description}</p>
                             <div className="flex flex-wrap items-center gap-3 mt-3">
@@ -557,7 +557,7 @@ const StudentReportsTab = ({ reports, requests, onReportStatus, onRequestStatus 
                         <div className="flex-grow min-w-0">
                             <div className="flex justify-between gap-3">
                                 <h3 className="font-bold text-gray-900">{q.request_type || 'Support items'} × {q.quantity ?? 1}{q.pickup_location ? ` — collect at ${q.pickup_location}` : ''}</h3>
-                                <span className="text-xs font-bold text-gray-400 whitespace-nowrap">{new Date(q.created_at).toLocaleString()}</span>
+                                <span className="text-xs font-bold text-gray-400 whitespace-nowrap">{new Date(q.created_at).toLocaleString('ms-MY')}</span>
                             </div>
                             {q.notes && <p className="text-sm text-gray-600 mt-1 whitespace-pre-wrap">{q.notes}</p>}
                             <div className="flex flex-wrap items-center gap-3 mt-3">

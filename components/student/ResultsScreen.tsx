@@ -219,7 +219,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
                     if (terms.length > 0 && !activeTerm) {
                         setActiveTerm(terms[terms.length - 1] as string);
                     } else if (terms.length === 0) {
-                        setActiveTerm('First Term');
+                        setActiveTerm('Penggal 1');
                     }
                 }
             }
@@ -268,12 +268,12 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
         fetchAttendanceStats();
     }, [fetchData, fetchQuizResults, fetchAttendanceStats]);
 
-    // Third Term is the cumulative/annual view of a standard report card: the
-    // average of whatever First/Second/Third Term scores exist per subject,
+    // Penggal 3 is the cumulative/annual view of a standard report card: the
+    // average of whatever First/Second/Penggal 3 scores exist per subject,
     // not just that term's own raw scores. A subject missing one term's
     // score is still averaged from the terms it has, rather than blocked.
     const termGrades = useMemo(() => {
-        if (activeTerm === 'Third Term') {
+        if (activeTerm === 'Penggal 3') {
             const bySubject = new Map<string, number[]>();
             performanceData
                 .filter((d: any) => CANONICAL_TERMS.includes(d.term))
@@ -289,7 +289,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
         return performanceData.filter(d => d.term === activeTerm);
     }, [performanceData, activeTerm]);
 
-    // Always offer all three terms, even before any Third Term data exists,
+    // Always offer all three terms, even before any Penggal 3 data exists,
     // so the annual/cumulative view is reachable as soon as at least one
     // term has results — plus any non-standard term names already in the data.
     const availableTerms = useMemo(() => {
@@ -331,16 +331,16 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
         return publishedRawReports.length > 0;
     }, [publishedRawReports]);
 
-    // If the school hasn't published an official Third Term report yet, the
+    // If the school hasn't published an official Penggal 3 report yet, the
     // student still gets a combined annual view built from whichever
-    // First/Second/Third Term reports ARE published, so "Third Term" never
+    // First/Second/Penggal 3 reports ARE published, so "Penggal 3" never
     // shows nothing just because no one has separately published an annual
     // document.
-    const isSyntheticSummary = activeTerm === 'Third Term' && !activeReportCard;
+    const isSyntheticSummary = activeTerm === 'Penggal 3' && !activeReportCard;
 
     const formattedReportCard = useMemo((): ReportCard | null => {
         if (activeReportCard) return mapRawReportCard(activeReportCard);
-        if (activeTerm === 'Third Term') {
+        if (activeTerm === 'Penggal 3') {
             const sessionReports = publishedRawReports
                 .filter(r => !activeSession || r.session === activeSession)
                 .map(mapRawReportCard);
@@ -494,7 +494,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
                         <div className="lg:col-span-2 bg-white p-4 rounded-xl shadow-sm">
                             <div className="flex items-center space-x-2 mb-3">
                                 <BookOpenIcon className="h-5 w-5 text-orange-600" />
-                                <h4 className="font-bold text-gray-800">Grades ({activeTerm}{activeTerm === 'Third Term' ? ' — Annual Average' : ''})</h4>
+                                <h4 className="font-bold text-gray-800">Grades ({activeTerm}{activeTerm === 'Penggal 3' ? ' — Annual Average' : ''})</h4>
                             </div>
                             <div className="space-y-2">
                                 {termGrades.length > 0 ? termGrades.map((record: any, i: number) => (
@@ -570,7 +570,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ studentId, student, schoo
                                         >
                                             <div>
                                                 <div className="font-semibold text-sm text-gray-800">{result.quiz?.title || 'Quiz'}</div>
-                                                <div className="text-xs text-gray-500">{new Date(result.submitted_at).toLocaleDateString()}</div>
+                                                <div className="text-xs text-gray-500">{new Date(result.submitted_at).toLocaleDateString("ms-MY")}</div>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-xs font-medium bg-gray-100 px-2 py-1 rounded text-gray-600">{result.quiz?.subject_id}</span>

@@ -86,7 +86,7 @@ const DigitalTwinScreen = () => {
                             );
                         })}
                     </div>
-                    <p className="text-xs text-gray-400">Last updated {new Date(snapshot.generated_at).toLocaleTimeString()} — refreshes automatically every 30 seconds. Buses and classes running are best-effort estimates, not live tracking.</p>
+                    <p className="text-xs text-gray-400">Last updated {new Date(snapshot.generated_at).toLocaleTimeString("ms-MY")} — refreshes automatically every 30 seconds. Buses and classes running are best-effort estimates, not live tracking.</p>
                 </>
             )}
         </div>

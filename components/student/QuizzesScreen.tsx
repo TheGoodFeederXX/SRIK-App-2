@@ -245,7 +245,7 @@ const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) =>
                           {item.type === 'assignment' && item.dueDate && (
                             <span className="flex items-center bg-gray-50 px-2 py-0.5 rounded-md">
                               <ClockIcon className="w-3.5 h-3.5 mr-1 text-gray-400" />
-                              Due: {new Date(item.dueDate).toLocaleDateString()}
+                              Due: {new Date(item.dueDate).toLocaleDateString("ms-MY")}
                             </span>
                           )}
                           {item.type === 'quiz' && item.durationMinutes > 0 && (

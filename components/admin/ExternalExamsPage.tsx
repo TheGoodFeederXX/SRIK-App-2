@@ -35,7 +35,7 @@ const ExternalExamsPage: React.FC = () => {
                             External Exam Registration
                         </h1>
                         <p className="text-gray-500 text-base mt-1">
-                            Register students for WAEC, NECO, IGCSE and other bodies.
+                            Register students for external exam bodies.
                         </p>
                     </div>
                     

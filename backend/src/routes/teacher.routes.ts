@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { createTeacher, getAllTeachers, getTeacherById, updateTeacher, deleteTeacher, submitMyAttendance, getMyHistory, getTeacherAttendance, getMyProfile, saveTeacherAttendance, approveTeacherAttendance, getMyStudentsWithCredentials, getPendingStudents, getMyAppointments, createMyAppointment, updateMyAppointmentStatus, getMyBadges, getMyRecognitions, getMyMentoring, createMyMentoring, getTeacherCertificates, getSubstituteRequests, createSubstituteRequest, getTeacherEvaluation, submitTeacherEvaluation, getTeacherPerformance, assignTeacherBranchClasses } from '../controllers/teacher.controller';
 import { authenticate } from '../middleware/auth.middleware';
-import { requirePlanCapacity } from '../middleware/plan.middleware';
 
 const router = Router();
 
@@ -67,7 +66,7 @@ router.get('/substitutes', authenticate, async (req: any, res) => {
     }
 });
 
-router.post('/', authenticate, requirePlanCapacity('teacher'), createTeacher);
+router.post('/', authenticate, createTeacher);
 router.get('/', authenticate, getAllTeachers);
 router.get('/:id/salary-profile', authenticate, async (req: any, res) => {
     try {

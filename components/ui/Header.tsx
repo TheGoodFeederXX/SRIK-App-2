@@ -5,8 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { LogoutIcon, ChevronLeftIcon, NotificationIcon, SearchIcon, UserIcon } from '../../constants';
 import { Menu } from 'lucide-react';
 
-import { BranchSwitcher } from '../shared/BranchSwitcher';
-import { useBranch } from '../../context/BranchContext';
 
 interface HeaderProps {
   title: string;
@@ -27,13 +25,11 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
-  const { currentBranch, canSwitchBranches } = useBranch();
 
   // The menu is drawn in a portal, positioned from the avatar's own box, so it
   // always sits above page content (a sticky card lower in the page can out-rank
   // the header's own layer) and is never clipped by the header.
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
-  const [branchPanelOpen, setBranchPanelOpen] = useState(false);
   const placeMenu = React.useCallback(() => {
     const r = buttonRef.current?.getBoundingClientRect();
     if (r) setMenuPos({ top: Math.round(r.bottom + 8), right: Math.max(8, Math.round(window.innerWidth - r.right)) });
@@ -119,9 +115,6 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
           </div>
         </div>
         <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
-          <div className="hidden md:block mr-2">
-            <BranchSwitcher />
-          </div>
           {onSearchClick && (
             <motion.button whileTap={{ scale: 0.9 }} onClick={onSearchClick} className="relative p-1.5 sm:p-2 rounded-full hover:bg-current/10" aria-label="Search">
               <SearchIcon className={`h-6 w-6 sm:h-7 sm:w-7 ${bgColor.includes('bg-white') || bgColor.includes('bg-gray-50') ? 'text-gray-900' : 'text-white'}`} />
@@ -177,12 +170,6 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
           aria-orientation="vertical"
           aria-label="User menu"
         >
-          {/* Menu-styled branch row: neutral gray text like the rest of the menu,
-              name visible at every width. Opening the switch panel closes this
-              menu first so the two never stack. */}
-          <div className="border-b border-gray-100">
-            <BranchSwitcher variant="menu" onOpen={() => { setIsDropdownOpen(false); setBranchPanelOpen(true); }} />
-          </div>
           {customId && (
             <div className="px-4 py-3 border-b border-gray-100">
               <span className="text-xs text-gray-500 uppercase font-semibold">ID</span>
@@ -204,7 +191,6 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
       </AnimatePresence>,
       document.body
       )}
-      {branchPanelOpen && <BranchSwitcher variant="panel" open onClose={() => setBranchPanelOpen(false)} />}
     </header>
   );
 };

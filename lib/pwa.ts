@@ -10,53 +10,16 @@ interface BeforeInstallPromptEvent extends Event {
     userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
-// Register service worker - MODIFIED TO UNREGISTER IN DEV
-export function registerServiceWorker() {
-    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
-        return;
-    }
+// There is deliberately no service-worker registration here.
+//
+// VitePWA generates the worker (see `VitePWA` in vite.config.mts) and
+// UpdatePrompt owns the only registration, at the root of the app so it
+// survives login and logout. A second register() call would install a competing
+// worker on the same scope, and the two would take turns deciding which cached
+// copy of the app a family sees. The hand-written `public/sw.js` that used to be
+// registered from here was overwritten by the generated one at build time, so
+// it never ran; it has been removed rather than left to look authoritative.
 
-    // In development, unregister service workers and clear caches to avoid HMR/import issues
-    const isDev = window.location.hostname === 'localhost' ||
-        window.location.hostname === '127.0.0.1' ||
-        window.location.port === '3000' ||
-        window.location.port === '5173';
-
-    if (isDev) {
-        // Clear all caches
-        if ('caches' in window) {
-            caches.keys().then((names) => {
-                for (const name of names) {
-                    caches.delete(name);
-                }
-            });
-        }
-
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-            for (const registration of registrations) {
-                registration.unregister().then(success => {
-                    if (success) {
-                        console.log('✅ Service Worker unregistered for development and caches cleared');
-                        // Force a one-time reload to clear the controller if it exists
-                        if (navigator.serviceWorker.controller) {
-                            window.location.reload();
-                        }
-                    }
-                });
-            }
-        });
-        return;
-    }
-
-    window.addEventListener('load', async () => {
-        try {
-            const registration = await navigator.serviceWorker.register('/sw.js');
-            console.log('Service Worker registered with scope:', registration.scope);
-        } catch (error) {
-            console.error('Service Worker registration failed:', error);
-        }
-    });
-}
 
 // Hook for PWA install prompt. The `beforeinstallprompt` event is captured EAGERLY
 // at app startup (see index.tsx) and stashed on `window.__deferredInstallPrompt`,

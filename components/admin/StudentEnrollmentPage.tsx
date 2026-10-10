@@ -31,7 +31,8 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
         classId: '',
         grade: -3,
         section: 'A',
-        curriculum: 'NIGERIAN' as 'NIGERIAN' | 'BRITISH' | 'DUAL'
+        // The national track is KSSR, not the Nigerian curriculum.
+        curriculum: 'KSSR' as 'KSSR' | 'BRITISH' | 'DUAL'
     });
     const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
 
@@ -129,7 +130,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                 class_id: formData.classId,
                 grade: Number(selectedClass?.grade || formData.grade),
                 section: selectedClass?.section || formData.section,
-                curriculumType: formData.curriculum === 'NIGERIAN' ? 'Nigerian' :
+                curriculumType: formData.curriculum === 'KSSR' ? 'KSSR' :
                     formData.curriculum === 'BRITISH' ? 'British' : 'Both',
                 documentUrls
             };
@@ -324,7 +325,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                     <AcademicCapIcon className="w-4 h-4" /> Academic Track
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 overflow-x-auto pb-1 hide-scrollbar">
-                                    <SelectCard value="NIGERIAN" title="Nigerian" desc="Standard NERDC. WAEC/NECO." icon={BookOpenIcon} />
+                                    <SelectCard value="KSSR" title="KSSR" desc="Kurikulum Standard Sekolah Rendah." icon={BookOpenIcon} />
                                     <SelectCard value="BRITISH" title="British" desc="Cambridge/Edexcel. IGCSE." icon={BookOpenIcon} />
                                     <SelectCard value="DUAL" title="Dual" desc="Hybrid Intensive Program." icon={AcademicCapIcon} />
                                 </div>

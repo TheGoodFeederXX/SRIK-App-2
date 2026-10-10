@@ -35,7 +35,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
             if (data) {
                 setSalaryData({
                     base_salary: data.base_salary || data.salary || 0,
-                    currency: data.currency || 'NGN', 
+                    currency: data.currency || 'MYR', 
                     effective_date: data.effective_date || data.hire_date || data.created_at,
                     payment_frequency: data.payment_frequency || 'Monthly',
                     is_active: data.is_active ?? true,
@@ -133,7 +133,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
                             {formatCurrency(salaryData.base_salary, salaryData.currency)}
                         </h3>
                         <p className="text-indigo-100 text-sm mt-2">
-                            Effective from {new Date(salaryData.effective_date).toLocaleDateString()}
+                            Effective from {new Date(salaryData.effective_date).toLocaleDateString("ms-MY")}
                         </p>
                     </div>
                     <DollarSignIcon className="w-12 h-12 text-indigo-200" />
@@ -203,14 +203,14 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
                                         <div className="flex items-center space-x-2">
                                             <CalendarIcon className="w-5 h-5 text-gray-400" />
                                             <p className="font-semibold text-gray-900">
-                                                {new Date(payslip.period_start).toLocaleDateString('en-US', {
+                                                {new Date(payslip.period_start).toLocaleDateString('ms-MY', {
                                                     month: 'long',
                                                     year: 'numeric'
                                                 })}
                                             </p>
                                         </div>
                                         <p className="text-sm text-gray-600 mt-1">
-                                            {new Date(payslip.period_start).toLocaleDateString()} - {new Date(payslip.period_end).toLocaleDateString()}
+                                            {new Date(payslip.period_start).toLocaleDateString("ms-MY")} - {new Date(payslip.period_end).toLocaleDateString("ms-MY")}
                                         </p>
                                     </div>
                                     <div className="text-right">
@@ -237,7 +237,10 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p className="text-sm text-blue-800">
                     <strong>Note:</strong> Your salary includes base pay plus any allowances, bonuses, and deductions.
-                    Tax and pension (8%) are automatically calculated based on Nigerian requirements.
+                    {/* The note told a teacher the figures were computed under a
+                        foreign country's tax and pension rules. This school's
+                        payroll runs under Malaysian rules, so it was false. */}
+                    Yang ditolak ialah caruman berkanun Malaysia (KWSP/PERKESO) mengikut kadar semasa.
                 </p>
             </div>
         </div>

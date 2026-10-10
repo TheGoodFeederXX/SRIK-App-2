@@ -209,7 +209,7 @@ const LeaveApproval: React.FC<LeaveApprovalProps> = () => {
                                                 <strong>{request.leave_type}</strong> - {request.days_requested} day(s)
                                             </p>
                                             <p className="text-gray-600">
-                                                {new Date(request.start_date).toLocaleDateString()} - {new Date(request.end_date).toLocaleDateString()}
+                                                {new Date(request.start_date).toLocaleDateString("ms-MY")} - {new Date(request.end_date).toLocaleDateString("ms-MY")}
                                             </p>
                                             <p className="text-gray-600">
                                                 <strong>Reason:</strong> {request.reason}
@@ -267,7 +267,7 @@ const LeaveApproval: React.FC<LeaveApprovalProps> = () => {
                                     <div>
                                         <p className="text-sm text-gray-600">Dates</p>
                                         <p className="font-semibold text-sm">
-                                            {new Date(selectedRequest.start_date).toLocaleDateString()} - {new Date(selectedRequest.end_date).toLocaleDateString()}
+                                            {new Date(selectedRequest.start_date).toLocaleDateString("ms-MY")} - {new Date(selectedRequest.end_date).toLocaleDateString("ms-MY")}
                                         </p>
                                     </div>
                                 </div>

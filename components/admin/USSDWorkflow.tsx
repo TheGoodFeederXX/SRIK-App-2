@@ -41,7 +41,7 @@ const USSDWorkflow: React.FC = () => {
                 </div>
 
                 <p className="text-sm text-gray-500 mt-6">
-                    Contact <span className="font-semibold text-green-600">support@oliskey.com</span> to set up USSD access for your school.
+                    Contact <span className="font-semibold text-green-600">srialkhairiah@gmail.com</span> to set up USSD access for your school.
                 </p>
             </div>
         </motion.div>

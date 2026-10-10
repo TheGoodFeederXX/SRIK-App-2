@@ -8,7 +8,9 @@ export interface ClassOption {
 
 /**
  * Parses a class name string to extract grade and section.
- * Supports patterns like "Grade 10A", "JSS 1A", "Primary 4 B", "10 A".
+ * Supports patterns like "Grade 10A", "Primary 4 B", "10 A". The JSS/SSS
+ * forms below are the class names of the country this app was first built for;
+ * they are kept only so exams saved before the port still parse.
  */
 export const parseClassName = (name: string) => {
     const clean = name.trim();
@@ -19,7 +21,7 @@ export const parseClassName = (name: string) => {
     // Matches: "10A", "10 A", "Grade 10A", "Year 10A"
     const standardMatch = clean.match(/^(?:Grade|Year)?\s*(\d+)\s*(.*)$/i);
 
-    // 2. Try Nigerian Secondary Patterns
+    // 2. Try the foreign secondary patterns this app was first built around
     // Matches: "JSS 1A", "JSS1 A", "SSS 3 Gold"
     const jsMatch = clean.match(/^JSS\s*(\d+)\s*(.*)$/i);
     const ssMatch = clean.match(/^S{2,3}\s*(\d+)\s*(.*)$/i); // Matches SS or SSS

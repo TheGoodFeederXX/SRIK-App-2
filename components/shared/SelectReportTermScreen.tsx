@@ -27,7 +27,7 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
 
     if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a student first.</div>;
 
-    const terms = ["First Term", "Second Term", "Third Term"];
+    const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
 
     const getGradeName = (grade: number) => {
         const className = (student as any).className || '';
@@ -53,7 +53,11 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
         const joinedAt = (student as any).createdAt || (student as any).created_at || (student as any).admissionDate;
         const joinDate = joinedAt ? new Date(joinedAt) : new Date(activeEntryYear, 0);
         const joinYear = joinDate.getFullYear();
-        const startYear = joinDate.getMonth() >= 8 ? joinYear : joinYear - 1;
+        // The school year is the calendar year, so a student who joined in any
+        // month of 2026 began in the 2026 session. The old rule pushed anyone
+        // who joined before September into the PREVIOUS session, so a report
+        // card for a January intake was headed with the year before.
+        const startYear = joinYear;
 
         const currentGrade = student.grade || 1;
         const list: any[] = [];
@@ -61,7 +65,8 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
         const maxEnd = activeEntryYear + (12 - currentGrade);
 
         for (let y = minStart; y <= maxEnd; y++) {
-            const sessionStr = `${y}/${y + 1}`;
+            // A bare year: "2026", not "2026/2027".
+            const sessionStr = `${y}`;
             const gradeAtSession = currentGrade - (activeEntryYear - y);
             if (gradeAtSession <= 0) continue;
 
@@ -84,7 +89,7 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
 
     const defaultSession = React.useMemo(() => {
         const current = sessionData.find(s => s.isCurrent);
-        return current ? current.session : (sessionData[0]?.session || `${activeEntryYear}/${activeEntryYear + 1}`);
+        return current ? current.session : (sessionData[0]?.session || `${activeEntryYear}`);
     }, [sessionData, activeEntryYear]);
 
     const [selectedSession, setSelectedSession] = React.useState(defaultSession);

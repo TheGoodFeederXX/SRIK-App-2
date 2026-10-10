@@ -1,6 +1,6 @@
 /**
  * AI Lesson Planner Service
- * Generates structured lesson plans aligned with the Nigerian National Curriculum.
+ * Generates structured lesson plans aligned with the KSSR curriculum.
  */
 
 import { getAIClient } from './ai';
@@ -12,7 +12,7 @@ export interface LessonPlan {
     materials: string[];
     activities: string[];
     evaluation: string[];
-    resources_nigeria?: string[]; // Suggests locally available materials
+    resources_local?: string[]; // Suggests locally available materials
 }
 
 /**
@@ -24,8 +24,12 @@ export async function generateLessonPlan(
     gradeLevel: string
 ): Promise<LessonPlan | null> {
     const ai = getAIClient();
-    
-    const systemPrompt = `You are an expert curriculum designer for Nigerian primary and secondary education.
+
+    // The prompt names the curriculum and where the teaching aids come from. It
+    // used to name the NIGERIAN national curriculum and Nigeria, so the model
+    // returned objectives from the wrong syllabus and suggested items bought in
+    // another country; this school follows KSSR and its staff buy in Malaysia.
+    const systemPrompt = `You are an expert curriculum designer for Malaysian primary education.
     Generate a lesson plan following the structure:
     {
       "topic": "string",
@@ -33,9 +37,9 @@ export async function generateLessonPlan(
       "materials": ["list"],
       "activities": ["Introduction, Development, Conclusion"],
       "evaluation": ["questions"],
-      "resources_nigeria": ["suggest locally available teaching aids found in Nigeria, e.g., crown corks for counting"]
+      "resources_local": ["suggest locally available teaching aids found in Malaysia, e.g., bottle caps for counting"]
     }
-    Aling strictly with Nigerian National Curriculum standards for ${gradeLevel}.`;
+    Align strictly with KSSR (Kurikulum Standard Sekolah Rendah) standards for ${gradeLevel}.`;
 
     const prompt = `Subject: ${subject}\nTopic: ${topic}\nGrade: ${gradeLevel}`;
 

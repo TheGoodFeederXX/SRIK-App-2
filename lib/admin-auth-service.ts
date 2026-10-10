@@ -1,5 +1,5 @@
 import { api } from './api';
-import { generateOliskeyId, UserRolePrefix } from '../utils/idFormatter';
+import { generateSchoolId, UserRolePrefix } from '../utils/idFormatter';
 
 export class AdminAuthService {
     /**
@@ -29,7 +29,7 @@ export class AdminAuthService {
             .eq('school_id', payload.schoolId)
             .eq('role', payload.role);
 
-        const customId = await generateOliskeyId(
+        const customId = await generateSchoolId(
             payload.schoolSlug,
             payload.branchSlug,
             rolePrefix[payload.role],
@@ -37,7 +37,7 @@ export class AdminAuthService {
         );
 
         // 2. Default password logic if none provided
-        const finalPassword = payload.password || `oliskey_${Math.random().toString(36).slice(-6)}`;
+        const finalPassword = payload.password || `srik_${Math.random().toString(36).slice(-6)}`;
 
         // 3. Call backend to create the Auth user (requires Service Role on backend)
         // In a real scenario, this hits an Express endpoint

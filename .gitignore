@@ -170,3 +170,14 @@ tmp-routes.json
 # runtime artefacts
 backend/uploads/
 tests/e2e/qa-test-upload.pdf
+
+# Local editor/agent MCP configuration.
+#
+# These files point at a Supabase project ref that is NOT this school's, so
+# committing them would put a wrong project reference in the repository for
+# anyone who clones it. They are personal tooling configuration, not part of
+# the app.
+.mcp.json
+mcp.json
+.opencode/
+.kilo/

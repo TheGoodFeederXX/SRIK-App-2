@@ -38,10 +38,10 @@ export function startRiskScanCron() {
         return;
     }
 
-    // 01:00 Africa/Lagos — after the midnight subscription cron.
+    // 01:00 Asia/Kuala_Lumpur — after the midnight subscription cron.
     cron.schedule('0 1 * * *', () => {
         runAsPlatform(() => runRiskScanForAllSchools()).catch(e => console.error('[RiskScanCron] crashed:', e));
-    }, { timezone: 'Africa/Lagos' });
+    }, { timezone: 'Asia/Kuala_Lumpur' });
 
-    console.log('🕛 [RiskScanCron] Scheduled daily at 01:00 Africa/Lagos');
+    console.log('🕛 [RiskScanCron] Scheduled daily at 01:00 Asia/Kuala_Lumpur');
 }

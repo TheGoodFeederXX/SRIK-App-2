@@ -58,7 +58,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
             toast.success('🚨 EMERGENCY ALERT SENT! Help is on the way.');
             setShowConfirm(false);
             setLocation('');
-            setSentAlert({ id: result?.data?.id, time: new Date().toLocaleTimeString() });
+            setSentAlert({ id: result?.data?.id, time: new Date().toLocaleTimeString("ms-MY") });
 
         } catch (error: any) {
             console.error('Error activating panic button:', error);

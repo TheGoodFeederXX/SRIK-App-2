@@ -9,6 +9,9 @@ import * as api from '../lib/api/eager';
 import { apiCore } from '../lib/api/core';
 import { queryClient, idbPersister } from '../lib/react-query';
 import { offlineStorage } from '../lib/offlineStorage';
+import { onAuthStateChange, fetchIdentity, signOut as supabaseSignOut } from '../src/lib/supabase/auth';
+import { sendPasswordReset as supabaseSendPasswordReset } from '../src/lib/supabase/auth';
+import { isSupabaseConfigured } from '../src/lib/supabase/client';
 
 interface AuthContextType {
     session: any | null;
@@ -23,11 +26,16 @@ interface AuthContextType {
     signOut: () => Promise<void>;
     switchSchool: (schoolId: string) => Promise<void>;
     switchDemoRole: (roleKey: string) => Promise<void>;
-    signInWithGoogle: (credential?: string) => Promise<{ success: boolean } | void>;
     userProfile: any | null;
     refreshUser: () => Promise<void>;
     refreshCurrentSchool: () => Promise<void>;
     isAuthenticated: boolean;
+    /**
+     * True when the signed-in user has not yet replaced the temporary password
+     * an administrator set for them. The credential is known to a second person
+     * until they do, so the app must require a change before real use.
+     */
+    mustChangePassword: boolean;
     switchDashboardRole: (role: DashboardType) => void;
     forgotPassword: (email: string) => Promise<any>;
     resetPassword: (data: any) => Promise<any>;
@@ -42,6 +50,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [currentSchool, setCurrentSchool] = useState<School | null>(null);
     const [currentBranchId, setCurrentBranchId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    // Defaults to false: an account is only "temporary password" when the
+    // database says so, never by omission.
+    const [mustChangePassword, setMustChangePassword] = useState(false);
     const [memberships, setMemberships] = useState<any[]>([]);
     const [isDemo, setIsDemo] = useState(() => sessionStorage.getItem('is_demo_mode') === 'true');
 
@@ -53,19 +64,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // request only commits its result if it's still the most recent one.
     const authActionSeqRef = React.useRef(0);
 
+    /**
+     * Map a role code onto a dashboard.
+     *
+     * THE FALLBACK IS THE IMPORTANT PART. It used to be `DashboardType.Admin`,
+     * so ANY role this function did not recognise opened the administration
+     * dashboard — the one with the most power. The database's real parent role is
+     * `GUARDIAN`, which was not listed, so a guardian fell through to Admin.
+     *
+     * `GUARDIAN` and `PARENT` are both accepted because the database says one and
+     * the UI is built around the other; a mismatch between them is exactly how the
+     * admin fallback was reachable.
+     */
     const getDashboardTypeFromUserType = (userType: string): DashboardType => {
-        const normalized = (userType || '').toUpperCase().replace(/_/g, '');
-        if (normalized === 'SUPERADMIN') return DashboardType.SuperAdmin;
+        const normalized = (userType || '').toUpperCase().replace(/[\s_]/g, '');
         if (normalized === 'ADMIN') return DashboardType.Admin;
         if (normalized === 'TEACHER') return DashboardType.Teacher;
-        if (normalized === 'PARENT') return DashboardType.Parent;
+        if (normalized === 'GUARDIAN' || normalized === 'PARENT') return DashboardType.Guardian;
         if (normalized === 'STUDENT') return DashboardType.Student;
-        if (normalized === 'PROPRIETOR') return DashboardType.Proprietor;
-        if (normalized === 'INSPECTOR') return DashboardType.Inspector;
-        if (normalized === 'EXAMOFFICER') return DashboardType.ExamOfficer;
-        if (normalized === 'COMPLIANCEOFFICER') return DashboardType.ComplianceOfficer;
-        if (normalized === 'COUNSELOR') return DashboardType.Counselor;
-        return DashboardType.Admin;
+        // Least privilege, not most: an unrecognised role gets the smallest
+        // dashboard rather than the administration one.
+        return DashboardType.Student;
     };
 
     const signOut = async () => {
@@ -128,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const initializeAuth = async () => {
         // Read tab-scoped token. No app code path writes auth tokens to localStorage
-        // anymore (signIn/switchDemoRole/signInWithGoogle all write sessionStorage only),
+        // anymore (signIn writes sessionStorage only),
         // so any leftover localStorage.auth_token is stale/foreign — e.g. from a script,
         // an old browser tab predating the sessionStorage migration, or another tool.
         // Previously this was silently adopted into the current tab's session ("one-time
@@ -308,6 +327,102 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         initializeAuth();
     }, []);
 
+    // Supabase session bridge.
+    //
+    // This runs ALONGSIDE the legacy restore path above rather than replacing
+    // it. During cutover both auth sources must be able to establish a session,
+    // and neither may be removed until the other provably covers every case —
+    // the rule from CLAUDE.md ("never leave two auth sources") applies to the
+    // END state, and this bridge exists precisely so the legacy path can be
+    // deleted once Supabase sign-in is the only way in.
+    //
+    // A session signed in through Supabase is translated into the same context
+    // shape the rest of the app already consumes, so none of the 200+ consumers
+    // of useAuth() need to know which source produced it.
+    useEffect(() => {
+        if (!isSupabaseConfigured) return;
+
+        let cancelled = false;
+
+        const applySupabaseSession = async (nextSession: any) => {
+            if (cancelled) return;
+
+            if (!nextSession?.user) {
+                // A Supabase sign-out must clear app state. Without this the UI
+                // would keep showing a signed-in shell after the session ends.
+                await signOut();
+                return;
+            }
+
+            const identity = await fetchIdentity(nextSession.user.id);
+            if (cancelled) return;
+
+            if (!identity.success || !identity.data) {
+                // The account exists in Supabase Auth but has no usable profile
+                // (or is not ACTIVE). Treat it as signed out rather than
+                // rendering a half-authenticated app.
+                await signOut();
+                return;
+            }
+
+            const data = identity.data;
+            // A GUARDIAN must reach the guardian dashboard. This used to be
+            // "ADMIN, else TEACHER", so a parent — whose real role code is
+            // GUARDIAN — was given the TEACHER dashboard, complete with its
+            // navigation and screens. Checked in privilege order, and an
+            // unrecognised role falls to the smallest dashboard rather than a
+            // larger one.
+            const dashboard: DashboardType = data.roles.includes('ADMIN')
+                ? DashboardType.Admin
+                : data.roles.includes('TEACHER')
+                    ? DashboardType.Teacher
+                    : data.roles.includes('GUARDIAN')
+                        ? DashboardType.Guardian
+                        : DashboardType.Student;
+
+            const userRecord = {
+                id: data.id,
+                email: nextSession.user.email,
+                fullName: data.fullName,
+                displayName: data.displayName,
+                phone: data.phone,
+                avatarStorageKey: data.avatarStorageKey,
+                status: data.status,
+                roles: data.roles,
+                permissions: data.permissions,
+                userType: dashboard,
+            };
+
+            React.startTransition(() => {
+                setSession(nextSession);
+                setUser(userRecord);
+                setRole(dashboard);
+                setMustChangePassword(data.mustChangePassword);
+                setLoading(false);
+            });
+        };
+
+        const unsubscribe = onAuthStateChange((event, session) => {
+            // Token refresh events carry no new identity, so re-applying them
+            // would cause needless profile reads on every periodic refresh.
+            if (event === 'TOKEN_REFRESHED') return;
+            void applySupabaseSession(session);
+        });
+
+        // A session may already exist on load (restored from storage), which no
+        // event announces. Check once explicitly.
+        void (async () => {
+            const { getSession } = await import('../src/lib/supabase/auth');
+            const existing = await getSession();
+            if (existing) void applySupabaseSession(existing);
+        })();
+
+        return () => {
+            cancelled = true;
+            unsubscribe();
+        };
+    }, [signOut]);
+
     useEffect(() => {
         const handleForceLogout = () => {
             signOut();
@@ -438,7 +553,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
                 if (userRole === 'teacher') dashType = DashboardType.Teacher;
                 else if (userRole === 'student') dashType = DashboardType.Student;
-                else if (userRole === 'parent') dashType = DashboardType.Parent;
+                else if (userRole === 'parent' || userRole === 'guardian') dashType = DashboardType.Guardian;
 
                 // invalidateCache() (not clearCache()) — clears the in-memory
                 // response cache AND the persistent offlineDB.roster_cache, so
@@ -467,42 +582,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const signInWithGoogle = async (credential?: string) => {
-        if (!credential) {
-            throw new Error('Google credential is required');
-        }
-
-        const seq = ++authActionSeqRef.current;
-        setLoading(true);
-        try {
-            const { api } = await import('../lib/api');
-            const { token, refreshToken, user: userData } = await api.googleLogin(credential);
-
-            if (seq !== authActionSeqRef.current) {
-                console.warn('[Auth] Discarding stale Google login response — a newer auth action has since started.');
-                return { success: false };
-            }
-
-            if (token && userData) {
-                // Determine dashboard type based on role
-                let dashType = DashboardType.Admin;
-                const userRole = (userData.role || '').toLowerCase();
-
-                if (userRole === 'teacher') dashType = DashboardType.Teacher;
-                else if (userRole === 'student') dashType = DashboardType.Student;
-                else if (userRole === 'parent') dashType = DashboardType.Parent;
-
-                await signIn(dashType, { ...userData, token, refreshToken });
-                return { success: true };
-            }
-            throw new Error('Invalid response from Google Login');
-        } catch (err: any) {
-            console.error("Google Auth Error:", err);
-            setLoading(false);
-            throw err;
-        }
-    };
-
     const value = React.useMemo(() => ({
         session,
         user,
@@ -516,7 +595,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signOut,
         switchSchool,
         switchDemoRole,
-        signInWithGoogle,
         userProfile: user,
         refreshUser: initializeAuth,
         refreshCurrentSchool: async () => {
@@ -536,17 +614,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             }
         },
         isAuthenticated: !!user,
+        mustChangePassword,
         switchDashboardRole: (newRole: DashboardType) => {
             React.startTransition(() => {
                 setRole(newRole);
                 sessionStorage.setItem('active_dashboard_role', newRole);
             });
         },
+        // Password recovery now goes through Supabase, which emails a LINK
+        // rather than the 6-digit code the legacy backend used. The old code
+        // path could never have worked once Supabase owned identity: it asked
+        // the user for a code that would never arrive.
         forgotPassword: async (email: string) => {
-            return api.forgotPassword(email);
+            const result = await supabaseSendPasswordReset(email);
+            if (!result.success) throw new Error(result.error || 'Failed to send reset link');
+            return result;
         },
-        resetPassword: async (data: any) => {
-            return api.resetPassword(data);
+        // Choosing the new password happens on SetPasswordScreen (reached via
+        // the emailed link), so there is nothing to do here but report that
+        // this path is no longer used. Kept so existing callers do not break.
+        resetPassword: async () => {
+            throw new Error('Use the link sent to your email to set a new password.');
         }
     }), [session, user, role, currentSchool, currentBranchId, loading, isDemo, memberships, initializeAuth]);
 

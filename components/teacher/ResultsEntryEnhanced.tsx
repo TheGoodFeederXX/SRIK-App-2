@@ -17,7 +17,7 @@ interface ResultsEntryProps {
     teacherId: string;
     classId: string;
     examId: string;
-    teacherCurriculumEligibility: 'Nigerian' | 'British' | 'Both' | null;
+    teacherCurriculumEligibility: 'KSSR' | 'British' | 'Both' | null;
 }
 
 interface ResultRecord {
@@ -35,7 +35,8 @@ export default function ResultsEntryEnhanced({
 }: ResultsEntryProps) {
     const { currentSchool, currentBranchId } = useAuth();
     const schoolId = currentSchool?.id;
-    const [selectedCurriculum, setSelectedCurriculum] = useState<'Nigerian' | 'British'>('Nigerian');
+    // KSSR is the Malaysian national curriculum, and the default here.
+    const [selectedCurriculum, setSelectedCurriculum] = useState<'KSSR' | 'British'>('KSSR');
     const [students, setStudents] = useState<any[]>([]);
     const [results, setResults] = useState<{ [key: string]: ResultRecord }>({});
     const [loading, setLoading] = useState(false);
@@ -51,10 +52,10 @@ const fetchExamDetails = useCallback(async () => {
             if (data?.curriculum_id && !data.curricula?.name) {
                 const curriculum = await api.getCurriculum(data.curriculum_id);
                 if (curriculum?.name) {
-                    setSelectedCurriculum(curriculum.name as 'Nigerian' | 'British');
+                    setSelectedCurriculum(curriculum.name as 'KSSR' | 'British');
                 }
             } else if (data?.curricula?.name) {
-                setSelectedCurriculum(data.curricula.name as 'Nigerian' | 'British');
+                setSelectedCurriculum(data.curricula.name as 'KSSR' | 'British');
             }
         } catch (error) {
             console.error('Error fetching exam details:', error);
@@ -117,14 +118,16 @@ const fetchExamDetails = useCallback(async () => {
     // Auto-sync
     useAutoSync(['exam_results', 'students'], fetchStudents);
 
-    const calculateGrade = (total: number, curriculum: 'Nigerian' | 'British'): string => {
-        if (curriculum === 'Nigerian') {
-            if (total >= 70) return 'A';
-            if (total >= 60) return 'B';
+    // The school's own scale (A 80, B 65, C 50, D 35, E below), which had a
+    // FIFTH definition here (A 70, ending F). A teacher entering marks saw one
+    // letter and the report card printed another.
+    const calculateGrade = (total: number, curriculum: 'KSSR' | 'British'): string => {
+        if (curriculum === 'KSSR') {
+            if (total >= 80) return 'A';
+            if (total >= 65) return 'B';
             if (total >= 50) return 'C';
-            if (total >= 45) return 'D';
-            if (total >= 40) return 'E';
-            return 'F';
+            if (total >= 35) return 'D';
+            return 'E';
         } else {
             // British grading
             if (total >= 90) return 'A*';
@@ -140,8 +143,12 @@ const fetchExamDetails = useCallback(async () => {
 
     const handleScoreChange = (studentId: string, field: 'ca' | 'exam', value: string) => {
         const numValue = parseFloat(value) || 0;
-        const maxCA = selectedCurriculum === 'Nigerian' ? 40 : 50;
-        const maxExam = selectedCurriculum === 'Nigerian' ? 60 : 50;
+        // KSSR splits 40 continuous assessment / 60 examination; the British
+        // track splits 50/50. Keyed to 'KSSR' — it used to key on 'Nigerian',
+        // so a Malaysian class was marked on the wrong split.
+        const isNational = selectedCurriculum === 'KSSR';
+        const maxCA = isNational ? 40 : 50;
+        const maxExam = isNational ? 60 : 50;
 
         if (field === 'ca' && numValue > maxCA) {
             toast.error(`CA score cannot exceed ${maxCA} for ${selectedCurriculum} curriculum.`);
@@ -202,7 +209,9 @@ const fetchExamDetails = useCallback(async () => {
         : '0.00';
 
     const passCount = Object.values(results).filter((r: ResultRecord) =>
-        selectedCurriculum === 'Nigerian' ? r.total >= 40 : r.total >= 40
+        // Both tracks pass at 40, so this is the same either way; written out
+        // rather than left as a branch that says the same thing twice.
+        r.total >= 40
     ).length;
 
     // Check for curriculum mismatch
@@ -229,8 +238,8 @@ const fetchExamDetails = useCallback(async () => {
                             <TrendingUp className="h-5 w-5" />
                             Results Entry - {selectedCurriculum} Curriculum
                         </CardTitle>
-                        <Badge variant="outline" className={selectedCurriculum === 'Nigerian' ? 'border-green-500 text-green-700' : 'border-blue-500 text-blue-700'}>
-                            {selectedCurriculum === 'Nigerian' ? '🇳🇬 Nigerian' : '🇬🇧 British'}
+                        <Badge variant="outline" className={selectedCurriculum === 'KSSR' ? 'border-green-500 text-green-700' : 'border-blue-500 text-blue-700'}>
+                            {selectedCurriculum === 'KSSR' ? 'KSSR' : 'British'}
                         </Badge>
                     </div>
                 </CardHeader>
@@ -243,14 +252,14 @@ const fetchExamDetails = useCallback(async () => {
                         <div className="flex justify-between text-sm">
                             <span className="font-semibold">Grading Scale:</span>
                             <span>
-                                {selectedCurriculum === 'Nigerian'
+                                {selectedCurriculum === 'KSSR'
                                     ? 'CA (40) + Exam (60) = Total (100)'
                                     : 'Coursework (50) + Exam (50) = Total (100)'}
                             </span>
                         </div>
                         <div className="flex justify-between text-sm">
                             <span className="font-semibold">Pass Mark:</span>
-                            <span>{selectedCurriculum === 'Nigerian' ? '40/100 (E)' : '40/100 (E)'}</span>
+                            <span>{selectedCurriculum === 'KSSR' ? '40/100 (E)' : '40/100 (E)'}</span>
                         </div>
                     </div>
                 </CardContent>
@@ -298,10 +307,10 @@ const fetchExamDetails = useCallback(async () => {
                                         <tr className="border-b-2">
                                             <th className="text-left p-3">Student Name</th>
                                             <th className="text-center p-3">
-                                                {selectedCurriculum === 'Nigerian' ? 'CA (40)' : 'Coursework (50)'}
+                                                {selectedCurriculum === 'KSSR' ? 'CA (40)' : 'Coursework (50)'}
                                             </th>
                                             <th className="text-center p-3">
-                                                {selectedCurriculum === 'Nigerian' ? 'Exam (60)' : 'Exam (50)'}
+                                                {selectedCurriculum === 'KSSR' ? 'Exam (60)' : 'Exam (50)'}
                                             </th>
                                             <th className="text-center p-3">Total (100)</th>
                                             <th className="text-center p-3">Grade</th>
@@ -322,7 +331,7 @@ const fetchExamDetails = useCallback(async () => {
                                                         <Input
                                                             type="number"
                                                             min="0"
-                                                            max={selectedCurriculum === 'Nigerian' ? 40 : 50}
+                                                            max={selectedCurriculum === 'KSSR' ? 40 : 50}
                                                             value={result.ca}
                                                             onChange={(e) => handleScoreChange(student.id, 'ca', e.target.value)}
                                                             className="w-20 text-center"
@@ -333,7 +342,7 @@ const fetchExamDetails = useCallback(async () => {
                                                         <Input
                                                             type="number"
                                                             min="0"
-                                                            max={selectedCurriculum === 'Nigerian' ? 60 : 50}
+                                                            max={selectedCurriculum === 'KSSR' ? 60 : 50}
                                                             value={result.exam}
                                                             onChange={(e) => handleScoreChange(student.id, 'exam', e.target.value)}
                                                             className="w-20 text-center"
@@ -383,7 +392,7 @@ const fetchExamDetails = useCallback(async () => {
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
-                    {selectedCurriculum === 'Nigerian' ? (
+                    {selectedCurriculum === 'KSSR' ? (
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
                             <div className="p-2 bg-green-100 rounded text-center">
                                 <strong>A:</strong> 70-100

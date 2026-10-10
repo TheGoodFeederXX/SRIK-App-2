@@ -4,7 +4,11 @@ import { JITSI_DOMAIN } from '../../lib/videoConfig';
 // ConferenceScheduling's "copy invite link") don't drag in LiveClassRoom's
 // module graph — which statically imports DailyClassRoom, and with it the
 // entire @daily-co/daily-js SDK, into their bundle chunk.
-const roomNameFor = (sessionId: string) => `OliskeyClass${sessionId.replace(/-/g, '')}`;
+// The room name is visible to everyone in the call and appears in its URL, so a
+// vendor's name here was shown to teachers, pupils and parents. New rooms are
+// named for the school. Rooms already in use keep their old name until the call
+// ends, which is why this is a prefix change and not a migration.
+const roomNameFor = (sessionId: string) => `SRIKClass${sessionId.replace(/-/g, '')}`;
 
 // IMPORTANT — the free public meet.jit.si must open in a new browser tab, NOT
 // in an iframe. It detects any iframe embedding (not just External API) and

@@ -338,7 +338,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
     // card); until then it reads "No result yet". Where a subject has been
     // published across more than one term (First/Second/Third), the score
     // shown is the average across those terms — the same combined annual
-    // result as the Academic Performance Dashboard's Third Term view —
+    // result as the Academic Performance Dashboard's Penggal 3 view —
     // rather than whichever term happened to be processed last.
     const overviewRows = useMemo(() => {
         const scoresBySubject = new Map<string, number[]>();
@@ -457,7 +457,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         {student.curriculum_type && (
                                             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-1.5 text-sm font-semibold">
                                                 <Globe className="w-4 h-4 mr-2" />
-                                                {student.curriculum_type === 'Both' ? 'Nigerian & British Curriculum' : `${student.curriculum_type} Curriculum`}
+                                                {/* The dual-track badge named a
+                                                    foreign curriculum; the national
+                                                    track here is KSSR. */}
+                                                {student.curriculum_type === 'Both' ? 'KSSR & British Curriculum' : `${student.curriculum_type} Curriculum`}
                                             </Badge>
                                         )}
                                         <motion.button
@@ -617,7 +620,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <InfoField icon={<Mail />} label="Email Address" value={student.email || 'N/A'} />
                                                 <InfoField icon={<Phone />} label="Phone Number" value={student.phone || student.parentPhone || 'N/A'} />
-                                                <InfoField icon={<Calendar />} label="Date of Birth" value={student.dob ? new Date(student.dob).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'} />
+                                                <InfoField icon={<Calendar />} label="Date of Birth" value={student.dob ? new Date(student.dob).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'} />
                                                 <InfoField icon={<MapPin />} label="Address" value={student.address || 'N/A'} />
                                                 <InfoField icon={<User />} label="Guardian" value={student.parentName || student.guardian_name || 'N/A'} />
                                                 <InfoField icon={<Phone />} label="Guardian Contact" value={student.parentPhone || student.guardian_phone || 'N/A'} />
@@ -736,9 +739,9 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                 {events.length > 0 ? events.map((event, i) => (
                                                     <MotionListItem key={i}>
                                                         <EventItem
-                                                            date={new Date(event.date).toLocaleDateString('en-US', { day: 'numeric', month: 'short' })}
+                                                            date={new Date(event.date).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short' })}
                                                             title={event.title}
-                                                            time={event.type === 'Assignment' ? 'Due Date' : new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                            time={event.type === 'Assignment' ? 'Due Date' : new Date(event.date).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}
                                                         />
                                                     </MotionListItem>
                                                 )) : (

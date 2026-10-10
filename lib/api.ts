@@ -134,17 +134,6 @@ class ExpressApiClient {
         }
     }
 
-    async googleLogin(credential: string): Promise<any> {
-        this.clearCsrfToken();
-        // The raw signed ID token is sent as-is — the backend verifies it against
-        // Google directly. We never send a locally-decoded email/name, since that
-        // would let anyone claim to be any user with a plain API call.
-        const result = await this.post<any>('/auth/google-login', { credential });
-        if (result.token) sessionStorage.setItem('auth_token', result.token);
-        if (result.refreshToken) sessionStorage.setItem('auth_refresh_token', result.refreshToken);
-        return result;
-    }
-
     async forgotPassword(email: string): Promise<any> {
         return this.post('/auth/forgot-password', { email });
     }
@@ -187,23 +176,6 @@ class ExpressApiClient {
 
     async verifyToken(token: string, type: string = 'signup'): Promise<any> {
         return this.post('/auth/verify-email', { token, code: type }); // Mapping type to code if needed, but verifyEmail expects token and code
-    }
-
-    async updateEmail(data: { userId: string; newEmail: string }): Promise<any> {
-        console.log('ðŸš€ [API] Calling updateEmail (POST) with data:', data);
-        return this.post('/auth/update-email', data);
-    }
-
-    async verifyEmailChange(data: { userId: string; code: string }): Promise<any> {
-        return this.post('/auth/verify-email-change', data);
-    }
-
-    async updateUsername(data: { userId: string; newUsername: string }): Promise<any> {
-        return this.post('/auth/update-username', data);
-    }
-
-    async updatePassword(data: { userId: string; currentPassword?: string; newPassword: string }): Promise<any> {
-        return this.post('/auth/update-password', data);
     }
 
     // ============================================
@@ -327,37 +299,6 @@ class ExpressApiClient {
     // ============================================
     // SCHOOLS & BRANCHES
     // ============================================
-    async getBranches(schoolId: string, branchId: string = 'all'): Promise<any[]> {
-        const cleanSchoolId = (schoolId || '').replace(/^=+/, '');
-        const branchParam = branchId ? `&branchId=${encodeURIComponent(branchId)}` : '';
-        try {
-            return await this.get(`/branches?schoolId=${cleanSchoolId}${branchParam}`);
-        } catch (err) {
-            console.warn('[API] getBranches failed:', err);
-            return [];
-        }
-    }
-
-    /** Branches the current user is authorized to see/operate in (handles branch-scoped users). */
-    async getAuthorizedBranches(): Promise<any[]> {
-        try {
-            return await this.get('/branches/authorized');
-        } catch (err) {
-            console.warn('[API] getAuthorizedBranches failed:', err);
-            return [];
-        }
-    }
-
-    /** All branch labels in the school (id/name/code) â€” for assignment pickers (e.g. lending a teacher). */
-    async getBranchOptions(): Promise<any[]> {
-        try {
-            return await this.get('/branches/options');
-        } catch (err) {
-            console.warn('[API] getBranchOptions failed:', err);
-            return [];
-        }
-    }
-
     /** Configurable academics (terms + grading). scope 'school' = the school default. */
     async getAcademicSettings(scope?: 'school' | 'branch', branchId?: string): Promise<any> {
         const params = new URLSearchParams();
@@ -369,23 +310,6 @@ class ExpressApiClient {
 
     async saveAcademicSettings(data: { terms?: any[]; grading?: any; scope?: 'school' | 'branch'; branch_id?: string }): Promise<any> {
         return this.put('/academic/settings', data);
-    }
-
-    /** Main-admin-only: transfer a user's primary branch and/or set additional authorized branches. */
-    async transferUser(payload: { userId: string; newBranchId?: string; allowedBranchIds?: string[] }): Promise<any> {
-        return this.post('/branches/transfer-user', payload);
-    }
-
-    async createBranch(schoolId: string, data: any): Promise<any> {
-        return this.post('/branches', { ...data, school_id: schoolId });
-    }
-
-    async updateBranch(branchId: string, data: any): Promise<any> {
-        return this.put(`/branches/${branchId}`, data);
-    }
-
-    async deleteBranch(id: string): Promise<void> {
-        await this.delete(`/branches/${id}`);
     }
 
     async getSchoolInfo(schoolId: string): Promise<any> {
@@ -408,10 +332,6 @@ class ExpressApiClient {
     async updateSchoolInfo(schoolId: string, data: any): Promise<any> {
         const endpoint = schoolId ? `/schools/${schoolId}` : '/schools';
         return this.put(endpoint, data);
-    }
-
-    async updateSchoolSubscription(schoolId: string, data: any): Promise<any> {
-        return this.post(`/schools/${schoolId}/subscription`, data);
     }
 
     // ============================================
@@ -678,7 +598,7 @@ class ExpressApiClient {
 
     async getStudentReportStats(studentId: string): Promise<any> {
         try {
-            const report = await this.get(`/academic/report-card-details?studentId=${studentId}&term=First Term&session=2024/2025`);
+            const report = await this.get(`/academic/report-card-details?studentId=${studentId}&term=Penggal 1&session=2024/2025`);
             if (!report) return { avgScore: 0, attendancePct: 100, performance: [] };
             
             const records = (report as any).academic_records || [];
@@ -1036,14 +956,6 @@ class ExpressApiClient {
         return this.post('/classes/initialize', { schoolId, classes, branch_id: branchId });
     }
 
-    async getPlans(): Promise<any[]> {
-        return this.get('/plans');
-    }
-
-    async getPlanStatus(schoolId: string): Promise<any> {
-        return this.get(`/plans/status?schoolId=${schoolId}`);
-    }
-
     // ============================================
     // SCHOOLS & INFRASTRUCTURE
     // ============================================
@@ -1387,23 +1299,6 @@ class ExpressApiClient {
             body = schoolIdOrData;
         }
         return this.post('/fees/record-payment', body);
-    }
-
-    // Parent-initiated gateway payment recording. Unlike recordPayment() above
-    // (admin-only, trusts a client-supplied amount), this hits the parent-scoped
-    // endpoint which verifies the reference against the real payment gateway
-    // server-side before recording anything — required because parents are
-    // rejected (403) by the admin-only /fees/record-payment route.
-    async recordParentPayment(data: {
-        fee_id?: string | number;
-        student_id: string | number;
-        reference: string;
-        gateway: 'paystack' | 'flutterwave';
-        branch_id?: string | null;
-        payment_method?: string;
-        purpose?: string;
-    }): Promise<any> {
-        return this.post('/parents/me/payments', data);
     }
 
     // Server-side notification triggers — the backend looks up the fee/payment,
@@ -3119,10 +3014,7 @@ class ExpressApiClient {
         try { return await this.get(`/timetables?${qs.toString()}`); } catch { return []; }
     }
 
-    // SaaS plan management -> /plans (SuperAdmin)
-    async createPlan(data: any): Promise<any> { return this.post('/plans', data); }
-    async updatePlan(id: string, data: any): Promise<any> { return this.put(`/plans/${id}`, data); }
-    async deletePlan(id: string): Promise<void> { await this.delete(`/plans/${id}`); }
+
 
     // SaaS platform notifications -> /notifications/platform
     async getPlatformNotifications(): Promise<any[]> {
@@ -3636,7 +3528,7 @@ class ExpressApiClient {
     }
 
     // ============================================
-    // DATA PRIVACY (NDPR)
+    // DATA PRIVACY (PDPA)
     // ============================================
     async getDataRequests(schoolId?: string, branchId?: string): Promise<any[]> {
         const queryParams = new URLSearchParams();

@@ -48,11 +48,11 @@ const AssetDetailScreen = ({ assetId }: { assetId: string }) => {
                     </div>
                     <div className="flex items-start gap-2">
                         <Calendar className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Purchase Date</p><p className="text-sm font-semibold text-gray-900">{asset.purchase_date ? new Date(asset.purchase_date).toLocaleDateString() : 'Unknown'}</p></div>
+                        <div><p className="text-xs text-gray-400 uppercase font-bold">Purchase Date</p><p className="text-sm font-semibold text-gray-900">{asset.purchase_date ? new Date(asset.purchase_date).toLocaleDateString("ms-MY") : 'Unknown'}</p></div>
                     </div>
                     <div className="flex items-start gap-2">
                         <ShieldCheck className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Warranty</p><p className="text-sm font-semibold text-gray-900">{asset.warranty_expiry ? `Until ${new Date(asset.warranty_expiry).toLocaleDateString()}` : 'No warranty on file'}</p></div>
+                        <div><p className="text-xs text-gray-400 uppercase font-bold">Warranty</p><p className="text-sm font-semibold text-gray-900">{asset.warranty_expiry ? `Until ${new Date(asset.warranty_expiry).toLocaleDateString("ms-MY")}` : 'No warranty on file'}</p></div>
                     </div>
                 </div>
             </motion.div>
@@ -67,7 +67,7 @@ const AssetDetailScreen = ({ assetId }: { assetId: string }) => {
                             <motion.div key={t.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, delay: Math.min(ti, 10) * 0.03 }} className="flex items-center justify-between border-b border-gray-50 pb-2">
                                 <div>
                                     <p className="text-sm font-semibold text-gray-900">{t.issue_title}</p>
-                                    <p className="text-xs text-gray-400">{new Date(t.created_at).toLocaleDateString()}</p>
+                                    <p className="text-xs text-gray-400">{new Date(t.created_at).toLocaleDateString("ms-MY")}</p>
                                 </div>
                                 <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">{t.status}</span>
                             </motion.div>

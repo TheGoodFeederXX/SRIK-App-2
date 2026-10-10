@@ -39,7 +39,6 @@ describe('DashboardOverview Component', () => {
         forceUpdate={vi.fn()}
         schoolId="school-123"
         currentBranchId={null}
-        isMainBranch={true}
       />
     );
 

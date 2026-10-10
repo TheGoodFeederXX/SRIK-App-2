@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { toast } from 'react-hot-toast';
 import { AlertTriangle, Users, User } from 'lucide-react';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -22,7 +22,7 @@ interface ReportIncidentScreenProps {
 
 const ReportIncidentScreen: React.FC<ReportIncidentScreenProps> = ({ navigateTo, handleBack }) => {
     const { currentSchool } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const [types, setTypes] = useState<IncidentType[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);

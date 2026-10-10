@@ -110,7 +110,7 @@ const AuditTrailViewer: React.FC = () => {
         const csv = [
             ['Date/Time', 'User', 'Action', 'Resource', 'Description', 'Risk Level', 'Status', 'IP Address'].join(','),
             ...filteredLogs.map(log => [
-                new Date(log.performed_at).toLocaleString(),
+                new Date(log.performed_at).toLocaleString('ms-MY'),
                 log.user_email,
                 log.action_type,
                 log.resource_type,
@@ -273,7 +273,7 @@ const AuditTrailViewer: React.FC = () => {
                                 {filteredLogs.map((log, li) => (
                                     <motion.tr key={log.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, delay: Math.min(li, 15) * 0.02 }} className="hover:bg-gray-50">
                                         <td className="px-4 py-3 text-sm text-gray-900 whitespace-nowrap">
-                                            {new Date(log.performed_at).toLocaleString('en-GB')}
+                                            {new Date(log.performed_at).toLocaleString('ms-MY')}
                                         </td>
                                         <td className="px-4 py-3 text-sm">
                                             <div>
@@ -343,7 +343,7 @@ const AuditTrailViewer: React.FC = () => {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <p className="text-sm font-semibold text-gray-700">Date/Time</p>
-                                        <p className="text-gray-900">{new Date(selectedLog.performed_at).toLocaleString()}</p>
+                                        <p className="text-gray-900">{new Date(selectedLog.performed_at).toLocaleString('ms-MY')}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm font-semibold text-gray-700">User</p>

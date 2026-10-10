@@ -47,7 +47,7 @@ const GameShell: React.FC<GameShellProps> = ({ title, onExit, children, score = 
                 <div className="flex items-center gap-4">
                     {/* Score Display */}
                     <div className="px-4 py-1 bg-slate-700 rounded-full font-mono font-bold text-yellow-400 border border-slate-600">
-                        {score.toLocaleString()} pts
+                        {score.toLocaleString('ms-MY')} pts
                     </div>
 
                     {/* Timer Display */}

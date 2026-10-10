@@ -278,6 +278,60 @@ html.glass .bg-white.rounded-\[2rem\]:not(.liquid-glass):not(.liquid-glass-solid
     margin: 0;
     padding: 0;
   }
+
+  /*
+   * Printing a report card must print ONLY the report card.
+   *
+   * Without this, the browser prints the whole application shell: the sidebar,
+   * the header, the action buttons and the scrollbars all end up on the sheet
+   * of paper handed to a parent. Marking the shell as no-print and the report
+   * as the only thing to show is the way to get a clean page without moving the
+   * report into a separate window, which would lose the styles and require the
+   * data to be fetched a second time.
+   */
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* One report card per sheet, and never split across two. */
+  .report-card-sheet {
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .report-card-sheet:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  /* A fee statement is an ordinary document: it may run to more than one sheet,
+     so unlike a report card it is allowed to break, but never through the
+     middle of a line of figures. */
+  .statement-sheet {
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  .statement-sheet li {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
+
+/* On screen the print-only blocks stay hidden; print reveals them. */
+.print-only {
+  display: none;
 }
 
 @keyframes slideInUp {

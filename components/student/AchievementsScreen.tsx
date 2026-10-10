@@ -117,7 +117,7 @@ const AchievementsScreen: React.FC = () => {
                                         </div>
                                         <div className="flex-grow min-w-0">
                                             <p className="font-bold text-gray-800">{cert.title}</p>
-                                            <p className="text-sm text-gray-500">Issued: {new Date(cert.date).toLocaleDateString()}</p>
+                                            <p className="text-sm text-gray-500">Issued: {new Date(cert.date).toLocaleDateString("ms-MY")}</p>
                                         </div>
                                     </motion.div>
                                 ))}
@@ -144,7 +144,7 @@ const AchievementsScreen: React.FC = () => {
                                             </div>
                                             <div>
                                                 <p className="font-bold text-gray-800">{award.title}</p>
-                                                <p className="text-sm text-gray-500">{new Date(award.date).toLocaleDateString()}</p>
+                                                <p className="text-sm text-gray-500">{new Date(award.date).toLocaleDateString("ms-MY")}</p>
                                             </div>
                                         </div>
                                         <p className="text-sm text-gray-600 mt-2 pl-10">{award.description}</p>
@@ -174,7 +174,7 @@ const AchievementsScreen: React.FC = () => {
                                     <div className="flex-grow min-w-0">
                                         <p className="font-bold text-gray-800">{ach.title}</p>
                                         <p className="text-sm text-gray-500">{ach.description}</p>
-                                        <p className="text-xs text-gray-400 mt-1">{new Date(ach.date).toLocaleDateString()}</p>
+                                        <p className="text-xs text-gray-400 mt-1">{new Date(ach.date).toLocaleDateString("ms-MY")}</p>
                                     </div>
                                 </motion.div>
                             ))}

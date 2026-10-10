@@ -38,7 +38,7 @@ const SecuritySettingsScreen: React.FC = () => {
                     id: log.id,
                     user: log.user_name || log.user?.full_name || 'System',
                     action: 'Logged In',
-                    time: new Date(log.created_at).toLocaleString(),
+                    time: new Date(log.created_at).toLocaleString('ms-MY'),
                     device: log.metadata?.device || 'Unknown Device',
                     location: log.metadata?.location || 'Unknown Location',
                     isCurrent: false

@@ -30,7 +30,7 @@ export class CalendarService {
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
             'BEGIN:VEVENT',
-            `URL:https://app.oliskey.com/events/${event.id}`,
+            `URL:srik://events/${event.id}`,
             `DTSTART:${dateStr}`,
             `DTEND:${dateStr}`,
             `SUMMARY:${event.title}`,

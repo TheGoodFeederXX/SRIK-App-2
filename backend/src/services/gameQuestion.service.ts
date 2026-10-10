@@ -155,9 +155,15 @@ export async function generateAIQuestions(params: GameQuestionParams): Promise<B
     const avoid = await getRecentQuestionTexts(params);
 
     const prompt =
-        `You are writing multiple-choice quiz questions for a school game app used in Nigerian schools. ` +
+        // The school matters to the ANSWER, not just the wording: a question
+        // written for a Nigerian curriculum asks about the naira, Nigerian
+        // states and a September school year. This school is in Kedah, teaches
+        // the Malaysian curriculum, and its children are Malay-speaking.
+        `You are writing multiple-choice quiz questions for a school game app used in a Malaysian primary school ` +
+        `(Sekolah Rendah Islam Al-Khairiah, in Kedah). Questions and answers must be in Bahasa Melayu. ` +
         `Write ${params.count} fresh, original questions for the subject "${params.subject}" (category: ${subjectKey}), ` +
         `suitable for students ${bandLabel}.\n` +
+        `- Use the Malaysian curriculum and Malaysian context (ringgit, Malaysian states, Malaysian history).\n` +
         `Rules:\n` +
         `- Each question needs exactly 4 short answer options, with exactly one correct answer.\n` +
         `- "correctIndex" is the 0-based index of the correct option.\n` +

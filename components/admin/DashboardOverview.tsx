@@ -356,10 +356,9 @@ interface DashboardOverviewProps {
     forceUpdate: () => void;
     schoolId: string;
     currentBranchId: string | null;
-    isMainBranch: boolean;
 }
 
-const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handleBack, forceUpdate, schoolId, currentBranchId, isMainBranch }) => {
+const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handleBack, forceUpdate, schoolId, currentBranchId }) => {
     const { t } = useTranslation();
     const { currentSchool, user } = useAuth();
     const { profile } = useProfile();
@@ -483,9 +482,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                 { label: 'Enroll Student', icon: <UserIcon />, onClick: () => navigateTo('enrollmentPage', 'New Student Enrollment'), color: 'bg-emerald-600' },
                 { label: 'Past Students', icon: <Archive className="w-6 h-6" />, onClick: () => navigateTo('pastStudents', 'Past Students'), color: 'bg-slate-600' },
                 { label: 'User Accounts', icon: <UsersIcon />, onClick: () => navigateTo('userAccounts', 'User Accounts'), color: 'bg-indigo-600' },
-                { label: 'Manage Branches', icon: <Building2 className="w-6 h-6" />, onClick: () => navigateTo('schoolManagement', 'Manage Branches'), color: 'bg-blue-600' },
                 { label: 'Curriculum', icon: <Globe className="w-6 h-6" />, onClick: () => navigateTo('curriculumManagement', 'Curriculum Management'), color: 'bg-emerald-700' },
-                ...(!currentBranchId ? [{ label: 'Branch Transfers', icon: <UsersIcon />, onClick: () => navigateTo('branchTransfer', 'Branch Transfers'), color: 'bg-fuchsia-600' }] : []),
             ]
         },
         {
@@ -563,7 +560,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
         },
         {
             id: 'compliancePrivacy', name: 'Compliance & Privacy', items: [
-                { label: 'Consent Forms', icon: <FileCheck />, onClick: () => navigateTo('consentForms', 'Parental Consent (NDPR)'), color: 'bg-green-700' },
+                { label: 'Consent Forms', icon: <FileCheck />, onClick: () => navigateTo('consentForms', 'Parental Consent (PDPA)'), color: 'bg-green-700' },
                 { label: 'Data Export', icon: <Download />, onClick: () => navigateTo('dataExport', 'Data Export & Deletion'), color: 'bg-gray-700' },
                 { label: 'Notification Settings', icon: <BellRing />, onClick: () => navigateTo('notificationDigest', 'Notification Digest'), color: 'bg-purple-600' },
                 { label: 'Project Boards', icon: <LayoutGrid />, onClick: () => navigateTo('projectBoard', 'Kanban Project Boards'), color: 'bg-sky-600' },
@@ -602,7 +599,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                         <div className={`grid gap-3 sm:gap-4 mt-6 ${statCardLayout === 'compact' ? 'grid-cols-2 2xl:grid-cols-4' : 'grid-cols-1 xs:grid-cols-2'}`}>
                             <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={totalStudents} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', 'Manage Students', {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
                             <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={totalStaff} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', 'Manage Teachers', {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
-                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={totalParents} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Parents', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
+                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={totalParents} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Guardians', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
                             <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={stats?.totalAcademicLevels || 0} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
                         </div>
                     </motion.div>
@@ -710,7 +707,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                                 <AlertCard index={1} label="Reports to Publish" value={unpublishedReports} icon={<ReportIcon />} onClick={() => navigateTo('reportCardPublishing', 'Publish Reports')} color="text-red-500" />
                             )}
                             {overdueFees > 0 && (
-                                <AlertCard index={2} label="in Overdue Fees" value={new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', 'Fee Management')} color="text-orange-500" />
+                                <AlertCard index={2} label="in Overdue Fees" value={new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', 'Fee Management')} color="text-orange-500" />
                             )}
                             {unpublishedReports === 0 && overdueFees === 0 && (
                                 <div className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">

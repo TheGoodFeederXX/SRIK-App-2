@@ -2,6 +2,7 @@ import React, { cloneElement } from 'react';
 import { motion } from 'framer-motion';
 import { HomeIcon, BellIcon, UserIcon as ProfileIcon, DocumentTextIcon, PhoneIcon, PlayIcon, AnalyticsIcon, MegaphoneIcon, SettingsIcon, MessagesIcon, ElearningIcon, SparklesIcon, UserGroupIcon, GameControllerIcon, ChartBarIcon, ClockIcon, LogoutIcon, ReportIcon, CheckCircleIcon, BuildingLibraryIcon, StudentsIcon, ClipboardListIcon, ExamIcon, EnterResultsIcon, ShieldCheckIcon, SUBJECT_COLORS, getFormattedClassName } from '../../constants';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
+import { SCHOOL_NAME } from '../../src/lib/branding';
 
 // ⚠️ PERMANENT, OWNER-LOCKED NAV SETS ⚠️
 // The item list (count, labels, order) in EVERY *Sidebar component below —
@@ -57,7 +58,7 @@ export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, school
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'S'}</span>
                     </div>
                 )}
-                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || 'Oliskey Demo School'}</span>
+                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || SCHOOL_NAME}</span>
             </div>
 
             <nav className="flex-1 py-6 overflow-y-auto">
@@ -105,7 +106,7 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'A'}</span>
                     </div>
                 )}
-                <span className="text-lg font-bold text-gray-800 truncate" title={schoolName}>{schoolName || 'Oliskey School'}</span>
+                <span className="text-lg font-bold text-gray-800 truncate" title={schoolName}>{schoolName || SCHOOL_NAME}</span>
             </div>
 
             <nav className="flex-1 py-6 overflow-y-auto">
@@ -117,7 +118,6 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
                     <SidebarItem id="examManagement" icon={<ExamIcon />} label="Exams" isActive={activeScreen === 'examManagement'} onClick={() => setActiveScreen('examManagement')} activeColor="text-indigo-600" />
                     <SidebarItem id="results" icon={<EnterResultsIcon />} label="Results" isActive={activeScreen === 'results'} onClick={() => setActiveScreen('results')} activeColor="text-indigo-600" />
                     <SidebarItem id="compliance" icon={<ShieldCheckIcon />} label="Compliance" isActive={activeScreen === 'compliance'} onClick={() => setActiveScreen('compliance')} activeColor="text-indigo-600" />
-                    <SidebarItem id="branches" icon={<BuildingLibraryIcon />} label="Branches" isActive={activeScreen === 'branches'} onClick={() => setActiveScreen('branches')} activeColor="text-indigo-600" />
                     <SidebarItem id="studentApprovals" icon={<CheckCircleIcon />} label="Approvals" isActive={activeScreen === 'studentApprovals'} onClick={() => setActiveScreen('studentApprovals')} activeColor="text-indigo-600" />
                     <SidebarItem id="feeManagement" icon={<DocumentTextIcon />} label="Fee Management" isActive={activeScreen === 'feeManagement'} onClick={() => setActiveScreen('feeManagement')} activeColor="text-indigo-600" />
                     <SidebarItem id="messages" icon={<MessagesIcon />} label="Messages" isActive={activeScreen === 'messages'} onClick={() => setActiveScreen('messages')} activeColor="text-indigo-600" />
@@ -164,7 +164,7 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'T'}</span>
                     </div>
                 )}
-                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || 'Oliskey School'}</span>
+                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || SCHOOL_NAME}</span>
             </div>
 
             <nav className="flex-1 py-6 overflow-y-auto">
@@ -218,7 +218,7 @@ export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolN
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'P'}</span>
                     </div>
                 )}
-                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || 'Oliskey Demo School'}</span>
+                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || SCHOOL_NAME}</span>
             </div>
 
             <nav className="flex-1 py-6 overflow-y-auto">
@@ -231,58 +231,6 @@ export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolN
                             isActive={activeScreen === item.id}
                             onClick={() => setActiveScreen(item.id)}
                             activeColor="text-green-600"
-                        />
-                    ))}
-                </div>
-            </nav>
-
-            {onLogout && (
-                <div className="p-4 border-t border-gray-100">
-                    <motion.button
-                        whileHover={{ x: 2 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={onLogout}
-                        className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-                    >
-                        <LogoutIcon className="h-6 w-6" />
-                        <span className="font-medium">Logout</span>
-                    </motion.button>
-                </div>
-            )}
-        </div>
-    );
-};
-
-export const InspectorSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
-    const navItems = [
-        { id: 'overview', icon: <HomeIcon />, label: 'Home' },
-        { id: 'schoolSearch', icon: <BuildingLibraryIcon />, label: 'Search Schools' },
-        { id: 'inspectionHistory', icon: <AnalyticsIcon />, label: 'History' },
-    ];
-
-    return (
-        <div className="h-full flex flex-col bg-white border-r border-gray-200">
-            <div className="p-6 flex items-center space-x-3 border-b border-gray-100">
-                {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain" />
-                ) : (
-                    <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
-                        <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'I'}</span>
-                    </div>
-                )}
-                <span className="text-xl font-bold text-gray-800 truncate" title={schoolName}>{schoolName || 'School Administration'}</span>
-            </div>
-
-            <nav className="flex-1 py-6 overflow-y-auto">
-                <div className="space-y-1">
-                    {navItems.map(item => (
-                        <SidebarItem
-                            key={item.id}
-                            icon={item.icon}
-                            label={item.label}
-                            isActive={activeScreen === item.id}
-                            onClick={() => setActiveScreen(item.id)}
-                            activeColor="text-indigo-600"
                         />
                     ))}
                 </div>

@@ -190,7 +190,7 @@ const ExtracurricularsScreen: React.FC = () => {
                         <div className="bg-white rounded-xl shadow-sm p-4">
                             <div className="flex justify-between items-center mb-4">
                                 <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors"><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
-                                <h3 className="font-bold text-lg text-gray-800">{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</h3>
+                                <h3 className="font-bold text-lg text-gray-800">{currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}</h3>
                                 <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors"><ChevronRightIcon /></motion.button>
                             </div>
                             <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
@@ -229,7 +229,7 @@ const ExtracurricularsScreen: React.FC = () => {
                                     transition={{ duration: 0.2 }}
                                     className="bg-white rounded-xl shadow-sm p-4"
                                 >
-                                    <h3 className="font-bold text-gray-800 mb-3">Events on {selectedDate.toLocaleDateString('default', { month: 'long', day: 'numeric' })}</h3>
+                                    <h3 className="font-bold text-gray-800 mb-3">Events on {selectedDate.toLocaleDateString('ms-MY', { month: 'long', day: 'numeric' })}</h3>
                                     <ul className="space-y-2">
                                         {selectedDateEvents.map(event => {
                                             const config = ACTIVITY_CATEGORY_CONFIG[event.category];

@@ -16,7 +16,7 @@ import CenteredLoader from '../ui/CenteredLoader';
 import LoadingState from '../ui/LoadingState';
 import LowDataImage from '../ui/LowDataImage';
 import { Student } from '../../types';
-import { api } from '../../lib/api';
+import { listStudents, setStudentStatus, type StudentRecord } from '../../src/lib/supabase/students';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -302,82 +302,145 @@ const ClassAccordion: React.FC<{ title: string; count: number; children: React.R
 };
 
 interface StudentListScreenProps {
-  filter?: { grade: number; section?: string; };
+  /**
+   * Limits the list to one class.
+   *
+   * `className` is the SRIK form, e.g. "3 Al-Junaidi". The legacy
+   * `grade`/`section` pair is still accepted so an older caller does not break,
+   * but nothing in the app passes it and it is ignored when `className` is set.
+   */
+  filter?: { className?: string; grade?: number; section?: string };
   navigateTo: (view: string, title: string, props?: any) => void;
   currentBranchId?: string | null;
   schoolId?: string;
 }
 
 // Maps a roster row from the API into the shape StudentRow / the profile screen expect.
-const mapStudent = (s: any) => ({
+/**
+ * Maps a database student to the shape this screen renders.
+ *
+ * A student's class is now a real class name from their enrolment ("3
+ * Al-Junaidi") rather than a grade/section pair, so `className` is derived here
+ * and the legacy `grade`/`section` fields are left undefined. Nothing on screen
+ * reads them any more — the class grouping below uses the class name.
+ */
+const mapStudent = (s: StudentRecord): StudentListRow => ({
   id: s.id,
-  schoolId: s.school_id || s.schoolId,
-  schoolGeneratedId: s.school_generated_id || s.schoolGeneratedId,
-  name: s.name || s.full_name || '',
-  email: s.email || '',
-  avatarUrl: s.avatar_url || s.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.name || s.full_name || 'student'}`,
-  grade: s.grade,
-  section: s.section,
-  department: s.department,
-  attendanceStatus: s.attendance_status || s.attendanceStatus || 'Absent',
-  birthday: s.birthday,
-  classId: s.class_id || s.classId,
-  status: s.status
+  schoolGeneratedId: s.admissionNo,
+  name: s.fullName,
+  email: s.guardians.find(g => g.isPrimary)?.email || s.guardians[0]?.email || '',
+  avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${s.fullName || s.id}`,
+  className: s.className,
+  classId: s.classId,
+  yearLevel: s.yearLevel,
+  birthday: s.birthDate,
+  guardianName: s.guardians[0]?.fullName,
+  guardianPhone: s.guardians[0]?.phone,
+  status: s.status,
 });
 
-// Graduated/Transferred students live exclusively in the Past Students archive —
-// they must never appear (or count) in the active roster.
-const isCurrentStudent = (s: any) => s.status !== 'Graduated' && s.status !== 'Transferred';
+/**
+ * Whether a student still belongs on the active roll.
+ *
+ * This used to compare against the legacy title-case values ('Graduated',
+ * 'Transferred'). The database stores upper-case values, so the old check never
+ * matched and every student passed — including ones who had left. It now tests
+ * the values the database actually uses, and keeps only ACTIVE.
+ *
+ * Students who have left stay visible in their own archive rather than being
+ * deleted: a school record of who attended is not something to throw away.
+ */
+const isCurrentStudent = (s: { status?: string }) => (s.status ?? 'ACTIVE') === 'ACTIVE';
 
-/** One class group's headcount, derived from /students/summary. */
+/**
+ * The status vocabulary as it exists in the database.
+ *
+ * The screen's dropdown offers Active / Withdrawn / Pending for a teacher's
+ * convenience; the database stores five values because a school needs to tell
+ * "graduated" apart from "left the school". These pairs are the only place the
+ * two vocabularies meet.
+ */
+const DB_STATUS: Record<StudentStatus, StudentRecord['status']> = {
+  Active: 'ACTIVE',
+  Withdrawn: 'WITHDRAWN',
+  // "Pending" has no database equivalent. The closest honest value is ACTIVE,
+  // because a student awaiting confirmation is still on the roll; recording
+  // them as archived would hide them from every list.
+  Pending: 'ACTIVE',
+};
+
+const toScreenStatus = (s: StudentRecord['status']): StudentStatus =>
+  s === 'WITHDRAWN' ? 'Withdrawn' : s === 'ACTIVE' ? 'Active' : 'Active';
+
+/**
+ * One class group: a real SRIK class, e.g. "3 Al-Junaidi", plus its headcount.
+ *
+ * Grouping is by class NAME now. The old grade/section pair belonged to a
+ * school with forms and streams; SRIK has named classes within Years 1-6, and
+ * they are already the label a user recognises.
+ */
 interface ClassGroup {
   name: string;
-  grade: number | null;
-  // Every (section) this display name covers — normally exactly one.
-  sections: Array<string | null>;
   total: number;
+  /** Year level, used only for ordering. Null for students with no class yet. */
+  yearLevel: number | null;
 }
 
-const classNameFor = (grade: number | null | undefined, section: string | null | undefined) =>
-  grade === null || grade === undefined ? 'Unassigned' : getFormattedClassName(grade, section);
+/** The group a student with no class yet is shown under. */
+const UNASSIGNED = 'Unassigned';
+
+/**
+ * The row shape THIS screen renders.
+ *
+ * Deliberately not the shared `Student` type: that one still describes the
+ * legacy record (grade, section, attendanceStatus) and is consumed widely, so
+ * changing it would ripple far beyond this screen. A student's class is a name
+ * now, taken from their enrolment.
+ */
+interface StudentListRow {
+  id: string;
+  schoolGeneratedId: string;
+  name: string;
+  email: string;
+  avatarUrl: string;
+  className: string | null;
+  classId: string | null;
+  /** Real year level from the database — never parsed from the name. */
+  yearLevel: number | null;
+  birthday?: string | null;
+  guardianName?: string;
+  guardianPhone?: string;
+  status: string;
+}
 
 // The roster used to be fetched whole (every student in the school, ~1KB each:
 // 1.5MB at 1,500 students — half a minute on a 400kbps link) and grouped on the
 // client. Sections start collapsed, so a class's rows are only needed when the
 // admin opens it: this fetches just that group, on mount, i.e. on expand
 // (the accordions render no children while closed).
+/**
+ * A class group's rows.
+ *
+ * Rows arrive already loaded. The previous version fetched each class on
+ * expand, because the legacy roster was fetched whole and could reach 1.5MB. At
+ * SRIK's ~250 students the whole roster is trivial, so the lazy fetch (and the
+ * failure mode where a collapsed class looked empty) is gone.
+ */
 const ClassStudents: React.FC<{
-  schoolId: string;
-  branchId?: string;
   group: ClassGroup;
+  rows: StudentListRow[];
   statusFilter: 'All' | StudentStatus;
   onSelect: (student: Student) => void;
   onStatusChange: (student: any, newStatus: StudentStatus) => void;
-}> = ({ schoolId, branchId, group, statusFilter, onSelect, onStatusChange }) => {
-  const single = group.sections.length === 1;
-  const { data: rows = [], isLoading, isError, refetch } = useQuery({
-    queryKey: ['students', schoolId, branchId, 'class', group.grade, single ? group.sections[0] : '*', statusFilter],
-    queryFn: async () => {
-      // A display name normally maps to one (grade, section). If it covers
-      // several (e.g. a null and an empty section), fetch the grade once and
-      // keep only this group's sections.
-      const raw = await api.getStudentsInClassGroup(schoolId, branchId, group.grade, single ? group.sections[0] : undefined, statusFilter);
-      const wanted = new Set(group.sections.map(s => s ?? null));
-      return (raw || []).filter(isCurrentStudent).filter((s: any) => single || wanted.has(s.section ?? null)).map(mapStudent);
-    },
-    staleTime: 1000 * 60 * 5,
-  });
-
-  if (isLoading) return <LoadingState type="list" rows={Math.min(group.total, 4)} className="p-1" />;
-  if (isError) {
+}> = ({ group, rows, onSelect, onStatusChange }) => {
+  if (rows.length === 0) {
     return (
-      <div className="flex items-center justify-between px-2 py-1.5 text-sm text-gray-500">
-        <span>Couldn't load this class.</span>
-        <button onClick={() => refetch()} className="font-semibold text-indigo-600 hover:text-indigo-700">Retry</button>
+      <div className="px-2 py-1.5 text-sm text-gray-500">
+        No students in this class.
       </div>
     );
   }
-  return <>{rows.map((s: Student) => <StudentRow key={s.id} student={s} onSelect={onSelect} onStatusChange={onStatusChange} />)}</>;
+  return <>{rows.map(s => <StudentRow key={s.id} student={s} onSelect={onSelect} onStatusChange={onStatusChange} />)}</>;
 };
 
 const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateTo, currentBranchId, schoolId: propSchoolId }) => {
@@ -393,40 +456,44 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
   const { profile } = useProfile();
   const queryClient = useQueryClient();
 
-  const schoolId = propSchoolId || profile?.schoolId || profile?.school_id || user?.user_metadata?.school_id;
-  const branchArg = currentBranchId || undefined;
-  // Prefix for every roster query on this screen (summary, per-class, search),
-  // so one invalidation refreshes whichever of them are on screen.
-  const queryKey = ['students', schoolId, currentBranchId];
+  // The roster no longer needs a school id: SRIK is one school, and the
+  // database decides what this user may see. Computing a school id here would
+  // reintroduce a tenancy concept the product does not have.
+  const queryKey = ['students'];
 
-  // Headcounts per class group: a few hundred bytes, replaces the whole-roster fetch.
-  const { data: summary = [], isLoading, isError, error: fetchError, refetch } = useQuery({
-    queryKey: [...queryKey, 'summary'],
-    queryFn: async () => (schoolId ? api.getStudentSummary(schoolId, branchArg) : []),
-    enabled: !!schoolId,
+  // One fetch for the whole roster, grouped in memory. The previous version
+  // kept three separate queries (per-class headcounts, per-class rows, and a
+  // server-side search) because the legacy roster could reach 1.5MB. At ~250
+  // students that machinery cost more than it saved, and its lazy per-class
+  // fetch could show a collapsed class as empty.
+  const { data: roster = [], isLoading, isError, error: fetchError, refetch } = useQuery({
+    queryKey,
+    queryFn: () => listStudents(),
     staleTime: 1000 * 60 * 5,
   });
 
-  // A closed section renders none of its rows, so while the roster is filtered
-  // by a search term a closed section can swallow the only match and the search
-  // reads as broken. Sections stay force-opened for as long as a term is active;
-  // clearing it restores whatever the user had expanded.
+  // Searching is now local, because the rows are already here. That also makes
+  // the result instant rather than waiting on a round trip per keystroke.
   const isSearching = searchTerm.trim().length > 0;
 
-  // Search is server-side now (the client no longer holds the roster), so it
-  // waits for typing to pause rather than firing a request per keystroke.
-  const [debouncedTerm, setDebouncedTerm] = useState('');
-  useEffect(() => {
-    const t = window.setTimeout(() => setDebouncedTerm(searchTerm.trim()), 300);
-    return () => window.clearTimeout(t);
-  }, [searchTerm]);
+  const students = useMemo<StudentListRow[]>(
+    () => roster.filter(isCurrentStudent).map(mapStudent),
+    [roster]
+  );
 
-  const { data: searchResults = [], isLoading: searchLoading, isError: searchError } = useQuery({
-    queryKey: [...queryKey, 'search', debouncedTerm, statusFilter],
-    queryFn: async () => (await api.searchStudents(schoolId, branchArg, debouncedTerm, statusFilter)).filter(isCurrentStudent).map(mapStudent),
-    enabled: !!schoolId && debouncedTerm.length > 0,
-    staleTime: 1000 * 60,
-  });
+  const matchingStudents = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase();
+    return students.filter(s => {
+      if (term && !(
+        s.name.toLowerCase().includes(term) ||
+        (s.schoolGeneratedId || '').toLowerCase().includes(term) ||
+        (s.guardianName || '').toLowerCase().includes(term)
+      )) return false;
+      if (statusFilter !== 'All' && toScreenStatus(s.status as StudentRecord['status']) !== statusFilter) return false;
+      if (filter && filter.className && s.className !== filter.className) return false;
+      return true;
+    });
+  }, [students, searchTerm, statusFilter, filter]);
 
   useAutoSync(['students'], () => {
     queryClient.invalidateQueries({ queryKey });
@@ -448,10 +515,13 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
   const applyStatusChange = async (student: any, status: StudentStatus, reason: string) => {
     setIsChangingStatus(true);
     try {
-      await api.updateStudent(student.id, {
-        status,
-        ...(status === 'Withdrawn' && reason.trim() ? { withdrawal_reason: reason.trim() } : {}),
-      });
+      // Withdrawal goes through the dedicated status path rather than the full
+      // record update, so a withdrawal cannot accidentally rewrite the
+      // student's name or admission number.
+      if (status === 'Withdrawn') {
+        const result = await setStudentStatus(student.id, 'WITHDRAWN');
+        if (!result.success) throw new Error(result.error);
+      }
       queryClient.invalidateQueries({ queryKey });
       toast.success(`${student.name} marked as ${status}`);
       setPendingStatusChange(null);
@@ -463,125 +533,70 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
     }
   };
 
-  // Class groups (with headcounts) that survive the status filter and the
-  // grade/section `filter` prop — the same population the old client-side
-  // filtering produced, minus the rows.
+  // Group the matching students by their real class name.
+  //
+  // The previous grouping produced "Senior Secondary", "Junior Secondary" and
+  // "Preschool / Nursery" — all empty for SRIK, which teaches Years 1-6, so
+  // most of the tree was scaffolding for stages the school does not have.
   const groups = useMemo<ClassGroup[]>(() => {
     const byName = new Map<string, ClassGroup>();
-    for (const r of summary) {
-      if (statusFilter !== 'All' && (r.status || 'Active') !== statusFilter) continue;
-      if (filter && (r.grade !== filter.grade || (filter.section && r.section !== filter.section))) continue;
-      const name = classNameFor(r.grade, r.section);
-      const g = byName.get(name) || { name, grade: r.grade, sections: [], total: 0 };
-      const sec = r.section ?? null;
-      if (!g.sections.includes(sec)) g.sections.push(sec);
-      g.total += r.count;
-      byName.set(name, g);
+    for (const s of matchingStudents) {
+      const name = s.className || UNASSIGNED;
+      // `yearLevel` comes from the database column, not from the class name.
+      // Class names are labels the school may rename at any time, so deriving a
+      // number from the text would break silently on the next rename — and a
+      // name like "Al-Junaidi" has no number at all.
+      const group = byName.get(name) || { name, total: 0, yearLevel: s.yearLevel };
+      group.total += 1;
+      byName.set(name, group);
     }
-    return [...byName.values()];
-  }, [summary, statusFilter, filter]);
-
-  // Search results are already rows, so they group exactly as the roster used to.
-  const filteredStudentsList = useMemo(() => {
-    if (!isSearching) return [] as Student[];
-    return searchResults.filter(student => {
-      if (filter) {
-        const gradeMatch = student.grade === filter.grade;
-        const sectionMatch = !filter.section || student.section === filter.section;
-        return gradeMatch && sectionMatch;
-      }
-      return true;
+    // Class order: Year 1 first, and "Unassigned" last so students still to be
+    // placed are easy to find rather than buried at the top.
+    return [...byName.values()].sort((a, b) => {
+      if (a.name === UNASSIGNED) return 1;
+      if (b.name === UNASSIGNED) return -1;
+      return (a.yearLevel ?? 0) - (b.yearLevel ?? 0) || a.name.localeCompare(b.name);
     });
-  }, [isSearching, searchResults, filter]);
+  }, [matchingStudents]);
 
-  const sortClassNames = (names: string[]) => [...names].sort((a, b) => {
-    const gradeA = parseInt(a.match(/\d+/)?.[0] || '0');
-    const gradeB = parseInt(b.match(/\d+/)?.[0] || '0');
-    if (gradeA !== gradeB) return gradeB - gradeA;
-    const sectionA = a.match(/[A-Z]/)?.[0] || '';
-    const sectionB = b.match(/[A-Z]/)?.[0] || '';
-    return sectionA.localeCompare(sectionB);
-  });
+  const studentsByClass = useMemo(() => {
+    const map: Record<string, StudentListRow[]> = {};
+    for (const s of matchingStudents) {
+      const name = s.className || UNASSIGNED;
+      (map[name] ||= []).push(s);
+    }
+    return map;
+  }, [matchingStudents]);
 
-  type Stage = 'preschool' | 'lower' | 'upper' | 'junior' | 'senior';
-  const stageOf = (grade: number | null): Stage => {
-    if (grade === null || grade === undefined) return 'preschool';
-    if (grade <= 0) return 'preschool';
-    if (grade <= 3) return 'lower';
-    if (grade <= 6) return 'upper';
-    if (grade <= 9) return 'junior';
-    return 'senior';
-  };
+  const classesForClassView = groups;
 
-  // Stage -> ordered class groups. From the summary normally; from the search
-  // results (as synthetic groups whose rows are already loaded) while searching.
-  const groupsByStage = useMemo(() => {
-    const stages: Record<Stage, ClassGroup[]> = { preschool: [], lower: [], upper: [], junior: [], senior: [] };
-    const source: ClassGroup[] = isSearching
-      ? (() => {
-          const byName = new Map<string, ClassGroup>();
-          filteredStudentsList.forEach(student => {
-            const grade = student.grade === null || student.grade === undefined ? null : student.grade;
-            const name = classNameFor(grade, student.section);
-            const g = byName.get(name) || { name, grade, sections: [student.section ?? null], total: 0 };
-            g.total += 1;
-            byName.set(name, g);
-          });
-          return [...byName.values()];
-        })()
-      : groups;
-    source.forEach(g => stages[stageOf(g.grade)].push(g));
-    (Object.keys(stages) as Stage[]).forEach(k => {
-      const order = sortClassNames(stages[k].map(g => g.name));
-      stages[k] = order.map(n => stages[k].find(g => g.name === n)!);
-    });
-    return stages;
-  }, [isSearching, filteredStudentsList, groups]);
-
-  const searchRowsByClass = useMemo(() => {
-    const byName: Record<string, Student[]> = {};
-    filteredStudentsList.forEach(student => {
-      const name = classNameFor(student.grade === null || student.grade === undefined ? null : student.grade, student.section);
-      (byName[name] ||= []).push(student);
-    });
-    return byName;
-  }, [filteredStudentsList]);
-
-  const classesForClassView = useMemo(() => {
-    const all = (Object.values(groupsByStage) as ClassGroup[][]).flat();
-    return all.sort((a, b) => a.name.localeCompare(b.name));
-  }, [groupsByStage]);
-
-  const countOf = (gs: ClassGroup[]) => gs.reduce((n, g) => n + g.total, 0);
-  const seniorCount = countOf(groupsByStage.senior);
-  const juniorCount = countOf(groupsByStage.junior);
-  const lowerPrimaryCount = countOf(groupsByStage.lower);
-  const upperPrimaryCount = countOf(groupsByStage.upper);
-  const preschoolCount = countOf(groupsByStage.preschool);
-  const primaryCount = lowerPrimaryCount + upperPrimaryCount;
-  const totalCount = seniorCount + juniorCount + primaryCount + preschoolCount;
+  const totalCount = matchingStudents.length;
 
   // A class section's body: already-loaded rows while searching, otherwise
   // fetched on expand.
   const renderClassBody = (g: ClassGroup) => (
-    isSearching
-      ? (searchRowsByClass[g.name] || []).map(s => <StudentRow key={s.id} student={s} onSelect={handleStudentSelect} onStatusChange={handleStatusChange} />)
-      : <ClassStudents schoolId={schoolId} branchId={branchArg} group={g} statusFilter={statusFilter} onSelect={handleStudentSelect} onStatusChange={handleStatusChange} />
+    <ClassStudents
+      group={g}
+      rows={studentsByClass[g.name] || []}
+      statusFilter={statusFilter}
+      onSelect={handleStudentSelect}
+      onStatusChange={handleStatusChange}
+    />
   );
 
   const renderContent = () => {
-    if (isLoading || (isSearching && searchLoading)) {
+    if (isLoading) {
       return <LoadingState type="list" rows={8} className="p-2" />;
     }
 
-    if (isError || (isSearching && searchError)) {
+    if (isError) {
       return (
         <div className="flex flex-col items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-red-100 text-center m-2">
           <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
             <CircleAlert className="w-6 h-6 text-red-500" />
           </div>
           <h3 className="font-bold text-gray-900 mb-1">Failed to Load Students</h3>
-          <p className="text-sm text-gray-500 mb-4">{String(fetchError || 'Search failed')}</p>
+          <p className="text-sm text-gray-500 mb-4">{String(fetchError || 'Could not load students')}</p>
           <button
             onClick={() => (isSearching ? queryClient.invalidateQueries({ queryKey }) : refetch())}
             className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors"
@@ -623,60 +638,31 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
       );
     }
 
+    // "Stage" view: the class list, grouped by year band so a long list stays
+    // navigable. Bands with no students are omitted entirely rather than shown
+    // empty, which is what the old fixed tree did for stages SRIK does not have.
+    const bands: Array<{ title: string; groups: ClassGroup[] }> = [
+      { title: 'Year 1 - 3', groups: groups.filter(g => g.yearLevel !== null && g.yearLevel <= 3) },
+      { title: 'Year 4 - 6', groups: groups.filter(g => g.yearLevel !== null && g.yearLevel > 3) },
+      { title: 'Unassigned', groups: groups.filter(g => g.yearLevel === null) },
+    ].filter(b => b.groups.length > 0);
+
     return (
       <>
-        {seniorCount > 0 && (
-          <StageAccordion title="Senior Secondary" count={seniorCount} forceOpen={isSearching}>
-            {groupsByStage.senior.map(g => (
-              <SubStageAccordion key={g.name} title={g.name} count={g.total} forceOpen={isSearching}>
-                {renderClassBody(g)}
-              </SubStageAccordion>
-            ))}
-          </StageAccordion>
-        )}
-
-        {juniorCount > 0 && (
-          <StageAccordion title="Junior Secondary" count={juniorCount} forceOpen={isSearching}>
-            {groupsByStage.junior.map(g => (
-              <SubStageAccordion key={g.name} title={g.name} count={g.total} forceOpen={isSearching}>
-                {renderClassBody(g)}
-              </SubStageAccordion>
-            ))}
-          </StageAccordion>
-        )}
-
-        {primaryCount > 0 && (
-          <StageAccordion title="Primary School" count={primaryCount} forceOpen={isSearching}>
-            {upperPrimaryCount > 0 && (
-              <SubStageAccordion title="Upper Primary (4-6)" count={upperPrimaryCount} forceOpen={isSearching}>
-                {groupsByStage.upper.map(g => (
-                  <ClassAccordion key={g.name} title={g.name} count={g.total} forceOpen={isSearching}>
-                    {renderClassBody(g)}
-                  </ClassAccordion>
-                ))}
-              </SubStageAccordion>
-            )}
-            {lowerPrimaryCount > 0 && (
-              <SubStageAccordion title="Lower Primary (1-3)" count={lowerPrimaryCount} forceOpen={isSearching}>
-                {groupsByStage.lower.map(g => (
-                  <ClassAccordion key={g.name} title={g.name} count={g.total} forceOpen={isSearching}>
-                    {renderClassBody(g)}
-                  </ClassAccordion>
-                ))}
-              </SubStageAccordion>
-            )}
-          </StageAccordion>
-        )}
-
-        {preschoolCount > 0 && (
-          <StageAccordion title="Preschool / Nursery" count={preschoolCount} forceOpen={isSearching}>
-            {groupsByStage.preschool.map(g => (
+        {bands.map(band => (
+          <StageAccordion
+            key={band.title}
+            title={band.title}
+            count={band.groups.reduce((n, g) => n + g.total, 0)}
+            forceOpen={isSearching}
+          >
+            {band.groups.map(g => (
               <ClassAccordion key={g.name} title={g.name} count={g.total} forceOpen={isSearching}>
                 {renderClassBody(g)}
               </ClassAccordion>
             ))}
           </StageAccordion>
-        )}
+        ))}
       </>
     );
   };

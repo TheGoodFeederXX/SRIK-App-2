@@ -5,13 +5,13 @@ import prisma from '../config/database';
 
 /**
  * Per-school PWA branding: when a signed-in user installs the app ("Download"),
- * the home-screen icon and name are the SCHOOL's, not the generic Oliskey ones.
+ * the home-screen icon and name are the SCHOOL's, not a generic vendor's.
  *
  * The browser reads <link rel="manifest"> and fetches its icons WITHOUT auth,
  * so these two endpoints are public. They only ever expose a school's name and
  * logo — both already shown on public pages — never anything else. A school
- * without a logo (or whose logo cannot be fetched) gets the default Oliskey
- * icons, so installing never fails.
+ * without a logo (or whose logo cannot be fetched) gets the default icons, so
+ * installing never fails.
  *
  * Icons are rendered from the logo with sharp into square PNGs (padded, white
  * background) because manifest icons must be PNG at fixed sizes and the logo
@@ -35,8 +35,12 @@ const usableLogo = (url: string | null | undefined) => !!url && /^https?:\/\//.t
 
 export const schoolManifest = async (req: Request, res: Response) => {
     const school = await loadSchool(String(req.params.id));
-    const base = { start_url: '/', id: '/', scope: '/', display: 'standalone', orientation: 'portrait', background_color: '#ffffff', theme_color: '#4F46E5' };
-    const name = school?.name?.trim() || 'Oliskey School App';
+    const base = { start_url: '/', id: '/', scope: '/', display: 'standalone', orientation: 'portrait', background_color: '#ffffff', theme_color: '#0F766E' };
+    // The fallback is the school's own name. It was the vendor's, so a school row
+    // with no name installed an app called "Oliskey School App" on a teacher's
+    // phone. This value is the HOME-SCREEN LABEL an installer sees, which makes
+    // it the most visible string in the whole system.
+    const name = school?.name?.trim() || 'SRI Al-Khairiah';
     const hasLogo = !!school && usableLogo(school.logo_url);
     // The icon URL carries a version derived from the logo URL. A changed logo
     // is therefore a NEW icon URL: neither the browser cache nor the CDN can
@@ -57,7 +61,7 @@ export const schoolManifest = async (req: Request, res: Response) => {
         ...base,
         name,
         short_name: name.length > 12 ? name.slice(0, 12).trim() : name,
-        description: `${name} on the Oliskey School App`,
+        description: `Sistem pengurusan ${name}`,
         icons: [icon(192, 'any'), icon(512, 'any'), icon(192, 'maskable'), icon(512, 'maskable')],
     });
 };

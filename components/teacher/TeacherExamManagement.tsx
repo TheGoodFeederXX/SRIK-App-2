@@ -173,7 +173,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                                 : <span className="text-amber-600 ml-1">Pending</span>
                                             }
                                         </p>
-                                        <p className="text-sm text-gray-600 font-medium">{new Date(exam.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                                        <p className="text-sm text-gray-600 font-medium">{new Date(exam.date).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                                     </div>
                                 </div>
                                 <div className="flex justify-between items-center border-t border-gray-100 pt-3">

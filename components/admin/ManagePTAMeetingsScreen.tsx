@@ -229,7 +229,7 @@ const ManagePTAMeetingsScreen: React.FC = () => {
                                 {upcomingMeetings.map((meeting, mi) => (
                                     <motion.div key={meeting.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(mi, 15) * 0.03 }} className="flex flex-col md:flex-row p-4 bg-gray-50 border border-gray-100 rounded-xl hover:bg-white hover:shadow-sm transition-all">
                                         <div className="flex-shrink-0 w-24 text-gray-500 text-sm font-medium mb-2 md:mb-0">
-                                            {new Date(meeting.date).toLocaleDateString()}
+                                            {new Date(meeting.date).toLocaleDateString("ms-MY")}
                                         </div>
                                         <div className="flex-grow">
                                             <div className="flex justify-between items-start">
@@ -267,7 +267,7 @@ const ManagePTAMeetingsScreen: React.FC = () => {
                                 {pastMeetings.map(meeting => (
                                     <div key={meeting.id} className="flex flex-col md:flex-row p-4 bg-gray-50 border border-gray-100 rounded-xl">
                                         <div className="flex-shrink-0 w-24 text-gray-400 text-sm font-medium mb-2 md:mb-0">
-                                            {new Date(meeting.date).toLocaleDateString()}
+                                            {new Date(meeting.date).toLocaleDateString("ms-MY")}
                                         </div>
                                         <div className="flex-grow">
                                             <div className="flex justify-between items-start">

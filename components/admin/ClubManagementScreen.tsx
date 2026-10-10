@@ -154,7 +154,7 @@ const ClubManagementScreen = () => {
                                     {achievements.length === 0 ? <p className="text-sm text-gray-400">None logged yet.</p> : achievements.map((a: any) => (
                                         <div key={a.id} className="text-sm bg-gray-50 rounded-lg px-3 py-1.5 flex justify-between">
                                             <span>{a.title} — {a.student?.full_name}</span>
-                                            <span className="text-gray-400">{new Date(a.date).toLocaleDateString()}</span>
+                                            <span className="text-gray-400">{new Date(a.date).toLocaleDateString("ms-MY")}</span>
                                         </div>
                                     ))}
                                 </div>

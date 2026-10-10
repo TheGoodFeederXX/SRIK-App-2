@@ -1,18 +1,18 @@
 {
-    "name": "Oliskey School App",
-    "short_name": "Oliskey",
-    "description": "Complete school management system for students, teachers, parents and administrators",
+    "name": "SRI Al-Khairiah",
+    "short_name": "SRIK",
+    "description": "Sistem pengurusan Sekolah Rendah Islam Al-Khairiah — pelajar, guru, ibu bapa dan pentadbir.",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#4F46E5",
+    "theme_color": "#0F766E",
     "orientation": "portrait-primary",
     "scope": "/",
     "categories": [
         "education",
         "productivity"
     ],
-    "lang": "en-NG",
+    "lang": "ms-MY",
     "dir": "ltr",
     "icons": [
         {
@@ -35,22 +35,22 @@
     ],
     "shortcuts": [
         {
-            "name": "Mark Attendance",
-            "short_name": "Attendance",
-            "description": "Quick access to mark student attendance",
+            "name": "Ambil Kehadiran",
+            "short_name": "Kehadiran",
+            "description": "Tanda kehadiran murid dengan cepat",
             "url": "/attendance"
         },
         {
-            "name": "Messages",
-            "short_name": "Messages",
-            "description": "View and send messages",
+            "name": "Mesej",
+            "short_name": "Mesej",
+            "description": "Lihat dan hantar mesej",
             "url": "/messages"
         },
         {
-            "name": "Pay Fees",
-            "short_name": "Pay",
-            "description": "Pay school fees",
-            "url": "/payments"
+            "name": "Pengumuman",
+            "short_name": "Notis",
+            "description": "Baca notis daripada pihak sekolah",
+            "url": "/announcements"
         }
     ],
     "prefer_related_applications": false,

@@ -243,7 +243,7 @@ const EquipmentInventoryScreen = () => {
                                                     <span className={`text-sm font-bold ${isOverdue(item.next_service_date) ? 'text-red-600' :
                                                         isNearService(item.next_service_date) ? 'text-amber-600' : 'text-gray-600'
                                                         }`}>
-                                                        {new Date(item.next_service_date).toLocaleDateString()}
+                                                        {new Date(item.next_service_date).toLocaleDateString("ms-MY")}
                                                     </span>
                                                     {isOverdue(item.next_service_date) && <AlertCircle className="w-4 h-4 text-red-500 animate-pulse" />}
                                                 </div>

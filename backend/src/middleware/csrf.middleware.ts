@@ -31,6 +31,9 @@ export const {
     getSessionIdentifier: (req: Request) => {
         // Lead DevSecOps: Use a stable constant for session identifier to rule out 
         // mismatches during the cross-site auth handshake.
+        // The cookie key is a STORED identifier, so it is deliberately not
+        // renamed: changing it would invalidate every session already open and
+        // sign every signed-in user out mid-work. It is not shown to anyone.
         return 'oliskey-session';
     },
     cookieName: 'psid-csrf',

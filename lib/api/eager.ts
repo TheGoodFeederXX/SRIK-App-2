@@ -55,17 +55,6 @@ export async function demoLogin(role: string): Promise<any> {
     }
 }
 
-export async function googleLogin(credential: string): Promise<any> {
-    apiCore.clearCsrfToken();
-    // The raw signed ID token is sent as-is — the backend verifies it against
-    // Google directly. We never send a locally-decoded email/name, since that
-    // would let anyone claim to be any user with a plain API call.
-    const result = await apiCore.post<any>('/auth/google-login', { credential });
-    if (result.token) sessionStorage.setItem('auth_token', result.token);
-    if (result.refreshToken) sessionStorage.setItem('auth_refresh_token', result.refreshToken);
-    return result;
-}
-
 export async function forgotPassword(email: string): Promise<any> {
     return apiCore.post('/auth/forgot-password', { email });
 }
@@ -79,7 +68,7 @@ export async function getSchoolById(schoolId: string): Promise<any> {
 }
 
 export async function getActiveBranchId(): Promise<{ school_generated_id: string; branch_id: string | null; is_main_admin?: boolean }> {
-    // NOT under /auth â€” the client strips the branch header from /auth/* calls.
+    // NOT under /auth — the client strips the school header from /auth/* calls.
     return apiCore.get('/active-branch-id');
 }
 

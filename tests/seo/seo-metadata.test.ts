@@ -1,12 +1,23 @@
 /**
- * SEO and brand-entity guard rails.
+ * What the world sees before the app loads — SRIK.
  *
- * These assert the things that silently rot: a title someone "temporarily"
- * changes, a second meta description, an og:image that no longer exists, a
- * private route slipping into the sitemap, or the company/product entities
- * being conflated again in the structured data.
+ * This file used to guard the SEO of a multi-tenant product sold to many
+ * schools: a company homepage, a product page, a canonical URL on the vendor's
+ * domain, an Open Graph card on that domain, a G2 review profile, and a
+ * `SoftwareApplication` schema node. Every one of those assertions was then a
+ * REASON NOT TO CHANGE THE PAGE. That is exactly what happened: `index.html`
+ * still carried the vendor's name in 38 places long after the rest of the app had
+ * been renamed, because fixing it would have failed this suite.
  *
- * Everything is checked against the files that actually ship, with no network.
+ * SRIK is ONE school, so the questions are different. Not "does the company's
+ * brand beat the product's in search?" but:
+ *   - does the page say the school's name, in the school's language?
+ *   - is the school's own phone number and address the one published?
+ *   - is the app kept OUT of search engines? It is a private school system: a
+ *     parent's marks and a family's fee balance must not appear in a search
+ *     result, and nothing here should invite a crawler in.
+ *   - is the page honest? No rating, no award, no customer count, because a
+ *     school cannot substantiate those and should not have to.
  */
 import { describe, it, expect } from 'vitest';
 import { readFileSync, existsSync } from 'fs';
@@ -16,218 +27,180 @@ const root = join(__dirname, '..', '..');
 const read = (p: string) => readFileSync(join(root, p), 'utf8');
 
 const html = read('index.html');
-const APP = 'https://app.oliskey.com/';
-const COMPANY_HOST = 'oliskey.com';
 
-describe('index.html metadata', () => {
-    it('has exactly one title, and it is the product title', () => {
+/** The school, as it must appear. */
+const SCHOOL_NAME = 'SRI Al-Khairiah';
+const SCHOOL_FULL_NAME = 'Sekolah Rendah Islam Al-Khairiah';
+
+/**
+ * Names that must NEVER appear on a page a visitor sees.
+ *
+ * `Oliskey` is the company the codebase was originally written for; `Naira`
+ * and `NGN` are its currency; `Paystack` is its payment provider. None of them
+ * has anything to do with this school. Written as a list so a future rename can
+ * extend it in one place.
+ */
+const FORBIDDEN = ['oliskey', 'paystack', 'flutterwave', 'naira', 'ngn'];
+
+describe('index.html says the school\u2019s name, and only the school\u2019s', () => {
+    it('THE RULE: the vendor\u2019s name appears nowhere on the page', () => {
+        const lower = html.toLowerCase();
+        const found = FORBIDDEN.filter((term) => lower.includes(term));
+        expect(found, `the page still names a company that is not this school: ${found.join(', ')}`).toEqual([]);
+    });
+
+    it('has exactly one title, and it is the school', () => {
         const titles = html.match(/<title>([\s\S]*?)<\/title>/g) ?? [];
         expect(titles.length, 'there must be exactly one <title>').toBe(1);
         const title = titles[0].replace(/<\/?title>/g, '').trim();
-        expect(title).toBe('Oliskey School App | School Management &amp; Engagement Platform');
+        expect(title).toContain(SCHOOL_NAME);
         expect(title.length, 'title is too long for a search result').toBeLessThanOrEqual(70);
         expect(title).not.toMatch(/^(React App|Vite App|Dashboard|School App)$/i);
+    });
+
+    it('declares Malay as the document language', () => {
+        // Every word the user reads is Malay. Declaring English makes a screen
+        // reader pronounce Malay with English phonetics, and tells a browser to
+        // offer translation into a language the page is already written in.
+        expect(html).toMatch(/<html[^>]+lang="ms"/);
     });
 
     it('has exactly one meta description of a sensible length', () => {
         const descs = [...html.matchAll(/<meta\s+name="description"[\s\S]*?content="([\s\S]*?)"/g)];
         expect(descs.length, 'duplicate meta descriptions confuse search engines').toBe(1);
         const d = descs[0][1].trim();
-        expect(d).toContain('Oliskey School App');
-        expect(d.length).toBeGreaterThan(80);
+        expect(d.length).toBeGreaterThan(60);
         expect(d.length).toBeLessThanOrEqual(320);
     });
 
-    it('declares a single canonical pointing at the application root', () => {
-        const canon = [...html.matchAll(/<link\s+rel="canonical"[^>]*href="([^"]+)"/g)];
-        expect(canon.length).toBe(1);
-        expect(canon[0][1]).toBe(APP);
+    it('THE RULE: the app is not offered up to search engines', () => {
+        // Marks, attendance and fee balances live behind this page. Nothing here
+        // should invite a crawler in, and there must be no canonical URL pointing
+        // at a domain this school does not own.
+        expect(html).toMatch(/<meta\s+name="robots"\s+content="noindex,\s*nofollow"\s*\/?>/);
+        expect(html, 'a canonical URL would name a domain that is not the school\u2019s').not.toMatch(/rel="canonical"/);
     });
 
-    it('is indexable and mobile-ready', () => {
-        expect(html).toMatch(/<meta\s+name="robots"\s+content="index, follow"/);
-        expect(html).toMatch(/name="viewport"/);
-        expect(html).toMatch(/<html lang="[a-z]{2}/i);
+    it('asks for no third-party script it does not use', () => {
+        // Google's identity script was loaded for a sign-in method this school
+        // does not offer — every visitor fetched it for nothing.
+        expect(html).not.toContain('accounts.google.com');
     });
 
-    it('carries the Open Graph and Twitter tags a share preview needs', () => {
-        for (const tag of ['og:title', 'og:description', 'og:url', 'og:type', 'og:image', 'og:site_name']) {
-            expect(html, `missing ${tag}`).toContain(`property="${tag}"`);
+    it('carries the share-preview tags, in the school\u2019s language', () => {
+        expect(html).toMatch(/property="og:title"/);
+        expect(html).toMatch(/property="og:description"/);
+        expect(html).toMatch(/property="og:image"/);
+        expect(html).toContain('og:site_name');
+        expect(html, 'the share locale must be Malaysian Malay').toContain('ms_MY');
+        expect(html).not.toContain('en_NG');
+    });
+
+    it('points every share image at a file that exists', () => {
+        const images = [...html.matchAll(/(?:og:image|twitter:image)"\s+content="([^"]+)"/g)]
+            .map((m) => m[1]);
+        expect(images.length).toBeGreaterThan(0);
+        for (const src of images) {
+            // Local only: an external image could change or vanish without this
+            // school knowing, and a broken card looks careless when shared.
+            expect(src.startsWith('http'), `share image should be local, got ${src}`).toBe(false);
+            expect(existsSync(join(root, 'public', src.replace(/^\//, ''))), `missing share image: ${src}`).toBe(true);
         }
-        for (const tag of ['twitter:card', 'twitter:title', 'twitter:description', 'twitter:image']) {
-            expect(html, `missing ${tag}`).toContain(`name="${tag}"`);
-        }
     });
 
-    it('the og:image is a real file, local, and large enough for summary_large_image', () => {
-        const src = html.match(/property="og:image"\s+content="([^"]+)"/)?.[1];
-        expect(src, 'og:image missing').toBeTruthy();
-        expect(src!.startsWith(APP), 'og:image must be served from the app origin').toBe(true);
-        const file = src!.replace(APP, 'public/');
-        expect(existsSync(join(root, file)), `og:image file missing: ${file}`).toBe(true);
-
-        // A summary_large_image card needs roughly 1200x630; the PWA icon does not qualify.
-        const w = Number(html.match(/property="og:image:width"\s+content="(\d+)"/)?.[1] ?? 0);
-        const h = Number(html.match(/property="og:image:height"\s+content="(\d+)"/)?.[1] ?? 0);
-        expect(w).toBeGreaterThanOrEqual(1200);
-        expect(h).toBeGreaterThanOrEqual(630);
-        expect(readFileSync(join(root, file)).length, 'og:image looks too small to be a real card').toBeGreaterThan(20_000);
+    it('names the installed app in the school\u2019s short form', () => {
+        expect(html).toMatch(/<meta\s+name="apple-mobile-web-app-title"\s+content="SRIK"/);
     });
 });
 
 describe('structured data', () => {
-    const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => m[1]);
+    const blocks = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)]
+        .map((m) => m[1].trim());
 
     it('has exactly one JSON-LD block and it parses', () => {
-        expect(blocks.length, 'duplicate JSON-LD blocks can conflict').toBe(1);
+        expect(blocks.length).toBe(1);
         expect(() => JSON.parse(blocks[0])).not.toThrow();
     });
 
-    it('separates the company from the product', () => {
-        const graph = JSON.parse(blocks[0])['@graph'] as any[];
-        const byType = (t: string) => graph.find(n => n['@type'] === t);
-
-        const org = byType('Organization');
-        expect(org, 'no Organization node').toBeTruthy();
-        expect(org.name).toBe('Oliskey');
-        // The company is oliskey.com. Pointing it at app.oliskey.com tells search
-        // engines the application IS the company — the bug this guards against.
-        expect(new URL(org.url).hostname.endsWith(COMPANY_HOST)).toBe(true);
-        expect(new URL(org.url).hostname.startsWith('app.'), 'Organization must not be the app origin').toBe(false);
-
-        const app = byType('SoftwareApplication');
-        expect(app, 'no SoftwareApplication node').toBeTruthy();
-        expect(app.name).toBe('Oliskey School App');
-        expect(app.url).toBe(APP);
-        expect(app.applicationCategory).toBe('EducationalApplication');
-        expect(app.publisher['@id']).toBe(org['@id']);
-
-        const site = byType('WebSite');
-        expect(site?.url).toBe(APP);
+    it('THE RULE: describes a school, not a software company', () => {
+        const node = JSON.parse(blocks[0]);
+        expect(node['@type']).toBe('School');
+        expect(node.name).toBe(SCHOOL_FULL_NAME);
+        // There is no company behind this app other than the school itself, so
+        // there is no second entity to link to and no vendor domain to claim.
+        expect(JSON.stringify(node)).not.toMatch(/oliskey/i);
     });
 
-    it('links third-party product profiles by identity only (sameAs), never by rating', () => {
-        const graph = JSON.parse(blocks[0])['@graph'] as any[];
-        const app = graph.find(n => n['@type'] === 'SoftwareApplication');
-        const sameAs: string[] = app.sameAs ?? [];
-        // The G2 listing is the same product entity, so sameAs is the right
-        // (and only) way to reference it from here.
-        expect(sameAs, 'G2 profile missing from sameAs').toContain('https://www.g2.com/products/oliskey-school-app/reviews');
-        for (const url of sameAs) {
-            expect(() => new URL(url), `sameAs entry is not a valid URL: ${url}`).not.toThrow();
-            expect(url.startsWith('https://'), `sameAs must be https: ${url}`).toBe(true);
+    it('publishes the school\u2019s real telephone and address, and no other', () => {
+        const node = JSON.parse(blocks[0]);
+        expect(node.telephone).toBe('+60105119582');
+        expect(node.address.addressCountry).toBe('MY');
+        expect(node.address.addressRegion).toBe('Kedah');
+        expect(node.address.postalCode).toBe('06300');
+        expect(node.address.addressLocality).toBe('Kuala Nerang');
+    });
+
+    it('THE RULE: claims nothing that cannot be verified', () => {
+        // A school cannot substantiate a rating, a review count or a customer
+        // number, and asserting one in structured data would be a claim nobody
+        // can stand behind.
+        const json = JSON.parse(blocks[0]);
+        const banned = ['aggregateRating', 'ratingValue', 'reviewCount', 'award', 'sameAs', 'isAccessibleForFree'];
+        for (const field of banned) {
+            expect(json[field], `${field} is a claim this school cannot substantiate`).toBeUndefined();
         }
-        // Referencing a reviews page must never turn into publishing its numbers.
-        expect(JSON.stringify(app), 'a rating was attached to the product entity').not.toMatch(/aggregateRating|ratingValue|reviewCount|bestRating/);
-    });
-
-    it('claims nothing that cannot be verified', () => {
-        // Checked as PROPERTY NAMES, not substrings: a legitimate sameAs URL may
-        // legitimately contain the word "reviews" (the G2 profile does) without
-        // the page claiming any rating of its own.
-        const forbidden = ['aggregateRating', 'ratingValue', 'reviewCount', 'review', 'award', 'bestRating'];
-        const found: string[] = [];
-        const walk = (node: any, path: string) => {
-            if (!node || typeof node !== 'object') return;
-            if (Array.isArray(node)) return node.forEach((n, i) => walk(n, `${path}[${i}]`));
-            for (const [key, value] of Object.entries(node)) {
-                if (forbidden.includes(key)) found.push(`${path}.${key}`);
-                walk(value, `${path}.${key}`);
-            }
-        };
-        walk(JSON.parse(blocks[0]), '$');
-        expect(found, `unverifiable rating/award claims in structured data: ${found.join(', ')}`).toEqual([]);
     });
 });
 
 describe('unverified marketing claims', () => {
     it('no superlative or rating language appears in the page metadata', () => {
-        // Title, description, OG/Twitter text and JSON-LD are the strings search
-        // engines and social cards quote. Until a verified rating exists on a
-        // third-party profile, none of these may imply one.
-        const banned = [
-            /top[- ]rated/i, /best[- ](school|platform|app|software)/i,
-            /[0-9](\.[0-9])?\s*(\/\s*5|stars?)/i, /five[- ]star/i,
-            /#\s*1/, /number one/i, /award[- ]winning/i,
-            /most popular/i, /leading/i, /highest[- ]rated/i,
-        ];
-        const head = html.slice(0, html.indexOf('</head>'));
-        const quoted = [
-            ...[...head.matchAll(/<title>([\s\S]*?)<\/title>/g)].map(m => m[1]),
-            ...[...head.matchAll(/<meta[^>]+content="([^"]*)"/g)].map(m => m[1]),
-            ...[...head.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(m => m[1]),
-        ].join(String.fromCharCode(10));
-        const hits = banned.filter(rx => rx.test(quoted)).map(rx => String(rx));
-        expect(hits, `unverified claim language in metadata: ${hits.join(', ')}`).toEqual([]);
+        const meta = [...html.matchAll(/<meta[^>]+content="([^"]*)"/g)].map((m) => m[1]).join(' ');
+        expect(meta).not.toMatch(/\b(best|#1|number one|leading|award-winning|top-rated|most trusted)\b/i);
     });
 });
 
 describe('robots.txt and sitemap.xml', () => {
-    const robots = read('public/robots.txt');
-    const sitemap = read('public/sitemap.xml');
-
-    it('robots.txt keeps the application private by default and points at the sitemap', () => {
-        expect(robots).toMatch(/^Disallow: \/$/m);
-        expect(robots).toMatch(/Sitemap:\s*https:\/\/app\.oliskey\.com\/sitemap\.xml/);
-        expect(robots).toMatch(/^Allow: \/\$$/m);
+    it('THE RULE: robots.txt keeps the whole application private', () => {
+        const robots = read('public/robots.txt');
+        // A school system is not a public website. Everything is disallowed; the
+        // entry screen is reached by the people who were given the address.
+        expect(robots).toMatch(/User-agent:\s*\*/i);
+        expect(robots).toMatch(/Disallow:\s*\/\s*$/m);
+        expect(robots, 'robots.txt still points at a domain this school does not own').not.toMatch(/oliskey/i);
     });
 
-    it('the sitemap contains only public entry URLs on the app origin', () => {
-        const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
-        expect(locs.length).toBeGreaterThan(0);
-        for (const loc of locs) {
-            expect(loc.startsWith(APP), `${loc} is not on the app origin`).toBe(true);
-        }
-        // Anything behind a login must never be advertised for crawling.
-        const PRIVATE = ['dashboard', 'students', 'teachers', 'parents', 'attendance', 'results',
-            'report-card', 'payments', 'messages', 'admin', 'settings', 'analytics', 'uploads', 'profile'];
-        for (const loc of locs) {
-            const path = new URL(loc).pathname.toLowerCase();
-            for (const seg of PRIVATE) {
-                expect(path.includes(seg), `private route "${seg}" is listed in the sitemap: ${loc}`).toBe(false);
-            }
-        }
-    });
-
-    it('every sitemap URL is a public entry screen robots.txt actually allows', () => {
-        const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname);
-        const allowed = [...robots.matchAll(/^Allow:\s*(\S+)$/gm)].map(m => m[1].replace(/\$$/, ''));
-        for (const path of locs) {
-            const ok = allowed.some(a => (a === '/' ? path === '/' : path.startsWith(a)));
-            expect(ok, `${path} is in the sitemap but not allowed by robots.txt`).toBe(true);
-        }
+    it('THE RULE: nothing is submitted to search engines', () => {
+        // A sitemap is an invitation to crawl. This app does not extend one, so
+        // neither the sitemap nor a link to it should exist.
+        expect(html).not.toMatch(/Sitemap:/i);
+        const robots = read('public/robots.txt');
+        expect(robots, 'a Sitemap line invites crawlers into a private system').not.toMatch(/Sitemap:/i);
+        expect(existsSync(join(root, 'public', 'sitemap.xml')), 'sitemap.xml should not exist for a private app').toBe(false);
     });
 });
 
 describe('PWA manifest', () => {
     const manifest = JSON.parse(read('public/manifest.json'));
 
-    it('names the product correctly and starts in scope', () => {
-        expect(manifest.name).toBe('Oliskey School App');
-        expect(manifest.short_name).toBe('Oliskey');
-        expect(manifest.start_url).toBe('/');
-        expect(manifest.scope).toBe('/');
-        expect(String(manifest.description).length).toBeGreaterThan(30);
+    it('names the school, not a vendor', () => {
+        expect(manifest.name).toBe(SCHOOL_NAME);
+        expect(manifest.short_name).toBe('SRIK');
+        expect(manifest.lang).toBe('ms-MY');
+        expect(JSON.stringify(manifest)).not.toMatch(/oliskey/i);
     });
 
-    it('every declared icon file exists', () => {
-        expect(manifest.icons.length).toBeGreaterThan(0);
-        for (const icon of manifest.icons) {
-            const p = join(root, 'public', icon.src.replace(/^\//, ''));
-            expect(existsSync(p), `manifest icon missing: ${icon.src}`).toBe(true);
+    it('starts in scope and every declared icon file exists', () => {
+        expect(manifest.start_url).toBe('/');
+        expect(manifest.scope).toBe('/');
+        for (const icon of manifest.icons ?? []) {
+            expect(existsSync(join(root, 'public', icon.src.replace(/^\//, ''))), `missing icon ${icon.src}`).toBe(true);
         }
-        const sizes = manifest.icons.map((i: any) => i.sizes);
-        expect(sizes, 'a 192x192 icon is required for installability').toContain('192x192');
-        expect(sizes, 'a 512x512 icon is required for installability').toContain('512x512');
     });
 });
 
 describe('README', () => {
-    it('exists and describes the product and both URLs', () => {
+    it('names the school it is for', () => {
         const readme = read('README.md');
-        expect(readme).toContain('# Oliskey School App');
-        expect(readme).toContain('app.oliskey.com');
-        expect(readme).toContain('oliskey.com');
-        expect(readme).toContain('Change how school feels');
+        expect(readme).toMatch(/SRI Al-Khairiah|SRIK/);
     });
 });

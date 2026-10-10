@@ -112,7 +112,7 @@ const AssignmentsScreen: React.FC<StudentAssignmentsScreenProps> = ({ studentId,
                         user_id: uid,
                         category: 'Homework',
                         title: 'Assignment Due Soon',
-                        message: `"${a.title}" is due ${new Date(a.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}. Submit before the deadline.`,
+                        message: `"${a.title}" is due ${new Date(a.dueDate).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short' })}. Submit before the deadline.`,
                         timestamp: new Date().toISOString(),
                         is_read: false,
                         audience: ['student'],
@@ -217,7 +217,7 @@ const AssignmentsScreen: React.FC<StudentAssignmentsScreenProps> = ({ studentId,
 
                                         <div className="flex items-center text-sm text-gray-500">
                                             <ClockIcon className="w-4 h-4 mr-1.5" />
-                                            <span>Due: {new Date(assignment.dueDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</span>
+                                            <span>Due: {new Date(assignment.dueDate).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short' })}</span>
                                             {dueSoon && (
                                                 <span className="ml-2 px-2 py-0.5 text-xs font-bold uppercase tracking-wide rounded-full bg-amber-100 text-amber-700">
                                                     Due soon

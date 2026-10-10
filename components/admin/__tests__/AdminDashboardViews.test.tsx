@@ -36,7 +36,9 @@ describe('AdminSidebar Navigation Labels', () => {
         // Based on the sidebar code, we expect these:
         expect(await screen.findByText(/Approvals/i)).toBeInTheDocument();
         expect(await screen.findByText(/Fee Management/i)).toBeInTheDocument();
-        expect(await screen.findByText(/Branches/i)).toBeInTheDocument();
+        // "Branches" was removed from the sidebar. This school has no branches —
+        // there is no `branches` table — so the item opened an empty screen.
+        expect(screen.queryByText(/Branches/i)).not.toBeInTheDocument();
         expect(await screen.findByText(/Settings/i)).toBeInTheDocument();
     });
 

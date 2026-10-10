@@ -128,7 +128,7 @@ export class InsightService {
         const recommendations: string[] = [];
         for (const c of childSummaries) {
             if (c.attendance_pct_30d !== null && c.attendance_pct_30d < 80) recommendations.push(`${c.name}'s attendance has been low this month (${c.attendance_pct_30d}%).`);
-            if (c.unpaid_fees > 0) recommendations.push(`${c.name} has ₦${c.unpaid_fees.toLocaleString()} in unpaid fees.`);
+            if (c.unpaid_fees > 0) recommendations.push(`${c.name} has RM${c.unpaid_fees.toLocaleString('ms-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} in unpaid fees.`);
         }
         if (riskFlags.length > 0) recommendations.push(...riskFlags.map((f: any) => f.message));
 

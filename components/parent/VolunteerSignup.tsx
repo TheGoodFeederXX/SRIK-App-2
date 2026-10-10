@@ -203,7 +203,7 @@ const VolunteerSignup: React.FC = () => {
                                     <div className="space-y-2 text-sm text-gray-600">
                                         <div className="flex items-center space-x-2">
                                             <Calendar className="h-4 w-4" />
-                                            <span>{new Date(opp.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                            <span>{new Date(opp.date).toLocaleDateString('ms-MY', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
                                         </div>
                                         <div className="flex items-center space-x-2">
                                             <Clock className="h-4 w-4" />
@@ -270,7 +270,7 @@ const VolunteerSignup: React.FC = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600">
                                             <div className="flex items-center space-x-2">
                                                 <Calendar className="h-4 w-4" />
-                                                <span>{new Date(signup.volunteer_opportunities.date).toLocaleDateString()}</span>
+                                                <span>{new Date(signup.volunteer_opportunities.date).toLocaleDateString("ms-MY")}</span>
                                             </div>
                                             <div className="flex items-center space-x-2">
                                                 <Clock className="h-4 w-4" />

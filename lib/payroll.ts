@@ -52,7 +52,12 @@ export interface PayslipItem {
 
 // ==================== TAX CONFIGURATION ====================
 
-// Nigerian tax brackets (2024) - configurable
+// NOTE (unresolved): these brackets are the origin product's home-country
+// income-tax bands, NOT Malaysia's. A payslip computed from them deducts the
+// wrong amount for a Malaysian teacher. They are left unchanged only because
+// the correct figures are Malaysia's LHDN MTD/PCB schedule, which this app does
+// not yet implement and which must not be guessed. Replace before payroll goes
+// live.
 const TAX_BRACKETS = [
     { min: 0, max: 300000, rate: 0.07 },
     { min: 300001, max: 600000, rate: 0.11 },
@@ -62,24 +67,28 @@ const TAX_BRACKETS = [
     { min: 3200001, max: Infinity, rate: 0.24 }
 ];
 
+// 8% — likewise the home country's rate; Malaysia's equivalent is the
+// KWSP/PERKESO contribution schedule (see the note above).
 const PENSION_RATE = 0.08; // 8% of gross salary
 const TAX_FREE_ALLOWANCE = 200000; // Annual tax-free allowance
 
 /**
  * Format currency value
+ * The fallback currency is the Ringgit. It used to fall back to a foreign
+ * currency, so a payslip whose currency was missing printed the wrong amount.
  */
-export function formatCurrency(amount: number, currency: string = 'NGN'): string {
+export function formatCurrency(amount: number, currency: string = 'MYR'): string {
     try {
-        return new Intl.NumberFormat('en-NG', {
+        return new Intl.NumberFormat('ms-MY', {
             style: 'currency',
-            currency: currency || 'NGN',
+            currency: currency || 'MYR',
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
         }).format(amount);
     } catch (e) {
         // Fallback for invalid currency or environment issues
-        const symbol = currency === 'USD' ? '$' : '₦';
-        return `${symbol}${amount.toLocaleString()}`;
+        const symbol = currency === 'USD' ? '$' : 'RM';
+        return `${symbol}${amount.toLocaleString('ms-MY')}`;
     }
 }
 

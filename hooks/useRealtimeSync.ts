@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useBranch } from '../context/BranchContext';
+import { useSchoolScope } from '../context/SchoolScopeContext';
 
 /**
  * Start realtime only after the authenticated UI has become interactive.
@@ -9,7 +9,7 @@ import { useBranch } from '../context/BranchContext';
  */
 export function useRealtimeSync() {
     const { user } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const schoolId = user?.user_metadata?.school_id || (user as any)?.school_id || user?.app_metadata?.school_id;
     const userId = user?.id;
     const branchId = currentBranch?.id;

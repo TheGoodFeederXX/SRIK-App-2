@@ -23,7 +23,10 @@ const WORD_CATEGORIES = [
     },
     {
         name: 'Proper Nouns',
-        words: ['Nigeria', 'London', 'Lagos', 'Jupiter', 'Tuesday', 'January', 'Sango'],
+        // Fallback word pool shown before the AI-generated one loads. It carried
+        // NIGERIAN proper nouns (Nigeria, Lagos), so a Malaysian pupil was asked
+        // to recognise country and city names from the wrong country.
+        words: ['Malaysia', 'Kedah', 'Kuala Lumpur', 'Jupiter', 'Tuesday', 'January', 'Melaka'],
         distractors: ['country', 'city', 'day', 'planet', 'month', 'river', 'man']
     },
     {

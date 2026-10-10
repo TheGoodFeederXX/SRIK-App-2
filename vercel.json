@@ -1,7 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
-  "regions": ["fra1"],
+  "regions": [
+    "sin1"
+  ],
   "buildCommand": "npm run build:vercel",
   "outputDirectory": "dist",
   "functions": {

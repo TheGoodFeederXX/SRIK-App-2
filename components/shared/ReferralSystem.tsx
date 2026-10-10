@@ -345,7 +345,7 @@ const ReferralSystem: React.FC = () => {
                                 )}
 
                                 <div className="mt-3 text-xs text-gray-500">
-                                    Submitted: {new Date(referral.created_at).toLocaleDateString()}
+                                    Submitted: {new Date(referral.created_at).toLocaleDateString("ms-MY")}
                                 </div>
                             </motion.div>
                         ))}

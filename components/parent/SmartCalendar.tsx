@@ -91,7 +91,7 @@ export const SmartCalendar: React.FC = () => {
                                         {new Date(event.date).getDate()}
                                     </p>
                                     <p className="text-xs font-bold text-gray-400 uppercase">
-                                        {new Date(event.date).toLocaleString('default', { month: 'short' })}
+                                        {new Date(event.date).toLocaleString('ms-MY', { month: 'short' })}
                                     </p>
                                 </div>
                             </div>

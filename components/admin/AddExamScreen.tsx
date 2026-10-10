@@ -102,7 +102,9 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
     }
   };
 
-  const examTypes = ['Mid-term', 'Final', 'Quiz', 'Test', 'Assessment', 'WAEC', 'NECO', 'IGCSE', 'CHECKPOINT'];
+  // WAEC/NECO are foreign national exam boards this school does not sit; the
+  // school's own exam types are used instead.
+  const examTypes = ['Mid-term', 'Final', 'Quiz', 'Test', 'Assessment', 'Ujian', 'IGCSE', 'CHECKPOINT'];
 
   if (loading && availableClasses.length === 0) {
     return <CenteredLoader message="Loading form data..." className="p-8" />;

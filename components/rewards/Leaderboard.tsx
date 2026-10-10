@@ -141,7 +141,7 @@ const Leaderboard: React.FC = () => {
                                     {/* Points */}
                                     <div className="text-right">
                                         <p className="text-2xl font-bold text-indigo-600">
-                                            {entry.points.toLocaleString()}
+                                            {entry.points.toLocaleString('ms-MY')}
                                         </p>
                                         <p className="text-xs text-gray-500">points</p>
                                     </div>

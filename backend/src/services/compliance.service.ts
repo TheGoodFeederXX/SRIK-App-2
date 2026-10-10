@@ -9,7 +9,7 @@ const CHECK_DEFS = [
     { key: 'student_records', name: 'Student Records', description: 'Every student has a valid ID and is assigned to a class.', frequency: 'Daily' },
     { key: 'staff_assignment', name: 'Staff Assignment', description: 'Every class has an assigned teacher.', frequency: 'Daily' },
     { key: 'finance', name: 'Finance Setup', description: 'Fee structures are configured for the school.', frequency: 'Weekly' },
-    { key: 'data_protection', name: 'Data Protection (NDPR)', description: 'A recent database backup exists (last 30 days).', frequency: 'Weekly' },
+    { key: 'data_protection', name: 'Data Protection (PDPA)', description: 'A recent database backup exists (last 30 days).', frequency: 'Weekly' },
 ];
 
 export class ComplianceService {

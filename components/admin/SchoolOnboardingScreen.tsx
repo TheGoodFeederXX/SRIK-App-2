@@ -16,7 +16,7 @@ interface SchoolProfile {
     email: string;
     phone: string;
     logo_url: string;
-    curricula: string[]; // ['NIGERIAN', 'BRITISH']
+    curricula: string[]; // ['KSSR', 'BRITISH']
 }
 
 interface SchoolDocument {
@@ -27,8 +27,13 @@ interface SchoolDocument {
     expiry_date?: string;
 }
 
-const NIGERIAN_STATES = [
-    "Lagos", "Abuja", "Rivers", "Ogun", "Oyo", "Kano", "Kaduna", "Enugu", "Delta", "Edo", "Anambra", "Plateau", "Benue", "Kwara", "Other"
+// The state list is what a Malaysian school sits in. It held NIGERIAN states
+// (Lagos, Abuja, Kano…) and defaulted to Lagos, so the school's own address
+// could not be entered and every new profile claimed to be in Nigeria.
+const MALAYSIAN_STATES = [
+    "Kedah", "Perlis", "Pulau Pinang", "Perak", "Selangor", "Kuala Lumpur",
+    "Putrajaya", "Negeri Sembilan", "Melaka", "Johor", "Pahang", "Terengganu",
+    "Kelantan", "Sabah", "Sarawak", "Labuan"
 ];
 
 const REQUIRED_DOCS = [
@@ -41,9 +46,9 @@ const REQUIRED_DOCS = [
 const SchoolOnboardingScreen: React.FC = () => {
     const { currentSchool } = useAuth();
     const [profile, setProfile] = useState<SchoolProfile>({
-        name: '', address: '', state: 'Lagos',
+        name: '', address: '', state: 'Kedah',
         email: '', phone: '', logo_url: '',
-        curricula: ['NIGERIAN']
+        curricula: ['KSSR']
     });
     const [documents, setDocuments] = useState<SchoolDocument[]>([]);
     const [loading, setLoading] = useState(true);
@@ -72,9 +77,9 @@ const SchoolOnboardingScreen: React.FC = () => {
                     phone: schoolData.phone || schoolData.contact_phone || '',
                     name: schoolData.name || '',
                     address: schoolData.address || '',
-                    state: schoolData.state || 'Lagos',
+                    state: schoolData.state || 'Kedah',
                     logo_url: schoolData.logo_url || '',
-                    curricula: schoolData.curricula_config || ['NIGERIAN']
+                    curricula: schoolData.curricula_config || ['KSSR']
                 });
             }
 
@@ -225,7 +230,7 @@ const SchoolOnboardingScreen: React.FC = () => {
                                 </div>
                                 <div>
                                     <label className="label">Phone Number</label>
-                                    <input required type="tel" className="input-field" placeholder="+234..." value={profile.phone} onChange={e => setProfile({ ...profile, phone: e.target.value })} />
+                                    <input required type="tel" className="input-field" placeholder="+60..." value={profile.phone} onChange={e => setProfile({ ...profile, phone: e.target.value })} />
                                 </div>
                                 <div className="sm:col-span-2">
                                     <label className="label">Physical Address</label>
@@ -234,7 +239,7 @@ const SchoolOnboardingScreen: React.FC = () => {
                                 <div>
                                     <label className="label">State</label>
                                     <select className="input-field" value={profile.state} onChange={e => setProfile({ ...profile, state: e.target.value })}>
-                                        {NIGERIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                                        {MALAYSIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                                     </select>
                                 </div>
                             </div>
@@ -330,18 +335,21 @@ const SchoolOnboardingScreen: React.FC = () => {
                             <p className="text-sm text-gray-500 mb-6">Choose the curricula your school is accredited to offer. This determines the grading systems and report card formats available.</p>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
-                                {/* Nigerian */}
+                                {/* KSSR — the national curriculum */}
                                 <motion.div
                                     whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                                    onClick={() => toggleCurriculum('NIGERIAN')}
-                                    className={`relative p-5 md:p-6 rounded-xl border-2 cursor-pointer transition-all ${profile.curricula.includes('NIGERIAN') ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}
+                                    onClick={() => toggleCurriculum('KSSR')}
+                                    className={`relative p-5 md:p-6 rounded-xl border-2 cursor-pointer transition-all ${profile.curricula.includes('KSSR') ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}
                                 >
                                     <div className="flex items-center justify-between mb-3 md:mb-4">
                                         <div className="w-10 h-6 md:w-12 md:h-8 bg-green-600 rounded shadow-sm opacity-90"></div> {/* Flag placeholder */}
-                                        {profile.curricula.includes('NIGERIAN') && <CheckCircleIcon className="w-5 h-5 md:w-6 md:h-6 text-green-600" />}
+                                        {profile.curricula.includes('KSSR') && <CheckCircleIcon className="w-5 h-5 md:w-6 md:h-6 text-green-600" />}
                                     </div>
-                                    <h3 className="text-lg md:text-xl font-bold text-gray-900">Nigerian National</h3>
-                                    <p className="text-xs md:text-sm text-gray-600 mt-2">Standard NERDC Curriculum. Uses CA (40%) and Exam (60%) grading structure. Supports WAEC/NECO/BECE.</p>
+                                    <h3 className="text-lg md:text-xl font-bold text-gray-900">KSSR (Kebangsaan)</h3>
+                                    {/* NERDC, WAEC, NECO and BECE are all foreign
+                                        bodies; this school's national curriculum
+                                        and grading are KSSR. */}
+                                    <p className="text-xs md:text-sm text-gray-600 mt-2">Kurikulum KSSR. Uses a continuous-assessment and examination grading structure.</p>
                                 </motion.div>
 
                                 {/* British */}

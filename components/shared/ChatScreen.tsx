@@ -43,8 +43,8 @@ const formatDateLabel = (date: Date): string => {
     const week  = new Date(today.getTime() - 6 * 86_400_000);
     if (date >= today) return 'Today';
     if (date >= yest)  return 'Yesterday';
-    if (date >= week)  return date.toLocaleDateString('en-US', { weekday: 'long' });
-    return date.toLocaleDateString('en-US', {
+    if (date >= week)  return date.toLocaleDateString('ms-MY', { weekday: 'long' });
+    return date.toLocaleDateString('ms-MY', {
         month: 'short', day: 'numeric',
         ...(date.getFullYear() !== now.getFullYear() && { year: 'numeric' })
     });
@@ -640,7 +640,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({
                                                             {last && (
                                                                 <div className={`flex items-center gap-1 px-1 ${isMe ? 'justify-end' : ''}`}>
                                                                     <span className="text-[10px] text-gray-400">
-                                                                        {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                                                        {new Date(msg.createdAt).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}
                                                                     </span>
                                                                     {isMe && <CheckCircleIcon className="w-3 h-3 text-gray-400" />}
                                                                 </div>

@@ -6,7 +6,7 @@ import { useAutoSync } from '../../hooks/useAutoSync';
 import { TrendingUp, Target, TrendingDown, Award, Users, AlertTriangle, Star } from 'lucide-react';
 import CenteredLoader from '../ui/CenteredLoader';
 
-const CANONICAL_TERMS = ['First Term', 'Second Term', 'Third Term'];
+const CANONICAL_TERMS = ['Penggal 1', 'Penggal 2', 'Penggal 3'];
 
 interface GradeDistribution {
     grade: string;

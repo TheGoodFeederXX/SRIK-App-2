@@ -9,8 +9,6 @@ import { runMigrations } from './lib/migrationManager';
 import { cacheCleanupScheduler } from './lib/cacheManager';
 import { useRealtimeSync } from './hooks/useRealtimeSync';
 import { useAuth } from './context/AuthContext';
-import { useSubscriptionGate } from './hooks/useSubscriptionGate';
-import { setAIAllowed } from './lib/ai';
 import { useIdleKeepAlive } from './lib/hooks/useIdleKeepAlive';
 import { lazyWithRetry } from './lib/lazyRetry';
 import { APP_VERSION } from './lib/config';
@@ -30,9 +28,12 @@ import PremiumErrorPage from './components/ui/PremiumErrorPage';
 import ImageLightbox from './components/shared/ImageLightbox';
 
 const DashboardRouter = lazyWithRetry(() => import('./components/DashboardRouter'));
-const Signup = lazyWithRetry(() => import('./components/auth/Signup'));
-const CreateSchoolSignup = lazyWithRetry(() => import('./components/auth/CreateSchoolSignup'));
 const AuthCallback = lazyWithRetry(() => import('./components/auth/AuthCallback'));
+// Used as the landing page for a Supabase password-recovery link. It is the
+// same screen a temporary-password account sees, because both cases mean the
+// same thing: choose a password now.
+const SetPasswordScreen = lazyWithRetry(() => import('./components/auth/SetPasswordScreen'));
+const ChangePasswordScreen = lazyWithRetry(() => import('./components/auth/ChangePasswordScreen'));
 const InviteAcceptScreen = lazyWithRetry(() => import('./components/auth/InviteAcceptScreen'));
 const VerificationGuard = lazyWithRetry(() => import('./components/auth/VerificationGuard'));
 const AIChatScreen = lazyWithRetry(() => import('./components/shared/AIChatScreen'));
@@ -40,7 +41,6 @@ const AIChatWidget = lazyWithRetry(() => import('./components/shared/AIChatWidge
 const MobileNavigationHandler = lazyWithRetry(() => import('./components/shared/MobileNavigationHandler'));
 const ContextualMarquee = lazyWithRetry(() => import('./components/shared/ContextualMarquee'));
 const UpdatePrompt = lazyWithRetry(() => import('./components/shared/UpdatePrompt'));
-const SubscriptionLockScreen = lazyWithRetry(() => import('./components/shared/SubscriptionLockScreen'));
 
 // framer-motion is used by ~250 lazy-loaded screens but by nothing on the
 // login path — yet importing MotionConfig here statically forced the entire
@@ -95,9 +95,8 @@ const LoadingScreen: React.FC = () => (
 );
 
 const AuthenticatedApp: React.FC = () => {
-  const { user, role, signOut, loading, isDemo, currentSchool } = useAuth();
+  const { user, role, signOut, loading, isDemo, currentSchool, mustChangePassword } = useAuth();
   useRealtimeSync();
-  const subscriptionGate = useSubscriptionGate();
 
   useIdleKeepAlive(!!user && !!role && !isDemo);
 
@@ -120,7 +119,6 @@ const AuthenticatedApp: React.FC = () => {
     return () => { if (previous) meta.setAttribute('content', previous); };
   }, [user, role]);
 
-  useEffect(() => { setAIAllowed(subscriptionGate.isAIAllowed); }, [subscriptionGate.isAIAllowed]);
 
   const [latestRegistryVersion, setLatestRegistryVersion] = useState<string | null>(null);
   useEffect(() => {
@@ -148,23 +146,18 @@ const AuthenticatedApp: React.FC = () => {
   const isVersionMismatch = isOutdated(APP_VERSION, latestVersion);
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
-  const [authView, setAuthView] = useState<'login' | 'signup' | 'create-school'>('login');
+
   const [showAuthConfirm, setShowAuthConfirm] = useState(false);
+  // A recovery link that has already been verified lands here. Tracked
+  // separately from showAuthConfirm so the two steps cannot race: the callback
+  // verifies, then navigates, then this flag selects the password screen.
+  const [isSettingPassword, setIsSettingPassword] = useState(
+    typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/set-password'
+  );
 
   useEffect(() => {
     const hash = window.location.hash;
     if (hash.includes('access_token') || hash.includes('type=recovery') || hash.includes('type=signup') || hash.includes('/auth/callback')) setShowAuthConfirm(true);
-  }, []);
-
-  // DashboardLayout's demo-mode "Create Your School" button lives deep under
-  // DashboardRouter, with no direct path to this component's authView state —
-  // it dispatches this event (alongside its own signOut()) instead of forcing
-  // a full page reload, which used to land back on the login screen instead
-  // of Create School.
-  useEffect(() => {
-    const handleDemoCreateSchool = () => setAuthView('create-school');
-    window.addEventListener('demo-create-school', handleDemoCreateSchool);
-    return () => window.removeEventListener('demo-create-school', handleDemoCreateSchool);
   }, []);
 
   const isInviteAccept = window.location.hash.includes('/invite/accept');
@@ -222,32 +215,38 @@ const AuthenticatedApp: React.FC = () => {
   if (loading && !user && hasStoredSession) return <LoadingScreen />;
   if (isInviteAccept) return <InviteAcceptScreen />;
   if (showAuthConfirm) return <AuthCallback />;
-  if (!user || !role) return <>
-    {authView === 'signup' ? <Suspense fallback={<LoadingScreen />}><Signup onNavigateToLogin={() => React.startTransition(() => setAuthView('login'))} /></Suspense> : authView === 'create-school' ? <Suspense fallback={<LoadingScreen />}><CreateSchoolSignup onNavigateToLogin={() => React.startTransition(() => setAuthView('login'))} /></Suspense> : <Login onNavigateToSignup={() => React.startTransition(() => setAuthView('signup'))} onNavigateToCreateSchool={() => React.startTransition(() => setAuthView('create-school'))} />}
-  </>;
+
+  // Password recovery: a verified recovery session must be allowed to set a new
+  // password WITHOUT being treated as a normal signed-in user.
+  if (isSettingPassword) return (
+    <Suspense fallback={<LoadingScreen />}>
+      <SetPasswordScreen key="recovery" onDone={() => { setIsSettingPassword(false); window.location.href = '/'; }} />
+    </Suspense>
+  );
+  // Login is the only unauthenticated screen now: accounts are created by an
+  // administrator, so there is no self-service signup to route to.
+  if (!user || !role) return (
+    <Suspense fallback={<LoadingScreen />}>
+      <Login />
+    </Suspense>
+  );
+  // A user whose account was created with a temporary password cannot reach
+  // any dashboard until they replace it. Placed BEFORE the dashboard renders so
+  // there is no frame in which the app appears usable.
+  if (mustChangePassword) return (
+    <Suspense fallback={<LoadingScreen />}>
+      <ChangePasswordScreen />
+    </Suspense>
+  );
+
   if (isChatOpen) return <AIChatScreen onBack={() => setIsChatOpen(false)} dashboardType={role} />;
 
   if (!user || !role) {
     return (
       <Suspense fallback={<LoadingScreen />}>
-        {/* Login has no framer-motion usage and must never wait on that chunk
-            (it is the critical path). The two signup screens do use motion.*
-            and are lazy chunks themselves, so wrapping just them costs no
-            extra round trip — both chunks fetch under this one boundary. */}
-        {authView === 'signup' ? (
-          <LazyMotionConfig reducedMotion="user">
-            <Signup onNavigateToLogin={() => React.startTransition(() => setAuthView('login'))} />
-          </LazyMotionConfig>
-        ) : authView === 'create-school' ? (
-          <LazyMotionConfig reducedMotion="user">
-            <CreateSchoolSignup onNavigateToLogin={() => React.startTransition(() => setAuthView('login'))} />
-          </LazyMotionConfig>
-        ) : (
-          <Login
-            onNavigateToSignup={() => React.startTransition(() => setAuthView('signup'))}
-            onNavigateToCreateSchool={() => React.startTransition(() => setAuthView('create-school'))}
-          />
-        )}
+        {/* Login has no framer-motion usage and must never wait on that chunk:
+            it is the critical path for every user. */}
+        <Login />
       </Suspense>
     );
   }
@@ -278,16 +277,10 @@ const AuthenticatedApp: React.FC = () => {
           {isVersionMismatch && (
             <UpdatePrompt forced={true} targetVersion={latestVersion} />
           )}
-          {subscriptionGate.isLocked && !window.location.pathname.startsWith('/subscription') ? (
-            <SubscriptionLockScreen />
-          ) : (
-            <>
-              {renderDashboard}
-              {/* The Parent dashboard draws its own AI button (it opens the assistant
-                  inside the dashboard), so this one would sit exactly on top of it. */}
-              {isHomePage && role !== DashboardType.Parent && <AIChatWidget dashboardType={role} onClick={() => setIsChatOpen(true)} />}
-            </>
-          )}
+          {renderDashboard}
+          {/* The Parent dashboard draws its own AI button (it opens the assistant
+              inside the dashboard), so this one would sit exactly on top of it. */}
+          {isHomePage && role !== DashboardType.Parent && <AIChatWidget dashboardType={role} onClick={() => setIsChatOpen(true)} />}
         </VerificationGuard>
         </LazyMotionConfig>
       </Suspense>

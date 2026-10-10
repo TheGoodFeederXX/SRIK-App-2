@@ -109,7 +109,7 @@ const TeacherForum: React.FC = () => {
                                     <div className="flex items-center space-x-4 mt-3 text-sm text-gray-500">
                                         <span>By {thread.author_name}</span>
                                         <span>•</span>
-                                        <span>{new Date(thread.created_at).toLocaleDateString()}</span>
+                                        <span>{new Date(thread.created_at).toLocaleDateString("ms-MY")}</span>
                                         <span>•</span>
                                         <span>{thread.reply_count} replies</span>
                                     </div>

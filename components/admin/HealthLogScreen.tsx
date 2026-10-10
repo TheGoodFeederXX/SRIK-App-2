@@ -534,7 +534,7 @@ const HealthLogScreen: React.FC<HealthLogProps> = ({ schoolId, currentUserId }) 
                                                 <h3 className="font-bold text-gray-900 text-sm">{log.studentName}</h3>
                                                 <div className="flex items-center gap-1.5 text-xs text-gray-500">
                                                     <CalendarIcon className="w-3 h-3" />
-                                                    <span>{new Date(log.date).toLocaleDateString()}</span>
+                                                    <span>{new Date(log.date).toLocaleDateString("ms-MY")}</span>
                                                     <span>•</span>
                                                     <ClockIcon className="w-3 h-3" />
                                                     <span>{log.time}</span>

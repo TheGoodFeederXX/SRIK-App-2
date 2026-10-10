@@ -119,7 +119,7 @@ const ParentNotificationSettingsScreen: React.FC = () => {
              <SettingToggle
                 icon={<NotificationIcon className="text-purple-500"/>}
                 label="Weekly Summary"
-                description="Get a summary report every Monday."
+                description="Get a summary report every Thursday."
                 enabled={weeklySummary}
                 onToggle={() => toggleSetting('weekly_summary')}
                 index={2}

@@ -91,8 +91,12 @@ export class TeacherService {
                     allowed_branch_ids: data.allowed_branch_ids || (branchId ? [branchId] : []),
                     school_generated_id: schoolGeneratedId,
                     status: status || 'Active',
-                    curriculum_type: curriculum_type || 'Nigerian',
-                    curriculum_eligibility: curriculum_eligibility || (curriculum_type ? [curriculum_type] : ['Nigerian']),
+                    // A teacher here teaches the Malaysian national curriculum —
+                    // KSSR at primary level. The default was 'Nigerian', so a
+                    // teacher record created without one was filed as teaching
+                    // another country's syllabus.
+                    curriculum_type: curriculum_type || 'KSSR',
+                    curriculum_eligibility: curriculum_eligibility || (curriculum_type ? [curriculum_type] : ['KSSR']),
                     subject_specialty: effectiveSubjects,
                     trcn_certificate,
                     degree_certificate,

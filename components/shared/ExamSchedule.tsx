@@ -39,7 +39,7 @@ const ExamSchedule: React.FC = () => {
                 id: e.id,
                 type: e.exam_type || e.type || 'Exam',
                 date: e.date ? new Date(e.date).toISOString().split('T')[0] : '',
-                time: e.start_time ? new Date(e.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : undefined,
+                time: e.start_time ? new Date(e.start_time).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }) : undefined,
                 className: e.class_name || e.className || '',
                 subject: e.subject,
                 isPublished: e.is_published ?? e.isPublished ?? false,
@@ -86,7 +86,7 @@ const ExamSchedule: React.FC = () => {
                             <div className="mb-3 pl-1">
                                 <h3 className="font-bold text-lg text-gray-700">
                                     {/* Replace hyphens with slashes for better cross-browser date parsing consistency */}
-                                    {new Date(date.replace(/-/g, '/')).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                    {new Date(date.replace(/-/g, '/')).toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
                                 </h3>
                             </div>
                             <div className="space-y-3">

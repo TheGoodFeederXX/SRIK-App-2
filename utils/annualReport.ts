@@ -1,20 +1,36 @@
 import { ReportCard, ReportCardAcademicRecord } from '../types';
 
-/** The three terms every school session is built from, in order. */
-export const CANONICAL_TERMS = ['First Term', 'Second Term', 'Third Term'];
+/**
+ * The three terms every school year is built from, in order.
+ *
+ * These strings are KEYS, not labels: a report card is filed under one of them
+ * and the annual view finds it by matching. So a term named "First Term" is
+ * invisible to a school that calls it "Penggal 1", and the annual report comes
+ * back empty — which reads as "no results" rather than "the names disagree".
+ */
+export const CANONICAL_TERMS = ['Penggal 1', 'Penggal 2', 'Penggal 3'];
 
+/**
+ * A grade from a total, on the school's scale.
+ *
+ * The bands here were A 70, B 60, C 50, D 45, F — a FOURTH scale in the
+ * codebase, and the only one that ends in F. The school agreed in phase 4:
+ * A 80, B 65, C 50, D 35, E below that. A grade computed for an annual report
+ * has to agree with the one printed on the term report card it summarises, or
+ * the same marks produce two different letters.
+ */
 export function gradeFromTotal(total: number): string {
-    if (total >= 70) return 'A';
-    if (total >= 60) return 'B';
+    if (total >= 80) return 'A';
+    if (total >= 65) return 'B';
     if (total >= 50) return 'C';
-    if (total >= 45) return 'D';
-    return 'F';
+    if (total >= 35) return 'D';
+    return 'E';
 }
 
 /**
- * Combines a set of already-published term report cards (First/Second/Third
- * Term, same session) into one cumulative result — the standard "annual"
- * view shown alongside a Third Term report card. Each subject's total is
+ * Combines a set of already-published term report cards (Penggal 1/2/3, same
+ * session) into one cumulative result — the standard "annual" view shown
+ * alongside a Penggal 3 report card. Each subject's total is
  * the average of whichever terms actually have a score for it, so a
  * subject missing one term's result still gets averaged from the terms it
  * does have rather than being blocked entirely. Attendance is summed

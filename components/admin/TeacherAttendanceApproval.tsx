@@ -89,7 +89,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
 
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+        return date.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' });
     };
 
     const formatTime = (timeString: string) => {

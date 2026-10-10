@@ -22,13 +22,16 @@ export default function ProfessionalStudentProfile({ studentId }: StudentProfile
                     first_name: data.firstName || data.first_name || data.name?.split(' ')[0] || 'Student',
                     last_name: data.lastName || data.last_name || data.name?.split(' ').slice(1).join(' ') || 'Name',
                     email: data.email || 'student@school.com',
-                    phone: data.phone || data.parentPhone || '+234 XXX XXX XXXX',
+                    phone: data.phone || data.parentPhone || '+60 XX XXX XXXX',
                     class_name: data.className || `Grade ${data.grade}${data.section}`,
                     admission_number: data.schoolGeneratedId || data.school_generated_id || 'STU2024001',
                     date_of_birth: data.birthday || data.date_of_birth || '2008-01-15',
-                    address: data.address || 'Lagos, Nigeria',
+                    // Placeholder address. It previously defaulted to "Lagos,
+                    // Nigeria", so a profile with no address on file printed a
+                    // foreign city as if it were the pupil's home.
+                    address: data.address || 'Kuala Nerang, Kedah',
                     guardian_name: data.parentName || data.parent_name || 'Parent Name',
-                    guardian_phone: data.parentPhone || data.parent_phone || '+234 XXX XXX XXXX',
+                    guardian_phone: data.parentPhone || data.parent_phone || '+60 XX XXX XXXX',
                     attendance_rate: data.attendanceRate || 95,
                     average_grade: data.averageGrade || 88,
                 });
@@ -157,7 +160,7 @@ export default function ProfessionalStudentProfile({ studentId }: StudentProfile
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <InfoField icon={<Mail />} label="Email" value={student.email} />
                                 <InfoField icon={<Phone />} label="Phone" value={student.phone} />
-                                <InfoField icon={<Calendar />} label="Date of Birth" value={new Date(student.date_of_birth).toLocaleDateString()} />
+                                <InfoField icon={<Calendar />} label="Date of Birth" value={new Date(student.date_of_birth).toLocaleDateString("ms-MY")} />
                                 <InfoField icon={<MapPin />} label="Address" value={student.address} />
                             </div>
                         </div>

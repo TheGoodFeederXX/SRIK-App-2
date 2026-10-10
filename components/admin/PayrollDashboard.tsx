@@ -375,8 +375,8 @@ const PayrollDashboard: React.FC<PayrollDashboardProps> = ({ navigateTo }) => {
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="text-sm text-gray-600">
-                                                    {new Date(payslip.period_start).toLocaleDateString()} -{' '}
-                                                    {new Date(payslip.period_end).toLocaleDateString()}
+                                                    {new Date(payslip.period_start).toLocaleDateString("ms-MY")} -{' '}
+                                                    {new Date(payslip.period_end).toLocaleDateString("ms-MY")}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">

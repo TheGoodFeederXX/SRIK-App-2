@@ -3,7 +3,7 @@ import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 
 const formatTimestamp = (isoDate: string): string => {
-  return new Date(isoDate).toLocaleString('en-US', {
+  return new Date(isoDate).toLocaleString('ms-MY', {
     month: 'short',
     day: 'numeric',
     hour: 'numeric',

@@ -28,7 +28,7 @@ const ADMIN_STEPS: TourStep[] = [
     { title: 'Welcome to Your Dashboard!', description: 'This is your school\'s command center. You\'ll see an overview of total students, teachers, attendance, and critical alerts right here.', icon: <Home className="w-8 h-8" />, highlight: 'Dashboard Overview' },
     { title: 'Manage Your People', description: 'Add students, teachers, and parents. Approve pending registrations, assign classes, and manage user accounts — all in one place.', icon: <Users className="w-8 h-8" />, highlight: 'People Management' },
     { title: 'Academic Control', description: 'Create timetables with AI, manage exams, enter results, and publish report cards. The gradebook auto-calculates positions and grades.', icon: <BookOpen className="w-8 h-8" />, highlight: 'Academics' },
-    { title: 'Fee Management', description: 'Assign fees by class, track payments, manage arrears, and send automated reminders. Paystack & Flutterwave are built in.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Finance' },
+    { title: 'Fee Management', description: 'Assign fees by class, record payments, track arrears, and send reminders.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Finance' },
     { title: 'Analytics & Reports', description: 'View enrollment trends, attendance heatmaps, financial reports, and build custom reports with our drag-and-drop report builder.', icon: <BarChart3 className="w-8 h-8" />, highlight: 'Analytics' },
     { title: 'Communication Hub', description: 'Send announcements, chat with teachers and parents, schedule conferences, and broadcast emergency alerts.', icon: <MessageSquare className="w-8 h-8" />, highlight: 'Communication' },
     { title: 'Security & Settings', description: 'Configure school settings, manage roles and permissions, view audit logs, and control data backups.', icon: <Settings className="w-8 h-8" />, highlight: 'Settings' },
@@ -45,7 +45,7 @@ const TEACHER_STEPS: TourStep[] = [
 const PARENT_STEPS: TourStep[] = [
     { title: 'Welcome, Parent!', description: 'See all your children\'s daily updates in one dashboard — attendance, homework, fees, and bus status.', icon: <Home className="w-8 h-8" />, highlight: 'Today\'s View' },
     { title: 'Track Progress', description: 'View your child\'s grades, report cards, behavior logs, and attendance history. Get AI-powered insights and tips.', icon: <BarChart3 className="w-8 h-8" />, highlight: 'Progress' },
-    { title: 'Pay Fees Online', description: 'Pay school fees online with Paystack or Flutterwave. View fee breakdowns, installment plans, and payment receipts.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Fees' },
+    { title: 'Pay Fees Online', description: 'See each child\'s fee balance and the full list of charges. Payments are recorded by the school office.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Fees' },
     { title: 'Stay Connected', description: 'Message teachers directly, receive notifications about your child, and RSVP to school events and PTA meetings.', icon: <MessageSquare className="w-8 h-8" />, highlight: 'Communication' },
     { title: 'Notifications', description: 'Customize your notification preferences — choose digest mode, instant alerts, or mute specific categories.', icon: <Bell className="w-8 h-8" />, highlight: 'Notifications' },
 ];

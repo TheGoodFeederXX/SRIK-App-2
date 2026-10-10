@@ -127,7 +127,7 @@ const HostelTab = ({ hostels, onAdd, onDelete }: { hostels: Hostel[]; onAdd: () 
                             </div>
                             <div>
                                 <p className="text-xs uppercase font-bold text-gray-400">Added</p>
-                                <p className="font-bold text-gray-700">{new Date(h.created_at).toLocaleDateString()}</p>
+                                <p className="font-bold text-gray-700">{new Date(h.created_at).toLocaleDateString("ms-MY")}</p>
                             </div>
                         </div>
                         <button
@@ -290,7 +290,7 @@ const VisitorTab = ({ visitors, onAdd }: { visitors: VisitorLog[]; onAdd: () => 
                                     <h3 className="font-bold text-gray-900">{v.visitor_name}</h3>
                                     <p className="text-sm text-gray-500">{v.relationship} of {v.student?.full_name || 'Unknown'}</p>
                                 </div>
-                                <span className="text-xs font-bold text-gray-400">{new Date(v.visit_date).toLocaleDateString()}</span>
+                                <span className="text-xs font-bold text-gray-400">{new Date(v.visit_date).toLocaleDateString("ms-MY")}</span>
                             </div>
                             <p className="text-sm text-gray-600 mt-2">{v.purpose}</p>
                             <div className="flex items-center space-x-4 mt-3">

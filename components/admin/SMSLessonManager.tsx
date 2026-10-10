@@ -31,18 +31,22 @@ const SMSLessonManager: React.FC = () => {
                         <Info className="w-5 h-5 text-rose-500 mt-0.5 flex-shrink-0" />
                         <div>
                             <p className="text-sm font-semibold text-gray-800 mb-1">Supported SMS providers (any one required):</p>
+                            {/* Provider descriptions, with their operating region.
+                                Two lines named gateways from a foreign country as
+                                the school's options; this school is in Malaysia,
+                                so the list describes reach, not a foreign market. */}
                             <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                                <li><span className="font-medium">Termii</span> — Nigerian SMS gateway, very cost-effective</li>
-                                <li><span className="font-medium">Africa's Talking</span> — popular across West Africa</li>
                                 <li><span className="font-medium">Twilio</span> — global, reliable, higher cost</li>
-                                <li><span className="font-medium">Bulksmsnigeria</span> — affordable Nigerian provider</li>
+                                <li><span className="font-medium">Infobip</span> — global, enterprise messaging</li>
+                                <li><span className="font-medium">Africa's Talking</span> — regional provider; check Malaysia coverage before use</li>
+                                <li><span className="font-medium">Local Malaysian gateway</span> — arrange one directly with a local provider</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <p className="text-sm text-gray-500 mt-6">
-                    Contact <span className="font-semibold text-rose-600">support@oliskey.com</span> to activate SMS messaging for your school.
+                    Contact <span className="font-semibold text-rose-600">srialkhairiah@gmail.com</span> to activate SMS messaging for your school.
                 </p>
             </div>
         </motion.div>

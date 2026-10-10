@@ -183,11 +183,11 @@ const VirtualClassroom: React.FC<VirtualClassroomProps> = ({ userRole, userId, d
                             <div className="space-y-3 text-sm text-slate-600 mb-6 bg-slate-50 p-3 rounded-xl border border-slate-100">
                                 <div className="flex items-center space-x-2">
                                     <CalendarIcon className="h-4 w-4 text-slate-400" />
-                                    <span className="font-medium">{new Date(session.start_time).toLocaleDateString()}</span>
+                                    <span className="font-medium">{new Date(session.start_time).toLocaleDateString("ms-MY")}</span>
                                 </div>
                                 <div className="flex items-center space-x-2">
                                     <ClockIcon className="h-4 w-4 text-slate-400" />
-                                    <span className="font-medium">{new Date(session.start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                                    <span className="font-medium">{new Date(session.start_time).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}</span>
                                 </div>
                                 {session.teacher && (() => {
                                     const teacherName = session.teacher.full_name || session.teacher.name || 'Teacher';

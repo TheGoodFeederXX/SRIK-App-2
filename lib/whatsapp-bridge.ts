@@ -5,6 +5,7 @@
 
 import { api } from './api';
 import { sendSMS } from './notifications';
+import { formatMoney } from '../src/lib/supabase/finance';
 
 export type WhatsAppCommand = 'balance' | 'attendance' | 'grades' | 'help';
 
@@ -44,7 +45,7 @@ export async function handleWhatsAppMessage(
                 return await fetchGrades(children);
             case 'help':
             default:
-                return "💡 *Oliskey School Assistant Commands:*\n- *balance*: View your fee balance.\n- *attendance*: View child's arrival today.\n- *grades*: View recent academic results.";
+                return "💡 *Pembantu Sekolah SRI Al-Khairiah:*\n- *baki*: Lihat baki yuran anda.\n- *kehadiran*: Lihat kedatangan anak hari ini.\n- *markah*: Lihat markah terkini.";
         }
 
     } catch (error) {
@@ -63,8 +64,8 @@ async function fetchBalances(parentId: string): Promise<string> {
 
     const total = fees.reduce((sum, f) => sum + f.amount, 0);
     return `💰 *Outstanding Fees:* \n` + 
-           fees.map(f => `- ${f.title}: ₦${f.amount.toLocaleString()}`).join('\n') + 
-           `\n\nTotal: *₦${total.toLocaleString()}*`;
+           fees.map(f => `- ${f.title}: ${formatMoney(f.amount)}`).join('\n') + 
+           `\n\nTotal: *${formatMoney(total)}*`;
 }
 
 async function fetchAttendance(children: any[]): Promise<string> {

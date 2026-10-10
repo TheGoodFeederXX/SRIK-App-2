@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
-import { useBranch } from '../../context/BranchContext';
+import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { toast } from 'react-hot-toast';
 import {
     CalendarIcon,
@@ -79,7 +79,7 @@ const STATUS_STYLES: Record<string, { label: string; classes: string }> = {
 
 function formatTime(iso: string | null): string {
     if (!iso) return '—';
-    return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return new Date(iso).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' });
 }
 
 function todayStr(): string {
@@ -89,7 +89,7 @@ function todayStr(): string {
 
 const ClassVerificationScreen = () => {
     const { currentSchool } = useAuth();
-    const { currentBranch } = useBranch();
+    const { currentBranch } = useSchoolScope();
     const [report, setReport] = useState<DailyReport | null>(null);
     const [loading, setLoading] = useState(true);
     const [date, setDate] = useState(todayStr());
@@ -259,7 +259,7 @@ const ClassVerificationScreen = () => {
                                             <p className="text-xs text-gray-400">{t.completed} of {t.assigned} classes taught{t.late ? ` · ${t.late} late` : ''}</p>
                                         </div>
                                         <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-green-50 text-green-700">
-                                            Done{t.finished_at ? ` · ${new Date(t.finished_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ''}
+                                            Done{t.finished_at ? ` · ${new Date(t.finished_at).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' })}` : ''}
                                         </span>
                                     </li>
                                 ))}

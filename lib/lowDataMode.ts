@@ -12,7 +12,7 @@ import { useSyncExternalStore } from 'react';
  * as on when the browser itself reports Data Saver, without touching the
  * stored choice.
  */
-const STORAGE_KEY = 'oliskey:low_data_mode';
+const STORAGE_KEY = 'srik:low_data_mode';
 export const LOW_DATA_EVENT = 'low-data-mode-change';
 
 function stored(): boolean {

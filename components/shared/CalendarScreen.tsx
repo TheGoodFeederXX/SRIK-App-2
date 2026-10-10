@@ -144,7 +144,7 @@ const CalendarScreen: React.FC<CalendarScreenProps & { schoolId?: string }> = ({
                                 transition={{ duration: 0.15 }}
                                 className="font-extrabold text-xl text-gray-800 tracking-tight"
                             >
-                                {currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
                             </motion.h3>
                         </AnimatePresence>
                         <motion.button
@@ -215,7 +215,7 @@ const CalendarScreen: React.FC<CalendarScreenProps & { schoolId?: string }> = ({
                         <h3 className="text-xl font-bold text-gray-800">
                             Schedule
                             <span className="ml-2 text-sm font-normal text-gray-500">
-                                {selectedDate.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
+                                {selectedDate.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
                             </span>
                         </h3>
                     </div>

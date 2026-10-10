@@ -142,7 +142,10 @@ export const ExamCandidateRegistration = React.forwardRef<ExamCandidateRegistrat
 
             if (data) {
                 setStudents(data.filter((s: any) => {
-                    if (body?.curriculum_type === 'Nigerian') return true;
+                    // Exam bodies are keyed to a curriculum track. The national
+                    // track is KSSR (was 'Nigerian'), so matching on the old key
+                    // meant a KSSR body never selected its own candidates.
+                    if (body?.curriculum_type === 'KSSR') return true;
                     if (body?.curriculum_type === 'British') return s.grade >= 9;
                     return true;
                 }));
@@ -468,7 +471,7 @@ export const ExamCandidateRegistration = React.forwardRef<ExamCandidateRegistrat
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. WAEC"
+                                    placeholder="e.g. SEKOLAH"
                                     value={newBodyCode}
                                     onChange={e => setNewBodyCode(e.target.value)}
                                     className="w-full bg-[#F9FAFB] border border-gray-200 rounded-2xl px-5 py-4 text-base font-medium text-[#1A1C21] placeholder:text-gray-400 focus:ring-4 focus:ring-indigo-50 focus:border-[#5850EC] transition-all"
@@ -479,7 +482,7 @@ export const ExamCandidateRegistration = React.forwardRef<ExamCandidateRegistrat
                                 <input
                                     type="text"
                                     required
-                                    placeholder="e.g. West African Examinations Council"
+                                    placeholder="e.g. Lembaga Peperiksaan"
                                     value={newBodyName}
                                     onChange={e => setNewBodyName(e.target.value)}
                                     className="w-full bg-[#F9FAFB] border border-gray-200 rounded-2xl px-5 py-4 text-base font-medium text-[#1A1C21] placeholder:text-gray-400 focus:ring-4 focus:ring-indigo-50 focus:border-[#5850EC] transition-all"
