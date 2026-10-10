@@ -84,19 +84,11 @@ jobs:
       - name: Build the app
         run: npm run build
 
-      # The API that Vercel serves is built from the compiled backend, so this
-      # proves the deployable artefact is produced here rather than on Vercel.
-      - name: Build the API function
-        run: npm run build:backend
-
-      - name: Confirm the API entry point was produced
-        run: |
-          set -e
-          if [ ! -f backend/dist/backend/src/app.js ]; then
-            echo "::error::The API entry point backend/dist/backend/src/app.js was not produced."
-            exit 1
-          fi
-          echo "API entry point is present."
+      # NOTE ON THE BACKEND. The Express API is still type-checked and covered by
+      # the backend type-check above, but it is NOT built or deployed here. Vercel
+      # serves the frontend only, and the app reads and writes through Supabase
+      # directly — so there is no serverless function to build. The API's Prisma
+      # schema describes the previous product's database, not this school's.
 
   deploy:
     name: Deploy to Vercel
