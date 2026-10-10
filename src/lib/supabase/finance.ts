@@ -203,8 +203,14 @@ export function friendlyFinanceError(error: unknown): string {
     return 'Maaf, urusan ini tidak berjaya. Sila cuba lagi.';
 }
 
-/** A key that is unique per intentional payment, so a double press is safe. */
-function newIdempotencyKey(): string {
+/**
+ * A key that is unique per SUBMISSION, so a retry of that submission is safe.
+ *
+ * Call this ONCE when a submission starts — not once per attempt — and pass the
+ * same value to every retry. Using it inside `recordPayment` would defeat the
+ * purpose, which is exactly the defect it was introduced to fix (audit F22).
+ */
+export function newIdempotencyKey(): string {
     // randomUUID is available in every browser this app supports, and on any
     // secure origin. It is a key for de-duplication, not a security token.
     if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
@@ -440,13 +446,26 @@ export async function recordPayment(input: {
     paidAt?: string | null;
     payerGuardianId?: string | null;
     notes?: string | null;
-    idempotencyKey?: string;
+    // Required, and deliberately not optional: a payment without a stable key
+    // cannot be retried safely (audit F22).
+    idempotencyKey: string;
 }): Promise<{ payment_id: string; reference: string; amount: number; duplicate: boolean }> {
     const supabase = requireSupabase();
     const { data, error } = await supabase.rpc('record_payment', {
         p_amount: input.amount,
         p_allocations: input.allocations,
-        p_idempotency_key: input.idempotencyKey ?? newIdempotencyKey(),
+        // The key is REQUIRED, not generated here.
+        //
+        // Generating it in this wrapper is what made a retry dangerous: if the
+        // server committed the payment but the response was lost, the caller's
+        // retry arrived with a NEW key, which the server cannot tell apart from a
+        // genuinely new payment — so the school collected twice (audit F22).
+        //
+        // The caller mints one key per SUBMISSION and reuses it for every attempt
+        // at that submission. `record_payment` refuses a payment without a key, so
+        // a caller that forgets this fails loudly instead of quietly risking a
+        // duplicate.
+        p_idempotency_key: input.idempotencyKey,
         p_reference: input.reference ?? null,
         p_method: input.method ?? 'CASH',
         p_paid_at: input.paidAt ?? null,

@@ -40,7 +40,7 @@
  * screen stops it and points at the other charges instead.
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -51,6 +51,7 @@ import CenteredLoader from '../ui/CenteredLoader';
 import { useAuth } from '../../context/AuthContext';
 import {
     listOutstanding, listStudentCharges, recordPayment, listPayments, reversePayment,
+    newIdempotencyKey,
     formatMoney, periodLabel, friendlyFinanceError,
     CHARGE_STATUS_LABELS, METHOD_LABELS,
     type StudentBalance, type Charge, type Payment, type PaymentMethod,
@@ -316,10 +317,29 @@ function CollectPanel({
     const canSave =
         amountValue > 0 && allocatedTotal > 0 && addsUp && !overpaidCharge && !saving;
 
+    // The key for the submission currently in progress.
+    //
+    // A ref rather than state: it must NOT change when the component re-renders,
+    // because a re-render between the two attempts would produce a new key and
+    // recreate the duplicate-payment risk this exists to remove (audit F22).
+    const submissionKeyRef = useRef<string | null>(null);
+
     async function handleSave() {
         if (!canSave) return;
         setSaving(true);
         setError(null);
+        // ONE key for THIS submission, kept if the attempt fails so the retry
+        // reuses it (audit F22).
+        //
+        // This is the whole point: if the server records the payment but the reply
+        // is lost, the clerk presses save again — and the second attempt must be
+        // recognisable as the same submission. A key minted inside the call would
+        // be new every time, so the server would see a second, different payment
+        // and the school would collect twice. Persisted in a ref so it survives
+        // re-renders and a second press, and cleared only once the result is
+        // definitive.
+        const key = submissionKeyRef.current ?? newIdempotencyKey();
+        submissionKeyRef.current = key;
         try {
             const result = await recordPayment({
                 amount: amountValue,
@@ -329,7 +349,11 @@ function CollectPanel({
                 method,
                 reference: reference.trim() || null,
                 notes: notes.trim() || null,
+                idempotencyKey: key,
             });
+            // Definitive result, so the submission is finished and the key must not
+            // be reused for a different payment.
+            submissionKeyRef.current = null;
             toast.success(
                 result.duplicate
                     ? `Bayaran ini sudah direkodkan. Resit ${result.reference}.`
