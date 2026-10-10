@@ -13,15 +13,43 @@ export type RealtimeStatus = 'connected' | 'connecting' | 'disconnected' | 'unav
 // /socket.io/ with the SPA's index.html, so socket.io-client fails, retries
 // ten times and every user saw a permanent "Live updates unavailable —
 // reconnecting…" banner. Ask the API once instead of guessing from failures.
+//
+// WHY THIS MUST NOT GUESS `true` ON FAILURE.
+//
+// This deployment serves NO API at all: `/api/health` is caught by the SPA
+// rewrite and answers with index.html. So `r.json()` always throws here, and the
+// old `.catch(() => (realtimeSupported = true))` "let the socket try" — which is
+// exactly what this probe exists to prevent. The socket then sat in
+// 'connecting' forever, never reaching the 'unavailable' state that hides the
+// banner, and every user saw "Live updates unavailable — reconnecting…" pinned
+// to the top of every screen for the whole session.
+//
+// A probe that cannot be answered has not proved realtime works. Treating that
+// as unsupported is the only honest answer, and it is also the correct one:
+// there is no realtime server to reach. "Unknown" must not silently become
+// "supported", because the visible cost of that guess is a permanent warning.
 let realtimeSupported: boolean | null = null;
 let probe: Promise<boolean> | null = null;
 export function isRealtimeSupported(): Promise<boolean> {
     if (realtimeSupported !== null) return Promise.resolve(realtimeSupported);
     if (!probe) {
-        probe = fetch(`${API_BASE_URL}/health`, { cache: 'no-store' })
-            .then((r) => r.json())
+        probe = fetch(`${API_BASE_URL}/health`, {
+            cache: 'no-store',
+            headers: { Accept: 'application/json' },
+        })
+            .then((r) => {
+                // An HTML answer means the request never reached an API — it was
+                // served the app shell. Parsing it would throw and be mistaken for
+                // a network blip.
+                const type = r.headers.get('content-type') ?? '';
+                if (!r.ok || !type.includes('application/json')) return false;
+                return r.json();
+            })
             .then((j) => (realtimeSupported = j?.realtime !== false))
-            .catch(() => (realtimeSupported = true)) // unknown → let the socket try, as before
+            // Reached only when the endpoint answered with usable JSON but the
+            // body was malformed, or the request failed outright. Either way
+            // realtime is not proven, so it is not claimed.
+            .catch(() => (realtimeSupported = false))
             .finally(() => { probe = null; });
     }
     return probe;
@@ -30,7 +58,22 @@ export function isRealtimeSupported(): Promise<boolean> {
 class SocketService {
     private socket: Socket | null = null;
     private schoolId: string | null = null;
-    private status: RealtimeStatus = 'connecting';
+    // START AS 'unavailable', NOT 'connecting'.
+    //
+    // 'connecting' is a promise that something is being attempted. On this
+    // deployment nothing is: the socket is only initialised with a school id, and
+    // a Supabase session does not provide one (the legacy `user.school` field it
+    // came from no longer exists). So `initialize` was never called, the status
+    // stayed 'connecting' forever, and `RealtimeStatusIndicator` — which hides
+    // itself for 'connected' and 'unavailable' but shows a banner after 8s for
+    // everything else — pinned "Live updates unavailable — reconnecting…" to every
+    // screen for the whole session, waiting for a connection that was never
+    // started.
+    //
+    // 'unavailable' is the truthful initial state: this host has no realtime
+    // server, the app polls instead, and there is nothing to reconnect to. If a
+    // socket IS attempted later, `connect()` sets 'connecting' itself.
+    private status: RealtimeStatus = 'unavailable';
     private statusListeners = new Set<(status: RealtimeStatus) => void>();
     // "Reconnecting…" is only true if there was a live connection to get back.
     // A socket that never connected (serverless host, health probe that failed

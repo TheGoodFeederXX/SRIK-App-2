@@ -5,6 +5,7 @@ import { MainAdminOnly } from '../shared/MainAdminOnly';
 import { useProfile } from '../../context/ProfileContext';
 import PremiumLoader from '../ui/PremiumLoader';
 import { api } from '../../lib/api';
+import { supabase } from '../../src/lib/supabase/client';
 import { syncEngine } from '../../lib/syncEngine';
 import { DashboardType } from '../../types';
 import { realtimeService } from '../../services/RealtimeService';
@@ -243,12 +244,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
     }, [canGoBack, isSearchOpen, setIsHomePage, activeBottomNav]);
 
     useEffect(() => {
+        // IS THE DATABASE REACHABLE?
+        //
+        // This asked the old Express server's health endpoint via
+        // `api.checkBackendHealth()`. That server is no longer deployed, so the
+        // call failed and the dashboard showed a red "Database Connection Error"
+        // bar on every screen — while the database was in fact perfectly healthy.
+        // The data itself has come from Supabase for some time.
+        //
+        // So ask the thing that actually holds the data. One row is enough: this
+        // confirms the connection AND that the signed-in user is allowed to read.
+        // A count rather than a row fetch, so this cannot be confused by an empty
+        // table — "0 students" is a healthy database, not an error.
         const checkDb = async () => {
             try {
-                const { backend } = await api.checkBackendHealth();
-                setDbStatus(backend ? 'connected' : 'error');
-            } catch (e) {
-                setDbStatus('connected'); // Fallback for demo
+                const { error } = await supabase
+                    .from('students')
+                    .select('id', { count: 'exact', head: true });
+                setDbStatus(error ? 'error' : 'connected');
+            } catch {
+                setDbStatus('error');
             }
         };
 
