@@ -43,6 +43,10 @@ GUARDIAN_SUITE="$REPO_ROOT/supabase/tests/phase5b_guardian_access_test.sql"
 ONBOARDING_SUITE="$REPO_ROOT/supabase/tests/phase5c_guardian_onboarding_test.sql"
 MIGRATION_P6="$REPO_ROOT/supabase/migrations/20261015000001_phase6_operations_release.sql"
 MIGRATION_P6B="$REPO_ROOT/supabase/migrations/20261016000001_phase6_storage_buckets.sql"
+# Security hardening (audit findings F01, F02, F03): revokes anon EXECUTE and
+# replaces record_class_attendance so the actor cannot be supplied by the caller.
+MIGRATION_HARDEN="$REPO_ROOT/supabase/migrations/20261017000001_security_hardening_rpc_anon.sql"
+HARDEN_SUITE="$REPO_ROOT/supabase/tests/security_hardening_test.sql"
 STORAGE_SUITE="$REPO_ROOT/supabase/tests/phase6b_storage_test.sql"
 OPERATIONS_SUITE="$REPO_ROOT/supabase/tests/phase6_operations_test.sql"
 
@@ -52,7 +56,7 @@ if [ ! -x "$PGBIN/initdb" ]; then
     exit 2
 fi
 
-for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$OPERATIONS_SUITE"; do
+for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$OPERATIONS_SUITE"; do
     [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 2; }
 done
 
@@ -82,7 +86,7 @@ as_runas "PATH=$PGBIN:\$PATH initdb -D $PGDATA -U postgres --auth=trust" >"$WORK
 as_runas "PATH=$PGBIN:\$PATH pg_ctl -D $PGDATA -o '-p $PGPORT -k $PGSOCK' -l $WORKDIR/server.log start" >/dev/null 2>&1
 sleep 2
 
-cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
+cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
 chmod -R a+rX "$WORKDIR/sql"
 
 psql_as() {
@@ -124,6 +128,8 @@ psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261015000001_phase6_
 
 echo "==> Applying Phase 6b migration (private storage bucket)"
 psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261016000001_phase6_storage_buckets.sql" >/dev/null
+echo "==> Applying security hardening (anon RPC revokes, F01/F02/F03)"
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261017000001_security_hardening_rpc_anon.sql" >/dev/null
 
 echo "==> Checking Phase 5, 5b, 5c and 6 idempotency (second apply must be a no-op)"
 psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261012000001_phase5_finance.sql" >/dev/null
@@ -131,6 +137,12 @@ psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261013000001_phase5b
 psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261014000001_phase5c_guardian_onboarding.sql" >/dev/null
 psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261015000001_phase6_operations_release.sql" >/dev/null
 psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261016000001_phase6_storage_buckets.sql" >/dev/null
+# The hardening is re-applied LAST, and that is the point rather than a tidiness
+# detail. Phase 5 re-defines `charge_balance` and re-grants it to `authenticated`;
+# applying it after the hardening silently restored the F03 exposure. This is
+# finding F38 — a migration history that can be re-run needs its security
+# migration to be the last thing that touches the schema.
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261017000001_security_hardening_rpc_anon.sql" >/dev/null
 TABLES="$(psql_as "-d $DBNAME -tAc \"select count(*) from pg_tables where schemaname='public';\"" | tr -d '[:space:]')"
 # Phase 1 created 7 tables; Phase 2 added 12; Phase 3 added 6; Phase 4 added 4;
 # Phase 5 added 4; Phase 6 added 3 (audit_log, documents, announcements).
@@ -217,5 +229,20 @@ fi
 STORAGE_CHECKS="$(echo "$OUTPUT" | grep -c "PASS:" || true)"
 
 echo ""
-echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks)"
+echo "==> Running security hardening suite (audit F01, F02, F03)"
+OUTPUT="$(psql_as "-d $DBNAME -f $WORKDIR/sql/security_hardening_test.sql" 2>&1 || true)"
+echo "$OUTPUT" | grep -oE "(PASS|FAIL|FAIL F[0-9]+): .*" | sed 's/^/    /' || true
+
+# The suite proves itself: every guarded check raises. An uncaught exception here
+# means a hole is open, so the failure is reported rather than the count.
+if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
+    echo ""
+    echo "$OUTPUT" | grep -E "ERROR|FAIL" | sed 's/^/    /' || true
+    echo "RESULT: FAIL (security hardening)" >&2
+    exit 1
+fi
+HARDEN_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
+
+echo ""
+echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks)"
 exit 0

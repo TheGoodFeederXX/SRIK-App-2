@@ -238,12 +238,27 @@ $$;
 -- ===========================================================================
 do $$
 declare
-    v_balance numeric;
+    v_blocked boolean := false;
 begin
-    -- The helper is SECURITY DEFINER, so it can compute the figure, but the
-    -- charge row itself is invisible to this parent. Reading it gives nothing.
-    select public.charge_balance(test_id('801')) into v_balance;
-    if v_balance = 999.00 then
+    -- STRONGER THAN BEFORE, and this is a deliberate change of expectation.
+    --
+    -- The old behaviour was ACCIDENTAL protection: the helper could compute the
+    -- figure, but the charge row was invisible to this parent under RLS, so the
+    -- call returned null. The parent got no number — but only because a policy
+    -- happened to hide the row, not because anything refused the request. If the
+    -- charge policy were ever broadened, the balance of another family's child
+    -- would start being returned and nothing would flag it.
+    --
+    -- Now the request is REFUSED outright: the caller is not a guardian of that
+    -- child and holds no finance permission, so the function raises. That is a
+    -- guarantee rather than a coincidence, and it is what finding F03 asks for.
+    begin
+        perform public.charge_balance(test_id('801'));
+    exception when insufficient_privilege then
+        v_blocked := true;
+    end;
+
+    if not v_blocked then
         raise exception 'FAIL: guardian A can compute a balance for a child who is not theirs';
     end if;
 
