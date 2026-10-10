@@ -1530,3 +1530,21 @@ Perkara berikut **belum** selesai dan mesti diketahui sebelum release:
 | 2026-10-10 | Ujian `supabase/tests/provisioning_test.sql` (**10 pemeriksaan**). **Lima mutasi ditangkap, masing-masing oleh ujian yg dimaksudkan:** (A) buang geran peranan → `FAIL F13: ...holds roles "(none)"`; (B) `is_active_user` abaikan bendera → ditangkap; (C) langkau bukti `updated_at` → ditangkap; (D) kembalikan policy F15 kpd `is_active_user` → `FAIL F15: ...cannot read its own profile... locked out permanently`; (E) buang compare-and-set → `FAIL F13: a second provisioning overwrote the existing account link`. |
 | 2026-10-10 | **Kesilapan ujian sendiri, dan pembetulannya:** diagnostik F14c mula membaca profil melalui polisi, jadi ia tidak dapat membezakan "peraturan berkuat kuasa" drpd "bacaan ditolak" — dan suite terhenti awal sehingga ujian F13 tidak pernah dijalankan. Diperbetulkan dgn membaca keadaan data tanpa polisi (soalan itu ttg data, bukan ttg siapa boleh melihatnya) dan dgn menegaskan prasyarat fixture di tempat ia ditetapkan. |
 | 2026-10-10 | **Disahkan pada produksi:** pentadbir sebenar kekal `status=ACTIVE, must_change=false` (peraturan baharu **tidak** menguncinya keluar); `create_guardian_account` dan `clear_temporary_password_flag` **tiada lagi**; 4 RPC baharu wujud; log masuk berjaya; 18 guru; tiada respons gagal. Suite SQL **127 pemeriksaan**; hadapan 56 fail/425 ujian; taipcheck bersih. |
+
+## Audit 2026-10-10 — F18–F22, F37, F38, F32 (selesai)
+
+Semua disahkan terhadap produksi. Setiap pengawal ditulis dahulu, kemudian
+sengaja dipecahkan semula untuk membuktikan ujian benar-benar menangkapnya.
+
+| Finding | Pembetulan | Bukti produksi |
+|---|---|---|
+| F18 | `family_balance` hanya menjumlah anak yang penjaga benar-benar jaga; pejabat kekal nampak seluruh keluarga. Aritmetik tanpa semakan dipindah ke helper yang dicabut daripada semua peranan API. | Penjaga nampak RM100 (anaknya), pejabat nampak RM927 (termasuk anak melalui penjaga kongsi). |
+| F19 | `reverse_payment` menolak pembalikan bagi pembalikan. Semakan bertindih dibuang supaya peraturan ada di SATU tempat. | RM100 → bayar (paid 100.00) → balik (paid 0.00/balance 100.00) → balik semula DITOLAK; buku kekal betul. |
+| F20 | Trigger membekukan `amount`, `student_id`, `fee_type_id`, `academic_year_id`, tempoh apabila ada bayaran; status/diskaun/nota kekal boleh dibetulkan. | Ubah amaun caj berbayar DITOLAK dengan mesej jelas. |
+| F21 | Penerbitan penilaian mesti melalui langkah penerbitan, bukan UPDATE terus. | Terbit terus DITOLAK. |
+| F22 | `record_payment` mengunci caj mengikut urutan id; kunci dijana sekali per penghantaran di klien. | Kunci sama dua kali → satu bayaran sahaja, dilaporkan sebagai pendua. |
+| F37 | Laluan storan diselesaikan kpd baris dokumen dan dihakimi oleh SATU peraturan. Fungsi dinamakan `can_read_stored_file` (bukan overload). | Guru bukan-pengajar DITOLAK; laluan salah DITOLAK; pejabat DIBENARKAN. |
+| F38 | Registry migrasi diwujudkan (17 entri); helper ujian `test_id` yang tertinggal dibuang. | Registry ada, 17 entri, terbaru sepadan repo; anon TIDAK boleh baca. |
+| F32 | Kerja CI "Database rules" menjalankan suite SQL/RLS pada setiap push; versi Vercel CLI dipin. | CI hijau di GitHub termasuk kerja baharu; laman langsung 200. |
+
+**Jumlah suite SQL: 154 pemeriksaan.** Frontend: 56 fail / 425 ujian.
