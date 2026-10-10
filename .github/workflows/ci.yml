@@ -90,6 +90,56 @@ jobs:
       # directly — so there is no serverless function to build. The API's Prisma
       # schema describes the previous product's database, not this school's.
 
+  # ---------------------------------------------------------------------------
+  # The database checks. This is the job that would have caught the findings in
+  # the 2026-10-10 audit, and it is the reason they can be said to be closed:
+  # every one of them has a check here that FAILS when the guard is removed.
+  #
+  # It is a SEPARATE job from `verify` on purpose. `verify` is fast and answers
+  # "does this build and do the screens still work". This one spins up a real
+  # PostgreSQL, applies every migration to an empty database, and asks whether the
+  # rules actually hold — including anonymous access, guardianship scope, the last
+  # administrator, temporary passwords, money, and stored files.
+  #
+  # WHY IT MATTERS MORE THAN USUAL HERE. Authorization lives in the database, in
+  # policies and functions that no browser ever sees. A screen that looks right
+  # proves nothing about what a caller can fetch directly. Without this job, the
+  # only thing standing between a regression and the school's records is review.
+  database:
+    name: Database rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # The suite needs a real server to build a scratch cluster — it creates its
+      # own database, its own roles and its own data. PostgreSQL 17 matches the
+      # version the migrations are written against.
+      - name: Install PostgreSQL 17
+        run: |
+          set -e
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-17 postgresql-client-17
+          /usr/lib/postgresql/17/bin/initdb --version
+
+      # ONE COMMAND. The runner resets its own scratch cluster, applies every
+      # migration in order, runs every suite, and exits non-zero if any check
+      # fails. Keeping the wiring inside the script means CI and a developer's
+      # machine run the same thing, in the same order — the order is load-bearing,
+      # because a later migration replaces functions an earlier one defined.
+      - name: Run the migration and policy suites
+        run: bash supabase/tests/run_phase5_tests.sh
+
+      # The suite's own summary line is quoted back, so a run that passed with
+      # fewer checks than expected is visible rather than merely green.
+      - name: Summarise
+        if: always()
+        run: |
+          echo "The database suite prints its own summary above."
+          echo "A PASS with fewer checks than the previous run means a suite stopped early."
+
   deploy:
     name: Deploy to Vercel
     needs: verify
@@ -130,6 +180,11 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           set -e
-          # `--prod` makes this the live site. Without it Vercel creates a preview
-          # URL and the real address keeps serving the previous version.
-          npx --yes vercel@latest deploy --prod --yes --token "$VERCEL_TOKEN"
+          # The CLI version is PINNED. `@latest` meant the deploy tool could change
+          # between two identical commits, so a deployment that worked yesterday
+          # could fail today for a reason unrelated to this repository — and a
+          # deployment is the worst place to discover that.
+          #
+          # To move it: run the deploy locally with the new version, confirm it
+          # succeeds, then change this pin in the same commit.
+          npx --yes vercel@48.2.1 deploy --prod --yes --token "$VERCEL_TOKEN"
