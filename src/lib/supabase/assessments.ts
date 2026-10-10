@@ -132,6 +132,7 @@ export async function listTerms(): Promise<AcademicTerm[]> {
     const { data, error } = await db
         .from('academic_terms')
         .select('id, name, sequence, start_date, end_date, status')
+        .limit(2000)
         .order('sequence');
 
     if (error) throw new Error(`Could not load the terms: ${error.message}`);
@@ -213,6 +214,7 @@ export async function listAssessments(
     let query = db
         .from('assessments')
         .select(ASSESSMENT_SELECT)
+        .limit(2000)
         .eq('academic_term_id', termId);
 
     if (filter?.classId) query = query.eq('class_id', filter.classId);
@@ -229,6 +231,7 @@ export async function getAssessment(id: string): Promise<Assessment | null> {
     const { data, error } = await db
         .from('assessments')
         .select(ASSESSMENT_SELECT)
+        .limit(2000)
         .eq('id', id)
         .maybeSingle();
 
@@ -260,6 +263,7 @@ export async function createAssessment(input: {
             assessment_date: input.assessmentDate ?? null,
         })
         .select('id')
+            .limit(2000)
         .single();
 
     if (error) throw new Error(friendlyAssessmentError(error.message));
@@ -315,6 +319,7 @@ export async function getMarkRegister(assessmentId: string): Promise<MarkRegiste
     const { data: enrollments, error: enrollError } = await db
         .from('student_enrollments')
         .select('student_id')
+        .limit(2000)
         .eq('class_id', assessment.classId)
         .is('ended_at', null);
 
@@ -328,9 +333,11 @@ export async function getMarkRegister(assessmentId: string): Promise<MarkRegiste
     }
 
     const [studentsRes, resultsRes] = await Promise.all([
-        db.from('students').select('id, full_name, admission_no, status').in('id', studentIds),
+        db.from('students').select('id, full_name, admission_no, status').in('id', studentIds)
+            .limit(2000),
         db.from('assessment_results')
             .select('student_id, status, score, tp, comment')
+            .limit(2000)
             .eq('assessment_id', assessmentId)
             .in('student_id', studentIds),
     ]);
@@ -443,6 +450,7 @@ export async function listGradeBoundaries(): Promise<GradeBoundary[]> {
     const { data, error } = await db
         .from('grade_boundaries')
         .select('id, grade, min_percent, max_percent, sort_order')
+        .limit(2000)
         .eq('status', 'ACTIVE')
         .order('sort_order');
 
@@ -496,6 +504,7 @@ export async function listReportCards(termId: string): Promise<ReportCardRow[]> 
         .from('report_cards')
         .select('id, student_id, academic_term_id, version, status, published_at, ' +
                 'students(full_name), classes(display_name), academic_terms(name)')
+                    .limit(2000)
         .eq('academic_term_id', termId)
         .order('version', { ascending: false });
 
@@ -612,6 +621,7 @@ export async function getReportSnapshot(
     const { data, error } = await db
         .from('report_cards')
         .select('id, version, status, snapshot')
+        .limit(2000)
         .eq('student_id', studentId)
         .eq('academic_term_id', termId)
         .order('version', { ascending: false })
@@ -711,6 +721,7 @@ export async function getSchoolDetails(): Promise<SchoolDetails | null> {
     const { data, error } = await db
         .from('school_profile')
         .select('name, short_name, address, phone, email, website, principal_name, logo_storage_key')
+        .limit(2000)
         .maybeSingle();
 
     if (error) throw new Error(`Could not load the school details: ${error.message}`);
@@ -756,6 +767,7 @@ export async function listClassStudents(classId: string): Promise<ClassStudent[]
     const { data: enrollments, error: enrollError } = await db
         .from('student_enrollments')
         .select('student_id')
+        .limit(2000)
         .eq('class_id', classId)
         .is('ended_at', null);
 
@@ -767,6 +779,7 @@ export async function listClassStudents(classId: string): Promise<ClassStudent[]
     const { data, error } = await db
         .from('students')
         .select('id, full_name, admission_no, status')
+        .limit(2000)
         .in('id', ids);
 
     if (error) throw new Error(`Could not load the students: ${error.message}`);

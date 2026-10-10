@@ -30,7 +30,7 @@
  *    a parent wonder whether the record had been lost.
  */
 
-import { requireSupabase } from './client';
+import { readAllPages, requireSupabase } from './client';
 import {
     formatMoney,
     periodLabel,
@@ -66,6 +66,9 @@ export async function listMyChildrenFees(): Promise<ChildFeeSummary[]> {
         .from('students')
         .select('id, full_name, admission_no')
         .eq('status', 'ACTIVE')
+        // The caller's own children — a handful — but it is still a list read, and
+        // the bound states the assumption instead of relying on the silent cap.
+            .limit(200)
         .order('full_name');
     if (studentError) throw studentError;
 
@@ -115,20 +118,33 @@ export async function listMyChildrenFees(): Promise<ChildFeeSummary[]> {
  */
 export async function listMyChildCharges(studentId: string): Promise<Charge[]> {
     const supabase = requireSupabase();
-    const { data, error } = await supabase
-        .from('student_charges')
-        .select(
-            'id, student_id, fee_type_id, academic_year_id, period_month, period_year, ' +
-            'amount, discount_amount, discount_reason, due_date, description, status, ' +
-            'fee_types(name)'
-        )
-        .eq('student_id', studentId)
-        .order('period_year', { ascending: false, nullsFirst: false })
-        .order('period_month', { ascending: false, nullsFirst: false })
-        .order('created_at', { ascending: false });
-    if (error) throw error;
-
-    const rows = (data ?? []) as unknown as (Charge & { fee_types: { name: string } | null })[];
+    // PAGED — this is the read the audit named as the clearest example of the cap.
+    //
+    // A child has a charge for every month of every year they attend, and each month
+    // may carry more than one (monthly fee, a trip, a book). Over the years this list
+    // passes 1,000 comfortably. The cap does not error: the family would simply be
+    // shown an incomplete bill, with the oldest charges silently absent — and the
+    // total, being a sum of what was returned, would be too low.
+    //
+    // The ordering is kept exactly as it was, and it is now load-bearing: pages are
+    // read in this order, so it must be a total order. `created_at` breaks ties
+    // between charges posted in the same month, which is what stops a row sitting on
+    // a page boundary from being skipped or returned twice.
+    const rows = await readAllPages<Charge & { fee_types: { name: string } | null }>(
+        (from, to) =>
+            supabase
+                .from('student_charges')
+                .select(
+                    'id, student_id, fee_type_id, academic_year_id, period_month, period_year, ' +
+                    'amount, discount_amount, discount_reason, due_date, description, status, ' +
+                    'fee_types(name)'
+                )
+                .eq('student_id', studentId)
+                .order('period_year', { ascending: false, nullsFirst: false })
+                .order('period_month', { ascending: false, nullsFirst: false })
+                .order('created_at', { ascending: false })
+                .range(from, to),
+    );
     if (!rows.length) return [];
 
     // Balances come from the database's own function, one per charge, so a

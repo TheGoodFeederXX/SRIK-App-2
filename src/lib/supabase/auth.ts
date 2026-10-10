@@ -188,6 +188,7 @@ export async function fetchIdentity(userId: string): Promise<AuthResult<SrikIden
     const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('id, full_name, display_name, phone, avatar_storage_key, status, must_change_password')
+        .limit(2000)
         .eq('id', userId)
         .maybeSingle();
 
@@ -203,6 +204,7 @@ export async function fetchIdentity(userId: string): Promise<AuthResult<SrikIden
     const { data: roleRows } = await supabase
         .from('user_roles')
         .select('role_code')
+        .limit(2000)
         .eq('user_id', userId);
 
     const roles = (roleRows ?? []).map((r) => r.role_code as string);
@@ -216,6 +218,7 @@ export async function fetchIdentity(userId: string): Promise<AuthResult<SrikIden
         const { data: rolePerms } = await supabase
             .from('role_permissions')
             .select('permission_code')
+            .limit(2000)
             .in('role_code', roles);
         for (const row of rolePerms ?? []) permissionSet.add(row.permission_code as string);
     }
@@ -223,6 +226,7 @@ export async function fetchIdentity(userId: string): Promise<AuthResult<SrikIden
     const { data: userPerms } = await supabase
         .from('user_permissions')
         .select('permission_code')
+        .limit(2000)
         .eq('user_id', userId);
     for (const row of userPerms ?? []) permissionSet.add(row.permission_code as string);
 

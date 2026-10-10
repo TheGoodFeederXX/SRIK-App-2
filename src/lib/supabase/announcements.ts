@@ -82,6 +82,7 @@ export async function listAnnouncements(): Promise<Announcement[]> {
     const { data, error } = await supabase
         .from('announcements')
         .select('*')
+        .limit(2000)
         .order('created_at', { ascending: false });
     if (error) throw error;
     return (data ?? []) as Announcement[];
@@ -99,6 +100,7 @@ export async function listPublishedAnnouncements(): Promise<Announcement[]> {
     const { data, error } = await supabase
         .from('announcements')
         .select('*')
+        .limit(2000)
         .eq('status', 'PUBLISHED')
         .neq('audience', 'STAFF')
         .order('publish_at', { ascending: false });
@@ -129,6 +131,7 @@ export async function saveAnnouncement(input: {
             .update({ ...payload, updated_at: new Date().toISOString() })
             .eq('id', input.id)
             .select('*')
+            .limit(2000)
             .single();
         if (error) throw error;
         return data as Announcement;
@@ -138,6 +141,7 @@ export async function saveAnnouncement(input: {
         .from('announcements')
         .insert({ ...payload, status: 'DRAFT', author_id: auth?.user?.id ?? null })
         .select('*')
+        .limit(2000)
         .single();
     if (error) throw error;
     return data as Announcement;

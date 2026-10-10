@@ -179,6 +179,9 @@ export async function listStudentsForLinking(): Promise<
         .from('students')
         .select('id, full_name, admission_no')
         .eq('status', 'ACTIVE')
+        // Every active student, offered as a list to link a guardian to. A list
+        // read, so it carries a bound rather than relying on the silent cap.
+            .limit(2000)
         .order('full_name');
     if (error) throw error;
     return (data ?? []) as { id: string; full_name: string; admission_no: string | null }[];
@@ -213,6 +216,7 @@ export async function listLinkedStudents(
         .from('students')
         .select('id, full_name, admission_no')
         .in('id', ids)
+        .limit(2000)
         .order('full_name');
     if (error) throw error;
 

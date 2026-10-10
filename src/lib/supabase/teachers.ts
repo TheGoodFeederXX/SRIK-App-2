@@ -102,6 +102,7 @@ export async function listTeachers(): Promise<TeacherRecord[]> {
         .from('teachers')
         .select('id, user_id, staff_code, full_name, gender, phone, email, ' +
                 'employment_start, employment_end, status')
+                    .limit(2000)
         .order('full_name');
 
     if (teachersError) {
@@ -117,6 +118,7 @@ export async function listTeachers(): Promise<TeacherRecord[]> {
     const { data: assignments, error: assignmentsError } = await db
         .from('teaching_assignments')
         .select('teacher_id, subject_id, class_id, status')
+        .limit(2000)
         .eq('status', 'ACTIVE');
 
     const subjectsByTeacher = new Map<string, Set<string>>();
@@ -130,9 +132,11 @@ export async function listTeachers(): Promise<TeacherRecord[]> {
         const [{ data: subjects }, { data: classes }] = await Promise.all([
             subjectIds.length
                 ? db.from('subjects').select('id, name').in('id', subjectIds)
+                    .limit(2000)
                 : Promise.resolve({ data: [] as { id: string; name: string }[] }),
             classIds.length
                 ? db.from('classes').select('id, display_name').in('id', classIds)
+                    .limit(2000)
                 : Promise.resolve({ data: [] as { id: string; display_name: string }[] }),
         ]);
 
@@ -174,6 +178,7 @@ export async function getTeacher(id: string): Promise<TeacherRecord | null> {
         .from('teachers')
         .select('id, user_id, staff_code, full_name, gender, phone, email, ' +
                 'employment_start, employment_end, status')
+                    .limit(2000)
         .eq('id', id)
         .maybeSingle();
 
@@ -184,6 +189,7 @@ export async function getTeacher(id: string): Promise<TeacherRecord | null> {
     const { data: assignments } = await db
         .from('teaching_assignments')
         .select('teacher_id, subject_id, class_id, status')
+        .limit(2000)
         .eq('teacher_id', id)
         .eq('status', 'ACTIVE');
 
@@ -193,8 +199,10 @@ export async function getTeacher(id: string): Promise<TeacherRecord | null> {
 
     const [{ data: subjects }, { data: classes }] = await Promise.all([
         subjectIds.length ? db.from('subjects').select('id, name').in('id', subjectIds)
+            .limit(2000)
                           : Promise.resolve({ data: [] as { id: string; name: string }[] }),
         classIds.length ? db.from('classes').select('id, display_name').in('id', classIds)
+            .limit(2000)
                         : Promise.resolve({ data: [] as { id: string; display_name: string }[] }),
     ]);
 
@@ -252,6 +260,7 @@ export async function createTeacher(input: TeacherInput): Promise<TeacherWriteRe
             status: input.status ?? 'ACTIVE',
         })
         .select('id')
+            .limit(2000)
         .single();
 
     if (error) {
@@ -341,6 +350,7 @@ export async function listSubjectOptions(): Promise<Option[]> {
     const { data, error } = await db
         .from('subjects')
         .select('id, name')
+        .limit(2000)
         .eq('status', 'ACTIVE')
         .order('name');
 
@@ -363,6 +373,7 @@ export async function listClassOptions(): Promise<Option[]> {
     const { data: year, error: yearError } = await db
         .from('academic_years')
         .select('id')
+        .limit(2000)
         .eq('status', 'CURRENT')
         .maybeSingle();
 
@@ -372,6 +383,7 @@ export async function listClassOptions(): Promise<Option[]> {
     const { data, error } = await db
         .from('classes')
         .select('id, display_name')
+        .limit(2000)
         .eq('academic_year_id', (year as { id: string }).id)
         .eq('status', 'ACTIVE')
         .order('year_level')
@@ -447,6 +459,7 @@ export async function listAssignments(
     const { data, error } = await db
         .from('teaching_assignments')
         .select('id, teacher_id, class_id, subject_id, assignment_type, periods_per_week')
+        .limit(2000)
         .eq('academic_year_id', yearId)
         .eq('status', 'ACTIVE');
 
@@ -464,10 +477,13 @@ export async function listAssignments(
     const subjectIds = [...new Set(rows.map(r => r.subject_id).filter(Boolean))] as string[];
 
     const [teachers, classes, subjects] = await Promise.all([
-        db.from('teachers').select('id, full_name, staff_code').in('id', teacherIds),
-        db.from('classes').select('id, display_name').in('id', classIds),
+        db.from('teachers').select('id, full_name, staff_code').in('id', teacherIds)
+            .limit(2000),
+        db.from('classes').select('id, display_name').in('id', classIds)
+            .limit(2000),
         subjectIds.length
             ? db.from('subjects').select('id, name').in('id', subjectIds)
+                .limit(2000)
             : Promise.resolve({ data: [] as { id: string; name: string }[] }),
     ]);
 
@@ -538,6 +554,7 @@ export async function getCurrentAcademicYearId(): Promise<string | null> {
     const { data, error } = await db
         .from('academic_years')
         .select('id')
+        .limit(2000)
         .eq('status', 'CURRENT')
         .maybeSingle();
     if (error) return null;

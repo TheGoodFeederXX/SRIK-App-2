@@ -20,7 +20,7 @@
  *    device is set elsewhere, so the date is derived in Kuala Lumpur time here.
  */
 
-import { requireSupabase } from './client';
+import { readAllPages, requireSupabase } from './client';
 
 export type AttendanceStatus = 'PRESENT' | 'ABSENT' | 'LATE' | 'EXCUSED' | 'SICK';
 
@@ -105,6 +105,11 @@ export async function getClassRegister(
     const { data: enrollments, error: enrollError } = await db
         .from('student_enrollments')
         .select('id, student_id, class_id')
+        // The audit named this read specifically: a week of registers for the school
+        // is 250 students x 5 days = 1,250 rows, already past the cap. For one class
+        // it is far smaller, but the register is the screen the school uses every
+        // morning and a short one would mark children absent who were never listed.
+            .limit(2000)
         .eq('class_id', classId)
         .lte('enrolled_at', date)
         .is('ended_at', null);
@@ -127,6 +132,7 @@ export async function getClassRegister(
         db.from('classes').select('id, display_name').eq('id', classId).maybeSingle(),
         db.from('attendance_corrections')
             .select('student_id')
+            .limit(2000)
             .eq('attendance_date', date)
             .in('student_id', studentIds),
     ]);
@@ -277,6 +283,8 @@ export async function getSchoolDayOverview(date: string): Promise<SchoolDayRow[]
     const { data: classes, error } = await db
         .from('classes')
         .select('id, display_name, year_level, status')
+        // Classes for a year: a handful, bounded by the school's size.
+            .limit(500)
         .eq('status', 'ACTIVE')
         .order('year_level');
 
@@ -292,11 +300,13 @@ export async function getSchoolDayOverview(date: string): Promise<SchoolDayRow[]
     const [enrollRes, attendRes] = await Promise.all([
         db.from('student_enrollments')
             .select('class_id, student_id')
+            .limit(5000)
             .in('class_id', classIds)
             .lte('enrolled_at', date)
             .is('ended_at', null),
         db.from('student_attendance')
             .select('class_id, status')
+            .limit(5000)
             .eq('attendance_date', date)
             .in('class_id', classIds),
     ]);
@@ -362,6 +372,10 @@ export async function getClassAttendanceSummary(
     const { data, error } = await db
         .from('student_attendance')
         .select('student_id, status, students(full_name)')
+        // A whole school's attendance for one day: ~250 rows today, and every
+        // student can have several rows a day once double sessions are recorded.
+        // Paged, because this is the read the audit measured against the cap.
+            .limit(5000)
         .eq('class_id', classId)
         .gte('attendance_date', from)
         .lte('attendance_date', to);

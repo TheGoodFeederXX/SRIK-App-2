@@ -84,6 +84,7 @@ export async function getActiveTimetable(): Promise<TimetableInfo | null> {
     const { data, error } = await db
         .from('timetables')
         .select('id, name, version, status, effective_from, published_at')
+        .limit(2000)
         .order('version', { ascending: false });
 
     if (error) throw new Error(`Could not load the timetable: ${error.message}`);
@@ -116,6 +117,7 @@ export async function listPeriods(timetableId: string): Promise<PeriodRecord[]> 
     const { data, error } = await db
         .from('timetable_periods')
         .select('id, day_of_week, period_number, start_time, end_time, type, label')
+        .limit(2000)
         .eq('timetable_id', timetableId)
         .order('period_number');
 
@@ -281,6 +283,7 @@ export async function listTimetableClasses(timetableId: string): Promise<Timetab
         // asked to return, and rejects the request outright.
         .from('timetable_entries')
         .select('class_id, classes!inner(display_name, year_level), timetable_periods!inner(timetable_id)')
+            .limit(2000)
         .eq('timetable_periods.timetable_id', timetableId)
         .limit(2000);
 
@@ -308,6 +311,7 @@ export async function listTimetableTeachers(timetableId: string): Promise<Timeta
     const { data, error } = await db
         .from('timetable_entries')
         .select('teacher_id, teachers!inner(full_name), timetable_periods!inner(timetable_id)')
+        .limit(2000)
         .eq('timetable_periods.timetable_id', timetableId)
         .not('teacher_id', 'is', null)
         .limit(2000);
@@ -446,6 +450,7 @@ export async function listAssignableSubjects(
     const { data, error } = await db
         .from('teaching_assignments')
         .select('subject_id, teacher_id, subjects!inner(code, name), teachers!inner(full_name)')
+        .limit(2000)
         .eq('academic_year_id', academicYearId)
         .eq('class_id', classId)
         .eq('status', 'ACTIVE')
@@ -621,6 +626,7 @@ export async function findTeacherClash(
     const { data, error } = await db
         .from('timetable_entries')
         .select('class_id, classes!inner(display_name), subjects(code), timetable_periods!inner(timetable_id)')
+        .limit(2000)
         .eq('teacher_id', teacherId)
         .eq('period_id', periodId)
         .eq('timetable_periods.timetable_id', timetableId)
@@ -664,6 +670,7 @@ export async function getMyClassId(): Promise<string | null> {
     const { data, error } = await supabase
         .from('student_enrollments')
         .select('class_id, students!inner(status)')
+        .limit(2000)
         .is('ended_at', null)
         .eq('students.status', 'ACTIVE')
         .order('started_at', { ascending: false })
@@ -688,6 +695,7 @@ export async function getMyTeacherId(): Promise<string | null> {
     const { data, error } = await supabase
         .from('user_roles')
         .select('role_code')
+        .limit(2000)
         .eq('user_id', (await supabase.auth.getUser()).data.user?.id ?? '')
         .limit(1);
 
@@ -701,6 +709,7 @@ export async function getMyTeacherId(): Promise<string | null> {
     const { data: rows, error: teacherError } = await supabase
         .from('teachers')
         .select('id')
+        .limit(2000)
         .limit(1);
 
     if (teacherError) throw new Error(`Could not find your teacher record: ${teacherError.message}`);

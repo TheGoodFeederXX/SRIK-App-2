@@ -226,6 +226,7 @@ export async function listFeeTypes(includeInactive = false): Promise<FeeType[]> 
     let query = supabase
         .from('fee_types')
         .select('id, code, name, default_amount, frequency, description, sort_order, status')
+        .limit(2000)
         .order('sort_order')
         .order('name');
     if (!includeInactive) query = query.eq('status', 'ACTIVE');
@@ -279,6 +280,7 @@ export async function listStudentCharges(
             'amount, discount_amount, discount_reason, due_date, description, status, ' +
             'fee_types(name)'
         )
+            .limit(2000)
         .eq('student_id', studentId)
         .order('period_year', { ascending: false, nullsFirst: false })
         .order('period_month', { ascending: false, nullsFirst: false })
@@ -316,6 +318,7 @@ export async function chargeBalances(
     const { data, error } = await supabase
         .from('student_charges')
         .select('id, amount, discount_amount')
+        .limit(2000)
         .in('id', chargeIds);
     if (error) throw error;
 
@@ -398,6 +401,7 @@ export async function createCharge(input: {
             description: input.description ?? null,
         })
         .select()
+            .limit(2000)
         .single();
     if (error) throw error;
     return data as Charge;
@@ -514,6 +518,7 @@ export async function listPayments(options?: {
             'payment_allocations(amount, student_charge_id, ' +
             'student_charges(period_month, period_year, fee_types(name), students(full_name)))'
         )
+            .limit(2000)
         .order('paid_at', { ascending: false })
         .limit(options?.limit ?? 100);
     if (options?.fromDate) query = query.gte('paid_at', options.fromDate);
@@ -576,6 +581,7 @@ export async function listOutstanding(academicYearId?: string): Promise<StudentB
         .select(
             'id, student_id, amount, discount_amount, status, students(full_name, admission_no)'
         )
+            .limit(2000)
         .in('status', ['OUTSTANDING', 'PARTIAL']);
     if (academicYearId) query = query.eq('academic_year_id', academicYearId);
 
@@ -638,6 +644,7 @@ export async function listActiveStudents(): Promise<
     const { data, error } = await supabase
         .from('students')
         .select('id, full_name, admission_no')
+        .limit(2000)
         .eq('status', 'ACTIVE')
         .order('full_name');
     if (error) throw error;
@@ -650,6 +657,7 @@ export async function getCurrentAcademicYear(): Promise<{ id: string; name: stri
     const { data, error } = await supabase
         .from('academic_years')
         .select('id, name')
+        .limit(2000)
         .eq('status', 'CURRENT')
         .maybeSingle();
     if (error) throw error;

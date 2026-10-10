@@ -15,7 +15,7 @@
  *      single audited transaction.
  */
 
-import { requireSupabase } from './client';
+import { readAllPages, requireSupabase } from './client';
 
 /** A student as the screens consume it. */
 export interface StudentRecord {
@@ -121,34 +121,56 @@ const STUDENT_COLUMNS =
  * students the size is irrelevant, and separate queries are far easier to
  * verify than a deeply nested PostgREST query — which matters more here than
  * saving two round trips.
+ *
+ * EVERY QUERY HERE PAGES, and the reason is the school's own growth rather than
+ * today's roll. The Data API returns at most 1,000 rows per response and stops
+ * there without an error. Five years of graduates in the archive reaches that on
+ * the students list alone, and the school would see a full-looking register with
+ * people quietly missing from the bottom — sorted by name, so the loss would fall
+ * on whoever comes last alphabetically and be attributed to anything but paging.
+ * `readAllPages` keeps asking until the answer runs out.
+ *
+ * Each page request needs an `order`, or the database may return rows in a
+ * different order per page and a student on a boundary can be dropped or doubled.
  */
 export async function listStudents(): Promise<StudentRecord[]> {
     const db = requireSupabase();
 
-    const { data: students, error } = await db
-        .from('students')
-        .select(STUDENT_COLUMNS)
-        .order('full_name');
+    let students: unknown[];
+    try {
+        students = await readAllPages<StudentRow>((from, to) =>
+            db.from('students').select(STUDENT_COLUMNS).order('full_name').range(from, to),
+        );
+    } catch (e) {
+        throw new Error(
+            `Could not load students: ${e instanceof Error ? e.message : String(e)}`,
+        );
+    }
 
-    if (error) throw new Error(`Could not load students: ${error.message}`);
-    if (!students || students.length === 0) return [];
+    if (students.length === 0) return [];
 
     const rows = students as unknown as StudentRow[];
 
     // Current class per student. A failure here degrades to "no class shown"
     // rather than blanking the whole list: a student without a class is a
     // normal state, not an error.
+    //
+    // This one is not paged, and that is deliberate rather than an oversight: a
+    // student has AT MOST ONE open enrollment — the table's own constraint says so —
+    // so the number of rows is bounded by the number of students, and an unbounded
+    // read of it is not possible.
     const classByStudent = new Map<string, { id: string; name: string; yearLevel: number; code: string | null }>();
     const { data: enrollments } = await db
         .from('student_enrollments')
         .select('student_id, class_id, ended_at')
-        .is('ended_at', null);
+        .is('ended_at', null)
+        .limit(5000);
 
     if (enrollments) {
         const enrollmentRows = enrollments as unknown as EnrollmentRow[];
         const classIds = [...new Set(enrollmentRows.map(e => e.class_id))];
         const { data: classes } = classIds.length
-            ? await db.from('classes').select('id, display_name, year_level, code').in('id', classIds)
+            ? await db.from('classes').select('id, display_name, year_level, code').in('id', classIds).limit(1000)
             : { data: [] as ClassRow[] };
 
         const classById = new Map(((classes ?? []) as unknown as ClassRow[]).map(c => [c.id, c]));
@@ -197,10 +219,14 @@ async function loadGuardians(studentIds: string[]): Promise<Map<string, Guardian
     if (studentIds.length === 0) return result;
 
     const db = requireSupabase();
+    // Bounded by `studentIds`, which the caller supplies — a page of students. A
+    // guardian count per child is small (one to three), so this cannot reach the
+    // 1,000-row cap for a realistic page; the explicit limit states that bound.
     const { data: links } = await db
         .from('student_guardians')
         .select('student_id, guardian_id, relationship, is_primary, is_emergency_contact')
-        .in('student_id', studentIds);
+        .in('student_id', studentIds)
+        .limit(10000);
 
     if (!links) return result;
 
@@ -211,7 +237,8 @@ async function loadGuardians(studentIds: string[]): Promise<Map<string, Guardian
     const { data: people } = await db
         .from('guardians')
         .select('id, full_name, phone, email')
-        .in('id', guardianIds);
+        .in('id', guardianIds)
+        .limit(10000);
 
     const personById = new Map(((people ?? []) as unknown as GuardianRow[]).map(g => [g.id, g]));
 
@@ -483,7 +510,10 @@ export async function listClassOptions(): Promise<ClassOption[]> {
         .eq('academic_year_id', (year as unknown as { id: string }).id)
         .eq('status', 'ACTIVE')
         .order('year_level')
-        .order('name');
+        .order('name')
+        // A school has a handful of classes per year, not a thousand. The explicit
+        // limit records that this is a bounded list rather than an oversight.
+        .limit(500);
 
     if (error) throw new Error(`Could not load classes: ${error.message}`);
     return ((data ?? []) as unknown as ClassRow[]).map(c => ({ id: c.id, label: c.display_name }));
@@ -511,12 +541,21 @@ export async function getCurrentAcademicYearId(): Promise<string | null> {
 export async function suggestNextAdmissionNo(prefix = 'S-'): Promise<string> {
     const db = requireSupabase();
 
-    const { data } = await db
-        .from('students')
-        .select('admission_no')
-        .ilike('admission_no', `${prefix}%`);
+    // PAGED. This reads every admission number the school has ever issued, and the
+    // table only grows — it holds graduates and transfers too, because the record is
+    // kept. A count that silently stopped at 1,000 would suggest a number that is
+    // already taken (the highest ones are missing), and `createStudent` would then
+    // report a confusing clash on the unique index instead of a clear duplicate.
+    const rows = await readAllPages<{ admission_no: string }>((from, to) =>
+        db
+            .from('students')
+            .select('admission_no')
+            .ilike('admission_no', `${prefix}%`)
+            .order('admission_no')
+            .range(from, to),
+    );
 
-    const numbers = ((data ?? []) as unknown as { admission_no: string }[])
+    const numbers = rows
         .map(s => Number(s.admission_no.slice(prefix.length)))
         .filter(n => Number.isFinite(n));
 
@@ -574,12 +613,23 @@ export interface GuardianRecord {
 export async function listGuardians(): Promise<GuardianRecord[]> {
     const db = requireSupabase();
 
-    const { data: guardians, error } = await db
-        .from('guardians')
-        .select('id, full_name, phone, email, identity_no, address, occupation, user_id')
-        .order('full_name');
-
-    if (error) throw new Error(`Could not load guardians: ${error.message}`);
+    // PAGED, because this is the school's entire guardian roll — one row per
+    // parent and carer, so ~250 today and unbounded as siblings and years are
+    // added. Over 1,000 it would return a full-looking list missing people.
+    let guardians: unknown[];
+    try {
+        guardians = await readAllPages<Record<string, unknown>>((from, to) =>
+            db
+                .from('guardians')
+                .select('id, full_name, phone, email, identity_no, address, occupation, user_id')
+                .order('full_name')
+                .range(from, to),
+        );
+    } catch (e) {
+        throw new Error(
+            `Could not load guardians: ${e instanceof Error ? e.message : String(e)}`,
+        );
+    }
 
     const rows = (guardians ?? []) as unknown as {
         id: string; full_name: string; phone: string; email: string | null;
@@ -593,10 +643,23 @@ export async function listGuardians(): Promise<GuardianRecord[]> {
     // Links are read on their own and joined in memory: nested PostgREST selects
     // are harder to verify, and at SRIK's size the extra query is cheaper than
     // the ambiguity.
-    const { data: links } = await db
-        .from('student_guardians')
-        .select('guardian_id, student_id, relationship, is_primary')
-        .in('guardian_id', ids);
+    // One row per guardian-child pair, so the count grows with family size rather
+    // than with the roll. It is read in pages anyway: the cost is one extra request
+    // only when there is genuinely another page, and the alternative is a silently
+    // short list of children.
+    let links: unknown[];
+    try {
+        links = await readAllPages<Record<string, unknown>>((from, to) =>
+            db
+                .from('student_guardians')
+                .select('guardian_id, student_id, relationship, is_primary')
+                .in('guardian_id', ids)
+                .order('guardian_id')
+                .range(from, to),
+        );
+    } catch {
+        links = [];
+    }
 
     const linkRows = (links ?? []) as unknown as {
         guardian_id: string; student_id: string; relationship: string; is_primary: boolean;
@@ -609,7 +672,8 @@ export async function listGuardians(): Promise<GuardianRecord[]> {
         const { data: students } = await db
             .from('students')
             .select('id, full_name')
-            .in('id', studentIds);
+            .in('id', studentIds)
+            .limit(10000);
 
         const studentRows = (students ?? []) as unknown as {
             id: string; full_name: string;
@@ -623,7 +687,8 @@ export async function listGuardians(): Promise<GuardianRecord[]> {
             .from('student_enrollments')
             .select('student_id, class_id, ended_at')
             .in('student_id', studentIds)
-            .is('ended_at', null);
+            .is('ended_at', null)
+            .limit(10000);
 
         const enrolledClassByStudent = new Map<string, string>();
         for (const e of (enrollments ?? []) as unknown as { student_id: string; class_id: string }[]) {
@@ -638,7 +703,8 @@ export async function listGuardians(): Promise<GuardianRecord[]> {
             const { data: classes } = await db
                 .from('classes')
                 .select('id, display_name')
-                .in('id', classIds);
+                .in('id', classIds)
+                .limit(1000);
             for (const c of (classes ?? []) as unknown as { id: string; display_name: string }[]) {
                 classById.set(c.id, c.display_name);
             }
@@ -725,16 +791,24 @@ export async function saveGuardian(input: {
 export async function deleteGuardian(id: string): Promise<{ success: boolean; error?: string }> {
     const db = requireSupabase();
 
-    const { data: links } = await db
+    // A COUNT, not a row fetch, and the difference matters for a guard like this.
+    //
+    // This decides whether a guardian may be deleted. Fetching the rows would cap at
+    // 1,000 and the check would be "fewer than 1,000 links", which is a weaker rule
+    // than it looks — and it is the wrong failure direction: a guardian with 1,001
+    // children would be reported as deletable. `count: 'exact'` with `head: true`
+    // makes the database do the counting, so no cap applies.
+    const { count, error: linkError } = await db
         .from('student_guardians')
-        .select('student_id')
+        .select('student_id', { count: 'exact', head: true })
         .eq('guardian_id', id);
+    if (linkError) return { success: false, error: linkError.message };
 
-    const linked = (links ?? []) as unknown as { student_id: string }[];
-    if (linked.length > 0) {
+    const linkedCount = count ?? 0;
+    if (linkedCount > 0) {
         return {
             success: false,
-            error: `This guardian is still linked to ${linked.length} ${linked.length === 1 ? 'student' : 'students'}. Remove the link from the student's record first.`,
+            error: `This guardian is still linked to ${linkedCount} ${linkedCount === 1 ? 'student' : 'students'}. Remove the link from the student's record first.`,
         };
     }
 

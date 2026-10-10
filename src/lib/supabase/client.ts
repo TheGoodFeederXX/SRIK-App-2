@@ -98,3 +98,79 @@ export function requireSupabase(): SupabaseClient {
     }
     return supabase;
 }
+
+/**
+ * The largest number of rows the Data API will return in one response.
+ *
+ * This is not a preference. Asking for more does not give you more — the response
+ * simply stops here, with no error and no indication that it was cut short. A list
+ * of 1,250 students arrives as 1,000 students and looks complete.
+ */
+export const MAX_ROWS_PER_REQUEST = 1000;
+
+/** A page of rows, read in the order the caller asked for. */
+export type PageReader<T> = (
+    from: number,
+    to: number,
+) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>;
+
+/**
+ * Reads a list in pages until the database has nothing left to give.
+ *
+ * WHY THIS EXISTS (audit F28). Several of these modules ask for "all the students"
+ * or "this family's charges" and then show them on a screen. With ~250 students and
+ * a school week of Sunday to Thursday, one week of attendance is already 1,250 rows,
+ * and a few months of charges passes 1,000 comfortably. Past that line the response
+ * is silently cut short. There is no error to catch: the list is valid, non-empty
+ * and incomplete. The screen shows a full register that is quietly missing people,
+ * and nobody has any reason to look further.
+ *
+ * The fix cannot be "raise the limit", because there is no wider request to make.
+ * The only correct way to read an unbounded list is to keep asking until the answer
+ * runs out.
+ *
+ * HOW TO USE IT. Pass a function that builds one page of the query with `range`:
+ *
+ *     const rows = await readAllPages<StudentRow>((from, to) =>
+ *         db.from('students').select('...').order('full_name').range(from, to),
+ *     );
+ *
+ * ALWAYS give the query an `order`. Without one the database is free to return rows
+ * in a different order for each page, and a row sitting on a page boundary can be
+ * returned twice or skipped entirely — a paging bug that looks like missing data.
+ *
+ * `MAX_PAGES` is a backstop, not a limit anyone should reach. It stops a query that
+ * matches far more than expected — a broken filter, say — from looping forever and
+ * draining the browser. Reaching it is a genuine error and is reported as one,
+ * because a partial list presented as a complete one is the exact failure this
+ * function exists to prevent.
+ */
+export async function readAllPages<T>(
+    read: PageReader<T>,
+    pageSize: number = MAX_ROWS_PER_REQUEST,
+): Promise<T[]> {
+    const MAX_PAGES = 100;
+    const all: T[] = [];
+
+    for (let page = 0; page < MAX_PAGES; page += 1) {
+        const from = page * pageSize;
+        const to = from + pageSize - 1;
+
+        const { data, error } = await read(from, to);
+        if (error) throw new Error(error.message);
+        if (!data || data.length === 0) return all;
+
+        all.push(...data);
+
+        // A short page means the end of the data. An exactly-full page might be the
+        // end too, so the loop asks once more and stops on the empty answer — one
+        // extra request, in exchange for never silently losing the last row.
+        if (data.length < pageSize) return all;
+    }
+
+    throw new Error(
+        `[supabase] Reading this list stopped after ${MAX_PAGES} pages ` +
+        `(${MAX_PAGES * pageSize} rows). The result would have been incomplete, so ` +
+        `it was refused rather than shown as if it were the whole list.`,
+    );
+}

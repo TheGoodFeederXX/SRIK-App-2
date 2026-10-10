@@ -100,6 +100,7 @@ export async function getCurrentAcademicYearId(): Promise<string | null> {
     const { data, error } = await db
         .from('academic_years')
         .select('id')
+        .limit(2000)
         .eq('status', 'CURRENT')
         .maybeSingle();
     if (error) return null;
@@ -123,6 +124,7 @@ export async function listClasses(): Promise<ClassRecord[]> {
     const { data, error } = await db
         .from('classes')
         .select('id, year_level, name, code, display_name, status, academic_year_id')
+        .limit(2000)
         .order('year_level')
         .order('name');
 
@@ -136,6 +138,7 @@ export async function listClasses(): Promise<ClassRecord[]> {
     const { data: enrollments } = await db
         .from('student_enrollments')
         .select('class_id')
+        .limit(2000)
         .is('ended_at', null);
 
     for (const e of (enrollments ?? []) as unknown as EnrollmentRow[]) {
@@ -163,6 +166,7 @@ export async function listClassOptions(): Promise<ClassOption[]> {
     const { data, error } = await db
         .from('classes')
         .select('id, display_name')
+        .limit(2000)
         .eq('academic_year_id', yearId)
         .eq('status', 'ACTIVE')
         .order('year_level')
@@ -206,6 +210,7 @@ export async function createClass(input: ClassInput): Promise<WriteResult> {
             status: 'ACTIVE',
         })
         .select('id')
+            .limit(2000)
         .single();
 
     if (error) {
@@ -298,6 +303,7 @@ export async function listSubjects(): Promise<SubjectRecord[]> {
     const { data, error } = await db
         .from('subjects')
         .select('id, code, name, short_name, category, status')
+        .limit(2000)
         .order('name');
 
     if (error) throw new Error(`Could not load subjects: ${error.message}`);
@@ -305,7 +311,10 @@ export async function listSubjects(): Promise<SubjectRecord[]> {
     if (rows.length === 0) return [];
 
     const counts = new Map<string, number>();
-    const { data: links } = await db.from('class_subjects').select('class_id, subject_id');
+    const { data: links } = await db
+        .from('class_subjects')
+        .select('class_id, subject_id')
+        .limit(2000);
     for (const l of (links ?? []) as unknown as ClassSubjectRow[]) {
         counts.set(l.subject_id, (counts.get(l.subject_id) ?? 0) + 1);
     }
@@ -327,6 +336,7 @@ export async function listSubjectOptions(): Promise<ClassOption[]> {
     const { data, error } = await db
         .from('subjects')
         .select('id, name, code')
+        .limit(2000)
         .eq('status', 'ACTIVE')
         .order('name');
 
@@ -359,6 +369,7 @@ export async function createSubject(input: SubjectInput): Promise<WriteResult> {
         .from('subjects')
         .insert(subjectRow(input))
         .select('id')
+        .limit(2000)
         .single();
 
     if (error) {
@@ -430,7 +441,10 @@ export async function deleteSubject(id: string): Promise<WriteResult> {
 export async function listClassSubjects(): Promise<ClassSubjectRecord[]> {
     const db = requireSupabase();
 
-    const { data, error } = await db.from('class_subjects').select('class_id, subject_id');
+    const { data, error } = await db
+        .from('class_subjects')
+        .select('class_id, subject_id')
+        .limit(2000);
     if (error) throw new Error(`Could not load class subjects: ${error.message}`);
 
     return ((data ?? []) as unknown as ClassSubjectRow[]).map(r => ({
@@ -464,6 +478,7 @@ export async function setClassSubjects(
     const { data: existing, error: readError } = await db
         .from('class_subjects')
         .select('subject_id')
+        .limit(2000)
         .eq('class_id', classId)
         .eq('academic_year_id', yearId);
 
