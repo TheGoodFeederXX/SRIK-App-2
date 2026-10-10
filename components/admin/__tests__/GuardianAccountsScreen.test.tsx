@@ -21,11 +21,11 @@ import { MemoryRouter } from 'react-router';
 import GuardianAccountsScreen from '../GuardianAccountsScreen';
 
 const {
-    listGuardians, createGuardianAccount, setGuardianChildLink, createGuardian,
+    listGuardians, provisionGuardianAccount, setGuardianChildLink, createGuardian,
     listStudentsForLinking, listLinkedStudents,
 } = vi.hoisted(() => ({
     listGuardians: vi.fn(),
-    createGuardianAccount: vi.fn(),
+    provisionGuardianAccount: vi.fn(),
     setGuardianChildLink: vi.fn(),
     createGuardian: vi.fn(),
     listStudentsForLinking: vi.fn(),
@@ -39,7 +39,7 @@ vi.mock('../../../src/lib/supabase/guardianAccounts', async () => {
     return {
         ...actual,
         listGuardians: (...a: unknown[]) => listGuardians(...a),
-        createGuardianAccount: (...a: unknown[]) => createGuardianAccount(...a),
+        provisionGuardianAccount: (...a: unknown[]) => provisionGuardianAccount(...a),
         setGuardianChildLink: (...a: unknown[]) => setGuardianChildLink(...a),
         createGuardian: (...a: unknown[]) => createGuardian(...a),
         listStudentsForLinking: (...a: unknown[]) => listStudentsForLinking(...a),
@@ -115,59 +115,55 @@ describe('GuardianAccountsScreen — creating an account', () => {
         fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
             target: { value: 'bapa@srik.test' },
         });
-        fireEvent.change(screen.getByPlaceholderText('Berikan kepada ibu bapa'), {
-            target: { value: 'KataLaluan#2026' },
-        });
         fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
 
-        expect(await screen.findByText(/Sila isi emel, kata laluan/)).toBeTruthy();
-        expect(createGuardianAccount).not.toHaveBeenCalled();
+        expect(await screen.findByText(/Sila isi emel dan sebab/)).toBeTruthy();
+        expect(provisionGuardianAccount).not.toHaveBeenCalled();
     });
 
-    it('THE RULE: will not create an account with a short password', async () => {
+    it('THE RULE: the clerk does not choose the password any more', async () => {
+        // The password field was a text input the clerk typed into, and the rule
+        // it enforced was WEAKER than the system's own — 8 characters, where the
+        // project config says 12. The field is now a read-only display of the
+        // password the system generates, so no clerk-chosen password reaches the
+        // account at all (audit F16).
         await openGuardian();
-        fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
-            target: { value: 'bapa@srik.test' },
-        });
-        fireEvent.change(screen.getByPlaceholderText('Berikan kepada ibu bapa'), {
-            target: { value: '123' },
-        });
-        fireEvent.change(screen.getByPlaceholderText(/ibu bapa baharu mendaftar/), {
-            target: { value: 'Ibu bapa baharu' },
-        });
-        fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
-
-        expect(await screen.findByText(/Sila isi emel, kata laluan/)).toBeTruthy();
-        expect(createGuardianAccount).not.toHaveBeenCalled();
+        expect(screen.queryByPlaceholderText('Berikan kepada ibu bapa')).toBeNull();
+        expect(screen.getByPlaceholderText(/Dijana automatik/)).toBeTruthy();
     });
 
     it('creates the account and confirms the email to hand over', async () => {
-        createGuardianAccount.mockResolvedValue({
-            user_id: 'u1', guardian_id: 'g1', email: 'bapa@srik.test',
+        provisionGuardianAccount.mockResolvedValue({
+            email: 'bapa@srik.test',
+            temporaryPassword: 'Sementara#2026Xy',
+            childrenLinked: 0,
         });
         await openGuardian();
         fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
             target: { value: 'bapa@srik.test' },
-        });
-        fireEvent.change(screen.getByPlaceholderText('Berikan kepada ibu bapa'), {
-            target: { value: 'KataLaluan#2026' },
         });
         fireEvent.change(screen.getByPlaceholderText(/ibu bapa baharu mendaftar/), {
             target: { value: 'Ibu bapa baharu' },
         });
         fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
 
-        await waitFor(() => expect(createGuardianAccount).toHaveBeenCalledTimes(1));
-        const arg = createGuardianAccount.mock.calls[0][0] as {
-            guardianId: string; email: string; password: string; reason: string;
+        await waitFor(() => expect(provisionGuardianAccount).toHaveBeenCalledTimes(1));
+        const arg = provisionGuardianAccount.mock.calls[0][0] as {
+            guardianId: string; email: string;
         };
         expect(arg.guardianId).toBe('g1');
         expect(arg.email).toBe('bapa@srik.test');
-        expect(arg.reason).toBe('Ibu bapa baharu');
 
         // The clerk must be able to read the email back, because the password
         // cannot be recovered later.
         expect(await screen.findByText(/Akaun dicipta: bapa@srik\.test/)).toBeTruthy();
+
+        // And the generated password must be shown, or the clerk has nothing to
+        // hand over and the parent can never sign in.
+        await waitFor(() => {
+            const input = screen.getByPlaceholderText(/Dijana automatik/) as HTMLInputElement;
+            expect(input.value).toBe('Sementara#2026Xy');
+        });
     });
 
     it('warns the clerk that the password cannot be read back', async () => {
@@ -176,13 +172,10 @@ describe('GuardianAccountsScreen — creating an account', () => {
     });
 
     it('explains a duplicate email in words', async () => {
-        createGuardianAccount.mockRejectedValue(new Error('An account with that email already exists'));
+        provisionGuardianAccount.mockRejectedValue(new Error('An account with that email already exists'));
         await openGuardian();
         fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
             target: { value: 'bapa@srik.test' },
-        });
-        fireEvent.change(screen.getByPlaceholderText('Berikan kepada ibu bapa'), {
-            target: { value: 'KataLaluan#2026' },
         });
         fireEvent.change(screen.getByPlaceholderText(/ibu bapa baharu mendaftar/), {
             target: { value: 'Cuba' },

@@ -25,9 +25,60 @@ function generateTemporaryPassword(length = 16): string {
   return Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('');
 }
 
+// -----------------------------------------------------------------------------
+// Cross-origin access.
+//
+// The previous version rejected OPTIONS with 405 and attached no CORS headers, so
+// a browser calling this from the app's own origin failed at the preflight before
+// the request was ever sent — audit finding F13. The allow-list is explicit rather
+// than `*` because this endpoint creates accounts; `*` would let any page a
+// signed-in administrator visits call it.
+// -----------------------------------------------------------------------------
+const ALLOWED_ORIGINS = (Deno.env.get('ALLOWED_ORIGINS') ?? '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+function corsHeaders(req: Request): Record<string, string> {
+  const origin = req.headers.get('Origin') ?? '';
+  const headers: Record<string, string> = {
+    'Vary': 'Origin',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'authorization, content-type, apikey, x-client-info',
+    'Access-Control-Max-Age': '86400',
+  };
+  // An empty allow-list means "same-origin only", which needs no CORS header at
+  // all. Falling back to `*` would silently widen the endpoint.
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    headers['Access-Control-Allow-Origin'] = origin;
+  }
+  return headers;
+}
+
+function json(
+  body: unknown,
+  status: number,
+  req: Request,
+  extra?: Record<string, string>
+): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'Content-Type': 'application/json',
+      ...corsHeaders(req),
+      ...extra,
+    },
+  });
+}
+
 Deno.serve(async (req: Request) => {
+  // The preflight must be answered before any authorization: the browser sends it
+  // without credentials, so requiring a token here would reject every real call.
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders(req) });
+  }
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
+    return json({ error: 'Method not allowed' }, 405, req);
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL');
@@ -35,16 +86,13 @@ Deno.serve(async (req: Request) => {
   const publishableKey = Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY');
 
   if (!supabaseUrl || !secretKey || !publishableKey) {
-    return new Response(
-      JSON.stringify({ error: 'Server is not configured to create accounts.' }),
-      { status: 500 }
-    );
+    return json({ error: 'Server is not configured to create accounts.' }, 500, req);
   }
 
   // Identify the CALLER from their own token, then act with the secret key.
   const authorization = req.headers.get('Authorization') ?? '';
   if (!authorization.toLowerCase().startsWith('bearer ')) {
-    return new Response(JSON.stringify({ error: 'Not signed in' }), { status: 401 });
+    return json({ error: 'Not signed in' }, 401, req);
   }
 
   const callerClient = createClient(supabaseUrl, publishableKey, {
@@ -54,7 +102,7 @@ Deno.serve(async (req: Request) => {
 
   const { data: callerData, error: callerError } = await callerClient.auth.getUser();
   if (callerError || !callerData.user) {
-    return new Response(JSON.stringify({ error: 'Not signed in' }), { status: 401 });
+    return json({ error: 'Not signed in' }, 401, req);
   }
 
   // Authorize against the database, not the request body.
@@ -69,10 +117,7 @@ Deno.serve(async (req: Request) => {
   });
 
   if (permissionError || permitted !== true) {
-    return new Response(
-      JSON.stringify({ error: 'Not permitted to create user accounts.' }),
-      { status: 403 }
-    );
+    return json({ error: 'Not permitted to create user accounts.' }, 403, req);
   }
 
   // Only now, after the caller is known to be allowed, does the secret key come
@@ -83,12 +128,12 @@ Deno.serve(async (req: Request) => {
   try {
     body = await req.json();
   } catch {
-    return new Response(JSON.stringify({ error: 'Invalid request body' }), { status: 400 });
+    return json({ error: 'Invalid request body' }, 400, req);
   }
 
   const { teacherId, email, fullName } = body;
   if (!teacherId || !email) {
-    return new Response(JSON.stringify({ error: 'teacherId and email are required' }), { status: 400 });
+    return json({ error: 'teacherId and email are required' }, 400, req);
   }
 
   // Confirm the teacher exists before creating an orphan account.
@@ -99,16 +144,13 @@ Deno.serve(async (req: Request) => {
     .maybeSingle();
 
   if (teacherError || !teacher) {
-    return new Response(JSON.stringify({ error: 'Teacher not found' }), { status: 404 });
+    return json({ error: 'Teacher not found' }, 404, req);
   }
 
   // Refuse to overwrite an existing link: silently replacing it could detach a
   // person from their own history.
   if (teacher.user_id) {
-    return new Response(
-      JSON.stringify({ error: 'This teacher already has a login account.' }),
-      { status: 409 }
-    );
+    return json({ error: 'This teacher already has a login account.' }, 409, req);
   }
 
   const temporaryPassword = generateTemporaryPassword();
@@ -124,58 +166,59 @@ Deno.serve(async (req: Request) => {
 
   if (createError || !created.user) {
     const alreadyExists = createError?.message?.toLowerCase().includes('already');
-    return new Response(
-      JSON.stringify({
+    return json(
+      {
         error: alreadyExists
           ? 'An account with that email already exists.'
           : createError?.message ?? 'Could not create the account.',
-      }),
-      { status: 400 }
+      },
+      400,
+      req
     );
   }
 
-  // The teacher profile row and TEACHER role are created by the same triggers
-  // that Phase 1 relies on; this function only links the account and marks that
-  // the password must be changed at first sign-in.
-  const { error: linkError } = await admin
-    .from('teachers')
-    .update({ user_id: created.user.id })
-    .eq('id', teacherId);
+  // Everything AFTER the credential is created is database work, and it is one
+  // transactional RPC.
+  //
+  // This comment used to claim "The teacher profile row and TEACHER role are
+  // created by the same triggers that Phase 1 relies on". `handle_new_user`
+  // inserts a `profiles` row and NOTHING else — so this function linked the account
+  // and granted no role, and the teacher could sign in and see an empty
+  // application with no error to explain it (audit F13). Measured before the fix:
+  // 1 profile, 0 roles, 0 permissions.
+  //
+  // The RPC grants the role, sets the temporary-password flag, and does the link as
+  // a compare-and-set so two simultaneous requests cannot both succeed. It runs
+  // with the CALLER's token — not the secret key — because it authorizes against
+  // `auth.uid()`, which is the person asking, not the server.
+  const { data: linked, error: linkError } = await callerClient.rpc('link_teacher_account', {
+    p_teacher_id: teacherId,
+    p_user_id: created.user.id,
+  });
 
   if (linkError) {
-    // Roll the account back so a half-created state is not left behind: an
-    // account nobody is linked to would collide on the next attempt.
+    // Roll the account back. A half-provisioned account is exactly the failure
+    // being fixed: it can sign in, holds no role, and looks like a broken system
+    // rather than an incomplete one. Leaving it would also collide on the retry.
     await admin.auth.admin.deleteUser(created.user.id);
-    return new Response(
-      JSON.stringify({ error: `Could not link the account: ${linkError.message}` }),
-      { status: 500 }
-    );
-  }
-
-  const { error: flagError } = await admin
-    .from('profiles')
-    .update({ must_change_password: true })
-    .eq('id', created.user.id);
-
-  if (flagError) {
-    // The account and link are correct; only the forced-change flag is missing.
-    // Report it rather than failing, so the owner is not told the whole thing
-    // failed when the important part succeeded.
-    return new Response(
-      JSON.stringify({
-        created: true,
-        email: created.user.email,
-        temporaryPassword,
-        warning: 'Account created, but the password-change prompt could not be set.',
-      }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    return json(
+      { error: `Could not finish setting up the account: ${linkError.message}` },
+      500,
+      req
     );
   }
 
   // The temporary password is returned exactly once and deliberately never
   // stored: the owner passes it on, and the teacher must change it immediately.
-  return new Response(
-    JSON.stringify({ created: true, email: created.user.email, temporaryPassword }),
-    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  // Until they do, the account can sign in but holds no authority.
+  return json(
+    {
+      created: true,
+      email: created.user.email,
+      temporaryPassword,
+      role: linked?.role_code ?? 'TEACHER',
+    },
+    200,
+    req
   );
 });

@@ -312,12 +312,17 @@ export function onAuthStateChange(
  * must be called AFTER the password change succeeds. Calling it first would
  * mark the account as safe while the temporary password still worked.
  */
-export async function clearTemporaryPasswordFlag(): Promise<{ success: boolean; error?: string }> {
+export async function completePasswordChange(): Promise<{ success: boolean; error?: string }> {
     if (!isSupabaseConfigured || !supabase) {
         return { success: false, error: NOT_CONFIGURED };
     }
 
-    const { error } = await supabase.rpc('clear_temporary_password_flag');
+    // `complete_password_change` requires EVIDENCE that the password was actually
+    // changed — Supabase Auth writes the account's `updated_at`, and the function
+    // compares it against `created_at`. The old `clear_temporary_password_flag`
+    // took the caller's word for it, so the flag could be cleared without the
+    // password ever changing (audit F14).
+    const { error } = await supabase.rpc('complete_password_change');
     if (error) {
         return { success: false, error: translateAuthError(error.message) };
     }

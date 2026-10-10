@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { SchoolLogoIcon } from '../shared/SchoolLogoIcon';
 import LanguageSwitcher from '../shared/LanguageSwitcher';
-import { updatePassword, clearTemporaryPasswordFlag, signOut } from '../../src/lib/supabase/auth';
+import { updatePassword, completePasswordChange, signOut } from '../../src/lib/supabase/auth';
 
 /**
  * Forced password change for an account created with a temporary password.
@@ -56,7 +56,7 @@ const ChangePasswordScreen: React.FC = () => {
             // 2. Only now mark the account as no longer temporary. If this step
             //    fails the password is still changed, which is the safe order:
             //    the user may be asked again, but the shared password is gone.
-            const cleared = await clearTemporaryPasswordFlag();
+            const cleared = await completePasswordChange();
             if (!cleared.success) {
                 throw new Error(
                     cleared.error || 'Password changed, but the account could not be released. Please contact the administrator.'

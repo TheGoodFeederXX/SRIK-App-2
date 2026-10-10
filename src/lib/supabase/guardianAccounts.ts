@@ -83,27 +83,52 @@ export function friendlyGuardianError(error: unknown): string {
 }
 
 /**
- * Creates a login for a guardian.
+ * Creates a login for a guardian, and links their children.
  *
- * The password is chosen by the clerk and must be handed to the parent, who
- * should change it. Nothing is generated, because a generated password that
- * nobody writes down becomes a support call.
+ * This calls an Edge Function rather than the database, because creating an account
+ * needs a key that bypasses Row Level Security and that key must never reach the
+ * browser. The account is made by the system's own sign-up path, so the real
+ * password policy, email confirmation, password recovery and sign-in audit trail
+ * all apply to it. The function then links the guardian, gives the GUARDIAN role
+ * and links the children in one step.
+ *
+ * It replaced a database function that built the account's credentials itself. That
+ * version applied a minimum password length of 8 while the project's configuration
+ * says 12, and skipped every check listed above, because it wrote the account
+ * directly instead of asking the system to create one (audit F16).
+ *
+ * The temporary password is returned exactly once so the clerk can hand it over,
+ * and is not stored anywhere the app can read back.
  */
-export async function createGuardianAccount(input: {
+export async function provisionGuardianAccount(input: {
     guardianId: string;
     email: string;
-    password: string;
-    reason: string;
-}): Promise<{ user_id: string; guardian_id: string; email: string }> {
+    fullName?: string;
+    studentIds?: string[];
+}): Promise<{ email: string; temporaryPassword: string; childrenLinked: number }> {
     const supabase = requireSupabase();
-    const { data, error } = await supabase.rpc('create_guardian_account', {
-        p_guardian_id: input.guardianId,
-        p_email: input.email.trim(),
-        p_password: input.password,
-        p_reason: input.reason.trim(),
+    const { data, error } = await supabase.functions.invoke('provision-guardian-account', {
+        body: {
+            guardianId: input.guardianId,
+            email: input.email,
+            fullName: input.fullName,
+            studentIds: input.studentIds,
+        },
     });
     if (error) throw error;
-    return data as { user_id: string; guardian_id: string; email: string };
+    const result = data as {
+        email: string;
+        temporaryPassword: string;
+        childrenLinked?: number;
+    };
+    if (!result?.temporaryPassword) {
+        throw new Error('The account was created but no temporary password was returned.');
+    }
+    return {
+        email: result.email,
+        temporaryPassword: result.temporaryPassword,
+        childrenLinked: result.childrenLinked ?? 0,
+    };
 }
 
 /** Links or unlinks a guardian and a child. Unlinking removes access at once. */
