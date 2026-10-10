@@ -118,7 +118,23 @@ begin
     --    right to record a PARTICULAR class is a scope question. Without this,
     --    any teacher could write the register for a class they do not teach —
     --    F08. ADMINs are exempt: the office must be able to correct any register.
-    if not public.has_permission('admin.access') then
+    -- `has_role(array['ADMIN'])`, NOT a permission.
+    --
+    -- The first version of this check used `has_permission('admin.access')`. That
+    -- permission DOES NOT EXIST — ADMIN holds 39 permissions and that is not one
+    -- of them — so `has_permission` always returned false and the exemption never
+    -- fired. The effect was the opposite of the intent: every ADMIN was refused,
+    -- because only a teacher with a matching assignment could pass.
+    --
+    -- The security suite did not catch it, and the reason is worth recording: the
+    -- suite proved that a TEACHER is refused, which the broken version did too.
+    -- Proving a defect is fixed is not enough; the legitimate path has to be
+    -- proved to still work. Every guard test written since asserts both halves.
+    --
+    -- `has_role` is the project's own helper for "is this the office", already
+    -- used by the last-admin protection, and it checks `is_active_user()`
+    -- internally so a disabled administrator is not an exemption.
+    if not public.has_role(array['ADMIN']::public.app_role[]) then
         select count(*) into v_assigned
         from public.teaching_assignments ta
         where ta.class_id = p_class_id

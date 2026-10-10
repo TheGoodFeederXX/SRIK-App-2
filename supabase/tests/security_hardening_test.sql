@@ -49,11 +49,74 @@ begin
 end;
 $$;
 
--- No fixtures. The property under test is what the database ACCEPTS, and that is
--- true regardless of which rows happen to exist — which is what makes these
--- checks meaningful on a live database as well as in CI.
+-- MOSTLY NO FIXTURES, and that is still the point for the refusal checks: the
+-- property under test is what the database ACCEPTS, which is true regardless of
+-- which rows exist. That is what makes those checks meaningful on a live database
+-- as well as in CI.
+--
+-- BUT "no fixtures" IS NOT ENOUGH FOR THE ALLOWED CASE, and this file was wrong
+-- about that. `is_active_user()` reads `profiles.status`, and the phase suites
+-- never create profile rows — they call `test_as` with ids that have an
+-- `auth.users` entry and nothing else. So for every user these tests act as,
+-- `is_active_user()` was FALSE, every `has_permission` was false, and a check that
+-- asserted "this is refused" was passing for the wrong reason.
+--
+-- It surfaced the moment the ADMIN half of F01 was added: the admin was refused,
+-- correctly and for an unrelated reason. A refusal that happens because the test's
+-- own user is not real is not evidence of a security property.
 
 begin;
+
+-- Fixtures for the ALLOWED case only: an ACTIVE administrator, and a class the
+-- admin does not teach, so passing proves the exemption rather than an assignment.
+--
+-- The `auth.users` row is required, not decorative: `profiles.id` is a foreign key
+-- to it. The phase suites create their own user rows and roll back, so this suite
+-- must create the one it depends on.
+insert into auth.users (id, email, email_confirmed_at) values
+    (test_id('1'), 'admin.hardening@srik.test', now())
+on conflict (id) do nothing;
+
+insert into public.profiles (id, full_name, status) values
+    (test_id('1'), 'Pentadbir Ujian Keselamatan', 'ACTIVE')
+on conflict (id) do update set status = excluded.status;
+
+insert into public.user_roles (user_id, role_code) values
+    (test_id('1'), 'ADMIN')
+on conflict do nothing;
+
+-- A second account holding NO finance permission, for the checks that assert a
+-- signed-in user is refused. It has to be a DIFFERENT id from the admin: `test_id('1')`
+-- now legitimately passes those checks, and using it made the refusal test fail —
+-- correctly, because the premise (this user should be refused) was no longer true.
+insert into auth.users (id, email, email_confirmed_at) values
+    (test_id('2'), 'guru.hardening@srik.test', now())
+on conflict (id) do nothing;
+
+insert into public.profiles (id, full_name, status) values
+    (test_id('2'), 'Guru Ujian Keselamatan', 'ACTIVE')
+on conflict (id) do update set status = excluded.status;
+
+insert into public.user_roles (user_id, role_code) values
+    (test_id('2'), 'TEACHER')
+on conflict do nothing;
+
+insert into public.academic_years (id, name, start_date, end_date, status)
+values (test_id('900'), '2026', '2026-01-01', '2026-12-31', 'CURRENT')
+on conflict (id) do nothing;
+
+insert into public.classes (id, academic_year_id, year_level, name, code, status)
+values (test_id('700'), test_id('900'), 1, '1 Al-Junaidi', '1J', 'ACTIVE')
+on conflict (id) do nothing;
+
+insert into public.students (id, admission_no, full_name, gender, status)
+values (test_id('401'), 'H-001', 'Murid Ujian Keselamatan', 'MALE', 'ACTIVE')
+on conflict (id) do update set status = excluded.status;
+
+insert into public.student_enrollments
+    (id, student_id, class_id, academic_year_id, enrolled_at, status)
+values (test_id('501'), test_id('401'), test_id('700'), test_id('900'), '2026-01-05', 'ACTIVE')
+on conflict (id) do update set status = excluded.status;
 
 -- ---------------------------------------------------------------------------
 -- F01 — record_class_attendance must refuse an anonymous caller
@@ -115,6 +178,47 @@ begin
     end if;
 
     raise notice 'PASS F01: attendance cannot be attributed to another user';
+end
+$$;
+
+-- ---------------------------------------------------------------------------
+-- F01, THE OTHER HALF: an ADMIN must STILL be able to record attendance.
+--
+-- This test exists because its absence hid a bug in the FIRST version of the F01
+-- fix. That version gated the class-scope check on `has_permission('admin.access')`
+-- — a permission that does not exist (ADMIN holds 39, and that is not one of them)
+-- — so the exemption never fired and EVERY administrator was refused. The suite
+-- passed, because it only proved a teacher is refused, which the broken version
+-- also did.
+--
+-- The lesson is general and worth more than the finding: proving the defect is
+-- closed says nothing about whether the legitimate path still works. A guard test
+-- that never exercises the allowed case can certify a fix that breaks the product.
+-- ---------------------------------------------------------------------------
+do $$
+declare
+    v_blocked boolean := false;
+begin
+    perform test_as(test_id('1'));  -- ADMIN, holding no assignment for this class
+    begin
+        perform public.record_class_attendance(
+            test_id('700'),
+            '2026-03-09'::date,
+            jsonb_build_array(
+                jsonb_build_object('student_id', test_id('401'), 'status', 'PRESENT')
+            )
+        );
+    exception when insufficient_privilege then
+        v_blocked := true;
+    end;
+
+    if v_blocked then
+        raise exception
+            'FAIL F01: an ADMIN was refused attendance for a class they do not teach'
+            using errcode = 'raise_exception';
+    end if;
+
+    raise notice 'PASS F01: an admin can record attendance for any class';
 end
 $$;
 
@@ -224,7 +328,8 @@ begin
 
         -- signed in
         v_blocked := false;
-        perform test_as(test_id('1'));
+        -- The unprivileged account, NOT the admin: see the fixture note above.
+        perform test_as(test_id('2'));
         begin
             execute format('select public.%I(%L::uuid)', v_fn, '00000000-0000-4000-a000-000000000005');
         exception when others then
