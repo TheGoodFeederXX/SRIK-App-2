@@ -1548,3 +1548,16 @@ sengaja dipecahkan semula untuk membuktikan ujian benar-benar menangkapnya.
 | F32 | Kerja CI "Database rules" menjalankan suite SQL/RLS pada setiap push; versi Vercel CLI dipin. | CI hijau di GitHub termasuk kerja baharu; laman langsung 200. |
 
 **Jumlah suite SQL: 154 pemeriksaan.** Frontend: 56 fail / 425 ujian.
+
+## Audit 2026-10-10 — F39, F40 (tetapan platform)
+
+| Finding | Tindakan | Bukti |
+|---|---|---|
+| F39 | Perlindungan password bocor (HaveIBeenPwned) **tidak tersedia** pada pelan ini — API menolaknya secara eksplisit: "available on Pro Plans and up". Risiko direkodkan, bukan diakali. Yang boleh dikuatkan telah dikuatkan: panjang minimum 6 → **10**, dan kini wajib huruf kecil + besar + digit. | Log masuk pentadbir masih **200**; password lemah ditolak dengan mesej jelas; tiada akaun ujian tertinggal (0). |
+| F40 | Cawangan `main` **tiada** perlindungan langsung. Kini wajib lulus kedua-dua kerja CI: "Check, test and build" dan "Database rules", dengan mod ketat. | API mengesahkan kedua-dua konteks diperlukan, `strict: true`, admin tidak boleh langkau. |
+
+**Keputusan risiko F39 yang tinggal.** Perlindungan password bocor memerlukan
+pelan Pro. Langkah yang dikurangkan risiko sekarang: panjang minimum 10 dengan
+aksara bercampur, kadar cubaan log masuk Supabase, dan aliran tukar-password
+paksa untuk akaun guru/penjaga yang baharu (F13–F16). Jika sekolah naik ke pelan
+Pro, tetapan ini boleh dihidupkan tanpa perubahan kod.
