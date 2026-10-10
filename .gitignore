@@ -55,7 +55,26 @@ test_output_utf8.txt
 /tmp/
 *.txt
 *.js
+# WHY THIS SECTION IS WRITTEN THIS WAY.
+#
+# A blanket `*.ts` / `*.js` / `*.txt` rule was added to keep build output and test
+# scratch files out of git. Every exception had to be listed by hand, and anything
+# nobody thought of was silently dropped — with no error, and invisible locally
+# because the file still sits in the working directory.
+#
+# This was not theoretical. It removed, at various points:
+#   - `src/lib/supabase/**` — the entire Supabase data layer (13 files),
+#   - `src/lib/branding.ts` — the school-facts module everything imports,
+#   - `src/lib/__tests__/**` — 6 guard tests,
+#   - `supabase/functions/provision-teacher-account/index.ts`,
+#   - `prisma/seed.ts` (recorded below) and `public/robots.txt`.
+#
+# The pattern is the problem, so it is gone. Each entry below is now an explicit
+# DIRECTORY of source that belongs in the repository. Build output is excluded by
+# its own specific directory names instead.
 *.ts
+!src/**/*.ts
+!src/**/*.tsx
 !backend/src/**/*.ts
 !backend/tests/**/*.ts
 !lib/**/*.ts
@@ -68,6 +87,10 @@ test_output_utf8.txt
 !services/**/*.ts
 !services/**/*.tsx
 !api/**/*.ts
+!api/**/*.js
+!supabase/functions/**/*.ts
+!supabase/tests/**/*.sql
+!supabase/migrations/**/*.sql
 !tests/**/*.ts
 !*.config.ts
 !*.config.js
