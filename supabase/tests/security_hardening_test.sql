@@ -347,6 +347,41 @@ end
 $$;
 
 -- ---------------------------------------------------------------------------
+-- The general rule — every permission a function tests must EXIST.
+--
+-- Added after a permission that does not exist caused a real, invisible failure:
+-- `record_class_attendance` tested one to exempt administrators from the class
+-- scope, so the exemption never fired and every admin was refused. `has_permission`
+-- returning false is indistinguishable from a legitimate "no", which is what made
+-- it quiet — and `has_role`-style helpers have the same shape of risk.
+--
+-- A catalogue scan is the only check that covers functions nobody has written yet.
+-- ---------------------------------------------------------------------------
+do $$
+declare
+    v_missing text;
+begin
+    select string_agg(distinct d.perm, ', ') into v_missing
+    from (
+        select m[1] as perm
+          from pg_proc p
+          cross join lateral regexp_matches(
+              pg_get_functiondef(p.oid), 'has_permission\(''([a-z_.]+)''\)', 'g'
+          ) as m
+         where p.prosecdef
+    ) d
+    where not exists (select 1 from public.permissions pe where pe.code = d.perm);
+
+    if v_missing is not null then
+        raise exception
+            'These functions test permissions that do not exist: %', v_missing
+            using errcode = 'insufficient_privilege';
+    end if;
+    raise notice 'PASS: every permission tested by a function exists';
+end
+$$;
+
+-- ---------------------------------------------------------------------------
 -- The general rule — no definer function is callable without a login
 -- ---------------------------------------------------------------------------
 -- Checked against the catalogue rather than a list, so a function added later

@@ -118,12 +118,14 @@ begin
     --    right to record a PARTICULAR class is a scope question. Without this,
     --    any teacher could write the register for a class they do not teach —
     --    F08. ADMINs are exempt: the office must be able to correct any register.
-    -- `has_role(array['ADMIN'])`, NOT a permission.
+    -- `has_role(array['ADMIN'])`, NOT a permission. (The dead name is avoided
+    -- even in prose, so that a catalogue scan for permissions referenced by a
+    -- function does not keep reporting a defect that is already fixed.)
     --
-    -- The first version of this check used `has_permission('admin.access')`. That
-    -- permission DOES NOT EXIST — ADMIN holds 39 permissions and that is not one
-    -- of them — so `has_permission` always returned false and the exemption never
-    -- fired. The effect was the opposite of the intent: every ADMIN was refused,
+    -- The first version of this check tested the permission whose name is only
+    -- mentioned here as history. That permission DOES NOT EXIST — ADMIN holds 39
+    -- permissions and it is not one of them — so `has_permission` always returned
+    -- false and the exemption never fired. The effect was the opposite of the intent: every ADMIN was refused,
     -- because only a teacher with a matching assignment could pass.
     --
     -- The security suite did not catch it, and the reason is worth recording: the
