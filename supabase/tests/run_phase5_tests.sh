@@ -47,6 +47,8 @@ MIGRATION_P6B="$REPO_ROOT/supabase/migrations/20261016000001_phase6_storage_buck
 # replaces record_class_attendance so the actor cannot be supplied by the caller.
 MIGRATION_HARDEN="$REPO_ROOT/supabase/migrations/20261017000001_security_hardening_rpc_anon.sql"
 HARDEN_SUITE="$REPO_ROOT/supabase/tests/security_hardening_test.sql"
+MIGRATION_SCOPE="$REPO_ROOT/supabase/migrations/20261018000001_access_scope_policies.sql"
+SCOPE_SUITE="$REPO_ROOT/supabase/tests/access_scope_test.sql"
 STORAGE_SUITE="$REPO_ROOT/supabase/tests/phase6b_storage_test.sql"
 OPERATIONS_SUITE="$REPO_ROOT/supabase/tests/phase6_operations_test.sql"
 
@@ -56,7 +58,7 @@ if [ ! -x "$PGBIN/initdb" ]; then
     exit 2
 fi
 
-for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$OPERATIONS_SUITE"; do
+for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$OPERATIONS_SUITE"; do
     [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 2; }
 done
 
@@ -86,7 +88,7 @@ as_runas "PATH=$PGBIN:\$PATH initdb -D $PGDATA -U postgres --auth=trust" >"$WORK
 as_runas "PATH=$PGBIN:\$PATH pg_ctl -D $PGDATA -o '-p $PGPORT -k $PGSOCK' -l $WORKDIR/server.log start" >/dev/null 2>&1
 sleep 2
 
-cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
+cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
 chmod -R a+rX "$WORKDIR/sql"
 
 psql_as() {
@@ -243,6 +245,28 @@ if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
 fi
 HARDEN_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
 
+# The scope policies come LAST, after the hardening, for the same reason the
+# hardening does: `create policy` and `drop policy` are the final word on what a
+# row-level check is, and an earlier migration re-creating a permissive policy
+# would otherwise undo them. F38 again — the security migration has to be able to
+# say it is the last thing that touched the schema.
 echo ""
-echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks)"
+echo "==> Applying access-scope policies (audit F05, F06, F07)"
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261018000001_access_scope_policies.sql" >/dev/null
+
+echo ""
+echo "==> Running access scope suite (audit F05, F06, F07)"
+OUTPUT="$(psql_as "-d $DBNAME -f $WORKDIR/sql/access_scope_test.sql" 2>&1 || true)"
+echo "$OUTPUT" | grep -oE "(PASS|FAIL|FAIL F[0-9]+): .*" | sed 's/^/    /' || true
+
+if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
+    echo ""
+    echo "$OUTPUT" | grep -E "ERROR|FAIL" | sed 's/^/    /' || true
+    echo "RESULT: FAIL (access scope)" >&2
+    exit 1
+fi
+SCOPE_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
+
+echo ""
+echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks)"
 exit 0
