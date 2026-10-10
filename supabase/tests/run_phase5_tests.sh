@@ -49,6 +49,8 @@ MIGRATION_HARDEN="$REPO_ROOT/supabase/migrations/20261017000001_security_hardeni
 HARDEN_SUITE="$REPO_ROOT/supabase/tests/security_hardening_test.sql"
 MIGRATION_SCOPE="$REPO_ROOT/supabase/migrations/20261018000001_access_scope_policies.sql"
 SCOPE_SUITE="$REPO_ROOT/supabase/tests/access_scope_test.sql"
+MIGRATION_DOCS="$REPO_ROOT/supabase/migrations/20261019000001_document_scope_policy.sql"
+DOCS_SUITE="$REPO_ROOT/supabase/tests/document_scope_test.sql"
 STORAGE_SUITE="$REPO_ROOT/supabase/tests/phase6b_storage_test.sql"
 OPERATIONS_SUITE="$REPO_ROOT/supabase/tests/phase6_operations_test.sql"
 
@@ -58,7 +60,7 @@ if [ ! -x "$PGBIN/initdb" ]; then
     exit 2
 fi
 
-for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$OPERATIONS_SUITE"; do
+for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$OPERATIONS_SUITE"; do
     [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 2; }
 done
 
@@ -88,7 +90,7 @@ as_runas "PATH=$PGBIN:\$PATH initdb -D $PGDATA -U postgres --auth=trust" >"$WORK
 as_runas "PATH=$PGBIN:\$PATH pg_ctl -D $PGDATA -o '-p $PGPORT -k $PGSOCK' -l $WORKDIR/server.log start" >/dev/null 2>&1
 sleep 2
 
-cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
+cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
 chmod -R a+rX "$WORKDIR/sql"
 
 psql_as() {
@@ -267,6 +269,26 @@ if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
 fi
 SCOPE_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
 
+# The document policy goes last for the same reason as the others: `drop policy`
+# and `create policy` are the final word, so a later re-apply of an earlier
+# migration would undo it (F38).
 echo ""
-echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks)"
+echo "==> Applying document scope policy (audit F10)"
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261019000001_document_scope_policy.sql" >/dev/null
+
+echo ""
+echo "==> Running document scope suite (audit F10)"
+OUTPUT="$(psql_as "-d $DBNAME -f $WORKDIR/sql/document_scope_test.sql" 2>&1 || true)"
+echo "$OUTPUT" | grep -oE "(PASS|FAIL|FAIL F[0-9]+): .*" | sed 's/^/    /' || true
+
+if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
+    echo ""
+    echo "$OUTPUT" | grep -E "ERROR|FAIL" | sed 's/^/    /' || true
+    echo "RESULT: FAIL (document scope)" >&2
+    exit 1
+fi
+DOCS_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
+
+echo ""
+echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks, $DOCS_CHECKS document-scope checks)"
 exit 0
