@@ -112,7 +112,20 @@ export const MAX_ROWS_PER_REQUEST = 1000;
 export type PageReader<T> = (
     from: number,
     to: number,
-) => PromiseLike<{ data: T[] | null; error: { message: string } | null }>;
+    // `any` for the wrapper, and it is the honest answer rather than laziness.
+    //
+    // A Supabase query builder resolves to a different concrete type for every
+    // combination of table, select and filter — `PostgrestFilterBuilder<any, any,
+    // any, GenericStringError[], 'students', unknown, 'GET', false>`. Naming that
+    // shape here means copying a signature that changes with the library, and a
+    // narrower guess does not accept a builder at all: it fails to compile with
+    // "Type 'PostgrestFilterBuilder<...>' is not assignable to type
+    // 'PromiseLike<...>'", which is how the CI caught it.
+    //
+    // The ROWS stay typed. `T` is the row the caller names and it is what comes back
+    // out of `readAllPages<T>`; the untyped part is only the wrapper, which nothing
+    // in this function inspects beyond `data` and `error`.
+) => PromiseLike<{ data: any; error: { message: string } | null }>;
 
 /**
  * Reads a list in pages until the database has nothing left to give.

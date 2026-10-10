@@ -73,7 +73,32 @@ jobs:
         run: npm run prisma:generate
 
       - name: Type-check the frontend
-        run: npx tsc --noEmit
+        # A RAISED HEAP IS NOT ENOUGH ON ITS OWN, and this step is written the way it
+        # is for that reason.
+        #
+        # `tsc` running out of memory does not exit non-zero. It prints
+        # "JavaScript heap out of memory", aborts, and the shell sees success — so the
+        # step goes green having type-checked nothing. That is not hypothetical: while
+        # fixing F28 a real type error sat in the tree reporting "0 errors" locally,
+        # and it took a CI run to find. A step that passes by crashing is worse than
+        # no step at all, because it is trusted.
+        #
+        # So the output is captured and inspected as well as the exit code: a run that
+        # produced no "error TS" line AND no successful completion is treated as a
+        # failure, whichever way `tsc` chose to die.
+        shell: bash
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          set +e
+          OUT="$(npx tsc --noEmit 2>&1)"
+          CODE=$?
+          echo "$OUT"
+          if echo "$OUT" | grep -q "JavaScript heap out of memory"; then
+            echo "::error::tsc ran out of memory and reported success. Raise the heap or investigate, but do not accept this as a pass."
+            exit 1
+          fi
+          exit $CODE
 
       - name: Type-check the backend
         run: npx tsc --noEmit -p backend/tsconfig.json
