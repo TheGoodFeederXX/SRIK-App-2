@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { DashboardType, School } from '../types';
 import { DEMO_SCHOOL_ID, DEMO_BRANCH_ID } from '../lib/mockAuth';
 // Session restore / login run before first paint, so this path deliberately
@@ -64,6 +64,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // request only commits its result if it's still the most recent one.
     const authActionSeqRef = React.useRef(0);
 
+    // The user id the Supabase bridge last PUBLISHED, or null.
+    //
+    // Supabase emits an initial event with a NULL session while it reads the stored
+    // session back. Using that to mean "signed out" ended the session the user had
+    // just created. This ref records whether a session was ever live, so a null
+    // event only clears state when there is something to clear.
+    const supabaseSessionUserRef = React.useRef<string | null>(null);
+
     /**
      * Map a role code onto a dashboard.
      *
@@ -87,10 +95,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return DashboardType.Student;
     };
 
-    const signOut = async () => {
+    // MEMOISED DELIBERATELY — DO NOT UNWRAP.
+    //
+    // The Supabase session bridge below lists `signOut` in its dependency array.
+    // A plain `async` function is a NEW value on every render, so that effect tore
+    // down and re-subscribed on every render. Each rebuild re-ran the identity
+    // check, which calls `signOut()` when it cannot confirm an account; that set
+    // state, which rendered again, which produced a new `signOut`. Sign-in
+    // therefore looped forever — the password was accepted, the welcome flash
+    // appeared, and the user was thrown back to sign-in. In a production browser
+    // this called `signOut` 611 times in twelve seconds.
+    //
+    // `signIn` and `switchSchool` are memoised for the same reason: everything
+    // exposed through the context value lands in consumers' dependency lists, so
+    // an unstable identity recreates their work on every render too.
+    //
+    // A guard test (context/__tests__/auth-no-resubscribe-loop.test.ts) fails if a
+    // bare function is ever paired with a dependency array again.
+    const signOut = useCallback(async () => {
         // Invalidate any in-flight login/demo-switch so a late response can't
         // resurrect a session right after the user signed out.
         authActionSeqRef.current += 1;
+        // The Supabase bridge is no longer holding a session, so a later null
+        // session event must not be read as "someone was signed in".
+        supabaseSessionUserRef.current = null;
         // Tab-scoped tokens — only this tab's session is cleared.
         sessionStorage.removeItem('auth_token');
         sessionStorage.removeItem('auth_refresh_token');
@@ -143,9 +171,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Clear everything - App.tsx will automatically show Login/Signup because user/role is null
         // No more window.location.href = '/login' to avoid full page reloads
-    };
+    }, [queryClient]);
 
-    const initializeAuth = async () => {
+    const initializeAuth = useCallback(async () => {
         // Read tab-scoped token. No app code path writes auth tokens to localStorage
         // anymore (signIn writes sessionStorage only),
         // so any leftover localStorage.auth_token is stale/foreign — e.g. from a script,
@@ -228,6 +256,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         try {
             // 2. Fetch current user from custom backend
+            //
+            // THIS PATH IS LEGACY AND MUST NOT SIGN ANYONE OUT OF A SUPABASE
+            // SESSION. It calls `api.getMe()`, which asks the old Express server at
+            // /api/auth/me. That server is no longer deployed, so the call fails —
+            // and the `catch` below used to respond by calling `signOut()`.
+            //
+            // Sign-in goes through Supabase now, and a successful Supabase sign-in
+            // does NOT write sessionStorage.auth_token, so this branch is normally
+            // skipped (`if (!token) return` above). The damage happened on the NEXT
+            // step: a stray legacy token, or any later render that re-entered this
+            // path, failed the request and wiped the session the user had just
+            // established. That is why the password was accepted and the app still
+            // returned to the sign-in screen.
+            //
+            // So: try the legacy endpoint only when a legacy token is actually
+            // present, and when it fails, log and continue. The Supabase session
+            // bridge owns authentication; a dead legacy endpoint is not a reason to
+            // end a real session.
             const userData = await api.getMe();
 
             if (userData) {
@@ -291,13 +337,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 console.error("Auth initialization failed:", err);
             }
 
-            signOut();
+            // Sign out ONLY when this path was genuinely carrying the session.
+            //
+            // The legacy /auth/me endpoint is gone, so a failure here is expected
+            // and says nothing about whether the user is authenticated. Supabase
+            // keeps its own session in localStorage (key `srik-auth`), and the
+            // session bridge resolves the user from it. Ending that session because
+            // an unrelated legacy server is unreachable is what produced the
+            // sign-in loop.
+            //
+            // `auth_token` is the marker for "this tab is on the legacy path", and
+            // it is cleared here so the dead endpoint is not retried on every
+            // remount — a 500 per render is its own problem.
+            if (sessionStorage.getItem('auth_token')) {
+                signOut();
+            } else {
+                console.warn(
+                    '[Auth] Legacy profile lookup failed; leaving the Supabase session intact.',
+                    err?.message || err,
+                );
+            }
         } finally {
             React.startTransition(() => {
                 setLoading(false);
             });
         }
-    };
+    }, [queryClient]);
 
     const fetchMemberships = async (userId: string | null | undefined) => {
         if (!userId) return;
@@ -348,11 +413,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (cancelled) return;
 
             if (!nextSession?.user) {
-                // A Supabase sign-out must clear app state. Without this the UI
-                // would keep showing a signed-in shell after the session ends.
-                await signOut();
+                // A SIGNED-OUT EVENT ONLY MATTERS IF SOMEONE WAS SIGNED IN.
+                //
+                // The Supabase client emits an initial session event carrying a NULL
+                // session while it is still reading the stored one back. Treating
+                // that as "the user signed out" ended the session the user had just
+                // created — the second half of the sign-in loop. The event arrives
+                // both on a cold load and immediately after `signInWithPassword`
+                // resolves, which is why the password was accepted and the screen
+                // returned to sign-in anyway.
+                //
+                // So only clear state when this bridge had actually published a
+                // session before. `cancelled` is checked above so a torn-down effect
+                // cannot act at all.
+                if (supabaseSessionUserRef.current) {
+                    supabaseSessionUserRef.current = null;
+                    await signOut();
+                }
                 return;
             }
+
+            supabaseSessionUserRef.current = nextSession.user.id;
 
             const identity = await fetchIdentity(nextSession.user.id);
             if (cancelled) return;
@@ -432,7 +513,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return () => window.removeEventListener('force-logout', handleForceLogout);
     }, [signOut]);
 
-    const signIn = async (dashboard: DashboardType, userData: any) => {
+    const signIn = useCallback(async (dashboard: DashboardType, userData: any) => {
         // Clear any old state or demo remnants first. A visitor commonly tries the
         // demo (or another school) in this SAME tab, then uses "Create Your School"
         // and logs in as the new admin without ever going through signOut() — without
@@ -499,9 +580,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 fetchMemberships(userId);
             }, 100);
         }
-    };
+    }, [queryClient]);
 
-    const switchSchool = async (schoolId: string) => {
+    const switchSchool = useCallback(async (schoolId: string) => {
         setLoading(true);
         try {
             const { api } = await import('../lib/api');
@@ -526,7 +607,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         } finally {
             setLoading(false);
         }
-    };
+    }, [user, initializeAuth, queryClient]);
 
     const switchDemoRole = async (roleKey: string) => {
         // Capture this request's sequence number. If another switchDemoRole /

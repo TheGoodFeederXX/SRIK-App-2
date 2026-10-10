@@ -297,8 +297,24 @@ class ApiCore {
                 const isPublicAuthEndpoint = unauthenticatedAuthEndpoints.some((path) => endpoint.startsWith(path));
 
                 if (!token && !endpoint.includes('/health') && !isPublicAuthEndpoint) {
-                    console.warn(`ðŸ”’ [API-WARN] Missing token for protected endpoint: ${endpoint}`);
-                    this.triggerLogout('missing_token', endpoint);
+                    console.warn(`🔒 [API-WARN] Missing token for protected endpoint: ${endpoint}`);
+
+                    // A MISSING LEGACY TOKEN IS NOT A SIGNED-OUT USER.
+                    //
+                    // Sign-in runs through Supabase now, and a Supabase session is
+                    // NOT written to sessionStorage.auth_token — it lives in the
+                    // Supabase client's own storage. So this check fired for every
+                    // signed-in user, and `triggerLogout` told the app the user had
+                    // been signed out. That was the production sign-in loop: the
+                    // password was accepted, the dashboard briefly resolved, and the
+                    // user was returned to the sign-in screen.
+                    //
+                    // There is nothing to sign out of here — by definition no legacy
+                    // session exists on this path. The request fails with a clear
+                    // error, which every caller already handles, and the Supabase
+                    // session stays intact. `triggerLogout` remains wired for the
+                    // 401 case below, where a token really was presented and
+                    // rejected.
                     throw new Error(`Missing token for protected endpoint: ${endpoint}`);
                 }
 
