@@ -64,6 +64,8 @@ MIGRATION_REGISTRY="$REPO_ROOT/supabase/migrations/20261023000001_migration_regi
 REGISTRY_SUITE="$REPO_ROOT/supabase/tests/migration_registry_test.sql"
 MIGRATION_BULK="$REPO_ROOT/supabase/migrations/20261023000002_bulk_charge_balances.sql"
 BULK_SUITE="$REPO_ROOT/supabase/tests/bulk_balances_test.sql"
+MIGRATION_REMARK="$REPO_ROOT/supabase/migrations/20261023000003_attendance_remark_only.sql"
+REMARK_SUITE="$REPO_ROOT/supabase/tests/attendance_remark_test.sql"
 STORAGE_SUITE="$REPO_ROOT/supabase/tests/phase6b_storage_test.sql"
 OPERATIONS_SUITE="$REPO_ROOT/supabase/tests/phase6_operations_test.sql"
 
@@ -73,7 +75,7 @@ if [ ! -x "$PGBIN/initdb" ]; then
     exit 2
 fi
 
-for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$OPERATIONS_SUITE"; do
+for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$OPERATIONS_SUITE"; do
     [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 2; }
 done
 
@@ -103,7 +105,7 @@ as_runas "PATH=$PGBIN:\$PATH initdb -D $PGDATA -U postgres --auth=trust" >"$WORK
 as_runas "PATH=$PGBIN:\$PATH pg_ctl -D $PGDATA -o '-p $PGPORT -k $PGSOCK' -l $WORKDIR/server.log start" >/dev/null 2>&1
 sleep 2
 
-cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
+cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
 chmod -R a+rX "$WORKDIR/sql"
 
 psql_as() {
@@ -405,6 +407,22 @@ if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
 fi
 BULK_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
 
+# F26: a remark-only attendance change was silently dropped.
 echo ""
-echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks, $DOCS_CHECKS document-scope checks, $ADMIN_CHECKS last-admin checks, $PROV_CHECKS provisioning checks, $FIN_CHECKS finance-integrity checks, $STORAGE_SCOPE_CHECKS storage-scope checks, $REGISTRY_CHECKS registry checks, $BULK_CHECKS bulk-balance checks)"
+echo "==> Applying attendance remark fix (audit F26)"
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261023000003_attendance_remark_only.sql" >/dev/null
+
+echo ""
+echo "==> Running attendance remark suite (audit F26)"
+OUTPUT="$(psql_as "-d $DBNAME -f $WORKDIR/sql/attendance_remark_test.sql" 2>&1 || true)"
+echo "$OUTPUT" | grep -oE "(PASS|SKIP|FAIL|ERROR|FAIL F[0-9]+): .*" | sed 's/^/    /' | head -20 || true
+
+if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
+    echo "RESULT: FAIL (attendance remark)" >&2
+    exit 1
+fi
+REMARK_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
+
+echo ""
+echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks, $DOCS_CHECKS document-scope checks, $ADMIN_CHECKS last-admin checks, $PROV_CHECKS provisioning checks, $FIN_CHECKS finance-integrity checks, $STORAGE_SCOPE_CHECKS storage-scope checks, $REGISTRY_CHECKS registry checks, $BULK_CHECKS bulk-balance checks, $REMARK_CHECKS attendance-remark checks)"
 exit 0
