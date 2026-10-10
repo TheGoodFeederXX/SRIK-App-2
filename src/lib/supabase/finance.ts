@@ -324,20 +324,28 @@ export async function chargeBalances(
         result[row.id] = { paid: 0, balance: Number(row.amount) - Number(row.discount_amount) };
     }
 
-    // The paid figures come from the database's own function, one per charge.
-    const paidResults = await Promise.all(
-        chargeIds.map(async id => {
-            const { data: paid, error: paidError } = await supabase.rpc('charge_paid_amount', {
-                p_charge_id: id,
-            });
-            if (paidError) throw paidError;
-            return { id, paid: Number(paid ?? 0) };
-        })
-    );
-    for (const { id, paid } of paidResults) {
-        if (result[id]) {
-            result[id].paid = paid;
-            result[id].balance = result[id].balance - paid;
+    // ONE request for the paid figures, not one per charge.
+    //
+    // This used to be `chargeIds.map(... rpc('charge_paid_amount', ...))` wrapped in
+    // `Promise.all`. It worked, and it was wrong at scale: a page showing a family's
+    // charges for a few months is a few hundred separate HTTP requests, each
+    // authenticated on its own, all outstanding at once, and the screen waits for the
+    // slowest. The audit found it (F28).
+    //
+    // The database function authorizes EVERY charge it is asked about, using the same
+    // gate as the single-charge call — so this is faster without being more
+    // permissive. That distinction is the whole point; a bulk endpoint that checked
+    // one id and returned many would be a worse bug than the one being fixed.
+    const { data: paidRows, error: paidError } = await supabase.rpc('charge_paid_amounts', {
+        p_charge_ids: chargeIds,
+    });
+    if (paidError) throw paidError;
+
+    for (const row of (paidRows ?? []) as { charge_id: string; paid_amount: number }[]) {
+        const entry = result[row.charge_id];
+        if (entry) {
+            entry.paid = Number(row.paid_amount ?? 0);
+            entry.balance = entry.balance - entry.paid;
         }
     }
     return result;
