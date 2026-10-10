@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { api } from '../../lib/api';
 import { Sparkles, AlertCircle } from 'lucide-react';
 import { formatMoney } from '../../src/lib/supabase/finance';
 
@@ -22,10 +21,19 @@ const AIInsightsPanel = () => {
 
     const fetchInsights = useCallback(async () => {
         try {
-            const data = await api.getMyInsights();
-            setInsights(data);
-        } catch (err) {
-            console.error('Error loading AI insights:', err);
+            // NO SOURCE YET — this panel is inert on purpose.
+            //
+            // `api.getMyInsights()` called the legacy Express backend, which this
+            // deployment does not run. The request failed on every dashboard load,
+            // so the console carried a 500 and a doomed round trip on each visit.
+            // It was invisible rather than broken — the panel renders nothing
+            // without data — but a request that cannot succeed trains the reader to
+            // ignore the console, which is where real failures would appear.
+            //
+            // Left in place and rendering nothing, so restoring it is a matter of
+            // pointing it at a real source. The AI knowledge base itself is intact
+            // (see ai-is-not-behind-a-paywall.test.ts).
+            setInsights(null);
         } finally {
             setLoading(false);
         }

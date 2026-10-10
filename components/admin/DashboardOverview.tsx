@@ -50,6 +50,7 @@ import AIInsightsPanel from '../shared/AIInsightsPanel';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
+import { getDashboardCounts } from '../../src/lib/supabase/stats';
 import { useApi } from '../../lib/hooks/useApi';
 import api from '../../lib/api';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -367,11 +368,19 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
 
     const activeSchoolId = schoolId || user?.school_id || profile?.schoolId || user?.user_metadata?.school_id;
 
-    // Use React Query for dashboard stats for better caching and speed
-    const { data: stats, isLoading: isLoadingStats, isError, error, refetch } = useQuery({
-        queryKey: ['dashboard-stats', activeSchoolId, currentBranchId],
-        queryFn: () => api.getDashboardStats(activeSchoolId || '', currentBranchId || undefined),
-        enabled: !!activeSchoolId,
+    // DASHBOARD COUNTS COME FROM SUPABASE.
+    //
+    // This asked `api.getDashboardStats()`, which called the legacy Express
+    // endpoint `/dashboard/stats`. That server is no longer deployed, so the query
+    // never resolved and every tile fell back to its own default — the school had
+    // 18 active teachers and the dashboard read "Total Staff 0".
+    //
+    // A wrong figure is worse than a visible error: nothing looks broken, so the
+    // reader simply concludes the school is empty. The counts now come from the
+    // database that actually holds the data.
+    const { data: counts, isLoading: isLoadingStats, refetch } = useQuery({
+        queryKey: ['dashboard-counts'],
+        queryFn: getDashboardCounts,
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
@@ -402,45 +411,40 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
     const [actionSearch, setActionSearch] = useState('');
 
-    // Derived stats for UI consumption
-    const totalStudents = stats?.totalStudents || 0;
-    const studentTrend = stats?.studentTrend || 0;
-    const totalStaff = stats?.totalTeachers || 0;
-    const teacherTrend = stats?.teacherTrend || 0;
-    const totalParents = stats?.totalParents || 0;
-    const parentTrend = stats?.parentTrend || 0;
-    const totalClasses = stats?.totalClasses || 0;
-    const classTrend = stats?.classTrend || 0;
-    const overdueFees = stats?.overdueFees || 0;
-    const unpublishedReports = stats?.unpublishedReports || 0;
-    const pendingApprovalsCount = stats?.pendingApprovals || stats?.pendingApprovalsCount || 0;
-    const attendancePercentage = stats?.attendanceRate || stats?.attendancePercentage || 0;
-    const timetablePreview = stats?.timetablePreview || [];
-    const latestHealthLog = stats?.latestHealthLog ? {
-        studentName: stats.latestHealthLog.studentName || stats.latestHealthLog.student_name,
-        reason: stats.latestHealthLog.reason || stats.latestHealthLog.description,
-        time: stats.latestHealthLog.time,
-    } : null;
+    // Derived stats for UI consumption.
+    //
+    // The counts are real. The trend figures and the few panels below them (health
+    // log, timetable preview, unpublished reports) have no Supabase source yet, so
+    // they stay at 0 — an honest "not built" rather than a stale number from a
+    // server that no longer exists. Each is left explicit rather than deleted so
+    // the remaining work is visible in one place.
+    const totalStudents = counts?.students ?? 0;
+    const totalStaff = counts?.staff ?? 0;
+    const totalParents = counts?.guardians ?? 0;
+    const totalClasses = counts?.classes ?? 0;
+    const overdueFees = counts?.overdueCharges ?? 0;
 
-    const recentActivities = (stats?.recentActivity || []).map((log: any) => ({
-        id: log.id,
-        user: {
-            name: log.profiles?.name || log.user_name || 'System',
-            avatarUrl: log.profiles?.avatar_url || log.avatar_url || `https://ui-avatars.com/api/?name=${log.user_name || 'System'}&background=random`,
-            role: (log.user_role || log.user?.role || 'Admin') as RoleName
-        },
-        action: log.action,
-        timestamp: log.created_at,
-        type: (log.action_type || log.action.toLowerCase()) as any
-    }));
+    // No data source yet — see the note above.
+    const studentTrend = 0;
+    const teacherTrend = 0;
+    const parentTrend = 0;
+    const classTrend = 0;
+    const unpublishedReports = 0;
+    const pendingApprovalsCount = 0;
+    const attendancePercentage = 0;
+    const timetablePreview: any[] = [];
+    const latestHealthLog = null;
+
+    const recentActivities: any[] = [];
 
     // Bus Roster derived stats
     const busRosterTotal = buses.length;
     const busRosterAssigned = buses.filter((b: any) => (b.driverName || b.driver_name) && b.status === 'active').length;
 
-    const enrollmentData = stats?.enrollmentData || [
-        { year: new Date().getFullYear(), count: 0 },
-        { year: new Date().getFullYear(), count: totalStudents }
+    // No enrolment history source yet, so the chart shows the current roll as a
+    // single point rather than an invented trend line between two guesses.
+    const enrollmentData = [
+        { year: new Date().getFullYear(), count: totalStudents },
     ];
 
     // The owner chooses how the total cards sit; the choice follows the account,
@@ -458,7 +462,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     // at t=2572ms — and covered the whole app for ~1s. That was the second
     // "loading screen". Stats are only part of this page, so waiting for them
     // now shows the page's own skeleton in place, not a screen over everything.
-    if (isLoadingStats && !stats) return <DashboardSkeletonLoader type="overview" />;
+    if (isLoadingStats && !counts) return <DashboardSkeletonLoader type="overview" />;
 
 
     const formatTrend = (val: number) => {
@@ -587,7 +591,9 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
 
     return (
         <div className="p-4 lg:p-6 bg-gray-50 min-h-full">
-            {isError && <div className="bg-red-50 border border-red-200 text-red-700 p-4 mb-4 rounded-xl shadow-sm text-sm font-semibold">{(error as any)?.message || 'Failed to load dashboard data.'}</div>}
+            {/* No whole-dashboard error banner. Each count reports its own failure and
+                falls back to 0, so one unreadable table cannot blank the page — the
+                behaviour this banner used to paper over. */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content Column */}
                 <div className="lg:col-span-2 space-y-6">
@@ -600,7 +606,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                             <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={totalStudents} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', 'Manage Students', {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
                             <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={totalStaff} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', 'Manage Teachers', {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
                             <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={totalParents} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Guardians', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
-                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={stats?.totalAcademicLevels || 0} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
+                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={totalClasses} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
                         </div>
                     </motion.div>
 
