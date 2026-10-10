@@ -378,7 +378,12 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     // A wrong figure is worse than a visible error: nothing looks broken, so the
     // reader simply concludes the school is empty. The counts now come from the
     // database that actually holds the data.
-    const { data: counts, isLoading: isLoadingStats, refetch } = useQuery({
+    const {
+        data: counts,
+        isLoading: isLoadingStats,
+        isError: statsFailed,
+        refetch,
+    } = useQuery({
         queryKey: ['dashboard-counts'],
         queryFn: getDashboardCounts,
         staleTime: 1000 * 60 * 5, // 5 minutes
@@ -418,11 +423,35 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     // they stay at 0 — an honest "not built" rather than a stale number from a
     // server that no longer exists. Each is left explicit rather than deleted so
     // the remaining work is visible in one place.
+    // WHEN THE FIGURES COULD NOT BE READ, THE TILES SAY SO.
+    //
+    // They used to fall back to 0, and that is the defect in audit finding F29: on
+    // a register of ~250 people, "0" is not a missing figure, it is a claim that the
+    // school is empty. Nobody investigates a zero, because a zero looks like an
+    // answer.
+    //
+    // `show` renders an em dash where the number would be, so a tile reads "—"
+    // rather than "0". The word "unreadable" would be clearer still, but these are
+    // headline numbers on a card and this is the smallest change that stops the
+    // screen from stating something false.
+    const statsAvailable = !statsFailed && counts != null;
+
+    // The NUMBERS stay numbers. Only the DISPLAY changes.
+    //
+    // The first version of this fix made `totalStudents` itself `'—'`, which broke
+    // the enrolment chart: it builds a data point from the total and a chart needs
+    // a number, so the page threw before it ever reached the alert. Numbers are
+    // used for arithmetic all over this component; a display string has no business
+    // in them.
     const totalStudents = counts?.students ?? 0;
     const totalStaff = counts?.staff ?? 0;
     const totalParents = counts?.guardians ?? 0;
     const totalClasses = counts?.classes ?? 0;
     const overdueFees = counts?.overdueCharges ?? 0;
+
+    /** What a tile should PRINT. An em dash when the figure is not known. */
+    const display = (value: number): number | string =>
+        statsAvailable ? value : '—';
 
     // No data source yet — see the note above.
     const studentTrend = 0;
@@ -591,9 +620,30 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
 
     return (
         <div className="p-4 lg:p-6 bg-gray-50 min-h-full">
-            {/* No whole-dashboard error banner. Each count reports its own failure and
-                falls back to 0, so one unreadable table cannot blank the page — the
-                behaviour this banner used to paper over. */}
+            {/* A banner when the figures could not be read at all.
+                This is the opposite of what used to be here. The dashboard once
+                swallowed failures into 0 so that "one unreadable table cannot blank
+                the page" — and the result was a page that reported the school had no
+                staff. Blanking a tile is recoverable; stating a false number is not,
+                because it is believed. */}
+            {statsFailed && (
+                <div
+                    role="alert"
+                    className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900"
+                >
+                    {t('dashboard.countsUnavailable', {
+                        defaultValue:
+                            'Angka ringkasan tidak dapat dibaca buat masa ini, jadi ia dipaparkan sebagai —. Sila muat semula sebentar lagi.',
+                    })}
+                    <button
+                        type="button"
+                        onClick={() => refetch()}
+                        className="ml-2 font-semibold underline"
+                    >
+                        {t('common.retry', { defaultValue: 'Cuba lagi' })}
+                    </button>
+                </div>
+            )}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Content Column */}
                 <div className="lg:col-span-2 space-y-6">
@@ -603,10 +653,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                         </h2>
                         <p className="text-white/80">{t('dashboard.commandCenter')}</p>
                         <div className={`grid gap-3 sm:gap-4 mt-6 ${statCardLayout === 'compact' ? 'grid-cols-2 2xl:grid-cols-4' : 'grid-cols-1 xs:grid-cols-2'}`}>
-                            <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={totalStudents} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', 'Manage Students', {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
-                            <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={totalStaff} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', 'Manage Teachers', {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
-                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={totalParents} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Guardians', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
-                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={totalClasses} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
+                            <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={display(totalStudents)} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', 'Manage Students', {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
+                            <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={display(totalStaff)} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', 'Manage Teachers', {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
+                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={display(totalParents)} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Guardians', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
+                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={display(totalClasses)} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
                         </div>
                     </motion.div>
 

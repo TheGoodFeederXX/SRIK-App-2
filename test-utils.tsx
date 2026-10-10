@@ -19,6 +19,24 @@ const defaultQueryClient = new QueryClient({
     },
 });
 
+/**
+ * The client `renderWithProviders` uses, exported so a test can reset it.
+ *
+ * WHY. `staleTime: Infinity` means a query answered once is never asked again for
+ * the life of the suite. That is a sensible default for most tests — it keeps them
+ * off the network — but it makes it impossible for a test to assert on what happens
+ * when a query FAILS, if an earlier test in the same file already made it succeed.
+ * The success is served from cache, the failing mock is never called, and the test
+ * reports a missing UI element that is really a stale cache.
+ *
+ * A test that needs a different answer calls `resetTestQueryClient()` first.
+ */
+export function resetTestQueryClient() {
+    defaultQueryClient.clear();
+}
+
+export { defaultQueryClient as testQueryClient };
+
 function AllProviders({ children }: { children: React.ReactNode }) {
     return (
         <QueryClientProvider client={defaultQueryClient}>

@@ -27,6 +27,7 @@
  */
 
 import { requireSupabase } from './client';
+import { todayInKualaLumpur } from './attendance';
 
 /** The headline figures shown on the admin dashboard. */
 export interface DashboardCounts {
@@ -41,12 +42,40 @@ export interface DashboardCounts {
 }
 
 /**
+ * Thrown when a dashboard figure cannot be read.
+ *
+ * This exists because returning 0 was WRONG, and the reason is worth keeping.
+ *
+ * The old version logged the failure and returned 0. The comment claimed a tile
+ * reading "0" is a smaller problem than a dashboard that will not render. That
+ * reasoning misses what 0 means here: on a register of ~250 people, "0 students"
+ * is not a missing number, it is a DECLARATION that the school has no students.
+ * The reader cannot tell it apart from an empty school, and the log line is not
+ * visible to the person looking at the screen.
+ *
+ * This is the same mistake, one layer down, that this whole module was written to
+ * fix: the dashboard said "Total Staff 0" when the school had 18 teachers, and
+ * nothing looked broken.
+ *
+ * So the failure now travels. `getDashboardCounts` rejects, the query reports an
+ * error, and the screen can say the figures could not be loaded — which is true,
+ * and which someone can act on.
+ */
+export class StatsUnavailableError extends Error {
+    constructor(
+        public readonly table: string,
+        cause: string,
+    ) {
+        super(`Could not read the ${table} figure: ${cause}`);
+        this.name = 'StatsUnavailableError';
+    }
+}
+
+/**
  * Counts rows matching a filter, without transferring any of them.
  *
- * Returns 0 when the count cannot be read. That is deliberate: a dashboard tile
- * reading "0" is a smaller problem than a dashboard that will not render. The
- * caller can tell the difference between "empty" and "unreadable" because the
- * failure is logged.
+ * THROWS rather than returning 0 when the count cannot be read. See
+ * `StatsUnavailableError` for why a silent 0 is the defect and not the fix.
  */
 async function count(
     table: string,
@@ -58,12 +87,15 @@ async function count(
 
     const { count: n, error } = await q;
     if (error) {
-        // Named, because a silent zero is exactly the failure this module was
-        // written to remove.
-        console.error(`[stats] Could not count ${table}:`, error.message);
-        return 0;
+        throw new StatsUnavailableError(table, error.message);
     }
-    return n ?? 0;
+    // `count` is null only when the request was not a count request, which would
+    // be a bug in this function rather than a database problem — so it is also a
+    // failure, not a zero.
+    if (n === null || n === undefined) {
+        throw new StatsUnavailableError(table, 'the database returned no count');
+    }
+    return n;
 }
 
 /** Students currently on roll. ARCHIVED and withdrawn students are not on roll. */
@@ -81,9 +113,43 @@ export function countGuardians(): Promise<number> {
     return count('guardians');
 }
 
-/** Classes running this year. */
-export function countActiveClasses(): Promise<number> {
-    return count('classes', (q) => q.eq('status', 'ACTIVE'));
+/**
+ * Classes running THIS academic year.
+ *
+ * Not simply "classes with status ACTIVE". `classes` carries an
+ * `academic_year_id` and next year's classes are created while this year's still
+ * run, so an unfiltered count grows every year and eventually reports twice the
+ * real number. The figure is "how many classes are running now", so it is scoped
+ * to the year that is CURRENT.
+ *
+ * `academic_years.status` is the database's own enum: PLANNED, CURRENT, CLOSED.
+ * Exactly one year should be CURRENT.
+ */
+export async function countActiveClasses(): Promise<number> {
+    // Two steps, not one nested filter.
+    //
+    // The obvious version — `classes?status=eq.ACTIVE&academic_years.status=eq.CURRENT`
+    // — is REFUSED by the API with PGRST108, because a related table cannot be
+    // filtered unless it is also selected, and selecting it here would return rows
+    // we then throw away. That was verified against the live API rather than
+    // assumed; the request came back 400.
+    //
+    // So the current year is resolved first and the count is filtered by its id. If
+    // no year is CURRENT the count is 0, which is correct: the school has not set up
+    // the year yet, so no classes are running.
+    const { data: year, error } = await requireSupabase()
+        .from('academic_years')
+        .select('id')
+        .eq('status', 'CURRENT')
+        .limit(1)
+        .maybeSingle();
+
+    if (error) throw new StatsUnavailableError('academic_years', error.message);
+    if (!year) return 0;
+
+    return count('classes', (q) =>
+        q.eq('status', 'ACTIVE').eq('academic_year_id', year.id),
+    );
 }
 
 /**
@@ -95,11 +161,22 @@ export function countActiveClasses(): Promise<number> {
  * These are read from the enum rather than guessed: an invented value such as
  * 'UNPAID' is not an error, it simply matches nothing, and the overdue figure
  * would sit at 0 while the school chased families who owed nothing.
+ *
+ * THE DATE COMES FROM `todayInKualaLumpur`, the attendance module's helper, imported
+ * rather than copied. The first version of this fix wrote its own Malaysian-date
+ * function and the project's own branding check failed it: `en-CA` is a foreign
+ * locale and only two files may name one. The guard was right — a second copy of a
+ * date rule is a second thing to keep correct, and two dates that disagree about
+ * which day it is would be a nasty bug to find.
+ *
+ * NOT `new Date().toISOString().slice(0, 10)`, which is UTC. Malaysia is UTC+8, so for
+ * the first eight hours of every Malaysian day the UTC date is still YESTERDAY there:
+ * a charge due today would count as overdue and the office would chase the family a
+ * day early — in the morning, when the reminders go out.
  */
 export function countOverdueCharges(): Promise<number> {
-    const today = new Date().toISOString().slice(0, 10);
     return count('student_charges', (q) =>
-        q.in('status', ['OUTSTANDING', 'PARTIAL']).lt('due_date', today),
+        q.in('status', ['OUTSTANDING', 'PARTIAL']).lt('due_date', todayInKualaLumpur()),
     );
 }
 
@@ -117,6 +194,15 @@ export function countActiveAnnouncements(): Promise<number> {
  * entire dashboard.
  */
 export async function getDashboardCounts(): Promise<DashboardCounts> {
+    // ALL OR NOTHING, deliberately.
+    //
+    // Letting a partial success through would put a screen in front of the office
+    // showing five real figures beside one made-up zero, with nothing to say which
+    // was which. A screen that says the figures could not be loaded is less useful
+    // and more honest, and it is the one that gets fixed.
+    //
+    // `Promise.all` short-circuits on the first failure, so a leak of the other
+    // five requests is prevented by the caller not retrying in a loop.
     const [students, staff, guardians, classes, overdueCharges, activeAnnouncements] =
         await Promise.all([
             countActiveStudents(),

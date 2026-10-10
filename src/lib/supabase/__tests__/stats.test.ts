@@ -61,17 +61,33 @@ const overview = code(
 
 describe('dashboard counts', () => {
     it('every count asks the database for a count, never for rows', () => {
-        // Every `select(...)` in the module must be the counting form.
+        // Every `select(...)` in the module must be the counting form — with one
+        // deliberate exception, checked explicitly rather than by loosening the rule.
+        //
+        // The exception is the current-year lookup: `.select('id').limit(1).maybeSingle()`.
+        // That reads ONE row to obtain an id, and no count can express it. It cannot
+        // under-report the way a row-fetch count can, because it is not counting
+        // anything. Naming it here keeps the rule strict for everything else — a
+        // blanket exemption would also excuse a real row-fetch count.
+        const ID_LOOKUP = ".select('id')";
         const selects = stats.match(/\.select\([^)]*\)/g) ?? [];
         expect(selects.length, 'the module should issue at least one count').toBeGreaterThan(0);
 
-        const fetching = selects.filter((s) => !/head:\s*true/.test(s) || !/count:\s*'exact'/.test(s));
+        const counts = selects.filter((s) => s !== ID_LOOKUP);
+        const fetching = counts.filter((s) => !/head:\s*true/.test(s) || !/count:\s*'exact'/.test(s));
         expect(
             fetching,
             'these selects fetch rows instead of counting them — PostgREST caps a ' +
             'response at 1000 rows, so the dashboard would silently under-report:\n' +
             fetching.map((s) => `  ${s}`).join('\n'),
         ).toEqual([]);
+
+        // And the exception really is the single-row lookup it claims to be.
+        const lookup = stats.slice(stats.indexOf(ID_LOOKUP));
+        expect(
+            lookup.slice(0, 120),
+            'the one non-counting select must be a limited single-row lookup',
+        ).toMatch(/limit\(1\)/);
     });
 
     it('uses the real charge status values, not invented ones', () => {
@@ -105,10 +121,88 @@ describe('dashboard counts', () => {
         expect(overview).toMatch(/from '\.\.\/\.\.\/src\/lib\/supabase\/stats'/);
     });
 
-    it('does not let one failed count reject the whole dashboard', () => {
-        // The counts resolve in parallel. A rejected Promise.all would blank every
-        // tile because one table was unreadable, so each count returns a number.
-        expect(stats).toMatch(/return 0;/);
-        expect(stats).toMatch(/console\.error/);
+    it('does NOT hide an unreadable figure as zero', () => {
+        // THE DEFECT THIS REPLACES, and it is worth reading before editing it.
+        //
+        // The previous version of this test asserted `expect(stats).toMatch(/return 0;/)`
+        // under the heading "does not let one failed count reject the whole
+        // dashboard". It was passing, and it was WRONG. What it guaranteed was
+        // that an unreadable count came back as 0 — and on a register of ~250
+        // people, "0" is not a missing figure, it is a statement that the school has
+        // no students. The tile cannot be told apart from an empty school, and the
+        // `console.error` it also asserted is invisible to the person reading the
+        // screen.
+        //
+        // So the test locked in the very failure the module exists to prevent: the
+        // dashboard said "Total Staff 0" for a school with 18 teachers, and nothing
+        // looked broken. A guard that encodes a defect as a requirement is worse
+        // than no guard, because it defends the defect.
+        //
+        // The counts now reject. The screen can say the figures could not be
+        // loaded, which is true.
+        expect(stats).toMatch(/throw new StatsUnavailableError/);
+        expect(stats).toMatch(/class StatsUnavailableError/);
+        // And the null count is a failure too, not a zero: a missing count means
+        // the request was malformed, which is our bug to see.
+        expect(stats).toMatch(/the database returned no count/);
+
+        // AN ERROR PATH MUST NOT END IN A ZERO.
+        //
+        // This is asserted by reading the error branch's own body, not by searching
+        // the file for `return 0`. The first version of this check looked for the
+        // pattern `return 0; } return n` and did NOT catch the defect when it was
+        // put back — the mutation passed. A pattern that happens to match the right
+        // code, and also happens not to match the wrong code, is not a guard.
+        //
+        // So the branch is located and its contents are inspected directly.
+        const errorBranch = stats.slice(stats.indexOf('if (error) {'));
+        const branchBody = errorBranch.slice(
+            errorBranch.indexOf('{') + 1,
+            errorBranch.indexOf('}'),
+        );
+        expect(
+            branchBody,
+            'the `if (error)` branch must not return a number — returning 0 here is ' +
+            'exactly the defect: an unreadable figure is shown as a real zero, which ' +
+            'nobody investigates because it looks like an answer',
+        ).not.toMatch(/return\s+0/);
+        expect(
+            branchBody,
+            'the error branch must throw or rethrow, so the failure reaches the screen',
+        ).toMatch(/throw/);
+    });
+
+    it('scopes the class figure to the current academic year', () => {
+        // `classes` carries an academic_year_id and next year's classes are created
+        // while this year's still run, so counting every ACTIVE class grows the
+        // figure every year until it reports twice the real number.
+        expect(
+            stats,
+            'the class count must be scoped to the CURRENT academic year, or it ' +
+            'doubles as soon as next year is set up',
+        ).toMatch(/eq\('status',\s*'CURRENT'\)/);
+        expect(stats).toMatch(/academic_year_id/);
+        // The nested-filter form is refused by the API (PGRST108): a related table
+        // cannot be filtered unless it is selected. Verified live, not assumed.
+        expect(
+            stats,
+            'filtering through the embedded relation returns 400 from the API; the ' +
+            'year must be resolved first',
+        ).not.toMatch(/academic_years\.status/);
+    });
+
+    it('uses the Malaysian date, not the UTC one, for overdue charges', () => {
+        // Malaysia is UTC+8, so for the first eight hours of every Malaysian day the
+        // UTC date is still yesterday. `toISOString()` would mark a charge due today
+        // as overdue and the office would chase the family a day early — in the
+        // morning, when the reminders go out.
+        expect(
+            stats,
+            'overdue must be judged against the Malaysian date; a UTC date is a day ' +
+            'behind for the first eight hours of every school day',
+        ).not.toMatch(/toISOString\(\)\.slice\(0,\s*10\)/);
+        // The school's own date helper, imported rather than reimplemented — a
+        // second copy is a second thing that can disagree about which day it is.
+        expect(stats).toMatch(/todayInKualaLumpur/);
     });
 });
