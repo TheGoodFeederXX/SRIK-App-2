@@ -264,12 +264,12 @@ begin
     -- A path whose second segment is not a uuid must be refused quietly. If it
     -- raised, one stray object in the bucket would break the policy for every
     -- request in the system.
-    v_result := public.can_read_document('STUDENT/not-a-uuid/kad.pdf');
+    v_result := public.can_read_stored_file('STUDENT/not-a-uuid/kad.pdf');
     if v_result then
         raise exception 'FAIL: a guardian was granted a malformed path';
     end if;
 
-    v_result := public.can_read_document('');
+    v_result := public.can_read_stored_file('');
     if v_result then
         raise exception 'FAIL: a guardian was granted an empty path';
     end if;

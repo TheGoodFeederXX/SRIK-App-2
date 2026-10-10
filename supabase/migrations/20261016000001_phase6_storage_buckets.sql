@@ -42,8 +42,19 @@
 -- 25 MB, matching the check constraint on `documents.size_bytes`. If one is
 -- changed the other must follow, or a file will be accepted by one and refused
 -- by the other.
+-- The bucket is created only if it is absent.
+--
+-- `storage.buckets` is owned by `supabase_storage_admin`, not by the project owner,
+-- so an `on conflict do update` needs a role this migration does not have and the
+-- whole file fails with "must be owner of table buckets". The bucket already exists
+-- in production (private, 25 MB, right MIME list), and a migration that cannot be
+-- re-applied is worse than one that skips work already done — so the guard is a
+-- plain existence check.
+--
+-- What the bucket SHOULD be is asserted immediately below, so the settings are
+-- still verified on every run rather than only on the first.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
-values (
+select
     'srik-documents',
     'srik-documents',
     false,
@@ -58,15 +69,41 @@ values (
         'application/vnd.ms-excel',
         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ]
-)
-on conflict (id) do update
-    set public = excluded.public,
-        file_size_limit = excluded.file_size_limit,
-        allowed_mime_types = excluded.allowed_mime_types;
+where not exists (select 1 from storage.buckets where id = 'srik-documents');
 
-comment on table storage.buckets is
-    'Private storage. srik-documents holds files attached to children and '
-    'teachers; it is never public, and every read goes through a signed URL.';
+-- Whether this file created the bucket or found it, its shape is checked. A
+-- migration that silently accepted a PUBLIC bucket because the row already existed
+-- would be the worst outcome here.
+do $$
+declare
+    v_public boolean;
+    v_limit  bigint;
+    v_mimes  text[];
+begin
+    select public, file_size_limit, allowed_mime_types
+      into v_public, v_limit, v_mimes
+      from storage.buckets where id = 'srik-documents';
+
+    if v_public is distinct from false then
+        raise exception
+            'The srik-documents bucket must be private, but it is %',
+            case when v_public is null then 'missing' else 'PUBLIC' end
+            using errcode = 'insufficient_privilege';
+    end if;
+
+    if v_limit is distinct from 26214400 then
+        raise exception
+            'The srik-documents bucket limit is % but should be 25 MB (26214400)',
+            v_limit
+            using errcode = 'insufficient_privilege';
+    end if;
+
+    if v_mimes is null or array_length(v_mimes, 1) is null then
+        raise exception 'The srik-documents bucket accepts any file type'
+            using errcode = 'insufficient_privilege';
+    end if;
+end
+$$;
 
 -- --- Reading a file ---------------------------------------------------------
 
@@ -106,7 +143,78 @@ comment on function public.storage_path_owner(text) is
  * the office's to read, and a guardian's if the child is theirs. The path is
  * parsed here rather than being taken from anything the caller supplies.
  */
-create or replace function public.can_read_document(p_name text)
+-- ---------------------------------------------------------------------------
+-- THE ONE ANSWER, keyed by the document ROW.
+--
+-- This definition is identical to the one introduced for audit F10. It is repeated
+-- here because a migration must stand on its own: this file creates the bucket and
+-- the Storage policies, and a policy calling a function the file does not define
+-- cannot be applied to a fresh database. `create or replace` is idempotent, so
+-- defining it twice with the same text is safe — the risk this actually guards
+-- against is DIVERGENCE, which is what F37 was.
+--
+-- `is_teacher_of_student` is defined here only if it does not already exist. It
+-- belongs to the access-scope migration (audit F05/F06) which runs LATER in the
+-- sequence; without this guard, applying this file first would fail on a fresh
+-- database with "function is_teacher_of_student(uuid) does not exist". The later
+-- migration then replaces it with the same body.
+-- ---------------------------------------------------------------------------
+create or replace function public.is_teacher_of_student(p_student_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    select exists (
+        select 1
+          from public.student_enrollments e
+          join public.teaching_assignments ta
+            on ta.class_id = e.class_id
+           and ta.academic_year_id = e.academic_year_id
+          join public.teachers t on t.id = ta.teacher_id
+         where e.student_id = p_student_id
+           and e.status = 'ACTIVE'
+           and t.user_id = auth.uid()
+    );
+$$;
+
+revoke all on function public.is_teacher_of_student(uuid) from public, anon;
+grant execute on function public.is_teacher_of_student(uuid) to authenticated;
+
+create or replace function public.can_read_document(p_document_id uuid)
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    select exists (
+        select 1
+          from public.documents d
+         where d.id = p_document_id
+           and public.is_active_user()
+           and (
+                public.has_role(array['ADMIN']::public.app_role[])
+                or (
+                    d.student_id is not null
+                    and (
+                        public.is_guardian_of(d.student_id)
+                        or (
+                            public.has_permission('documents.view')
+                            and public.is_teacher_of_student(d.student_id)
+                        )
+                    )
+                )
+                or (d.teacher_id is not null and d.teacher_id = public.current_teacher_id())
+           )
+    );
+$$;
+
+revoke all on function public.can_read_document(uuid) from public, anon;
+grant execute on function public.can_read_document(uuid) to authenticated;
+
+create or replace function public.can_read_stored_file(p_name text)
 returns boolean
 language plpgsql
 stable
@@ -114,53 +222,77 @@ security definer
 set search_path = ''
 as $$
 declare
-    v_type text;
-    v_id   uuid;
+    v_id    uuid;
+    v_type  text;
+    v_owner uuid;
 begin
-    select o.owner_type, o.owner_id into v_type, v_id
-      from public.storage_path_owner(p_name) o;
-
-    -- A SCHOOL document has no owner id: its path is `SCHOOL/<filename>`, two
-    -- segments, so the second is the file name and not a uuid. Treating a null
-    -- id as "malformed" made the office unable to read its own school-level
-    -- files — a bug this test caught. School files are the office's, so they are
-    -- allowed here and go no further.
-    -- THE OFFICE IS CHECKED FIRST, before the path is judged at all.
+    -- A FILE is judged by the ROW it belongs to, and the row is judged in exactly
+    -- one place: `can_read_document(uuid)`.
     --
-    -- A malformed or unexpected name used to be rejected before this check, so
-    -- a single oddly-named object became invisible to the very people
-    -- responsible for it — the office. Whether a name makes sense is a question
-    -- about how a file is filed; whether the office may read it is a question
-    -- about authority, and authority comes first.
-    if public.has_permission('documents.view') then
-        return true;
+    -- This function used to answer the question itself, and its answer was
+    -- WEAKER. It returned true for anyone holding `documents.view` — a permission
+    -- BOTH ADMIN AND TEACHER hold — before looking at the path at all. A teacher
+    -- could therefore open any family's document. The row-level version, added for
+    -- audit F10, restricts a teacher to children they actually teach.
+    --
+    -- So the storage path now resolves to a document row and hands the decision
+    -- over. The two answers cannot drift again, because there is only one answer.
+    --
+    -- The path is `OWNER_TYPE/OWNER_ID/filename` for STUDENT and TEACHER, and
+    -- `SCHOOL/filename` for school-level files, which have no document row to
+    -- consult and are readable by the office only.
+    -- NOTE the second element of the path is the OWNER ID (a student or teacher
+    -- id), not a document id. Passing it straight to `can_read_document(uuid)`
+    -- looks up the wrong row and finds nothing, which silently refused a guardian
+    -- their own child's file — the fixture caught it, not a reading of the code.
+    -- So the path is resolved to the DOCUMENT ROW and that row's id is used.
+    -- `storage_path_owner` RETURNS TABLE, so its columns are read with SELECT —
+    -- `public.storage_path_owner(x).owner_id` is a syntax error in Postgres. The
+    -- function is wrapped in a subquery rather than dotted into.
+    begin
+        select o.owner_type, o.owner_id
+          into v_type, v_owner
+          from public.storage_path_owner(p_name) o;
+    exception when others then
+        return false;
+    end;
+
+    if v_owner is null then
+        -- `SCHOOL/filename` has no owner id and no document row. School-level files
+        -- belong to the office.
+        return public.has_permission('documents.manage');
     end if;
 
-    -- A school document has no owner id: its path is `SCHOOL/<filename>`, two
-    -- segments. A guardian never reaches these.
-    if v_type = 'SCHOOL' then
+    -- The row is found the same way the rest of the system finds it: by the stored
+    -- key. If several rows claim the same key, the first is used — the unique
+    -- constraint on the key makes that unambiguous.
+    select d.id into v_id
+      from public.documents d
+     where d.storage_key = p_name
+     limit 1;
+
+    if v_id is null then
+        -- A file with no document row is not a document, and an unknown object
+        -- must not become readable merely because it was placed in the bucket.
         return false;
     end if;
 
-    if v_type is null or v_id is null then
-        return false;
-    end if;
-
-    -- A guardian reaches only their own child's files.
-    if v_type = 'STUDENT' and public.is_guardian_of(v_id) then
-        return true;
-    end if;
-
-    return false;
+    return public.can_read_document(v_id);
 end;
 $$;
 
-comment on function public.can_read_document(text) is
+comment on function public.can_read_stored_file(text) is
     'Whether the caller may read a stored file, decided from the path and the '
     'family record. A guardian reaches only their own child''s documents.';
 
-revoke all on function public.can_read_document(text) from public;
-grant execute on function public.can_read_document(text) to authenticated;
+revoke all on function public.can_read_stored_file(text) from public, anon;
+grant execute on function public.can_read_stored_file(text) to authenticated;
+
+-- A leftover of the old overloading, if this migration has been applied before:
+-- the path-keyed rule used to share the name `can_read_document` with a `uuid`
+-- parameter. Two overloads where a text literal can coerce to uuid is a trap, so
+-- the old signature is removed rather than left to be chosen by accident.
+drop function if exists public.can_read_document(p_name text);
 
 -- --- Storage policies -------------------------------------------------------
 
@@ -168,7 +300,7 @@ drop policy if exists srik_documents_read on storage.objects;
 create policy srik_documents_read on storage.objects
     for select using (
         bucket_id = 'srik-documents'
-        and public.can_read_document(name)
+        and public.can_read_stored_file(name)
     );
 
 drop policy if exists srik_documents_write on storage.objects;
