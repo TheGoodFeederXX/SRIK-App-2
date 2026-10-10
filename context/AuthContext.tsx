@@ -113,6 +113,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // A guard test (context/__tests__/auth-no-resubscribe-loop.test.ts) fails if a
     // bare function is ever paired with a dependency array again.
     const signOut = useCallback(async () => {
+        // END THE SUPABASE SESSION FIRST, and the order is deliberate.
+        //
+        // F04: this function used to clear every local trace of the account —
+        // sessionStorage and localStorage tokens, the persisted query cache, the
+        // offline write store, and all React state — and then rely on "user is
+        // null, so the login screen shows". Nothing was ever sent to Supabase.
+        //
+        // That made it a UI sign-out rather than an authentication one: the
+        // session and its refresh token stayed valid, so the account was still
+        // signed in server-side while the screen said otherwise. On a shared
+        // staffroom device that is the worst possible outcome — the next person
+        // sees a login screen, but the previous session is still live and can be
+        // restored from storage.
+        //
+        // Awaited BEFORE the local teardown below, because the request has to
+        // carry the access token that identifies which session to revoke. Clearing
+        // state first would leave nothing to revoke.
+        //
+        // A failure here must NOT trap the user in a signed-in UI, so the result
+        // is deliberately ignored — not because the error does not matter, but
+        // because the local teardown that follows is the more important guarantee.
+        // The helper already reports the error rather than throwing.
+        try {
+            await supabaseSignOut();
+        } catch {
+            // Local sign-out proceeds regardless; see the note above.
+        }
+
         // Invalidate any in-flight login/demo-switch so a late response can't
         // resurrect a session right after the user signed out.
         authActionSeqRef.current += 1;
