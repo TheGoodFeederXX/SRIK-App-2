@@ -225,4 +225,67 @@ begin
 end
 $$;
 
+-- ===========================================================================
+-- F08 and F09: the WRITE paths must be scoped, and the mitigation is structural.
+--
+-- These two findings are different in kind from F05/F06/F07 and it is worth
+-- recording why, because the difference is the whole answer.
+--
+-- `student_attendance_write` and `assessment_results_write` are permission tests
+-- with no scope clause — exactly the shape of the defects above. They are NOT
+-- exploitable, because `authenticated` does not hold INSERT, UPDATE or DELETE on
+-- either table: writes must go through the RPCs, and the RPCs DO check class
+-- scope. The permissive policy is unreachable.
+--
+-- That is a real mitigation and not a reason to relax, so the test locks the
+-- STRUCTURE rather than the policy text: if a future migration grants write
+-- access to the table, these fail and the mis-scoped policy becomes live.
+-- ===========================================================================
+reset role;
+do $$
+declare
+    v_tables text[] := array['student_attendance', 'assessment_results'];
+    v_table  text;
+    v_priv   text;
+    v_open   text := '';
+begin
+    foreach v_table in array v_tables loop
+        foreach v_priv in array array['INSERT', 'UPDATE', 'DELETE'] loop
+            if has_table_privilege('authenticated',
+                                   format('public.%I', v_table), v_priv) then
+                v_open := v_open || format('%s.%s ', v_table, v_priv);
+            end if;
+        end loop;
+    end loop;
+
+    if v_open <> '' then
+        raise exception
+            'FAIL F08/F09: an API role can write these tables directly, so their '
+            'unscoped write policies are now reachable: %', v_open
+            using errcode = 'raise_exception';
+    end if;
+    raise notice 'PASS: attendance and marks cannot be written except through the scoped RPCs';
+end
+$$;
+
+-- And the RPC that writes marks must actually carry the class scope. Asserted on
+-- the function BODY, because the guarantee is inside the SQL and a later
+-- `create or replace` could drop it while leaving every policy untouched.
+reset role;
+do $$
+declare
+    v_body text := pg_get_functiondef(
+        (select oid from pg_proc where proname = 'save_assessment_marks')
+    );
+begin
+    if v_body not like '%teaching_assignments%'
+       or v_body not like '%current_teacher_id%' then
+        raise exception
+            'FAIL F09: save_assessment_marks no longer scopes to the teacher''s classes'
+            using errcode = 'raise_exception';
+    end if;
+    raise notice 'PASS: save_assessment_marks scopes marks to the teacher''s own classes';
+end
+$$;
+
 rollback;
