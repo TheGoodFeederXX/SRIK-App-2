@@ -92,6 +92,14 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // Today for a parent: today's register for each child, and the school's notices.
+    // A register not yet taken says so, rather than showing the child as absent. The
+    // homework, fee and bus cards are gone — no table backs any of them, so each was a
+    // permanently blank card that looked like information.
+    'components/parent/ParentTodayWidget.tsx',
+    // Learning progress. There is no learning-hub table and no per-topic tracking, so
+    // the screen showed zeroes a parent could only read as "my child has done nothing".
+    'components/parent/LearningHubProgressScreen.tsx',
     // School notices for a parent. There is no notification system: the screen showed
     // an unread dot and a live feed over a table that does not exist, so a parent saw
     // "No new notifications" whether the school had sent ten notices or none. It now

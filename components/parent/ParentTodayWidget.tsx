@@ -2,21 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { listMyChildren } from '../../src/lib/supabase/family';
+import { getClassRegister } from '../../src/lib/supabase/attendance';
+import { listAnnouncements } from '../../src/lib/supabase/announcements';
 import {
-    BookOpen,
     CircleCheck,
-    Clock,
-    CreditCard,
-    Bus,
     Calendar,
     Bell,
-    MessageSquare,
     ChevronRight,
-    Star,
-    TrendingUp,
-    AlertTriangle,
-    Eye,
     FileText,
     Utensils
 } from 'lucide-react';
@@ -25,23 +18,32 @@ interface ChildSummary {
     id: string;
     name: string;
     class_name: string;
-    avatar_url: string;
-    attendance_status: 'present' | 'absent' | 'late' | 'not_marked';
-    homework_pending: number;
-    fee_due: number;
-    bus_status: string;
-    behavior_points: number;
-    upcoming_events: number;
+    /** null means the register for today has NOT been taken — not that they were away. */
+    attendance_status: 'present' | 'absent' | 'late' | 'leave' | 'not_marked';
+    classId: string | null;
 }
 
 interface FeedItem {
     id: string;
-    type: 'attendance' | 'homework' | 'fee' | 'event' | 'behavior' | 'message';
+    type: 'attendance' | 'event';
     child_name: string;
     description: string;
     time: string;
     icon_color: string;
 }
+
+/**
+ * Today, for a parent.
+ *
+ * WHAT THIS USED TO SHOW. Homework pending, fees due, bus status, behaviour points and
+ * upcoming events — for a school with no assignments table, no bus routes, no behaviour
+ * notes and no events table. Every one of those came from a server that is not deployed,
+ * so the cards were blank or zero and the activity feed was permanently empty.
+ *
+ * WHAT IT SHOWS NOW. Today's register for each child, and the school's own notices. A
+ * register that has not been taken today says so, rather than showing "absent" — the
+ * difference matters to a parent standing at the gate.
+ */
 
 const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: string, props?: any) => void }) => {
     const { user } = useAuth();
@@ -60,9 +62,65 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
         // replace content the user is reading with a spinner and replay the entry
         // animations — that is what made these screens blink.
             if (!hasLoadedOnceRef.current) setLoading(true);
-            const data = await api.getParentTodayUpdate(user?.id || '');
-            setChildren(data?.children || []);
-            setFeedItems(data?.feedItems || []);
+
+            // The children come from the session, not from a parent id.
+            const mine = await listMyChildren();
+            const today = new Date().toISOString().slice(0, 10);
+
+            const summaries: ChildSummary[] = [];
+            const feed: FeedItem[] = [];
+
+            for (const c of mine) {
+                const s = c.student;
+                const row = { id: s.id, name: s.fullName, class_name: s.className || '', classId: s.classId };
+
+                // Today's register, if the class has one. A missing row is "not marked",
+                // which is a different thing from "absent" and is shown as such.
+                let status: ChildSummary['attendance_status'] = 'not_marked';
+                if (s.classId) {
+                    try {
+                        const register = await getClassRegister(s.classId, today);
+                        const entry = register.find(r => r.studentId === s.id);
+                        if (entry?.status === 'PRESENT') status = 'present';
+                        else if (entry?.status === 'ABSENT') status = 'absent';
+                        else if (entry?.status === 'LATE') status = 'late';
+                        else if (entry?.status === 'EXCUSED' || entry?.status === 'SICK') status = 'leave';
+                    } catch {
+                        // A register that cannot be read leaves the day unmarked rather
+                        // than claiming anything about the child.
+                    }
+                }
+
+                summaries.push({ ...row, attendance_status: status });
+                feed.push({
+                    id: `${s.id}-today`,
+                    type: 'attendance',
+                    child_name: s.fullName,
+                    description: status === 'not_marked'
+                        ? 'Attendance has not been taken yet today.'
+                        : `Marked ${status} today.`,
+                    time: today,
+                    icon_color: 'text-emerald-600',
+                });
+            }
+
+            // The school's own published notices, which a guardian can genuinely read.
+            const notices = (await listAnnouncements())
+                .filter(a => a.status === 'PUBLISHED')
+                .slice(0, 5);
+            for (const n of notices) {
+                feed.push({
+                    id: `notice-${n.id}`,
+                    type: 'event',
+                    child_name: 'School',
+                    description: n.title,
+                    time: n.publish_at ?? n.created_at,
+                    icon_color: 'text-indigo-600',
+                });
+            }
+
+            setChildren(summaries);
+            setFeedItems(feed);
         } catch (err: any) {
             console.error('Failed to fetch today update:', err);
             setError(err.message);
@@ -75,7 +133,8 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
     }, []);
 
     // Real-time synchronization
-    useAutoSync(['students', 'attendance', 'assignments', 'finances'], fetchTodayUpdate);
+    // Only tables that exist.
+    useAutoSync(['students', 'student_attendance', 'announcements'], fetchTodayUpdate);
 
     useEffect(() => {
         fetchTodayUpdate();
@@ -106,18 +165,22 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
     }
 
     const child = children[selectedChild];
-    const attendanceIcon = child.attendance_status === 'present' ? '✅' : child.attendance_status === 'late' ? '⏰' : child.attendance_status === 'absent' ? '❌' : '⏳';
+    // ⏳ for a register not yet taken, which is NOT the same as absent.
+    const attendanceIcon = child.attendance_status === 'present' ? '✅'
+        : child.attendance_status === 'late' ? '⏰'
+        : child.attendance_status === 'absent' ? '❌'
+        : child.attendance_status === 'leave' ? '🏠'
+        : '⏳';
     const greetingHour = new Date().getHours();
     const greeting = greetingHour < 12 ? 'Good Morning' : greetingHour < 17 ? 'Good Afternoon' : 'Good Evening';
 
+    // Only the two kinds of entry this screen can actually produce: a register mark and
+    // a school notice. The old map had homework, fees, behaviour and messages — none of
+    // which has a table, so none of which could ever appear.
     const getFeedIcon = (type: string) => {
         switch (type) {
             case 'attendance': return CircleCheck;
-            case 'homework': return BookOpen;
-            case 'fee': return CreditCard;
             case 'event': return Calendar;
-            case 'behavior': return Star;
-            case 'message': return MessageSquare;
             default: return Bell;
         }
     };
@@ -149,9 +212,22 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
             {/* Summary Cards */}
             <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-4 gap-4">
                 {[
-                    { onClick: () => navigateTo('attendanceOverview', 'Attendance'), iconBg: 'bg-emerald-50', icon: <CircleCheck className="w-5 h-5 text-emerald-600" />, corner: <span className="text-2xl">{attendanceIcon}</span>, value: <span className="capitalize">{child.attendance_status.replace('_', ' ')}</span>, label: 'Attendance' },
-                    { onClick: () => navigateTo('assignments', 'Homework'), iconBg: 'bg-indigo-50', icon: <BookOpen className="w-5 h-5 text-indigo-600" />, corner: child.homework_pending > 0 && <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">{child.homework_pending}</span>, value: `${child.homework_pending} Pending`, label: 'Homework' },
-                    { onClick: () => navigateTo('busRoute', 'Bus Tracker', { studentId: child.id }), iconBg: 'bg-blue-50', icon: <Bus className="w-5 h-5 text-blue-600" />, corner: null, value: <span className="text-sm">{child.bus_status}</span>, label: 'Bus Status' },
+                    // ONE card, because there is one thing this school can honestly say
+                    // about today. Homework, bus status and behaviour were all removed:
+                    // no table backs any of them, so each was a permanently blank or zero
+                    // card that told a parent nothing while looking like information.
+                    {
+                        onClick: () => navigateTo('attendanceOverview', 'Attendance'),
+                        iconBg: 'bg-emerald-50',
+                        icon: <CircleCheck className="w-5 h-5 text-emerald-600" />,
+                        corner: <span className="text-2xl">{attendanceIcon}</span>,
+                        value: <span className="capitalize">
+                            {child.attendance_status === 'not_marked'
+                                ? 'Not taken yet'
+                                : child.attendance_status.replace('_', ' ')}
+                        </span>,
+                        label: 'Attendance Today',
+                    },
                 ].map((card, i) => (
                     <motion.button
                         key={card.label}
@@ -173,14 +249,9 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                 ))}
             </div>
 
-            {/* Quick Actions */}
+            {/* Quick Actions — only destinations that are real. "Pay Fees" and
+                "Message Teacher" led to screens for features this school does not run. */}
             <div className="flex space-x-3 overflow-x-auto pb-2">
-                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('feeStatus', 'Pay Fees')} className="flex items-center space-x-2 bg-indigo-600 text-white min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm whitespace-nowrap hover:bg-indigo-700 transition-colors">
-                    <CreditCard className="w-4 h-4" /><span>Pay Fees</span>
-                </motion.button>
-                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('parentMessages', 'Messages')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
-                    <MessageSquare className="w-4 h-4" /><span>Message Teacher</span>
-                </motion.button>
                 <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('reportCard', 'Report Card')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
                     <FileText className="w-4 h-4" /><span>View Report Card</span>
                 </motion.button>

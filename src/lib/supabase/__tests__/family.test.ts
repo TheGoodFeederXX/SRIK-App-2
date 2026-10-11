@@ -28,6 +28,7 @@ const code = (s: string) =>
 const MODULE = 'src/lib/supabase/family.ts';
 const SCREENS = [
     'components/parent/AlertsScreen.tsx',
+    'components/parent/ParentTodayWidget.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -134,6 +135,43 @@ describe('F27: the parent portal reads the family from the session, not a parame
             expect(src, `the screen invents read-state via \`${ghost}\``)
                 .not.toMatch(new RegExp(`\\b${ghost}\\b`));
         }
+    });
+
+    it('shows a parent today, and says so when the register has not been taken', () => {
+        const src = code(read('components/parent/ParentTodayWidget.tsx'));
+
+        // The day's status comes from the real register.
+        expect(src).toMatch(/getClassRegister/);
+        expect(src).toMatch(/listMyChildren/);
+
+        // NOT MARKED IS NOT ABSENT. A parent at the gate must be able to tell "the
+        // register is not in yet" from "your child was away". A screen that defaults to
+        // absent is making a false accusation.
+        //
+        // The assertion is on the DEFAULT the code assigns, not merely on the word
+        // `not_marked` appearing: the type declaration contains that word too, so
+        // checking for it let a mutation that defaulted to 'present' pass straight
+        // through. A check that matches the type instead of the behaviour is not a guard.
+        expect(src, 'the day does not start as unmarked')
+            .toMatch(/attendance_status']\s*=\s*'not_marked'/);
+        expect(src, "'Not taken yet' is not shown to the parent")
+            .toMatch(/Not taken yet/);
+
+        // Homework pending, fees due, bus status and behaviour points all had no table.
+        for (const ghost of ['homework_pending', 'bus_status', 'behavior_points', 'fee_due']) {
+            expect(src, `the widget shows \`${ghost}\`, which no column backs`)
+                .not.toMatch(new RegExp(`\\b${ghost}\\b`));
+        }
+    });
+
+    it('does not promise a parent an e-learning progress screen that does not exist', () => {
+        const src = read('components/parent/LearningHubProgressScreen.tsx');
+
+        // There is no learning-hub table and no topic progress. The screen used to show
+        // zeroes, which a parent could only read as "my child has done nothing".
+        expect(src).toMatch(/ComingSoonScreen/);
+        expect(src, 'the old fabricated figures are still rendered')
+            .not.toMatch(/getStudentLearningHubSummary|api\./);
     });
 
     it('reads children without a school id, which does not exist', () => {
