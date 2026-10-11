@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { CheckCircleIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '../../constants';
 import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api';
+import {
+    listMyAttendance,
+    toAttendanceView,
+    type StaffAttendanceView,
+} from '../../src/lib/supabase/staffAttendance';
 
-interface TeacherAttendance {
-    id: string;
-    teacher_id: string;
-    date: string;
-    status: string;
-    approval_status: string;
-    check_in: string;
+/**
+ * The screen's own view model, now fed from the database.
+ *
+ * `approved_by` is kept so the layout and wording are untouched: SRIK has no
+ * separate approval step, the office records attendance directly, so the field is
+ * always undefined and the screen simply does not render that line.
+ */
+interface TeacherAttendance extends StaffAttendanceView {
     approved_by?: string;
 }
 
@@ -35,12 +40,15 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
             const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString().split('T')[0];
             const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString().split('T')[0];
 
-            // Use unified API client for teacher attendance
-            const data = await api.getTeacherAttendance('', {
-                startDate,
-                endDate,
-                teacher_id: teacherId || undefined
-            });
+            // The teacher's OWN attendance, straight from the database.
+            //
+            // This called `api.getTeacherAttendance('', {...})` on an Express
+            // server that is not deployed, so the calendar was blank for every
+            // month. The database function resolves the teacher from the signed-in
+            // session — the `teacher_id` that used to be passed here is gone,
+            // because there is nothing sensible it could have been used for.
+            const all = (await listMyAttendance(400)).map(toAttendanceView);
+            const data = all.filter(r => r.date >= startDate && r.date <= endDate);
 
             const map = new Map<string, string>();
             data?.forEach((record: any) => {
@@ -63,8 +71,8 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
         const fetchHistory = async () => {
             setLoading(true);
             try {
-                const data = await api.getTeacherAttendanceHistory(100);
-                setHistory(data || []);
+                const data = (await listMyAttendance(100)).map(toAttendanceView);
+                setHistory(data);
             } catch (err: any) {
                 console.error("Error fetching history:", err);
                 toast.error(err.message || "Failed to load history");
@@ -84,8 +92,8 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                 console.log('🔄 [History] Realtime update detected, refreshing...');
                 const fetchHistory = async () => {
                     try {
-                        const data = await api.getTeacherAttendanceHistory(100);
-                        setHistory(data || []);
+                        const data = (await listMyAttendance(100)).map(toAttendanceView);
+                        setHistory(data);
                     } catch (err: any) {
                         console.error("Error fetching history:", err);
                     }

@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import {
+    listMyAttendance,
+    checkInMyAttendance,
+    checkOutMyAttendance,
+    todayInKualaLumpur,
+    toAttendanceView,
+    type StaffAttendanceView,
+} from '../../src/lib/supabase/staffAttendance';
 import { toast } from 'react-hot-toast';
 import { CheckCircleIcon, CalendarIcon, AlertTriangleIcon } from '../../constants';
 import { useProfile } from '../../context/ProfileContext';
 import { useAuth } from '../../context/AuthContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
 
-interface TeacherAttendance {
-    id: string;
-    teacher_id: string;
-    date: string;
-    status: string;
-    approval_status: string;
-    check_in: string;
-    check_out?: string;
-}
+type TeacherAttendance = StaffAttendanceView;
 
 interface TeacherSelfAttendanceProps {
     navigateTo: (view: string, title: string, props?: any) => void;
@@ -41,14 +40,17 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
         setLoading(true);
         try {
             setErrorOccurred(false);
-            // Get attendance history (which includes today)
-            // Use current school/branch context for accurate history
-            const history = await api.getTeacherAttendanceHistory(30);
-            setAttendanceHistory(history || []);
+            // Read the teacher's OWN history straight from the database.
+            //
+            // This called `api.getTeacherAttendanceHistory(30)` on an Express
+            // server that is not deployed, so the screen showed an empty history
+            // for everyone, always. The database function resolves the teacher
+            // from the signed-in session, so there is no id to pass and no way to
+            // read a colleague's record by accident.
+            const history = (await listMyAttendance(30)).map(toAttendanceView);
+            setAttendanceHistory(history);
 
-            // Find today's entry
-            const now = new Date();
-            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const todayStr = todayInKualaLumpur();
             const today = history.find(h => h.date === todayStr);
             setTodayStatus(today || null);
         } catch (error) {
@@ -64,19 +66,27 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
     }, [user?.id]);
 
     // Real-time synchronization
-    useAutoSync(['staff_attendance'], loadAttendanceData);
+    useAutoSync(['teacher_attendance'], loadAttendanceData);
 
     const handleCheckIn = async () => {
         setSubmitting(true);
         try {
-            const result = await api.submitMyAttendance();
-            console.log('✅ [SelfAttendance] Check-in result:', result);
-            toast.success("Attendance marked successfully!");
-            
-            // No need for manual reload or dispatch; useAutoSync handles it
+            const result = await checkInMyAttendance('PRESENT');
+            // The database refuses when the office has already recorded today —
+            // a leave approval, a medical certificate. That must be said out loud
+            // rather than reported as a successful check-in.
+            if (result.recorded) {
+                toast.success('Attendance marked successfully!');
+            } else {
+                toast.error(result.reason || 'Attendance could not be recorded.');
+            }
+            await loadAttendanceData();
         } catch (error: any) {
             console.error('Check-in error:', error);
-            toast.error(error.message || "Failed to mark attendance");
+            // The database's own words explain the refusal ("The office has already
+            // recorded your attendance for today"). Replacing them with a generic
+            // message would hide the one thing the teacher needs to know.
+            toast.error(error?.message || 'Failed to mark attendance');
         } finally {
             setSubmitting(false);
         }
