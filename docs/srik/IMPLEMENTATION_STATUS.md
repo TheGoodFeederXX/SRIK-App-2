@@ -30,28 +30,43 @@ Keadaan sebenar yang disahkan hari ini:
 
 | Perkara | Angka |
 |---|---|
-| Ujian frontend | **438 lulus**, 59 fail, 0 ralat jenis |
-| Pemeriksaan SQL | **188 lulus** (`supabase/tests/run_phase5_tests.sh`) |
+| Ujian frontend | **462 lulus**, 62 fail, 0 ralat jenis |
+| Pemeriksaan SQL | **201 lulus**, 19 suite (`supabase/tests/run_phase5_tests.sh`) |
 | Jadual dengan RLS dipaksa | 36 / 36 |
 | Kerosakan kebergantungan runtime | **0** (dari 14) |
-| Isu audit diselesaikan | 35 / 40 |
+| Isu audit diselesaikan | **40 / 40** |
 
 **Apa yang RLS enabled TIDAK buktikan.** Bilangan jadual dengan RLS hidup tidak
 membuktikan bahawa setiap operasi ditolak dan setiap skop betul — itu hanya
 membuktikan RLS dihidupkan. Bukti sebenar ialah ujian yang cuba operasi yang tidak
-dibenarkan dan mengesahkan ia ditolak, dan itulah yang dilakukan oleh 188
+dibenarkan dan mengesahkan ia ditolak, dan itulah yang dilakukan oleh 201
 pemeriksaan SQL: setiap satu menyemak kedua-dua arah, kes yang ditolak DAN kes yang
 dibenarkan. Angka RLS di atas dikekalkan kerana ia menjawab soalan yang berbeza,
 bukan kerana ia membuktikan kebenaran.
 
+**F27 ditutup, dan caranya penting.** Setiap skrin guru yang boleh dicapai kini
+sama ada membaca/menulis melalui Supabase, atau — bagi fungsi yang sekolah ini
+memang tiada rekodnya — menukar kepada skrin yang memberitahu perkara sebenar.
+Tiada satu pun daripada 22 skrin itu kini memanggil API yang tidak wujud.
+
+**Lima belas skrin itu TIDAK dibina, dan ia sengaja tidak dibina.** Tiada jadual
+untuk kes SOP, pemerhatian, temujanji, guru ganti, kelas maya, kebenaran keluar,
+rancangan mengajar, murid berisiko, tiket sokongan, tiket penyelenggaraan atau
+penyerahan tugasan. Skrin lama memaparkan ralat mentah, yang memberitahu guru
+aplikasi rosak — sedangkan yang benar ialah fungsi itu belum dibina untuk sekolah
+ini. Ia kini berkata demikian, dan tidak menyimpan apa-apa. Ia sengaja tidak
+dipalsukan: senarai kosong akan dibaca sebagai "tiada rekod lagi", iaitu dakwaan
+tentang sekolah yang tiada asasnya.
+
 **Baki yang diketahui, supaya tiada siapa menyangka ia selesai:**
 
-- 22 skrin guru yang boleh dicapai masih bergantung pada API lama yang tidak
-  dideploy (F27). Yang paling penting — papan pemuka, daftar kehadiran, dan dua
-  cangkuk di bawahnya — sudah selesai.
+- Lima belas fungsi di atas belum dibina. Setiap satu memerlukan perbincangan
+  dengan sekolah dahulu — siapa boleh memfailkan laporan kerosakan, apa gunanya
+  rekod pemerhatian, apa jadi pada permintaan guru ganti jam 6 pagi.
 - Kedua-dua Edge Function (`provision-teacher-account`, `provision-guardian-account`)
   belum dideploy.
 - Data orang sebenar belum dimasukkan: 0 pelajar, 0 penjaga, 0 log masuk guru.
+  Ini jurang DATA, bukan jurang kod — kata laluan guru pertama perlu dijana.
 - Kurungan cukai dan kadar pencen dalam `lib/payroll.ts` masih menunggu angka
   sebenar daripada LHDN dan KWSP. Ia sengaja tidak direka.
 - ~16 skrin warisan masih berdaftar tetapi belum dibuang.

@@ -39,8 +39,13 @@ Laporkan tingkah laku yang berubah, migration, validation yang bermakna, risiko 
 - **Skema SRIK ialah `supabase/migrations/*.sql`** (36 jadual). `db:migrate`,
   `db:push` dan `db:reset` menunjuk kepada Prisma warisan dan **tidak** membina skema
   SRIK — jangan jalankannya terhadap pangkalan data SRIK.
-- Baseline: frontend typecheck + build **lulus**; suite frontend **438 lulus**;
-  suite SQL **188 lulus** (`supabase/tests/run_phase5_tests.sh`, PostgreSQL sebenar).
+- Baseline: frontend typecheck + build **lulus**; suite frontend **462 lulus**;
+  suite SQL **201 lulus** (`supabase/tests/run_phase5_tests.sh`, PostgreSQL sebenar).
+- Audit 2026-10-10: **40/40 isu selesai**. Setiap pembetulan ada ujian pengawal
+  yang gagal sebelum dan lulus selepas (disahkan dgn memperkenalkan semula
+  kecacatan). **Tiada skrin aktif memanggil `lib/api` lagi** — lima belas fungsi
+  yang sekolah tiada rekodnya memakai `ComingSoonScreen` dan memberitahu pengguna
+  perkara sebenar, bukan memaparkan ralat mentah.
   Suite backend warisan masih tidak hijau tanpa `DATABASE_URL` — itu diketahui dan
   tidak perlu dibaiki sebelum penggantinya siap. Jangan dakwa ujian lulus tanpa
   menjalankannya.
