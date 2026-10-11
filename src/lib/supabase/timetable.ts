@@ -21,6 +21,7 @@
  */
 
 import { requireSupabase } from './client';
+import { todayInKualaLumpur } from './attendance';
 
 export type DayOfWeek = 'SUNDAY' | 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY';
 export type PeriodType = 'TEACHING' | 'ASSEMBLY' | 'BREAK' | 'PRAYER' | 'ACTIVITY';
@@ -667,13 +668,18 @@ export async function findTeacherClash(
 export async function getMyClassId(): Promise<string | null> {
     const supabase = requireSupabase();
 
+    // The child's class TODAY, by the interval.
+    //
+    // `ended_at is null` alone would return a promoted child's NEXT year's class
+    // during this year, so a student opening their timetable would see a class they
+    // are not in yet.
     const { data, error } = await supabase
         .from('student_enrollments')
         .select('class_id, students!inner(status)')
-        .limit(2000)
-        .is('ended_at', null)
         .eq('students.status', 'ACTIVE')
-        .order('started_at', { ascending: false })
+        .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`)
+        .order('enrolled_at', { ascending: false })
         .limit(1);
 
     if (error) throw new Error(`Could not find your class: ${error.message}`);

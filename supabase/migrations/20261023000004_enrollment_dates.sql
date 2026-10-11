@@ -422,3 +422,81 @@ end;
 $$;
 
 commit;
+
+-- ---------------------------------------------------------------------------
+-- APPENDED: the bulk form, so the student list stays one request.
+--
+-- `class_on` answers for one child. The directory needs the class of every child
+-- on screen, and calling the single form per child would be the F28 mistake again —
+-- 250 round trips to draw one page.
+--
+-- The resolution rule is IDENTICAL, and it is written out rather than shared
+-- because the alternative is a per-row function call anyway. The guard suite pins
+-- the two to the same answers on the same fixture, so they cannot drift.
+create or replace function public.classes_on(p_student_ids uuid[], p_date date)
+returns table (student_id uuid, class_id uuid)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    with current_year as (
+        select cy.id from public.academic_years cy where cy.status = 'CURRENT' limit 1
+    ),
+    ranked as (
+        select
+            e.student_id,
+            e.class_id,
+            row_number() over (
+                partition by e.student_id
+                order by
+                    (p_date between y.start_date and y.end_date) desc,
+                    (e.academic_year_id = (select id from current_year)) desc nulls last,
+                    e.enrolled_at desc,
+                    e.id
+            ) as rn
+          from public.student_enrollments e
+          join public.academic_years y on y.id = e.academic_year_id
+         where e.student_id = any(p_student_ids)
+           and e.status <> 'ARCHIVED'
+           and e.enrolled_at::date <= p_date
+           and (e.ended_at is null or e.ended_at::date >= p_date)
+    )
+    select r.student_id, r.class_id from ranked r where r.rn = 1;
+$$;
+
+comment on function public.classes_on(uuid[], date) is
+    'The class of each of several students on one date, in one request. The same '
+    'rule as class_on, so the directory and the student record cannot disagree.';
+
+revoke all on function public.classes_on(uuid[], date) from public, anon;
+grant execute on function public.classes_on(uuid[], date) to authenticated;
+
+-- And the two must agree. A single row mis-joined here would put one child in the
+-- wrong class on the list and the right one on their record, which is the kind of
+-- difference nobody reports as a bug.
+do $$
+declare
+    v_student uuid;
+    v_one     uuid;
+    v_bulk    uuid;
+begin
+    select student_id into v_student
+      from public.student_enrollments
+     where ended_at is null
+     limit 1;
+
+    if v_student is not null then
+        v_one  := public.class_on(v_student, current_date);
+        select c.class_id into v_bulk
+          from public.classes_on(array[v_student], current_date) c;
+
+        if v_one is distinct from v_bulk then
+            raise exception
+                'F24 guard: class_on says class % and classes_on says % for the same '
+                'student and date', v_one, v_bulk
+                using errcode = 'raise_exception';
+        end if;
+    end if;
+end;
+$$;

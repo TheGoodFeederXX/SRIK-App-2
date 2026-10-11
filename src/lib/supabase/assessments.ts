@@ -28,6 +28,7 @@
  */
 
 import { requireSupabase } from './client';
+import { todayInKualaLumpur } from './attendance';
 
 export type AssessmentType =
     | 'MID_YEAR_EXAM'
@@ -316,12 +317,18 @@ export async function getMarkRegister(assessmentId: string): Promise<MarkRegiste
     const assessment = await getAssessment(assessmentId);
     if (!assessment) throw new Error('This assessment could not be found.');
 
+    // The class list AS OF TODAY, by the interval — not merely "still open".
+    //
+    // A promoted child has one open enrollment per year, so `ended_at is null` would
+    // put them on BOTH this year's and next year's mark sheet. A child appears on a
+    // register because they are in that class on that day.
     const { data: enrollments, error: enrollError } = await db
         .from('student_enrollments')
         .select('student_id')
-        .limit(2000)
         .eq('class_id', assessment.classId)
-        .is('ended_at', null);
+        .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`)
+        .limit(2000);
 
     if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
 
@@ -769,7 +776,8 @@ export async function listClassStudents(classId: string): Promise<ClassStudent[]
         .select('student_id')
         .limit(2000)
         .eq('class_id', classId)
-        .is('ended_at', null);
+        .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`);
 
     if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
 

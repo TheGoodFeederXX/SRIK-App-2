@@ -102,17 +102,29 @@ export async function getClassRegister(
 ): Promise<RegisterRow[]> {
     const db = requireSupabase();
 
+    // The class list ON THE DATE BEING MARKED — the interval at both ends.
+    //
+    // `enrolled_at <= date and ended_at is null` is CLOSE and still wrong: it says
+    // the child had joined by that date and has not left since TODAY. Marking a
+    // register for last month therefore includes every child who has joined the
+    // class since, and excludes none who have since left — so the register for an
+    // old date grows as the year goes on (audit F25).
+    //
+    // The end of the interval is compared to the date as well. Both bounds are
+    // cast to dates rather than timestamps, because the question is about a school
+    // day, not an instant: a child enrolled at 08:00 on their first morning is in
+    // the class that day, and a timestamp comparison would miss them until midnight.
     const { data: enrollments, error: enrollError } = await db
         .from('student_enrollments')
         .select('id, student_id, class_id')
+        .eq('class_id', classId)
+        .lte('enrolled_at', `${date}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${date}T00:00:00`)
         // The audit named this read specifically: a week of registers for the school
         // is 250 students x 5 days = 1,250 rows, already past the cap. For one class
         // it is far smaller, but the register is the screen the school uses every
         // morning and a short one would mark children absent who were never listed.
-            .limit(2000)
-        .eq('class_id', classId)
-        .lte('enrolled_at', date)
-        .is('ended_at', null);
+        .limit(2000);
 
     if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
 
@@ -298,12 +310,14 @@ export async function getSchoolDayOverview(date: string): Promise<SchoolDayRow[]
     const classIds = classRows.map(c => c.id);
 
     const [enrollRes, attendRes] = await Promise.all([
+        // The same interval rule as the single-class register above. A summary for
+        // a past date must count the children who were in the class that day.
         db.from('student_enrollments')
             .select('class_id, student_id')
-            .limit(5000)
             .in('class_id', classIds)
-            .lte('enrolled_at', date)
-            .is('ended_at', null),
+            .lte('enrolled_at', `${date}T23:59:59`)
+            .or(`ended_at.is.null,ended_at.gte.${date}T00:00:00`)
+            .limit(5000),
         db.from('student_attendance')
             .select('class_id, status')
             .limit(5000)

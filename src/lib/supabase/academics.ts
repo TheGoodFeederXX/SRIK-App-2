@@ -14,6 +14,7 @@
  */
 
 import { requireSupabase } from './client';
+import { todayInKualaLumpur } from './attendance';
 
 /** A class as the screens consume it. */
 export interface ClassRecord {
@@ -135,11 +136,15 @@ export async function listClasses(): Promise<ClassRecord[]> {
     // Count students per class from open enrolments. A failure here degrades to
     // "0 students" rather than blanking the list: an empty class is normal.
     const counts = new Map<string, number>();
+    // The same date rule as everywhere else. Counting `ended_at is null` rows would
+    // count a promoted child in BOTH their old and new class, so every class list
+    // would overstate its size by however many children are moving up.
     const { data: enrollments } = await db
         .from('student_enrollments')
         .select('class_id')
-        .limit(2000)
-        .is('ended_at', null);
+        .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`)
+        .limit(2000);
 
     for (const e of (enrollments ?? []) as unknown as EnrollmentRow[]) {
         counts.set(e.class_id, (counts.get(e.class_id) ?? 0) + 1);
@@ -267,7 +272,8 @@ export async function deleteClass(id: string): Promise<WriteResult> {
         .from('student_enrollments')
         .select('id', { count: 'exact', head: true })
         .eq('class_id', id)
-        .is('ended_at', null);
+        .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+        .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`);
 
     if (countError) return { success: false, error: countError.message };
     if (count && count > 0) {

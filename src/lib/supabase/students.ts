@@ -16,6 +16,7 @@
  */
 
 import { readAllPages, requireSupabase } from './client';
+import { todayInKualaLumpur } from './attendance';
 
 /** A student as the screens consume it. */
 export interface StudentRecord {
@@ -151,34 +152,40 @@ export async function listStudents(): Promise<StudentRecord[]> {
 
     const rows = students as unknown as StudentRow[];
 
-    // Current class per student. A failure here degrades to "no class shown"
-    // rather than blanking the whole list: a student without a class is a
-    // normal state, not an error.
+    // Current class per student, resolved by the DATABASE — one call for the list.
     //
-    // This one is not paged, and that is deliberate rather than an oversight: a
-    // student has AT MOST ONE open enrollment — the table's own constraint says so —
-    // so the number of rows is bounded by the number of students, and an unbounded
-    // read of it is not possible.
+    // This used to filter `student_enrollments` on `ended_at is null` and take
+    // whatever came back. That filter is ambiguous (audit F24): a child promoted to
+    // next year's class has two open rows, one per year, and the answer depended on
+    // which one the database happened to return. The student record did not survive
+    // it at all, because it reads with `maybeSingle()` and two rows is an error.
+    //
+    // `classes_on` is the same rule as `class_on`, in bulk, so the directory and the
+    // child's own page cannot disagree about which class they are in.
+    //
+    // A failure here degrades to "no class shown" rather than blanking the whole
+    // list: a student without a placement is a normal state, not an error.
     const classByStudent = new Map<string, { id: string; name: string; yearLevel: number; code: string | null }>();
-    const { data: enrollments } = await db
-        .from('student_enrollments')
-        .select('student_id, class_id, ended_at')
-        .is('ended_at', null)
-        .limit(5000);
+    const { data: placements } = await db.rpc('classes_on', {
+        p_student_ids: rows.map(r => r.id),
+        p_date: todayInKualaLumpur(),
+    });
 
-    if (enrollments) {
-        const enrollmentRows = enrollments as unknown as EnrollmentRow[];
-        const classIds = [...new Set(enrollmentRows.map(e => e.class_id))];
-        const { data: classes } = classIds.length
-            ? await db.from('classes').select('id, display_name, year_level, code').in('id', classIds).limit(1000)
-            : { data: [] as ClassRow[] };
+    const placementRows = (placements ?? []) as { student_id: string; class_id: string }[];
+    if (placementRows.length) {
+        const classIds = [...new Set(placementRows.map(p => p.class_id))];
+        const { data: classes } = await db
+            .from('classes')
+            .select('id, display_name, year_level, code')
+            .in('id', classIds)
+            .limit(1000);
 
         const classById = new Map(((classes ?? []) as unknown as ClassRow[]).map(c => [c.id, c]));
-        for (const e of enrollmentRows) {
-            const cls = classById.get(e.class_id);
+        for (const p of placementRows) {
+            const cls = classById.get(p.class_id);
             if (cls) {
-                classByStudent.set(e.student_id, {
-                    id: e.class_id,
+                classByStudent.set(p.student_id, {
+                    id: p.class_id,
                     name: cls.display_name,
                     yearLevel: cls.year_level,
                     code: cls.code,
@@ -280,19 +287,24 @@ export async function getStudent(id: string): Promise<StudentRecord | null> {
 
     const row = data as unknown as StudentRow;
 
-    const { data: enrollment } = await db
-        .from('student_enrollments')
-        .select('student_id, class_id, ended_at')
-        .eq('student_id', id)
-        .is('ended_at', null)
-        .maybeSingle();
+    // The child's class, from the database's own rule — NOT a `maybeSingle()` over
+    // `ended_at is null`.
+    //
+    // That is what F24 broke most visibly: a promoted child has two open enrollments
+    // in different years, `maybeSingle()` errors when it is handed two rows, and the
+    // whole student record failed to open. Not a wrong class — a page that would not
+    // load, for every child the office had promoted for next year.
+    const { data: placement } = await db.rpc('class_on', {
+        p_student_id: id,
+        p_date: todayInKualaLumpur(),
+    });
 
     let className: string | null = null;
     let classId: string | null = null;
     let yearLevel: number | null = null;
     let classCode: string | null = null;
-    if (enrollment) {
-        classId = (enrollment as unknown as EnrollmentRow).class_id;
+    if (placement) {
+        classId = placement as unknown as string;
         const { data: cls } = await db
             .from('classes').select('id, display_name, year_level, code').eq('id', classId).maybeSingle();
         const row2 = cls as unknown as ClassRow | null;
@@ -683,15 +695,26 @@ export async function listGuardians(): Promise<GuardianRecord[]> {
         // row: the same child is in Year 3 this year and Year 4 next year, and
         // the record of that change is the point. Reading a class_id off the
         // student would show nothing for every child.
+        // Date-scoped, not merely `ended_at is null`.
+        //
+        // A promoted child has one open enrollment per year, and `Set`-ing them into
+        // a Map means the LAST row the database returns wins — so which class shown
+        // against the child depended on row order. Now the placement must actually
+        // cover today, and the same later-start-wins rule as the database function
+        // breaks any remaining tie.
         const { data: enrollments } = await db
             .from('student_enrollments')
-            .select('student_id, class_id, ended_at')
+            .select('student_id, class_id, ended_at, enrolled_at')
             .in('student_id', studentIds)
-            .is('ended_at', null)
+            .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+            .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`)
+            .order('enrolled_at', { ascending: true })
             .limit(10000);
 
         const enrolledClassByStudent = new Map<string, string>();
         for (const e of (enrollments ?? []) as unknown as { student_id: string; class_id: string }[]) {
+            // Ascending order means the LATEST placement is written last and wins —
+            // deterministically, rather than by whatever order the rows arrived.
             enrolledClassByStudent.set(e.student_id, e.class_id);
         }
 
