@@ -107,7 +107,32 @@ jobs:
         run: npm run test:run
 
       - name: Build the app
-        run: npm run build
+        # THE BUILD NEEDS A SUPABASE CONNECTION, and it is right that it refuses
+        # without one.
+        #
+        # `scripts/check-env.mjs` now fails the build when VITE_SUPABASE_URL or the
+        # publishable key is missing — because without them the deploy succeeds, the
+        # site answers 200, and every screen is empty. That is a silent failure and
+        # the check exists to make it loud. Before the check existed, this step
+        # passed on a bundle that could not connect, which is exactly the bug.
+        #
+        # These two values are the project URL and the PUBLISHABLE key. Both are
+        # public by design: they are compiled into the JavaScript every visitor
+        # downloads, and the browser cannot work without them. The secret key is a
+        # different variable and must never appear here — `client.ts` refuses to
+        # build a browser client from one, and the build check fails if the
+        # publishable key holds a secret.
+        env:
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
+        run: |
+          # A missing repository VARIABLE is not the same as a missing .env, and the
+          # error above would blame the wrong thing. Name the actual problem.
+          if [ -z "$VITE_SUPABASE_URL" ] || [ -z "$VITE_SUPABASE_PUBLISHABLE_KEY" ]; then
+            echo "::error::Set the repository variables VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (Settings -> Secrets and variables -> Actions -> Variables). They are public values: the project URL and the publishable key."
+            exit 1
+          fi
+          npm run build
 
       # NOTE ON THE BACKEND. The Express API is still type-checked and covered by
       # the backend type-check above, but it is NOT built or deployed here. Vercel
