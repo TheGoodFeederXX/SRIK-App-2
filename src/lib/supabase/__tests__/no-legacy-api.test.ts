@@ -92,6 +92,12 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // School notices for a parent. There is no notification system: the screen showed
+    // an unread dot and a live feed over a table that does not exist, so a parent saw
+    // "No new notifications" whether the school had sent ten notices or none. It now
+    // reads the school's published announcements, which the database admits a guardian
+    // to because they are the audience — and refuses a draft or a staff-only notice.
+    'components/parent/AlertsScreen.tsx',
     // The parent dashboard: the child list, this term's attendance day by day, and the
     // school's own year as the window. Homework and behaviour notes have no tables, so
     // they are shown empty with the reason rather than as "nothing is due".
