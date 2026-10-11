@@ -1,110 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import api from '../../lib/api';
-import { Appointment } from '../../types';
-import { DEFAULT_AVATAR } from '../../lib/avatar';
-import { CheckCircleIcon, XCircleIcon, ClockIcon } from '../../constants';
-import { toast } from 'react-hot-toast';
+import React from 'react';
+import ComingSoonScreen from '../ui/ComingSoonScreen';
 
-interface TeacherAppointmentsScreenProps {
-    teacherId: string;
-}
-
-const AppointmentCard: React.FC<{
-    appointment: any;
-    onUpdateStatus: (id: string, status: 'Confirmed' | 'Cancelled') => void;
-}> = ({ appointment, onUpdateStatus }) => {
-    // Backend returns { Student: { full_name }, Parent: { full_name, avatar_url } }
-    const studentName = appointment.Student?.full_name || 'Unknown Student';
-    const parentName = appointment.Parent?.full_name || 'Unknown Parent';
-    const parentAvatar = appointment.Parent?.avatar_url || DEFAULT_AVATAR;
-
-    return (
-        <div className="bg-white rounded-xl shadow-sm p-4 space-y-3">
-            <div className="flex items-start space-x-3">
-                <img src={parentAvatar} alt={parentName} className="w-12 h-12 rounded-full object-cover" />
-                <div>
-                    <p className="font-bold text-gray-800">{parentName}</p>
-                    <p className="text-sm text-gray-500">Parent of {studentName}</p>
-                </div>
-            </div>
-            <p className="text-sm text-gray-700 italic bg-purple-50 border border-purple-100 rounded-lg px-3 py-2">"{appointment.description || appointment.reason || 'No reason provided'}"</p>
-            <div className="flex justify-between items-center text-sm font-semibold text-gray-700 pt-2 border-t">
-                <span>{new Date(appointment.date).toLocaleDateString('ms-MY', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
-                {appointment.status === 'Pending' ? (
-                    <div className="flex space-x-2">
-                        <button onClick={() => onUpdateStatus(appointment.id, 'Cancelled')} className="p-2 bg-red-100 rounded-full hover:bg-red-200" aria-label="Reject appointment request"><XCircleIcon className="w-5 h-5 text-red-600" /></button>
-                        <button onClick={() => onUpdateStatus(appointment.id, 'Confirmed')} className="p-2 bg-green-100 rounded-full hover:bg-green-200" aria-label="Approve appointment request"><CheckCircleIcon className="w-5 h-5 text-green-600" /></button>
-                    </div>
-                ) : (
-                    <span className={`px-2 py-1 text-xs rounded-full ${appointment.status === 'Confirmed' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>{appointment.status}</span>
-                )}
-            </div>
-        </div>
-    );
-};
-
-const TeacherAppointmentsScreen: React.FC<TeacherAppointmentsScreenProps> = ({ teacherId }) => {
-    const [appointments, setAppointments] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    const fetchAppointments = async () => {
-        setLoading(true);
-        try {
-            const data = await api.getTeacherAppointments();
-            setAppointments(data || []);
-        } catch (error) {
-            console.error('Error fetching appointments:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchAppointments();
-    }, []);
-
-    const handleUpdateStatus = async (id: string, status: 'Confirmed' | 'Cancelled') => {
-        // Optimistic update
-        const previousAppointments = [...appointments];
-        setAppointments(prev => prev.map(a => a.id === id ? { ...a, status } : a));
-
-        try {
-            await api.updateAppointmentStatus(id, status);
-            toast.success(`Appointment ${status.toLowerCase()}`);
-        } catch (error) {
-            console.error('Error updating status:', error);
-            toast.error("Failed to update status.");
-            setAppointments(previousAppointments); // Revert
-        }
-    };
-
-    const pending = appointments.filter(a => a.status === 'Pending');
-    const upcoming = appointments.filter(a => a.status === 'Confirmed');
-
-    if (loading && appointments.length === 0) {
-        return <div className="p-8 text-center text-gray-500">Loading appointments...</div>;
-    }
-
-    return (
-        <div className="p-4 space-y-6 bg-gray-100 min-h-full">
-            <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center"><ClockIcon className="w-5 h-5 mr-2 text-amber-500" />Pending Requests ({pending.length})</h3>
-                <div className="space-y-3">
-                    {pending.length > 0 ? pending.map(app => (
-                        <AppointmentCard key={app.id} appointment={app} onUpdateStatus={handleUpdateStatus} />
-                    )) : <p className="text-sm text-gray-500 bg-white p-4 rounded-xl text-center">No pending appointment requests.</p>}
-                </div>
-            </div>
-            <div>
-                <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center"><CheckCircleIcon className="w-5 h-5 mr-2 text-green-500" />Upcoming Appointments ({upcoming.length})</h3>
-                <div className="space-y-3">
-                    {upcoming.length > 0 ? upcoming.map(app => (
-                        <AppointmentCard key={app.id} appointment={app} onUpdateStatus={handleUpdateStatus} />
-                    )) : <p className="text-sm text-gray-500 bg-white p-4 rounded-xl text-center">No upcoming appointments.</p>}
-                </div>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — this screen has no data behind it.
+ *
+ * It called an Express server that is not deployed, for records this school does
+ * not keep: there is no table for it in the database. The screen showed a raw
+ * request failure, which tells a teacher the app is broken when the truth is that
+ * the feature was never built for this school.
+ *
+ * It now says so, and stores nothing. Nothing here is faked or pre-filled: an
+ * empty-looking list would be worse than this, because a teacher would read it as
+ * "no records yet" rather than "no such feature".
+ *
+ * When this feature is built, this file is replaced by the real screen.
+ */
+const TeacherAppointmentsScreen: React.FC<any> = ({ navigateTo }) => (
+    <ComingSoonScreen
+        title="Appointments"
+        explanation="Appointment requests are not managed here yet. Please arrange them with the office directly."
+        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+    />
+);
 
 export default TeacherAppointmentsScreen;

@@ -58,7 +58,6 @@ html.dark .bg-gray-50\/30 { background-color: rgb(2 6 23 / 0.3); }
 html.dark .bg-gray-50\/40 { background-color: rgb(2 6 23 / 0.4); }
 html.dark .bg-gray-50\/50 { background-color: rgb(2 6 23 / 0.5); }
 html.dark .bg-gray-50\/60 { background-color: rgb(2 6 23 / 0.6); }
-html.dark .bg-gray-50\/70 { background-color: rgb(2 6 23 / 0.7); }
 html.dark .bg-gray-50\/80 { background-color: rgb(2 6 23 / 0.8); }
 html.dark .bg-green-100 { background-color: rgb(34 197 94 / 0.22); }
 html.dark .bg-green-200 { background-color: rgb(34 197 94 / 0.3); }
@@ -236,7 +235,6 @@ html.dark .from-orange-50 { --tw-gradient-from: rgb(249 115 22 / 0.14) var(--tw-
 html.dark .from-pink-50 { --tw-gradient-from: rgb(236 72 153 / 0.14) var(--tw-gradient-from-position); --tw-gradient-to: rgb(236 72 153 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 html.dark .from-purple-200 { --tw-gradient-from: rgb(168 85 247 / 0.3) var(--tw-gradient-from-position); --tw-gradient-to: rgb(168 85 247 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 html.dark .from-purple-50 { --tw-gradient-from: rgb(168 85 247 / 0.14) var(--tw-gradient-from-position); --tw-gradient-to: rgb(168 85 247 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
-html.dark .from-slate-100 { --tw-gradient-from: rgb(30 41 59 / 1) var(--tw-gradient-from-position); --tw-gradient-to: rgb(30 41 59 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 html.dark .from-slate-50 { --tw-gradient-from: rgb(2 6 23 / 1) var(--tw-gradient-from-position); --tw-gradient-to: rgb(2 6 23 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 html.dark .from-white { --tw-gradient-from: rgb(15 23 42 / 1) var(--tw-gradient-from-position); --tw-gradient-to: rgb(15 23 42 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
 html.dark .from-yellow-50 { --tw-gradient-from: rgb(234 179 8 / 0.14) var(--tw-gradient-from-position); --tw-gradient-to: rgb(234 179 8 / 0) var(--tw-gradient-to-position); --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to); }
@@ -510,6 +508,5 @@ html.dark .to-purple-100 { --tw-gradient-to: rgb(168 85 247 / 0.22) var(--tw-gra
 html.dark .to-purple-50 { --tw-gradient-to: rgb(168 85 247 / 0.14) var(--tw-gradient-to-position); }
 html.dark .to-red-50 { --tw-gradient-to: rgb(239 68 68 / 0.14) var(--tw-gradient-to-position); }
 html.dark .to-slate-100 { --tw-gradient-to: rgb(30 41 59 / 1) var(--tw-gradient-to-position); }
-html.dark .to-slate-200 { --tw-gradient-to: rgb(51 65 85 / 1) var(--tw-gradient-to-position); }
 html.dark .to-white { --tw-gradient-to: rgb(15 23 42 / 1) var(--tw-gradient-to-position); }
 html.dark .to-yellow-100 { --tw-gradient-to: rgb(234 179 8 / 0.22) var(--tw-gradient-to-position); }

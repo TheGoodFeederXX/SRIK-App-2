@@ -33,26 +33,26 @@ const ROOT = process.cwd();
  * Each one is a known outstanding item under F27, not a licence to add more.
  */
 const STILL_TO_MIGRATE = [
-    'components/teacher/AssignmentSubmissionsScreen.tsx',
+    // The last two: both have real data behind them and are being moved onto
+    // `assessments` and `report_cards`.
     'components/teacher/ClassGradebookScreen.tsx',
-    'components/teacher/HelpSupportScreen.tsx',
-    'components/teacher/LessonNotesUploadScreen.tsx',
-    'components/teacher/LessonPlannerScreen.tsx',
-    'components/teacher/MyAtRiskStudents.tsx',
-    'components/teacher/MyClassHubScreen.tsx',
-    'components/teacher/MyObservations.tsx',
-    'components/teacher/MySOPCasesScreen.tsx',
-    'components/teacher/ReportMaintenanceIssue.tsx',
-    'components/teacher/ScanClassroomScreen.tsx',
-    'components/shared/StudentGateScreen.tsx',
-    'components/teacher/SubstituteAssignment.tsx',
-    'components/teacher/TeacherAppointmentsScreen.tsx',
     'components/teacher/TeacherReportsScreen.tsx',
-    'components/teacher/TeacherSettingsScreen.tsx',
-    'components/teacher/VirtualClassScreen.tsx',
 ];
 
-/** Screens that must NOT reach for the legacy client. */
+
+/**
+ * Screens that must NOT reach for the legacy client.
+ *
+ * Two kinds are listed here together, because the rule is the same for both.
+ *
+ * MIGRATED: the screen reads and writes through Supabase.
+ *
+ * NOT BUILT YET: the screen needed records this school does not keep — there is no
+ * table for them — so it now says so plainly instead of showing a raw request
+ * failure. A teacher reading "this part is not built yet" is being told the truth;
+ * reading a failed request, or a blank screen that looks like an empty list of real
+ * records, is not. Those files are small and import ComingSoonScreen.
+ */
 const MIGRATED = [
     // The first screen after a teacher logs in.
     'components/teacher/TeacherOverview.tsx',
@@ -67,6 +67,23 @@ const MIGRATED = [
     'components/teacher/TeacherExamManagement.tsx',
     'components/admin/ExamManagement.tsx',
     'components/admin/AddExamScreen.tsx',
+    // Not built yet. Each needed records this school does not keep, so the screen
+    // now says so rather than failing a request.
+    'components/teacher/MySOPCasesScreen.tsx',
+    'components/teacher/MyObservations.tsx',
+    'components/teacher/TeacherAppointmentsScreen.tsx',
+    'components/teacher/SubstituteAssignment.tsx',
+    'components/teacher/VirtualClassScreen.tsx',
+    'components/teacher/MyAtRiskStudents.tsx',
+    'components/teacher/HelpSupportScreen.tsx',
+    'components/teacher/ReportMaintenanceIssue.tsx',
+    'components/shared/StudentGateScreen.tsx',
+    'components/teacher/LessonPlannerScreen.tsx',
+    'components/teacher/LessonNotesUploadScreen.tsx',
+    'components/teacher/ScanClassroomScreen.tsx',
+    'components/teacher/AssignmentSubmissionsScreen.tsx',
+    'components/teacher/MyClassHubScreen.tsx',
+    'components/teacher/TeacherSettingsScreen.tsx',
     // The register, marked every morning.
     'components/teacher/TeacherAttendanceScreen.tsx',
     // The hooks every teacher screen is built on.
@@ -125,5 +142,63 @@ describe('F27: reachable screens do not depend on the undeployed API', () => {
             + 'teacher, because no record carries a school id. The dashboard then renders '
             + 'its empty state as though there were simply nothing to show',
         ).not.toMatch(/if\s*\(\s*!actualSchoolId/);
+    });
+});
+
+/**
+ * The screens that were replaced rather than migrated must say so, and must not
+ * pretend to hold data.
+ */
+describe('F27: screens for features this school does not have', () => {
+    const NOT_BUILT = [
+        'components/teacher/MySOPCasesScreen.tsx',
+        'components/teacher/MyObservations.tsx',
+        'components/teacher/TeacherAppointmentsScreen.tsx',
+        'components/teacher/SubstituteAssignment.tsx',
+        'components/teacher/VirtualClassScreen.tsx',
+        'components/teacher/MyAtRiskStudents.tsx',
+        'components/teacher/HelpSupportScreen.tsx',
+        'components/teacher/ReportMaintenanceIssue.tsx',
+        'components/shared/StudentGateScreen.tsx',
+        'components/teacher/LessonPlannerScreen.tsx',
+        'components/teacher/LessonNotesUploadScreen.tsx',
+        'components/teacher/ScanClassroomScreen.tsx',
+        'components/teacher/AssignmentSubmissionsScreen.tsx',
+        'components/teacher/MyClassHubScreen.tsx',
+        'components/teacher/TeacherSettingsScreen.tsx',
+    ];
+
+    it('each one says the feature is not built, rather than failing a request', () => {
+        for (const rel of NOT_BUILT) {
+            const src = readFileSync(join(ROOT, rel), 'utf8');
+            expect(src, `${rel} no longer says why it has nothing to show`).toMatch(
+                /ComingSoonScreen/,
+            );
+            // And it explains itself. A screen that only says "not available"
+            // leaves the teacher wondering whether they did something wrong.
+            expect(src, `${rel} shows no explanation`).toMatch(/explanation=/);
+        }
+    });
+
+    it('each one holds no data of its own', () => {
+        for (const rel of NOT_BUILT) {
+            const src = readFileSync(join(ROOT, rel), 'utf8');
+            // No state, no fetching, no records. A "coming soon" screen that had
+            // kept its data layer would still be a screen that cannot work, with a
+            // nicer message on top.
+            expect(src, `${rel} still fetches data`).not.toMatch(/useState|useEffect/);
+            expect(src, `${rel} still calls something`).not.toMatch(/api\./);
+            // Not faked either: pre-filled rows would read as real records.
+            expect(src, `${rel} hard-codes sample rows`).not.toMatch(/const\s+\w+\s*=\s*\[\s*\{/);
+        }
+    });
+
+    it('the outstanding list is down to the two screens with real data behind them', () => {
+        // This is the audit finding closing. Anything else appearing here means a
+        // screen was added back on the undeployed client.
+        expect(STILL_TO_MIGRATE).toEqual([
+            'components/teacher/ClassGradebookScreen.tsx',
+            'components/teacher/TeacherReportsScreen.tsx',
+        ]);
     });
 });
