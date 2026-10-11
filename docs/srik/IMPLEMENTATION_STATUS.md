@@ -34,7 +34,7 @@ Keadaan sebenar yang disahkan hari ini:
 | Pemeriksaan SQL | **201 lulus**, 19 suite (`supabase/tests/run_phase5_tests.sh`) |
 | Jadual dengan RLS dipaksa | 36 / 36 |
 | Kerosakan kebergantungan runtime | **0** (dari 14) |
-| Isu audit diselesaikan | **40 / 40** |
+| Isu audit diselesaikan | **40 / 40** (F27 selesai bagi 22 skrin yang dinamakan; lihat nota) |
 
 **Apa yang RLS enabled TIDAK buktikan.** Bilangan jadual dengan RLS hidup tidak
 membuktikan bahawa setiap operasi ditolak dan setiap skop betul — itu hanya
@@ -44,10 +44,33 @@ pemeriksaan SQL: setiap satu menyemak kedua-dua arah, kes yang ditolak DAN kes y
 dibenarkan. Angka RLS di atas dikekalkan kerana ia menjawab soalan yang berbeza,
 bukan kerana ia membuktikan kebenaran.
 
-**F27 ditutup, dan caranya penting.** Setiap skrin guru yang boleh dicapai kini
-sama ada membaca/menulis melalui Supabase, atau — bagi fungsi yang sekolah ini
-memang tiada rekodnya — menukar kepada skrin yang memberitahu perkara sebenar.
-Tiada satu pun daripada 22 skrin itu kini memanggil API yang tidak wujud.
+**F27: 22 skrin yang disenaraikan audit sudah selesai — tetapi skopnya lebih besar,
+dan ini diukur semula.**
+
+Senarai audit menamakan 22 skrin guru. Kesemua 22 itu kini sama ada membaca/menulis
+melalui Supabase, atau — bagi fungsi yang sekolah ini memang tiada rekodnya —
+menukar kepada skrin yang memberitahu perkara sebenar.
+
+Tetapi kriteria penerimaan audit itu sendiri ialah "E2E setiap menu berdaftar;
+tiada panggilan legacy yang mempunyai perkhidmatan". Diukur terhadap perkara itu,
+kerja ini BELUM selesai. Daripada 336 laluan berdaftar yang berjaya dipetakan
+kepada failnya:
+
+| Dashboard | Laluan | Masih guna API lama |
+|---|---|---|
+| Guru | 63 | **31** |
+| Admin | 176 | **130** |
+| Ibu bapa | 29 | **24** |
+| Murid | 68 | **56** |
+| **Jumlah** | **336** | **241** |
+
+Nombor 241 ini adalah pembetulan. Semakan pertama saya melaporkan guru "0 daripada
+65" dan itu SALAH — ia memadankan nama laluan kepada nama fail secara tekaan, dan
+gagal apabila fail itu dinamakan lain (contohnya `selectClassForAttendance` →
+`TeacherUnifiedAttendanceScreen`). Kaedah kedua memetakan setiap laluan melalui
+`import` sebenar, dan itulah angka di atas.
+
+Ini dicatat sebagai kerja yang BELUM SIAP, bukan sebagai kerja yang selesai.
 
 **Lima belas skrin itu TIDAK dibina, dan ia sengaja tidak dibina.** Tiada jadual
 untuk kes SOP, pemerhatian, temujanji, guru ganti, kelas maya, kebenaran keluar,
