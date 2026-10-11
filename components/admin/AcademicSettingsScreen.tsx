@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { BookOpenIcon, SaveIcon, ChevronRightIcon } from '../../constants';
-import { api } from '../../lib/api';
+import { getSchoolProfile, updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -52,15 +52,15 @@ const AcademicSettingsScreen: React.FC = () => {
     if (!schoolId) return;
     setLoading(true);
     try {
-      const data = await api.getSystemSettings(schoolId, ['academic_calendar', 'grading_config', 'curriculum_type'], branchId);
-      
-      const calendarData = data?.find(s => s?.key === 'academic_calendar');
-      const gradingData = data?.find(s => s?.key === 'grading_config');
-      const curriculumData = data?.find(s => s?.key === 'curriculum_type');
+      // These three live in the school's own settings. `api.getSystemSettings`
+      // asked an Express endpoint that is not deployed, so every field on this
+      // screen came back blank and saving wrote blanks back over the real values.
+      const profile = await getSchoolProfile();
+      const stored = (profile.settings || {}) as Record<string, any>;
 
-      if (calendarData?.value) setCalendar(calendarData.value);
-      if (gradingData?.value) setGrading(gradingData.value);
-      if (curriculumData?.value) setCurriculumType(curriculumData.value);
+      if (stored.academic_calendar) setCalendar(stored.academic_calendar);
+      if (stored.grading_config) setGrading(stored.grading_config);
+      if (stored.curriculum_type) setCurriculumType(stored.curriculum_type);
     } catch (err) {
       console.error('Failed to load settings:', err);
       toast.error('Error loading academic settings.');
@@ -80,23 +80,13 @@ const AcademicSettingsScreen: React.FC = () => {
     }
     setSaving(true);
     try {
-      const payload = {
-        school_id: schoolId,
-        branch_id: (branchId && branchId !== 'all' ? branchId : null)
-      };
-
-      await api.updateSystemSettings(schoolId, [
-        { key: 'academic_calendar', value: calendar },
-        { key: 'grading_config', value: grading },
-        { key: 'curriculum_type', value: curriculumType }
-      ], branchId);
-
-      // Also update school level curriculum type if available
-      try {
-          await api.updateSchoolInfo(schoolId, { curriculum_type: curriculumType });
-      } catch (e) {
-          console.warn("Failed to update school-level curriculum type:", e);
-      }
+      // One merge, so this screen cannot revert a setting changed elsewhere while
+      // it was open. There is no school or branch id: one school, one settings row.
+      await updateSchoolSettings({
+        academic_calendar: calendar,
+        grading_config: grading,
+        curriculum_type: curriculumType,
+      });
 
       toast.success('Settings saved successfully!');
     } catch (err: any) {

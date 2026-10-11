@@ -2,12 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { SchoolLogoIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { updateSchoolDetails, updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
+import { uploadFile, signedUrlFor } from '../../src/lib/supabase/storage';
 import { toast } from 'react-hot-toast';
 
 const BrandingSettingsScreen: React.FC = () => {
     const { currentSchool, refreshCurrentSchool } = useAuth();
+    // The STORED KEY of the school logo, which is what gets saved on the row.
     const [logo, setLogo] = useState<string | null>(null);
+    // A short-lived URL for showing it. The bucket is private, so a key is not
+    // something an <img> can open — the key is what is stored, this is what is
+    // displayed, and they are kept apart for that reason.
+    const [logoPreviewUrl, setLogoPreviewUrl] = useState<string | null>(null);
     // The logo URL as it was when the form was seeded. Save only sends logo_url
     // when it differs — re-sending the seeded value wrote an OLD logo back over
     // a newer one saved elsewhere (seen on a real school, 2026-09-18).
@@ -21,6 +27,13 @@ const BrandingSettingsScreen: React.FC = () => {
             const current = (currentSchool as any).logo_url || currentSchool.logoUrl || null;
             setLogo(current);
             setSeededLogo(current);
+            // The stored value is an object KEY, and the bucket is private — so the
+            // preview needs its own short-lived link. A stored key that cannot be
+            // resolved leaves the placeholder rather than a broken image.
+            setLogoPreviewUrl(null);
+            if (current) {
+                signedUrlFor(current).then(setLogoPreviewUrl).catch(() => setLogoPreviewUrl(null));
+            }
             // Assuming settings JSON contains primaryColor
             setPrimaryColor((currentSchool as any).settings?.primaryColor || currentSchool.primaryColor || '#4f46e5');
         }
@@ -36,21 +49,20 @@ const BrandingSettingsScreen: React.FC = () => {
 
         setIsLoading(true);
         try {
-            const updates: Record<string, unknown> = {
-                settings: {
-                    ...((currentSchool as any).settings || {}),
-                    primaryColor: primaryColor
-                }
-            };
+            // Merged in the database rather than written whole. The old code sent
+            // the settings object it had read at page load, so saving here silently
+            // reverted any setting another screen had changed since — no error, the
+            // other change just disappeared.
+            await updateSchoolSettings({ primaryColor });
+
             // Only a NEW logo is sent. The seeded value is never re-sent, so this
             // screen can no longer overwrite a logo saved from another screen or
             // device with a stale copy.
-            if (logo && logo !== seededLogo) updates.logo_url = logo;
-
-            await api.updateSchool(currentSchool.id, updates);
+            const sendingLogo = Boolean(logo && logo !== seededLogo);
+            if (sendingLogo) await updateSchoolDetails({ logoStorageKey: logo });
 
             await refreshCurrentSchool();
-            if (updates.logo_url) setSeededLogo(logo);
+            if (sendingLogo) setSeededLogo(logo);
             toast.success('Branding settings saved successfully');
         } catch (error: any) {
             toast.error(`Failed to save: ${error.message}`);
@@ -77,10 +89,13 @@ const BrandingSettingsScreen: React.FC = () => {
             // profile-photo object, so saving a school logo replaced the admin's
             // photo (and vice versa). The logo gets its own random-named object
             // under the school's branding folder.
-            const uploadResult = await api.uploadFile('general', 'branding/', file);
-            const url = uploadResult.publicUrl || uploadResult.url || '';
-            if (!url) throw new Error('No file address was returned');
-            setLogo(url);
+            // SCHOOL-level, so the object lives at `SCHOOL/<name>` and is readable
+            // by the office. The stored value is the OBJECT KEY, not a URL: the
+            // bucket is private, so a URL saved today is dead tomorrow. The preview
+            // gets a short-lived link instead.
+            const uploaded = await uploadFile({ type: 'SCHOOL' }, file);
+            setLogo(uploaded.storageKey);
+            setLogoPreviewUrl(await signedUrlFor(uploaded.storageKey));
             toast.success('Logo uploaded — press Save to apply it', { id: toastId });
         } catch (error: any) {
             setLogo(seededLogo);
@@ -97,7 +112,7 @@ const BrandingSettingsScreen: React.FC = () => {
                 <h3 className="font-bold text-gray-800 mb-3">School Logo</h3>
                 <div className="flex items-center space-x-4">
                     <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center border">
-                        {logo ? <img src={logo} alt="School Logo" className="w-full h-full object-contain p-1" /> : <SchoolLogoIcon className="text-gray-300 w-10 h-10" />}
+                        {(logoPreviewUrl || logo) ? <img src={logoPreviewUrl || logo || undefined} alt="School Logo" className="w-full h-full object-contain p-1" /> : <SchoolLogoIcon className="text-gray-300 w-10 h-10" />}
                     </div>
                     <label className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg text-sm">
                         <span>Upload Logo</span>

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ShieldCheckIcon, ClockIcon as HistoryIcon, LockIcon, LoginIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { listAuditLog } from '../../src/lib/supabase/auditTrail';
+import { updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { toast } from 'react-hot-toast';
 
 const SecuritySettingsScreen: React.FC = () => {
@@ -29,7 +30,16 @@ const SecuritySettingsScreen: React.FC = () => {
             try {
                 // Use the real audit-logs endpoint (school + branch scoped on the
                 // backend). The old chained query builder isn't supported here.
-                const logs = await api.getAuditLogs(currentSchool.id, 20, currentBranchId || undefined);
+                // The school's own audit trail. This is the record of who changed
+                // security settings, so a screen that could not read it was showing
+                // an empty list where the evidence should be.
+                const entries = await listAuditLog({ limit: 20 });
+                const logs = entries.map(e => ({
+                    id: String(e.id),
+                    action: e.action,
+                    user_email: e.actor_email ?? '',
+                    created_at: e.created_at,
+                }));
                 const loginLogs = (logs || []).filter((log: any) =>
                     /login|token/i.test(log.action || log.type || '')
                 ).slice(0, 5);
@@ -61,11 +71,11 @@ const SecuritySettingsScreen: React.FC = () => {
             // Persist via the real schools endpoint instead of the unsupported
             // Chained .from().update().eq() builder (which threw
             // "api.from(...).update(...).eq is not a function").
-            await api.updateSchool(currentSchool.id, {
-                settings: {
-                    ...(currentSchool.settings || {}),
-                    security: { ...(currentSchool.settings?.security || {}), passwordPolicy }
-                }
+            // Merged in the database. The old code wrote back the whole settings
+            // object it had read, so a save here reverted any setting another screen
+            // had changed since — silently, with no error.
+            await updateSchoolSettings({
+                security: { ...((currentSchool.settings as any)?.security || {}), passwordPolicy },
             });
             toast.success('Security settings saved');
         } catch (error: any) {

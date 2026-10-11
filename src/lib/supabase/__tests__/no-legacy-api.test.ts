@@ -74,6 +74,15 @@ const MIGRATED = [
     // The office's audit trail, on the one screen whose whole purpose is to show
     // that something happened — so an empty trail was indistinguishable from none.
     'components/admin/AuditLogScreen.tsx',
+    // Settings screens. Each one used to send the WHOLE settings object it had
+    // read at page load, so a save silently reverted any setting another screen
+    // had changed since — and `merge_school_settings` is what stops that.
+    'components/admin/BrandingSettingsScreen.tsx',
+    'components/admin/CommunicationSettingsScreen.tsx',
+    'components/admin/CalendarManager.tsx',
+    'components/admin/SecuritySettingsScreen.tsx',
+    'components/admin/AcademicSettingsScreen.tsx',
+    'components/admin/CurriculumManagementScreen.tsx',
     // Changing a password. All four screens posted to an endpoint that is not
     // deployed, so nobody could change their password at all — and the shared
     // function re-checks the current one, which is what stops an unlocked laptop

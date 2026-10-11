@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../lib/api';
+import { updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 
@@ -251,10 +251,18 @@ const CalendarManager: React.FC = () => {
         if (!schoolId) return;
         setSaving(true);
         try {
-            const existingSettings = (currentSchool as any)?.settings || {};
-            const allCalendars = { ...(existingSettings.calendars || {}), [selectedYear]: calendar };
-            await api.updateSchool(schoolId, {
-                settings: { ...existingSettings, calendars: allCalendars }
+            // Only the calendars key is sent, and the database merges it into
+            // `settings`. The old code read the whole settings object and wrote it
+            // all back, so saving a calendar reverted anything another settings
+            // screen had changed since this page loaded.
+            //
+            // `calendars` is a map of year -> calendar, so the merge is handed the
+            // whole map rather than one year: a top-level merge replaces the key.
+            // The current value is taken from the fresh school record when it has
+            // arrived, and from what is on screen otherwise.
+            const existingCalendars = ((currentSchool as any)?.settings?.calendars || {}) as Record<string, unknown>;
+            await updateSchoolSettings({
+                calendars: { ...existingCalendars, [selectedYear]: calendar },
             });
             await refreshCurrentSchool();
             toast.success('Calendar saved!');

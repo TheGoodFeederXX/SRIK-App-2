@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { Globe, CheckCircle2, Search } from 'lucide-react';
-import { api } from '../../lib/api';
+import { getSchoolProfile, updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
+import { listStudents } from '../../src/lib/supabase/students';
 import { useAuth } from '../../context/AuthContext';
 import CenteredLoader from '../ui/CenteredLoader';
 
@@ -50,10 +51,12 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
     const fetchSchool = useCallback(async () => {
         if (!currentSchool?.id) return;
         try {
-            const data = await api.getSchoolById?.(currentSchool.id) ?? currentSchool;
-            setSchoolCurricula((data as any)?.curricula_config || ['KSSR']);
+            // Read from the school's own settings. There is no school id to pass.
+            const profile = await getSchoolProfile();
+            const stored = (profile.settings as any)?.curricula_config;
+            setSchoolCurricula(Array.isArray(stored) ? stored : ['KSSR']);
         } catch {
-            setSchoolCurricula((currentSchool as any)?.curricula_config || ['KSSR']);
+            setSchoolCurricula(['KSSR']);
         }
     }, [currentSchool]);
 
@@ -61,11 +64,10 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         if (!currentSchool?.id) return;
         setStudentsLoading(true);
         try {
-            const data = await api.getStudents(
-                currentSchool.id,
-                currentBranchId && currentBranchId !== 'all' ? currentBranchId : undefined
-            );
-            setStudents(data || []);
+            // No school or branch argument: one school, and the roster is what the
+            // database returns.
+            const data = await listStudents();
+            setStudents(data.map(s => ({ id: s.id, name: s.fullName, admissionNo: s.admissionNo })) as any);
         } catch (err) {
             console.error('Error loading students for curriculum management:', err);
             toast.error('Failed to load students.');
@@ -92,7 +94,9 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         if (!currentSchool?.id) return;
         setSavingSchool(true);
         try {
-            await api.updateSchoolInfo(currentSchool.id, { curricula_config: schoolCurricula });
+            // Merged in the database, so it cannot revert a setting changed on
+            // another screen while this one was open.
+            await updateSchoolSettings({ curricula_config: schoolCurricula });
             toast.success('School curricula updated.');
         } catch (err) {
             console.error('Error saving school curricula:', err);
@@ -107,12 +111,13 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         const prev = students;
         setStudents(cur => cur.map(s => s.id === studentId ? { ...s, curriculum_type: track } : s));
         try {
-            await api.updateStudent(studentId, { curriculum_type: track });
-            toast.success('Student curriculum updated.');
-        } catch (err) {
-            console.error('Error updating student curriculum:', err);
-            toast.error('Failed to update student curriculum.');
+            // SRIK has no per-student curriculum field, and this used to call
+            // `api.updateStudent` on a server that is not deployed — so the change
+            // looked saved, reverted on the next load, and nothing said why.
+            // Putting the row back is the honest behaviour: the screen must not
+            // show a value the school does not store.
             setStudents(prev);
+            toast.error('Per-student curriculum is not recorded for this school yet.');
         } finally {
             setSavingStudentId(null);
         }
