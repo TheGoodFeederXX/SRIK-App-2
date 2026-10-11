@@ -49,8 +49,28 @@ describe('teacher self-attendance', () => {
         // one; an assertion over the whole file would fail on that display field
         // and teach the reader to loosen the check, which is how a real guard gets
         // abandoned.
-        const rpcCalls = code(MODULE).match(/rpc\([^)]*\)/g) ?? [];
-        expect(rpcCalls.length).toBeGreaterThan(0);
+        // The SELF-SERVICE calls only. `record_staff_attendance` and the office
+        // readers DO take a teacher id, and should: the office is recording someone
+        // else's day, which is the entire point of a register. The danger this guard
+        // exists for is a teacher-facing screen naming the teacher, because passing
+        // an id there means someone believed they could mark a COLLEAGUE present.
+        //
+        // Named explicitly rather than filtered by a pattern, so adding a third
+        // teacher-facing call is a decision someone has to make here.
+        const SELF_SERVICE = [
+            'record_my_attendance',
+            'record_my_checkout',
+            'my_attendance_history',
+        ];
+        const allCalls = code(MODULE).match(/rpc\([^)]*\)/g) ?? [];
+        expect(allCalls.length).toBeGreaterThan(0);
+
+        const rpcCalls = allCalls.filter(c => SELF_SERVICE.some(n => c.includes(n)));
+        expect(
+            rpcCalls.length,
+            'none of the self-service calls were found — this guard is checking nothing',
+        ).toBe(SELF_SERVICE.length);
+
         for (const call of rpcCalls) {
             expect(call, `an rpc call names a teacher: ${call}`).not.toMatch(/teacher_id/);
             expect(call, `an rpc call names a teacher: ${call}`).not.toMatch(/p_teacher_id/);

@@ -83,6 +83,10 @@ const MIGRATED = [
     'components/admin/SecuritySettingsScreen.tsx',
     'components/admin/AcademicSettingsScreen.tsx',
     'components/admin/CurriculumManagementScreen.tsx',
+    // The office's staff attendance register, and one teacher's month view. Both
+    // looked like they worked — the buttons moved — while nothing was written.
+    'components/admin/TeacherAttendanceScreen.tsx',
+    'components/admin/TeacherAttendanceDetail.tsx',
     // A person's own notification preferences. These belong to the person, not the
     // school — whether a teacher wants an email digest is not the office's business,
     // and the database is what enforces that.
@@ -257,7 +261,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 49;
+        const CEILING = 47;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

@@ -2,12 +2,19 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Teacher } from '../../types';
 import { ChevronLeftIcon, ChevronRightIcon, CheckCircleIcon } from '../../constants';
-import { api } from '../../lib/api';
+import {
+    listStaffAttendanceRange,
+    recordStaffAttendance,
+    type StaffAttendanceStatus,
+} from '../../src/lib/supabase/staffAttendance';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { toast } from 'react-hot-toast';
 import { Save, RotateCcw } from 'lucide-react';
 
-type AttendanceStatus = 'Present' | 'Absent' | 'Leave' | 'Pending';
+// The database tells medical leave, annual leave and official duty apart. Collapsing
+// them for DISPLAY is fine, but then the screen could not say which it meant, so they
+// are kept distinct here and only the plain kinds are writable from this screen.
+type AttendanceStatus = 'Present' | 'Absent' | 'Leave' | 'Medical' | 'Duty' | 'Pending';
 
 const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) => {
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -17,6 +24,17 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
     const [isSaving, setIsSaving] = useState(false);
 
     const firstDayOfMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth(), 1), [currentDate]);
+    // The screen's words for the database's statuses. The reverse map is partial on
+    // purpose: the database distinguishes medical leave, annual leave and official
+    // duty, and a screen that collapses them cannot say which it meant.
+    const DB_TO_UI: Record<StaffAttendanceStatus, AttendanceStatus> = {
+        PRESENT: 'Present', ABSENT: 'Absent', LATE: 'Pending',
+        ON_LEAVE: 'Leave', MEDICAL_LEAVE: 'Medical', OFFICIAL_DUTY: 'Duty',
+    };
+    const UI_TO_DB: Record<string, StaffAttendanceStatus> = {
+        Present: 'PRESENT', Absent: 'ABSENT', Leave: 'ON_LEAVE', Pending: 'LATE',
+    };
+
     const daysInMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(), [currentDate]);
     const startingDayIndex = firstDayOfMonth.getDay();
 
@@ -24,25 +42,24 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
         if (!teacher?.id) return;
         setLoading(true);
         try {
-            const startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).toISOString().split('T')[0];
-            const endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).toISOString().split('T')[0];
-            const schoolId = sessionStorage.getItem('school_id') || '';
+            // The month's dates, built locally. `toISOString` converts to UTC first,
+            // which shifts the window by up to a day for a school in +8 — so a month
+            // view could omit its own first or last day.
+            const y = currentDate.getFullYear();
+            const m = currentDate.getMonth();
+            const pad = (n: number) => String(n).padStart(2, '0');
+            const startDate = `${y}-${pad(m + 1)}-01`;
+            const endDate = `${y}-${pad(m + 1)}-${pad(new Date(y, m + 1, 0).getDate())}`;
 
-            const data = await api.getTeacherAttendance(schoolId, {
-                teacher_id: teacher?.id,
-                startDate,
-                endDate
-            });
+            const data = await listStaffAttendanceRange(teacher.id, startDate, endDate);
 
             const map = new Map<string, AttendanceStatus>();
-            data?.forEach((record: any) => {
-                let status: AttendanceStatus = 'Absent';
-                if (record?.approval_status === 'approved') status = 'Present';
-                else if (record?.approval_status === 'pending') status = 'Pending';
-                else if (record?.status === 'Leave' || record?.status === 'excused') status = 'Leave';
-
-                if (record?.date) map.set(record.date, status);
-            });
+            for (const record of data) {
+                // The database's own status. The old code looked for `approval_status`,
+                // which this schema has no column for, so every day of the month came
+                // through as "Absent" whatever had actually been recorded.
+                map.set(record.date, DB_TO_UI[record.status] ?? 'Absent');
+            }
             setAttendanceMap(map);
         } catch (err) {
             console.error('Error fetching teacher attendance detail:', err);
@@ -90,14 +107,17 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
         setIsSaving(true);
         const schoolId = sessionStorage.getItem('school_id') || '';
         try {
-            const records = Array.from(pendingChanges.entries()).map(([date, status]) => ({
-                teacher_id: teacher.id,
-                date,
-                status: status || 'Absent',
-                approval_status: 'approved'
-            }));
-
-            await api.saveTeacherAttendance(schoolId, records);
+            // Saved one day at a time, through the same function the office register
+            // uses, so a day corrected here cannot end up in a different shape from a
+            // day corrected there. A status the database has no equivalent for is
+            // REFUSED rather than guessed at.
+            for (const [date, status] of pendingChanges.entries()) {
+                const dbStatus = UI_TO_DB[status as AttendanceStatus];
+                if (!dbStatus) {
+                    throw new Error(`"${status}" is not something this school records.`);
+                }
+                await recordStaffAttendance(teacher.id, date, dbStatus);
+            }
             toast.success(`Successfully updated ${pendingChanges.size} records`);
             setPendingChanges(new Map());
             await fetchAttendance();
@@ -113,6 +133,8 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
         Present: 'bg-green-400 text-white',
         Absent: 'bg-red-400 text-white',
         Leave: 'bg-amber-400 text-white',
+        Medical: 'bg-sky-400 text-white',
+        Duty: 'bg-purple-400 text-white',
         Pending: 'bg-yellow-400 text-white',
     };
 

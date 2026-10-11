@@ -5,13 +5,44 @@ import { SearchIcon } from '../../constants';
 import DonutChart from '../ui/DonutChart';
 import { THEME_CONFIG } from '../../constants';
 import { DashboardType, Teacher } from '../../types';
-import { api } from '../../lib/api';
+import { listTeachers } from '../../src/lib/supabase/teachers';
+import {
+    listStaffAttendanceForDay,
+    recordStaffAttendance,
+    todayInKualaLumpur,
+    type StaffAttendanceStatus,
+} from '../../src/lib/supabase/staffAttendance';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { toast } from 'react-hot-toast';
 
 import { useAuth } from '../../context/AuthContext';
 
 type AttendanceStatus = 'Present' | 'Absent' | 'Leave' | 'Pending' | 'Not Marked';
+
+/**
+ * The screen's words for the database's statuses.
+ *
+ * These are NOT the same vocabulary, and the difference matters: the database has
+ * ON_LEAVE, MEDICAL_LEAVE and OFFICIAL_DUTY as separate facts, while the screen has
+ * one "Leave". Collapsing them for DISPLAY is fine — the office wants to see who is
+ * away. Collapsing them on the way BACK is not, so the reverse map is deliberately
+ * absent for the three leave kinds: a screen cannot invent which kind it was.
+ */
+const DB_TO_UI_STATUS: Record<StaffAttendanceStatus, AttendanceStatus> = {
+    PRESENT: 'Present',
+    ABSENT: 'Absent',
+    LATE: 'Pending',
+    ON_LEAVE: 'Leave',
+    MEDICAL_LEAVE: 'Leave',
+    OFFICIAL_DUTY: 'Leave',
+};
+
+/** Only the unambiguous ones the office can set directly. */
+const UI_TO_DB_STATUS: Partial<Record<AttendanceStatus, StaffAttendanceStatus>> = {
+    Present: 'PRESENT',
+    Absent: 'ABSENT',
+    Leave: 'ON_LEAVE',
+};
 
 interface TeacherWithAttendance extends Teacher {
     attendanceStatus: AttendanceStatus;
@@ -36,33 +67,37 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
     const fetchTeacherData = async () => {
         setLoading(true);
         try {
-            if (!currentSchool?.id) return;
-            // 1. Fetch all teachers
-            const allTeachers = await api.getTeachers(currentSchool.id, currentBranchId || undefined);
+            // 1. Every teacher the office can see.
+            const allTeachers = await listTeachers();
 
-            // 2. Fetch today's attendance records
-            const now = new Date();
-            const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-            const attendanceData = await api.getTeacherAttendance(currentSchool.id, { date: today });
+            // 2. Today's records. The DAY comes from the school's own clock, not the
+            // device's — a device in another timezone would otherwise ask for the
+            // wrong day and show an empty register.
+            const today = todayInKualaLumpur();
+            const attendanceData = await listStaffAttendanceForDay(today);
 
             // 3. Merge data
             const mergedData: TeacherWithAttendance[] = allTeachers.map(teacher => {
-                const record = attendanceData?.find((r: any) => r.teacher_id === teacher.id);
+                const record = attendanceData.find(r => r.teacherId === teacher.id);
                 // Map DB status to UI Status
-                let status: AttendanceStatus = 'Not Marked';
-                if (record) {
-                    if (record.approval_status === 'approved') status = 'Present';
-                    else if (record.approval_status === 'pending') status = 'Pending';
-                    else if (record.approval_status === 'rejected') status = 'Absent';
-                }
+                // The database's own status, mapped for display. The old code looked
+                // for an `approval_status` field that this schema does not have, so
+                // every teacher showed as "Not Marked" even when a record existed.
+                const status: AttendanceStatus = record
+                    ? DB_TO_UI_STATUS[record.status] ?? 'Not Marked'
+                    : 'Not Marked';
 
                 return {
                     ...teacher,
+                    // The screen's own shape, filled from the school's records. The
+                    // display name falls back to the staff code so a teacher with no
+                    // full name on file is still identifiable.
+                    name: teacher.fullName,
+                    full_name: teacher.fullName,
                     attendanceStatus: status,
-                    checkInTime: record?.check_in,
-                    checkOutTime: record?.check_out,
-                    attendanceId: record?.id
-                };
+                    checkInTime: record?.checkIn ?? undefined,
+                    checkOutTime: record?.checkOut ?? undefined,
+                } as unknown as TeacherWithAttendance;
             });
 
             setTeachers(mergedData);
@@ -86,22 +121,41 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
 
 
 
+    /**
+     * The office records or corrects a teacher's day.
+     *
+     * THIS WAS A PLACEHOLDER. The buttons moved on screen, nothing was written, and
+     * the next load put them back. An office marking someone present, seeing it
+     * stick, and finding it gone tomorrow has been told something false — and the
+     * register is what a school relies on when it has to answer for attendance.
+     *
+     * `record_staff_attendance` writes one row per teacher per day: a second entry
+     * CORRECTS the first rather than adding a duplicate, so "how many days was she
+     * in" stays answerable. The database also records who made the entry.
+     */
     const handleStatusChange = useCallback(async (teacherId: string, status: AttendanceStatus) => {
-        // Optimistic update
-        setTeachers(currentTeachers =>
-            currentTeachers.map(teacher =>
-                teacher.id === teacherId ? { ...teacher, attendanceStatus: status } : teacher
-            )
-        );
+        const dbStatus = UI_TO_DB_STATUS[status];
+        if (!dbStatus) {
+            toast.error('That status cannot be recorded.');
+            return;
+        }
 
-        // TODO: Implement direct admin override if needed. 
-        // For now, this UI was for marking, but with self-attendance, Admin usually *Approves* rather than marks directly.
-        // If we want Admin to manually mark, we'd need an implementation here writing to DB.
-        // For this task, we focus on Sync. Assuming the buttons trigger DB updates:
+        const previous = teachers;
+        setTeachers(current => current.map(t =>
+            t.id === teacherId ? { ...t, attendanceStatus: status } : t));
 
-        // This is a placeholder for the actual DB update logic if Admin assumes control.
-        // console.log("Admin manually changing status...", teacherId, status);
-    }, []);
+        try {
+            await recordStaffAttendance(teacherId, todayInKualaLumpur(), dbStatus);
+            toast.success('Attendance recorded.');
+            // Read back, so the screen shows what was stored rather than the guess.
+            await fetchTeacherData();
+        } catch (err) {
+            // Put the row back. Leaving an optimistic value that did not save is how
+            // the office ends up believing a record exists.
+            setTeachers(previous);
+            toast.error(err instanceof Error ? err.message : 'Could not record that.');
+        }
+    }, [teachers]);
 
     const filteredTeachers = useMemo(() =>
         teachers.filter(teacher =>

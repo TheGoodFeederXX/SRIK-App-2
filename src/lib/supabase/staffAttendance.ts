@@ -162,3 +162,104 @@ export async function checkOutMyAttendance(): Promise<CheckInResult> {
     if (error) throw error;
     return (data ?? { recorded: false }) as CheckInResult;
 }
+
+/** A teacher's attendance on one school day, as the office sees it. */
+export interface StaffAttendanceRow extends StaffAttendanceDay {
+    teacherId: string;
+    /** Who recorded it, or null when the teacher recorded it themselves. */
+    recordedBy: string | null;
+    remark: string | null;
+}
+
+function mapOfficeRow(row: {
+    teacher_id: string;
+    attendance_date: string;
+    status: StaffAttendanceStatus;
+    check_in: string | null;
+    check_out: string | null;
+    remark: string | null;
+    recorded_by: string | null;
+}): StaffAttendanceRow {
+    return {
+        teacherId: row.teacher_id,
+        date: row.attendance_date,
+        status: row.status,
+        checkIn: row.check_in,
+        checkOut: row.check_out,
+        remark: row.remark,
+        recordedBy: row.recorded_by,
+    };
+}
+
+/**
+ * Every teacher's attendance on one day, for the office's register.
+ *
+ * WHY THIS IS SEPARATE FROM `listMyAttendance`. That one asks for the caller's own
+ * row and returns nothing if they have no linked teacher record. This one asks for
+ * everyone's, and is allowed to by RLS only because the caller holds
+ * `attendance.manage_staff` — the database decides, not this function. A teacher
+ * calling it gets an empty list, which is the correct answer to "show me everyone".
+ *
+ * `p_date` is passed through as the school's own day, so the office register and a
+ * teacher's own history cannot be looking at different dates.
+ */
+export async function listStaffAttendanceForDay(
+    date: string,
+): Promise<StaffAttendanceRow[]> {
+    const db = requireSupabase();
+    const { data, error } = await db.rpc('list_staff_attendance', { p_date: date });
+    if (error) {
+        // An un-migrated database has no such function; the register shows empty
+        // rather than an error, because "no records yet" is the truthful reading.
+        if (error.code === 'PGRST202') return [];
+        throw new Error(error.message);
+    }
+    return ((data ?? []) as unknown[]).map(r =>
+        mapOfficeRow(r as Parameters<typeof mapOfficeRow>[0]),
+    );
+}
+
+/** Record or correct a teacher's attendance on one day, as the office. */
+export async function recordStaffAttendance(
+    teacherId: string,
+    date: string,
+    status: StaffAttendanceStatus,
+    remark?: string | null,
+): Promise<void> {
+    const db = requireSupabase();
+    const { error } = await db.rpc('record_staff_attendance', {
+        p_teacher_id: teacherId,
+        p_date: date,
+        p_status: status,
+        p_remark: remark ?? null,
+    });
+    if (error) throw new Error(error.message);
+}
+
+/**
+ * One teacher's attendance between two days, for the office's month view.
+ *
+ * A separate read from the day register because the question is different — "how
+ * was this person's month" rather than "who was in today" — and because a month of
+ * rows for one person should not be fetched by pulling a month of rows for
+ * everyone.
+ */
+export async function listStaffAttendanceRange(
+    teacherId: string,
+    from: string,
+    to: string,
+): Promise<StaffAttendanceDay[]> {
+    const db = requireSupabase();
+    const { data, error } = await db.rpc('list_staff_attendance_range', {
+        p_teacher_id: teacherId,
+        p_from: from,
+        p_to: to,
+    });
+    if (error) {
+        if (error.code === 'PGRST202') return [];
+        throw new Error(error.message);
+    }
+    return ((data ?? []) as unknown[]).map(r =>
+        mapDay(r as Parameters<typeof mapDay>[0]),
+    );
+}
