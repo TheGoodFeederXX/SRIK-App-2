@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
-import { PlusIcon, EditIcon, TrashIcon, EXAM_TYPE_COLORS, EnterResultsIcon } from '../../constants';
+import { EXAM_TYPE_COLORS, EnterResultsIcon } from '../../constants';
 import { Exam } from '../../types';
-import { api } from '../../lib/api';
+import {
+    ASSESSMENT_TYPE_LABELS,
+    listAssessments,
+    getCurrentTerm,
+    type AssessmentType,
+} from '../../src/lib/supabase/assessments';
+import { toExamRow } from '../../src/lib/supabase/exams';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh';
 import { useProfile } from '../../context/ProfileContext';
-import ConfirmationModal from '../ui/ConfirmationModal';
+
 
 interface TeacherExamManagementProps {
     navigateTo: (view: string, title: string, props?: any) => void;
@@ -21,28 +27,37 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
     const { profile } = useProfile();
     const [exams, setExams] = useState<Exam[]>([]);
     const [loading, setLoading] = useState(true);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [examToDelete, setExamToDelete] = useState<Exam | null>(null);
 
+    /**
+     * The exams the school has recorded, read from the database.
+     *
+     * This called `api.getExams(schoolId, branchId, teacherId)` on an Express server
+     * that is not deployed, so the grid was empty for everyone. Two of those
+     * arguments explain the old shape and are gone: SRIK is one school, so there is
+     * no branch to filter by.
+     */
     const fetchExams = async () => {
-        if (!schoolId) return;
         setLoading(true);
         try {
-            const effectiveBranchId = branchId || profile?.branchId;
-            const data = await api.getExams(schoolId, effectiveBranchId || undefined, teacherId || undefined);
+            // An assessment belongs to a TERM, so the term has to be known before
+            // anything can be listed. Without one the school has no exams yet,
+            // which is an empty grid rather than an error.
+            const term = await getCurrentTerm();
+            if (!term) {
+                setExams([]);
+                return;
+            }
 
-            setExams(data.map((e: any) => ({
-                id: e.id,
-                subject: e.subject,
-                className: e.class_name,
-                classId: e.class_id,
-                type: e.exam_type,
-                date: e.date,
-                isPublished: e.is_published,
-                teacherId: e.teacher_id
-            })));
+            const all = await listAssessments(term.id);
+            // A teacher sees the exams for the classes they teach. The list is
+            // filtered here rather than in the query because the same loader feeds
+            // the office's screen, which must see all of them.
+            const mine = teacherId
+                ? all.filter(a => a.createdBy === teacherId)
+                : all;
+            setExams(mine.map(toExamRow));
         } catch (error: any) {
-            toast.error(error.message || "Failed to load exams");
+            toast.error(error.message || 'Failed to load exams');
         } finally {
             setLoading(false);
         }
@@ -50,100 +65,18 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
 
     useEffect(() => {
         fetchExams();
-    }, [schoolId, teacherId, branchId, profile?.branchId]);
+        // Note what is NOT here: `schoolId`, `branchId`, `profile?.branchId`. The
+        // old dependencies included a branch that never changes and a school id
+        // that is now only used by the layout, so the grid re-fetched on renders
+        // that could not have changed the answer.
+    }, [teacherId]);
 
     // Auto-sync when exams change
-    useAutoSync(['exams'], () => {
+    useAutoSync(['assessments'], () => {
         fetchExams();
     });
 
-    useRealtimeRefresh(['exams'], fetchExams);
-
-
-    const handleDeleteClick = (exam: Exam) => {
-        if (exam.isPublished) {
-            toast.error("Cannot delete a published exam.");
-            return;
-        }
-        setExamToDelete(exam);
-        setIsDeleteModalOpen(true);
-    };
-
-    const confirmDelete = async () => {
-        if (!examToDelete) return;
-
-        try {
-            await api.deleteExam(examToDelete.id, schoolId, branchId || profile?.branchId || null);
-            toast.success("Exam deleted successfully.");
-            setExams(prev => prev.filter(e => e.id !== examToDelete.id));
-            forceUpdate();
-        } catch (error: any) {
-            toast.error(error.message || "Failed to delete exam");
-        }
-        setIsDeleteModalOpen(false);
-        setExamToDelete(null);
-    };
-
-    const handleEdit = (exam: Exam) => {
-        navigateTo('addExam', 'Edit Exam', {
-            examToEdit: exam,
-            onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
-                if (exam.isPublished) {
-                    toast.error("Cannot edit a published exam.");
-                    return;
-                }
-
-                // Construct clean payload for API
-                const payload = {
-                    type: examData.type,
-                    date: examData.date,
-                    time: examData.time,
-                    class_name: examData.className,
-                    class_id: examData.classId || null,
-                    subject: examData.subject,
-                    updated_at: new Date().toISOString()
-                };
-
-                try {
-                    await api.updateExam(exam.id, schoolId, branchId || profile?.branchId || undefined, payload);
-                    toast.success("Exam updated successfully");
-                    fetchExams();
-                    handleBack();
-                } catch (error: any) {
-                    toast.error(error.message || "Failed to update exam");
-                }
-            }
-        });
-    };
-
-    const handleAddNew = () => {
-        navigateTo('addExam', 'Add New Exam', {
-            onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
-                const effectiveBranchId = branchId || profile?.branchId || null;
-                const payload = {
-                    type: examData.type,
-                    date: examData.date,
-                    time: examData.time,
-                    class_name: examData.className,
-                    class_id: examData.classId || null,
-                    subject: examData.subject,
-                    is_published: false,
-                    teacher_id: teacherId,
-                    school_id: schoolId,
-                    branch_id: effectiveBranchId
-                };
-
-                try {
-                    await api.createExam(schoolId, branchId || profile?.branchId || undefined, payload);
-                    toast.success("Exam created successfully");
-                    fetchExams();
-                    handleBack();
-                } catch (error: any) {
-                    toast.error(error.message || "Failed to create exam");
-                }
-            }
-        });
-    };
+    useRealtimeRefresh(['assessments'], fetchExams);
 
     return (
         <div className="flex flex-col h-full bg-gray-100 relative">
@@ -163,7 +96,10 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                             <p className="text-sm text-gray-500">{exam.className}</p>
                                         </div>
                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${EXAM_TYPE_COLORS[exam.type] || 'bg-gray-100 text-gray-800 border-gray-300'}`}>
-                                            {exam.type}
+                                            {/* The school's own wording, not the database's
+                                                constant: "Peperiksaan Pertengahan Tahun" is
+                                                what a teacher calls it, MID_YEAR_EXAM is not. */}
+                                            {ASSESSMENT_TYPE_LABELS[exam.type as AssessmentType] ?? exam.type}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center mt-2">
@@ -184,42 +120,22 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                         <EnterResultsIcon className="w-5 h-5" />
                                         <span>Enter Grades</span>
                                     </button>
-                                    <div className="flex space-x-2">
-                                        {!exam.isPublished && (
-                                            <>
-                                                <button onClick={() => handleEdit(exam)} className="text-indigo-600 p-1 hover:bg-gray-100 rounded-md" aria-label={`Edit ${exam.subject} exam`}><EditIcon className="w-5 h-5" /></button>
-                                                <button onClick={() => handleDeleteClick(exam)} className="text-red-600 p-1 hover:bg-gray-100 rounded-md" aria-label={`Delete ${exam.subject} exam`}><TrashIcon className="w-5 h-5" /></button>
-                                            </>
-                                        )}
-                                    </div>
+                                    {/* NO EDIT OR DELETE HERE, deliberately.
+                                        A teacher holds `assessments.enter_scores` but
+                                        not `assessments.create`, and the database
+                                        enforces that: an insert is refused by row level
+                                        security. Offering buttons that cannot work is
+                                        how a teacher concludes the system is broken
+                                        rather than that the office owns this step. */}
                                 </div>
                             </div>
                         ))}
                     </div>
                 )}
 
-                {!loading && exams.length === 0 && <p className="text-center text-gray-500 py-8">You have not created any exams.</p>}
+                {!loading && exams.length === 0 && <p className="text-center text-gray-500 py-8">No exams have been scheduled for your classes yet.</p>}
             </main>
 
-            <div className="fixed bottom-24 right-6 lg:bottom-12 lg:right-12 z-40">
-                <button
-                    onClick={handleAddNew}
-                    className="p-4 bg-indigo-600 text-white rounded-full shadow-xl hover:bg-indigo-700 transition-all hover:scale-110 active:scale-95"
-                    aria-label="Add new exam"
-                >
-                    <PlusIcon className="h-6 w-6" />
-                </button>
-            </div>
-
-            <ConfirmationModal
-                isOpen={isDeleteModalOpen}
-                onClose={() => setIsDeleteModalOpen(false)}
-                onConfirm={confirmDelete}
-                title="Delete Exam"
-                message={`Are you sure you want to delete the exam '${examToDelete?.subject} - ${examToDelete?.type}'? This action cannot be undone.`}
-                confirmText="Delete"
-                isDanger={true}
-            />
         </div>
     );
 };

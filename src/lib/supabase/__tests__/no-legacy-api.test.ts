@@ -47,7 +47,6 @@ const STILL_TO_MIGRATE = [
     'components/shared/StudentGateScreen.tsx',
     'components/teacher/SubstituteAssignment.tsx',
     'components/teacher/TeacherAppointmentsScreen.tsx',
-    'components/teacher/TeacherExamManagement.tsx',
     'components/teacher/TeacherReportsScreen.tsx',
     'components/teacher/TeacherSettingsScreen.tsx',
     'components/teacher/VirtualClassScreen.tsx',
@@ -64,6 +63,10 @@ const MIGRATED = [
     // A teacher's own attendance: check in, check out, read the month.
     'components/teacher/TeacherSelfAttendance.tsx',
     'components/teacher/TeacherAttendanceHistoryScreen.tsx',
+    // Exams: the teacher's list, the office's list, and the shared form.
+    'components/teacher/TeacherExamManagement.tsx',
+    'components/admin/ExamManagement.tsx',
+    'components/admin/AddExamScreen.tsx',
     // The register, marked every morning.
     'components/teacher/TeacherAttendanceScreen.tsx',
     // The hooks every teacher screen is built on.

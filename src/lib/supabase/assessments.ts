@@ -83,6 +83,8 @@ export interface Assessment {
     weight: number;
     assessmentDate: string | null;
     status: AssessmentStatus;
+    /** The profile that created it. Used to show a teacher their own exams. */
+    createdBy: string | null;
 }
 
 export interface AcademicTerm {
@@ -172,6 +174,7 @@ interface RawAssessment {
     weight: number;
     assessment_date: string | null;
     status: AssessmentStatus;
+    created_by: string | null;
     subjects: { code: string; name: string } | null;
     classes: { display_name: string } | null;
     academic_terms: { name: string } | null;
@@ -193,12 +196,14 @@ function toAssessment(a: RawAssessment): Assessment {
         weight: Number(a.weight),
         assessmentDate: a.assessment_date,
         status: a.status,
+        createdBy: a.created_by,
     };
 }
 
 const ASSESSMENT_SELECT =
     'id, title, type, subject_id, class_id, academic_term_id, max_score, weight, ' +
-    'assessment_date, status, subjects(code, name), classes(display_name), academic_terms(name)';
+    'assessment_date, status, created_by, subjects(code, name), classes(display_name), ' +
+    'academic_terms(name)';
 
 /**
  * Assessments for one term, newest first.
@@ -276,6 +281,9 @@ export async function updateAssessment(
     patch: {
         title?: string;
         type?: AssessmentType;
+        /** Move the exam to a different class. A mis-filed exam may be corrected
+         *  without deleting it and losing the marks already recorded against it. */
+        classId?: string;
         maxScore?: number;
         weight?: number;
         assessmentDate?: string | null;
@@ -285,6 +293,7 @@ export async function updateAssessment(
     const update: Record<string, unknown> = {};
     if (patch.title !== undefined) update.title = patch.title;
     if (patch.type !== undefined) update.type = patch.type;
+    if (patch.classId !== undefined) update.class_id = patch.classId;
     if (patch.maxScore !== undefined) update.max_score = patch.maxScore;
     if (patch.weight !== undefined) update.weight = patch.weight;
     if (patch.assessmentDate !== undefined) update.assessment_date = patch.assessmentDate;

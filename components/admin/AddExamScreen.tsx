@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { Exam } from '../../types';
-import { api } from '../../lib/api';
+import { listClassOptions, listSubjectOptions } from '../../src/lib/supabase/academics';
 import { useAuth } from '../../context/AuthContext';
 import CenteredLoader from '../ui/CenteredLoader';
 
@@ -25,55 +25,35 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
 
   useEffect(() => {
     const fetchFormData = async () => {
-      if (!currentSchool?.id) return;
       setLoading(true);
       try {
-        // Get Auth User and Role
-        const user = await api.getMe();
-        const isTeacher = user?.role === 'teacher';
-
-        if (isTeacher && user) {
-          const teacher = user.teacher_profile;
-          if (teacher) {
-            const { getGradeDisplayName } = await import('../../lib/schoolSystem');
-
-            // MODERN: Fetch Assigned Classes from profile
-            const assignments = teacher.classes || [];
-
-            const finalClasses: any[] = [];
-            const addedClassKeys = new Set<string>();
-
-            assignments.forEach((item: any) => {
-              const c = item.class;
-              if (c) {
-                const name = `${getGradeDisplayName(c.grade)}${c.section ? ' ' + c.section : ''}`;
-                if (!addedClassKeys.has(name)) {
-                  finalClasses.push({ name, id: c.id });
-                  addedClassKeys.add(name);
-                }
-              }
-            });
-            setAvailableClasses(finalClasses);
-            
-            // For subjects, since we don't have a direct link in profile yet in this schema, 
-            // we'll fetch all subjects for now or teacher's specialty
-            const subjectsRes = await api.getSubjects(currentSchool.id);
-            if (subjectsRes) setAvailableSubjects(subjectsRes);
-
-            setLoading(false);
-            return; // Done for teacher
-          }
-        }
-
-        // ADMIN OR FALLBACK: Fetch all classes and subjects
-        const branchId = currentBranchId || undefined;
-        const [classesRes, subjectsRes] = await Promise.all([
-          api.getClasses(currentSchool.id, branchId),
-          api.getSubjects(currentSchool.id, branchId)
+        // The classes and subjects the school actually has.
+        //
+        // This called `api.getMe()`, `api.getClasses()` and `api.getSubjects()` on an
+        // Express server that is not deployed, so both dropdowns were empty and an
+        // exam could not be created at all. It also branched on the user's role and
+        // walked `teacher.classes` out of the profile response — a shape that no
+        // longer exists. The database decides what a teacher may see through row
+        // level security, so both roles read the same two lists and no branch is
+        // needed.
+        const [classes, subjects] = await Promise.all([
+          listClassOptions(),
+          listSubjectOptions(),
         ]);
+        const classList = classes.map(c => ({ name: c.label, id: c.id }));
+        const subjectList = subjects.map(s => ({ name: s.label, id: s.id }));
+        setAvailableClasses(classList);
+        setAvailableSubjects(subjectList);
 
-        if (classesRes) setAvailableClasses(classesRes);
-        if (subjectsRes) setAvailableSubjects(subjectsRes);
+        // An exam being edited arrives with a subject NAME, not an id. The select
+        // holds ids, so the name is resolved here rather than being left as text
+        // the picker cannot match — which would silently show the first subject.
+        if (examToEdit?.subject) {
+          const match = subjectList.find(
+            o => o.name === examToEdit.subject || o.name.split(' — ')[0] === examToEdit.subject,
+          );
+          if (match) setSubject(match.id);
+        }
       } catch (err) {
         console.error('Error fetching exam form data:', err);
         toast.error('Failed to load form data');
@@ -87,16 +67,24 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
     if (examToEdit) {
       setExamType(examToEdit.type || '');
       setDate(examToEdit.date || '');
-      setClassName(examToEdit.className || '');
+      // Preselect by ID when the caller supplied one, so the edit form opens on the
+      // exam's actual class rather than on whatever carries the same label today.
+      setClassName(examToEdit.classId || '');
+      // The subject arrives as a NAME and these lists are not loaded yet at this
+      // point, so the name is kept and resolved to an id after the lists arrive.
       setSubject(examToEdit.subject || '');
     }
-  }, [examToEdit, currentSchool?.id]);
+  }, [examToEdit]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (examType && date && className && subject) {
-      const classId = availableClasses.find(c => c.name === className)?.id;
-      onSave({ type: examType, date, className, classId, subject });
+    // The selects hold IDs, so the class name is only needed to show a description
+    // in the confirmation. The ID is what is passed on, and it is the only thing
+    // the database can use.
+    const cls = availableClasses.find(c => c.id === className);
+    const sub = availableSubjects.find(s => s.id === subject);
+    if (examType && date && cls && sub) {
+      onSave({ type: examType, date, className: cls.name, classId: cls.id, subject: sub.name });
     } else {
       toast.error('Please fill all fields.');
     }
@@ -130,7 +118,9 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
               <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">Class</label>
               <select id="className" value={className} onChange={e => setClassName(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
                 <option value="" disabled>Select class...</option>
-                {availableClasses.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
+                {/* The ID is the value. Two classes can share a label across years,
+                    and the label is something the school renames. */}
+                {availableClasses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 {availableClasses.length === 0 && <option value="" disabled>No classes found in database</option>}
               </select>
             </div>
@@ -138,7 +128,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
               <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
               <select id="subject" value={subject} onChange={e => setSubject(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
                 <option value="" disabled>Select subject...</option>
-                {Array.from(new Map(availableSubjects.map(sub => [sub.name, sub])).values()).map(sub => <option key={sub.id ?? sub.name} value={sub.name}>{sub.name}</option>)}
+                {Array.from(new Map(availableSubjects.map(sub => [sub.name, sub])).values()).map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
               </select>
             </div>
           </motion.div>

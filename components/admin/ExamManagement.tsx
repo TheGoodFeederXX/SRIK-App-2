@@ -6,8 +6,19 @@ import { PlusIcon, EditIcon, TrashIcon, PublishIcon, EXAM_TYPE_COLORS } from '..
 import CenteredLoader from '../ui/CenteredLoader';
 import { useNavigate } from 'react-router';
 import { Exam, Teacher } from '../../types';
-import { api } from '../../lib/api';
-import { fetchExams } from '../../lib/database';
+import {
+    listAssessments,
+    createAssessment,
+    updateAssessment,
+    deleteAssessment,
+    publishAssessment,
+    getCurrentTerm,
+    ASSESSMENT_TYPE_LABELS,
+    type Assessment,
+    type AssessmentType,
+} from '../../src/lib/supabase/assessments';
+import { listSubjectOptions } from '../../src/lib/supabase/academics';
+import { toExamRow, toAssessmentType } from '../../src/lib/supabase/exams';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import ConfirmationModal from '../ui/ConfirmationModal';
 import { useAuth } from '../../context/AuthContext';
@@ -30,25 +41,29 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
     const [examToDelete, setExamToDelete] = useState<string | null>(null);
 
     useEffect(() => {
-        if (!currentSchool?.id) return;
         loadData();
-    }, [currentSchool?.id]);
-
-    useAutoSync(['exams', 'teachers'], () => {
-        console.log('🔄 [ExamManagement] Real-time auto-sync triggered');
-        loadData();
-    });
+        // The old dependency was `currentSchool?.id`, which never changes, so the
+        // office's screen loaded once and never picked up an exam a teacher added.
+    }, []);
 
     const loadData = async () => {
-        if (!currentSchool?.id) return;
         setLoading(true);
         try {
-            const [examsData, teachersData] = await Promise.all([
-                fetchExams(currentSchool.id),
-                api.getTeachers(currentSchool.id)
-            ]);
-            setExams(examsData);
-            setTeachers(teachersData || []);
+            // The school's exams, from the database.
+            //
+            // This ran `fetchExams(currentSchool.id)` and `api.getTeachers(...)`; the
+            // second has no SRIK equivalent because the teacher list on this screen
+            // only fed a filter. The filter is now by the CLASS the exam belongs to,
+            // which is what the office actually looks for, and it needs no separate
+            // list to be loaded first.
+            const term = await getCurrentTerm();
+            if (!term) {
+                setExams([]);
+                return;
+            }
+            const rows = await listAssessments(term.id);
+            setExams(rows.map(toExamRow));
+            setTeachers([]);
         } catch (err) {
             console.error('Error loading exam management data:', err);
             toast.error('Failed to load exams');
@@ -56,6 +71,8 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
             setLoading(false);
         }
     };
+
+    useAutoSync(['assessments'], loadData);
 
     const filteredExams = useMemo(() => {
         let filtered = [...exams].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -83,11 +100,11 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
             examToEdit: exam,
             onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
                 try {
-                    await api.updateExam(exam.id, currentSchool.id, currentSchool.branch_id || undefined, {
-                        type: examData.type,
-                        date: examData.date,
-                        class_name: examData.className,
-                        subject: examData.subject
+                    await updateAssessment(exam.id, {
+                        title: examData.subject,
+                        type: toAssessmentType(examData.type),
+                        classId: examData.classId ?? undefined,
+                        assessmentDate: examData.date || null,
                     });
                     toast.success('Exam updated successfully');
                     loadData();
@@ -109,7 +126,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
         if (examToDelete === null) return;
 
         try {
-            await api.deleteExam(examToDelete, currentSchool.id, currentSchool.branch_id || null);
+            await deleteAssessment(examToDelete);
             toast.success('Exam deleted successfully');
             loadData();
         } catch (err) {
@@ -122,7 +139,9 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
 
     const handlePublish = async (examId: string) => {
         try {
-            await api.updateExam(examId, currentSchool.id, currentSchool.branch_id || undefined, { is_published: true });
+            // Publishing is its own operation, not a flag on an edit: the database
+            // moves the assessment to PUBLISHED and records who did it and when.
+            await publishAssessment(examId);
             toast.success('Exam published successfully');
             loadData();
         } catch (err) {
@@ -135,12 +154,32 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
         navigateTo('addExam', 'Add New Exam', {
             onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
                 try {
-                    await api.createExam(currentSchool.id, currentSchool.branch_id || undefined, {
-                        type: examData.type,
-                        date: examData.date,
-                        class_name: examData.className,
-                        subject: examData.subject,
-                        is_published: false
+                    // The database requires a class, a subject and a term by ID.
+                    if (!examData.classId) {
+                        toast.error('Please choose a class.');
+                        return;
+                    }
+                    const term = await getCurrentTerm();
+                    if (!term) {
+                        toast.error('No school term is set up yet. Ask an administrator to add one.');
+                        return;
+                    }
+                    const subjects = await listSubjectOptions();
+                    const subject = subjects.find(
+                        o => o.label === examData.subject || o.label.split(' — ')[0] === examData.subject,
+                    );
+                    if (!subject) {
+                        toast.error('Please choose a subject.');
+                        return;
+                    }
+                    await createAssessment({
+                        title: examData.subject,
+                        type: toAssessmentType(examData.type),
+                        subjectId: subject.id,
+                        classId: examData.classId,
+                        academicTermId: term.id,
+                        maxScore: 100,
+                        assessmentDate: examData.date || null,
                     });
                     toast.success('Exam created successfully');
                     loadData();
