@@ -62,7 +62,7 @@ describe('teacher self-attendance', () => {
             'record_my_checkout',
             'my_attendance_history',
         ];
-        const allCalls = code(MODULE).match(/rpc\([^)]*\)/g) ?? [];
+        const allCalls: string[] = [...code(MODULE).matchAll(/rpc\([^)]*\)/g)].map(m => m[0]);
         expect(allCalls.length).toBeGreaterThan(0);
 
         const rpcCalls = allCalls.filter(c => SELF_SERVICE.some(n => c.includes(n)));
