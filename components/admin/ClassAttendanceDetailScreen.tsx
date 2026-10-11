@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Student, ClassInfo, AttendanceStatus } from '../../types';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { getClassRegister } from '../../src/lib/supabase/attendance';
 import { toast } from 'react-hot-toast';
 import DonutChart from '../ui/DonutChart';
 import { CheckCircleIcon, XCircleIcon, ClockIcon, ExclamationCircleIcon, CalendarIcon } from '../../constants';
@@ -38,52 +38,54 @@ const AttendanceStatusIndicator: React.FC<{ status: AttendanceStatus }> = ({ sta
 
 const ClassAttendanceDetailScreen: React.FC<ClassAttendanceDetailScreenProps> = ({ classInfo, date, currentBranchId }) => {
     const { currentSchool } = useAuth();
+
+    // The database's statuses, in the screen's words.
+    const UI_STATUS: Record<string, AttendanceStatus | 'Not Recorded'> = {
+        PRESENT: 'Present', ABSENT: 'Absent', LATE: 'Late',
+        EXCUSED: 'Leave', SICK: 'Leave',
+    };
     const [studentsInClass, setStudentsInClass] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedDate, setSelectedDate] = useState(date || new Date().toISOString().split('T')[0]);
+    // Built from local parts rather than `toISOString`, which converts to UTC first —
+    // in +8 that can shift the day, so a register opened in the evening would default
+    // to tomorrow.
+    const todayLocal = (() => {
+        const d = new Date();
+        const pad = (n: number) => String(n).padStart(2, '0');
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+    })();
+    const [selectedDate, setSelectedDate] = useState(date || todayLocal);
 
     const loadAttendanceData = async () => {
         if (!currentSchool?.id || !classInfo) return;
         setLoading(true);
         try {
-            // 1. Fetch Students in Class directly from API
-            const studentData = await api.getStudentsByClass(
-                classInfo.grade, 
-                classInfo.section, 
-                currentSchool.id, 
-                currentBranchId || undefined
-            );
-            
-            // 2. Fetch Attendance Records for this class and date
-            let attendanceRecords = [];
-            if (classInfo.id) {
-                attendanceRecords = await api.getAttendanceByClass(classInfo.id, selectedDate);
-            } else {
-                const schoolAttendance = await api.getAttendanceByDate(currentSchool.id, selectedDate);
-                const studentIds = new Set(studentData.map((s: any) => s.id));
-                attendanceRecords = (schoolAttendance || []).filter((r: any) => studentIds.has(r.student_id));
+            // The class register for that date, in one call: the children who were in
+            // the class ON THAT DAY, and what was recorded for each.
+            //
+            // The old code fetched the roster by grade-and-section — a class NAME the
+            // school can rename — so a renamed class returned nobody. It also filtered
+            // the school's whole attendance list by student id, which grew with the
+            // school and could silently stop at the row cap.
+            if (!classInfo.id) {
+                setStudentsInClass([]);
+                return;
             }
+            const register = await getClassRegister(classInfo.id, selectedDate);
 
-            // 3. Merge attendance into student data
-            const mergedStudents = studentData.map((student: any) => {
-                const record = attendanceRecords?.find((r: any) => r.student_id === student.id);
-                
-                let status: AttendanceStatus = 'Absent';
-                if (record?.status) {
-                    const s = record.status.toLowerCase();
-                    if (s === 'present') status = 'Present';
-                    else if (s === 'late') status = 'Late';
-                    else if (s === 'leave') status = 'Leave';
-                    else status = 'Absent';
-                }
-                
-                return {
-                    ...student,
-                    attendanceStatus: status
-                };
-            });
-
-            setStudentsInClass(mergedStudents);
+            setStudentsInClass(register.map(r => ({
+                id: r.studentId,
+                name: r.studentName,
+                full_name: r.studentName,
+                admission_no: r.admissionNo,
+                // null means "not recorded yet" — which is NOT the same as absent. A
+                // register that shows an unmarked child as absent is a register that
+                // accuses a child of missing school when nobody wrote anything down.
+                attendanceStatus: r.status === null
+                    ? 'Not Recorded'
+                    : UI_STATUS[r.status] ?? 'Not Recorded',
+                remark: r.remark,
+            })));
         } catch (err) {
             console.error("Error loading class attendance detail:", err);
             toast.error('Failed to load attendance records');

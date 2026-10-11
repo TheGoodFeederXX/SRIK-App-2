@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRightIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { toast } from 'react-hot-toast';
 
 const Accordion: React.FC<{ title: string; children: React.ReactNode; defaultOpen?: boolean }> = ({ title, children, defaultOpen = false }) => {
@@ -39,12 +39,9 @@ const FinancialSettingsScreen: React.FC = () => {
     if (!currentSchool?.id) return;
     setIsLoading(true);
     try {
-      await api.updateSchool(currentSchool.id, {
-        settings: {
-          ...(currentSchool.settings || {}),
-          financial: { currency }
-        }
-      });
+      // Merged in the database, so this screen cannot revert a setting changed on
+      // another screen while it was open. It used to write the whole object back.
+      await updateSchoolSettings({ financial: { currency } });
 
       toast.success('Financial settings saved');
     } catch (error: any) {

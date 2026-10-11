@@ -85,6 +85,18 @@ const MIGRATED = [
     'components/admin/CurriculumManagementScreen.tsx',
     // The office's staff attendance register, and one teacher's month view. Both
     // looked like they worked — the buttons moved — while nothing was written.
+    // School details and financial settings: merged in the database, so one screen
+    // cannot revert a setting another changed while it was open.
+    'components/admin/SchoolInfoScreen.tsx',
+    'components/admin/FinancialSettingsScreen.tsx',
+    // A class register for one day. Feeds on the class's real id, not a class name
+    // the school can rename, and treats "not recorded" as distinct from absent.
+    'components/admin/ClassAttendanceDetailScreen.tsx',
+    // Screens for features this school keeps no record of: homework and submissions,
+    // teaching qualifications and curriculum eligibility.
+    'components/teacher/ClassAssignmentsScreen.tsx',
+    'components/student/AssignmentsScreen.tsx',
+    'components/teacher/TeacherProfileEnhanced.tsx',
     'components/admin/TeacherAttendanceScreen.tsx',
     'components/admin/TeacherAttendanceDetail.tsx',
     // A person's own notification preferences. These belong to the person, not the
@@ -261,7 +273,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 47;
+        const CEILING = 41;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

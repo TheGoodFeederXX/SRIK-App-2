@@ -30,8 +30,8 @@ Keadaan sebenar yang disahkan hari ini:
 
 | Perkara | Angka |
 |---|---|
-| Ujian frontend | **462 lulus**, 62 fail, 0 ralat jenis |
-| Pemeriksaan SQL | **201 lulus**, 19 suite (`supabase/tests/run_phase5_tests.sh`) |
+| Ujian frontend | **466 lulus**, 63 fail, 0 ralat jenis |
+| Pemeriksaan SQL | **212 lulus**, 22 suite (`supabase/tests/run_phase5_tests.sh`) |
 | Jadual dengan RLS dipaksa | 36 / 36 |
 | Kerosakan kebergantungan runtime | **0** (dari 14) |
 | Isu audit diselesaikan | **40 / 40** (F27 selesai bagi 22 skrin yang dinamakan; lihat nota) |
@@ -56,14 +56,17 @@ tiada panggilan legacy yang mempunyai perkhidmatan". Diukur terhadap perkara itu
 kerja ini BELUM selesai. Daripada 336 laluan berdaftar yang berjaya dipetakan
 kepada failnya:
 
-| Dashboard | Laluan berdaftar | Fail guna API lama |
+| Keadaan | Laluan berdaftar | Masih guna API lama |
 |---|---|---|
-| Guru | 63 | 27 |
-| Admin | 176 | 127 |
-| Ibu bapa | 29 | 23 |
-| Murid | 68 | 55 |
-| Skrin kongsi | — | 9 |
-| **Jumlah** | **336** | **218 fail (~62,000 baris)** |
+| **Sekarang** | 336 | **47** |
+| Pada mula pusingan ini | 336 | 241 |
+
+Siling 47 itu dikawal oleh ujian (`no-legacy-api.test.ts`): bilangannya boleh turun,
+tidak boleh naik. Tanpa itu, skrin baharu yang ditulis cara lama akan tidak kelihatan.
+
+**160 daripada 241 itu adalah fungsi yang sekolah ini memang tiada.** Tiada jadual
+untuknya, jadi ia tidak boleh dipindahkan ke Supabase — ia hanya boleh dinyatakan
+dengan jujur.
 
 Dikemas kini 24 Oktober 2026 selepas pusingan kedua. Nombor 241 adalah pembetulan
 kepada angka "0" yang salah. Semakan pertama saya melaporkan guru "0 daripada

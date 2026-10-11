@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import { updateSchoolDetails, updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { SaveIcon, SchoolLogoIcon, PhotoIcon, BellIcon, RefreshIcon } from '../../constants';
@@ -62,17 +62,20 @@ const SchoolInfoScreen: React.FC = () => {
 
         try {
             const currentLogo = currentSchool?.logoUrl || (currentSchool as any)?.logo_url || '';
-            await api.updateSchool(schoolId, {
-                name: info.name,
-                // Only send the logo when this screen actually changed it, so a copy
-                // loaded earlier can never overwrite a logo saved elsewhere.
-                ...(info.logo_url !== currentLogo ? { logo_url: info.logo_url } : {}),
-                settings: {
-                    ...((currentSchool as any).settings || {}),
-                    anthem: info.anthem,
-                    pledge: info.pledge,
-                    hero_image_url: info.hero_image_url
-                }
+
+            // The details that have their own columns. Only a CHANGED logo is sent,
+            // so a copy loaded earlier can never overwrite a logo saved elsewhere.
+            const details: Parameters<typeof updateSchoolDetails>[0] = { name: info.name };
+            if (info.logo_url !== currentLogo) details.logoStorageKey = info.logo_url;
+            await updateSchoolDetails(details);
+
+            // The rest are settings, MERGED in the database. Sending the whole object
+            // back — which is what this did — silently reverted any setting another
+            // screen had changed since this page was loaded.
+            await updateSchoolSettings({
+                anthem: info.anthem,
+                pledge: info.pledge,
+                hero_image_url: info.hero_image_url,
             });
 
             await refreshCurrentSchool();
