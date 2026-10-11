@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { api } from '../../lib/api';
+import { getCurrentTerm } from '../../src/lib/supabase/assessments';
 import { motion } from 'framer-motion';
 import { Student } from '../../types';
 import { ChevronRightIcon, DocumentTextIcon } from '../../constants';
@@ -20,11 +20,13 @@ const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ stu
   const [session, setSession] = useState<string>('');
   useEffect(() => {
     let active = true;
-    api.getAcademicTerms('').then((terms: any[]) => {
-      if (!active || !Array.isArray(terms)) return;
-      const current = terms.find((t) => t.is_current) || terms[0];
-      if (current?.academic_year) setSession(current.academic_year);
-    }).catch(() => { /* falls back to the server default on save/load */ });
+    // `api.getAcademicTerms('')` was an Express endpoint with no server behind it,
+    // so the session was always empty and the report editor read one year while its
+    // saves went to another. The school's own current term answers the question the
+    // screen is actually asking.
+    getCurrentTerm()
+      .then((term) => { if (active && term) setSession(term.name); })
+      .catch(() => { /* the editor falls back to the current term on load */ });
     return () => { active = false; };
   }, []);
 

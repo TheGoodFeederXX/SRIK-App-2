@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { api } from '../../lib/api';
+import { listAuditLog } from '../../src/lib/supabase/auditTrail';
 import { toast } from 'react-hot-toast';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
@@ -63,8 +63,25 @@ const AuditLogScreen: React.FC = () => {
     if (!currentSchool) return;
     setLoading(true);
     try {
-      const data = await api.getAuditLogs(currentSchool.id, 50);
-      setLogs(data);
+      // The school's own audit trail, read through the database function.
+      //
+      // This called `api.getAuditLogs(schoolId, 50)` on an Express server that is
+      // not deployed, so the trail was always empty — on the one screen whose
+      // entire purpose is to show that something happened. An empty audit log and
+      // a missing one look identical, which is the worst way for this to fail.
+      //
+      // `listAuditLog` resolves the entries already; the actor is an email rather
+      // than a profile row, so the shape is mapped here instead of the screen
+      // reaching for fields the database no longer returns.
+      const entries = await listAuditLog({ limit: 50 });
+      setLogs(entries.map(e => ({
+        id: String(e.id),
+        action: e.action,
+        table_name: e.entity_type,
+        record_id: e.entity_id ?? '',
+        user_email: e.actor_email ?? '',
+        created_at: e.created_at,
+      } as unknown as typeof logs[number])));
     } catch (err) {
       console.error("Failed to load audit logs:", err);
       toast.error('Failed to load audit logs');

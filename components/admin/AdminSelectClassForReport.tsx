@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { StudentsIcon, ChevronRightIcon, gradeColors, getFormattedClassName } from '../../constants';
 import { ClassInfo } from '../../types';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../../lib/api';
+import { listClasses } from '../../src/lib/supabase/academics';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -21,7 +21,10 @@ const AdminSelectClassForReport: React.FC<AdminSelectClassForReportProps> = ({ n
     // Enable React Query for classes instead of legacy useRealtime
     const { data: rawClasses = [], isLoading } = useQuery({
         queryKey: ['classes', schoolId, currentBranchId],
-        queryFn: () => api.getClasses(schoolId!, currentBranchId === 'all' ? undefined : currentBranchId),
+        // `api.getClasses(schoolId, branchId)` — an Express endpoint with no server.
+            // SRIK is one school, so the branch argument is gone rather than left as
+            // a parameter nobody can supply.
+            queryFn: () => listClasses(),
         enabled: !!schoolId
     });
 
@@ -30,16 +33,19 @@ const AdminSelectClassForReport: React.FC<AdminSelectClassForReportProps> = ({ n
     });
 
     // Mapped data to ensure compatibility with UI components expecting camelCase
-    const classes: ClassInfo[] = useMemo(() => {
-        return rawClasses.map(c => ({
+    const classes: ClassInfo[] = useMemo(() => (
+        // Year level comes from the class's own column, never parsed from its name.
+        // There is no subject or section on a class: a class is a group of children,
+        // and the subjects taught to it come from its teaching assignments.
+        rawClasses.map(c => ({
             id: c.id,
-            subject: c.subject,
-            grade: c.grade,
-            section: c.section,
-            department: c.department,
-            studentCount: c.student_count || 0
-        }));
-    }, [rawClasses]);
+            subject: '',
+            grade: c.yearLevel,
+            section: '',
+            department: '',
+            studentCount: c.studentCount,
+        }) as unknown as ClassInfo)
+    ), [rawClasses]);
 
     // Group classes by Grade and Deduplicate by Formatted Name
     const groupedClasses = React.useMemo(() => {

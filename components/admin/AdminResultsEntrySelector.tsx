@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { StudentsIcon, ChevronRightIcon, gradeColors, getFormattedClassName } from '../../constants';
 import { ClassInfo } from '../../types';
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../../lib/api';
+import { listClasses } from '../../src/lib/supabase/academics';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
 
@@ -16,7 +16,10 @@ interface AdminResultsEntrySelectorProps {
 const AdminResultsEntrySelector: React.FC<AdminResultsEntrySelectorProps> = ({ navigateTo, schoolId, currentBranchId }) => {
     const { data: rawClasses = [], isLoading } = useQuery({
         queryKey: ['classes', schoolId, currentBranchId],
-        queryFn: () => api.getClasses(schoolId!, currentBranchId === 'all' ? undefined : currentBranchId),
+        // `api.getClasses(schoolId, branchId)` — an Express endpoint with no server.
+            // SRIK is one school, so the branch argument is gone rather than left as
+            // a parameter nobody can supply.
+            queryFn: () => listClasses(),
         enabled: !!schoolId
     });
 
@@ -24,27 +27,23 @@ const AdminResultsEntrySelector: React.FC<AdminResultsEntrySelectorProps> = ({ n
         console.log('🔄 [ResultsEntrySelector] Auto-sync triggered');
     });
 
-    const classes: ClassInfo[] = useMemo(() => {
-        return rawClasses
-            .filter(c => {
-                const sMatch = !schoolId || c.school_id === schoolId;
-                const bMatch = !currentBranchId || currentBranchId === 'all' || c.branch_id === currentBranchId || !c.branch_id;
-                return sMatch && bMatch;
-            })
-            .map(c => ({
-                id: c.id,
-                // Real class name (classes have no subject column — the gradebook
-                // offers the class's assigned subjects when subject is absent)
-                name: (c as any).name,
-                subject: c.subject,
-                // Admin-assigned subjects for this class (from the class form)
-                subjects: (c as any).subjects,
-                grade: c.grade,
-                section: c.section,
-                department: c.department,
-                studentCount: c.student_count || 0
-            } as ClassInfo & { name?: string; subjects?: any[] }));
-    }, [rawClasses, schoolId, currentBranchId]);
+    const classes: ClassInfo[] = useMemo(() => (
+        // No school or branch filter any more. There is one school and its classes
+        // are the rows the database returns — a filter on a `school_id` the schema
+        // does not have was always `undefined === schoolId`, which is why the list
+        // came out empty rather than filtered.
+        rawClasses.map(c => ({
+            id: c.id,
+            // The class's own name. There is no subject column: a class is not a
+            // subject, and the subjects taught to it come from its assignments.
+            name: c.displayName,
+            subject: '',
+            grade: c.yearLevel,
+            section: '',
+            department: '',
+            studentCount: c.studentCount,
+        } as unknown as ClassInfo & { name?: string; subjects?: any[] }))
+    ), [rawClasses]);
 
     const groupedClasses = useMemo(() => {
         const groups: { [key: number]: Map<string, ClassInfo> } = {};

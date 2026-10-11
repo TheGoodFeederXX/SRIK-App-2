@@ -71,6 +71,14 @@ const MIGRATED = [
     // A teacher's reports for a class: averages from the marks, attendance from
     // the register, both read rather than estimated.
     'components/teacher/TeacherReportsScreen.tsx',
+    // The office's audit trail, on the one screen whose whole purpose is to show
+    // that something happened — so an empty trail was indistinguishable from none.
+    'components/admin/AuditLogScreen.tsx',
+    // Report selectors. A class is not a subject, and a school that is one school
+    // has no branch to filter by.
+    'components/admin/AdminSelectTermForReport.tsx',
+    'components/admin/AdminSelectClassForReport.tsx',
+    'components/admin/AdminResultsEntrySelector.tsx',
     // The class gradebook, and the mark-entry screen it sends you to.
     'components/teacher/ClassGradebookScreen.tsx',
     'components/teacher/GradeEntryScreen.tsx',
