@@ -70,6 +70,8 @@ MIGRATION_ENROLL="$REPO_ROOT/supabase/migrations/20261023000004_enrollment_dates
 ENROLL_SUITE="$REPO_ROOT/supabase/tests/enrollment_dates_test.sql"
 MIGRATION_TTVERSION="$REPO_ROOT/supabase/migrations/20261024000001_timetable_version_protection.sql"
 TTVERSION_SUITE="$REPO_ROOT/supabase/tests/timetable_version_test.sql"
+MIGRATION_GUARDLINK="$REPO_ROOT/supabase/migrations/20261024000002_guardian_reads_own_links.sql"
+GUARDLINK_SUITE="$REPO_ROOT/supabase/tests/guardian_own_links_test.sql"
 STORAGE_SUITE="$REPO_ROOT/supabase/tests/phase6b_storage_test.sql"
 OPERATIONS_SUITE="$REPO_ROOT/supabase/tests/phase6_operations_test.sql"
 
@@ -79,7 +81,7 @@ if [ ! -x "$PGBIN/initdb" ]; then
     exit 2
 fi
 
-for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$MIGRATION_ENROLL" "$ENROLL_SUITE" "$MIGRATION_TTVERSION" "$TTVERSION_SUITE" "$OPERATIONS_SUITE"; do
+for f in "$STORAGE_SUITE" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SHIM" "$STORAGE_SHIM" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$MIGRATION_ENROLL" "$ENROLL_SUITE" "$MIGRATION_TTVERSION" "$TTVERSION_SUITE" "$MIGRATION_GUARDLINK" "$GUARDLINK_SUITE" "$OPERATIONS_SUITE"; do
     [ -f "$f" ] || { echo "ERROR: missing $f" >&2; exit 2; }
 done
 
@@ -109,7 +111,7 @@ as_runas "PATH=$PGBIN:\$PATH initdb -D $PGDATA -U postgres --auth=trust" >"$WORK
 as_runas "PATH=$PGBIN:\$PATH pg_ctl -D $PGDATA -o '-p $PGPORT -k $PGSOCK' -l $WORKDIR/server.log start" >/dev/null 2>&1
 sleep 2
 
-cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$MIGRATION_ENROLL" "$ENROLL_SUITE" "$MIGRATION_TTVERSION" "$TTVERSION_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
+cp "$SHIM" "$STORAGE_SHIM" "$MIGRATION_P1" "$MIGRATION_P2" "$MIGRATION_P3" "$MIGRATION_P4" "$MIGRATION_P5" "$MIGRATION_P5B" "$SUITE" "$GUARDIAN_SUITE" "$MIGRATION_P5C" "$ONBOARDING_SUITE" "$MIGRATION_P6" "$MIGRATION_P6B" "$MIGRATION_HARDEN" "$HARDEN_SUITE" "$MIGRATION_SCOPE" "$SCOPE_SUITE" "$MIGRATION_DOCS" "$DOCS_SUITE" "$MIGRATION_ADMIN" "$ADMIN_SUITE" "$MIGRATION_PROV" "$PROV_SUITE" "$MIGRATION_FIN" "$MIGRATION_FIN2" "$FIN_SUITE" "$MIGRATION_STORAGE_SCOPE" "$STORAGE_SCOPE_SUITE" "$MIGRATION_REGISTRY" "$REGISTRY_SUITE" "$MIGRATION_BULK" "$BULK_SUITE" "$MIGRATION_REMARK" "$REMARK_SUITE" "$MIGRATION_ENROLL" "$ENROLL_SUITE" "$MIGRATION_TTVERSION" "$TTVERSION_SUITE" "$MIGRATION_GUARDLINK" "$GUARDLINK_SUITE" "$OPERATIONS_SUITE" "$STORAGE_SUITE" "$WORKDIR/sql/"
 chmod -R a+rX "$WORKDIR/sql"
 
 psql_as() {
@@ -459,6 +461,22 @@ if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
 fi
 TTVERSION_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
 
+# F17: a guardian reading their own child links.
 echo ""
-echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks, $DOCS_CHECKS document-scope checks, $ADMIN_CHECKS last-admin checks, $PROV_CHECKS provisioning checks, $FIN_CHECKS finance-integrity checks, $STORAGE_SCOPE_CHECKS storage-scope checks, $REGISTRY_CHECKS registry checks, $BULK_CHECKS bulk-balance checks, $REMARK_CHECKS attendance-remark checks, $ENROLL_CHECKS enrollment-date checks, $TTVERSION_CHECKS timetable-version checks)"
+echo "==> Applying guardian self-read (audit F17)"
+psql_as "-d $DBNAME -v ON_ERROR_STOP=1 -q -f $WORKDIR/sql/20261024000002_guardian_reads_own_links.sql" >/dev/null
+
+echo ""
+echo "==> Running guardian own-links suite (audit F17)"
+OUTPUT="$(psql_as "-d $DBNAME -f $WORKDIR/sql/guardian_own_links_test.sql" 2>&1 || true)"
+echo "$OUTPUT" | grep -oE "(PASS|SKIP|FAIL|ERROR|FAIL F[0-9]+): .*" | sed 's/^/    /' | head -12 || true
+
+if echo "$OUTPUT" | grep -qE "FAIL|ERROR"; then
+    echo "RESULT: FAIL (guardian own links)" >&2
+    exit 1
+fi
+GUARDLINK_CHECKS="$(echo "$OUTPUT" | grep -c "PASS" || true)"
+
+echo ""
+echo "RESULT: PASS ($FEE_CHECKS fee checks, $GUARDIAN_CHECKS guardian checks, $ONBOARDING_CHECKS onboarding checks, $OPERATIONS_CHECKS operations checks, $STORAGE_CHECKS storage checks, $HARDEN_CHECKS security checks, $SCOPE_CHECKS access-scope checks, $DOCS_CHECKS document-scope checks, $ADMIN_CHECKS last-admin checks, $PROV_CHECKS provisioning checks, $FIN_CHECKS finance-integrity checks, $STORAGE_SCOPE_CHECKS storage-scope checks, $REGISTRY_CHECKS registry checks, $BULK_CHECKS bulk-balance checks, $REMARK_CHECKS attendance-remark checks, $ENROLL_CHECKS enrollment-date checks, $TTVERSION_CHECKS timetable-version checks, $GUARDLINK_CHECKS guardian-own-link checks)"
 exit 0
