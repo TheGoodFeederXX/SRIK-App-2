@@ -26,7 +26,9 @@ import { THEME_CONFIG } from '../../constants';
 import { useTeacherStats } from '../../hooks/useTeacherStats';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
+import { listAssignments, getTeacherDuties } from '../../src/lib/supabase/teachers';
+import type { EntryRecord } from '../../src/lib/supabase/timetable';
+import { getActiveTimetable, getTeacherTimetable, listPeriods } from '../../src/lib/supabase/timetable';
 import { loadSchedule } from '../../lib/timetableSchedule';
 import { toSchoolDayEnum } from '../../src/lib/branding';
 
@@ -101,9 +103,32 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
   // Re-read on every refresh signal (`version` bumps on realtime events and on
   // the polling fallback used where there is no socket): an admin assigning
   // this teacher as Class Teacher used to stay invisible until a full reload.
+  // Whether this teacher is a class teacher or a subject teacher, from the
+  // teaching assignments themselves.
+  //
+  // This was `GET /teacher-assignments/mine/roles` against the Express API. There
+  // is no server, so the request failed and the catch swallowed it — the badges
+  // stayed empty forever and nothing reported why. The duties are in
+  // `teaching_assignments`, which the frontend can already read.
   useEffect(() => {
-    api.get<any>('/teacher-assignments/mine/roles').then(setMyRoles).catch(() => { /* non-fatal — badges just stay empty */ });
-  }, [version]);
+    const id = resolvedTeacherId || teacherId;
+    if (!id) return;
+
+    getTeacherDuties(id)
+      .then(() => listAssignments())
+      .then(all => {
+        const mine = all.filter(a => a.teacherId === id);
+        const roles: string[] = [];
+        if (mine.some(a => a.type === 'CLASS_TEACHER')) roles.push('class_teacher');
+        if (mine.some(a => a.type === 'SUBJECT_TEACHER')) roles.push('subject_teacher');
+        setMyRoles({
+          roles,
+          class_teacher_of: mine.filter(a => a.type === 'CLASS_TEACHER').map(a => ({ class_id: a.classId, class_name: a.className })),
+          subject_assignments: mine.filter(a => a.type === 'SUBJECT_TEACHER').map(a => ({ class_id: a.classId, subject: a.subjectName })),
+        });
+      })
+      .catch(() => { /* non-fatal — badges just stay empty */ });
+  }, [version, resolvedTeacherId, teacherId]);
   const isClassTeacher = myRoles.roles.includes('class_teacher');
   const isSubjectTeacher = myRoles.roles.includes('subject_teacher');
 
@@ -117,62 +142,69 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
     useEffect(() => {
         const fetchData = async () => {
             const actualTeacherId = resolvedTeacherId || teacherId;
-            const actualSchoolId = resolvedSchoolId || schoolId;
 
-            if (!actualSchoolId || !actualTeacherId) return;
+            // ONLY the teacher is required. The gate used to be
+            // `if (!actualSchoolId || !actualTeacherId) return;`, and since SRIK has
+            // no school id on any record, that returned for every real teacher. The
+            // dashboard rendered its empty state as though there were simply no
+            // lessons today.
+            if (!actualTeacherId) return;
 
             try {
                 setLoading(true);
-                const todayName = new Date().toLocaleDateString('ms-MY', { weekday: 'long' });
-                const [scheduleRes, assignmentsRes] = await Promise.all([
-                    api.getTimetable(
-                        currentBranchId && currentBranchId !== 'all' ? currentBranchId : undefined,
-                        undefined, 
-                        actualTeacherId
-                    ),
-                    api.getAssignments(actualSchoolId, {
-                        teacherId: actualTeacherId,
-                        branchId: currentBranchId && currentBranchId !== 'all' ? currentBranchId : undefined
-                    })
+
+                // The teacher's own week, from the database.
+                //
+                // This used to be `api.getTimetable(...)` and `api.getAssignments(...)`
+                // against the Express API, gated on a `schoolId` SRIK does not have.
+                // So the guard below returned early for every real teacher and the
+                // dashboard showed an empty schedule — on the FIRST screen of the app,
+                // with nothing to indicate anything had gone wrong.
+                const timetable = await getActiveTimetable();
+                const [periods, scheduleRes, assignmentsRes] = await Promise.all([
+                    timetable ? listPeriods(timetable.id) : Promise.resolve([]),
+                    timetable
+                        ? getTeacherTimetable(timetable.id, actualTeacherId)
+                        : Promise.resolve({ entries: [] as EntryRecord[] }),
+                    listAssignments(),
                 ]);
 
-                // "Today's Schedule" = only the lessons assigned to THIS teacher for
-                // the current weekday. getTimetable returns the teacher's whole week, so
-                // filter to today's day (1=Mon..7=Sun), drop duplicate rows, and sort by time.
-                // `day_of_week` holds the ENGLISH DAY NAME ('SUNDAY' … 'THURSDAY'),
-                // not a number. This used to compute a number (1=Mon..7=Sun) and
-                // compare it to that column, so the comparison could never be true
-                // and "Today's Schedule" was empty on every day of the week — with
-                // no error to show for it. Comparing a name to a name fixes it, and
-                // the Sunday-first indexing comes from branding.ts rather than being
-                // re-derived here.
+                // "Today's Schedule" = this teacher's lessons for the current
+                // weekday, with the clock time that belongs to each period.
+                //
+                // The day is compared by NAME. `day_of_week` holds 'SUNDAY' …
+                // 'THURSDAY', and the previous code computed a number 1..7 and
+                // compared it to that column — so the comparison could never be true
+                // and Today's Schedule was empty every day of the week, with no
+                // error to show for it.
                 const todayEnum = toSchoolDayEnum(new Date());
-                const seen = new Set<string>();
-                const todays = (Array.isArray(scheduleRes) ? scheduleRes : [])
-                    .filter((e: any) => String(e.day_of_week).toUpperCase() === todayEnum)
-                    .filter((e: any) => {
-                        const k = `${e.class_id || e.class_name}|${e.start_time}|${e.subject}|${e.notes || ''}`;
-                        if (seen.has(k)) return false;
-                        seen.add(k);
-                        return true;
-                    })
-                    .sort((a: any, b: any) => String(a.start_time || '').localeCompare(String(b.start_time || '')));
 
-                // Remap stored start/end times to the actual period times from
-                // the shared schedule — same order-based mapping used by the
-                // full timetable view so both show identical period times.
-                const schedule = loadSchedule(actualSchoolId);
-                const teaching = schedule.filter((p: any) => !p.isBreak);
-                const remapped = todays.map((entry: any) => {
-                    // Match by start_time so Today's Schedule shows the correct clock
-                    // time for each period — order-based (i) mapping was wrong for
-                    // teachers who only teach specific periods of the day.
-                    const st = (entry.start_time || '').slice(0, 5);
-                    const period = teaching.find((p: any) => p.start === st);
-                    return period ? { ...entry, start_time: period.start, end_time: period.end } : entry;
-                });
-                setTodaySchedule(remapped);
-                setUngradedAssignments((assignmentsRes || []).slice(0, 3));
+                const todays = (scheduleRes.entries ?? [])
+                    .filter((e: any) => {
+                        const p = periods.find(x => x.id === e.periodId);
+                        return p ? p.dayOfWeek === todayEnum : false;
+                    })
+                    .map((e: any) => {
+                        const p = periods.find(x => x.id === e.periodId);
+                        return {
+                            id: e.id,
+                            class_id: e.classId,
+                            class_name: e.className,
+                            subject: e.subjectName ?? e.activity ?? '',
+                            start_time: p?.startTime ?? '',
+                            end_time: p?.endTime ?? '',
+                            room: e.room,
+                        };
+                    })
+                    .filter((e: any) => e.start_time)
+                    .sort((a: any, b: any) => String(a.start_time).localeCompare(String(b.start_time)));
+
+                setTodaySchedule(todays);
+
+                // The teacher's own assignments, newest first — the three they would
+                // most likely want to look at.
+                const mine = (assignmentsRes || []).filter((a: any) => a.teacherId === actualTeacherId);
+                setUngradedAssignments(mine.slice(0, 3));
             } catch (err) {
                 console.error('❌ Error fetching overview data:', err);
             } finally {

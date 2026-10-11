@@ -1,17 +1,37 @@
 import { useState, useEffect } from 'react';
-import { useProfile } from '../context/ProfileContext';
 import { useAuth } from '../context/AuthContext';
 import { ClassInfo, Subject } from '../types';
-import { parseClassName, deduplicateClasses } from '../utils/classUtils';
 import { useAutoSync } from './useAutoSync';
+import {
+    getMyTeacherProfile,
+    listAssignments,
+    getTeacher,
+    type AssignmentRecord,
+} from '../src/lib/supabase/teachers';
 
 export interface TeacherAssignment {
     classId: string;
     subjectId: string;
 }
 
-export const useTeacherClasses = (teacherId?: string | null, branchId?: string | null) => {
-    const { profile } = useProfile();
+/**
+ * The classes and subjects a teacher is responsible for, from the database.
+ *
+ * WHAT THIS HOOK USED TO DEPEND ON. It called `getMyTeacherProfileCached()`, which
+ * went to `GET /teacher-profile/me` on the Express API, and it read `school_id` off
+ * the result and off the signed-in user. Every one of those is gone: the API is not
+ * deployed, and SRIK is one school with no school_id on any record.
+ *
+ * The consequence was not an error. `currentSchoolId` was null, the guard below
+ * returned early, `loading` went false, and every teacher's dashboard showed zero
+ * classes and an empty timetable — the app looking calm and simply empty, on the
+ * first screen after login.
+ *
+ * It also filtered classes by branch, preferring the join row's branch over the
+ * class's own. SRIK has no branches, so that filter could only ever pass everything
+ * through unchanged.
+ */
+export const useTeacherClasses = (teacherId?: string | null) => {
     const { user: authUser } = useAuth();
 
     const [classes, setClasses] = useState<ClassInfo[]>([]);
@@ -19,167 +39,98 @@ export const useTeacherClasses = (teacherId?: string | null, branchId?: string |
     const [assignments, setAssignments] = useState<TeacherAssignment[]>([]);
 
     const [resolvedTeacherId, setResolvedTeacherId] = useState<string | null>(null);
-    const [resolvedSchoolId, setResolvedSchoolId] = useState<string | null>(null);
-    const [resolvedBranchId, setResolvedBranchId] = useState<string | null>(null);
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<any>(null);
     const [version, setVersion] = useState(0);
     const forceUpdate = () => setVersion(v => v + 1);
 
     useEffect(() => {
-        const fetchClassesAndSubjects = async () => {
-            let currentTeacherId = teacherId;
-            let currentSchoolId = profile?.schoolId || authUser?.app_metadata?.school_id || authUser?.user_metadata?.school_id;
-
+        const load = async () => {
             setLoading(true);
-
             try {
-                const { getMyTeacherProfileCached } = await import('../lib/queryClient');
+                // Who is this? Either the caller told us, or it is the signed-in
+                // teacher's own record.
+                let mine: AssignmentRecord[] = [];
+                let id = teacherId ?? null;
 
-                // Resolve the teacher ID AND fetch the detailed profile in one call —
-                // this endpoint already returns everything needed, so calling it twice
-                // (once to resolve the ID, once for the data) just doubled load on a
-                // heavy nested-include query for every screen that uses this hook.
-                // getMyTeacherProfileCached shares one cached/in-flight request across
-                // every screen that needs this same profile within the same session.
-                let teacherData: any = null;
-                if (!currentTeacherId) {
-                    teacherData = await getMyTeacherProfileCached().catch(() => null);
-                    if (teacherData) {
-                        currentTeacherId = teacherData.id;
-                        currentSchoolId = teacherData.school_id;
-                    }
+                if (!id) {
+                    const me = await getMyTeacherProfile().catch(() => null);
+                    id = me?.id ?? null;
                 }
 
-                if (!currentTeacherId) {
-                    setLoading(false);
+                setResolvedTeacherId(id);
+                if (!id) {
+                    setClasses([]);
+                    setSubjects([]);
+                    setAssignments([]);
                     return;
                 }
 
-                setResolvedTeacherId(currentTeacherId);
-                setResolvedSchoolId(currentSchoolId);
+                // The teacher's duties for the current academic year.
+                const all = await listAssignments().catch(() => [] as AssignmentRecord[]);
+                mine = all.filter(a => a.teacherId === id);
 
-                // If teacherId was passed in directly, we still need to fetch the data.
-                if (!teacherData) {
-                    teacherData = await getMyTeacherProfileCached();
-                }
+                // Only the classes they actually teach. A class-teacher duty carries
+                // no subject; those are still their class.
+                const byId = new Map<string, ClassInfo>();
+                const subjectById = new Map<string, Subject>();
+                const assignmentList: TeacherAssignment[] = [];
 
-                if (teacherData) {
-                    const finalClasses: ClassInfo[] = [];
-                    const finalSubjects: Subject[] = [];
-                    const finalAssignments: TeacherAssignment[] = [];
-                    const addedClassIds = new Set<string>();
-                    const addedSubjectIds = new Set<string>();
-
-                    if (teacherData.classes && Array.isArray(teacherData.classes)) {
-                        teacherData.classes.forEach((item: any) => {
-                            const c = item.class;
-                            const s = item.subject;
-                            // Only include classes for the active branch (branch_id null = school-wide, always shown).
-                            // The CLASS's own branch_id is authoritative here — it's what the backend
-                            // actually checks when the class is used (e.g. creating an assignment).
-                            // The ClassTeacher join row's own branch_id tag can legitimately differ
-                            // (e.g. a teacher lent across branches keeps one assignment row per branch
-                            // they operate in, not per branch the class belongs to) — preferring it
-                            // over the class's real branch let classes from OTHER branches slip through
-                            // the filter, so a class would appear pickable here yet be rejected by the
-                            // backend as "outside your branch" the moment it was actually used.
-                            const classBranch: string | null = c?.branch_id ?? item.branch_id ?? null;
-                            if (branchId && branchId !== 'all' && classBranch !== null && classBranch !== branchId) return;
-
-                            if (c) {
-                                // Add to classes list if not already there OR if it's a different subject assignment
-                                // Note: For the UI dropdown, we might want unique classes, but for specific assignments, 
-                                // we need the subject context.
-                                const classKey = `${c.id}-${s?.name || 'General'}`;
-                                if (!addedClassIds.has(classKey)) {
-                                    finalClasses.push({
-                                        id: c.id,
-                                        name: c.name,
-                                        grade: c.grade,
-                                        section: c.section || '',
-                                        subject: s?.name || 'General',
-                                        studentCount: c.student_count || 0,
-                                        schoolId: c.school_id
-                                    });
-                                    addedClassIds.add(classKey);
-                                }
-
-                                if (s) {
-                                    if (!addedSubjectIds.has(s.id)) {
-                                        finalSubjects.push({
-                                            id: s.id,
-                                            name: s.name,
-                                            code: s.code
-                                        } as Subject);
-                                        addedSubjectIds.add(s.id);
-                                    }
-
-                                    finalAssignments.push({
-                                        classId: c.id,
-                                        subjectId: s.id
-                                    });
-                                } else if (Array.isArray(c.subjects) && c.subjects.length > 0) {
-                                    // Class/form teacher row with no specific subject attached:
-                                    // they oversee the whole class, so give them every subject
-                                    // the class actually studies rather than dropping the class
-                                    // from every subject-scoped picker.
-                                    c.subjects.forEach((clsSub: any) => {
-                                        if (!addedSubjectIds.has(clsSub.id)) {
-                                            finalSubjects.push({
-                                                id: clsSub.id,
-                                                name: clsSub.name,
-                                                code: clsSub.code
-                                            } as Subject);
-                                            addedSubjectIds.add(clsSub.id);
-                                        }
-                                        finalAssignments.push({
-                                            classId: c.id,
-                                            subjectId: clsSub.id
-                                        });
-                                    });
-                                }
-                            }
-                        });
+                for (const a of mine) {
+                    if (!byId.has(a.classId)) {
+                        byId.set(a.classId, {
+                            id: a.classId,
+                            name: a.className,
+                            // The class's year level, shown as the teacher's own
+                            // "Form" wording.
+                            grade: '',
+                            section: '',
+                            subject: a.subjectName ?? 'General',
+                            studentCount: 0,
+                        } as unknown as ClassInfo);
                     }
 
-                    // Fallback if no specific subjects assigned, use subject_specialty if available
-                    if (finalSubjects.length === 0 && teacherData.subject_specialty) {
-                        const specialties = Array.isArray(teacherData.subject_specialty) 
-                            ? teacherData.subject_specialty 
-                            : [teacherData.subject_specialty];
-                        
-                        specialties.forEach((spec: string, idx: number) => {
-                            const id = `specialty-${idx}`;
-                            finalSubjects.push({ id, name: spec } as Subject);
-                            
-                            // Map this specialty to all assigned classes as a fallback
-                            finalClasses.forEach(c => {
-                                finalAssignments.push({ classId: c.id, subjectId: id });
-                            });
-                        });
+                    if (a.subjectId && a.subjectName) {
+                        if (!subjectById.has(a.subjectId)) {
+                            subjectById.set(a.subjectId, {
+                                id: a.subjectId,
+                                name: a.subjectName,
+                                code: a.subjectName,
+                            } as Subject);
+                        }
+                        assignmentList.push({ classId: a.classId, subjectId: a.subjectId });
                     }
-
-                    setClasses(finalClasses);
-                    setSubjects(finalSubjects);
-                    setAssignments(finalAssignments);
                 }
 
+                setClasses([...byId.values()]);
+                setSubjects([...subjectById.values()]);
+                setAssignments(assignmentList);
             } catch (err) {
-                console.error('❌ [useTeacherClasses] Error:', err);
+                console.error('[useTeacherClasses] could not load classes:', err);
                 setError(err);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchClassesAndSubjects();
-    }, [profile?.email, profile?.id, profile?.schoolId, authUser?.email, authUser?.id, teacherId, branchId, version]);
+        load();
+    }, [authUser?.id, teacherId, version]);
 
-    useAutoSync(['class_teachers', 'teacher_classes', 'teacher_subjects'], () => {
+    useAutoSync(['teaching_assignments'], () => {
         forceUpdate();
     });
 
-    return { classes, subjects, assignments, loading, error, teacherId: resolvedTeacherId, schoolId: resolvedSchoolId };
+    // `schoolId` is still returned, because screens pass it around — but it is
+    // always null now, and nothing should depend on it. Kept as an explicit
+    // acknowledgement that the field exists in the UI layer's vocabulary rather
+    // than silently changing the hook's shape.
+    return {
+        classes,
+        subjects,
+        assignments,
+        loading,
+        error,
+        teacherId: resolvedTeacherId,
+        schoolId: null as string | null,
+    };
 };

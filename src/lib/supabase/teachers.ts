@@ -600,3 +600,35 @@ export async function createTeacherWithAccount(
     }
     return { success: true, teacherId, temporaryPassword: account.temporaryPassword };
 }
+
+/**
+ * The teacher record belonging to the signed-in user.
+ *
+ * A teacher opens their own dashboard, so the app needs to get from "who is logged
+ * in" to "which teacher row is theirs". That link is `teachers.user_id`. When the
+ * office has not yet issued a login for a teacher, or is looking at a teacher who
+ * has no account, this returns null and the caller shows nothing rather than
+ * guessing.
+ *
+ * The dashboard used to reach for this through the Express API and a
+ * `school_id` that SRIK records do not carry, so it never resolved.
+ */
+export async function getMyTeacherProfile(): Promise<TeacherRecord | null> {
+    const db = requireSupabase();
+
+    const { data: auth } = await db.auth.getUser();
+    const userId = auth?.user?.id;
+    if (!userId) return null;
+
+    const { data, error } = await db
+        .from('teachers')
+        .select('id')
+        .limit(2000)
+        .eq('user_id', userId)
+        .maybeSingle();
+
+    if (error) throw new Error(`Could not load your teacher record: ${error.message}`);
+    if (!data) return null;
+
+    return getTeacher((data as unknown as { id: string }).id);
+}

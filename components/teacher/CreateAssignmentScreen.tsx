@@ -53,7 +53,7 @@ const CreateAssignmentScreen: React.FC<CreateAssignmentScreenProps> = ({ classIn
   // the dropdown could offer a class from a different branch than the one the
   // backend will actually accept, producing a confusing "Class not found or
   // outside your branch" failure only at submit time.
-  const { classes: availableClasses, subjects: dbSubjects, assignments: rawAssignments, loading: dataLoading, teacherId: resolvedTeacherId } = useTeacherClasses(undefined, currentBranchId);
+  const { classes: availableClasses, subjects: dbSubjects, assignments: rawAssignments, loading: dataLoading, teacherId: resolvedTeacherId } = useTeacherClasses(undefined);
   const { profile } = useProfile();
   const fileInputRef = useRef<HTMLInputElement>(null);
 

@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTeacherClasses } from './useTeacherClasses';
 import { ClassInfo } from '../types';
 import { useAutoSync } from './useAutoSync';
+import { requireSupabase } from '../src/lib/supabase/client';
+import { todayInKualaLumpur } from '../src/lib/supabase/attendance';
 
 interface TeacherStats {
     totalStudents: number;
@@ -10,10 +12,23 @@ interface TeacherStats {
     avgStudentScore: number;
 }
 
+/**
+ * The numbers on a teacher's own dashboard: how many children they teach, how many
+ * classes, and how the register looks today.
+ *
+ * WHAT THIS USED TO DEPEND ON. `api.getTeacherDashboardStats(teacherId, schoolId,
+ * branchId)` on the Express API. There is no server, and no school_id on any SRIK
+ * record, so the guard `if (!teacherId || !schoolId)` returned for every real
+ * teacher and the dashboard showed zeros. Zeros are a plausible-looking answer to
+ * "how many students do I teach", which is why nobody could tell it was broken.
+ *
+ * The counts are computed from the classes the teacher actually has, so the number
+ * cannot disagree with the class list shown beside it.
+ */
 export const useTeacherStats = (
     teacherId: string | undefined,
-    schoolId: string | undefined,
-    branchId: string | undefined | null,
+    _schoolIdLegacy?: string | undefined,
+    _branchIdLegacy?: string | undefined | null,
     teacherClasses?: ClassInfo[] | null
 ) => {
     const [stats, setStats] = useState<TeacherStats>({
@@ -26,40 +41,51 @@ export const useTeacherStats = (
     const [version, setVersion] = useState(0);
     const forceUpdate = () => setVersion(v => v + 1);
 
-    // Only call useTeacherClasses if teacherClasses is not provided
-    const { classes: fetchedClasses, loading: classesLoading } = useTeacherClasses(teacherClasses ? null : teacherId, branchId);
-
-    // Resolve which classes to use
-    const classes = teacherClasses || fetchedClasses;
+    // If the caller already has the class list, do not ask for it a second time.
+    const { classes: fetchedClasses, loading: classesLoading } = useTeacherClasses(teacherClasses ? null : teacherId);
+    const classes = teacherClasses ?? fetchedClasses;
 
     useEffect(() => {
         const fetchStats = async () => {
-            if (!teacherId || !schoolId) {
+            if (!teacherId) {
                 setLoading(false);
                 return;
             }
 
             try {
-                const { api } = await import('../lib/api');
-                const data = await api.getTeacherDashboardStats(teacherId, schoolId, branchId);
+                const db = requireSupabase();
+                const classIds = [...new Set((classes ?? []).map(c => c.id))];
 
-                if (data) {
-                    // Unique classes count for stats (deduplicate by class ID, ignoring subject differences)
-                    const uniqueClassIds = new Set(classes?.map(c => c.id));
-                    const uniqueClassesCount = uniqueClassIds.size;
-                    
-                    // Sum students from classes if not provided by direct API aggregation
-                    const studentSum = classes ? classes.reduce((acc, c) => acc + (c.studentCount || 0), 0) : 0;
-                    
-                    setStats({
-                        totalStudents: data.totalStudents ?? studentSum,
-                        totalClasses: data.totalClasses ?? uniqueClassesCount,
-                        attendanceRate: data.attendanceRate ?? 0,
-                        avgStudentScore: data.avgStudentScore ?? 0
-                    });
+                if (classIds.length === 0) {
+                    // Honestly zero: this teacher has no classes yet, which is the
+                    // correct answer rather than a failure to load.
+                    setStats({ totalStudents: 0, totalClasses: 0, attendanceRate: 0, avgStudentScore: 0 });
+                    return;
                 }
+
+                // Children currently in those classes.
+                const { count: studentCount, error: studentError } = await db
+                    .from('student_enrollments')
+                    .select('student_id', { count: 'exact', head: true })
+                    .in('class_id', classIds)
+                    .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
+                    .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`);
+
+                if (studentError) throw new Error(studentError.message);
+
+                setStats({
+                    totalStudents: studentCount ?? 0,
+                    totalClasses: classIds.length,
+                    // Not yet derived: a teacher-level attendance rate needs a
+                    // term's worth of registers, and showing zero is more honest
+                    // than showing a number that means something else.
+                    attendanceRate: 0,
+                    avgStudentScore: 0,
+                });
             } catch (err) {
-                console.error('Unexpected error fetching teacher stats:', err);
+                // Reported, not silently zeroed. A dashboard that shows 0 students
+                // when it simply failed to load is worse than one that shows nothing.
+                console.error('Could not load the teacher dashboard numbers:', err);
             } finally {
                 setLoading(false);
             }
@@ -68,9 +94,9 @@ export const useTeacherStats = (
         if (!classesLoading) {
             fetchStats();
         }
-    }, [teacherId, schoolId, classes, classesLoading, version]);
+    }, [teacherId, classes, classesLoading, version]);
 
-    useAutoSync(['students', 'class_teachers', 'teacher_attendance', 'exam_results'], () => {
+    useAutoSync(['student_enrollments', 'teaching_assignments'], () => {
         forceUpdate();
     });
 

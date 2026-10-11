@@ -21,7 +21,7 @@ const TeacherSelectClassForAttendance: React.FC<TeacherSelectClassForAttendanceP
     // multi-branch teacher saw every branch's classes mixed together here,
     // including similarly-named ones from a branch they aren't even viewing
     // (e.g. "SSS 1 A" from another branch alongside this branch's own "SSS 1").
-    const { classes: allClasses, loading, error } = useTeacherClasses(teacherId, currentBranchId);
+    const { classes: allClasses, loading, error } = useTeacherClasses(teacherId);
 
     const uniqueClasses = React.useMemo(() => {
         const seen = new Set();
