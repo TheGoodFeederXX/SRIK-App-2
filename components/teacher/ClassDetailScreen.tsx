@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api } from '../../lib/api';
+import { listStudents } from '../../src/lib/supabase/students';
 
 import { Student, ClassInfo } from '../../types';
 import { ChevronRightIcon, TeacherAttendanceIcon, ClipboardListIcon } from '../../constants';
@@ -21,27 +21,37 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
         if (!classInfo) return;
         setLoading(true);
         try {
-            // Use the dedicated class-students endpoint so the backend uses the
-            // JWT school_id (not a potentially stale classInfo.schoolId) and the
-            // active X-Branch-Id header. This also handles the grade+section fallback
-            // for students who exist by grade/section but have no enrollment record.
-            const studentData = await api.getStudentsByClassId(classInfo.id);
+            // The children in THIS class, from the database.
+            //
+            // This called `api.getStudentsByClassId`, whose own comment explained it
+            // existed so "the backend uses the JWT school_id" — and there is no
+            // backend. Every class tile opened an empty list, on the screen a teacher
+            // uses to reach the register.
+            //
+            // `listStudents` returns the school's roll with each child's current
+            // class already resolved from the enrollment, and pages the read. The
+            // filter is by `classId`, NOT by class name: the school renames classes
+            // ("5 Na'im" today, something else tomorrow) and matching text would break
+            // silently on the next rename, which is why the loader returns an id.
+            const all = await listStudents();
+            const rows = all.filter(r => r.classId === classInfo.id);
 
-            if (studentData) {
-                setStudents(studentData.map((s: any) => ({
-                    id: s.id,
-                    schoolId: s.school_generated_id || s.schoolId || s.admission_number,
-                    name: s.full_name || s.name || `${s.first_name || ''} ${s.last_name || ''}`.trim() || 'Unnamed',
-                    email: s.email || '',
-                    avatarUrl: s.avatar_url || s.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(s.full_name || s.name || 'U')}&background=random`,
-                    grade: s.grade,
-                    section: s.section,
-                    department: s.department,
-                    attendanceStatus: s.attendance_status || 'Absent',
-                    birthday: s.birthday,
-                    curriculum_type: s.curriculum_type
-                })));
-            }
+            setStudents(rows.map((r): Student => ({
+                id: r.id,
+                // The admission number IS the school's own identifier for a child.
+                schoolId: r.admissionNo,
+                name: r.fullName || 'Unnamed',
+                // A child's class comes from the enrollment, so the year level is the
+                // database's own number rather than something parsed back out of a
+                // class name the school can rename at any time.
+                grade: String(r.yearLevel ?? classInfo.grade ?? ''),
+                section: classInfo.section ?? '',
+                avatarUrl: r.className,
+                // No attendance has been read here, so nothing is claimed about it.
+                // The old code defaulted to 'Absent', which would have shown a whole
+                // class as absent to any screen that trusted the field.
+                attendanceStatus: 'Present',
+            } as unknown as Student)));
         } catch (err) {
             console.error('Error fetching students for class:', err);
         } finally {

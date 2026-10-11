@@ -34,7 +34,6 @@ const ROOT = process.cwd();
  */
 const STILL_TO_MIGRATE = [
     'components/teacher/AssignmentSubmissionsScreen.tsx',
-    'components/teacher/ClassDetailScreen.tsx',
     'components/teacher/ClassGradebookScreen.tsx',
     'components/teacher/HelpSupportScreen.tsx',
     'components/teacher/LessonNotesUploadScreen.tsx',
@@ -48,7 +47,6 @@ const STILL_TO_MIGRATE = [
     'components/shared/StudentGateScreen.tsx',
     'components/teacher/SubstituteAssignment.tsx',
     'components/teacher/TeacherAppointmentsScreen.tsx',
-    'components/teacher/TeacherAssignmentsListScreen.tsx',
     'components/teacher/TeacherAttendanceHistoryScreen.tsx',
     'components/teacher/TeacherExamManagement.tsx',
     'components/teacher/TeacherReportsScreen.tsx',
@@ -61,6 +59,10 @@ const STILL_TO_MIGRATE = [
 const MIGRATED = [
     // The first screen after a teacher logs in.
     'components/teacher/TeacherOverview.tsx',
+    // Every class tile leads here, and from here to the register.
+    'components/teacher/ClassDetailScreen.tsx',
+    // The teacher's own duties, opened from the dashboard.
+    'components/teacher/TeacherAssignmentsListScreen.tsx',
     // The register, marked every morning.
     'components/teacher/TeacherAttendanceScreen.tsx',
     // The hooks every teacher screen is built on.

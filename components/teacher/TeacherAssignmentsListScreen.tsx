@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Assignment } from '../../types';
 import { ChevronRightIcon, PlusIcon, CheckCircleIcon, ClipboardListIcon } from '../../constants';
-import { api } from '../../lib/api';
+import { listAssignments } from '../../src/lib/supabase/teachers';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import CenteredLoader from '../ui/CenteredLoader';
 
@@ -26,12 +26,16 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
         if (!teacherId) return;
         setLoading(true);
         try {
-            // schoolId is handled by backend auth/session or optional filter
-            const data = await api.getAssignments(undefined, {
-                teacherId: String(teacherId),
-                branchId: branchId || undefined
-            });
-            setRawAssignments(data || []);
+            // The teacher's duties, from the database.
+            //
+            // This called `api.getAssignments(undefined, {...})` — an Express
+            // endpoint with no server behind it, so the list was empty. Note what the
+            // call ALSO passed: a `branchId`. SRIK has no branches, which is why the
+            // argument was always undefined; it is gone along with the dependency,
+            // rather than left as a parameter nobody can supply.
+            const all = await listAssignments();
+            const data = all.filter(a => a.teacherId === String(teacherId));
+            setRawAssignments(data);
         } catch (err) {
             console.error('Error fetching assignments:', err);
         } finally {
