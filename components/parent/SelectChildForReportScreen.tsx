@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
+import { listMyChildren } from '../../src/lib/supabase/family';
+import { getCurrentTerm, listReportCards } from '../../src/lib/supabase/assessments';
 import { Student } from '../../types';
 import { ChevronRightIcon, ReportIcon } from '../../constants';
 
@@ -18,22 +19,41 @@ const SelectChildForReportScreen: React.FC<SelectChildForReportScreenProps> = ({
 
   const fetchChildren = useCallback(async () => {
     try {
-      const data = await api.getMyChildren();
-      if (data) {
-        // getMyChildren() includes each child's report_cards (Prisma snake_case);
-        // preserve it here — ReportCardScreen reads it directly off this object,
-        // and dropping it here was why parents always saw "No Published Reports"
-        // even when the student could see them.
-        const mappedStudents = data.map((s: any) => ({
-          id: s.id,
-          name: s.name || s.full_name || 'Unknown Student',
-          avatarUrl: s.avatar_url,
-          grade: s.grade || s.class?.name || '',
-          section: s.section || '',
-          reportCards: s.reportCards || s.report_cards || [],
-        } as Student));
-        setChildren(mappedStudents);
+      const children = await listMyChildren();
+
+      // Which of these children actually HAVE a report card, and in what state.
+      //
+      // The old comment here said the child list came with `report_cards` attached and
+      // that dropping it was why parents always saw "No Published Reports". There is no
+      // such attached field — report cards live in their own table, for a TERM. So it is
+      // read here, for the current term, and the count is what the picker shows.
+      const term = await getCurrentTerm();
+      const cards = term ? await listReportCards(term.id) : [];
+      const byChild = new Map<string, typeof cards>();
+      for (const c of cards) {
+        const list = byChild.get(c.studentId) ?? [];
+        list.push(c);
+        byChild.set(c.studentId, list);
       }
+
+      const mappedStudents = children.map(c => ({
+        id: c.student.id,
+        name: c.student.fullName,
+        grade: c.student.className || '',
+        section: '',
+        reportCards: (byChild.get(c.student.id) ?? []).map(rc => ({
+          id: rc.id,
+          session: rc.termName,
+          term: rc.termName,
+          // Only PUBLISHED cards are worth showing a parent. A draft is the office's
+          // working copy and has not been given to anyone yet.
+          status: rc.status === 'PUBLISHED' || rc.status === 'SUPERSEDED' ? 'Published' : 'Draft',
+          gradeAverage: null,
+          position: null,
+          totalStudents: null,
+        })),
+      } as unknown as Student));
+      setChildren(mappedStudents);
     } catch (err) {
       console.error("Error fetching children for report:", err);
     } finally {

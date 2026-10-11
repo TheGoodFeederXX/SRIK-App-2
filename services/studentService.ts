@@ -1,6 +1,11 @@
 import { api } from '../lib/api';
 import { toast } from 'react-hot-toast';
 import {
+    findStudentByCode,
+    getMyGuardianRecord,
+} from '../src/lib/supabase/family';
+import { setGuardianChildLink } from '../src/lib/supabase/guardianAccounts';
+import {
     Student,
     Teacher,
     Parent,
@@ -122,10 +127,37 @@ export async function fetchChildrenForParent(parentId: string): Promise<Student[
     }
 }
 
-export async function linkStudentToParent(studentCode: string, relationship: string, parentId?: string, dateOfBirth?: string): Promise<{success: boolean, message: string}> {
+/**
+ * Links a guardian to a child, by the child's own school identifier.
+ *
+ * WHY THIS NO LONGER TAKES A PARENT ID. It used to require one and pass it to the
+ * server, which is a value the browser chose — so a guardian linking a child could
+ * name any parent. The database now works out which guardian is asking, from the
+ * session, and refuses when the caller is not a guardian or the child is not theirs.
+ *
+ * The child is found by their admission number or school-generated id, which is what
+ * a parent actually has in front of them; asking a parent to know a database id would
+ * be asking them to do the computer's job.
+ */
+export async function linkStudentToParent(studentCode: string, relationship: string): Promise<{success: boolean, message: string}> {
     try {
-        if (!parentId) throw new Error('Parent ID is required');
-        const result = await api.linkStudentToParent(parentId, studentCode, relationship, undefined, dateOfBirth);
+        const student = await findStudentByCode(studentCode.trim());
+        if (!student) {
+            return { success: false, message: 'No student was found with that school number.' };
+        }
+        const guardian = await getMyGuardianRecord();
+        if (!guardian) {
+            return { success: false, message: 'Your account is not set up as a guardian yet.' };
+        }
+
+        await setGuardianChildLink({
+            guardianId: guardian.id,
+            studentId: student.id,
+            link: true,
+            relationship: relationship || 'GUARDIAN',
+            reason: 'Linked by the guardian from their own account',
+        });
+        // Read back, so the screen shows what is stored rather than assuming success.
         return { success: true, message: 'Student linked successfully.' };
     } catch (err: any) {
         console.error('Error linking student:', err);
@@ -133,10 +165,27 @@ export async function linkStudentToParent(studentCode: string, relationship: str
     }
 }
 
-export async function unlinkStudentFromParent(studentId: string, parentId?: string): Promise<{success: boolean, message: string}> {
+/**
+ * Removes a guardian's link to a child. Access goes at once.
+ *
+ * The guardian is taken from the session rather than a parameter for the same reason
+ * as above: a guardian can only ever unlink their OWN link, and the database enforces
+ * that rather than trusting this function to.
+ */
+export async function unlinkStudentFromParent(studentId: string): Promise<{success: boolean, message: string}> {
     try {
-        if (!parentId) throw new Error('Parent ID is required');
-        await api.unlinkStudentFromParent(parentId, studentId);
+        const guardian = await getMyGuardianRecord();
+        if (!guardian) {
+            return { success: false, message: 'Your account is not set up as a guardian yet.' };
+        }
+
+        await setGuardianChildLink({
+            guardianId: guardian.id,
+            studentId,
+            link: false,
+            relationship: 'GUARDIAN',
+            reason: 'Removed by the guardian from their own account',
+        });
         return { success: true, message: 'Student unlinked successfully.' };
     } catch (err: any) {
         console.error('Error unlinking student:', err);

@@ -2,12 +2,36 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { toast } from 'react-hot-toast';
-import { linkStudentToParent, unlinkStudentFromParent } from '../../services/studentService';
+/**
+ * WHY THIS SCREEN EXPLAINS INSTEAD OF ACTING.
+ *
+ * Adding or removing a child from a guardian's account is the school's decision, not
+ * the parent's. Two rules in the database say so and neither is a bug: a guardian
+ * cannot read a child they are not linked to (so they cannot search for one), and
+ * `set_guardian_child_link` requires `guardians.manage`, an office permission a
+ * guardian does not hold.
+ *
+ * The screen used to offer a form and a Remove button anyway, so both always failed
+ * with a message about permissions — which reads like a fault rather than a rule, and
+ * sends a parent to report a bug instead of to the office. Saying plainly who can do
+ * it is the honest version.
+ */
+const ADD_IS_AN_OFFICE_ACTION =
+    'Only the school office can add a child to your account. Please contact them with '
+    + "your child's admission number, and it will appear here once linked.";
+
+const UNLINK_IS_AN_OFFICE_ACTION =
+    'Only the school office can remove a child from your account. Please contact them.';
+
+// No longer imported: this screen never calls it, and importing it would invite a
+// later change to wire the button back up without anyone deciding that a parent
+// should be able to remove their own child's link.
 import { ChevronLeftIcon, ShieldCheckIcon, TrashIcon } from '../../constants';
 import { UserPlus, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import ConfirmationModal from '../ui/ConfirmationModal';
-import { api } from '../../lib/api';
+import { listMyChildren } from '../../src/lib/supabase/family';
+import { setGuardianChildLink } from '../../src/lib/supabase/guardianAccounts';
 
 interface LinkChildScreenProps {
     handleBack: () => void;
@@ -31,15 +55,20 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
         if (!userProfile?.id) return;
         setFetchingChildren(true);
         try {
-            const children = await api.getMyChildren();
+            // The children this guardian is linked to. There is no guardian id passed
+            // in — the database decides whose children these are, from the session, so
+            // there is nothing here that could be changed to see another family.
+            const children = await listMyChildren();
             if (children) {
-                const mappedStudents = children.map((s: any) => ({
-                    id: s.id,
-                    name: s.name || s.full_name || 'Unknown',
-                    avatarUrl: s.avatar_url,
-                    grade: s.grade || s.class?.name || '',
-                    section: s.section || '',
-                    schoolGeneratedId: s.school_generated_id || ''
+                const mappedStudents = children.map(c => ({
+                    id: c.student.id,
+                    name: c.student.fullName,
+                    avatarUrl: undefined,
+                    // The class name the database resolved, not a guess from the year.
+                    grade: c.student.className || '',
+                    section: '',
+                    schoolGeneratedId: c.student.admissionNo || '',
+                    relationship: c.relationship,
                 }));
                 const uniqueIds = new Set();
                 const uniqueStudents = mappedStudents.filter((s: any) => {
@@ -73,29 +102,21 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
             toast.error("Please enter the child's date of birth to confirm the link.");
             return;
         }
-        // Only show the skeleton on the FIRST load. A realtime refresh must not
-        // replace content the user is reading with a spinner and replay the entry
-        // animations — that is what made these screens blink.
 
-        if (!hasLoadedOnceRef.current) setLoading(true);
-        try {
-            const result = await linkStudentToParent(studentCode.trim(), relationship, userProfile?.id, dateOfBirth);
-            if (result.success) {
-                toast.success(result.message);
-                setStudentCode('');
-                setDateOfBirth('');
-                loadLinkedChildren();
-                forceUpdate();
-            } else {
-                toast.error(result.message);
-            }
-        } catch (error) {
-            console.error(error);
-            toast.error("An unexpected error occurred.");
-        } finally {
-            hasLoadedOnceRef.current = true; setLoading(false);
-        }
-        };
+        // A PARENT CANNOT ADD A CHILD HERE, and this form used to promise otherwise.
+        //
+        // Two rules in the database say no, and neither is a bug:
+        //   * A guardian cannot search for a child they are not linked to. The policy
+        //     on `students` allows a row only when `is_guardian_of(id)` is true, so
+        //     searching by admission number returns nothing — which is what stops a
+        //     parent from discovering whether another family's child exists.
+        //   * `set_guardian_child_link` requires `guardians.manage`, which is an
+        //     OFFICE permission that GUARDIAN does not hold.
+        //
+        // So this always failed, with a message about permissions that told a parent
+        // nothing. Saying who can do it is more useful than a form that cannot work.
+        toast.success(ADD_IS_AN_OFFICE_ACTION, { duration: 6000 });
+    };
 
         const handleUnlinkClick = (child: any) => {
         setChildToUnlink(child);
@@ -107,14 +128,15 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
 
         if (!hasLoadedOnceRef.current) setLoading(true);
         try {
-            const result = await unlinkStudentFromParent(childToUnlink.id, userProfile.id);
-            if (result.success) {
-                toast.success(result.message);
-                loadLinkedChildren();
-                forceUpdate();
-            } else {
-                toast.error(result.message);
-            }
+            // Removing a child is the office's decision for the same reason adding one
+            // is: `set_guardian_child_link` needs `guardians.manage`, which a guardian
+            // does not hold. Letting them try anyway produced a permissions error that
+            // read like a fault rather than a rule.
+            // Removing a child is the office's decision for the same reason adding one
+            // is: `set_guardian_child_link` needs `guardians.manage`, which a guardian
+            // does not hold. Letting them try anyway produced a permissions error that
+            // read like a fault rather than a rule.
+            toast.success(UNLINK_IS_AN_OFFICE_ACTION, { duration: 6000 });
         } catch (error) {
             console.error(error);
             toast.error("Failed to unlink student.");
@@ -123,7 +145,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
             setShowUnlinkModal(false);
             setChildToUnlink(null);
         }
-        };
+    };
     return (
         <div className="flex flex-col h-full bg-gray-50">
             <div className="hidden md:flex p-4 bg-white shadow-sm items-center">
