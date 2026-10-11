@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import type { Transporter as NodemailerTransporter } from 'nodemailer';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/env';
 
@@ -52,7 +53,11 @@ const rm = (n: number) =>
 const fromHeader = (suffix?: string) =>
     `"${suffix ? `${SCHOOL_NAME} ${suffix}` : MAIL_FROM_NAME}" <${MAIL_FROM_ADDRESS}>`;
 
-let transporter: nodemailer.Transporter | null = null;
+// `import type` rather than the `nodemailer.Transporter` namespace form: a newer
+// nodemailer no longer exposes the namespace on its default import, so the old
+// spelling stopped resolving. Naming the type directly is what the package has
+// always meant, and it survives the next export reshuffle.
+let transporter: NodemailerTransporter | null = null;
 
 async function initTransporter() {
     if (!transporter) {

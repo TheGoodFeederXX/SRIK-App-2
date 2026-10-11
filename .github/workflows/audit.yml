@@ -1,0 +1,65 @@
+name: Dependency audit
+
+# A dependency advisory is a finding with a deadline. Without a check, the fix is
+# one commit and the next `npm install` quietly brings the problem back.
+#
+# The gate covers RUNTIME dependencies only — what actually ships. The dev-only
+# tree carries advisories in tools that never reach a user (the PM2 process
+# manager, the nodemon watcher, the Tailwind CLI); failing the build on those
+# would train everyone to ignore the check, which is worse than not having one.
+#
+# `--omit=dev` is what makes that distinction real rather than aspirational.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # New advisories are published against code that has not changed, so a check
+    # that only runs on push would go quiet exactly when it is most useful.
+    - cron: '0 22 * * 0'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci --ignore-scripts
+
+      - name: Runtime dependencies must have no advisories
+        shell: bash
+        run: |
+          set +e
+          npm audit --omit=dev --json > audit.json
+          status=$?
+          set -e
+
+          node -e '
+            const fs = require("fs");
+            let report;
+            try { report = JSON.parse(fs.readFileSync("audit.json", "utf8")); }
+            catch { console.log("Could not read the audit report."); process.exit(1); }
+
+            const v = report.metadata?.vulnerabilities ?? {};
+            const total = v.total ?? 0;
+
+            if (total === 0) {
+              console.log("No advisories in runtime dependencies.");
+              process.exit(0);
+            }
+
+            console.log(`${total} advisories in runtime dependencies:`, v);
+            for (const [name, info] of Object.entries(report.vulnerabilities ?? {})) {
+              if (!info.isDirect && info.severity === "low") continue;
+              console.log(`  ${info.severity.toUpperCase()} ${name} — ${info.range}`);
+            }
+            process.exit(1);
+          '
