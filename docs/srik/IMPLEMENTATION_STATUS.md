@@ -56,15 +56,17 @@ tiada panggilan legacy yang mempunyai perkhidmatan". Diukur terhadap perkara itu
 kerja ini BELUM selesai. Daripada 336 laluan berdaftar yang berjaya dipetakan
 kepada failnya:
 
-| Dashboard | Laluan | Masih guna API lama |
+| Dashboard | Laluan berdaftar | Fail guna API lama |
 |---|---|---|
-| Guru | 63 | **31** |
-| Admin | 176 | **130** |
-| Ibu bapa | 29 | **24** |
-| Murid | 68 | **56** |
-| **Jumlah** | **336** | **241** |
+| Guru | 63 | 27 |
+| Admin | 176 | 127 |
+| Ibu bapa | 29 | 23 |
+| Murid | 68 | 55 |
+| Skrin kongsi | — | 9 |
+| **Jumlah** | **336** | **218 fail (~62,000 baris)** |
 
-Nombor 241 ini adalah pembetulan. Semakan pertama saya melaporkan guru "0 daripada
+Dikemas kini 24 Oktober 2026 selepas pusingan kedua. Nombor 241 adalah pembetulan
+kepada angka "0" yang salah. Semakan pertama saya melaporkan guru "0 daripada
 65" dan itu SALAH — ia memadankan nama laluan kepada nama fail secara tekaan, dan
 gagal apabila fail itu dinamakan lain (contohnya `selectClassForAttendance` →
 `TeacherUnifiedAttendanceScreen`). Kaedah kedua memetakan setiap laluan melalui
