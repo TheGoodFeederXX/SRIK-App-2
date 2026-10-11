@@ -32,12 +32,46 @@ vi.mock('../../../components/layout/DashboardLayout', () => ({
     )
 }));
 
-// Mock API
-vi.mock('../../../lib/api', () => ({
-    api: {
-        getMyChildren: vi.fn().mockResolvedValue([]),
-        getMyParentProfile: vi.fn().mockResolvedValue({ id: 'parent-123', name: 'Test Parent' })
-    }
+// The dashboard reads the family from Supabase now, not the legacy API. These mocks
+// must match, or the real module is loaded and throws for want of a configured client
+// — which is exactly what happened in CI, where there is no `.env`.
+vi.mock('../../../src/lib/supabase/family', () => ({
+    listMyChildren: vi.fn().mockResolvedValue([{
+        student: {
+            id: 'stu-1', admissionNo: 'S-001', fullName: 'Anak Ujian',
+            className: '1 Al-Junaidi', classId: 'cls-1', gender: 'MALE',
+            birthDate: null, status: 'ACTIVE',
+        },
+        relationship: 'Mother',
+        isPrimary: true,
+    }]),
+    getMyGuardianRecord: vi.fn().mockResolvedValue({ id: 'parent-123', fullName: 'Test Parent' }),
+    findStudentByCode: vi.fn().mockResolvedValue(null),
+}));
+
+vi.mock('../../../src/lib/supabase/attendance', () => ({
+    getStudentAttendanceRange: vi.fn().mockResolvedValue({
+        summary: {
+            studentId: 'stu-1', studentName: 'Anak Ujian', daysRecorded: 0,
+            present: 0, absent: 0, late: 0, excused: 0, sick: 0, attendanceRate: 0,
+        },
+        days: [],
+    }),
+}));
+
+vi.mock('../../../src/lib/supabase/assessments', () => ({
+    getCurrentTerm: vi.fn().mockResolvedValue({ id: 'term-1', name: 'Semester 1' }),
+}));
+
+vi.mock('../../../src/lib/supabase/academics', () => ({
+    getCurrentAcademicYear: vi.fn().mockResolvedValue({
+        id: 'yr-1', name: '2026', startDate: '2026-01-01', endDate: '2026-11-30', status: 'CURRENT',
+    }),
+}));
+
+vi.mock('../../../src/lib/supabase/announcements', () => ({
+    listAnnouncements: vi.fn().mockResolvedValue([]),
+    AUDIENCE_LABELS: { ALL: 'Semua', STAFF: 'Guru dan staf', GUARDIANS: 'Ibu bapa', STUDENTS: 'Pelajar' },
 }));
 
 describe('ParentDashboard Visibility (Minimal)', () => {
