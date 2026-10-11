@@ -31,8 +31,7 @@ Laporkan tingkah laku yang berubah, migration, validation yang bermakna, risiko 
 
 ## Keadaan semasa
 
-- **Fasa 0 selesai** — lihat `docs/srik/AUDIT.md` dan `docs/srik/IMPLEMENTATION_STATUS.md`.
-- **Fasa 0–6 selesai.** `IMPLEMENTATION_STATUS.md` menyenaraikan baki yang diketahui:
+- **Fasa 0–6 selesai** — lihat `docs/srik/AUDIT.md` dan `docs/srik/IMPLEMENTATION_STATUS.md`. `IMPLEMENTATION_STATUS.md` menyenaraikan baki yang diketahui:
   22 skrin guru masih bergantung pada API lama, Edge Function belum dideploy, data
   orang sebenar belum dimasukkan. Baca senarai itu sebelum memulakan implementasi
   baharu — "fasa selesai" bermaksud kriteria penerimaannya lulus, bukan bahawa tiada
@@ -40,4 +39,8 @@ Laporkan tingkah laku yang berubah, migration, validation yang bermakna, risiko 
 - **Skema SRIK ialah `supabase/migrations/*.sql`** (36 jadual). `db:migrate`,
   `db:push` dan `db:reset` menunjuk kepada Prisma warisan dan **tidak** membina skema
   SRIK — jangan jalankannya terhadap pangkalan data SRIK.
-- Baseline: frontend typecheck + build **lulus**; suite ujian **tidak hijau** (memerlukan DB live). Jangan dakwa ujian lulus tanpa menjalankannya dengan PostgreSQL sebenar.
+- Baseline: frontend typecheck + build **lulus**; suite frontend **438 lulus**;
+  suite SQL **188 lulus** (`supabase/tests/run_phase5_tests.sh`, PostgreSQL sebenar).
+  Suite backend warisan masih tidak hijau tanpa `DATABASE_URL` — itu diketahui dan
+  tidak perlu dibaiki sebelum penggantinya siap. Jangan dakwa ujian lulus tanpa
+  menjalankannya.
