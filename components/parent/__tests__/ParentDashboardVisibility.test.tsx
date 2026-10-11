@@ -61,6 +61,8 @@ vi.mock('../../../src/lib/supabase/attendance', () => ({
 
 vi.mock('../../../src/lib/supabase/assessments', () => ({
     getCurrentTerm: vi.fn().mockResolvedValue({ id: 'term-1', name: 'Semester 1' }),
+    // The dashboard populates each child's report-card picker from this.
+    listReportCards: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock('../../../src/lib/supabase/academics', () => ({

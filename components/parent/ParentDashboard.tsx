@@ -507,7 +507,7 @@ import { useRealtimeNotifications } from '../../hooks/useRealtimeNotifications';
 import { useAuth } from '../../context/AuthContext';
 import { listMyChildren, getMyGuardianRecord } from '../../src/lib/supabase/family';
 import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
-import { getCurrentTerm } from '../../src/lib/supabase/assessments';
+import { getCurrentTerm, listReportCards } from '../../src/lib/supabase/assessments';
 import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
 import { listAnnouncements } from '../../src/lib/supabase/announcements';
 
@@ -589,6 +589,12 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                 const guardian = await getMyGuardianRecord();
                 const childrenData = await listMyChildren();
 
+                // Read the term's published report cards ONCE, not per child — the map
+                // below is synchronous and cannot await, which is what a first attempt
+                // got wrong.
+                const cardTerm = await getCurrentTerm();
+                const allCards = cardTerm ? await listReportCards(cardTerm.id) : [];
+
                 if (guardian) {
                     setParentId(guardian.id);
                     setParentProfile({
@@ -624,7 +630,21 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                             // No behaviour-notes table exists. Behaviour lives in the
                             // report card comment, which the parent already sees.
                             behaviorNotes: [],
-                            reportCards: [],
+                            // The child's report cards for the current term, read live so
+                            // the picker has something to offer. Only PUBLISHED ones: a
+                            // draft is the office still working and has been shown to
+                            // nobody. The term id travels with each, because the report
+                            // card screen reads the frozen snapshot by id.
+                            reportCards: allCards
+                                .filter(rc => rc.studentId === c.student.id
+                                    && (rc.status === 'PUBLISHED' || rc.status === 'SUPERSEDED'))
+                                .map(rc => ({
+                                    id: rc.id,
+                                    termId: rc.academicTermId,
+                                    term: rc.termName,
+                                    session: rc.termName,
+                                    status: 'Published',
+                                })),
                         } as any)));
                 } else {
                     setProfileError(true);

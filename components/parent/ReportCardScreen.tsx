@@ -4,7 +4,7 @@ import { useAutoSync } from '../../hooks/useAutoSync';
 import { SchoolLogoIcon, DocumentTextIcon } from '../../constants';
 import { Student, ReportCard, Rating } from '../../types';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { getReportSnapshot } from '../../src/lib/supabase/assessments';
 import PremiumLoader from '../ui/PremiumLoader';
 import { CANONICAL_TERMS, buildAnnualReportCard } from '../../utils/annualReport';
 
@@ -205,6 +205,43 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
         [student]
     );
 
+    /**
+     * Turns a stored report-card SNAPSHOT into the shape this screen renders.
+     *
+     * WHY THE SNAPSHOT AND NOT LIVE FIGURES. A published report card is a frozen copy —
+     * that is the point of publishing it. Reading live assessment rows instead would mean
+     * a card a parent printed in March could disagree with the same card in June, with no
+     * record of which one the school actually issued. The snapshot is what was signed.
+     */
+    const mapSnapshot = (snap: any, term: string, session: string): ReportCard => {
+        return {
+            // The snapshot's own identity, so the screen shows what was published.
+            term: snap.term?.name || term,
+            session: session,
+            academicRecords: (snap.assessments || []).map((a: any) => ({
+                subject: a.subject_name ?? a.subjectName ?? '',
+                // A score of null means the child was NOT marked for this assessment. It
+                // is left as null rather than turned into 0, which would read as a real
+                // mark of zero and drag an average down.
+                total: a.score ?? null,
+                grade: a.grade ?? '',
+            })),
+            skills: {},
+            psychomotor: {},
+            attendance: {
+                total: snap.attendance?.daysRecorded ?? 0,
+                present: snap.attendance?.daysPresent ?? 0,
+                absent: Math.max(0, (snap.attendance?.daysRecorded ?? 0) - (snap.attendance?.daysPresent ?? 0)),
+                late: 0,
+            },
+            teacherComment: snap.teacher_comment ?? '',
+            principalComment: snap.principal_comment ?? '',
+            status: 'Published',
+            position: snap.position,
+            totalStudents: snap.total_students,
+        } as unknown as ReportCard;
+    };
+
     const mapRawReportCard = (details: any, term: string, session: string): ReportCard => ({
         ...details,
         term: details.term || term,
@@ -282,20 +319,32 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
         if (!hasLoadedOnceRef.current) setLoading(true);
         try {
             if (entry.synthetic) {
+                // The annual view: whichever terms in this session ARE published, read
+                // from their frozen snapshots and combined.
                 const sessionSummaries = publishedReportsSummary.filter(
                     r => r.session === session && CANONICAL_TERMS.includes(r.term)
                 );
-                const details = await Promise.all(
-                    sessionSummaries.map(s => api.getReportCardDetails(student.id, s.term, s.session).catch(() => null))
+                const snapshots = await Promise.all(
+                    sessionSummaries.map(s =>
+                        // The term id is on the summary; the snapshot is keyed by it.
+                        getReportSnapshot(student.id, (s as any).termId ?? s.id).catch(() => null)
+                    )
                 );
                 const mapped = sessionSummaries
-                    .map((s, i) => ({ summary: s, raw: details[i] }))
-                    .filter(p => p.raw)
-                    .map(p => mapRawReportCard(p.raw, p.summary.term, p.summary.session));
-                setActiveReport(buildAnnualReportCard(mapped));
+                    .map((s, i) => ({ summary: s, raw: snapshots[i] }))
+                    .filter(p => p.raw?.snapshot)
+                    .map(p => mapSnapshot(p.raw!.snapshot, p.summary.term, p.summary.session));
+                if (mapped.length > 0) setActiveReport(buildAnnualReportCard(mapped));
+                else setActiveReport(null);
             } else {
-                const details = await api.getReportCardDetails(student.id, term, session);
-                if (details) setActiveReport(mapRawReportCard(details, term, session));
+                // The summary for the tab being viewed carries the term id the snapshot
+                // is keyed by — not the term's NAME, which is a label.
+                const summary = publishedReportsSummary.find(
+                    r => r.term === term && r.session === session,
+                );
+                const snap = await getReportSnapshot(student.id, (summary as any)?.termId ?? '');
+                if (snap?.snapshot) setActiveReport(mapSnapshot(snap.snapshot, term ?? '', session ?? ''));
+                else setActiveReport(null);
             }
         } catch (err) {
             console.error("Error fetching report details:", err);

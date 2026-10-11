@@ -29,6 +29,7 @@ const MODULE = 'src/lib/supabase/family.ts';
 const SCREENS = [
     'components/parent/AlertsScreen.tsx',
     'components/parent/ParentTodayWidget.tsx',
+    'components/parent/ReportCardScreen.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -172,6 +173,23 @@ describe('F27: the parent portal reads the family from the session, not a parame
         expect(src).toMatch(/ComingSoonScreen/);
         expect(src, 'the old fabricated figures are still rendered')
             .not.toMatch(/getStudentLearningHubSummary|api\./);
+    });
+
+    it('tells the report card screen the whole point of a report card: it shows WHO said what, and only once', () => {
+        const src = code(read('components/parent/ReportCardScreen.tsx'));
+
+        // A parent does NOT get live figures here. A published report card is a frozen
+        // snapshot — that is what publishing means. Live reads would let a card printed
+        // in March disagree with the same card in June, with no record of which the
+        // school actually issued.
+        expect(src).toMatch(/getReportSnapshot/);
+        expect(src, 'the screen reads live assessment results instead of the frozen card')
+            .not.toMatch(/assessment_results|getMarkRegister/);
+
+        // A mark of null is "not marked", NOT zero. Turning it into 0 reads as a real
+        // score and drags the child's average down.
+        expect(src, 'a missing mark is not kept as null')
+            .toMatch(/score \?\? null/);
     });
 
     it('reads children without a school id, which does not exist', () => {

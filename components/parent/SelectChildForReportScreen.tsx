@@ -43,6 +43,10 @@ const SelectChildForReportScreen: React.FC<SelectChildForReportScreenProps> = ({
         section: '',
         reportCards: (byChild.get(c.student.id) ?? []).map(rc => ({
           id: rc.id,
+          // The TERM ID, not just its name. The report card screen reads the frozen
+          // snapshot by term id; a name is a label the school can rename, and matching
+          // on it would find nothing the moment they did.
+          termId: rc.academicTermId,
           session: rc.termName,
           term: rc.termName,
           // Only PUBLISHED cards are worth showing a parent. A draft is the office's
