@@ -632,3 +632,26 @@ export async function getMyTeacherProfile(): Promise<TeacherRecord | null> {
 
     return getTeacher((data as unknown as { id: string }).id);
 }
+
+/**
+ * Change only a teacher's status.
+ *
+ * WHY NOT `updateTeacher` WITH THE REST SPIED BACK OFF THE SCREEN. That call sends
+ * every column, so a screen that has not loaded a field — or that loaded it before
+ * someone else changed it — writes its stale copy back over the live one. A status
+ * change should touch the status.
+ *
+ * WHY NOT A DELETE. Removing a teacher would leave their teaching assignments,
+ * attendance and lesson records pointing at nothing, and the school would lose the
+ * record of who taught what. "No longer teaching here" is a STATUS, and ARCHIVED is
+ * the honest one: the person stays in the record and stops appearing in lists.
+ */
+export async function setTeacherStatus(
+    id: string,
+    status: 'ACTIVE' | 'INACTIVE' | 'ARCHIVED',
+): Promise<TeacherWriteResult> {
+    const db = requireSupabase();
+    const { error } = await db.from('teachers').update({ status }).eq('id', id);
+    if (error) return { success: false, error: error.message };
+    return { success: true, teacherId: id };
+}

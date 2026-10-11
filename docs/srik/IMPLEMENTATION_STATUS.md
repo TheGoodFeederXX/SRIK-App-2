@@ -58,10 +58,10 @@ kepada failnya:
 
 | Keadaan | Laluan berdaftar | Masih guna API lama |
 |---|---|---|
-| **Sekarang** | 336 | **47** |
+| **Sekarang** | 336 | **39** |
 | Pada mula pusingan ini | 336 | 241 |
 
-Siling 47 itu dikawal oleh ujian (`no-legacy-api.test.ts`): bilangannya boleh turun,
+Siling 39 itu dikawal oleh ujian (`no-legacy-api.test.ts`): bilangannya boleh turun,
 tidak boleh naik. Tanpa itu, skrin baharu yang ditulis cara lama akan tidak kelihatan.
 
 **160 daripada 241 itu adalah fungsi yang sekolah ini memang tiada.** Tiada jadual

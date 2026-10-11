@@ -92,6 +92,15 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // A teacher's admin view: status only, ARCHIVED rather than deleted, so their
+    // teaching history survives.
+    'components/admin/TeacherDetailAdminView.tsx',
+    // Role permissions. The screen carried its own catalogue of roles and permission
+    // names that the database has never heard of, so nothing it saved could have been
+    // real — and one rule here is unrecoverable if it breaks: a permission cannot be
+    // taken away from ADMIN, or every admin can be locked out of the screen that
+    // would put it back.
+    'components/admin/UserRolesScreen.tsx',
     // Report card publishing, and the enrolment form. Enrolling a child is three real
     // steps in order — the child, their class, their guardian — because a child must
     // exist before they can be placed, and be placed before a parent can be linked.
@@ -278,7 +287,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 39;
+        const CEILING = 37;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

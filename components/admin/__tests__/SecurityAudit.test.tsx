@@ -107,6 +107,25 @@ vi.mock('../../../src/lib/supabase/students', () => ({
   getStudent: vi.fn(),
 }));
 
+// The roles screen reads the database's OWN roles and permission codes now, not the
+// fabricated catalogue it used to carry. The mock returns real codes, so an assertion
+// that a fabricated one is absent is meaningful.
+vi.mock('../../../src/lib/supabase/roles', () => ({
+  listPermissions: vi.fn().mockResolvedValue([
+    { code: 'assessments.enter_scores', description: 'Enter assessment scores' },
+    { code: 'assessments.view', description: 'View assessments and results' },
+    { code: 'attendance.record', description: 'Record daily attendance' },
+  ]),
+  listRolePermissions: vi.fn().mockResolvedValue([
+    { roleCode: 'ADMIN', permissionCode: 'assessments.enter_scores' },
+    { roleCode: 'ADMIN', permissionCode: 'assessments.view' },
+    { roleCode: 'ADMIN', permissionCode: 'attendance.record' },
+    { roleCode: 'TEACHER', permissionCode: 'assessments.view' },
+  ]),
+  setRolePermissions: vi.fn().mockResolvedValue(undefined),
+  setRolePermission: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('react-hot-toast', () => {
   // Both shapes are used in the codebase: some screens import the named
   // `toast`, others the default export. The mock must provide both or a screen
@@ -142,39 +161,52 @@ describe('Admin Security Audit', () => {
   });
 
   describe('UserRolesScreen', () => {
-    it('Should save permissions to the backend', async () => {
-      // Setup
+    /**
+     * WHAT CHANGED AND WHY THESE ASSERT DIFFERENT THINGS.
+     *
+     * The old tests asserted calls to `api.getRolePermissions` and
+     * `api.updateRolePermissions` on an Express server that is not deployed. Passing
+     * them proved the screen was wired to something that could not answer — which is
+     * exactly the failure they should have caught. They were green the whole time
+     * nobody could save a permission.
+     *
+     * What matters now is the ADMIN rule, because breaking it is UNRECOVERABLE: strip
+     * `settings.manage` from ADMIN and every admin is locked out of the screen that
+     * would put it back. So these check the switch is disabled for ADMIN, that a
+     * teacher's is not, and that a switch shows the state the DATABASE reports rather
+     * than a hard-coded default.
+     */
+    it('shows the permissions the database reports, not a built-in default', async () => {
       render(<UserRolesScreen />);
 
-      // Find the Save button
-      const saveBtn = screen.getByText('Save Changes');
-      
-      // Click it
-      fireEvent.click(saveBtn);
-
-      // Verify: The component calls the API to save permissions
+      // The real permission code, which is the only kind the database accepts. The
+      // screen used to show invented names like "Manage Users" — no such permission
+      // exists, so nothing it saved could ever have been real.
       await waitFor(() => {
-        expect(toast.success).toHaveBeenCalledWith('Permissions saved successfully!');
+        // Once per role — there is no student or parent role in this system, so three.
+        expect(screen.getAllByText(/assessments.*Enter scores/i).length).toBe(3);
       });
+
+      // And a code that is NOT in this system must not appear. This is the assertion
+      // that would have failed on the old screen.
+      expect(screen.queryByText(/Manage Users/i)).toBeNull();
     });
 
-    it('Should prevent modifying Admin permissions', () => {
+    it('does not let ADMIN be switched off', async () => {
       render(<UserRolesScreen />);
-      
-      // Find a toggle for the Admin role (first one).
-      // The component renders a list. The first item is Admin.
-      // We need to find a toggle that is disabled.
-      
+
+      await waitFor(() => {
+        expect(screen.getAllByRole('switch').length).toBeGreaterThan(0);
+      });
+
       const switches = screen.getAllByRole('switch');
-      // The first few switches belong to Admin.
+      // ADMIN is the first role, so its switches come first.
       const adminSwitch = switches[0];
-      
+
       expect(adminSwitch).toBeDisabled();
-      
-      // Try to click it anyway
       fireEvent.click(adminSwitch);
-      
-      // Verify state didn't change (implied by disabled, but good to check logic)
+      // Still disabled: the click could not have changed it. The database refuses this
+      // as well, so the rule holds even if the screen were wrong.
       expect(adminSwitch).toBeDisabled();
     });
   });

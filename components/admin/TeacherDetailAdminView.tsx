@@ -4,7 +4,7 @@ import { toast } from 'react-hot-toast';
 import { Teacher } from '../../types';
 import { MailIcon, PhoneIcon, ChartBarIcon, CalendarIcon, EditIcon, BriefcaseIcon, gradeColors, SUBJECT_COLORS, TrashIcon } from '../../constants';
 import DonutChart from '../ui/DonutChart';
-import { api } from '../../lib/api';
+import { getTeacher, setTeacherStatus } from '../../src/lib/supabase/teachers';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import ConfirmationModal from '../ui/ConfirmationModal';
 import StudentTeacherTimeline from '../shared/StudentTeacherTimeline';
@@ -36,9 +36,24 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
     const loadTeacher = async () => {
         try {
             if (!initialTeacher?.id) return;
-            const freshData = await api.getTeacherById(initialTeacher.id);
+            const freshData = await getTeacher(initialTeacher.id);
             if (freshData) {
-                setTeacher(freshData);
+                // Mapped explicitly: the screen's shape and the database's are not the
+                // same, and a spread would carry the database's names onto a screen
+                // expecting the screen's, which is how a field silently reads
+                // `undefined` instead of failing.
+                setTeacher({
+                    id: freshData.id,
+                    staff_code: freshData.staffCode,
+                    full_name: freshData.fullName,
+                    name: freshData.fullName,
+                    gender: freshData.gender,
+                    phone: freshData.phone,
+                    email: freshData.email,
+                    employment_start: freshData.employmentStart,
+                    employment_end: freshData.employmentEnd,
+                    status: freshData.status,
+                } as unknown as Teacher);
                 setRefreshKey(Date.now()); // Force refresh of dependent components and images
             }
         } catch (err) {
@@ -85,12 +100,14 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
 
     const handleDelete = async () => {
         try {
-            // Delete using the backend API which handles relations and user accounts
-            const success = await api.deleteTeacher(teacher.id);
+            // ARCHIVED, not deleted. Removing the row would leave this teacher's
+            // assignments, attendance and lesson records pointing at nothing, and the
+            // school would lose the record of who taught what. Archived keeps the
+            // history and takes them out of the lists.
+            const result = await setTeacherStatus(teacher.id, 'ARCHIVED');
+            if (!result.success) throw new Error(result.error || 'Could not archive the teacher.');
 
-            if (!success) throw new Error('Failed to delete teacher via API');
-
-            toast.success(`${teacher.full_name || teacher.name} has been successfully deleted from the database.`);
+            toast.success(`${teacher.full_name || teacher.name} is no longer on the teaching staff.`);
             forceUpdate();
             handleBack();
         } catch (error: any) {
@@ -349,7 +366,10 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                 onConfirm={async () => {
                     if (!pendingStatus) return;
                     try {
-                        await api.updateTeacher(teacher.id, { status: pendingStatus });
+                        // Status only, so a stale copy of the other columns cannot be
+                        // written back over somebody else's change.
+                        const result = await setTeacherStatus(teacher.id, pendingStatus as 'ACTIVE' | 'INACTIVE' | 'ARCHIVED');
+                        if (!result.success) throw new Error(result.error || 'Could not change the status.');
                         setTeacher({ ...teacher, status: pendingStatus as any });
                         toast.success(`Status changed to ${pendingStatus}`);
                         forceUpdate();
