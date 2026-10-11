@@ -1,256 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { api } from '../../lib/api';
-import { useProfile } from '../../context/ProfileContext';
-import { toast } from 'react-hot-toast';
-import {
-    UserPlus,
-    Mail,
-    Loader2,
-    ChevronLeft,
-    Building
-} from 'lucide-react';
-import CredentialsModal from '../ui/CredentialsModal';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-
-type UserRole =
-    | 'admin'
-    | 'teacher'
-    | 'parent'
-    | 'student'
-    | 'proprietor'
-    | 'inspector'
-    | 'examofficer'
-    | 'complianceofficer'
-    | 'counselor';
-
-const roleOptions: { value: UserRole; label: string; description: string }[] = [
-    { value: 'proprietor', label: 'Proprietor', description: 'School owner with full administrative access' },
-    { value: 'teacher', label: 'Teacher', description: 'Instructors managing classes and students' },
-    { value: 'inspector', label: 'Inspector', description: 'Regulatory or quality assurance officer' },
-    { value: 'examofficer', label: 'Exam Officer', description: 'Manages examinations and results' },
-    { value: 'complianceofficer', label: 'Compliance Officer', description: 'Ensures regulatory compliance' },
-    { value: 'counselor', label: 'Counselor', description: 'Student welfare and guidance counseling' },
-    { value: 'parent', label: 'Parent', description: 'Guardian with access to child information' },
-    { value: 'student', label: 'Student', description: 'Student account for learning portal' },
-];
-
-interface InviteStaffScreenProps {
-    handleBack?: () => void;
-    navigateTo?: (view: string, title: string, props?: any) => void;
-}
-
-const InviteStaffScreen: React.FC<InviteStaffScreenProps> = ({ handleBack, navigateTo }) => {
-    const { profile } = useProfile();
-    const [isInviting, setIsInviting] = useState(false);
-
-    const [invitationForm, setInvitationForm] = useState({
-        email: '',
-        role: 'teacher' as UserRole,
-        fullName: '',
-        branchId: ''
-    });
-    const [credentials, setCredentials] = useState<{ userName: string; username: string; password: string; email: string; userType: string } | null>(null);
-
-    const handleInviteStaff = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!profile?.schoolId) {
-            toast.error('School information not available');
-            return;
-        }
-
-        setIsInviting(true);
-
-        try {
-            // Call the real invite endpoint directly. The previous code hit a
-            // non-existent /rpc/invite_staff_member route (and api.auth, which
-            // doesn't exist) — both threw before the invite could be sent. The
-            // HybridApiClient attaches the auth token automatically.
-            const result: any = await api.post('/invite-user', {
-                email: invitationForm.email,
-                school_id: profile.schoolId,
-                role: invitationForm.role,
-                full_name: invitationForm.fullName,
-                branch_id: invitationForm.branchId || null,
-            });
-
-            if (result && result.success === false) {
-                throw new Error(result.message || 'Failed to send invitation');
-            }
-
-            const data = result?.data || {};
-            toast.success(`${invitationForm.fullName} was added successfully!`);
-            // No real invitation email goes out yet — this is the ONLY place these
-            // credentials are ever shown, same as Add Teacher / Add Student.
-            setCredentials({
-                userName: invitationForm.fullName,
-                username: data.username || data.school_generated_id || invitationForm.email,
-                password: data.initial_password || '',
-                email: invitationForm.email,
-                userType: roleOptions.find(r => r.value === invitationForm.role)?.label || invitationForm.role
-            });
-            setInvitationForm({ email: '', role: 'teacher', fullName: '', branchId: '' });
-
-        } catch (error: any) {
-            console.error('Error inviting staff:', error);
-            toast.error(error.message || 'Failed to send invitation');
-        } finally {
-            setIsInviting(false);
-        }
-    };
-
-    return (
-        <div className="max-w-4xl mx-auto p-4 lg:p-6 space-y-6">
-            <div className="flex items-center gap-4">
-                {handleBack && (
-                    <motion.button whileTap={{ scale: 0.9 }} onClick={handleBack} className="p-2 hover:bg-gray-100 rounded-full">
-                        <ChevronLeft className="w-6 h-6 text-gray-600" />
-                    </motion.button>
-                )}
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                        <UserPlus className="w-6 h-6 text-indigo-600" />
-                        Invite New Staff Member
-                    </h1>
-                    <p className="text-sm text-gray-500">Send an invitation to join your school portal</p>
-                </div>
-            </div>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-                <form onSubmit={handleInviteStaff} className="p-6 space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {/* Email Input */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">
-                                Email Address *
-                            </label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                                <input
-                                    type="email"
-                                    required
-                                    value={invitationForm.email}
-                                    onChange={(e) => setInvitationForm({ ...invitationForm, email: e.target.value })}
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                                    placeholder="staff@example.com"
-                                />
-                            </div>
-                        </div>
-
-                        {/* Full Name Input */}
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-gray-700">
-                                Full Name *
-                            </label>
-                            <input
-                                type="text"
-                                required
-                                value={invitationForm.fullName}
-                                onChange={(e) => setInvitationForm({ ...invitationForm, fullName: e.target.value })}
-                                className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
-                                placeholder="John Doe"
-                            />
-                        </div>
-
-                    </div>
-
-                    {/* Role Selection */}
-                    <div className="space-y-3">
-                        <label className="text-sm font-semibold text-gray-700">
-                            Select Role *
-                        </label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            {roleOptions.map((role, i) => (
-                                <motion.label
-                                    key={role.value}
-                                    initial={{ opacity: 0, y: 8 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.2, delay: i * 0.04 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className={`
-                                        flex items-start p-4 border-2 rounded-xl cursor-pointer transition-colors
-                                        ${invitationForm.role === role.value
-                                            ? 'border-indigo-600 bg-indigo-50'
-                                            : 'border-gray-100 hover:border-gray-200 bg-gray-50/50'
-                                        }
-                                    `}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="role"
-                                        value={role.value}
-                                        checked={invitationForm.role === role.value}
-                                        onChange={(e) => setInvitationForm({ ...invitationForm, role: e.target.value as UserRole })}
-                                        className="mt-1 text-indigo-600 focus:ring-indigo-500 h-4 w-4"
-                                    />
-                                    <div className="ml-3">
-                                        <div className="font-bold text-gray-900 text-sm">{role.label}</div>
-                                        <div className="text-xs text-gray-500 mt-1">{role.description}</div>
-                                    </div>
-                                </motion.label>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Submit Button */}
-                    <div className="pt-4">
-                        <motion.button
-                            whileHover={!isInviting ? { scale: 1.01 } : {}}
-                            whileTap={!isInviting ? { scale: 0.98 } : {}}
-                            type="submit"
-                            disabled={isInviting}
-                            className="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 shadow-lg shadow-indigo-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
-                        >
-                            {isInviting ? (
-                                <>
-                                    <Loader2 className="w-5 h-5 animate-spin shrink-0" />
-                                    Sending Invitation...
-                                </>
-                            ) : (
-                                <>
-                                    <Mail className="w-5 h-5" />
-                                    Send Staff Invitation
-                                </>
-                            )}
-                        </motion.button>
-                    </div>
-                </form>
-            </div>
-
-            {/* Info Box */}
-            <div className="bg-amber-50 border border-amber-100 rounded-2xl p-5">
-                <div className="flex gap-4">
-                    <div className="p-2 bg-amber-100 rounded-lg h-fit">
-                        <Mail className="w-5 h-5 text-amber-600" />
-                    </div>
-                    <div>
-                        <h4 className="font-bold text-amber-900">What happens next?</h4>
-                        <p className="text-sm text-amber-800 mt-1">
-                            Their account is created immediately with the role you selected. You'll see their login username and a temporary password right after you submit — share those with them directly (no email is sent automatically yet).
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            {credentials && (
-                <CredentialsModal
-                    isOpen={true}
-                    userName={credentials.userName || credentials.email}
-                    username={credentials.username}
-                    password={credentials.password}
-                    email={credentials.email}
-                    userType={credentials.userType}
-                    onClose={() => {
-                        setCredentials(null);
-                        if (handleBack) handleBack();
-                        else if (navigateTo) navigateTo('teacherList', 'Manage Teachers');
-                    }}
-                />
-            )}
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const InviteStaffScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Invite Staff"
+        explanation="Invite Staff is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default InviteStaffScreen;
-
-

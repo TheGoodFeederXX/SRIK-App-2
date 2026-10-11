@@ -1,186 +1,28 @@
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../lib/ai';
-import { api } from '../../lib/api';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { Student } from '../../types';
-import { CheckCircleIcon, TrendingUpIcon, MessagesIcon, SparklesIcon } from '../../constants';
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const AIParentingTips: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="AIParenting Tips"
+        explanation="AIParenting Tips is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
-interface Tip {
-    category: string;
-    content: string[];
-}
-
-interface AIParentingTipsScreenProps {
-    student: Student;
-}
-
-const AIParentingTipsScreen: React.FC<AIParentingTipsScreenProps> = ({ student }) => {
-    const [tips, setTips] = useState<Tip[] | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [academicData, setAcademicData] = useState(student?.academicPerformance || []);
-    const [behaviorData, setBehaviorData] = useState(student?.behaviorNotes || []);
-
-    const generateTips = useCallback(async () => {
-        if (!student) return;
-        setIsLoading(true);
-        setError(null);
-        try {
-            // Fetch missing data if necessary
-            let currentAcademic = academicData;
-            let currentBehavior = behaviorData;
-
-            if (currentAcademic.length === 0 || currentBehavior.length === 0) {
-                const [records, notes] = await Promise.all([
-                    api.getStudentAcademicRecords(student.id),
-                    api.getBehaviorNotes(student.id)
-                ]);
-                currentAcademic = records || [];
-                currentBehavior = notes || [];
-                setAcademicData(currentAcademic);
-                setBehaviorData(currentBehavior);
-            }
-
-            const ai = getAIClient();
-
-            const academicSummary = currentAcademic
-                ?.slice(-4) // get latest 4 records
-                .map(p => `${p.subject}: ${p.score}%`)
-                .join(', ');
-
-            const behaviorSummary = currentBehavior
-                ?.map(n => `${n.type} note - ${n.title}: ${n.note}`)
-                .join('; ');
-
-            const prompt = `
-                Based on the following data for a student named ${student.name}, generate personalized parenting tips.
-                The tips should be constructive, encouraging, and actionable for a parent.
-
-                Student Data:
-                - Academic Performance (Recent): ${academicSummary || 'No recent academic data.'}
-                - Behavioral Notes: ${behaviorSummary || 'No behavioral notes.'}
-
-                Provide tips in three categories: 'Strengths to Encourage', 'Areas for Support', and 'Conversation Starters'.
-                Each category should have 2-3 brief, distinct tips as a list of strings.
-            `;
-
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.0-flash',
-                contents: prompt,
-                config: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: Type.OBJECT,
-                        properties: {
-                            tips: {
-                                type: Type.ARRAY,
-                                items: {
-                                    type: Type.OBJECT,
-                                    properties: {
-                                        category: { type: Type.STRING },
-                                        content: {
-                                            type: Type.ARRAY,
-                                            items: { type: Type.STRING }
-                                        }
-                                    },
-                                    required: ["category", "content"]
-                                }
-                            }
-                        },
-                        required: ["tips"]
-                    }
-                }
-            });
-
-            const jsonResponse = JSON.parse(response.text.trim());
-            if (jsonResponse.tips) {
-                setTips(jsonResponse.tips);
-            } else {
-                throw new Error("Invalid response format from AI.");
-            }
-
-        } catch (err) {
-            console.error("Error generating parenting tips:", err);
-            setError("Sorry, we couldn't generate tips at this moment. Please try again later.");
-        } finally {
-            setIsLoading(false);
-        }
-    }, [student?.id, academicData, behaviorData]);
-
-    // Real-time synchronization
-    useAutoSync(['academic_performance', 'behavior_notes'], generateTips);
-
-    useEffect(() => {
-        generateTips();
-    }, [generateTips]);
-
-    const categoryIcons: { [key: string]: React.ReactNode } = {
-        'Strengths to Encourage': <CheckCircleIcon className="h-6 w-6 text-green-500" />,
-        'Areas for Support': <TrendingUpIcon className="h-6 w-6 text-amber-500" />,
-        'Conversation Starters': <MessagesIcon className="h-6 w-6 text-sky-500" />,
-    };
-
-    if (!student) {
-        return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a child to see tailored parenting tips.</div>;
-    }
-
-    if (isLoading) {
-        return (
-            <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-50">
-                <SparklesIcon className="w-12 h-12 text-green-400 animate-pulse mb-4" />
-                <h2 className="text-xl font-bold text-gray-700">Generating Personalized Tips...</h2>
-                <p className="text-gray-500 mt-2">Our AI is analyzing {student.name}'s progress to provide helpful insights.</p>
-            </div>
-        );
-    }
-
-    if (error) {
-        return (
-            <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-50">
-                <h2 className="text-xl font-bold text-red-600">Oops!</h2>
-                <p className="text-gray-600 mt-2">{error}</p>
-                <button
-                    onClick={() => generateTips()}
-                    className="mt-4 px-5 py-2 bg-green-600 text-white text-sm font-bold rounded-xl hover:bg-green-700 transition-colors"
-                >
-                    Retry
-                </button>
-            </div>
-        );
-    }
-
-    return (
-        <div className="p-4 space-y-4 bg-gray-50">
-            <div className="bg-green-50 p-4 rounded-xl text-center border border-green-200">
-                <SparklesIcon className="h-10 w-10 mx-auto text-green-400 mb-2" />
-                <h3 className="font-bold text-lg text-green-800">Insights for {student.name}</h3>
-                <p className="text-sm text-green-700">Artificial intelligence analyzing grades and behavior.</p>
-            </div>
-            {tips?.map((tipSection, index) => (
-                <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                    className="bg-white rounded-xl shadow-sm p-4"
-                >
-                    <div className="flex items-center space-x-3 mb-3">
-                        {categoryIcons[tipSection.category] || <SparklesIcon className="h-6 w-6 text-gray-500" />}
-                        <h4 className="font-bold text-lg text-gray-800">{tipSection.category}</h4>
-                    </div>
-                    <ul className="space-y-2 list-disc list-inside text-gray-700">
-                        {tipSection.content.map((item, idx) => (
-                            <li key={idx} className="prose prose-sm max-w-none"><ReactMarkdown remarkPlugins={[remarkGfm]}>{item}</ReactMarkdown></li>
-                        ))}
-                    </ul>
-                </motion.div>
-            ))}
-        </div>
-    );
-};
-
-export default AIParentingTipsScreen;
+export default AIParentingTips;

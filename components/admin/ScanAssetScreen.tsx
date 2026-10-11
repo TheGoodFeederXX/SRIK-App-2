@@ -1,45 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Html5QrcodeScanner } from 'html5-qrcode';
-import { api } from '../../lib/api';
-import { toast } from 'react-hot-toast';
-import { QrCode } from 'lucide-react';
-import AssetDetailScreen from './AssetDetailScreen';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const ScanAssetScreen = () => {
-    const [scanning, setScanning] = useState(true);
-    const [foundAssetId, setFoundAssetId] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (!scanning) return;
-        const scanner = new Html5QrcodeScanner('asset-qr-reader', { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 }, false);
-        const onSuccess = async (decodedText: string) => {
-            setScanning(false);
-            scanner.clear().catch(() => {});
-            try {
-                const asset = await api.getAssetByQrCode(decodedText);
-                setFoundAssetId(asset.id);
-            } catch (err: any) {
-                toast.error(err?.message || 'Asset not found for this code');
-                setScanning(true);
-            }
-        };
-        scanner.render(onSuccess, () => {});
-        return () => { scanner.clear().catch(() => {}); };
-    }, [scanning]);
-
-    if (foundAssetId) return <AssetDetailScreen assetId={foundAssetId} />;
-
-    return (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="max-w-md mx-auto p-6 text-center space-y-4">
-            <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto">
-                <QrCode className="w-8 h-8 text-indigo-600" />
-            </div>
-            <h1 className="text-xl font-bold text-gray-900 font-outfit">Scan Asset QR Code</h1>
-            <p className="text-sm text-gray-500">Point the camera at the QR code on the asset.</p>
-            <div id="asset-qr-reader" className="rounded-2xl overflow-hidden" />
-        </motion.div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ScanAssetScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Scan Asset"
+        explanation="Scan Asset is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ScanAssetScreen;

@@ -1,127 +1,28 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { PDResource } from '../../types';
-import { BriefcaseIcon, AIIcon } from '../../constants';
-import { api } from '../../lib/api';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const ResourceCard: React.FC<{ resource: PDResource }> = ({ resource }) => {
-    const typeStyles = {
-        Article: 'bg-sky-100 text-sky-800',
-        Video: 'bg-red-100 text-red-800',
-        Workshop: 'bg-indigo-100 text-indigo-800',
-    };
-    return (
-        <a href={resource.url} target="_blank" rel="noopener noreferrer" className="block bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-            <span className={`text-xs font-bold px-2 py-1 rounded-full ${typeStyles[resource.type] || 'bg-gray-100 text-gray-800'}`}>{resource.type}</span>
-            <h4 className="font-bold text-gray-800 mt-2">{resource.title}</h4>
-            <p className="text-sm text-gray-600 mt-1">{resource.summary}</p>
-            <p className="text-xs text-gray-400 mt-2">Source: {resource.source}</p>
-        </a>
-    );
-};
-
-const ProfessionalDevelopmentScreen: React.FC = () => {
-    const [challenge, setChallenge] = useState('');
-    const [suggestions, setSuggestions] = useState<string | null>(null);
-    const [isGenerating, setIsGenerating] = useState(false);
-    const [resources, setResources] = useState<PDResource[]>([]);
-    const [loadingResources, setLoadingResources] = useState(true);
-
-    // Initial Fetch of Resources
-    useEffect(() => {
-        const fetchResources = async () => {
-            try {
-                const data = await api.getPDResources();
-                if (data) setResources(data as PDResource[]);
-            } catch (err) {
-                console.error('Error fetching PD resources:', err);
-            } finally {
-                setLoadingResources(false);
-            }
-        };
-        fetchResources();
-    }, []);
-
-    const ai = useMemo(() => getAIClient(), []);
-
-    const handleGenerateSuggestions = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!challenge) return;
-        setIsGenerating(true);
-        setSuggestions(null);
-
-        try {
-            const prompt = `As an expert educational coach, provide a list of 3-5 actionable strategies for a teacher facing this challenge: "${challenge}". The strategies should be practical for a modern classroom. Format the response as a markdown list.`;
-            const response = await ai.models.generateContent({
-                model: AI_MODEL_NAME,
-                contents: prompt,
-            });
-            setSuggestions(response.text);
-        } catch (error) {
-            console.error("AI Suggestion Error:", error);
-            setSuggestions("Sorry, I couldn't generate suggestions at this time. Please try again.");
-        } finally {
-            setIsGenerating(false);
-        }
-    };
-
-    return (
-        <div className="flex flex-col h-full bg-gray-100">
-            <main className="flex-grow p-4 space-y-6 overflow-y-auto">
-                <div className="bg-purple-50 p-4 rounded-xl text-center border border-purple-200">
-                    <BriefcaseIcon className="h-10 w-10 mx-auto text-purple-400 mb-2" />
-                    <h3 className="font-bold text-lg text-purple-800">Professional Development Hub</h3>
-                    <p className="text-sm text-purple-700">Grow your skills and find new teaching strategies.</p>
-                </div>
-
-                {/* AI Strategy Suggester */}
-                <div className="bg-white p-4 rounded-xl shadow-sm">
-                    <div className="flex items-center space-x-2 mb-3">
-                        <AIIcon className="h-6 w-6 text-purple-600" />
-                        <h3 className="font-bold text-lg text-gray-800">AI Strategy Suggester</h3>
-                    </div>
-                    <form onSubmit={handleGenerateSuggestions} className="space-y-3">
-                        <textarea
-                            value={challenge}
-                            onChange={e => setChallenge(e.target.value)}
-                            placeholder="Describe a classroom challenge... e.g., 'Keeping students engaged during long lessons'"
-                            rows={3}
-                            className="w-full p-2 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
-                        />
-                        <button type="submit" disabled={isGenerating || !challenge} className="w-full py-2 bg-purple-600 text-white font-bold rounded-lg shadow-md hover:bg-purple-700 transition-colors disabled:bg-gray-400">
-                            {isGenerating ? 'Thinking...' : 'Get Strategies'}
-                        </button>
-                    </form>
-                    {suggestions && (
-                        <div className="mt-4 p-4 bg-purple-50 rounded-lg border border-purple-200">
-                            <div className="prose prose-sm max-w-none prose-p:my-2 prose-ul:my-2 text-gray-800">
-                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{suggestions}</ReactMarkdown>
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {/* Curated Resources */}
-                <div>
-                    <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">Curated Resources</h3>
-                    {loadingResources ? (
-                        <p className="text-gray-500 text-center py-4">Loading resources...</p>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {resources.length > 0 ? resources.map(resource => (
-                                <ResourceCard key={resource.id} resource={resource} />
-                            )) : (
-                                <p className="text-gray-500 col-span-2 text-center py-4">No resources available at the moment.</p>
-                            )}
-                        </div>
-                    )}
-                </div>
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ProfessionalDevelopmentScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Professional Development"
+        explanation="Professional Development is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ProfessionalDevelopmentScreen;
-

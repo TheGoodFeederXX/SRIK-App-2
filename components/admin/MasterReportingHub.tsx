@@ -1,146 +1,28 @@
-﻿import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { FileBarChart, Users, GraduationCap, Award, Download, Building, CheckCircle, Clock } from 'lucide-react';
-import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const MasterReportingHub: React.FC = () => {
-    const { currentSchool } = useAuth();
-    const [generating, setGenerating] = useState<string | null>(null);
-
-    const handleGenerateCensus = async () => {
-        if (!currentSchool) return;
-        setGenerating('census');
-        try {
-            // Aggregation logic using consolidated stats
-            const stats = await api.getDashboardStats(currentSchool.id);
-            const totalStudents = stats.totalStudents || 0;
-            const totalStaff = stats.totalTeachers || 0;
-
-            // Mocking the complex aggregation for a second
-            setTimeout(() => {
-                toast.success("Annual School Census (2025/2026) generated successfully.");
-                setGenerating(null);
-
-                // Trigger download of mock CSV with real counts
-                const blob = new Blob([`Year,SchoolID,TotalStudents,TotalStaff,FacilityCount\n2026,${currentSchool.id},${totalStudents},${totalStaff},12`], { type: 'text/csv' });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'ASC_Report_2026.csv';
-                a.click();
-            }, 1500);
-        } catch (error) {
-            toast.error("Failed to fetch census data");
-            setGenerating(null);
-        }
-    };
-
-    // The teacher register is for the school's own records. It was labelled as
-    // a TRCN export — the Teachers Registration Council of NIGERIA — so the
-    // school was exporting a register to a foreign council it does not answer
-    // to. The document is kept under a neutral Malay name.
-    const handleTeacherRegistry = () => {
-        setGenerating('sijil');
-        setTimeout(() => {
-            toast.success("Eksport Daftar Perguruan selesai.");
-            setGenerating(null);
-        }, 1000);
-    };
-
-    return (
-        <div className="p-6 max-w-7xl mx-auto space-y-6">
-            <div className="flex justify-between items-center">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Master Reporting & Exports</h1>
-                    <p className="text-gray-500">Official data exports for Ministry and Exam Boards.</p>
-                </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* ASC Report */}
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                    <div>
-                        <div className="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-4">
-                            <Building className="w-6 h-6 text-indigo-600" />
-                        </div>
-                        <h3 className="text-lg font-bold">Annual School Census</h3>
-                        <p className="text-sm text-gray-500 mt-2">Comprehensive school data required by the Ministry of Education (MoE).</p>
-                    </div>
-                    <motion.button
-                        whileHover={generating !== 'census' ? { scale: 1.02 } : {}}
-                        whileTap={generating !== 'census' ? { scale: 0.98 } : {}}
-                        onClick={handleGenerateCensus}
-                        disabled={generating === 'census'}
-                        className="mt-6 w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 rounded-xl font-bold hover:bg-indigo-700 transition disabled:opacity-50"
-                    >
-                        {generating === 'census' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                        Generate ASC
-                    </motion.button>
-                </motion.div>
-
-                {/* Teacher Registry */}
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                    <div>
-                        <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center mb-4">
-                            <Users className="w-6 h-6 text-emerald-600" />
-                        </div>
-                        <h3 className="text-lg font-bold">Daftar Perguruan</h3>
-                        <p className="text-sm text-gray-500 mt-2">Export the school's certified teacher list with its Sijil Perguruan records.</p>
-                    </div>
-                    <motion.button
-                        whileHover={generating !== 'sijil' ? { scale: 1.02 } : {}}
-                        whileTap={generating !== 'sijil' ? { scale: 0.98 } : {}}
-                        onClick={handleTeacherRegistry}
-                        disabled={generating === 'sijil'}
-                        className="mt-6 w-full flex items-center justify-center gap-2 border border-emerald-200 text-emerald-700 py-2 rounded-xl font-bold hover:bg-emerald-50 transition disabled:opacity-50"
-                    >
-                        {generating === 'sijil' ? <Clock className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                        Export Senarai
-                    </motion.button>
-                </motion.div>
-
-                {/* Compliance Certificate */}
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col justify-between">
-                    <div>
-                        <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center mb-4">
-                            <Award className="w-6 h-6 text-amber-600" />
-                        </div>
-                        <h3 className="text-lg font-bold">Compliance Certificates</h3>
-                        <p className="text-sm text-gray-500 mt-2">Automated school status certificates based on current audit metrics.</p>
-                    </div>
-                    <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => toast.success("Certificate Generation Module Loaded")}
-                        className="mt-6 w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-2 rounded-xl font-bold hover:bg-black transition"
-                    >
-                        <CheckCircle className="w-4 h-4" />
-                        Issue Certificate
-                    </motion.button>
-                </motion.div>
-            </div>
-
-            {/* Recent Exports History */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="p-4 border-b border-gray-100 bg-gray-50 font-bold text-gray-700">Recent Exports</div>
-                <div className="divide-y divide-gray-100">
-                    <div className="p-4 flex justify-between items-center hover:bg-gray-50 transition">
-                        <div className="flex items-center gap-3">
-                            <FileBarChart className="w-5 h-5 text-gray-400" />
-                            <div>
-                                <p className="text-sm font-medium">CAMBRIDGE_Candidates_2026.csv</p>
-                                <p className="text-xs text-gray-400">Exported by Admin • 2 hours ago</p>
-                            </div>
-                        </div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded">Success</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const MasterReportingHub: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Master Reporting"
+        explanation="Master Reporting is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default MasterReportingHub;
-

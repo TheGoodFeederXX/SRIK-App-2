@@ -1,170 +1,28 @@
-import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { ChevronRightIcon, XCircleIcon, ChevronLeftIcon, PhotoIcon } from '../../constants';
-import { api } from '../../lib/api';
-import { Photo } from '../../types';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface ParentPhotoGalleryScreenProps {
-    schoolId?: string;
-}
-
-const ParentPhotoGalleryScreen: React.FC<ParentPhotoGalleryScreenProps> = ({ schoolId }) => {
-    const [photos, setPhotos] = useState<Photo[]>([]);
-    // True once a load has completed, so background refreshes never flash a skeleton.
-    const hasLoadedOnceRef = useRef(false);
-    const [loading, setLoading] = useState(true);
-    const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
-
-    useEffect(() => {
-        loadPhotos();
-    }, [schoolId]);
-
-    const loadPhotos = useCallback(async () => {
-        if (!schoolId) {
-            hasLoadedOnceRef.current = true; setLoading(false);
-            return;
-        }
-        // Only show the skeleton on the FIRST load. A realtime refresh must not
-        // replace content the user is reading with a spinner and replay the entry
-        // animations — that is what made these screens blink.
-        if (!hasLoadedOnceRef.current) setLoading(true);
-        try {
-            const data = await api.getPhotos(schoolId);
-            setPhotos(data || []);
-        } catch (err) {
-            console.error('Error fetching photos:', err);
-        } finally {
-            hasLoadedOnceRef.current = true; setLoading(false);
-        }
-    }, [schoolId]);
-
-    // Real-time synchronization
-    useAutoSync(['photos'], loadPhotos);
-
-    useEffect(() => {
-        loadPhotos();
-    }, [loadPhotos]);
-
-    const handleOpenPhoto = useCallback((index: number) => {
-        setSelectedPhotoIndex(index);
-    }, []);
-
-    const handleClosePhoto = useCallback(() => {
-        setSelectedPhotoIndex(null);
-    }, []);
-
-    const handleNextPhoto = useCallback(() => {
-        if (selectedPhotoIndex === null) return;
-        setSelectedPhotoIndex((prevIndex) => (prevIndex! + 1) % photos.length);
-    }, [selectedPhotoIndex, photos.length]);
-
-    const handlePrevPhoto = useCallback(() => {
-        if (selectedPhotoIndex === null) return;
-        setSelectedPhotoIndex((prevIndex) => (prevIndex! - 1 + photos.length) % photos.length);
-    }, [selectedPhotoIndex, photos.length]);
-
-    if (loading) {
-        return <div className="flex justify-center items-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div></div>;
-    }
-
-    if (photos.length === 0) {
-        return (
-            <div className="flex flex-col h-full items-center justify-center p-6 text-center bg-gray-50">
-                <div className="bg-green-50 p-4 rounded-full mb-4">
-                    <PhotoIcon className="h-12 w-12 text-green-400" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800">No Photos Yet</h3>
-                <p className="text-gray-500 mt-2">Check back later for school memories and event photos.</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <main className="flex-grow p-4 overflow-y-auto">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    {photos.map((photo, index) => (
-                        <motion.button
-                            key={photo.id}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.25, delay: Math.min(index, 15) * 0.03 }}
-                            whileHover={{ y: -2 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => handleOpenPhoto(index)}
-                            className="relative block w-full aspect-square rounded-lg overflow-hidden shadow-md group focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                        >
-                            <img
-                                src={photo.imageUrl}
-                                alt={photo.caption}
-                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <p className="absolute bottom-0 left-0 right-0 p-2 text-white text-xs font-semibold">
-                                {photo.caption}
-                            </p>
-                        </motion.button>
-                    ))}
-                </div>
-            </main>
-
-            <AnimatePresence>
-            {selectedPhotoIndex !== null && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
-                    onClick={handleClosePhoto}
-                    role="dialog"
-                    aria-modal="true"
-                    aria-labelledby="photo-caption"
-                >
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                        className="relative w-full max-w-lg p-4"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <div className="bg-white rounded-lg shadow-2xl overflow-hidden">
-                            <AnimatePresence mode="wait">
-                                <motion.img
-                                    key={selectedPhotoIndex}
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    exit={{ opacity: 0 }}
-                                    transition={{ duration: 0.15 }}
-                                    src={photos[selectedPhotoIndex].imageUrl}
-                                    alt={photos[selectedPhotoIndex].caption}
-                                    className="w-full h-auto max-h-[70vh] object-contain"
-                                />
-                            </AnimatePresence>
-                            <p id="photo-caption" className="p-4 text-center font-semibold text-gray-800">
-                                {photos[selectedPhotoIndex].caption}
-                            </p>
-                        </div>
-
-                        <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={handleClosePhoto} className="absolute -top-2 -right-2 text-white bg-black/50 rounded-full hover:bg-black/80" aria-label="Close photo viewer">
-                            <XCircleIcon className="w-9 h-9" />
-                        </motion.button>
-                    </motion.div>
-
-                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={handlePrevPhoto} className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40" aria-label="Previous photo">
-                        <ChevronLeftIcon className="h-8 w-8" />
-                    </motion.button>
-
-                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={handleNextPhoto} className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-white/20 text-white rounded-full hover:bg-white/40" aria-label="Next photo">
-                        <ChevronRightIcon className="h-8 w-8" />
-                    </motion.button>
-                </motion.div>
-            )}
-            </AnimatePresence>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ParentPhotoGalleryScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Parent Photo Gallery"
+        explanation="Parent Photo Gallery is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ParentPhotoGalleryScreen;

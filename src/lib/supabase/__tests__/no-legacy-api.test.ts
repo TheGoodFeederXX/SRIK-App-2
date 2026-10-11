@@ -237,3 +237,67 @@ describe('F27: screens for features this school does not have', () => {
         expect(STILL_TO_MIGRATE).toEqual([]);
     });
 });
+
+/**
+ * How much of the app is still on the undeployed client.
+ *
+ * This is not a pass/fail on the whole app — that is F27's remaining work and it is
+ * large. It is a CEILING: the number may fall as screens are migrated, and must
+ * never rise. Without it, a new screen written the old way is invisible, and the
+ * number that only goes down is the only thing that makes the remaining work
+ * countable.
+ *
+ * The ceiling was measured by resolving every registered dashboard route to the file
+ * its component imports, then asking which of those files call `lib/api`. Matching
+ * route names to filenames guesses and misses screens whose file is named
+ * differently, which is how this figure was first reported as zero.
+ */
+describe('the legacy client is going, not growing', () => {
+    it('no reachable screen has crept back onto lib/api', () => {
+        // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
+        // large; what this pins is that it only shrinks. Without it a new screen
+        // written the old way is invisible.
+        const CEILING = 49;
+        const dashes = [
+            'components/teacher/TeacherDashboard.tsx',
+            'components/admin/AdminDashboard.tsx',
+            'components/parent/ParentDashboard.tsx',
+            'components/student/StudentDashboard.tsx',
+        ];
+        const reachable = new Set<string>();
+
+        for (const dash of dashes) {
+            const dir = join(ROOT, dash, '..');
+            const src = readFileSync(join(ROOT, dash), 'utf8')
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/^\s*\/\/.*$/gm, '');
+            // name -> import path, so a route resolves to its OWN file. Matching
+            // route names to filenames by guesswork misses every screen whose file
+            // is named differently — which is how this figure was first reported
+            // as zero.
+            const from = new Map<string, string>();
+            for (const m of src.matchAll(/import\s+([A-Z][a-zA-Z0-9]+)\s+from\s+'([^']+)'/g)) {
+                from.set(m[1], m[2]);
+            }
+            for (const m of src.matchAll(/(?:lazyWithRetry|lazy)\(\(\)\s*=>\s*import\('([^']+)'\)\)/g)) {
+                from.set(m[1].split('/').pop() as string, m[1]);
+            }
+            for (const m of src.matchAll(/^\s+([a-zA-Z]+):\s+([A-Z][a-zA-Z0-9]+),?$/gm)) {
+                const rel = from.get(m[2]);
+                if (!rel) continue;
+                const file = join(dir, rel + '.tsx');
+                if (existsSync(file)) reachable.add(file);
+            }
+        }
+
+        const stillLegacy = [...reachable].filter(
+            f => /from\s+['"][^'"]*lib\/api['"]/.test(readFileSync(f, 'utf8')),
+        );
+
+        expect(
+            stillLegacy.length,
+            `${stillLegacy.length} reachable screens use the undeployed client (ceiling ${CEILING}):\n`
+                + stillLegacy.slice(0, 10).join('\n'),
+        ).toBeLessThanOrEqual(CEILING);
+    });
+});

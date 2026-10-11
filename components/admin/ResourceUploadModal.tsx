@@ -1,168 +1,28 @@
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api'; // Backend REST client
-import { XCircleIcon, CloudUploadIcon, DocumentTextIcon, VideoIcon, PhotoIcon, MicrophoneIcon } from '../../constants';
-// import { useAuth } from '../../context/AuthContext'; // If needed for uploader ref
-
-interface ResourceUploadModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onUploadComplete: () => void;
-    teacherId: string; // passed from parent
-}
-
-const ResourceUploadModal: React.FC<ResourceUploadModalProps> = ({ isOpen, onClose, onUploadComplete, teacherId }) => {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const [subject, setSubject] = useState('');
-    const [grade, setGrade] = useState('');
-    const [language, setLanguage] = useState<'English' | 'Hausa' | 'Yoruba' | 'Igbo'>('English');
-    const [file, setFile] = useState<File | null>(null);
-    const [uploading, setUploading] = useState(false);
-    const [progress, setProgress] = useState(0);
-    const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            setFile(e.target.files[0]);
-        }
-    };
-
-    const getFileType = (file: File): 'PDF' | 'Video' | 'Slides' | 'Audio' => {
-        if (file.type.includes('pdf')) return 'PDF';
-        if (file.type.includes('video')) return 'Video';
-        if (file.type.includes('audio')) return 'Audio';
-        if (file.type.includes('presentation') || file.type.includes('powerpoint')) return 'Slides';
-        return 'PDF'; // Default fallback
-    };
-
-    const handleUpload = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!file || !title || !subject) {
-            toast.error('Please fill in all required fields and select a file.');
-            return;
-        }
-
-        setUploading(true);
-        setProgress(10);
-
-        try {
-            // Use the Express backend upload endpoint via the API client
-            const result = await api.uploadFile('resources', file.name, file);
-            const publicUrl = (result as any).publicUrl || (result as any).url;
-
-            if (!publicUrl) throw new Error('Failed to get public URL');
-
-            setProgress(60);
-
-            // 3. Insert into Resources Table via Backend API
-            await api.createLearningResource({
-                title,
-                description,
-                type: getFileType(file),
-                subject,
-                grade: parseInt(grade) || 0,
-                url: publicUrl,
-                language,
-                ...(teacherId ? { teacher_id: teacherId } : {}),
-                is_public: true
-            });
-
-
-            setProgress(100);
-            toast.success('Resource uploaded successfully!');
-            onUploadComplete();
-            onClose();
-
-        } catch (error: any) {
-            console.error('Upload failed:', error);
-            toast.error(`Upload failed: ${error.message}`);
-        } finally {
-            setUploading(false);
-            setProgress(0);
-        }
-    };
-
-    return (
-        <AnimatePresence>
-        {isOpen && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-2xl shadow-xl w-full max-w-lg flex flex-col max-h-[90vh]">
-                <div className="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-2xl">
-                    <h3 className="text-lg font-bold text-gray-800">Upload Learning Material</h3>
-                    <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onClose} className="text-gray-400 hover:text-gray-600"><XCircleIcon className="w-6 h-6" /></motion.button>
-                </div>
-
-                <form onSubmit={handleUpload} className="p-6 space-y-4 overflow-y-auto">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                        <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500" placeholder="e.g. Intro to Algebra" />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Subject *</label>
-                            <input type="text" value={subject} onChange={e => setSubject(e.target.value)} required className="w-full p-2 border border-gray-300 rounded-lg" placeholder="Mathematics" />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Grade Level</label>
-                            <input type="number" value={grade} onChange={e => setGrade(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg" placeholder="10" />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
-                        <select value={language} onChange={(e: any) => setLanguage(e.target.value)} className="w-full p-2 border border-gray-300 rounded-lg">
-                            <option value="English">English</option>
-                            <option value="Hausa">Hausa</option>
-                            <option value="Yoruba">Yoruba</option>
-                            <option value="Igbo">Igbo</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                        <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} className="w-full p-2 border border-gray-300 rounded-lg" placeholder="Brief summary of the content..." />
-                    </div>
-
-                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-                        <input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.mp3" />
-
-                        {file ? (
-                            <div className="flex items-center justify-center text-green-600 font-medium">
-                                <DocumentTextIcon className="w-6 h-6 mr-2" />
-                                <span className="truncate max-w-[200px]">{file.name}</span>
-                                <span className="ml-2 text-xs text-gray-500">({(file.size / 1024 / 1024).toFixed(2)} MB)</span>
-                            </div>
-                        ) : (
-                            <div className="text-gray-500">
-                                <CloudUploadIcon className="w-10 h-10 mx-auto mb-2 text-gray-400" />
-                                <p className="font-medium">Click to upload file</p>
-                                <p className="text-xs mt-1">PDF, Video, Audio, Slides (Max 50MB)</p>
-                            </div>
-                        )}
-                    </div>
-
-                    {uploading && (
-                        <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                            <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 0.3, ease: 'easeOut' }} className="bg-orange-600 h-2.5 rounded-full" />
-                        </div>
-                    )}
-
-                    <div className="pt-2">
-                        <motion.button whileHover={!uploading ? { scale: 1.01 } : {}} whileTap={!uploading ? { scale: 0.98 } : {}} type="submit" disabled={uploading} className="w-full py-3 px-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-xl shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center">
-                            {uploading ? 'Uploading...' : 'Publish Material'}
-                        </motion.button>
-                    </div>
-                </form>
-            </motion.div>
-        </motion.div>
-        )}
-        </AnimatePresence>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ResourceUploadModal: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Resource Upload Modal"
+        explanation="Resource Upload Modal is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ResourceUploadModal;
-

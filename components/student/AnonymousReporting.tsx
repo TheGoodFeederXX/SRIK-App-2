@@ -1,235 +1,28 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
-import { toast } from 'react-hot-toast';
-import { ShieldIcon, AlertTriangleIcon, CheckCircleIcon } from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const AnonymousReporting: React.FC = () => {
-    const [formData, setFormData] = useState({
-        category: 'Bullying',
-        severity: 'Medium',
-        description: '',
-        location: ''
-    });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [trackingCode, setTrackingCode] = useState('');
-    const [showSuccess, setShowSuccess] = useState(false);
-
-    const generateTrackingCode = () => {
-        return `ANON-${Date.now().toString(36).toUpperCase()}-${Math.random().toString(36).substr(2, 4).toUpperCase()}`;
-    };
-
-    const generateReportHash = (data: any) => {
-        return `HASH-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-
-        try {
-            const code = generateTrackingCode();
-            const hash = generateReportHash(formData);
-
-            await api.createAnonymousReport({
-                report_hash: hash,
-                track_code: code,
-                category: formData.category,
-                severity: formData.severity,
-                description_encrypted: formData.description,
-                location: formData.location,
-                status: 'New'
-            });
-
-            setTrackingCode(code);
-            setShowSuccess(true);
-            setFormData({
-                category: 'Bullying',
-                severity: 'Medium',
-                description: '',
-                location: ''
-            });
-
-            toast.success('Report submitted anonymously');
-        } catch (error: any) {
-            console.error('Error:', error);
-            toast.error('Failed to submit report');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    if (showSuccess) {
-        return (
-            <div className="p-6 max-w-2xl mx-auto">
-                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="bg-white rounded-xl shadow-lg p-8 text-center">
-                    <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }}>
-                        <CheckCircleIcon className="w-16 h-16 text-green-600 mx-auto mb-4" />
-                    </motion.div>
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Report Submitted Successfully</h2>
-                    <p className="text-gray-600 mb-6">
-                        Your anonymous report has been received. Save this tracking code to check the status of your report.
-                    </p>
-
-                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="bg-indigo-50 border-2 border-indigo-500 rounded-lg p-6 mb-6">
-                        <p className="text-sm text-gray-600 mb-2">Your Tracking Code:</p>
-                        <p className="text-3xl font-bold text-indigo-600 font-mono">{trackingCode}</p>
-                        <p className="text-xs text-gray-500 mt-2">Please save this code. You will need it to check updates.</p>
-                    </motion.div>
-
-                    <div className="space-y-3">
-                        <motion.button
-                            whileHover={{ scale: 1.01 }}
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                                navigator.clipboard.writeText(trackingCode);
-                                toast.success('Tracking code copied to clipboard');
-                            }}
-                            className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                        >
-                            Copy Tracking Code
-                        </motion.button>
-                        <motion.button
-                            whileTap={{ scale: 0.98 }}
-                            onClick={() => {
-                                setShowSuccess(false);
-                                setTrackingCode('');
-                            }}
-                            className="w-full px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-                        >
-                            Submit Another Report
-                        </motion.button>
-                    </div>
-                </motion.div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="p-6 max-w-2xl mx-auto">
-            <div className="bg-white rounded-xl shadow-lg p-8">
-                <div className="flex items-center space-x-3 mb-6">
-                    <ShieldIcon className="w-8 h-8 text-indigo-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">Anonymous Reporting</h2>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                    <p className="text-sm text-blue-800">
-                        <strong>Your privacy is protected:</strong> This form does not collect any identifying information.
-                        You will receive a tracking code to check the status of your report.
-                    </p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            What would you like to report? *
-                        </label>
-                        <select
-                            value={formData.category}
-                            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        >
-                            <option>Bullying</option>
-                            <option>Safety Concern</option>
-                            <option>Mental Health</option>
-                            <option>Abuse</option>
-                            <option>Substance Use</option>
-                            <option>Other</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            How serious is this issue? *
-                        </label>
-                        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-                            {['Low', 'Medium', 'High', 'Critical'].map((level) => (
-                                <motion.button
-                                    key={level}
-                                    whileTap={{ scale: 0.95 }}
-                                    type="button"
-                                    onClick={() => setFormData({ ...formData, severity: level })}
-                                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${formData.severity === level
-                                        ? level === 'Critical' ? 'bg-red-600 text-white' :
-                                            level === 'High' ? 'bg-orange-600 text-white' :
-                                                level === 'Medium' ? 'bg-yellow-600 text-white' :
-                                                    'bg-green-600 text-white'
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                        }`}
-                                >
-                                    {level}
-                                </motion.button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Please describe what happened *
-                        </label>
-                        <textarea
-                            required
-                            value={formData.description}
-                            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                            rows={6}
-                            placeholder="Provide as much detail as you can. Your report is completely anonymous."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        ></textarea>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Where did this happen? (Optional)
-                        </label>
-                        <input
-                            type="text"
-                            value={formData.location}
-                            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                            placeholder="e.g., Classroom, Playground, Hallway"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        />
-                    </div>
-
-                    <AnimatePresence>
-                        {formData.severity === 'Critical' && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: 'auto' }}
-                                exit={{ opacity: 0, height: 0 }}
-                                transition={{ duration: 0.2 }}
-                                className="bg-red-50 border border-red-200 rounded-lg p-4 overflow-hidden"
-                            >
-                                <div className="flex items-start space-x-2">
-                                    <AlertTriangleIcon className="w-5 h-5 text-red-600 mt-0.5" />
-                                    <div className="text-sm text-red-800">
-                                        <p className="font-semibold mb-1">Immediate Help Available</p>
-                                        <p>If you or someone else is in immediate danger, please contact:</p>
-                                        <p className="font-mono mt-2">Emergency: 112 or 199</p>
-                                        <p className="font-mono">Child Helpline: 08008008001</p>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-
-                    <motion.button
-                        whileHover={{ scale: isSubmitting ? 1 : 1.01 }}
-                        whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        {isSubmitting ? 'Submitting Anonymously...' : 'Submit Anonymous Report'}
-                    </motion.button>
-
-                    <p className="text-xs text-gray-500 text-center">
-                        By submitting this report, you help create a safer school environment for everyone.
-                    </p>
-                </form>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const AnonymousReporting: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Anonymous Reporting"
+        explanation="Anonymous Reporting is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default AnonymousReporting;

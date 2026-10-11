@@ -1,134 +1,28 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { EXAM_TYPE_COLORS, ClockIcon, ExamIcon, AlertTriangleIcon } from '../../constants';
-import { Exam } from '../../types';
-import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
-import { useAutoSync } from '../../hooks/useAutoSync';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-// Function to group exams by date
-const groupExamsByDate = (exams: Exam[]) => {
-  return exams.reduce((acc, exam) => {
-    const date = exam.date;
-    if (!acc[date]) {
-      acc[date] = [];
-    }
-    acc[date].push(exam);
-    return acc;
-  }, {} as { [key: string]: Exam[] });
-};
-
-const ExamSchedule: React.FC = () => {
-    const { currentSchool, currentBranchId } = useAuth();
-    const [exams, setExams] = useState<Exam[]>([]);
-    // True once a load has completed, so background refreshes never flash a skeleton.
-    const hasLoadedOnceRef = useRef(false);
-    const [loading, setLoading] = useState(true);
-    const [errorOccurred, setErrorOccurred] = useState(false);
-
-    const fetchExams = async () => {
-        if (!currentSchool?.id) return;
-        try {
-        // Only show the skeleton on the FIRST load. A realtime refresh must not
-        // replace content the user is reading with a spinner and replay the entry
-        // animations — that is what made these screens blink.
-            if (!hasLoadedOnceRef.current) setLoading(true);
-            setErrorOccurred(false);
-            const data = await api.getExams(currentSchool.id, currentBranchId || undefined);
-            const mapped: Exam[] = (data || []).map((e: any) => ({
-                id: e.id,
-                type: e.exam_type || e.type || 'Exam',
-                date: e.date ? new Date(e.date).toISOString().split('T')[0] : '',
-                time: e.start_time ? new Date(e.start_time).toLocaleTimeString('ms-MY', { hour: '2-digit', minute: '2-digit' }) : undefined,
-                className: e.class_name || e.className || '',
-                subject: e.subject,
-                isPublished: e.is_published ?? e.isPublished ?? false,
-                teacherId: e.teacher_id || e.teacherId,
-            }));
-            setExams(mapped);
-        } catch (err) {
-            console.error('Error fetching exam schedule:', err);
-            setErrorOccurred(true);
-        } finally {
-            hasLoadedOnceRef.current = true; setLoading(false);
-        }
-    };
-
-    useEffect(() => { fetchExams(); }, [currentSchool?.id, currentBranchId]);
-    useAutoSync(['exams'], fetchExams);
-
-    const publishedExams = exams
-        .filter(exam => exam.isPublished)
-        .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-
-    const groupedExams = groupExamsByDate(publishedExams);
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <main className="flex-grow p-4 space-y-6 overflow-y-auto">
-                {loading ? (
-                    <div className="flex justify-center py-10"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-500"></div></div>
-                ) : errorOccurred ? (
-                    <div className="text-center py-10 bg-white rounded-lg shadow-sm mt-8">
-                        <AlertTriangleIcon className="mx-auto h-12 w-12 text-amber-300" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">Couldn't load the exam schedule</h3>
-                        <p className="mt-1 text-sm text-gray-500 mb-4">There was a problem reaching the server. Please try again.</p>
-                        <button
-                            onClick={fetchExams}
-                            className="px-5 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium text-sm"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                ) : Object.keys(groupedExams).length > 0 ? (
-                    Object.entries(groupedExams).map(([date, examsOnDate], groupIdx) => (
-                        <motion.div key={date} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: Math.min(groupIdx, 8) * 0.05 }}>
-                            <div className="mb-3 pl-1">
-                                <h3 className="font-bold text-lg text-gray-700">
-                                    {/* Replace hyphens with slashes for better cross-browser date parsing consistency */}
-                                    {new Date(date.replace(/-/g, '/')).toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
-                                </h3>
-                            </div>
-                            <div className="space-y-3">
-                                {examsOnDate.map(exam => {
-                                    const examTypeStyle = EXAM_TYPE_COLORS[exam.type] || 'bg-gray-100 text-gray-800 border-gray-300';
-                                    const borderColorClass = examTypeStyle.split(' ').find(c => c.startsWith('border-')) || 'border-gray-300';
-                                    const bgColorClass = examTypeStyle.split(' ')[0] || 'bg-gray-100';
-                                    const textColorClass = (examTypeStyle.split(' ')[1] || 'text-gray-800').replace('-800', '-600');
-
-                                    return (
-                                        <div key={exam.id} className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border-l-4 ${borderColorClass} overflow-hidden`}>
-                                            <div className="p-4 flex items-center space-x-4">
-                                                <div className={`flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center ${bgColorClass}`}>
-                                                    <ExamIcon className={`w-6 h-6 ${textColorClass}`} />
-                                                </div>
-                                                <div>
-                                                    <p className="font-bold text-lg text-gray-800">{exam.subject}</p>
-                                                    <p className="text-sm text-gray-500 font-medium">{exam.className}</p>
-                                                    {exam.time && (
-                                                      <div className="flex items-center text-sm text-gray-600 mt-1">
-                                                        <ClockIcon className="w-4 h-4 mr-2 text-gray-400" />
-                                                        <span>{exam.time}</span>
-                                                      </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </motion.div>
-                    ))
-                ) : (
-                    <div className="text-center py-10 bg-white rounded-lg shadow-sm mt-8">
-                        <ExamIcon className="mx-auto h-12 w-12 text-gray-300" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No Exams Published</h3>
-                        <p className="mt-1 text-sm text-gray-500">The exam schedule has not been released yet. Please check back later.</p>
-                    </div>
-                )}
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ExamSchedule: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Exam Schedule"
+        explanation="Exam Schedule is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ExamSchedule;

@@ -1,165 +1,28 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Shield, Sparkles, TrendingUp, Globe, Target, Layers, ArrowRight, Award, Zap } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const UnifiedGovernanceHub: React.FC = () => {
-    const { currentSchool } = useAuth();
-    const [stats, setStats] = React.useState<any>(null);
-
-    React.useEffect(() => {
-        const fetchGovernanceStats = async () => {
-            if (!currentSchool) return;
-            
-            try {
-                const results = await api.getGovernanceStats(currentSchool.id);
-                setStats(results);
-            } catch (error) {
-                console.error('Error fetching governance stats:', error);
-                setStats({
-                    students: 0,
-                    teachers: 0,
-                    policies: 0,
-                    inspections: 0,
-                });
-            }
-        };
-
-        fetchGovernanceStats();
-    }, [currentSchool]);
-
-    return (
-        <div className="p-6 max-w-7xl mx-auto space-y-10">
-            {/* Hero Section */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="relative overflow-hidden bg-gray-900 rounded-[2.5rem] p-10 text-white shadow-2xl">
-                <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-indigo-500/20 to-transparent"></div>
-                <div className="relative z-10 space-y-6 max-w-3xl">
-                    <div className="inline-flex items-center gap-2 bg-indigo-500/20 border border-indigo-500/30 px-4 py-1.5 rounded-full text-indigo-300 text-sm font-bold uppercase tracking-widest">
-                        <Sparkles className="w-4 h-4" />
-                        Value Proposition
-                    </div>
-                    <h1 className="text-5xl font-black leading-tight tracking-tight">
-                        Unified Governance for <br />
-                        <span className="text-indigo-400">Modern African Schools.</span>
-                    </h1>
-                    <p className="text-xl text-gray-400 font-medium">
-                        School ID: <span className="text-white font-mono">{currentSchool?.id?.substring(0, 8)}...</span> | 
-                        Current Track: <span className="text-emerald-400">{currentSchool?.curriculum_type || 'Unset'}</span>
-                    </p>
-                    <div className="flex gap-4 pt-4">
-                        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="bg-white text-gray-900 px-8 py-3 rounded-2xl font-black hover:bg-gray-100 transition shadow-lg shadow-white/5">
-                            Download Strategy Deck
-                        </motion.button>
-                        <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="bg-gray-800 text-white px-8 py-3 rounded-2xl font-bold border border-gray-700 hover:bg-gray-700 transition">
-                            Active Entities: {stats ? (stats.students + stats.teachers) : '...'}
-                        </motion.button>
-                    </div>
-                </div>
-            </motion.div>
-
-            {/* Core Pillars */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center pt-6">
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
-                    <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
-                        <Shield className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900">Compliance</h3>
-                    <p className="text-2xl font-black text-blue-600">{stats?.policies || 0} Active Policies</p>
-                    <p className="text-gray-500 text-xs italic">Ministry Standards Met</p>
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
-                    <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
-                        <Layers className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900">Audits</h3>
-                    <p className="text-2xl font-black text-emerald-600">{stats?.inspections || 0} Inspections</p>
-                    <p className="text-gray-500 text-xs italic">Digital Audit Trail</p>
-                </motion.div>
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-4">
-                    <div className="w-16 h-16 bg-purple-50 text-purple-600 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
-                        <Globe className="w-8 h-8" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-900">Reach</h3>
-                    <p className="text-2xl font-black text-purple-600">100% Edge Ready</p>
-                    <p className="text-gray-500 text-xs italic">Multi-Channel Access</p>
-                </motion.div>
-            </div>
-
-            {/* Operational Health Showcase */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-100/50 space-y-8">
-                    <div className="flex justify-between items-center">
-                        <h3 className="text-2xl font-black text-gray-900 flex items-center gap-2">
-                            <Target className="w-6 h-6 text-indigo-600" />
-                            Launch Readiness
-                        </h3>
-                        <div className="text-indigo-600 font-black text-2xl">94%</div>
-                    </div>
-
-                    <div className="space-y-6">
-                        {[
-                            { label: 'Security & Audit Immutability', progress: 100, color: 'bg-indigo-600' },
-                            { label: 'Ministry Reporting API', progress: 85, color: 'bg-emerald-500' },
-                            { label: 'External Exam Export Logic', progress: 100, color: 'bg-blue-500' },
-                            { label: 'Multi-Role Permissions', progress: 92, color: 'bg-purple-500' },
-                        ].map((item, idx) => (
-                            <div key={item.label} className="space-y-2">
-                                <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-gray-500">
-                                    <span>{item.label}</span>
-                                    <span>{item.progress}%</span>
-                                </div>
-                                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: `${item.progress}%` }}
-                                        transition={{ duration: 0.6, delay: idx * 0.1, ease: 'easeOut' }}
-                                        className={`${item.color} h-full rounded-full`}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} className="w-full flex items-center justify-center gap-2 py-4 bg-gray-50 border rounded-2xl font-bold text-gray-700 hover:bg-gray-100 transition mt-4">
-                        View Detailed Audit Logs
-                        <ArrowRight className="w-4 h-4" />
-                    </motion.button>
-                </div>
-
-                <div className="space-y-8">
-                    <motion.div whileHover={{ scale: 1.01 }} className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 rounded-[2rem] text-white shadow-xl shadow-indigo-100 flex items-center justify-between group overflow-hidden relative">
-                        <div className="space-y-1 relative z-10">
-                            <p className="text-indigo-200 text-sm font-bold uppercase tracking-widest">Growth Metric</p>
-                            <h4 className="text-3xl font-black">Market Expansion</h4>
-                            <p className="text-indigo-100 text-sm">Scale to 50+ centers with centralized governance.</p>
-                        </div>
-                        <TrendingUp className="w-20 h-20 text-white/10 absolute -right-4 -bottom-4 group-hover:scale-110 transition duration-500" />
-                        <div className="h-12 w-12 bg-white/10 rounded-2xl flex items-center justify-center relative z-10 backdrop-blur-sm">
-                            <Award className="w-6 h-6" />
-                        </div>
-                    </motion.div>
-
-                    <div className="bg-white p-8 rounded-[2rem] border border-gray-100 shadow-xl shadow-gray-100/50">
-                        <h4 className="text-xl font-bold mb-6">Certified Security Pro</h4>
-                        <div className="flex items-center gap-6">
-                            <div className="w-24 h-24 rounded-full border-8 border-indigo-600 border-t-emerald-400 flex items-center justify-center p-2">
-                                <Zap className="w-8 h-8 text-indigo-600" />
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-gray-900 font-black text-lg">PDPA Compliant</p>
-                                <p className="text-gray-500 text-sm italic">Verified January 2026. Secure data controller status active.</p>
-                                <div className="pt-2">
-                                    <span className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold ring-1 ring-emerald-200">Active Audit</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const UnifiedGovernanceHub: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Unified Governance"
+        explanation="Unified Governance is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default UnifiedGovernanceHub;
-

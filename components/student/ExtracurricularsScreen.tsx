@@ -1,254 +1,28 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { Activity, ActivityCategory, ExtracurricularEvent } from '../../types';
-import { ACTIVITY_CATEGORY_CONFIG, ChevronLeftIcon, ChevronRightIcon, StarIcon, TrophyIcon, UsersIcon, SparklesIcon } from '../../constants';
-import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
-import { toast } from 'react-hot-toast';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-type FilterType = 'All' | ActivityCategory;
-
-const ExtracurricularsScreen: React.FC = () => {
-    const { user } = useAuth();
-    const [activeFilter, setActiveFilter] = useState<FilterType>('All');
-    const [activities, setActivities] = useState<Activity[]>([]);
-    const [signedUpActivities, setSignedUpActivities] = useState<Set<string>>(new Set());
-    const [eventsByDate, setEventsByDate] = useState<{ [key: string]: ExtracurricularEvent[] }>({});
-    const [currentDate, setCurrentDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-    const [loading, setLoading] = useState(true);
-
-    const fetchExtracurricularData = useCallback(async () => {
-        if (!user?.id) return;
-        setLoading(true);
-        try {
-            // 1. Fetch joinable activities
-            const allActivities = await api.getExtracurriculars();
-            setActivities(allActivities);
-
-            // 2. Fetch user's signed-up activities
-            const myActivities = await api.getMyExtracurriculars();
-            setSignedUpActivities(new Set(myActivities.map((p: any) => p.activity_id.toString())));
-
-            // 3. Fetch real calendar events
-            const events = await api.getExtracurricularEvents(user.school_id || '');
-
-            if (events) {
-                const mappedEvents = events.reduce((acc: any, event: any) => {
-                    const dateKey = event.date.split('T')[0];
-                    (acc[dateKey] = acc[dateKey] || []).push({
-                        id: event.id,
-                        title: event.title,
-                        date: dateKey,
-                        category: event.category || 'Club',
-                        description: event.description
-                    });
-                    return acc;
-                }, {} as { [key: string]: ExtracurricularEvent[] });
-                setEventsByDate(mappedEvents);
-            }
-        } catch (error) {
-            console.error("Error fetching extracurriculars:", error);
-            toast.error("Failed to load extracurricular data.");
-        } finally {
-            setLoading(false);
-        }
-    }, [user?.id, user?.school_id]);
-
-    // Real-time synchronization
-    useAutoSync(['extracurriculars', 'events'], fetchExtracurricularData);
-
-    useEffect(() => {
-        fetchExtracurricularData();
-    }, [fetchExtracurricularData]);
-
-    const handleSignUpToggle = async (activityId: number) => {
-        if (!user?.id) return;
-
-        const isCurrentlySignedUp = signedUpActivities.has(activityId.toString());
-
-        // Optimistic UI update
-        setSignedUpActivities(prev => {
-            const newSet = new Set(prev);
-            isCurrentlySignedUp ? newSet.delete(activityId.toString()) : newSet.add(activityId.toString());
-            return newSet;
-        });
-
-        try {
-            if (isCurrentlySignedUp) {
-                // Leave
-                await api.leaveExtracurricular(activityId.toString());
-                toast.success("Successfully left the activity.");
-            } else {
-                // Join
-                await api.joinExtracurricular(activityId.toString());
-                toast.success("Successfully signed up for the activity!");
-            }
-        } catch (error) {
-            console.error("Error toggling sign up:", error);
-            toast.error("Failed to update activity status.");
-            // Revert optimistic update
-            setSignedUpActivities(prev => {
-                const newSet = new Set(prev);
-                isCurrentlySignedUp ? newSet.add(activityId.toString()) : newSet.delete(activityId.toString());
-                return newSet;
-            });
-        }
-    };
-
-    const filteredActivities = useMemo(() => {
-        if (activeFilter === 'All') return activities;
-        return activities.filter(a => a.category === activeFilter);
-    }, [activeFilter, activities]);
-
-    const getIcon = (iconName: string) => {
-        switch (iconName?.toLowerCase()) {
-            case 'trophy': return TrophyIcon;
-            case 'star': return StarIcon;
-            case 'users': return UsersIcon;
-            case 'sparkles': return SparklesIcon;
-            default: return UsersIcon;
-        }
-    };
-
-    // Calendar Logic
-    const firstDayOfMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth(), 1), [currentDate]);
-    const daysInMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(), [currentDate]);
-    const startingDayIndex = firstDayOfMonth.getDay();
-
-    const selectedDateEvents = useMemo(() => {
-        const dateKey = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
-        return eventsByDate[dateKey] || [];
-    }, [selectedDate, eventsByDate]);
-
-    const goToPreviousMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
-    const goToNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
-    const isSameDay = (d1: Date, d2: Date) => d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate();
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <main className="flex-grow p-4 overflow-y-auto">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Activity List Section */}
-                    <div className="space-y-4">
-                        <div>
-                            <h2 className="text-xl font-bold text-gray-800 mb-3">Join an Activity</h2>
-                            <div className="flex space-x-2 mb-4">
-                                {(['All', 'Club', 'Sport', 'Cultural'] as FilterType[]).map(filter => (
-                                    <motion.button key={filter} whileTap={{ scale: 0.95 }} onClick={() => setActiveFilter(filter)} className={`px-4 py-1.5 text-sm font-semibold rounded-full flex-shrink-0 transition-colors ${activeFilter === filter ? 'bg-orange-500 text-white shadow' : 'bg-white text-gray-700 hover:bg-orange-100'}`}>
-                                        {filter}
-                                    </motion.button>
-                                ))}
-                            </div>
-                            {loading ? (
-                                <div className="flex justify-center items-center py-12">
-                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
-                                </div>
-                            ) : filteredActivities.length === 0 ? (
-                                <div className="bg-white rounded-xl p-8 text-center text-gray-400 border border-gray-100">
-                                    No {activeFilter !== 'All' ? activeFilter.toLowerCase() : ''} activities available right now.
-                                </div>
-                            ) : (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                {filteredActivities.map((activity, i) => {
-                                    const isSignedUp = signedUpActivities.has(activity.id.toString()) || signedUpActivities.has(activity.id as any);
-                                    const config = ACTIVITY_CATEGORY_CONFIG[activity.category] || ACTIVITY_CATEGORY_CONFIG.Club;
-                                    const Icon = typeof activity.icon === 'string' ? getIcon(activity.icon) : (activity.icon || UsersIcon);
-                                    return (
-                                        <motion.div
-                                            key={activity.id}
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            transition={{ duration: 0.25, delay: Math.min(i, 10) * 0.05 }}
-                                            whileHover={{ y: -2 }}
-                                            className={`p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow border ${config.bg} ${config.border}`}
-                                        >
-                                            <div className="flex items-start space-x-3">
-                                                <div className={`p-2 rounded-lg ${config.bg}`}>
-                                                    <Icon className={`w-6 h-6 ${config.color}`} />
-                                                </div>
-                                                <div className="flex-grow">
-                                                    <h3 className={`font-bold ${config.color}`}>{activity.name}</h3>
-                                                    <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-                                                </div>
-                                            </div>
-                                            <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={() => handleSignUpToggle(activity.id)} className={`w-full mt-4 py-2 text-sm font-bold rounded-lg transition-colors ${isSignedUp ? 'bg-red-100 text-red-700 hover:bg-red-200' : 'bg-green-500 text-white hover:bg-green-600'}`}>
-                                                {isSignedUp ? 'Leave' : 'Sign Up'}
-                                            </motion.button>
-                                        </motion.div>
-                                    );
-                                })}
-                            </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Calendar Section */}
-                    <div className="space-y-4">
-                        <h2 className="text-xl font-bold text-gray-800">Events Calendar</h2>
-                        <div className="bg-white rounded-xl shadow-sm p-4">
-                            <div className="flex justify-between items-center mb-4">
-                                <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors"><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
-                                <h3 className="font-bold text-lg text-gray-800">{currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}</h3>
-                                <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors"><ChevronRightIcon /></motion.button>
-                            </div>
-                            <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
-                                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, i) => <div key={`${day}-${i}`}>{day}</div>)}
-                            </div>
-                            <div className="grid grid-cols-7 gap-1">
-                                {Array.from({ length: startingDayIndex }).map((_, i) => <div key={`e-${i}`} />)}
-                                {Array.from({ length: daysInMonth }).map((_, i) => {
-                                    const day = i + 1;
-                                    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-                                    const dateKey = date.toISOString().split('T')[0];
-                                    const dayEvents = eventsByDate[dateKey] || [];
-                                    const isSelected = isSameDay(date, selectedDate);
-                                    return (
-                                        <div key={day} className="flex flex-col items-center">
-                                            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setSelectedDate(date)} className={`w-9 h-9 flex items-center justify-center rounded-full text-sm transition-colors ${isSelected ? 'bg-orange-500 text-white font-bold' : 'hover:bg-gray-100 text-gray-700'}`}>
-                                                {day}
-                                            </motion.button>
-                                            <div className="flex space-x-0.5 mt-1 h-2">
-                                                {dayEvents.slice(0, 3).map(event => (
-                                                    <div key={event.id} className={`w-1.5 h-1.5 rounded-full ${ACTIVITY_CATEGORY_CONFIG[event.category].dot}`}></div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                        <AnimatePresence mode="wait">
-                            {selectedDateEvents.length > 0 && (
-                                <motion.div
-                                    key={selectedDate.toDateString()}
-                                    initial={{ opacity: 0, y: 8 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -8 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="bg-white rounded-xl shadow-sm p-4"
-                                >
-                                    <h3 className="font-bold text-gray-800 mb-3">Events on {selectedDate.toLocaleDateString('ms-MY', { month: 'long', day: 'numeric' })}</h3>
-                                    <ul className="space-y-2">
-                                        {selectedDateEvents.map(event => {
-                                            const config = ACTIVITY_CATEGORY_CONFIG[event.category];
-                                            return (
-                                                <li key={event.id} className="flex items-center space-x-3">
-                                                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${config.dot}`}></div>
-                                                    <p className={`font-semibold text-sm ${config.color}`}>{event.title}</p>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
-                </div>
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const ExtracurricularsScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Extracurriculars"
+        explanation="Extracurriculars is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default ExtracurricularsScreen;

@@ -1,163 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
-import { HelpingHandIcon } from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface VolunteeringOpportunity {
-    id: string;
-    title: string;
-    description: string;
-    date: string;
-    spotsAvailable: number;
-    spotsFilled: number;
-}
-
-const VolunteeringScreen: React.FC = () => {
-    const { user } = useAuth();
-    const [opportunities, setOpportunities] = useState<VolunteeringOpportunity[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [signedUpEvents, setSignedUpEvents] = useState<Set<string>>(new Set());
-    const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
-
-    const fetchOpportunities = useCallback(async () => {
-        try {
-            const data = await api.getVolunteeringOpportunities();
-
-            if (data) {
-                setOpportunities(data.map((item: any) => ({
-                    id: String(item.id),
-                    title: item.title,
-                    description: item.description,
-                    date: item.date,
-                    spotsAvailable: item.slots_total || 10,
-                    spotsFilled: item.slots_filled || 0
-                })));
-            }
-        } catch (err) {
-            console.error('Error fetching volunteering opportunities:', err);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const fetchMySignups = useCallback(async () => {
-        try {
-            const data = await api.getMyVolunteerSignups();
-            if (Array.isArray(data)) {
-                setSignedUpEvents(new Set(data.map((s: any) => String(s.opportunity_id || s.opportunity?.id))));
-            }
-        } catch {
-            // Non-blocking — start with empty set if fetch fails
-        }
-    }, []);
-
-    // Real-time synchronization
-    useAutoSync(['volunteering_opportunities', 'volunteers'], fetchOpportunities);
-
-    useEffect(() => {
-        fetchOpportunities();
-        fetchMySignups();
-    }, [fetchOpportunities, fetchMySignups]);
-
-    const handleSignUpToggle = async (id: string) => {
-        // Signing up is a one-way action here — there's no cancel/withdraw endpoint yet,
-        // so once signed up the button becomes a disabled "Signed Up" state rather than
-        // pretending to cancel (which would only clear local state, not the real signup).
-        if (pendingIds.has(id) || signedUpEvents.has(id)) return;
-
-        setPendingIds(prev => new Set(prev).add(id));
-        try {
-            await api.volunteerSignup(id, {
-                full_name: user?.user_metadata?.full_name || user?.email || 'Parent',
-            });
-            setSignedUpEvents(prev => new Set(prev).add(id));
-            toast.success('Signed up successfully!');
-        } catch (err) {
-            console.error('Volunteer signup error:', err);
-            toast.error('Failed to sign up. Please try again.');
-        } finally {
-            setPendingIds(prev => { const s = new Set(prev); s.delete(id); return s; });
-        }
-    };
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <main className="flex-grow p-4 space-y-4 overflow-y-auto">
-                <div className="bg-green-50 p-6 rounded-2xl text-center border border-green-100 shadow-sm relative overflow-hidden">
-                    <HelpingHandIcon className="h-10 w-10 mx-auto text-green-500 mb-2 relative z-10" />
-                    <h3 className="font-bold text-xl text-green-800 relative z-10">Volunteer Opportunities</h3>
-                    <p className="text-sm text-green-600 relative z-10">Get involved and make a difference!</p>
-                </div>
-
-                {loading ? (
-                    <div className="flex justify-center p-8">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                    </div>
-                ) : opportunities.length === 0 ? (
-                    <div className="text-center p-8 text-gray-500">No active volunteering opportunities.</div>
-                ) : (
-                    <div className="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))]">
-                        {opportunities.map((opp, i) => {
-                            const isSignedUp = signedUpEvents.has(opp.id);
-                            const isPending = pendingIds.has(opp.id);
-                            const spotsLeft = opp.spotsAvailable - (opp.spotsFilled + (isSignedUp ? 1 : 0));
-                            const isFull = spotsLeft <= 0;
-
-                            return (
-                                <motion.div
-                                    key={opp.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.25, delay: Math.min(i, 10) * 0.05 }}
-                                    whileHover={{ y: -2 }}
-                                    className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow"
-                                >
-                                    <div className="flex justify-between items-start gap-2 mb-2">
-                                        <h4 className="font-bold text-gray-800 text-lg min-w-0 break-words">{opp.title}</h4>
-                                        <span className={`flex-shrink-0 text-xs font-bold px-2 py-1 rounded-full uppercase tracking-wider ${isFull ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600'
-                                            }`}>
-                                            {isFull ? 'Full' : 'Open'}
-                                        </span>
-                                    </div>
-
-                                    <p className="text-sm text-gray-500 font-medium flex items-center mb-3">
-                                        <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></span>
-                                        {new Date(opp.date).toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
-                                    </p>
-
-                                    <p className="text-sm text-gray-600 mb-6 leading-relaxed bg-gray-50 p-3 rounded-lg border border-gray-100 break-words">
-                                        {opp.description}
-                                    </p>
-
-                                    <div className="flex flex-wrap justify-between items-center gap-2 mt-auto">
-                                        <p className="text-xs font-bold text-gray-400 whitespace-nowrap">
-                                            {Math.max(0, spotsLeft)} <span className="font-normal">spots remaining</span>
-                                        </p>
-                                        <motion.button
-                                            whileTap={{ scale: isFull || isPending || isSignedUp ? 1 : 0.95 }}
-                                            onClick={() => handleSignUpToggle(opp.id)}
-                                            disabled={isFull || isPending || isSignedUp}
-                                            className={`min-h-11 whitespace-nowrap py-2.5 px-6 text-sm font-bold rounded-xl shadow-sm transition-colors ${isSignedUp
-                                                ? 'bg-green-50 text-green-700 border border-green-200 cursor-default shadow-none'
-                                                : isFull || isPending
-                                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed shadow-none'
-                                                    : 'bg-green-600 text-white hover:bg-green-700 hover:shadow-green-200'
-                                                }`}
-                                        >
-                                            {isPending ? 'Signing up...' : isSignedUp ? '✓ Signed Up' : isFull ? 'Full' : 'Sign Up'}
-                                        </motion.button>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                )}
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const VolunteeringScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Volunteering"
+        explanation="Volunteering is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default VolunteeringScreen;

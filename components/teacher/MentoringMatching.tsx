@@ -1,199 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { api } from '../../lib/api';
-import { useProfile } from '../../context/ProfileContext';
-import { toast } from 'react-hot-toast';
-import {
-    UsersIcon,
-    CheckCircleIcon,
-    UserGroupIcon,
-    AlertTriangleIcon
-} from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface Teacher {
-    id: number;
-    full_name: string;
-    email: string;
-}
-
-interface MentoringMatch {
-    id: number;
-    mentor_name: string;
-    mentee_name: string;
-    subject_area: string;
-    status: string;
-    started_at: string;
-    is_mentor: boolean;
-}
-
-const MentoringMatching: React.FC = () => {
-    const { profile } = useProfile();
-    const [teachers, setTeachers] = useState<Teacher[]>([]);
-    const [myMatches, setMyMatches] = useState<MentoringMatch[]>([]);
-    const [selectedTeacher, setSelectedTeacher] = useState<number>(0);
-    const [subjectArea, setSubjectArea] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [errorOccurred, setErrorOccurred] = useState(false);
-
-    useEffect(() => {
-        fetchData();
-    }, []);
-
-    const fetchData = async () => {
-        try {
-            setLoading(true);
-            setErrorOccurred(false);
-            // Fetch all teachers and my mentoring matches from backend
-            const result = await api.getMentoringData(profile?.id || '');
-            if (result) {
-                setTeachers(result.teachers || []);
-                setMyMatches(result.myMatches || []);
-            }
-        } catch (error: any) {
-            console.error('Error fetching data:', error);
-            setErrorOccurred(true);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleRequestMentor = async () => {
-        if (!selectedTeacher || !subjectArea.trim()) {
-            toast.error('Please select a teacher and enter subject area');
-            return;
-        }
-
-        try {
-            await api.requestMentor(String(selectedTeacher), { subject_area: subjectArea });
-            toast.success('Mentoring request sent successfully!');
-            setSelectedTeacher(0);
-            setSubjectArea('');
-            fetchData();
-        } catch (error: any) {
-            console.error('Error creating match:', error);
-            toast.error('Failed to create mentoring match');
-        }
-    };
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-            </div>
-        );
-    }
-
-    if (errorOccurred) {
-        return (
-            <div className="p-6">
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
-                    <AlertTriangleIcon className="w-12 h-12 text-amber-300 mx-auto mb-3" />
-                    <p className="text-amber-800 font-semibold">Couldn't load mentoring data</p>
-                    <p className="text-amber-700 text-sm mt-1 mb-4">There was a problem reaching the server. Please try again.</p>
-                    <button
-                        onClick={fetchData}
-                        className="px-5 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
-
-    return (
-        <div className="p-6 space-y-6">
-            {/* Header */}
-            <div>
-                <h2 className="text-2xl font-bold text-gray-900">Mentoring</h2>
-                <p className="text-sm text-gray-600 mt-1">Connect with fellow teachers for professional growth</p>
-            </div>
-
-            {/* Request Mentor Form */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Request a Mentor</h3>
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Select Mentor
-                        </label>
-                        <select
-                            value={selectedTeacher}
-                            onChange={(e) => setSelectedTeacher(Number(e.target.value))}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        >
-                            <option value={0}>Choose a teacher</option>
-                            {teachers.map((teacher) => (
-                                <option key={teacher.id} value={teacher.id}>
-                                    {teacher.full_name} ({teacher.email})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Subject Area
-                        </label>
-                        <input
-                            type="text"
-                            value={subjectArea}
-                            onChange={(e) => setSubjectArea(e.target.value)}
-                            placeholder="e.g., Mathematics, Classroom Management"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                        />
-                    </div>
-
-                    <button
-                        onClick={handleRequestMentor}
-                        className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-                    >
-                        Send Request
-                    </button>
-                </div>
-            </div>
-
-            {/* My Mentoring Relationships */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-                <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-900">My Mentoring Relationships</h3>
-                </div>
-                <div className="divide-y divide-gray-200">
-                    {myMatches.length === 0 ? (
-                        <div className="p-8 text-center text-gray-500">
-                            <UserGroupIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                            <p>No active mentoring relationships</p>
-                        </div>
-                    ) : (
-                        myMatches.map((match) => (
-                            <div key={match.id} className="p-6">
-                                <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                        <div className="flex items-center space-x-2 mb-2">
-                                            <UsersIcon className="w-5 h-5 text-gray-400" />
-                                            <span className="px-2 py-1 bg-indigo-100 text-indigo-800 rounded text-xs font-medium">
-                                                {match.is_mentor ? 'Mentor' : 'Mentee'}
-                                            </span>
-                                        </div>
-                                        <p className="font-semibold text-gray-900">
-                                            {match.is_mentor ? `Mentoring: ${match.mentee_name}` : `Mentor: ${match.mentor_name}`}
-                                        </p>
-                                        <p className="text-sm text-gray-600 mt-1">
-                                            <strong>Subject:</strong> {match.subject_area}
-                                        </p>
-                                        <p className="text-xs text-gray-500 mt-1">
-                                            Started: {new Date(match.started_at).toLocaleDateString("ms-MY")}
-                                        </p>
-                                    </div>
-                                    <CheckCircleIcon className="w-6 h-6 text-green-600" />
-                                </div>
-                            </div>
-                        ))
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const MentoringMatching: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Mentoring Matching"
+        explanation="Mentoring Matching is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default MentoringMatching;
-

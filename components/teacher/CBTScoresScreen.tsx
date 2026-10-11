@@ -1,136 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { api } from '../../lib/api';
-import { CBTTest, CBTResult } from '../../types';
-import { CheckCircleIcon, XCircleIcon, AlertTriangleIcon } from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface CBTScoresScreenProps {
-    test: CBTTest;
-}
-
-const CBTScoresScreen: React.FC<CBTScoresScreenProps> = ({ test }) => {
-    const [results, setResults] = useState<CBTResult[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [errorOccurred, setErrorOccurred] = useState(false);
-
-    const fetchScores = async () => {
-        if (!test) return;
-        setLoading(true);
-        setErrorOccurred(false);
-        try {
-            // Use unified API client for scores
-            const data = await api.getQuizSubmissions(test.id);
-
-            if (data) {
-                const formattedResults: CBTResult[] = data.map((sub: any) => {
-                    const score = parseFloat(sub.score);
-                    const total = test.totalMarks || 100;
-                    const percentage = score;
-
-                    return {
-                        id: sub.id,
-                        examId: test.id,
-                        studentId: sub.student?.school_generated_id || sub.student_id,
-                        studentName: sub.student?.name || sub.full_name || 'Unknown',
-                        score: score,
-                        totalQuestions: total,
-                        percentage: percentage,
-                        submittedAt: sub.submitted_at,
-                        status: percentage >= (test.passPercentage || 50) ? 'Passed' : 'Failed'
-                    };
-                });
-                setResults(formattedResults);
-            }
-        } catch (err) {
-            console.error("Error fetching scores:", err);
-            setErrorOccurred(true);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchScores();
-    }, [test?.id]);
-
-    if (!test) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a test to view scores.</div>;
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <div className="p-4 bg-white border-b shadow-sm">
-                <h2 className="text-xl font-bold text-gray-800">{test.title} - Results</h2>
-                <div className="flex space-x-4 mt-2 text-sm text-gray-600">
-                    <p>Total Questions: <strong>{test.questionsCount}</strong></p>
-                    <p>Class: <strong>{test.className}</strong></p>
-                    <p>Participants: <strong>{results.length}</strong></p>
-                </div>
-            </div>
-
-            <main className="flex-grow p-4 overflow-y-auto">
-                {loading ? (
-                    <div className="text-center py-10 text-gray-500">Loading scores...</div>
-                ) : errorOccurred ? (
-                    <div className="text-center py-10">
-                        <AlertTriangleIcon className="w-12 h-12 text-amber-300 mx-auto mb-3" />
-                        <p className="text-gray-700 font-semibold">Couldn't load scores</p>
-                        <p className="text-gray-500 text-sm mt-1 mb-4">There was a problem reaching the server. Please try again.</p>
-                        <button
-                            onClick={fetchScores}
-                            className="px-5 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
-                        >
-                            Retry
-                        </button>
-                    </div>
-                ) : results.length === 0 ? (
-                    <div className="text-center py-10 text-gray-500">
-                        <p>No students have submitted this test yet.</p>
-                    </div>
-                ) : (
-                    <div className="bg-white rounded-xl shadow-sm overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-50 sticky top-0 z-10">
-                                <tr>
-                                    <th className="sticky left-0 z-20 bg-gray-50 px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">Student Name</th>
-                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Score</th>
-                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Percentage</th>
-                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Submitted</th>
-                                    <th className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Status</th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {results.map((result, idx) => (
-                                    <tr key={idx}>
-                                        <td className="sticky left-0 z-10 bg-white px-6 py-4 whitespace-nowrap shadow-[2px_0_4px_-2px_rgba(0,0,0,0.08)]">
-                                            <div className="text-sm font-medium text-gray-900">{result.studentName}</div>
-                                            <div className="text-xs text-gray-500">ID: {result.studentId}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className="text-sm text-gray-900">{result.score} / {result.totalQuestions}</div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <div className={`text-sm font-bold ${result.status === 'Passed' ? 'text-green-600' : 'text-red-600'}`}>
-                                                {result.percentage}%
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {new Date(result.submittedAt).toLocaleDateString("ms-MY")}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {result.status === 'Passed' ? (
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Passed</span>
-                                            ) : (
-                                                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Failed</span>
-                                            )}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const CBTScoresScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="CBTScores"
+        explanation="CBTScores is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default CBTScoresScreen;
-

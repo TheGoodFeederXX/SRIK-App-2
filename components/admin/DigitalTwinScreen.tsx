@@ -1,96 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { api } from '../../lib/api';
-import { Users, UserCheck, UserX, Bus, Wrench, Receipt, HeartPulse, Contact, Gauge, ShieldAlert, RefreshCcw } from 'lucide-react';
-import CenteredLoader from '../ui/CenteredLoader';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface Snapshot {
-    students_present: number;
-    teachers_present: number;
-    teachers_absent: number;
-    buses_active: number;
-    open_maintenance_requests: number;
-    unpaid_fees_today: number;
-    medical_incidents_today: number;
-    visitors_on_campus: number;
-    classes_running_pct: number;
-    ai_alerts: number;
-    generated_at: string;
-    estimates: string[];
-}
-
-const CARDS: { key: keyof Snapshot; label: string; icon: React.ElementType; color: string; suffix?: string }[] = [
-    { key: 'students_present', label: 'Students Present', icon: Users, color: 'bg-emerald-50 text-emerald-700' },
-    { key: 'teachers_present', label: 'Teachers Present', icon: UserCheck, color: 'bg-blue-50 text-blue-700' },
-    { key: 'teachers_absent', label: 'Teachers Absent', icon: UserX, color: 'bg-red-50 text-red-700' },
-    { key: 'buses_active', label: 'Buses Active', icon: Bus, color: 'bg-amber-50 text-amber-700' },
-    { key: 'open_maintenance_requests', label: 'Maintenance Requests', icon: Wrench, color: 'bg-orange-50 text-orange-700' },
-    { key: 'unpaid_fees_today', label: 'Unpaid Fees', icon: Receipt, color: 'bg-rose-50 text-rose-700' },
-    { key: 'medical_incidents_today', label: 'Medical Incidents Today', icon: HeartPulse, color: 'bg-pink-50 text-pink-700' },
-    { key: 'visitors_on_campus', label: 'Visitors On Campus', icon: Contact, color: 'bg-cyan-50 text-cyan-700' },
-    { key: 'classes_running_pct', label: 'Classes Running', icon: Gauge, color: 'bg-indigo-50 text-indigo-700', suffix: '%' },
-    { key: 'ai_alerts', label: 'AI Alerts', icon: ShieldAlert, color: 'bg-fuchsia-50 text-fuchsia-700' },
-];
-
-const REFRESH_MS = 30000;
-
-const DigitalTwinScreen = () => {
-    const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    const fetchSnapshot = useCallback(async () => {
-        try {
-            const data = await api.getDigitalTwinSnapshot();
-            setSnapshot(data);
-        } catch (err) {
-            console.error('Error loading Digital Twin snapshot:', err);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        fetchSnapshot();
-        const interval = setInterval(fetchSnapshot, REFRESH_MS);
-        return () => clearInterval(interval);
-    }, [fetchSnapshot]);
-
-    return (
-        <div className="p-6 max-w-5xl mx-auto space-y-6">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 font-outfit flex items-center gap-2">🏫 School Status</h1>
-                    <p className="text-gray-500">A live snapshot of everything happening right now.</p>
-                </div>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={fetchSnapshot} className="flex items-center gap-2 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-                    <RefreshCcw className="w-4 h-4" /> Refresh
-                </motion.button>
-            </div>
-
-            {loading || !snapshot ? (
-                <CenteredLoader className="py-12" />
-            ) : (
-                <>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                        {CARDS.map((c, ci) => {
-                            const Icon = c.icon;
-                            const isEstimate = snapshot.estimates?.includes(c.key);
-                            return (
-                                <motion.div key={c.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(ci, 15) * 0.03 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
-                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center mb-2 ${c.color}`}>
-                                        <Icon className="w-4.5 h-4.5" />
-                                    </div>
-                                    <p className="text-2xl font-bold text-gray-900">{snapshot[c.key]}{c.suffix || ''}</p>
-                                    <p className="text-xs text-gray-500">{c.label}{isEstimate ? ' (est.)' : ''}</p>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                    <p className="text-xs text-gray-400">Last updated {new Date(snapshot.generated_at).toLocaleTimeString("ms-MY")} — refreshes automatically every 30 seconds. Buses and classes running are best-effort estimates, not live tracking.</p>
-                </>
-            )}
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const DigitalTwinScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Digital Twin"
+        explanation="Digital Twin is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default DigitalTwinScreen;

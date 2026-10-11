@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import { listAuditLog } from '../../src/lib/supabase/auditTrail';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { Shield, Search, Filter, Download, AlertCircle, CheckCircle, Eye } from 'lucide-react';
@@ -55,11 +55,19 @@ const AuditTrailViewer: React.FC = () => {
         if (!currentSchool) return;
         try {
             setLoading(true);
-            const data = await api.getAuditLogs(currentSchool.id, 500, undefined, {
-                startDate: dateRange.start,
-                endDate: dateRange.end,
-            });
-            setAuditLogs(Array.isArray(data) ? data : []);
+            // The school's real audit trail. This screen is the one that lets the
+            // office search the record, and it was reading it from a server that is
+            // not deployed — so the search always came back empty.
+            const entries = await listAuditLog({ limit: 500 });
+            setAuditLogs(entries.map(e => ({
+                id: String(e.id),
+                action: e.action,
+                table_name: e.entity_type,
+                record_id: e.entity_id ?? '',
+                user_email: e.actor_email ?? '',
+                created_at: e.created_at,
+                details: e.after_data ?? e.before_data ?? null,
+            })) as any);
         } catch (error: any) {
             console.error('Error fetching audit logs:', error);
             toast.error('Failed to load audit logs');

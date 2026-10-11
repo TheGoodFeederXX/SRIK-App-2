@@ -1,81 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
-import { toast } from 'react-hot-toast';
-import { CheckCircle2, XCircle, ClipboardCheck } from 'lucide-react';
-import CenteredLoader from '../ui/CenteredLoader';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const GatePassApprovals = () => {
-    const [pending, setPending] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [actingId, setActingId] = useState<string | null>(null);
-
-    const fetchPending = useCallback(async () => {
-        try {
-            const result = await api.getDepartures({ status: 'Pending' });
-            setPending(Array.isArray(result) ? result.filter((d: any) => d.type === 'EarlyDismissal') : []);
-        } catch (err) {
-            console.error('Error loading gate pass requests:', err);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => { fetchPending(); }, [fetchPending]);
-
-    const handleDecision = async (id: string, approve: boolean) => {
-        setActingId(id);
-        try {
-            if (approve) await api.approveDeparture(id); else await api.denyDeparture(id);
-            toast.success(approve ? 'Gate pass approved' : 'Gate pass denied');
-            setPending(prev => prev.filter(p => p.id !== id));
-        } catch (err: any) {
-            toast.error(err?.message || 'Failed to update');
-        } finally {
-            setActingId(null);
-        }
-    };
-
-    return (
-        <div className="p-6 max-w-2xl mx-auto space-y-6">
-            <div>
-                <h1 className="text-2xl font-bold text-gray-900 font-outfit">Gate Pass Approvals</h1>
-                <p className="text-gray-500">Early dismissal requests awaiting your decision.</p>
-            </div>
-
-            {loading ? (
-                <CenteredLoader className="py-12" />
-            ) : pending.length === 0 ? (
-                <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.25 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center">
-                    <ClipboardCheck className="w-12 h-12 text-green-300 mx-auto mb-4" />
-                    <h3 className="font-bold text-lg text-gray-900">All clear</h3>
-                    <p className="text-gray-500 mt-1">No pending gate pass requests.</p>
-                </motion.div>
-            ) : (
-                <div className="space-y-3">
-                    <AnimatePresence>
-                    {pending.map((d, di) => (
-                        <motion.div key={d.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.2, delay: Math.min(di, 10) * 0.04 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-                            <p className="font-bold text-gray-900">{d.student_name}</p>
-                            <p className="text-sm text-gray-500">Pickup: {d.pickup_person_name || 'Unspecified'}</p>
-                            {d.reason && <p className="text-sm text-gray-600 mt-1 italic">"{d.reason}"</p>}
-                            <div className="flex gap-2 mt-3">
-                                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} disabled={actingId === d.id} onClick={() => handleDecision(d.id, true)}
-                                    className="flex items-center gap-1.5 bg-green-600 text-white text-sm font-semibold px-3 py-1.5 rounded-lg disabled:opacity-60">
-                                    <CheckCircle2 className="w-4 h-4" /> Approve
-                                </motion.button>
-                                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.96 }} disabled={actingId === d.id} onClick={() => handleDecision(d.id, false)}
-                                    className="flex items-center gap-1.5 bg-red-50 text-red-600 text-sm font-semibold px-3 py-1.5 rounded-lg disabled:opacity-60">
-                                    <XCircle className="w-4 h-4" /> Deny
-                                </motion.button>
-                            </div>
-                        </motion.div>
-                    ))}
-                    </AnimatePresence>
-                </div>
-            )}
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const GatePassApprovals: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Gate Pass Approvals"
+        explanation="Gate Pass Approvals is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default GatePassApprovals;

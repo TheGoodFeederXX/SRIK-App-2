@@ -1,209 +1,28 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
-import { LearningResource } from '../../types';
-import { DocumentTextIcon, PlayIcon, SearchIcon, ElearningIcon, ChevronRightIcon } from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const ResourceCard: React.FC<{ resource: LearningResource; index: number }> = ({ resource, index }) => {
-    const isVideo = resource.type === 'Video';
-    const isPDF = resource.type === 'PDF';
-
-    return (
-        <motion.a
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.25, delay: Math.min(index, 12) * 0.04 }}
-            href={resource.url || '#'}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 h-full flex flex-col"
-        >
-            {/* Thumbnail Section */}
-            <div className="relative aspect-video overflow-hidden bg-gray-100 flex-shrink-0">
-                {resource.thumbnailUrl ? (
-                    <img
-                        src={resource.thumbnailUrl}
-                        alt={resource.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gray-50 text-gray-300">
-                        <ElearningIcon className="w-12 h-12 opacity-50" />
-                    </div>
-                )}
-
-                {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity"></div>
-
-                {/* Play Button Overlay (if video) */}
-                {isVideo && (
-                    <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center border border-white/40 shadow-lg group-hover:scale-110 transition-transform duration-300">
-                            <PlayIcon className="h-6 w-6 text-white pl-1" />
-                        </div>
-                    </div>
-                )}
-
-                {/* Type Badge */}
-                <div className="absolute top-3 left-3">
-                    <span className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-white/20 shadow-sm ${isVideo ? 'bg-red-500/90 text-white' :
-                            isPDF ? 'bg-blue-500/90 text-white' :
-                                'bg-gray-800/90 text-white'
-                        } `}>
-                        {resource.type}
-                    </span>
-                </div>
-            </div>
-
-            {/* Content Section */}
-            <div className="p-5 flex flex-col flex-grow">
-                <div className="mb-2">
-                    <p className="text-xs font-medium text-green-600 mb-1 uppercase tracking-wide">{resource.subject}</p>
-                    <h3 className="font-bold text-gray-900 text-lg leading-tight line-clamp-2 group-hover:text-green-700 transition-colors">
-                        {resource.title}
-                    </h3>
-                </div>
-
-                <p className="text-sm text-gray-500 line-clamp-2 mb-4 h-10">
-                    {resource.description || "No description provided."}
-                </p>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-50 mt-auto">
-                    <span className="text-xs font-medium text-gray-400 whitespace-nowrap">Tap to view</span>
-                    <span className="flex items-center whitespace-nowrap text-sm font-bold text-gray-900 group-hover:text-green-600 transition-colors">
-                        Open
-                        <ChevronRightIcon className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" />
-                    </span>
-                </div>
-            </div>
-        </motion.a>
-    );
-};
-
-const LearningResourcesScreen: React.FC = () => {
-    const [resources, setResources] = useState<LearningResource[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedSubject, setSelectedSubject] = useState<string>('All');
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const fetchResources = useCallback(async () => {
-        try {
-            const data = await api.getLearningResources();
-
-            if (data) {
-                // Map DB columns to Typescript interface if needed (snake_case -> camelCase)
-                const mappedData: LearningResource[] = data.map((r: any) => ({
-                    id: r.id,
-                    title: r.title,
-                    type: r.type,
-                    subject: r.subject,
-                    description: r.description,
-                    url: r.url,
-                    thumbnailUrl: r.thumbnail_url
-                }));
-                setResources(mappedData);
-            }
-        } catch (err) {
-            console.error('Error fetching resources:', err);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    // Real-time synchronization
-    useAutoSync(['learning_resources'], fetchResources);
-
-    useEffect(() => {
-        fetchResources();
-    }, [fetchResources]);
-
-    const subjects = useMemo(() =>
-        ['All', ...Array.from(new Set(resources.map(r => r.subject)))]
-        , [resources]);
-
-    const filteredResources = useMemo(() => {
-        return resources.filter(r => {
-            const matchesSubject = selectedSubject === 'All' || r.subject === selectedSubject;
-            const matchesSearch = r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                (r.description && r.description.toLowerCase().includes(searchQuery.toLowerCase()));
-            return matchesSubject && matchesSearch;
-        });
-    }, [selectedSubject, searchQuery, resources]);
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            {/* Sticky Header with Search & Filters */}
-            <div className="sticky top-0 z-20 bg-white/90 backdrop-blur-md border-b border-gray-200">
-                <div className="p-4 space-y-4 max-w-7xl mx-auto w-full">
-                    {/* Search Bar */}
-                    <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <SearchIcon className="h-5 w-5 text-gray-400" />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search resources..."
-                            className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:bg-white focus:ring-2 focus:ring-green-500/20 focus:border-green-500 transition-all duration-200"
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                    </div>
-
-                    {/* Filter Pills */}
-                    <div className="flex space-x-2 overflow-x-auto pb-1 no-scrollbar">
-                        {subjects.map((subject: string) => (
-                            <motion.button
-                                key={subject}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={() => setSelectedSubject(subject)}
-                                className={`min-h-11 px-5 py-2 text-sm font-semibold rounded-full flex-shrink-0 transition-colors duration-200 whitespace-nowrap border ${selectedSubject === subject
-                                        ? 'bg-green-600 text-white border-green-600 shadow-md shadow-green-200'
-                                        : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                                    } `}
-                            >
-                                {subject}
-                            </motion.button>
-                        ))}
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <main className="flex-grow p-4 md:p-6 overflow-y-auto w-full max-w-7xl mx-auto">
-                {loading ? (
-                    <div className="flex justify-center items-center h-40">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-                    </div>
-                ) : filteredResources.length > 0 ? (
-                    <div className="grid gap-4 sm:gap-6 pb-20 [grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr))]">
-                        {filteredResources.map((resource, i) => (
-                            <ResourceCard key={resource.id} resource={resource} index={i} />
-                        ))}
-                    </div>
-                ) : (
-                    /* Empty State */
-                    <div className="flex flex-col items-center justify-center py-10 text-center">
-                        <div className="bg-white p-6 rounded-full shadow-sm mb-4">
-                            <SearchIcon className="w-12 h-12 text-gray-300" />
-                        </div>
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">No resources found</h3>
-                        <p className="text-gray-500 max-w-xs mx-auto">
-                            We couldn't find any resources matching your search or filter criteria.
-                        </p>
-                        <motion.button
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={() => { setSelectedSubject('All'); setSearchQuery(''); }}
-                            className="mt-6 min-h-11 px-6 py-2 bg-gray-900 text-white rounded-lg font-medium shadow-lg hover:shadow-xl transition-shadow"
-                        >
-                            Clear Filters
-                        </motion.button>
-                    </div>
-                )}
-            </main>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const LearningResourcesScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Learning Resources"
+        explanation="Learning Resources is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default LearningResourcesScreen;

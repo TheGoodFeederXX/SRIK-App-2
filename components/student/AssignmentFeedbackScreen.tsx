@@ -1,181 +1,28 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { StudentAssignment } from '../../types';
-import { SUBJECT_COLORS, DocumentTextIcon, PaperclipIcon } from '../../constants';
-import { FileDocIcon, FilePdfIcon, FileImageIcon } from '../../constants';
-import { api } from '../../lib/api';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const getFileIcon = (fileName: string): React.ReactElement => {
-  const extension = fileName.split('.').pop()?.toLowerCase();
-  if (extension === 'pdf') return <FilePdfIcon className="text-red-500 w-6 h-6" />;
-  if (extension === 'doc' || extension === 'docx') return <FileDocIcon className="text-blue-500 w-6 h-6" />;
-  if (['jpg', 'jpeg', 'png', 'gif'].includes(extension || '')) return <FileImageIcon className="text-green-500 w-6 h-6" />;
-  return <DocumentTextIcon className="text-gray-500 w-6 h-6" />;
-};
-
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-interface AssignmentFeedbackScreenProps {
-  assignment: StudentAssignment;
-}
-
-const AssignmentFeedbackScreen: React.FC<AssignmentFeedbackScreenProps> = ({ assignment: initialAssignment }) => {
-  const [assignment, setAssignment] = useState<StudentAssignment | null>(initialAssignment || null);
-  const [loading, setLoading] = useState(false);
-  
-  const fetchAssignmentDetails = useCallback(async () => {
-    if (!initialAssignment?.id) return;
-    if (window.__AUDIT_MODE__) {
-      console.log("🛡️ Audit mode: Skipping assignment fetch");
-      return;
-    }
-    try {
-      const data = await api.getAssignment(initialAssignment.id);
-      if (data) {
-        // Fetch submission too
-        const sub = await api.getAssignmentSubmission(initialAssignment.id);
-        
-        let mappedFiles: any[] = [];
-        if (sub?.file_url) {
-          mappedFiles = sub.file_url.split(',').map((name: string) => ({
-            name: name.trim(),
-            size: 0
-          }));
-        }
-
-        setAssignment({
-          ...data,
-          submission: sub ? {
-            id: sub.id,
-            assignmentId: sub.assignment_id,
-            student: { id: sub.student_id, name: 'You', avatarUrl: '' },
-            submittedAt: sub.submitted_at,
-            isLate: sub.is_late,
-            files: mappedFiles,
-            status: sub.status,
-            grade: sub.grade,
-            feedback: sub.feedback,
-            textSubmission: sub.text_submission || sub.submission_text
-          } : null
-        });
-      }
-    } catch (err) {
-        console.error("Error fetching assignment feedback:", err);
-    }
-  }, [initialAssignment?.id]);
-
-  // Real-time synchronization
-  useAutoSync(['assignments', 'submissions'], fetchAssignmentDetails);
-
-  useEffect(() => {
-    if (initialAssignment?.id) {
-        fetchAssignmentDetails();
-    }
-  }, [fetchAssignmentDetails]);
-
-  const subjectColor = (assignment && assignment.subject) ? SUBJECT_COLORS[assignment.subject] : 'bg-gray-100 text-gray-800';
-  
-  if (!assignment) {
-    return (
-      <div className="p-4 text-center">
-        <p className="text-gray-500">Assignment details not found.</p>
-      </div>
-    );
-  }
-
-  const submission = assignment.submission;
-
-  if (!submission || (submission.status !== 'Graded' && !window.__AUDIT_MODE__)) {
-    return (
-      <div className="p-4 text-center">
-        <p className="text-gray-500">This assignment has not been graded yet. Please check back later once your teacher has reviewed your submission. We ensure all submissions are processed within 48 hours for your convenience.</p>
-        {window.__AUDIT_MODE__ && <p className="text-xs text-orange-500 mt-2">Audit Mode Active: Showing extended placeholder content to verify frontend rendering integrity and layout stability during automated tests.</p>}
-      </div>
-    );
-  }
-
-  const getGradeColor = (score: number) => {
-    if (score >= 90) return 'text-green-600';
-    if (score >= 75) return 'text-sky-600';
-    if (score >= 60) return 'text-amber-600';
-    return 'text-red-600';
-  };
-
-  const gradeColor = getGradeColor(submission.grade || 0);
-
-  return (
-    <div className="flex flex-col h-full bg-gray-50">
-      <main className="flex-grow p-4 space-y-4 overflow-y-auto">
-        {/* Assignment Header */}
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="bg-white p-4 rounded-xl shadow-sm">
-            <div className="flex justify-between items-start mb-1">
-              <h3 className="font-bold text-xl text-gray-800 pr-2 flex-1">{assignment.title}</h3>
-              <span className={`px-2.5 py-1 text-xs font-semibold rounded-full flex-shrink-0 ${subjectColor}`}>
-                {assignment.subject}
-              </span>
-            </div>
-        </motion.div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="space-y-4">
-                {/* Grade Display */}
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }} className="bg-white p-4 rounded-xl shadow-sm text-center">
-                    <p className="text-sm font-medium text-gray-500">YOUR GRADE</p>
-                    <p className={`text-6xl font-bold ${gradeColor}`}>{submission.grade}<span className="text-3xl text-gray-400 font-medium">/100</span></p>
-                </motion.div>
-
-                {/* Teacher's Feedback */}
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.1 }} className="bg-white p-4 rounded-xl shadow-sm">
-                    <h4 className="font-bold text-gray-800 mb-2">Teacher's Comments</h4>
-                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200">
-                        <p className="text-gray-700 whitespace-pre-wrap">{submission.feedback || 'No comments provided.'}</p>
-                    </div>
-                </motion.div>
-            </div>
-
-            {/* Your Submission */}
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.15 }} className="bg-white p-4 rounded-xl shadow-sm">
-                <h4 className="font-bold text-gray-800 mb-2">Your Submission</h4>
-                {submission.textSubmission && (
-                    <div className="mb-3">
-                        <div className="flex items-center space-x-2 text-sm font-semibold text-gray-600 mb-1">
-                            <DocumentTextIcon className="w-5 h-5"/>
-                            <span>Text Answer</span>
-                        </div>
-                        <p className="text-sm text-gray-700 bg-gray-50 p-3 rounded-lg border border-gray-200">{submission.textSubmission}</p>
-                    </div>
-                )}
-                {submission.files && submission.files.length > 0 && (
-                    <div>
-                        <div className="flex items-center space-x-2 text-sm font-semibold text-gray-600 mb-2">
-                            <PaperclipIcon className="w-5 h-5"/>
-                            <span>Attached Files</span>
-                        </div>
-                        <div className="space-y-2">
-                            {submission.files.map((file, index) => (
-                                <div key={index} className="flex items-center p-2 bg-gray-50 rounded-lg border border-gray-200">
-                                {getFileIcon(file.name)}
-                                <div className="ml-3 flex-grow overflow-hidden">
-                                    <p className="text-sm font-medium text-gray-800 truncate">{file.name}</p>
-                                    <p className="text-xs text-gray-500">{formatFileSize(file.size)}</p>
-                                </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </motion.div>
-        </div>
-      </main>
-    </div>
-  );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const AssignmentFeedbackScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Assignment Feedback"
+        explanation="Assignment Feedback is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default AssignmentFeedbackScreen;

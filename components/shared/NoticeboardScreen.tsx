@@ -1,118 +1,28 @@
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-import React, { useMemo, useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { PinIcon } from '../../constants';
-import { api } from '../../lib/api';
-import { Notice, AnnouncementCategory } from '../../types';
-
-interface NoticeboardScreenProps {
-  userType: 'parent' | 'student' | 'teacher' | 'admin';
-  schoolId?: string;
-}
-
-const categoryStyles: { [key in AnnouncementCategory]: { bg: string, text: string, border: string } } = {
-  Urgent: { bg: 'bg-red-50', text: 'text-red-800', border: 'border-red-200' },
-  Event: { bg: 'bg-sky-50', text: 'text-sky-800', border: 'border-sky-200' },
-  Holiday: { bg: 'bg-green-50', text: 'text-green-800', border: 'border-green-200' },
-  General: { bg: 'bg-gray-50', text: 'text-gray-800', border: 'border-gray-200' },
-  'Homework': { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-200' },
-  'Test Reminder': { bg: 'bg-amber-50', text: 'text-amber-800', border: 'border-amber-200' },
-};
-
-const NoticeCard: React.FC<{ notice: Notice; index: number }> = ({ notice, index }) => {
-  const styles = categoryStyles[notice.category] || categoryStyles['General'];
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: Math.min(index, 10) * 0.04 }}
-      whileHover={{ y: -2 }}
-      className={`rounded-xl shadow-sm hover:shadow-md transition-shadow border ${styles.border} overflow-hidden`}>
-      <div className={`${styles.bg} p-4`}>
-        {notice.video_url ? (
-          <video src={notice.video_url} controls className="w-full h-40 object-cover rounded-lg mb-3 bg-black"></video>
-        ) : notice.image_url && (
-          <img src={notice.image_url} alt={notice.title} className="w-full h-32 object-cover rounded-lg mb-3" />
-        )}
-        <div className="flex justify-between items-start">
-          <h3 className={`font-bold text-lg ${styles.text}`}>{notice.title}</h3>
-          {notice.is_pinned && (
-            <div className="flex-shrink-0 ml-2">
-              <PinIcon className={`w-5 h-5 -rotate-45 ${styles.text}`} />
-            </div>
-          )}
-        </div>
-        <p className="text-sm text-gray-700 mt-1">
-          {new Date(notice.timestamp).toLocaleDateString('ms-MY', { month: 'long', day: 'numeric', year: 'numeric' })}
-        </p>
-      </div>
-      <div className="p-4 bg-white">
-        <p className="text-gray-800">{notice.content}</p>
-        {notice.video_url && !notice.content && (
-          <p className="text-gray-800">Please watch the video announcement above.</p>
-        )}
-      </div>
-    </motion.div>
-  );
-};
-
-
-const NoticeboardScreen: React.FC<NoticeboardScreenProps> = ({ userType, schoolId }) => {
-  const [notices, setNotices] = useState<Notice[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadNotices();
-  }, [schoolId]);
-
-  const loadNotices = async () => {
-    setLoading(true);
-    const data = await api.getNotices(schoolId || '');
-    // fetchNotices already returns Notice[], so no mapping needed if types align
-    // But fetchNotices in DB returns basic shape, might need to ensure mapped correctly?
-    // Let's check fetchNotices implementation again.
-    // It returns mapped properties: title, content, etc.
-    // So we can just set it.
-    if (data) {
-      setNotices(data);
-    }
-    setLoading(false);
-  };
-
-  const relevantNotices = useMemo(() => {
-    return notices
-      .filter(notice =>
-        notice.audience.includes('all') ||
-        notice.audience.includes(`${userType}s` as 'parents' | 'students' | 'teachers')
-      )
-      .sort((a, b) => {
-        // Pinned items first, then by date
-        if (a.is_pinned && !b.is_pinned) return -1;
-        if (!a.is_pinned && b.is_pinned) return 1;
-        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-      });
-  }, [userType, notices]);
-
-  if (loading) {
-    return <div className="flex items-center justify-center h-full"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div></div>;
-  }
-
-  return (
-    <div className="flex flex-col h-full bg-gray-100">
-      <main className="flex-grow p-4 space-y-4 overflow-y-auto">
-        {relevantNotices.length > 0 ? (
-          relevantNotices.map((notice, i) => (
-            <NoticeCard key={notice.id} notice={notice} index={i} />
-          ))
-        ) : (
-          <div className="text-center py-10">
-            <p className="text-gray-700">No announcements found.</p>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const NoticeboardScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Noticeboard"
+        explanation="Noticeboard is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default NoticeboardScreen;

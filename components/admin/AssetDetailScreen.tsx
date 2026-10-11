@@ -1,82 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { api } from '../../lib/api';
-import { Package, MapPin, Calendar, ShieldCheck, User, Wrench } from 'lucide-react';
-import CenteredLoader from '../ui/CenteredLoader';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const AssetDetailScreen = ({ assetId }: { assetId: string }) => {
-    const [asset, setAsset] = useState<any | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-
-    useEffect(() => {
-        (async () => {
-            try {
-                const data = await api.getAssetDetail(assetId);
-                setAsset(data);
-            } catch (err: any) {
-                setError(err?.message || 'Asset not found');
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [assetId]);
-
-    if (loading) return <CenteredLoader className="p-6" />;
-    if (error || !asset) return <div className="p-6 text-center text-gray-500">{error || 'Asset not found'}</div>;
-
-    return (
-        <div className="p-6 max-w-2xl mx-auto space-y-6">
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
-                        <Package className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h1 className="text-xl font-bold text-gray-900 font-outfit">{asset.name}</h1>
-                        <p className="text-xs text-gray-400 font-mono">{asset.code || 'NO-CODE'}</p>
-                    </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-start gap-2">
-                        <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Location</p><p className="text-sm font-semibold text-gray-900">{asset.location || asset.facility?.name || 'Not assigned'}</p></div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                        <User className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Assigned To</p><p className="text-sm font-semibold text-gray-900">{asset.assigned_user?.full_name || 'Unassigned'}</p></div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                        <Calendar className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Purchase Date</p><p className="text-sm font-semibold text-gray-900">{asset.purchase_date ? new Date(asset.purchase_date).toLocaleDateString("ms-MY") : 'Unknown'}</p></div>
-                    </div>
-                    <div className="flex items-start gap-2">
-                        <ShieldCheck className="w-4 h-4 text-gray-400 mt-0.5" />
-                        <div><p className="text-xs text-gray-400 uppercase font-bold">Warranty</p><p className="text-sm font-semibold text-gray-900">{asset.warranty_expiry ? `Until ${new Date(asset.warranty_expiry).toLocaleDateString("ms-MY")}` : 'No warranty on file'}</p></div>
-                    </div>
-                </div>
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                <h2 className="font-bold text-gray-900 flex items-center gap-2 mb-3"><Wrench className="w-4 h-4 text-indigo-500" /> Maintenance History</h2>
-                {(!asset.maintenance_tickets || asset.maintenance_tickets.length === 0) ? (
-                    <p className="text-sm text-gray-400">No maintenance tickets on record for this asset.</p>
-                ) : (
-                    <div className="space-y-2">
-                        {asset.maintenance_tickets.map((t: any, ti: number) => (
-                            <motion.div key={t.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, delay: Math.min(ti, 10) * 0.03 }} className="flex items-center justify-between border-b border-gray-50 pb-2">
-                                <div>
-                                    <p className="text-sm font-semibold text-gray-900">{t.issue_title}</p>
-                                    <p className="text-xs text-gray-400">{new Date(t.created_at).toLocaleDateString("ms-MY")}</p>
-                                </div>
-                                <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-gray-100 text-gray-600">{t.status}</span>
-                            </motion.div>
-                        ))}
-                    </div>
-                )}
-            </motion.div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const AssetDetailScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Asset Detail"
+        explanation="Asset Detail is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default AssetDetailScreen;

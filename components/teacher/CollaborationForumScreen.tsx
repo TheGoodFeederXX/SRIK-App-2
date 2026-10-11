@@ -1,165 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { ForumTopic } from '../../types';
-import { ChevronRightIcon, PlusIcon, UserGroupIcon, ShieldCheckIcon, GlobeIcon } from '../../constants';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '../../context/AuthContext';
-import { useProfile } from '../../context/ProfileContext';
-import { api } from '../../lib/api';
-import { useRealtimeRefresh } from '../../hooks/useRealtimeRefresh';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-
-const formatDistanceToNow = (date: string | Date | undefined | null) => {
-  if (!date) return 'Never';
-  const d = typeof date === 'string' ? new Date(date) : date;
-  if (isNaN(d.getTime())) return 'Invalid date';
-  
-  const diff = Math.floor((new Date().getTime() - d.getTime()) / 1000);
-  if (diff < 60) return 'just now';
-  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-  return `${Math.floor(diff / 86400)}d ago`;
-};
-
-interface CollaborationForumScreenProps {
-  navigateTo: (view: string, title: string, props?: any) => void;
-  teacherProfile?: any;
-}
-
-const CollaborationForumScreen: React.FC<CollaborationForumScreenProps> = ({ navigateTo, teacherProfile }) => {
-  const { user, currentSchool } = useAuth();
-  const { profile } = useProfile();
-  const [topics, setTopics] = useState<ForumTopic[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const forumEnabled = teacherProfile?.notification_preferences?.forumEnabled !== false;
-
-  const loadTopics = async () => {
-    if (!forumEnabled || !currentSchool?.id) return;
-    setLoading(true);
-    try {
-      const realTopics = await api.getForumTopics(currentSchool.id);
-      setTopics(realTopics);
-    } catch (error) {
-      console.error('Error loading topics:', error);
-      toast.error('Failed to load forum topics.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadTopics();
-  }, [currentSchool?.id, forumEnabled]);
-
-  useRealtimeRefresh(['forum_topics', 'forum_posts'], loadTopics);
-
-
-
-  if (!forumEnabled) {
-    return (
-      <div className="flex flex-col items-center justify-center h-full bg-gray-50 p-6 text-center">
-        <div className="bg-white p-8 rounded-3xl shadow-xl max-w-md border border-gray-100">
-          <div className="w-20 h-20 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <ShieldCheckIcon className="h-10 w-10 text-amber-500" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-800 mb-4">Forum Access Disabled</h2>
-          <p className="text-slate-600 mb-8">
-            The collaboration forum is currently disabled for your account. You can enable it in your
-            <button
-              onClick={() => navigateTo('settings', 'Settings', { activeSetting: 'teacherNotificationSettings' })}
-              className="text-blue-600 font-semibold hover:underline ml-1"
-            >
-              Settings
-            </button>.
-          </p>
-          <button
-            onClick={() => navigateTo('overview', 'Dashboard')}
-            className="w-full py-3 bg-purple-600 text-white font-bold rounded-xl shadow-lg hover:bg-purple-700 transition"
-          >
-            Back to Dashboard
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-full bg-gray-100 relative">
-      <main className="flex-grow p-4 overflow-y-auto pb-24">
-        <div className="bg-purple-50 p-4 rounded-xl text-center border border-purple-200 mb-4">
-          <UserGroupIcon className="h-10 w-10 mx-auto text-purple-400 mb-2" />
-          <h3 className="font-bold text-lg text-purple-800">Teacher Forum</h3>
-          <p className="text-sm text-purple-700">Share ideas, ask questions, and collaborate with your peers.</p>
-        </div>
-
-        <button
-          onClick={() => navigateTo('globalForum', 'Global Teacher Community')}
-          className="w-full bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-xl text-left border border-indigo-200 mb-4 flex items-center gap-3 hover:ring-2 hover:ring-indigo-200 transition-all"
-        >
-          <GlobeIcon className="h-9 w-9 text-indigo-500 flex-shrink-0" />
-          <div className="flex-1">
-            <h3 className="font-bold text-indigo-800">Global Teacher Community</h3>
-            <p className="text-sm text-indigo-700">Connect with teachers from other schools across the platform.</p>
-          </div>
-          <ChevronRightIcon className="h-5 w-5 text-indigo-400 flex-shrink-0" />
-        </button>
-
-        {loading ? (
-          <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {topics.map(topic => (
-              <button
-                key={topic.id}
-                onClick={() => navigateTo('forumTopic', topic.title, { topicId: topic.id, topic })}
-                className="w-full bg-white rounded-xl shadow-sm p-4 text-left hover:bg-gray-50 hover:ring-2 hover:ring-purple-200 transition-all group"
-              >
-                <h4 className="font-bold text-gray-800 group-hover:text-purple-700 transition-colors">{topic.title}</h4>
-                {/* Each of these printed its label with nothing behind it when the
-                    value was missing: a bare "By", and a "replies" chip with no
-                    number. A label with no value is noise — show the row only
-                    when there is something to say, and let it wrap rather than
-                    squeeze on a narrow phone. */}
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-gray-500 mt-2">
-                  {topic.authorName ? <span className="truncate">By {topic.authorName}</span> : null}
-                  <span className="bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
-                    {topic.postCount === 1 ? '1 reply' : `${topic.postCount ?? 0} replies`}
-                  </span>
-                  {topic.lastActivity ? <span className="ml-auto whitespace-nowrap">{formatDistanceToNow(topic.lastActivity)}</span> : null}
-                </div>
-              </button>
-            ))}
-
-            {topics.length === 0 && (
-              <div className="col-span-full text-center py-10 text-gray-500">
-                No topics found. Start a conversation!
-              </div>
-            )}
-          </div>
-        )}
-      </main>
-
-      <div className="fixed bottom-24 right-6 lg:bottom-12 lg:right-12 z-40">
-        <button
-          onClick={() => navigateTo('createForumTopic', 'Create New Topic', {
-            onTopicCreated: loadTopics,
-            currentUser: {
-              id: user?.id || '',
-              name: profile?.name || user?.email || 'Teacher',
-              schoolId: currentSchool?.id || '',
-              avatarUrl: profile?.avatarUrl
-            }
-          })}
-          className="bg-purple-600 text-white p-4 rounded-full shadow-lg hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-transform hover:scale-110 active:scale-95"
-          aria-label="Create new topic"
-        >
-          <PlusIcon className="h-6 w-6" />
-        </button>
-      </div>
-    </div>
-  );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const CollaborationForumScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Collaboration Forum"
+        explanation="Collaboration Forum is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default CollaborationForumScreen;

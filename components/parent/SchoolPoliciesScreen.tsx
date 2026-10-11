@@ -1,107 +1,28 @@
-import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
-import { SchoolPolicy } from '../../types';
-import { DocumentTextIcon, ShieldCheckIcon } from '../../constants';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-interface SchoolPoliciesScreenProps {
-  schoolId?: string;
-}
-
-const SchoolPoliciesScreen: React.FC<SchoolPoliciesScreenProps> = ({ schoolId }) => {
-  const [policies, setPolicies] = useState<SchoolPolicy[]>([]);
-  // True once a load has completed, so background refreshes never flash a skeleton.
-  const hasLoadedOnceRef = useRef(false);
-  const [loading, setLoading] = useState(true);
-
-  const fetchPolicies = useCallback(async () => {
-    // Must clear `loading` before bailing out — it starts as true, so an early
-    // return left the screen on a permanent spinner instead of showing the
-    // "No policies found" empty state.
-    if (!schoolId) {
-      setPolicies([]);
-      hasLoadedOnceRef.current = true; setLoading(false);
-      return;
-    }
-        // Only show the skeleton on the FIRST load. A realtime refresh must not
-        // replace content the user is reading with a spinner and replay the entry
-        // animations — that is what made these screens blink.
-    if (!hasLoadedOnceRef.current) setLoading(true);
-    try {
-      // Use Central API
-      const data = await api.getSchoolPolicies(schoolId);
-
-      setPolicies(data.map((p: any) => ({
-        id: p.id,
-        title: p.title,
-        description: p.description,
-        url: p.url
-      })));
-    } catch (error) {
-      console.error('Error fetching policies:', error);
-    } finally {
-      hasLoadedOnceRef.current = true; setLoading(false);
-    }
-  }, [schoolId]);
-
-  // Real-time synchronization
-  useAutoSync(['school_policies'], fetchPolicies);
-
-  useEffect(() => {
-    fetchPolicies();
-  }, [fetchPolicies]);
-
-  return (
-    <div className="flex flex-col h-full bg-gray-50">
-      <main className="flex-grow p-4 space-y-4 overflow-y-auto">
-        <div className="bg-green-50 p-6 rounded-2xl text-center border border-green-100 shadow-sm">
-          <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 shadow-md">
-            <ShieldCheckIcon className="h-8 w-8 text-green-500" />
-          </div>
-          <h3 className="font-bold text-xl text-green-800">School Policies</h3>
-          <p className="text-sm text-green-600 mt-1">Official guidelines and documents for our school community.</p>
-        </div>
-
-        {loading ? (
-          <div className="flex justify-center p-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-          </div>
-        ) : policies.length === 0 ? (
-          <div className="text-center p-8 text-gray-500">No policies found.</div>
-        ) : (
-          <div className="space-y-3">
-            {policies.map((policy, i) => (
-              <motion.div
-                key={policy.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25, delay: Math.min(i, 10) * 0.05 }}
-                whileHover={{ y: -2 }}
-                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h4 className="font-bold text-gray-800 text-lg">{policy.title}</h4>
-                    <p className="text-sm text-gray-500 mt-1 mb-4 leading-relaxed">{policy.description}</p>
-                  </div>
-                </div>
-                <a
-                  href={policy.url || '#'}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-gray-50 text-gray-700 hover:text-green-700 hover:bg-green-50 font-semibold rounded-xl border border-gray-200 hover:border-green-200 transition-colors group"
-                >
-                  <DocumentTextIcon className="w-5 h-5 group-hover:text-green-600" />
-                  <span>View Document</span>
-                </a>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </main>
-    </div>
-  );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const SchoolPoliciesScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="School Policies"
+        explanation="School Policies is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default SchoolPoliciesScreen;

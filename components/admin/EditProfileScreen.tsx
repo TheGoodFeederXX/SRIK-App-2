@@ -1,164 +1,28 @@
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { UserIcon, MailIcon, PhoneIcon, CameraIcon } from '../../constants';
-import { useProfile } from '../../context/ProfileContext';
-import { useUserIdentity } from '../../lib/hooks/useUserIdentity';
-import { api } from '../../lib/api';
-import { toast } from 'react-hot-toast';
-
-const EditProfileScreen: React.FC = () => {
-    const { profile, updateProfile, isLoading } = useProfile();
-    const { formatId, customId } = useUserIdentity();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
-    const [avatar, setAvatar] = useState('');
-
-    // Initialize form with profile data
-    useEffect(() => {
-        if (profile) {
-            setName(profile.name || '');
-            setEmail(profile.email || '');
-            setPhone(profile.phone || '');
-            setAvatar(profile.avatarUrl || '');
-        }
-        // Seed only when the person changes — see EditTeacherProfileScreen for why
-        // re-seeding on every profile refresh discarded unsaved edits.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [profile?.id]);
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            // Upload to get a persistent URL (replaces the local preview once ready).
-            api.uploadAvatar(file).then(({ url }) => { if (url) setAvatar(url); }).catch(() => { });
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 500;
-                    const MAX_HEIGHT = 500;
-                    let width = img.width;
-                    let height = img.height;
-
-                    if (width > height) {
-                        if (width > MAX_WIDTH) {
-                            height *= MAX_WIDTH / width;
-                            width = MAX_WIDTH;
-                        }
-                    } else {
-                        if (height > MAX_HEIGHT) {
-                            width *= MAX_HEIGHT / height;
-                            height = MAX_HEIGHT;
-                        }
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx?.drawImage(img, 0, 0, width, height);
-
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                    setAvatar(dataUrl);
-                };
-                img.src = event.target?.result as string;
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleSave = async (e: React.FormEvent) => {
-        e.preventDefault();
-        try {
-            await updateProfile({
-                name,
-                email,
-                phone,
-                avatarUrl: avatar,
-            });
-            toast.success('Profile saved successfully!');
-        } catch (err: any) {
-            console.error('Save error:', err);
-            toast.error(`Failed to save profile: ${err.message || 'Please try again.'}`);
-        }
-    };
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <form onSubmit={handleSave} className="flex-grow flex flex-col">
-                <main className="flex-grow p-4 space-y-6 overflow-y-auto">
-                    {/* Photo Upload */}
-                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="flex justify-center">
-                        <div className="relative">
-                            <img src={avatar} alt="Admin" className="w-28 h-28 rounded-full object-cover shadow-md flex-shrink-0 aspect-square" />
-                            <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full border-2 border-white cursor-pointer hover:bg-blue-700">
-                                <CameraIcon className="text-white h-4 w-4" />
-                                <input id="photo-upload" name="photo-upload" type="file" className="sr-only" accept="image/*" onChange={handleImageChange} />
-                            </label>
-                        </div>
-                    </motion.div>
-
-                    {/* Form Fields */}
-                    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm space-y-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Admin ID</label>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 font-mono text-xs font-bold bg-gray-100 rounded-l-lg h-full px-2 border-r border-gray-300">ID</span>
-                                <input
-                                    type="text"
-                                    value={formatId(customId || (profile as any)?.schoolGeneratedId || "0001")}
-                                    readOnly
-                                    className="w-full pl-12 pr-3 py-3 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg font-mono font-bold"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                    <UserIcon className="w-5 h-5" />
-                                </span>
-                                <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} className="w-full pl-10 pr-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                    <MailIcon className="w-5 h-5" />
-                                </span>
-                                <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full pl-10 pr-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
-                            </div>
-                        </div>
-                        <div>
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                            <div className="relative">
-                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                    <PhoneIcon className="w-5 h-5" />
-                                </span>
-                                <input type="tel" id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} className="w-full pl-10 pr-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" />
-                            </div>
-                        </div>
-                    </motion.div>
-                </main>
-
-                {/* Action Button */}
-                <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">
-                    <motion.button
-                        whileHover={!isLoading ? { scale: 1.01 } : {}} whileTap={!isLoading ? { scale: 0.98 } : {}}
-                        type="submit"
-                        disabled={isLoading}
-                        className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white ${isLoading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-                            } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500`}
-                    >
-                        {isLoading ? 'Saving...' : 'Save Profile'}
-                    </motion.button>
-                </div>
-            </form>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const EditProfileScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="Edit Profile"
+        explanation="Edit Profile is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default EditProfileScreen;

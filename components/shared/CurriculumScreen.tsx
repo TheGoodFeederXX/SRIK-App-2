@@ -6,7 +6,7 @@ import { getCurriculum } from '../../curriculumData';
 import { CurriculumSubject, CurriculumSubjectCategory, Department } from '../../types';
 import { BookOpenIcon } from '../../constants';
 import { fetchSubjects } from '../../lib/database';
-import { api } from '../../lib/api';
+import { listSubjects } from '../../src/lib/supabase/academics';
 import { useAuth } from '../../context/AuthContext';
 
 const categoryStyles: { [key in CurriculumSubjectCategory]: string } = {
@@ -45,16 +45,15 @@ const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }
         // animations — that is what made these screens blink.
     if (!hasLoadedOnceRef.current) setLoading(true);
     try {
-      // Try to find subjects in the DB matching this school
-      const data = await api.getSubjects(currentSchool.id);
-      
-      // Filter locally for the specific level (if the API doesn't support it yet)
-      const filteredData = data.filter((s: any) => 
-        s.grade_level_category === level && s.is_active !== false
-      );
+      // The school's own subjects. There is no school id to pass — one school — and
+      // no `grade_level_category` column: subjects are not filed by year level here,
+      // so the list is shown as it is stored rather than filtered by a field that
+      // never existed (which is why the screen fell back to its built-in list).
+      const data = await listSubjects();
+      const filteredData = data.filter(s => s.status === 'ACTIVE');
 
-      if (filteredData && filteredData.length > 0) {
-        setDbSubjects(filteredData.map((s: any) => ({
+      if (filteredData.length > 0) {
+        setDbSubjects(filteredData.map(s => ({
           name: s.name,
           category: (s.category as CurriculumSubjectCategory) || 'Core'
         })));
@@ -151,4 +150,4 @@ const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }
   );
 };
 
-export default CurriculumScreen;
+export default CurriculumScreen;

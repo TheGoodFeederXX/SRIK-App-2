@@ -1,195 +1,28 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
-import { PTAMeeting } from '../../types';
-import { CalendarIcon, ClockIcon, UsersIcon, CheckCircleIcon } from '../../constants';
-import { toast } from 'react-hot-toast';
+import React from 'react';
+import ComingSoonScreen from './../ui/ComingSoonScreen';
 
-const PTAMeetingScreen: React.FC = () => {
-    const [meeting, setMeeting] = useState<PTAMeeting | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [isRegistered, setIsRegistered] = useState(false);
-    const [isRegistering, setIsRegistering] = useState(false);
-
-    const fetchUpcomingMeeting = useCallback(async () => {
-        try {
-            // Fetch meetings via unified API
-            const data = await api.getParentPTAMeetings();
-
-            if (data && data.length > 0) {
-                const m = data[0];
-                setMeeting({
-                    id: m.id,
-                    title: m.title,
-                    date: m.date,
-                    time: m.time,
-                    agenda: m.agenda || [], // Ensure agenda is an array
-                    isPast: m.is_past
-                });
-                setIsRegistered(!!m.is_registered);
-            } else {
-                setMeeting(null);
-            }
-        } catch (err) {
-            console.error('Error fetching PTA meeting:', err);
-            setMeeting(null);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    const handleRegister = async () => {
-        if (!meeting?.id || isRegistered || isRegistering) return;
-        setIsRegistering(true);
-        try {
-            await (api as any).post('/parents/pta-meetings/register', { meetingId: meeting.id });
-            setIsRegistered(true);
-            toast.success('Registration confirmed!');
-        } catch (err) {
-            console.error('PTA registration error:', err);
-            toast.error('Failed to register. Please try again.');
-        } finally {
-            setIsRegistering(false);
-        }
-    };
-
-    // Real-time synchronization
-    useAutoSync(['pta_meetings'], fetchUpcomingMeeting);
-
-    useEffect(() => {
-        fetchUpcomingMeeting();
-    }, [fetchUpcomingMeeting]);
-
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-            </div>
-        );
-    }
-
-    if (!meeting) {
-        return (
-            <div className="flex flex-col items-center justify-center h-full p-4 text-center text-gray-500">
-                <UsersIcon className="h-16 w-16 text-gray-200 mb-4" />
-                <h3 className="text-xl font-bold text-gray-700">No Upcoming Meetings</h3>
-                <p>There are no PTA meetings scheduled at this moment.</p>
-            </div>
-        );
-    }
-
-    // Parse date safely
-    const meetingDate = new Date(meeting.date);
-
-    return (
-        <div className="flex flex-col h-full bg-gray-50">
-            <main className="flex-grow p-4 space-y-6 overflow-y-auto">
-                <div className="bg-green-50 p-6 rounded-2xl text-center border border-green-100 shadow-sm relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                        <UsersIcon className="h-32 w-32 text-green-800" />
-                    </div>
-                    <UsersIcon className="h-10 w-10 mx-auto text-green-500 mb-2 relative z-10" />
-                    <h3 className="font-bold text-xl text-green-800 relative z-10">Upcoming PTA Meeting</h3>
-                    <p className="text-sm text-green-600 relative z-10">Join us to discuss the future of our school.</p>
-                </div>
-
-                <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,20rem),1fr))]">
-                    {/* Meeting Details Card */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-                        <span className="inline-block px-3 py-1 bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wider rounded-full mb-4">
-                            Next Session
-                        </span>
-                        <h2 className="text-2xl font-extrabold text-gray-800 leading-tight mb-6 break-words">{meeting.title}</h2>
-
-                        <div className="space-y-4">
-                            <div className="flex items-center p-3 bg-gray-50 rounded-xl">
-                                <div className="p-2 bg-white rounded-lg shadow-sm mr-4 text-green-600">
-                                    <CalendarIcon className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 uppercase font-bold">Date</p>
-                                    <p className="font-bold text-gray-800">
-                                        {meetingDate.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center p-3 bg-gray-50 rounded-xl">
-                                <div className="p-2 bg-white rounded-lg shadow-sm mr-4 text-green-600">
-                                    <ClockIcon className="w-6 h-6" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-gray-500 uppercase font-bold">Time</p>
-                                    <p className="font-bold text-gray-800">{meeting.time}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Agenda Card */}
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col">
-                        <div className="flex items-center justify-between gap-3 mb-6">
-                            <h3 className="font-bold text-lg text-gray-800">Meeting Agenda</h3>
-                            <span className="flex-shrink-0 whitespace-nowrap text-xs font-bold text-gray-400 bg-gray-100 px-2 py-1 rounded-md">
-                                {meeting.agenda.length} Items
-                            </span>
-                        </div>
-
-                        <div className="flex-grow">
-                            <ul className="space-y-4 relative before:absolute before:inset-y-0 before:left-[15px] before:w-0.5 before:bg-gray-100">
-                                {meeting.agenda.map((item, index) => (
-                                    <motion.li
-                                        key={index}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ duration: 0.2, delay: Math.min(index, 10) * 0.05 }}
-                                        className="relative pl-10"
-                                    >
-                                        <div className="absolute left-0 top-1 w-8 h-8 rounded-full bg-white border-2 border-green-100 flex items-center justify-center text-xs font-bold text-green-600 shadow-sm z-10">
-                                            {index + 1}
-                                        </div>
-                                        <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                                            <p className="font-bold text-gray-800 text-sm">{item.title}</p>
-                                            {item.presenter && (
-                                                <p className="text-xs text-gray-500 mt-1 flex items-center">
-                                                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5"></span>
-                                                    Default Speaker: <span className="font-medium ml-1">{item.presenter}</span>
-                                                </p>
-                                            )}
-                                        </div>
-                                    </motion.li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </main>
-
-            {/* Sticky Bottom Action */}
-            <div className="p-4 bg-white border-t border-gray-200 z-10">
-                <div className="max-w-4xl mx-auto">
-                    <motion.button
-                        whileTap={{ scale: isRegistered ? 1 : 0.95 }}
-                        onClick={handleRegister}
-                        disabled={isRegistered || isRegistering}
-                        className={`w-full flex justify-center items-center space-x-3 py-4 px-6 font-bold text-lg rounded-xl shadow-lg transition-shadow ${isRegistered
-                                ? 'bg-green-50 text-green-600 border border-green-200 shadow-none cursor-default'
-                                : 'text-white bg-gray-900 hover:bg-black hover:shadow-xl'
-                            }`}
-                    >
-                        {isRegistered ? <CheckCircleIcon className="w-6 h-6" /> : null}
-                        <span>{isRegistering ? 'Registering...' : isRegistered ? 'Registration Confirmed' : 'Register for Meeting'}</span>
-                    </motion.button>
-                    {isRegistered && (
-                        <p className="text-center text-xs text-gray-400 mt-2">
-                            A confirmation email has been sent to your registered address.
-                        </p>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+/**
+ * AUDIT F27 — a feature this school does not have.
+ *
+ * WHAT THIS REPLACED. This screen read and wrote through an Express server that is
+ * not deployed, for data this school does not keep. No table holds it, so every list
+ * came back empty and every save failed.
+ *
+ * AN EMPTY LIST IS THE WORST WAY TO SHOW THAT. It reads as "there is nothing here
+ * yet", which is a claim about the school — that no incident has been reported, that
+ * no observation has been made, that nobody is at risk. The screen was making that
+ * claim while simply being unable to reach its data. Saying "not built yet" is true
+ * and harmless; a blank list of real-looking records is neither.
+ *
+ * This shows no data and accepts no input. It is not a placeholder that pretends to
+ * work — it is a statement that this part does not exist yet.
+ */
+const PTAMeetingScreen: React.FC<any> = ({ handleBack }) => (
+    <ComingSoonScreen
+        title="PTAMeeting"
+        explanation="PTAMeeting is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        handleBack={handleBack}
+    />
+);
 
 export default PTAMeetingScreen;
