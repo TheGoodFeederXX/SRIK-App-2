@@ -92,6 +92,11 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // Report card publishing, and the enrolment form. Enrolling a child is three real
+    // steps in order — the child, their class, their guardian — because a child must
+    // exist before they can be placed, and be placed before a parent can be linked.
+    'components/admin/ReportCardPublishing.tsx',
+    'components/admin/StudentEnrollmentPage.tsx',
     // Screens for features this school keeps no record of: homework and submissions,
     // teaching qualifications and curriculum eligibility.
     'components/teacher/ClassAssignmentsScreen.tsx',
@@ -273,7 +278,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 41;
+        const CEILING = 39;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

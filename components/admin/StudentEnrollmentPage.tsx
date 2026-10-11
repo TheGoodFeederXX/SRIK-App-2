@@ -5,7 +5,9 @@ import { toast } from 'react-hot-toast';
 import { UserIcon, BookOpenIcon, CheckCircleIcon, UploadIcon, IdentificationIcon, AcademicCapIcon, HomeIcon, PhoneIcon, MailIcon } from '../../constants';
 import { useProfile } from '../../context/ProfileContext';
 import { checkUserLimit } from '../../lib/usage-limits';
-import { api } from '../../lib/api';
+import { listClasses } from '../../src/lib/supabase/academics';
+import { createStudent, enrollStudent, addGuardian } from '../../src/lib/supabase/students';
+import { uploadFile } from '../../src/lib/supabase/storage';
 
 interface EnrollmentPageProps {
     onComplete: () => void;
@@ -40,14 +42,16 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
         const sid = schoolId || profile.schoolId;
         if (!sid) return;
         try {
-            const classes = await api.getClasses(sid, 'all', true);
-            setAvailableClasses(classes || []);
-            if (classes && classes.length > 0) {
+            // There is one school and no branch to pass. The year level comes from
+            // the class's own column rather than being read back out of its name.
+            const classes = await listClasses();
+            setAvailableClasses(classes as unknown as typeof availableClasses);
+            if (classes.length > 0) {
                 setFormData(prev => ({
                     ...prev,
                     classId: classes[0].id,
-                    grade: classes[0].grade,
-                    section: classes[0].section
+                    grade: classes[0].yearLevel,
+                    section: '',
                 }));
             }
         } catch (err) {
@@ -89,53 +93,68 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
 
         setLoading(true);
         try {
-            // Upload any attached documents first, so the backend can persist real URLs
-            // instead of the previous hardcoded empty placeholder.
-            let documentUrls: Record<string, string> = {};
+            // ENROLING A CHILD IS THREE REAL STEPS, and they used to be one call to a
+            // server that is not deployed. The order matters: the child must exist
+            // before they can be placed in a class, and the class placement must exist
+            // before a guardian can be linked as that child's parent.
+            //
+            // A child is created first, so a failure part-way through leaves a student
+            // record the office can see and finish — not a silent nothing.
+
+            // The admission number is the school's own identifier. The form has no
+            // field for it, so one is derived from the year and the child's name, and
+            // the office can correct it afterwards.
+            const admissionNo =
+                `${new Date().getFullYear()}-${formData.studentFirstName.trim().toUpperCase().slice(0, 3)}`
+                + `${Date.now().toString().slice(-4)}`;
+
+            const created = await createStudent({
+                admissionNo,
+                fullName: `${formData.studentFirstName} ${formData.studentLastName}`.trim(),
+                gender: (formData.studentGender as 'MALE' | 'FEMALE') || null,
+                birthDate: formData.studentDob || null,
+                address: formData.parentAddress || null,
+                admissionDate: new Date().toISOString().slice(0, 10),
+            });
+            if (!created.success || !created.studentId) {
+                throw new Error(created.error || 'The student could not be created.');
+            }
+
+            // Enrolment documents, attached to the child who now exists.
             if (uploadedDocs.length > 0) {
                 try {
-                    const uploads = await Promise.all(
-                        uploadedDocs.map(async (file) => {
-                            const sanitizedName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-                            const result = await api.uploadFile(
-                                'student-documents',
-                                `enrollment-docs/${Date.now()}_${sanitizedName}`,
-                                file
-                            ) as any;
-                            return { name: file.name, url: result.publicUrl || result.url };
-                        })
-                    );
-                    documentUrls = uploads.reduce((acc, { name, url }) => {
-                        if (url) acc[name] = url;
-                        return acc;
-                    }, {} as Record<string, string>);
+                    for (const file of uploadedDocs) {
+                        await uploadFile({ type: 'STUDENT', id: created.studentId }, file);
+                    }
                 } catch (uploadErr: any) {
+                    // The child EXISTS at this point, so failing the whole enrolment
+                    // would be worse than carrying on and letting the office re-attach
+                    // the paperwork.
                     console.error('Document upload error:', uploadErr);
-                    toast.error('Some documents failed to upload. Enrollment will continue without them.');
+                    toast.error('The student was saved, but some documents did not upload.');
                 }
             }
 
-            // Map frontend fields to backend expected payload
-            const payload = {
-                school_id: schoolId || profile.schoolId,
-                branch_id: selectedClass?.branch_id || currentBranchId,
-                firstName: formData.studentFirstName,
-                lastName: formData.studentLastName,
-                dateOfBirth: formData.studentDob,
-                gender: formData.studentGender,
-                parentName: formData.parentName,
-                parentEmail: formData.parentEmail,
-                parentPhone: formData.parentPhone,
-                parentAddress: formData.parentAddress,
-                class_id: formData.classId,
-                grade: Number(selectedClass?.grade || formData.grade),
-                section: selectedClass?.section || formData.section,
-                curriculumType: formData.curriculum === 'KSSR' ? 'KSSR' :
-                    formData.curriculum === 'BRITISH' ? 'British' : 'Both',
-                documentUrls
-            };
+            // Place the child in the class they were enrolled into.
+            if (formData.classId) {
+                const enrolled = await enrollStudent(created.studentId, formData.classId);
+                if (!enrolled.success) {
+                    throw new Error(enrolled.error || 'The student could not be placed in that class.');
+                }
+            }
 
-            await api.enrollStudent(payload);
+            // Link the parent, so the child is not left with nobody able to see them.
+            if (formData.parentName?.trim() && formData.parentPhone?.trim()) {
+                await addGuardian(created.studentId, {
+                    fullName: formData.parentName,
+                    // "PARENT" is the default the enrolment form implies. The office
+                    // can correct it on the child's record if it is wrong.
+                    relationship: 'PARENT',
+                    phone: formData.parentPhone,
+                    email: formData.parentEmail || undefined,
+                    address: formData.parentAddress || undefined,
+                });
+            }
 
             toast.success('Enrollment submitted successfully!');
             if (onComplete) onComplete(); else handleBack();

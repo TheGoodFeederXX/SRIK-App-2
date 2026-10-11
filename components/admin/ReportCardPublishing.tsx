@@ -5,7 +5,12 @@ import { SearchIcon, CheckCircleIcon, ClockIcon, PublishIcon, FilterIcon, Refres
 import CenteredLoader from '../ui/CenteredLoader';
 import ReportCardPreview from './ReportCardPreview';
 import { StudentReportInfo, ReportCard, Student } from '../../types';
-import { api } from '../../lib/api';
+import { listStudents } from '../../src/lib/supabase/students';
+import {
+    listReportCards,
+    publishReportCard,
+    getCurrentTerm,
+} from '../../src/lib/supabase/assessments';
 import { useAuth } from '../../context/AuthContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { CANONICAL_TERMS } from '../../utils/annualReport';
@@ -45,13 +50,34 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
   const [activeTab, setActiveTab] = useState<ReportCard['status'] | 'All'>('All');
   const [showPreview, setShowPreview] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentReportInfo | null>(null);
+  // The term these report cards belong to, resolved once. Publishing needs it, and
+  // the old code passed a branch id where a term was expected.
+  const [currentTermId, setCurrentTermId] = useState<string | null>(null);
+
   // Audit history modal: every save/submit/publish for one report card.
   const [history, setHistory] = useState<{ student: TermStudent; entries: any[] | null } | null>(null);
   const openHistory = async (student: TermStudent) => {
-    if (!student.activeReportId) { toast('No report card saved yet for this student.'); return; }
+    if (!currentTermId) { toast('No current term is set.'); return; }
     setHistory({ student, entries: null });
-    try { setHistory({ student, entries: await api.getReportCardHistory(student.activeReportId) }); }
-    catch (e: any) { toast.error(e?.message || 'Could not load history'); setHistory(null); }
+    try {
+      // History here is the child's report card VERSIONS for this term. Each publish
+      // stores a frozen snapshot and a new version, so the versions ARE the history —
+      // there is no separate log to fetch.
+      const cards = await listReportCards(currentTermId);
+      const mine = cards.filter(c => c.studentId === student.id);
+      setHistory({
+        student,
+        entries: mine.map(c => ({
+          version: c.version,
+          status: c.status,
+          published_at: c.publishedAt,
+          has_snapshot: c.hasSnapshot,
+        })),
+      });
+    } catch (e: any) {
+      toast.error(e?.message || 'Could not load history');
+      setHistory(null);
+    }
   };
 
   // Drill-down: Class -> Year -> Term -> Student. `selectedClassKey` is
@@ -79,50 +105,49 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
     if (!activeSchoolId) return;
     setIsLoading(true);
     try {
-      // Fetch all students for this school using Hybrid API
-      // Strict filtering: specific branches only see their own students. Untagged records will appear in 'All Branches'.
-      const studentsData = await api.getStudents(activeSchoolId, currentBranchId as string);
+      // The children, and this term's report cards. `api.getReportCards(schoolId,
+      // branchId)` asked a server that is not deployed for a per-branch list; there is
+      // one school and report cards belong to a TERM, not a branch.
+      const [studentsData, term] = await Promise.all([
+        listStudents(),
+        getCurrentTerm(),
+      ]);
+      setCurrentTermId(term?.id ?? null);
+      const reportCardsData = term ? await listReportCards(term.id) : [];
 
-      // Fetch all report cards for this school using Hybrid API
-      const reportCardsData = await api.getReportCards(activeSchoolId, currentBranchId);
-
-      console.log(`[Diagnostic] Fetched ${studentsData?.length || 0} students and ${reportCardsData?.length || 0} report cards for school ${activeSchoolId}`);
-
-      const studentsWithReportStatus = (studentsData || []).map(student => {
-        const studentReports = reportCardsData?.filter(rc => rc.student_id === student.id) || [];
+      const studentsWithReportStatus = studentsData.map(student => {
+        const studentReports = reportCardsData.filter(rc => rc.studentId === student.id);
         const latestReport = studentReports[0];
 
-        // Normalize status
+        // The database has DRAFT / PUBLISHED / SUPERSEDED. The screen's vocabulary
+        // adds "Submitted", which this schema has no column for — so it is not
+        // invented here. SUPERSEDED is shown as Published, because that is what it
+        // is: a version that went out and has since been replaced.
         let normalizedStatus: ReportCard['status'] = 'Draft';
-        if (latestReport?.status) {
-          const s = latestReport.status.charAt(0).toUpperCase() + latestReport.status.slice(1).toLowerCase();
-          if (['Draft', 'Submitted', 'Published'].includes(s)) {
-            normalizedStatus = s as ReportCard['status'];
-          }
+        if (latestReport) {
+          normalizedStatus = latestReport.status === 'PUBLISHED' || latestReport.status === 'SUPERSEDED'
+            ? 'Published'
+            : 'Draft';
         }
 
         return {
           ...student,
-          name: (student as any).name || (student as any).full_name || (student as any).display_name || '',
-          avatarUrl: (student as any).avatar_url || student.avatarUrl, // Handle both naming conventions
+          name: student.fullName,
           status: normalizedStatus,
-          hasReport: !!latestReport,
-          // Every report card this student has, not just the latest one —
-          // the class/year/term drill-down below picks the right one out
-          // of this list for whatever the admin is currently viewing.
+          hasReport: Boolean(latestReport),
+          // Every card this child has this term, so the drill-down below can pick one.
           reportCards: studentReports.map(rc => ({
             id: rc.id,
-            session: rc.session,
-            term: rc.term,
-            status: (rc.status?.charAt(0).toUpperCase() + rc.status?.slice(1).toLowerCase()) as ReportCard['status'] || 'Draft',
-            gradeAverage: rc.grade_average,
-            position: rc.position,
-            totalStudents: rc.total_students
-          }))
+            session: rc.termName,
+            term: rc.termName,
+            status: (rc.status === 'PUBLISHED' || rc.status === 'SUPERSEDED' ? 'Published' : 'Draft') as ReportCard['status'],
+            gradeAverage: null,
+            position: null,
+            totalStudents: null,
+          })),
         };
       });
 
-      console.log(`[Diagnostic] Mapping complete. ${studentsWithReportStatus.length} students processed.`);
       setStudentsWithReports(studentsWithReportStatus as unknown as StudentReportInfo[]);
     } catch (err) {
       console.error('Error fetching students with reports:', err);
@@ -139,7 +164,9 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
     }
 
     try {
-      await api.updateReportCardStatus(reportCardId, newStatus);
+      // Publishing is the database's job, and it refuses while any child still has
+      // no decision on a mark — a rule the screen must not be able to bypass.
+      await publishReportCard(String(studentId), currentTermId as string, `Set to ${newStatus} by the office`);
       toast.success(`Report ${newStatus.toLowerCase()} successfully`);
       fetchStudentsWithReports(); // Refresh data
     } catch (err) {
@@ -260,10 +287,11 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
       toast.loading(`Publishing ${toPublish.length} reports...`, { id: 'bulk-publish' });
 
       try {
-        const promises = toPublish.map(student =>
-          api.updateReportCardStatus(student.activeReportId as string, 'Published')
-        );
-        await Promise.all(promises);
+        // Publishing is done by the database, one child at a time, so a failure
+        // names WHICH child rather than failing the whole batch anonymously.
+        for (const student of toPublish) {
+          await publishReportCard(student.id as string, currentTermId as string, 'Bulk publish by the office');
+        }
 
         toast.success('All reports published', { id: 'bulk-publish' });
         await fetchStudentsWithReports();
