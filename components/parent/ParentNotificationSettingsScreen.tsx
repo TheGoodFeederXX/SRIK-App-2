@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { MailIcon, BellIcon, NotificationIcon } from '../../constants';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
+import { getMyPreferences, saveMyPreferences } from '../../src/lib/supabase/preferences';
 import { toast } from 'react-hot-toast';
 
 const SettingToggle = ({ icon, label, description, enabled, onToggle, index, unavailable = false }: { icon: React.ReactNode, label: string, description: string, enabled: boolean, onToggle: () => void, index: number, unavailable?: boolean }) => (
@@ -55,7 +55,8 @@ const ParentNotificationSettingsScreen: React.FC = () => {
 
     const loadSettings = useCallback(async () => {
         try {
-            const data = await api.getNotificationSettings();
+            // This person's own preferences, from their own row.
+            const data = await getMyPreferences() as any;
             if (data) {
                 setPrefs(data);
                 setPushAvailable(!!data?.channels?.push);
@@ -66,7 +67,9 @@ const ParentNotificationSettingsScreen: React.FC = () => {
     }, []);
 
     // Real-time synchronization
-    useAutoSync(['notification_settings'], loadSettings);
+    // Refreshed on the caller's own row changing. The old table name belonged to
+    // the server that is not deployed.
+    useAutoSync(['user_preferences'], loadSettings);
 
     useEffect(() => {
         loadSettings();
@@ -82,8 +85,11 @@ const ParentNotificationSettingsScreen: React.FC = () => {
         setPrefs(next);            // optimistic
         setSaving(key);
         try {
-            const saved = await api.updateNotificationSettings(next);
-            // Trust what the server stored rather than the optimistic guess.
+            // Only the changed key is sent, merged in the database — so this screen
+            // cannot revert a choice made elsewhere while it was open.
+            await saveMyPreferences({ [key]: next[key] });
+            // Read back what was actually stored rather than trusting the guess.
+            const saved = await getMyPreferences();
             if (saved) setPrefs(saved);
             toast.success('Settings updated');
         } catch (err) {

@@ -83,6 +83,12 @@ const MIGRATED = [
     'components/admin/SecuritySettingsScreen.tsx',
     'components/admin/AcademicSettingsScreen.tsx',
     'components/admin/CurriculumManagementScreen.tsx',
+    // A person's own notification preferences. These belong to the person, not the
+    // school — whether a teacher wants an email digest is not the office's business,
+    // and the database is what enforces that.
+    'components/admin/NotificationsSettingsScreen.tsx',
+    'components/parent/ParentNotificationSettingsScreen.tsx',
+    'components/shared/NotificationDigestSettings.tsx',
     // Changing a password. All four screens posted to an endpoint that is not
     // deployed, so nobody could change their password at all — and the shared
     // function re-checks the current one, which is what stops an unlocked laptop

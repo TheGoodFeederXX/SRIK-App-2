@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { getMyPreferences, saveMyPreferences } from '../../src/lib/supabase/preferences';
 import { toast } from 'react-hot-toast';
 import {
     Bell,
@@ -58,7 +58,8 @@ const NotificationDigestSettings = () => {
     const fetchSettings = async () => {
         setLoading(true);
         try {
-            const settings = await api.getNotificationSettings();
+            // The caller's own preferences.
+            const settings = await getMyPreferences() as any;
             if (settings) {
                 if (settings.channels) setAvailable(settings.channels);
                 setDigestTime(settings.digest_time || '19:00');
@@ -92,9 +93,11 @@ const NotificationDigestSettings = () => {
     const handleSave = async () => {
         setIsSaving(true);
         try {
-            await api.updateNotificationSettings({
+            // Only these two keys, merged in the database, so saving the digest
+            // cannot revert a preference changed on another screen meanwhile.
+            await saveMyPreferences({
                 digest_time: digestTime,
-                categories: categories.map(c => ({ id: c.id, mode: c.mode, channel: c.channel }))
+                categories: categories.map(c => ({ id: c.id, mode: c.mode, channel: c.channel })),
             });
             toast.success('Notification preferences saved!');
         } catch (err) {

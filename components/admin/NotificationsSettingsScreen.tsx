@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { MailIcon, BellIcon, NotificationIcon } from '../../constants';
-import { api } from '../../lib/api';
+import { getMyPreferences, saveMyPreferences } from '../../src/lib/supabase/preferences';
 import { toast } from 'react-hot-toast';
 
 const SettingToggle = ({ icon, label, description, enabled, onToggle, index = 0 }: { icon: React.ReactNode, label: string, description: string, enabled: boolean, onToggle: () => void, index?: number }) => (
@@ -37,8 +37,11 @@ const NotificationsSettingsScreen: React.FC = () => {
     // not on the users table, which has no notification_preferences column.)
     useEffect(() => {
         let active = true;
-        api.getNotificationSettings()
-            .then((prefs: any) => {
+        // The caller's OWN preferences. This screen used to read them from an
+        // Express endpoint that is not deployed, so the switches always showed
+        // defaults and any change was silently lost on the next visit.
+        getMyPreferences()
+            .then((prefs) => {
                 if (active && prefs) {
                     setSettings(prev => ({ ...prev, ...prefs }));
                 }
@@ -52,7 +55,9 @@ const NotificationsSettingsScreen: React.FC = () => {
         setSettings(newSettings); // Optimistic update
 
         try {
-            await api.updateNotificationSettings(newSettings);
+            // Only the key that changed is sent, and the database merges it, so a
+            // save here cannot revert a preference changed on another screen.
+            await saveMyPreferences({ [key]: newSettings[key] });
             toast.success('Notification preference updated');
         } catch (err: any) {
             console.error('Error saving notification settings:', err);
