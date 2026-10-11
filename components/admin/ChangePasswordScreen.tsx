@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { LockIcon } from '../../constants';
-import { api } from '../../lib/api';
+import { changePassword } from '../../src/lib/supabase/auth';
 import { toast } from 'react-hot-toast';
 
 const PasswordInput = ({ id, label, value, onChange }: { id: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => (
@@ -29,17 +29,22 @@ const ChangePasswordScreen: React.FC = () => {
             return;
         }
 
-        if (newPassword.length < 6) {
-            toast.error('Password must be at least 6 characters.');
+        if (newPassword.length < 8) {
+            toast.error('Password must be at least 8 characters.');
             return;
         }
 
         setLoading(true);
         try {
-            await api.patch('/auth/update-password', {
-                currentPassword,
-                newPassword
-            });
+            // The current password is re-checked inside `changePassword`. Supabase
+            // would let whoever holds the session set a new password, which in a
+            // staffroom means someone at an unlocked laptop could lock the real
+            // owner out. Asking for the current one means the person typing must
+            // already know it.
+            const result = await changePassword(currentPassword, newPassword);
+            if (!result.success) {
+                throw new Error(result.error || 'Could not change the password.');
+            }
             toast.success('Password changed successfully!');
             setCurrentPassword('');
             setNewPassword('');

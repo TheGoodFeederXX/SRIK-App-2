@@ -74,6 +74,14 @@ const MIGRATED = [
     // The office's audit trail, on the one screen whose whole purpose is to show
     // that something happened — so an empty trail was indistinguishable from none.
     'components/admin/AuditLogScreen.tsx',
+    // Changing a password. All four screens posted to an endpoint that is not
+    // deployed, so nobody could change their password at all — and the shared
+    // function re-checks the current one, which is what stops an unlocked laptop
+    // being used to lock the owner out.
+    'components/admin/ChangePasswordScreen.tsx',
+    'components/teacher/TeacherChangePasswordScreen.tsx',
+    'components/parent/ParentChangePasswordScreen.tsx',
+    'components/student/StudentChangePasswordScreen.tsx',
     // Report selectors. A class is not a subject, and a school that is one school
     // has no branch to filter by.
     'components/admin/AdminSelectTermForReport.tsx',

@@ -290,6 +290,50 @@ export async function updatePassword(newPassword: string): Promise<AuthResult> {
 }
 
 /**
+ * Change the signed-in user's password, checking the current one first.
+ *
+ * WHY THE CURRENT PASSWORD IS RE-CHECKED RATHER THAN IGNORED. Supabase's
+ * `updateUser` will happily set a new password for whoever holds the session. In a
+ * staffroom that matters: a teacher who leaves a laptop unlocked has handed over
+ * the account either way, but without this check they have also handed over the
+ * ability to LOCK THE REAL OWNER OUT — changing the password to something they do
+ * not know. Asking for the current one means the person typing must already know
+ * it, so a walk-up cannot take the account away.
+ *
+ * The check is a real sign-in against the same account, not a string comparison,
+ * so it is the provider's own answer rather than ours.
+ */
+export async function changePassword(
+    currentPassword: string,
+    newPassword: string,
+): Promise<AuthResult> {
+    if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: NOT_CONFIGURED };
+    }
+    if (!currentPassword || !newPassword) {
+        return { success: false, error: 'All fields are required' };
+    }
+    if (newPassword.length < 8) {
+        return { success: false, error: 'Password must be at least 8 characters' };
+    }
+
+    const session = await getSession();
+    const email = session?.user?.email;
+    if (!email) {
+        return { success: false, error: 'You are not signed in' };
+    }
+
+    // Re-authenticate against the SAME account. A wrong current password is
+    // reported as such and stops here, so the new one is never applied.
+    const check = await signInWithEmail(email, currentPassword);
+    if (!check.success) {
+        return { success: false, error: 'Your current password is not correct' };
+    }
+
+    return updatePassword(newPassword);
+}
+
+/**
  * Subscribe to auth state changes (sign-in, sign-out, token refresh, and
  * session expiry). Returns an unsubscribe function.
  */

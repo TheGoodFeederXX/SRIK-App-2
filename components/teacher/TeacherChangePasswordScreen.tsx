@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { LockIcon, EyeIcon, EyeOffIcon } from '../../constants';
-import { api } from '../../lib/api';
+import { changePassword } from '../../src/lib/supabase/auth';
 
 const PasswordInput = ({ id, label, value, onChange }: { id: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -45,18 +45,20 @@ const TeacherChangePasswordScreen: React.FC = () => {
             return;
         }
 
-        if (newPassword.length < 6) {
-            toast.error("Password must be at least 6 characters.");
+        if (newPassword.length < 8) {
+            toast.error("Password must be at least 8 characters.");
             return;
         }
 
         setLoading(true);
         const loadingToast = toast.loading("Updating password...");
         try {
-            await api.patch('/auth/update-password', { 
-                currentPassword, 
-                newPassword 
-            });
+            // See ChangePasswordScreen: the current password is re-checked, so an
+            // unlocked laptop cannot be used to take the account away.
+            const result = await changePassword(currentPassword, newPassword);
+            if (!result.success) {
+                throw new Error(result.error || 'Could not change the password.');
+            }
 
             toast.success("Password updated successfully!", { id: loadingToast });
             setCurrentPassword('');
