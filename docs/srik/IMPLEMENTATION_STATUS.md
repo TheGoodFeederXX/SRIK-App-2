@@ -20,7 +20,47 @@ Repo: `Oliskey-School/School-app-` · branch `main` · commit `910cf09`
 | 5 | `07_PHASE_5_FINANCE.md` | **SELESAI** | 4 jadual, 9 fungsi, RLS 33/33, ujian SQL 29/29. Wang numeric(12,2) tepat ke sen; bayaran idempotent; buku append-only; baki dikira. 3 skrin baharu (kutipan 15 ujian, tetapan 8, penyata pelajar 9) — 32 ujian UI lulus, 2 peraturan kritikal disahkan songsang. 9 skrin lama + 4 pembalut gerbang bayaran asing DIBUANG. Baki: skrin ibu bapa/guru dibina semula kemudian |
 | 6 | `08_PHASE_6_OPERATIONS_RELEASE.md` | **SELESAI** | 3 jadual (audit_log, documents, announcements), 13 trigger audit, RLS dipaksa 36/36. 18 ujian SQL + 27 ujian UI baharu. Log audit TIDAK BOLEH ditulis oleh mana-mana peranan aplikasi — disahkan secara langsung pada projek sebenar dengan akaun ADMIN. 3 skrin baharu (pengumuman pejabat 13 ujian, rekod audit 9, pengumuman ibu bapa 5). PWA: identiti SRIK, Bahasa Melayu, luar talian lihat-sahaja, konflik service worker dibuang. Sandaran + drill pemulihan DITULIS DAN DIUJI (lulus, dan gagal betul bila kiraan tidak padan). 3 skrin warisan kewangan Nigeria + `lib/payments.ts` dibuang. Satu arahan menjalankan 81 pemeriksaan pangkalan data: `RESULT: PASS`. Baki: RPO/RTO perlu pengesahan sekolah; ~16 skrin pendaftaran/markah lama masih berdaftar tetapi belum dibuang |
 
-Fasa 0 selesai sepenuhnya. Fasa 1: foundation pangkalan data selesai dan diuji; integrasi frontend belum bermula.
+**Dikemas kini 24 Oktober 2026, selepas kerja audit.**
+
+Fasa 0–6 selesai. Nota ringkas ini sebelum ini berkata "integrasi frontend Fasa 1
+belum bermula", yang tidak lagi benar dan tidak pernah jelas: frontend sudah
+berpindah ke Supabase Auth dan membaca data melalui Data API.
+
+Keadaan sebenar yang disahkan hari ini:
+
+| Perkara | Angka |
+|---|---|
+| Ujian frontend | **438 lulus**, 59 fail, 0 ralat jenis |
+| Pemeriksaan SQL | **188 lulus** (`supabase/tests/run_phase5_tests.sh`) |
+| Jadual dengan RLS dipaksa | 36 / 36 |
+| Kerosakan kebergantungan runtime | **0** (dari 14) |
+| Isu audit diselesaikan | 35 / 40 |
+
+**Apa yang RLS enabled TIDAK buktikan.** Bilangan jadual dengan RLS hidup tidak
+membuktikan bahawa setiap operasi ditolak dan setiap skop betul — itu hanya
+membuktikan RLS dihidupkan. Bukti sebenar ialah ujian yang cuba operasi yang tidak
+dibenarkan dan mengesahkan ia ditolak, dan itulah yang dilakukan oleh 188
+pemeriksaan SQL: setiap satu menyemak kedua-dua arah, kes yang ditolak DAN kes yang
+dibenarkan. Angka RLS di atas dikekalkan kerana ia menjawab soalan yang berbeza,
+bukan kerana ia membuktikan kebenaran.
+
+**Baki yang diketahui, supaya tiada siapa menyangka ia selesai:**
+
+- 22 skrin guru yang boleh dicapai masih bergantung pada API lama yang tidak
+  dideploy (F27). Yang paling penting — papan pemuka, daftar kehadiran, dan dua
+  cangkuk di bawahnya — sudah selesai.
+- Kedua-dua Edge Function (`provision-teacher-account`, `provision-guardian-account`)
+  belum dideploy.
+- Data orang sebenar belum dimasukkan: 0 pelajar, 0 penjaga, 0 log masuk guru.
+- Kurungan cukai dan kadar pencen dalam `lib/payroll.ts` masih menunggu angka
+  sebenar daripada LHDN dan KWSP. Ia sengaja tidak direka.
+- ~16 skrin warisan masih berdaftar tetapi belum dibuang.
+
+**Skrip yang mudah disalahgunakan.** `db:reset`, `db:push` dan `db:migrate` masih
+menunjuk kepada Prisma dan backend warisan, yang **bukan** skema SRIK. Skema SRIK
+ialah 36 jadual yang dibina oleh `supabase/migrations/*.sql`. Menjalankan salah satu
+skrip itu terhadap SRIK boleh merosakkan pangkalan data. Migration SQL ialah satu-
+satunya sumber kebenaran.
 
 ---
 
