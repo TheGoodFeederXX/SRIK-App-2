@@ -30,6 +30,7 @@ const SCREENS = [
     'components/parent/AlertsScreen.tsx',
     'components/parent/ParentTodayWidget.tsx',
     'components/parent/ReportCardScreen.tsx',
+    'components/student/AttendanceScreen.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -190,6 +191,18 @@ describe('F27: the parent portal reads the family from the session, not a parame
         // score and drags the child's average down.
         expect(src, 'a missing mark is not kept as null')
             .toMatch(/score \?\? null/);
+    });
+
+    it('a student reads their own record, and the id never comes from the URL', () => {
+        const src = code(read('components/student/AttendanceScreen.tsx'));
+
+        // Their own record by default, through the session.
+        expect(src).toMatch(/getMyStudentId/);
+        expect(src).toMatch(/getStudentAttendanceRange/);
+
+        // And the window is the school's YEAR, not a calendar month. Counting days the
+        // school was closed shows a child as absent when no register was taken.
+        expect(src).toMatch(/getCurrentAcademicYear/);
     });
 
     it('reads children without a school id, which does not exist', () => {

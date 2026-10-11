@@ -2,7 +2,10 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { StudentAttendance, AttendanceStatus } from '../../types';
-import { api } from '../../lib/api';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
+import { getCurrentTerm } from '../../src/lib/supabase/assessments';
+import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
+import { getMyStudentId } from '../../src/lib/supabase/family';
 import { ChevronLeftIcon, ChevronRightIcon, CheckCircleIcon, XCircleIcon, ClockIcon } from '../../constants';
 import DonutChart from '../ui/DonutChart';
 import { useAuth } from '../../context/AuthContext';
@@ -85,23 +88,50 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
             // parent has no student profile for, and which used to 500).
             // The term summary is fetched alongside (never blocked by) the day list,
             // so the day counts still show when the calendar data fails to load.
-            const [data, summary] = await Promise.all([
-                studentId ? api.getStudentAttendance(String(studentId)) : api.getMyAttendance(),
-                api.getAttendanceTermSummary(studentId ? { studentId: String(studentId) } : {}),
-            ]);
-            const mine = summary && (studentId ? summary.students?.[String(studentId)] : Object.values(summary.students || {})[0]);
-            setTermSummary(summary && mine ? { term: summary.term, session: summary.session, total: mine.total, present: mine.present, absent: mine.absent, late: mine.late, percentage: mine.percentage } : null);
+            // WHOSE RECORD. A student normally views their own, and the database works
+            // out who that is from the session. When a parent or the office opens this
+            // for a specific child they pass `studentId`, and the RLS policy admits the
+            // row only if that child really is theirs — so an id here cannot be used to
+            // read another family's child.
+            const targetId = studentId
+                ? String(studentId)
+                : (await getMyStudentId());
 
-            if (data) {
-                const formatted: StudentAttendance[] = data.map((d: any) => ({
-                    id: d.id,
-                    studentId: d.student_id,
-                    date: new Date(d.date).toISOString().split('T')[0],
-                    status: normalizeStatus(d.status),
-                    remarks: d.remark
-                }));
-                setAttendanceData(formatted);
+            if (!targetId) {
+                // No child record for this account. An empty screen, not an error: the
+                // office may not have linked them yet.
+                setAttendanceData([]);
+                setTermSummary(null);
+                return;
             }
+
+            // The window is the SCHOOL'S YEAR, not a calendar month. Counting days the
+            // school was closed would show a child as absent when no register was taken.
+            const year = await getCurrentAcademicYear();
+            const term = await getCurrentTerm();
+            const from = year?.startDate ?? `${new Date().getFullYear()}-01-01`;
+            const to = year?.endDate ?? new Date().toISOString().slice(0, 10);
+
+            const range = await getStudentAttendanceRange(targetId, from, to);
+
+            setTermSummary({
+                term: term?.name ?? '',
+                session: year?.name ?? '',
+                total: range.summary.daysRecorded,
+                present: range.summary.present,
+                absent: range.summary.absent,
+                late: range.summary.late,
+                percentage: range.summary.attendanceRate,
+            });
+
+            const formatted: StudentAttendance[] = range.days.map((d, i) => ({
+                id: i,
+                studentId: 0,
+                date: d.date,
+                status: normalizeStatus(d.status),
+                remarks: d.remark ?? undefined,
+            }));
+            setAttendanceData(formatted);
         } catch (err) {
             console.error('Error fetching attendance:', err);
         } finally {
@@ -110,7 +140,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
     }, [currentSchool?.id, studentId]);
 
     // Real-time synchronization
-    useAutoSync(['attendance'], fetchAttendance);
+    useAutoSync(['student_attendance'], fetchAttendance);
 
     useEffect(() => {
         fetchAttendance();

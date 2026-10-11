@@ -92,6 +92,10 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // A student's own attendance, read through the session. Every policy on these
+    // tables named the adults around the child and never the child — a student was
+    // admitted by NOTHING, so their own record read as empty.
+    'components/student/AttendanceScreen.tsx',
     // A child's report card, read from the FROZEN SNAPSHOT that publishing created —
     // not from live figures, which would let a card printed in March disagree with the
     // same card in June.
@@ -316,7 +320,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 36;
+        const CEILING = 35;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

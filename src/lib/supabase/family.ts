@@ -136,3 +136,31 @@ export async function getMyGuardianRecord(): Promise<{ id: string; fullName: str
     const row = (data ?? [])[0] as { id: string; full_name: string } | undefined;
     return row ? { id: row.id, fullName: row.full_name } : null;
 }
+
+/**
+ * The student record belonging to the signed-in account.
+ *
+ * `students.user_id` links a login to a child. Returns null when the account has no
+ * student record — a normal state for a staff or guardian account, not an error.
+ *
+ * WHY THIS IS NOT A PARAMETER ANYWHERE. A student id from the browser is a value the
+ * caller chose, and every screen that then reads attendance, marks or fees would be
+ * scoped by it. Here the database returns at most the one row whose `user_id` is the
+ * session's, so there is nothing to tamper with.
+ */
+export async function getMyStudentId(): Promise<string | null> {
+    const db = requireSupabase();
+    const { data: auth } = await db.auth.getUser();
+    const userId = auth?.user?.id;
+    if (!userId) return null;
+
+    const { data, error } = await db
+        .from('students')
+        .select('id')
+        .eq('user_id', userId)
+        .limit(1);
+
+    if (error) return null;
+    const row = (data ?? [])[0] as { id: string } | undefined;
+    return row?.id ?? null;
+}
