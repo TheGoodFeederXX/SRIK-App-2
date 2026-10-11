@@ -3,40 +3,43 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import TeacherMarkAttendanceScreen from '../TeacherAttendanceScreen';
 
-vi.mock('../../../context/ProfileContext', () => ({
-    useProfile: () => ({ profile: { schoolId: 'school-1', branchId: 'branch-1' } })
-}));
+// The screen reads its data from Supabase now, not the Express API.
+//
+// These mocks were on `lib/api` — the legacy client for a server that is not
+// deployed. They had to move with the screen, and moving them is also what makes
+// the tests meaningful: the old ones would have passed against a screen that could
+// never load a register on the live site, because the live site has no `/api`.
 
-vi.mock('../../../hooks/useAutoSync', () => ({
-    useAutoSync: () => {}
-}));
-
-let mockBranches: any[] = [];
-vi.mock('../../../context/SchoolScopeContext', () => ({
-    useSchoolScope: () => ({ branches: mockBranches })
-}));
-
-vi.mock('../../../lib/api', () => ({
-    api: {
-        getStudents: vi.fn().mockResolvedValue([{ id: 'stu-1', full_name: 'Ada Lovelace' }]),
-        getAttendance: vi.fn((_classId: string, date: string) => {
-            const attendanceByDate: Record<string, any[]> = {
-                '2026-08-04': [{ student_id: 'stu-1', status: 'absent' }],
-                '2026-08-05': [{ student_id: 'stu-1', status: 'present' }],
-            };
-            return Promise.resolve(attendanceByDate[date] || []);
-        }),
-        saveAttendance: vi.fn().mockResolvedValue({}),
-    }
-}));
-
-import { api } from '../../../lib/api';
-
-const students = [{ id: 'stu-1', full_name: 'Ada Lovelace' }];
-const attendanceByDate: Record<string, any[]> = {
-    '2026-08-04': [{ student_id: 'stu-1', status: 'absent' }],
-    '2026-08-05': [{ student_id: 'stu-1', status: 'present' }],
+const registerByDate: Record<string, { studentId: string; studentName: string; status: string | null }[]> = {
+    '2026-08-04': [{ studentId: 'stu-1', studentName: 'Ada Lovelace', status: 'ABSENT' }],
+    '2026-08-05': [{ studentId: 'stu-1', studentName: 'Ada Lovelace', status: 'PRESENT' }],
 };
+
+vi.mock('../../../src/lib/supabase/attendance', () => ({
+    // A register row per student, with the status for THAT date. `status: null`
+    // means nobody has marked it yet — which is not the same as absent.
+    getClassRegister: vi.fn((_classId: string, date: string) =>
+        Promise.resolve(
+            (registerByDate[date] ?? [{ studentId: 'stu-1', studentName: 'Ada Lovelace', status: null }]).map(r => ({
+                studentId: r.studentId,
+                studentName: r.studentName,
+                admissionNo: 'A-1',
+                classId: 'class-1',
+                classDisplayName: 'SSS 1 A',
+                enrollmentId: 'enr-1',
+                status: r.status,
+                remark: null,
+            })),
+        ),
+    ),
+    recordRegister: vi.fn().mockResolvedValue({ success: true, recorded: 1, corrected: 0 }),
+    todayInKualaLumpur: () => '2026-08-04',
+    // The status vocabulary the database uses. The screen translates between this
+    // and its own words; the test asserts on the screen's words.
+    ATTENDANCE_STATUSES: ['PRESENT', 'ABSENT', 'LATE', 'EXCUSED', 'SICK'],
+}));
+
+import { getClassRegister, recordRegister } from '../../../src/lib/supabase/attendance';
 
 const classInfo = { id: 'class-1', grade: 'SSS 1', section: 'A', schoolId: 'school-1' } as any;
 
@@ -44,18 +47,28 @@ describe('TeacherMarkAttendanceScreen date switching', () => {
     beforeEach(() => {
         localStorage.clear();
         vi.clearAllMocks();
-        mockBranches = [];
-        (api.getStudents as any).mockResolvedValue(students);
-        (api.getAttendance as any).mockImplementation((_classId: string, date: string) =>
-            Promise.resolve(attendanceByDate[date] || [])
+        (getClassRegister as any).mockImplementation((_classId: string, date: string) =>
+            Promise.resolve(
+                (registerByDate[date] ?? [{ studentId: 'stu-1', studentName: 'Ada Lovelace', status: null }]).map(r => ({
+                    studentId: r.studentId,
+                    studentName: r.studentName,
+                    admissionNo: 'A-1',
+                    classId: 'class-1',
+                    classDisplayName: 'SSS 1 A',
+                    enrollmentId: 'enr-1',
+                    status: r.status,
+                    remark: null,
+                })),
+            )
         );
+        (recordRegister as any).mockResolvedValue({ success: true, recorded: 1, corrected: 0 });
     });
 
     it('shows each date\'s own saved record instead of a stale local draft', async () => {
         render(<TeacherMarkAttendanceScreen classInfo={classInfo} currentBranchId="branch-1" />);
 
         // Initial load = today's date (mocked as no record -> defaults to Present)
-        await waitFor(() => expect(api.getAttendance).toHaveBeenCalled());
+        await waitFor(() => expect(getClassRegister).toHaveBeenCalled());
 
         const dateInput = await screen.findByDisplayValue(/\d{4}-\d{2}-\d{2}/);
 
@@ -101,11 +114,14 @@ describe('TeacherMarkAttendanceScreen — one curriculum, one list', () => {
     beforeEach(() => {
         localStorage.clear();
         vi.clearAllMocks();
-        (api.getStudents as any).mockResolvedValue([
-            { id: 'stu-1', full_name: 'Ada Lovelace' },
-            { id: 'stu-2', full_name: 'Grace Hopper' },
+        // Both students, straight from the register — the screen no longer asks a
+        // separate API for the class list and then a second one for the marks.
+        (getClassRegister as any).mockResolvedValue([
+            { studentId: 'stu-1', studentName: 'Ada Lovelace', admissionNo: 'A-1', classId: 'class-1',
+              classDisplayName: 'SSS 1 A', enrollmentId: 'enr-1', status: null, remark: null },
+            { studentId: 'stu-2', studentName: 'Grace Hopper', admissionNo: 'A-2', classId: 'class-1',
+              classDisplayName: 'SSS 1 A', enrollmentId: 'enr-2', status: null, remark: null },
         ]);
-        (api.getAttendance as any).mockResolvedValue([]);
     });
 
     // WHAT USED TO BE TESTED HERE. A dropdown to filter the class by curriculum
@@ -128,10 +144,13 @@ describe('TeacherMarkAttendanceScreen — one curriculum, one list', () => {
     });
 
     it('never hides a student even when the record carries a track field', async () => {
-        // A stray `curriculum_type` on a student must not remove them from the list.
-        (api.getStudents as any).mockResolvedValue([
-            { id: 'stu-1', full_name: 'Ada Lovelace', curriculum_type: 'KSSR' },
-            { id: 'stu-2', full_name: 'Grace Hopper', curriculum_type: 'British' },
+        // The register has no curriculum field at all — that is the point. There is
+        // nothing for a filter to hide a student with.
+        (getClassRegister as any).mockResolvedValue([
+            { studentId: 'stu-1', studentName: 'Ada Lovelace', admissionNo: 'A-1', classId: 'class-1',
+              classDisplayName: 'SSS 1 A', enrollmentId: 'enr-1', status: null, remark: null },
+            { studentId: 'stu-2', studentName: 'Grace Hopper', admissionNo: 'A-2', classId: 'class-1',
+              classDisplayName: 'SSS 1 A', enrollmentId: 'enr-2', status: null, remark: null },
         ]);
         render(<TeacherMarkAttendanceScreen classInfo={classInfo} currentBranchId="branch-1" />);
 

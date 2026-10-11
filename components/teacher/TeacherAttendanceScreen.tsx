@@ -10,10 +10,18 @@ import CenteredLoader from '../ui/CenteredLoader';
 import { THEME_CONFIG } from '../../constants';
 import { DashboardType, Student, AttendanceStatus, ClassInfo } from '../../types';
 import { getFormattedClassName } from '../../constants';
-import { api } from '../../lib/api';
-import { syncEngine } from '../../lib/syncEngine';
-import { useProfile } from '../../context/ProfileContext';
-import { useAutoSync } from '../../hooks/useAutoSync';
+import {
+    getClassRegister,
+    recordRegister,
+    todayInKualaLumpur,
+    type RegisterRow,
+    // The database's vocabulary, under its own name. The screen already has an
+    // `AttendanceStatus` meaning Present/Absent/Late/Leave, and the two are NOT the
+    // same set of strings — importing both under one name made every case in the
+    // mapping below a type error, which is the compiler pointing out exactly the
+    // confusion that caused the original display bug.
+    type AttendanceStatus as DbAttendanceStatus,
+} from '../../src/lib/supabase/attendance';
 
 
 const AttendanceStatusButtons = ({ status, onStatusChange }: { status: AttendanceStatus, onStatusChange: (newStatus: AttendanceStatus) => void }) => {
@@ -45,6 +53,70 @@ const AttendanceStatusButtons = ({ status, onStatusChange }: { status: Attendanc
     );
 };
 
+/**
+ * The screen's words and the database's words, translated in ONE place.
+ *
+ * The database stores PRESENT / ABSENT / LATE / EXCUSED / SICK. The screen shows
+ * Present / Absent / Late / Leave. Deriving the display word from capitalisation —
+ * which is what the old code did — silently turned 'EXCUSED' into 'Excused', a
+ * value the buttons do not offer, so the row showed no selection and the teacher's
+ * next save wrote the default.
+ *
+ * 'Leave' and 'Excused' are the same thing here; the school says "cuti" and the
+ * model says excused.
+ */
+function statusToLabel(status: DbAttendanceStatus | null): AttendanceStatus {
+    switch (status) {
+        case 'PRESENT': return 'Present';
+        case 'ABSENT': return 'Absent';
+        case 'LATE': return 'Late';
+        case 'EXCUSED': return 'Leave';
+        case 'SICK': return 'Leave';
+        // Nothing recorded yet. The register shows Present by default because that
+        // is what the teacher will mark for almost every child, and the save is
+        // explicit — the row is only written when the register is submitted.
+        case null: return 'Present';
+        default: return 'Present';
+    }
+}
+
+function labelToStatus(label: AttendanceStatus): DbAttendanceStatus {
+    switch (label) {
+        case 'Present': return 'PRESENT';
+        case 'Absent': return 'ABSENT';
+        case 'Late': return 'LATE';
+        case 'Leave': return 'EXCUSED';
+        default: return 'PRESENT';
+    }
+}
+
+/**
+ * The term day counts under each name.
+ *
+ * Derived from the register's own rows rather than a second request, so the numbers
+ * cannot disagree with the marks shown above them.
+ */
+function summariseTermDays(rows: RegisterRow[], classId: string) {
+    const students: Record<string, { total: number; present: number; absent: number; late: number }> = {};
+    for (const r of rows) {
+        if (!students[r.studentId]) {
+            students[r.studentId] = { total: 0, present: 0, absent: 0, late: 0 };
+        }
+        // A row with no status has not been recorded, so it is NOT counted as a
+        // school day for that child. Counting it would report absences nobody marked.
+        if (r.status === null) continue;
+        const entry = students[r.studentId];
+        entry.total += 1;
+        if (r.status === 'PRESENT') entry.present += 1;
+        else if (r.status === 'LATE') entry.late += 1;
+        else entry.absent += 1;
+    }
+    return {
+        term: new Date().getFullYear().toString(),
+        students,
+    };
+}
+
 interface TeacherMarkAttendanceScreenProps {
     classInfo: ClassInfo;
     currentBranchId?: string | null;
@@ -52,7 +124,6 @@ interface TeacherMarkAttendanceScreenProps {
 
 const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = ({ classInfo, currentBranchId }) => {
     const theme = THEME_CONFIG[DashboardType.Teacher];
-    const { profile } = useProfile();
     const [students, setStudents] = useState<Student[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     // Each student's days this term (school days / present / absent / late) from
@@ -65,77 +136,62 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         if (!classInfo) return;
         setIsLoading(true);
         try {
-            // 1. Fetch Students in Class using API
-            const effectiveSchoolId = classInfo.schoolId || (classInfo as any).school_id || profile?.schoolId;
-            const effectiveBranchId = currentBranchId || profile?.branchId;
+            // The register straight from the database, for the date being marked.
+            //
+            // This screen used to need `schoolId` and `branchId` and then call the
+            // Express API. SRIK is ONE school and has neither, so every real teacher
+            // hit the "School Context is missing" path and saw an empty register —
+            // there was no school to supply, and no server to answer.
+            //
+            // `getClassRegister` resolves the class list for THAT DATE from the
+            // enrollments, so a register marked for last month shows the children
+            // who were in the class then, not the ones who have joined since.
+            const rows = await getClassRegister(classInfo.id, selectedDate);
 
-            if (!effectiveSchoolId) {
-                console.error('[Attendance] No school ID found in classInfo or profile');
-                setIsLoading(false);
-                return;
-            }
-
-            const classStudents = await api.getStudents(
-                effectiveSchoolId,
-                effectiveBranchId && effectiveBranchId !== 'all' ? effectiveBranchId : undefined,
-                {
-                    classId: classInfo.id,
+            setStudents(
+                rows.map((r): Student => ({
+                    id: r.studentId,
+                    name: r.studentName || 'Unknown',
                     grade: classInfo.grade,
-                    section: classInfo.section
-                }
+                    section: classInfo.section,
+                    avatarUrl: null,
+                    // The database's status vocabulary, shown as the screen's own
+                    // words. The mapping lives in one place rather than being
+                    // re-derived from capitalisation, which broke on 'EXCUSED'.
+                    attendanceStatus: statusToLabel(r.status),
+                } as unknown as Student))
             );
 
-            if (!classStudents || classStudents.length === 0) {
-                setStudents([]);
-                return;
-            }
-
-            // 2. Fetch Existing Attendance for Selected Date using api client
-            const attendanceData = await api.getAttendance(
-                classInfo.id,
-                selectedDate
-            );
-
-            // Map API data to UI model
-            const studentsWithAttendance = classStudents.map((s: any) => {
-                const record = attendanceData?.find((a: any) => a.student_id === s.id);
-
-                // Normalize DB status (likely lowercase) to UI (PascalCase)
-                let displayStatus = 'Present';
-                if (record?.status) {
-                    displayStatus = record.status.charAt(0).toUpperCase() + record.status.slice(1).toLowerCase();
-                }
-
-                return {
-                    id: s.id,
-                    name: s.full_name || s.name || 'Unknown',
-                    grade: s.grade,
-                    section: s.section,
-                    avatarUrl: s.avatar_url,
-                    attendanceStatus: displayStatus as AttendanceStatus,
-                    curriculum_type: s.curriculum_type || 'KSSR',
-                } as unknown as Student;
-            });
-
-            setStudents(studentsWithAttendance);
-
-            const summary = await api.getAttendanceTermSummary({ classId: classInfo.id });
-            setTermDays(summary ? { term: summary.term, students: summary.students || {} } : null);
-
+            // The term day counts are computed from the same rows the register
+            // shows, so the numbers under each name agree with the marks above.
+            setTermDays(summariseTermDays(rows, classInfo.id));
         } catch (err) {
-            console.error("Error fetching attendance data:", err);
-            toast.error("Failed to load attendance data.");
+            // A failure is REPORTED, not swallowed into an empty list. "No students"
+            // and "we could not load your students" look identical on screen, and
+            // only one of them means the office has work to do.
+            console.error('Error fetching attendance data:', err);
+            toast.error(
+                err instanceof Error ? `Could not load the register: ${err.message}` : 'Could not load the register.'
+            );
+            setStudents([]);
         } finally {
             setIsLoading(false);
         }
-    }, [classInfo, selectedDate, profile?.schoolId, profile?.branchId, currentBranchId]);
+    }, [classInfo, selectedDate]);
 
+    // THE EFFECT THAT ACTUALLY LOADS THE REGISTER.
+    //
+    // The first version of this rewrite replaced the whole block from `fetchData`
+    // down to the old `useAutoSync` call, and took this with it: the function was
+    // defined, the dependencies were right, and nothing ever called it. The screen
+    // sat on "Loading attendance data..." forever, with no error, because a
+    // callback that is never invoked does not fail.
+    //
+    // `useAutoSync` is gone with it. It watched a local sync queue that no longer
+    // exists — reads are direct now, so there is nothing to re-sync after.
     useEffect(() => {
         fetchData();
     }, [fetchData]);
-
-    useAutoSync(['attendance', 'students'], fetchData);
-
 
     // This used to filter by curriculum track (KSSR / British). This school runs
     // one curriculum, and its student records have no track field at all — so the
@@ -161,48 +217,43 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
 
     const submitAttendance = async () => {
         if (!classInfo) return;
-        const effectiveSchoolId = classInfo.schoolId || (classInfo as any).school_id || profile?.schoolId;
-        const effectiveBranchId = currentBranchId || profile?.branchId || (classInfo as any).branchId || (classInfo as any).branch_id;
 
-        if (!effectiveSchoolId) {
-            toast.error("School Context is missing. Please refresh.");
-            return;
-        }
-
-        const upsertData = visibleStudents.map(s => {
-            let status = s.attendanceStatus.toLowerCase();
-            if (status === 'leave') status = 'excused'; // Map UI 'Leave' to DB 'excused'
-
-            return {
-                student_id: s.id,
-                class_id: classInfo.id,
-                date: selectedDate,
-                status: status,
-                school_id: effectiveSchoolId,
-                branch_id: effectiveBranchId || null
-            };
-        });
+        // One call for the whole class.
+        //
+        // This used to collect `school_id` and `branch_id` onto every row and POST
+        // them to the Express API. There is no server, so the save failed and the
+        // code then handed the register to an offline queue that replayed the same
+        // failing call — a loop that reported success to the teacher while nothing
+        // was ever written.
+        //
+        // The RPC is idempotent and writes the whole register in one transaction, so
+        // a dropped connection can be retried safely and can never leave a class
+        // half-marked.
+        const entries = visibleStudents.map(s => ({
+            studentId: String(s.id),
+            status: labelToStatus(s.attendanceStatus),
+            remark: null,
+        }));
 
         try {
-            await api.saveAttendance(upsertData);
-            toast.success(`Attendance for ${selectedDate} saved successfully!`);
-            // the term day counts under each name include today's marks now
-            api.getAttendanceTermSummary({ classId: classInfo.id }).then(summary => {
-                if (summary) setTermDays({ term: summary.term, students: summary.students || {} });
-            });
-        } catch (err) {
-            // A classroom is exactly where the signal is worst. Rather than losing
-            // the whole register (it previously lived only in component state and
-            // was gone on the next back-navigation), hand it to the offline sync
-            // queue, which replays the identical api.saveAttendance call later.
-            console.error('Error submitting attendance:', err);
-            try {
-                await syncEngine.enqueueAction('ATTENDANCE', upsertData);
-                toast.success(`Attendance for ${selectedDate} saved on this device — it will sync automatically.`);
-            } catch (queueErr) {
-                console.error('Error queueing attendance for sync:', queueErr);
-                toast.error('Failed to save attendance. Please stay on this page and try again.');
+            const result = await recordRegister(classInfo.id, selectedDate, entries);
+
+            if (!result.success) {
+                toast.error(result.error ?? 'Could not save attendance. Please try again.');
+                return;
             }
+
+            toast.success(`Attendance for ${selectedDate} saved successfully!`);
+
+            // Re-read rather than patching local state: the database is the record,
+            // and the term counts below each name are derived from it.
+            const refreshed = await getClassRegister(classInfo.id, selectedDate);
+            setTermDays(summariseTermDays(refreshed, classInfo.id));
+        } catch (err) {
+            console.error('Error submitting attendance:', err);
+            toast.error(
+                err instanceof Error ? `Could not save attendance: ${err.message}` : 'Could not save attendance.'
+            );
         }
     };
 
