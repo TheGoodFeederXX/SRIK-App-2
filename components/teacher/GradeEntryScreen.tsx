@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api';
+import { getMarkRegister, saveMarks, type ResultStatus } from '../../src/lib/supabase/assessments';
 import { Exam, Student } from '../../types';
 import { CheckCircleIcon } from '../../constants';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { useAuth } from '../../context/AuthContext';
 
 const getScoreIndicatorStyle = (scoreStr: string): string => {
     const score = parseInt(scoreStr, 10);
@@ -36,12 +35,10 @@ interface GradeEntryScreenProps {
 }
 
 const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack }) => {
-    const { currentSchool } = useAuth();
     const [scores, setScores] = useState<{ [studentId: string | number]: string }>({});
     const [students, setStudents] = useState<Student[]>([]);
     const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
     const [loading, setLoading] = useState(true);
-    const [currentTerm, setCurrentTerm] = useState<{ name: string; academic_year: string }>({ name: 'Penggal 1', academic_year: '' });
     // One debounce timer PER STUDENT. A single shared timer meant that typing a
     // score for the next student cancelled the pending save for the previous one,
     // silently discarding it.
@@ -59,119 +56,83 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
         };
     }, []);
 
-    // Fallback-only class name parser. exam.classId (the real class UUID) is the
-    // authoritative source of the roster — see fetchData below. This regex guess
-    // is kept only for legacy exams saved before class_id was persisted, and it
-    // is unreliable for the foreign (JSS/SSS-style) class names this app was
-    // first built around: "JSS 1" contains digit "1" (not the true numeric
-    // grade, which was offset by +6 for JSS / +9 for SSS) and its first capital
-    // letter "J" (from "JSS", not an actual section).
-    const gradeSection = React.useMemo(() => {
-        if (!exam?.className) return { grade: 0, section: 'A' };
-        const gradeMatch = exam.className.match(/\d+/);
-        const sectionMatch = exam.className.match(/[A-Z]/);
-
-        return {
-            grade: gradeMatch ? parseInt(gradeMatch[0], 10) : 0,
-            section: sectionMatch ? sectionMatch[0] : 'A'
-        };
-    }, [exam?.className]);
-
-    // The school's actual current term/session — grades used to be saved
-    // under hardcoded 'Penggal 1'/'2024/2025' literals regardless of what
-    // term the school was actually in, permanently mislabeling records.
-    useEffect(() => {
-        if (!currentSchool?.id) return;
-        api.getAcademicTerms(currentSchool.id).then((data: any[]) => {
-            const current = Array.isArray(data) ? data.find(t => t.is_current) || data[0] : null;
-            if (current) {
-                setCurrentTerm({ name: current.name, academic_year: current.academic_year });
-            } else {
-                const nowYear = new Date().getFullYear();
-                setCurrentTerm({ name: 'Penggal 1', academic_year: `${nowYear}/${nowYear + 1}` });
-            }
-        }).catch(() => {
-            const nowYear = new Date().getFullYear();
-            setCurrentTerm({ name: 'Penggal 1', academic_year: `${nowYear}/${nowYear + 1}` });
-        });
-    }, [currentSchool?.id]);
-
+    /**
+     * The children in this exam's class, and the marks already recorded.
+     *
+     * This called `api.getStudentsByClassId` and `api.getGrades` on an Express
+     * server that is not deployed, so the sheet was empty and nothing saved.
+     *
+     * It also guessed the roster from a class NAME by regex — "JSS 1" yielded grade
+     * 1, which was never the real year level. The class ID the exam carries is the
+     * authoritative source, and there is no fallback: guessing which children sat
+     * an exam is not something to do quietly.
+     */
     const fetchData = useCallback(async () => {
-        if (!exam || !gradeSection || !currentSchool?.id) return;
+        if (!exam?.id) return;
         setLoading(true);
         try {
-            // 1. Fetch Students using backend API.
-            // Prefer the real class UUID (exam.classId) — it always resolves the
-            // correct roster. Only fall back to the className regex-guess for
-            // legacy exams saved before class_id was captured.
-            const studentsData = exam.classId
-                ? await api.getStudentsByClassId(exam.classId)
-                : await api.getStudentsByClass(
-                    parseInt(gradeSection.grade.toString(), 10),
-                    gradeSection.section,
-                    currentSchool.id
-                );
+            const register = await getMarkRegister(exam.id);
 
-            const loadedStudents = studentsData.map((s: any) => ({
-                ...s,
-                name: s.full_name || s.name,
-                avatarUrl: s.avatar_url,
-                schoolGeneratedId: s.school_generated_id
-            }));
-            setStudents(loadedStudents);
+            setStudents(register.rows.map((r) => ({
+                id: r.studentId,
+                full_name: r.studentName,
+                name: r.studentName,
+                school_generated_id: r.admissionNo,
+                avatar_url: undefined,
+            } as unknown as Student)));
 
-            // 2. Fetch Existing Grades for this subject
-            const studentIds = loadedStudents.map(s => s.id);
-            if (studentIds.length > 0) {
-                const gradesData = await api.getGrades(
-                    studentIds,
-                    exam.subject,
-                    currentTerm.name,
-                    currentSchool.id,
-                    currentSchool.branch_id,
-                    (currentTerm as any).academic_year || (currentTerm as any).session,
-                    { useBackend: true }
-                );
-
-                if (gradesData) {
-                    const scoreMap: { [key: number]: string } = {};
-                    gradesData.forEach((g: any) => {
-                        scoreMap[g.student_id] = g.score.toString();
-                    });
-                    setScores(scoreMap);
-                }
+            // A mark that does not exist is NOT zero. Only what has actually been
+            // recorded is filled in, so the boxes a teacher has not touched stay
+            // empty and `saveMarks` can tell "not entered" from "scored zero".
+            const scoreMap: { [key: string]: string } = {};
+            for (const row of register.rows) {
+                if (row.score !== null) scoreMap[row.studentId] = String(row.score);
             }
-
+            setScores(scoreMap);
         } catch (err) {
-            console.error("Error loading grade entry data:", err);
+            console.error('Error loading grade entry data:', err);
+            toast.error(err instanceof Error ? err.message : 'Could not load the marks.');
         } finally {
             setLoading(false);
         }
-    }, [exam, gradeSection, currentSchool?.id, currentSchool?.branch_id, currentTerm.name]);
+    }, [exam?.id]);
 
     useEffect(() => {
         fetchData();
     }, [fetchData]);
 
     // Auto-sync
-    useAutoSync(['students', 'academic_records'], fetchData);
+    useAutoSync(['assessment_results', 'assessments'], fetchData);
 
-
+    /**
+     * Save one child's mark.
+     *
+     * The database owns the rules — it refuses a mark from a teacher who does not
+     * teach this class and this subject, and it refuses to touch a published
+     * assessment. Those refusals are surfaced rather than swallowed: a teacher who
+     * is told "saved" when nothing was written stops checking.
+     */
     const saveGrade = async (studentId: string | number, value: string) => {
-        if (!currentSchool?.id || !exam) return;
+        if (!exam?.id) return;
         const numericScore = parseInt(value, 10);
 
         try {
-            await api.saveGrade({
-                studentId,
-                subject: exam.subject,
-                score: numericScore,
-                term: currentTerm.name,
-                session: currentTerm.academic_year
-            }, currentSchool.id, currentSchool.branch_id, { useBackend: true });
+            await saveMarks(exam.id, [{
+                studentId: String(studentId),
+                // These three are display fields on a READ row and `saveMarks`
+                // ignores them; they are supplied because the row shape carries them.
+                studentName: '',
+                admissionNo: '',
+                // An empty box CLEARS the mark rather than scoring zero — "nobody has
+                // said anything yet" and "this child scored nothing" are different
+                // facts, and only one of them belongs on a report card.
+                status: (value === '' ? 'NOT_ENTERED' : 'GRADED') as ResultStatus,
+                score: value === '' || Number.isNaN(numericScore) ? null : numericScore,
+                tp: null,
+                comment: null,
+            }]);
 
             failedSavesRef.current.delete(studentId);
-            // Only report "all changes saved" once nothing is still outstanding.
             if (failedSavesRef.current.size === 0 && debounceTimeoutsRef.current.size === 0) {
                 setSaveStatus('saved');
                 setTimeout(() => setSaveStatus(prev => (prev === 'saved' ? 'idle' : prev)), 2000);
@@ -183,7 +144,11 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
             console.error(`Failed to auto-save grade for student ${studentId}`, err);
             failedSavesRef.current.add(studentId);
             setSaveStatus('error');
-            toast.error('A grade could not be saved. Re-enter it to try again.');
+            toast.error(
+                err instanceof Error && err.message
+                    ? err.message
+                    : 'A grade could not be saved. Re-enter it to try again.',
+            );
         }
     };
 

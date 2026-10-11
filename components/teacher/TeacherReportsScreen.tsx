@@ -2,7 +2,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Student, ClassInfo } from '../../types';
 import { ChevronLeftIcon, AIIcon, getFormattedClassName } from '../../constants';
-import { api } from '../../lib/api';
+import { listStudents } from '../../src/lib/supabase/students';
+import {
+    listAssessments,
+    getMarkRegister,
+    getCurrentTerm,
+} from '../../src/lib/supabase/assessments';
+import { getClassAttendanceSummary } from '../../src/lib/supabase/attendance';
 import { useProfile } from '../../context/ProfileContext';
 import { useAuth } from '../../context/AuthContext';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
@@ -49,52 +55,98 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
         const fetchStudentsAndStats = async () => {
             setLoadingStudents(true);
             try {
-                // Fetch students by grade via backend API
-                const studentsData = await api.getStudentsByClass(
-                    selectedClass.schoolId || '',
-                    String(selectedClass.grade),
-                    selectedClass.section || ''
-                );
+                // The children in this class, read from the database.
+                //
+                // This called `api.getStudentsByClass(schoolId, grade, section)` — an
+                // Express endpoint with no server behind it, matched on grade and
+                // SECTION as text. That match is why the list was empty even before
+                // the server went away: SRIK identifies a class by id and its labels
+                // are the school's to rename.
+                const all = await listStudents();
+                const roster = all.filter(r => r.classId === selectedClass.id);
 
-                if (!studentsData || studentsData.length === 0) {
+                if (roster.length === 0) {
                     setStudents([]);
                     return;
                 }
 
-                // Fetch report stats for each student via backend
-                const studentsWithStats = await Promise.all(studentsData.map(async (s: any) => {
-                    try {
-                        const stats = await api.getStudentReportStats(s.id);
-                        let perf = stats?.performance || [];
+                // Averages come from the marks actually recorded for this term, and
+                // attendance from the register. Both are read rather than estimated:
+                // `api.getStudentReportStats(id)` returned a ready-made summary from
+                // a server that is not there, and inventing one here would put a
+                // number in front of a teacher that nothing in the school supports.
+                const term = await getCurrentTerm();
 
-                        // Filter performance if not Class Teacher
-                        const isClassTeacher = teacherProfile?.assignedClasses?.some((c: any) => c.id === selectedClass.id);
-                        const isSubjectTeacher = (subj: string) => teacherProfile?.assignedSubjects?.some((as: any) => as.name.toLowerCase() === subj.toLowerCase());
-
-                        if (!isClassTeacher && teacherProfile) {
-                            perf = perf.filter((p: any) => isSubjectTeacher(p.subject));
-                        }
-
-                        return {
-                            ...s,
-                            name: s.name,
-                            avatarUrl: s.avatar_url,
-                            gradeAverage: stats?.avgScore || 0,
-                            attendancePercentage: stats?.attendancePct || 100,
-                            academicPerformance: perf
-                        };
-                    } catch {
-                        return { ...s, gradeAverage: 0, attendancePercentage: 100 };
+                // Attendance first, in ONE read for the whole class rather than one
+                // per child. A class of thirty would otherwise make thirty round
+                // trips, and the screen would sit on "Loading student data..." for
+                // seconds on a school connection.
+                const attendanceByStudent = new Map<string, number>();
+                if (term) {
+                    const summary = await getClassAttendanceSummary(
+                        selectedClass.id,
+                        term.startDate,
+                        term.endDate,
+                    ).catch(() => []);
+                    for (const row of summary) {
+                        attendanceByStudent.set(
+                            row.studentId,
+                            Math.round(row.attendanceRate * 10) / 10,
+                        );
                     }
-                }));
+                }
 
-                setStudents(studentsWithStats as any);
+                // Marks: every assessment for this class this term.
+                const perStudent = new Map<string, number[]>();
+                if (term) {
+                    const assessments = await listAssessments(term.id, {
+                        classId: selectedClass.id,
+                    });
+                    const registers = await Promise.all(
+                        assessments.map(a => getMarkRegister(a.id).catch(() => null)),
+                    );
+                    for (const reg of registers) {
+                        if (!reg) continue;
+                        const max = reg.assessment.maxScore || 100;
+                        for (const row of reg.rows) {
+                            // A missing mark is NOT a zero. Only marks that exist are
+                            // averaged, or a child who has not been marked yet appears
+                            // to be failing.
+                            if (row.score === null || max <= 0) continue;
+                            const list = perStudent.get(row.studentId) ?? [];
+                            list.push((Number(row.score) / max) * 100);
+                            perStudent.set(row.studentId, list);
+                        }
+                    }
+                }
+
+                setStudents(roster.map((r): any => {
+                    const marks = perStudent.get(r.id) ?? [];
+                    return {
+                        id: r.id,
+                        name: r.fullName,
+                        avatarUrl: null,
+                        grade: r.yearLevel ?? selectedClass.grade,
+                        section: selectedClass.section,
+                        schoolId: r.admissionNo,
+                        // null, not 0: no marks recorded yet is not an average of
+                        // zero, and a teacher reading "0%" would act on it.
+                        gradeAverage: marks.length
+                            ? Math.round((marks.reduce((a, b) => a + b, 0) / marks.length) * 10) / 10
+                            : null,
+                        // null, not 100: a child with no register entries has an
+                        // unknown rate, and showing 100% would claim perfect
+                        // attendance nobody recorded.
+                        attendancePercentage: attendanceByStudent.get(r.id) ?? null,
+                    };
+                }));
             } catch (err) {
                 console.error(err);
             } finally {
                 setLoadingStudents(false);
             }
         };
+
         fetchStudentsAndStats();
 
     }, [selectedClass]);
@@ -149,8 +201,12 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
                             <div className="flex-grow">
                                 <p className="font-bold text-gray-800">{student.name}</p>
                                 <div className="flex items-center space-x-3 text-sm text-gray-500">
-                                    <span>Avg Score: <span className="font-semibold text-purple-700">{student.gradeAverage}%</span></span>
-                                    <span>Attendance: <span className="font-semibold text-purple-700">{student.attendancePercentage}%</span></span>
+                                    {/* "—" for a value nobody has recorded, rather than
+                                        "0%". A teacher seeing 0% would act on it: chase a
+                                        child for failing when no mark exists yet, or for
+                                        absence on days no register was taken. */}
+                                    <span>Avg Score: <span className="font-semibold text-purple-700">{student.gradeAverage === null ? '—' : `${student.gradeAverage}%`}</span></span>
+                                    <span>Attendance: <span className="font-semibold text-purple-700">{student.attendancePercentage === null ? '—' : `${student.attendancePercentage}%`}</span></span>
                                 </div>
                             </div>
                         </div>

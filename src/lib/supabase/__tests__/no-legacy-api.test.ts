@@ -33,10 +33,11 @@ const ROOT = process.cwd();
  * Each one is a known outstanding item under F27, not a licence to add more.
  */
 const STILL_TO_MIGRATE = [
-    // The last two: both have real data behind them and are being moved onto
-    // `assessments` and `report_cards`.
-    'components/teacher/ClassGradebookScreen.tsx',
-    'components/teacher/TeacherReportsScreen.tsx',
+    // EMPTY, and that is the finding closed. Every screen the audit listed has
+    // either been moved onto Supabase or — where the school keeps no such records
+    // at all — replaced by one that says so. The assertion below fails if anything
+    // appears here again, which is what would happen if a screen were put back on
+    // the undeployed client.
 ];
 
 
@@ -67,6 +68,12 @@ const MIGRATED = [
     'components/teacher/TeacherExamManagement.tsx',
     'components/admin/ExamManagement.tsx',
     'components/admin/AddExamScreen.tsx',
+    // A teacher's reports for a class: averages from the marks, attendance from
+    // the register, both read rather than estimated.
+    'components/teacher/TeacherReportsScreen.tsx',
+    // The class gradebook, and the mark-entry screen it sends you to.
+    'components/teacher/ClassGradebookScreen.tsx',
+    'components/teacher/GradeEntryScreen.tsx',
     // Not built yet. Each needed records this school does not keep, so the screen
     // now says so rather than failing a request.
     'components/teacher/MySOPCasesScreen.tsx',
@@ -193,12 +200,9 @@ describe('F27: screens for features this school does not have', () => {
         }
     });
 
-    it('the outstanding list is down to the two screens with real data behind them', () => {
-        // This is the audit finding closing. Anything else appearing here means a
-        // screen was added back on the undeployed client.
-        expect(STILL_TO_MIGRATE).toEqual([
-            'components/teacher/ClassGradebookScreen.tsx',
-            'components/teacher/TeacherReportsScreen.tsx',
-        ]);
+    it('the outstanding list is empty', () => {
+        // This is the audit finding closed. Anything appearing here means a screen
+        // was put back on the undeployed client.
+        expect(STILL_TO_MIGRATE).toEqual([]);
     });
 });

@@ -103,3 +103,86 @@ describe('exams', () => {
         expect(code(FORM)).not.toMatch(/value=\{c\.name\}/);
     });
 });
+
+/**
+ * The mark-entry path, and the gradebook that reads it.
+ *
+ * SRIK records marks against REAL assessments, and a report card is a snapshot the
+ * database builds and freezes. The gradebook used to be an editable grid of
+ * `test1 (20) + test2 (20) + exam (60)` typed straight into a report card, which
+ * contradicted both: its columns could not represent an assessment the school
+ * schedules, and a hand-typed report card has no frozen version to show later.
+ */
+describe('marks entry and the gradebook', () => {
+    const ENTRY = read('components/teacher/GradeEntryScreen.tsx');
+    const GRADEBOOK = read('components/teacher/ClassGradebookScreen.tsx');
+
+    it('marks are written against a real assessment', () => {
+        // `saveMarks(assessmentId, rows)` is the only path. A call that named a
+        // subject-and-term instead would be writing marks to nothing.
+        expect(code(ENTRY)).toMatch(/saveMarks\(/);
+        expect(code(ENTRY)).toMatch(/getMarkRegister\(/);
+        expect(code(ENTRY), 'mark entry still writes the old report-card shape').not.toMatch(
+            /test1|test2/,
+        );
+    });
+
+    it('an empty box clears a mark instead of scoring zero', () => {
+        // "Nobody has said anything yet" and "this child scored nothing" are
+        // different facts, and only one of them belongs on a report card.
+        expect(code(ENTRY)).toMatch(/NOT_ENTERED/);
+        expect(code(ENTRY)).toMatch(/GRADED/);
+    });
+
+    it('a missing mark is never averaged as zero', () => {
+        const gb = code(GRADEBOOK);
+
+        // THE ASSERTION THAT MATTERS is the branch itself, not that a null check
+        // exists somewhere. Writing `0` into an unmarked cell would still pass a
+        // test that only looked for `=== null`, and it is the exact mistake that
+        // makes a whole class look like it is failing — so the branch is pinned.
+        expect(gb, 'an unmarked cell is not left empty').toMatch(
+            /entry\.marks\[assessment\.title\] = null;/,
+        );
+        expect(gb, 'an unmarked cell is given a zero').not.toMatch(
+            /entry\.marks\[assessment\.title\] = 0;/,
+        );
+
+        // The average is computed from the values that EXIST, so a null is dropped
+        // rather than counted. `v !== null` is the filter that does it.
+        expect(gb, 'the average does not filter out missing marks').toMatch(
+            /filter\(\s*\(?v\)?:?\s*[\s\S]{0,20}v !== null/,
+        );
+
+        // And an unknown average is shown as a dash, not as a number. Several such
+        // cells, hence a ternary rather than `??`.
+        expect(gb).toMatch(/=== null \? '—'/);
+
+        // The entry screen has no average at all: it writes one mark per child, and
+        // an empty box clears rather than scores.
+        expect(ENTRY).toMatch(/value === '' \? 'NOT_ENTERED'/);
+    });
+
+    it('the gradebook is a summary, not a second place to type marks', () => {
+        // Two places that write marks is two answers to "what did this child
+        // score". The gradebook displays; the entry screen writes.
+        const gb = code(GRADEBOOK);
+        expect(gb, 'the gradebook writes marks again').not.toMatch(
+            /saveMarks|upsertReportCard|\.insert\(|\.update\(|\.upsert\(/,
+        );
+        expect(gb, 'the gradebook has an editable score box').not.toMatch(
+            /onChange=\{.*handleScoreChange|<input[^>]+type="number"/,
+        );
+        // And it still reads, so it is a summary rather than a blank page.
+        expect(gb).toMatch(/getMarkRegister/);
+    });
+
+    it('neither screen guesses the roster from a class name', () => {
+        // The entry screen used to derive a grade and section by regex from
+        // "Grade 3B". The exam carries the real class id, and guessing which
+        // children sat an exam is not something to do quietly.
+        const entry = code(ENTRY);
+        expect(entry, 'the roster is guessed from a class name').not.toMatch(/className\.match/);
+        expect(entry, 'the roster is guessed from a class name').not.toMatch(/gradeSection/);
+    });
+});
