@@ -41,7 +41,15 @@ enable_confirmations = true
 [storage]
 # Private buckets for student/teacher documents and avatars (08_PHASE_6).
 enabled = true
-file_size_limit = "10MiB"
+# 25 MiB, because that is what the bucket and the `documents.size_bytes` check
+# constraint actually allow (20261016000001_phase6_storage_buckets.sql). This said
+# 10MiB while the other two said 25MB, so a local stack would have refused an
+# 11 MiB upload that production accepts — a difference nobody would look for in
+# the local config, because the config is supposed to describe production.
+#
+# The local stack is a development convenience; the limit that matters is the one
+# on the bucket, and the migration asserts it on every run.
+file_size_limit = "25MiB"
 
 [realtime]
 # Enabled selectively later; v1 is app-shell cache only.
