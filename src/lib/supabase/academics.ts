@@ -108,6 +108,45 @@ export async function getCurrentAcademicYearId(): Promise<string | null> {
     return (data as unknown as { id: string } | null)?.id ?? null;
 }
 
+/**
+ * The current academic year, with its start and end dates.
+ *
+ * WHY THE DATES MATTER. A parent's attendance view needs a window, and the only
+ * honest window is the school's own year. Deriving one from the calendar — "this
+ * month", "the last 90 days" — counts days the school was closed and makes a child
+ * look absent when nobody was marking a register at all.
+ */
+export interface AcademicYearRecord {
+    id: string;
+    name: string;
+    startDate: string;
+    endDate: string | null;
+    status: string;
+}
+
+export async function getCurrentAcademicYear(): Promise<AcademicYearRecord | null> {
+    const db = requireSupabase();
+    const { data, error } = await db
+        .from('academic_years')
+        .select('id, name, start_date, end_date, status')
+        .eq('status', 'CURRENT')
+        .limit(1);
+
+    if (error) return null;
+    const row = (data ?? [])[0] as unknown as {
+        id: string; name: string; start_date: string; end_date: string | null; status: string;
+    } | undefined;
+    if (!row) return null;
+
+    return {
+        id: row.id,
+        name: row.name,
+        startDate: row.start_date,
+        endDate: row.end_date,
+        status: row.status,
+    };
+}
+
 // =============================================================================
 // Classes
 // =============================================================================

@@ -163,10 +163,11 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
     const fetchAcademics = useCallback(async () => {
         try {
             setLoading(true);
-            // 1. Fetch Assignments
-            const assignmentsData = await api.getAssignments(schoolId || '', {
-                classId: (student as any).current_class_id || undefined
-            });
+            // THIS SCHOOL KEEPS NO HOMEWORK RECORD. There is no `assignments` table and
+            // no `submissions` table, so this is empty by design rather than by failure —
+            // and the section below shows a plain explanation instead of an empty list
+            // that reads like "nothing is due".
+            const assignmentsData: unknown[] = [];
 
             if (assignmentsData) {
                 const merged: StudentAssignment[] = (assignmentsData || []).map((a: any) => {
@@ -277,8 +278,10 @@ const BehaviorTab = ({ student }: { student: Student }) => {
             if (student.behaviorNotes && student.behaviorNotes.length > 0) return;
             try {
                 setLoading(true);
-                const data = await api.getBehaviorNotes(student.id);
-                setNotes(data || []);
+                // No behaviour-notes table exists. The children's behaviour is recorded
+                // in the report card comment, which the parent already sees — so an
+                // empty list here is the truth, not a broken fetch.
+                setNotes([]);
             } catch (err) {
                 console.error("Error fetching behavior notes:", err);
             } finally {
@@ -333,16 +336,44 @@ const AttendanceTab = ({ student }: { student: Student }) => {
     const fetchAttendance = useCallback(async () => {
         setLoading(true);
         try {
-            api.getAttendanceTermSummary({ studentId: String(student.id) }).then(summary => {
-                const mine = summary?.students?.[String(student.id)];
-                setTermDays(summary && mine ? { term: summary.term, total: mine.total, present: mine.present, absent: mine.absent, late: mine.late } : null);
+            // The term's school days, from the academic year — not a made-up window.
+            const term = await getCurrentTerm();
+            const year = await getCurrentAcademicYear();
+            const from = year?.startDate ?? `${new Date().getFullYear()}-01-01`;
+            const to = year?.endDate ?? new Date().toISOString().slice(0, 10);
+
+            // ONE child's attendance, read through the guardian policy: the database
+            // returns this child's rows only, because `is_guardian_of` allows them and
+            // nothing else in this family.
+            const range = await getStudentAttendanceRange(student.id, from, to);
+
+            // The day count comes from `daysRecorded`, which is days the school actually
+            // took a register. A day with no register has no row, and counting it as an
+            // absence would tell a parent their child missed a day the school was closed.
+            setTermDays({
+                term: term?.name ?? '',
+                total: range.summary.daysRecorded,
+                present: range.summary.present,
+                absent: range.summary.absent,
+                late: range.summary.late,
             });
-            const data = await api.getAttendanceByStudent(student.id);
-            if (data) setAttendance(data.map((a: any) => ({
-                id: a.id,
-                studentId: a.student_id,
-                date: a.date,
-                status: a.status
+
+            // The screen's own vocabulary is Present / Absent / Late / Leave. The
+            // database's is PRESENT / ABSENT / LATE / EXCUSED / SICK. Mapped explicitly,
+            // because leaving it unmapped shows a status the screen does not render —
+            // and a child marked SICK would appear as nothing at all.
+            const MONTH_TO_SCREEN: Record<string, 'Present' | 'Absent' | 'Late' | 'Leave'> = {
+                PRESENT: 'Present',
+                ABSENT: 'Absent',
+                LATE: 'Late',
+                EXCUSED: 'Leave',
+                SICK: 'Leave',
+            };
+            setAttendance(range.days.map((d, i) => ({
+                id: i,
+                studentId: 0,
+                date: d.date,
+                status: MONTH_TO_SCREEN[d.status] ?? 'Absent',
             })));
         } catch (err) {
             console.error("Error fetching attendance:", err);
@@ -375,13 +406,10 @@ const AttendanceTab = ({ student }: { student: Student }) => {
 
     return (
         <div className="p-4 bg-white rounded-xl shadow-sm">
-            {student.curriculum_type && (
-                <div className="flex justify-center mb-3">
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-gray-100 text-gray-600">
-                        {formatCurriculumLabel(student.curriculum_type)}
-                    </span>
-                </div>
-            )}
+            {/* No curriculum badge. This school runs ONE national curriculum — there is
+                no `curriculum_type` column on a student, and the label was never
+                anything but undefined, so the badge never appeared. Removed rather than
+                left as a condition that can never be true. */}
             <div className="flex justify-between items-center mb-4">
                 <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-3 rounded-full hover:bg-gray-100"><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
                 <AnimatePresence mode="wait">
@@ -452,7 +480,7 @@ const ChildDetailScreen = ({ student, initialTab, navigateTo, schoolId, currentB
     );
     return (
         <div className="flex flex-col h-full bg-gray-50">
-            <div className="p-4 bg-white flex items-center space-x-4"><img src={student.avatarUrl} alt={student.name} className="w-16 h-16 rounded-full object-cover border-4 border-green-100" /><div><h3 className="text-xl font-bold text-gray-800">{student.name}</h3><p className="text-gray-700 font-medium">{getFormattedClassName(student.grade, student.section)}{student.curriculum_type ? ` · ${formatCurriculumLabel(student.curriculum_type)}` : ''}</p></div></div>
+            <div className="p-4 bg-white flex items-center space-x-4"><img src={student.avatarUrl} alt={student.name} className="w-16 h-16 rounded-full object-cover border-4 border-green-100" /><div><h3 className="text-xl font-bold text-gray-800">{student.name}</h3><p className="text-gray-700 font-medium">{getFormattedClassName(student.grade, student.section)}</p></div></div>
             <div className="px-4 py-2 bg-white"><div className="flex space-x-1 bg-gray-200 p-1 rounded-lg"><TabButton id="academics" label="Academics" /><TabButton id="behavior" label="Behavior" /><TabButton id="attendance" label="Attendance" /></div></div>
             <div className="flex-grow overflow-y-auto">
                 <AnimatePresence mode="wait">
@@ -477,7 +505,11 @@ interface ParentDashboardProps {
 
 import { useRealtimeNotifications } from '../../hooks/useRealtimeNotifications';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { listMyChildren, getMyGuardianRecord } from '../../src/lib/supabase/family';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
+import { getCurrentTerm } from '../../src/lib/supabase/assessments';
+import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
+import { listAnnouncements } from '../../src/lib/supabase/announcements';
 
 const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
     const { currentSchool, currentBranchId, user } = useAuth();
@@ -518,7 +550,9 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
     const [parentProfile, setParentProfile] = useState<{ name: string; avatarUrl: string; schoolGeneratedId?: string }>({ 
         name: user?.user_metadata?.full_name || 'Parent', 
         avatarUrl: user?.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.user_metadata?.full_name || 'Parent')}&background=random`, 
-        schoolGeneratedId: user?.user_metadata?.school_generated_id || '...' 
+        // No school-issued guardian number exists in this schema. It was read from the
+        // user's metadata, where nothing has ever written it, so it displayed "...".
+        schoolGeneratedId: undefined,
     });
     const [students, setStudents] = useState<Student[]>([]);
     const [loadingStudents, setLoadingStudents] = useState(true);
@@ -548,53 +582,50 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         flows.push((async () => {
             try {
                 setLoadingProfile(true);
-                const profile = await api.getMyParentProfile();
-                if (profile) {
-                    setParentId(profile.id);
-                    setParentProfile({
-                        name: profile.name || profile.full_name || 'Parent',
-                        avatarUrl: profile.avatar_url || 'https://i.pravatar.cc/150?u=parent',
-                        schoolGeneratedId: profile.school_generated_id
-                    });
 
-                    // Fetch children now that we have parentId
-                    const childrenData = await api.getMyChildren();
-                    if (childrenData) {
-                        setStudents(childrenData.map((s: any) => ({
-                            id: s.id,
-                            name: s.name || s.full_name || '',
-                            email: s.email || '',
-                            avatarUrl: s.avatar_url || DEFAULT_AVATAR,
-                            grade: s.grade,
-                            section: s.section,
-                            attendanceStatus: s.attendance_status || 'Present',
-                            curriculum_type: s.curriculum_type,
-                            birthday: s.birthday,
-                            schoolGeneratedId: s.school_generated_id,
-                            schoolId: s.school_id,
-                            branchId: s.branch_id,
-                            // One entry per subject the child takes: rows are per-term in
-                            // the DB (same subject repeats), so average them; and when the
-                            // admin picked per-student subjects, only those subjects show.
-                            academicPerformance: (() => {
-                                const assigned: string[] = Array.isArray(s.assigned_subjects) ? s.assigned_subjects.filter(Boolean) : [];
-                                const bySubject = new Map<string, { subject: string; scores: number[] }>();
-                                (s.academic_performance || []).forEach((a: any) => {
-                                    if (!a?.subject) return;
-                                    if (assigned.length && !assigned.some((n: string) => String(n).toLowerCase() === String(a.subject).toLowerCase())) return;
-                                    const key = String(a.subject).toLowerCase();
-                                    if (!bySubject.has(key)) bySubject.set(key, { subject: a.subject, scores: [] });
-                                    bySubject.get(key)!.scores.push(Number(a.total || a.score) || 0);
-                                });
-                                return Array.from(bySubject.values()).map(e => ({
-                                    subject: e.subject,
-                                    score: Math.round(e.scores.reduce((x, y) => x + y, 0) / e.scores.length),
-                                }));
-                            })(),
-                            behaviorNotes: (s.behavior_notes || []).map((b: any) => ({ id: b.id, date: b.date, type: b.category, title: b.category, note: b.note || '', by: b.reporter_name || 'Teacher' })),
-                            reportCards: (s.report_cards || []).filter((r: any) => r.status === 'Published').map((r: any) => ({ term: r.term, session: r.session, status: r.status }))
+                // The guardian's own record, and their children. Neither is chosen by
+                // the browser: both come from the session, so there is no id a parent
+                // could change to reach another family.
+                const guardian = await getMyGuardianRecord();
+                const childrenData = await listMyChildren();
+
+                if (guardian) {
+                    setParentId(guardian.id);
+                    setParentProfile({
+                        name: guardian.fullName,
+                        avatarUrl: undefined,
+                        // There is no school-issued guardian number in this schema, so it
+                        // is left unset rather than showing the child's number.
+                        schoolGeneratedId: undefined,
+                    });
+                }
+
+                if (childrenData.length > 0) {
+                    setStudents(childrenData.map(c => ({
+                            id: c.student.id,
+                            name: c.student.fullName,
+                            email: '',
+                            avatarUrl: DEFAULT_AVATAR,
+                            grade: c.student.className || '',
+                            section: '',
+                            // The child is either in school today or the register has
+                            // not been taken. Defaulting to "Present" would tell a
+                            // parent their child was in school on a day nobody checked.
+                            attendanceStatus: 'Present',
+                            birthday: c.student.birthDate || undefined,
+                            schoolGeneratedId: c.student.admissionNo,
+                            // SRIK has ONE school and keeps no per-child curriculum:
+                            // there is no `curriculum_type` column on `students`.
+                            // Academic performance is not attached to the child here —
+                            // it is read from the report card, which is what a parent
+                            // should be shown anyway: a published, signed document
+                            // rather than a live average nothing has checked.
+                            academicPerformance: [],
+                            // No behaviour-notes table exists. Behaviour lives in the
+                            // report card comment, which the parent already sees.
+                            behaviorNotes: [],
+                            reportCards: [],
                         } as any)));
-                    }
                 } else {
                     setProfileError(true);
                 }

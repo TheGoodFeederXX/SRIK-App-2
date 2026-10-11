@@ -427,3 +427,73 @@ export async function getClassAttendanceSummary(
         };
     }).sort((a, b) => a.attendanceRate - b.attendanceRate);
 }
+
+/**
+ * One child's attendance over a date range, and the days themselves.
+ *
+ * WHY THIS EXISTS RATHER THAN REUSING THE CLASS SUMMARY. A parent looking at their own
+ * child should not have to have the child's whole class read to work out one figure,
+ * and the guardian policy on `student_attendance` allows exactly this child's rows. So
+ * the database does the scoping and this reads one child.
+ *
+ * A day the school never took a register has NO ROW, and is absent from `days` rather
+ * than counted as absent. Days recorded is what the rate divides by.
+ */
+export interface StudentAttendanceRange {
+    summary: StudentAttendanceSummary;
+    days: { date: string; status: AttendanceStatus; remark: string | null }[];
+}
+
+export async function getStudentAttendanceRange(
+    studentId: string,
+    from: string,
+    to: string
+): Promise<StudentAttendanceRange> {
+    const db = requireSupabase();
+
+    const { data, error } = await db
+        .from('student_attendance')
+        .select('student_id, attendance_date, status, remark, students(full_name)')
+        .eq('student_id', studentId)
+        .gte('attendance_date', from)
+        .lte('attendance_date', to)
+        // One child over one term is at most every school day in it — a few hundred at
+        // the very most, well under the response cap. Stated rather than assumed, so a
+        // silent truncation could not pass as a full term (audit F28).
+        .limit(500)
+        .order('attendance_date');
+
+    if (error) throw new Error(`Could not load attendance: ${error.message}`);
+
+    const rows = (data ?? []) as unknown as {
+        student_id: string;
+        attendance_date: string;
+        status: AttendanceStatus;
+        remark: string | null;
+        students: { full_name: string } | null;
+    }[];
+
+    const count = (s: AttendanceStatus) => rows.filter(r => r.status === s).length;
+    const present = count('PRESENT');
+    const late = count('LATE');
+    const days = rows.length;
+
+    return {
+        summary: {
+            studentId,
+            studentName: rows[0]?.students?.full_name ?? 'Unknown student',
+            daysRecorded: days,
+            present,
+            absent: count('ABSENT'),
+            late,
+            excused: count('EXCUSED'),
+            sick: count('SICK'),
+            attendanceRate: days === 0 ? 0 : Math.round(((present + late) / days) * 1000) / 10,
+        },
+        days: rows.map(r => ({
+            date: r.attendance_date,
+            status: r.status,
+            remark: r.remark,
+        })),
+    };
+}

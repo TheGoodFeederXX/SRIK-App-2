@@ -29,6 +29,7 @@ const MODULE = 'src/lib/supabase/family.ts';
 const SCREENS = [
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
+    'components/parent/ParentDashboard.tsx',
 ];
 
 describe('F27: the parent portal reads the family from the session, not a parameter', () => {
@@ -89,6 +90,28 @@ describe('F27: the parent portal reads the family from the session, not a parame
         // And it must not import the linking service back in, which would let a later
         // change wire the button up without anyone deciding it should be live.
         expect(src).not.toMatch(/linkStudentToParent/);
+    });
+
+    it('does not show a parent a screen for a feature this school has no record of', () => {
+        const src = code(read('components/parent/ParentDashboard.tsx'));
+
+        // Homework, submissions and behaviour notes have no tables. They are not
+        // "loading" and not "empty because nothing is due" — the school does not keep
+        // them. Each is set to an empty list with the reason beside it, and the check
+        // is that they are EMPTY rather than fetched from somewhere.
+        expect(src, 'assignments are fetched from nowhere').toMatch(
+            /const assignmentsData: unknown\[\] = \[\];/,
+        );
+        expect(src, 'behaviour notes are fetched from nowhere').toMatch(/setNotes\(\[\]\)/);
+
+        // And no invented column is read off a child — bare, quoted, or as a property.
+        // The first version of this check only looked for a trailing quote, so
+        // `curriculum_type: c.student.curriculum_type,` slipped through: a check that
+        // cannot see the defect is not a guard.
+        for (const ghost of ['curriculum_type', 'school_generated_id', 'assigned_subjects', 'behavior_notes']) {
+            expect(src, `the dashboard reads \`${ghost}\`, which no column backs`)
+                .not.toMatch(new RegExp(`['\\.]${ghost}\\b|\\b${ghost}\\s*:`));
+        }
     });
 
     it('reads children without a school id, which does not exist', () => {

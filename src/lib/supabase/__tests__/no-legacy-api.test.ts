@@ -92,6 +92,10 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // The parent dashboard: the child list, this term's attendance day by day, and the
+    // school's own year as the window. Homework and behaviour notes have no tables, so
+    // they are shown empty with the reason rather than as "nothing is due".
+    'components/parent/ParentDashboard.tsx',
     // The parent portal's screens, which read the family from the session rather than
     // a guardian id the browser chose. Adding or removing a child is the office's
     // decision, and the screen now says so instead of offering a button that cannot
