@@ -332,6 +332,54 @@ describe('F27: the parent portal reads the family from the session, not a parame
         }
     });
 
+    it('a feature the school does not have says so, rather than showing an empty list', () => {
+        // Every one of these screens previously rendered a list, a register or a form fed by
+        // the undeployed client, against a table that does not exist. The damage was never
+        // the empty list — it was that an empty list READS as data. A register with no
+        // entries looks like a clean record; a form that submits looks like a report filed.
+        const MISSING_FEATURES = [
+            'components/admin/AdminLessonNotesScreen.tsx',
+            'components/admin/CommunicationHub.tsx',
+            'components/admin/StudentIDCardDashboard.tsx',
+            'components/admin/BehaviorLogScreen.tsx',
+            'components/admin/ClassroomObservationScreen.tsx',
+            'components/admin/ClubManagementScreen.tsx',
+            'components/admin/CustomGamesListScreen.tsx',
+            'components/admin/DepartmentManagementScreen.tsx',
+            'components/admin/HostelManagementScreen.tsx',
+            'components/admin/SalaryConfiguration.tsx',
+            'components/admin/SchoolOnboardingScreen.tsx',
+            'components/admin/TransportManagementScreen.tsx',
+            'components/admin/ComplianceOnboardingPage.tsx',
+            'components/admin/CustomReportBuilder.tsx',
+            'components/admin/ExamCandidateRegistration.tsx',
+            'components/admin/SessionPromotionScreen.tsx',
+            'components/shared/ConferenceScheduling.tsx',
+            'components/student/ClassroomScreen.tsx',
+            'components/student/QuizzesScreen.tsx',
+            'components/student/cbt/StudentCBTPlayerScreen.tsx',
+            'components/teacher/ResultsEntryEnhanced.tsx',
+        ];
+
+        for (const file of MISSING_FEATURES) {
+            const src = code(read(file));
+
+            // It must be the placeholder, not a rebuilt feature.
+            expect(src, `${file} is not the placeholder any more`).toMatch(/ComingSoonScreen/);
+
+            // It must not read from the undeployed client, directly or by import.
+            expect(src, `${file} reaches the undeployed client again`)
+                .not.toMatch(/from\s+['"][^'"]*\/lib\/api['"]/);
+
+            // And it must EXPLAIN itself. A placeholder with no explanation does not say
+            // what is missing or who to ask, which is most of its value.
+            expect(src, `${file} does not explain why`).toMatch(/explanation=/);
+            const words = (src.match(/explanation=\{[\s\S]*?\n\s*\}/) || [''])[0];
+            expect(words.length, `${file} explains itself in too few words`)
+                .toBeGreaterThan(120);
+        }
+    });
+
     it('a teacher\'s notice is saved with the fields the table actually has', () => {
         const src = code(read('components/teacher/TeacherCommunicationScreen.tsx'));
         // No invented columns, and no school id — there is no such thing here.

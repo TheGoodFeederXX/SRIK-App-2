@@ -68,6 +68,34 @@ const MIGRATED = [
     'components/teacher/TeacherExamManagement.tsx',
     'components/admin/ExamManagement.tsx',
     'components/admin/AddExamScreen.tsx',
+    // Screens for features the school does not have. Each read from the undeployed client
+    // and there is no table behind any of them — no lesson notes, notifications, exam
+    // bodies, exam registrations, ID cards, saved reports, behaviour notes, observations,
+    // clubs, departments, hostels, transport, curricula, quizzes, assignments, submissions,
+    // conference slots, salary, savings or compliance records. Replaced rather than rebuilt:
+    // see each screen's explanation for why guessing the data model would be worse than an
+    // honest placeholder.
+    'components/admin/AdminLessonNotesScreen.tsx',
+    'components/admin/CommunicationHub.tsx',
+    'components/admin/StudentIDCardDashboard.tsx',
+    'components/admin/BehaviorLogScreen.tsx',
+    'components/admin/ClassroomObservationScreen.tsx',
+    'components/admin/ClubManagementScreen.tsx',
+    'components/admin/CustomGamesListScreen.tsx',
+    'components/admin/DepartmentManagementScreen.tsx',
+    'components/admin/HostelManagementScreen.tsx',
+    'components/admin/SalaryConfiguration.tsx',
+    'components/admin/SchoolOnboardingScreen.tsx',
+    'components/admin/TransportManagementScreen.tsx',
+    'components/admin/ComplianceOnboardingPage.tsx',
+    'components/admin/CustomReportBuilder.tsx',
+    'components/admin/ExamCandidateRegistration.tsx',
+    'components/admin/SessionPromotionScreen.tsx',
+    'components/shared/ConferenceScheduling.tsx',
+    'components/student/ClassroomScreen.tsx',
+    'components/student/QuizzesScreen.tsx',
+    'components/student/cbt/StudentCBTPlayerScreen.tsx',
+    'components/teacher/ResultsEntryEnhanced.tsx',
     // A teacher's notice to colleagues. The payload carried `category`, `is_pinned`,
     // `school_id` and `timestamp` — no column by any of those names — and `school_id`
     // exists nowhere in this database.
@@ -362,7 +390,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 21;
+        const CEILING = 0; // No reachable screen may use the undeployed client. Zero, permanently.
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

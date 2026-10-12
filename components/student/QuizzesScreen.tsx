@@ -1,274 +1,34 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { useAutoSync } from '../../hooks/useAutoSync';
-import { api } from '../../lib/api';
-import { Student } from '../../types';
-import { SUBJECT_COLORS, HelpIcon, ChevronRightIcon, ClockIcon, ExamIcon, ClipboardListIcon, CheckCircleIcon } from '../../constants';
-import { toast } from 'react-hot-toast';
+import React from 'react';
+import ComingSoonScreen from '../ui/ComingSoonScreen';
 
+/**
+ * Quizzes — replaced, because there is no quiz to take. The screen listed quizzes and
+ * assignments, showed past results and offered a CBT player. There is NO quizzes table, no
+ * assignments table, no submissions table, and no quiz-question table — every call went to an
+ * undeployed server.
+ * 
+ * It is not rebuilt here because a quiz shown to a child is teaching material, and it is also
+ * an assessment. Who sets the questions, what happens to a score, whether a child can retake it
+ * and whether the result counts toward anything are the school's decisions. A quiz that records
+ * a score the school never sees is worse than no quiz, because the child believes they were
+ * assessed.
+ */
 interface QuizzesScreenProps {
-  navigateTo: (view: string, title: string, props: any) => void;
-  student: Student;
+  navigateTo?: (view: string, title: string, props: any) => void;
+  student?: { id?: string; name?: string } | null;
 }
 
-type QuizCategory = 'cbt' | 'quiz';
-
-const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) => {
-  const [activeCategory, setActiveCategory] = useState<QuizCategory>('cbt');
-  const [items, setItems] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchContent = useCallback(async () => {
-    if (!student) return;
-    setLoading(true);
-
-    try {
-      // 1. Fetch Quizzes and Submissions
-      const [quizzesData, submissionData] = await Promise.all([
-        api.getQuizzes(),
-        api.getMyQuizResults()
-      ]);
-
-      const subMap: Record<string, any> = {};
-      submissionData?.forEach((s: any) => { subMap[s.quiz_id] = s; });
-
-      // 2. Fetch Assignments and Submissions (if active category is quiz)
-      let finalItems: any[] = [];
-
-      // Process Quizzes
-      const filteredQuizzes = (quizzesData || [])
-        .filter((q: any) => {
-          if (!q.is_published) return false;
-          // EXAM / TEST go to the "CBT & Examinations" tab; everything else
-          // (CBT QUIZ + regular practice quizzes) goes to "Assessments & Quizzes".
-          const t = (q.type || '').toUpperCase();
-          const isExam = t === 'EXAM' || t === 'TEST';
-          if (activeCategory === 'cbt' && !isExam) return false;
-          if (activeCategory === 'quiz' && isExam) return false;
-          return true;
-        })
-        .map((q: any) => ({
-          id: q.id,
-          title: q.title,
-          subject: q.subject?.name || q.subject_id || 'General',
-          className: q.class ? `Grade ${q.class.grade}${q.class.section || ''}` : `Grade ${q.grade || ''}`,
-          durationMinutes: q.time_limit ?? q.duration_minutes,
-          submission: subMap[q.id],
-          type: 'quiz',
-          originalType: q.type,
-          isCbt: q.is_cbt
-        }));
-
-      finalItems = [...filteredQuizzes];
-
-      // Add Assignments if in Quiz category
-      if (activeCategory === 'quiz') {
-        const [assignmentsData, assignmentSubmissions] = await Promise.all([
-          api.getAssignments(student.schoolId || '', { classId: undefined }),
-          api.getMySubmissions()
-        ]);
-
-        const aSubMap: Record<string, any> = {};
-        assignmentSubmissions?.forEach((s: any) => { aSubMap[s.assignment_id] = s; });
-
-        const mappedAssignments = (assignmentsData || []).map((a: any) => ({
-          id: a.id,
-          title: a.title,
-          subject: a.subject,
-          className: a.class_name || 'General',
-          dueDate: a.due_date,
-          submission: aSubMap[a.id],
-          type: 'assignment'
-        }));
-
-        finalItems = [...finalItems, ...mappedAssignments];
-      }
-
-      setItems(finalItems);
-
-    } catch (err: any) {
-      console.warn('Error fetching content:', err);
-      setItems([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [activeCategory, student]);
-
-  // Real-time synchronization
-  useAutoSync(['quizzes', 'quiz_submissions'], fetchContent);
-
-  useEffect(() => {
-    fetchContent();
-  }, [fetchContent]);
-
-  const handleStart = (item: any) => {
-    if (item.type === 'assignment') {
-      navigateTo('assignmentSubmission', 'Submit Assignment', { assignment: item });
-    } else if (item.isCbt) {
-      navigateTo('quizPlayer', item.title, { cbtExamId: item.id, student });
-    } else {
-      navigateTo('quizPlayer', item.title, { quizId: item.id, student });
-    }
-  };
-
-  if (loading && items.length === 0) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-full bg-gray-50">
-      <main className="flex-grow p-4 space-y-6 overflow-y-auto pb-24">
-        {/* Category Selector */}
-        <div className="space-y-3">
-          <motion.button
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setActiveCategory('cbt')}
-            className={`w-full text-left p-4 rounded-2xl transition-colors border-2 ${activeCategory === 'cbt'
-              ? 'bg-orange-50 border-orange-200 shadow-md ring-1 ring-orange-100'
-              : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'
-              }`}
-          >
-            <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl ${activeCategory === 'cbt' ? 'bg-orange-500 text-white shadow-lg' : 'bg-orange-100 text-orange-600'}`}>
-                <ExamIcon className="w-6 h-6" />
-              </div>
-              <div className="flex-grow">
-                <h3 className="font-bold text-gray-800">CBT & Examinations</h3>
-                <p className="text-sm text-gray-500">Take your scheduled exams and view results</p>
-              </div>
-              {activeCategory === 'cbt' && (
-                <div className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold scale-110 shadow-md">
-                  ✓
-                </div>
-              )}
-            </div>
-          </motion.button>
-
-          <motion.button
-            whileHover={{ y: -1 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setActiveCategory('quiz')}
-            className={`w-full text-left p-4 rounded-2xl transition-colors border-2 ${activeCategory === 'quiz'
-              ? 'bg-blue-50 border-blue-200 shadow-md ring-1 ring-blue-100'
-              : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'
-              }`}
-          >
-            <div className="flex items-center gap-4">
-              <div className={`p-3 rounded-xl ${activeCategory === 'quiz' ? 'bg-blue-500 text-white shadow-lg' : 'bg-blue-100 text-blue-600'}`}>
-                <ClipboardListIcon className="w-6 h-6" />
-              </div>
-              <div className="flex-grow">
-                <h3 className="font-bold text-gray-800">Assessments & Quizzes</h3>
-                <p className="text-sm text-gray-500">Practice your knowledge with fun quizzes</p>
-              </div>
-              {activeCategory === 'quiz' && (
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold scale-110 shadow-md">
-                  ✓
-                </div>
-              )}
-            </div>
-          </motion.button>
-        </div>
-
-        {/* Content List */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between px-1">
-            <h2 className="text-lg font-bold text-gray-700">
-              {activeCategory === 'cbt' ? 'Scheduled Exams' : 'Available Quizzes'}
-            </h2>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider bg-gray-100 px-2 py-1 rounded-md">
-              {items.length} {items.length === 1 ? 'Item' : 'Items'}
-            </span>
-          </div>
-
-          {items.length === 0 ? (
-            <div className="bg-white rounded-3xl p-12 text-center border-2 border-dashed border-gray-200">
-              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl grayscale opacity-50">📋</span>
-              </div>
-              <h3 className="text-gray-800 font-bold mb-1">Nothing here yet</h3>
-              <p className="text-gray-400 text-sm max-w-[200px] mx-auto">No {activeCategory === 'cbt' ? 'exams' : 'quizzes'} have been published for Grade {student.grade} yet.</p>
-              <motion.button
-                whileTap={{ scale: 0.96 }}
-                onClick={fetchContent}
-                className="mt-6 px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition-colors"
-              >
-                Check again
-              </motion.button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-4">
-              {items.map((item, i) => {
-                const colorClass = SUBJECT_COLORS[item.subject] || 'bg-gray-400 text-white';
-                const [bgColor] = colorClass.split(' ');
-
-                return (
-                  <motion.button
-                    key={`${item.type}-${item.id}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25, delay: Math.min(i, 10) * 0.04 }}
-                    whileHover={item.submission ? {} : { y: -2 }}
-                    whileTap={item.submission ? {} : { scale: 0.99 }}
-                    onClick={() => !item.submission && handleStart(item)}
-                    disabled={!!item.submission}
-                    className={`group w-full bg-white rounded-2xl shadow-sm p-4 flex items-center justify-between text-left transition-shadow border ${item.submission
-                        ? 'opacity-75 cursor-default bg-gray-50 border-gray-200'
-                        : 'hover:shadow-lg hover:ring-2 hover:ring-orange-200 border-gray-100'
-                      }`}
-                  >
-                    <div className="flex items-center space-x-4 min-w-0">
-                      <div className={`w-14 h-14 rounded-2xl ${item.submission ? 'bg-green-500' : bgColor} flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform`}>
-                        {item.submission ? <CheckCircleIcon className="w-7 h-7 text-white" /> : <HelpIcon className="w-7 h-7 text-white" />}
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          {item.className && (
-                            <span className="text-xs uppercase font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg border border-orange-100">
-                              {item.className}
-                            </span>
-                          )}
-                          {item.submission && (
-                            <span className="text-xs uppercase font-bold text-green-600 bg-green-50 px-2 py-0.5 rounded-lg border border-green-100">
-                              Completed: {item.submission.score}%
-                            </span>
-                          )}
-                        </div>
-                        <h4 className={`font-bold truncate pr-2 transition-colors ${item.submission ? 'text-gray-500' : 'text-gray-900 group-hover:text-orange-600'}`}>{item.title}</h4>
-                        <div className="flex items-center flex-wrap gap-2 text-xs text-gray-500 mt-1">
-                          <span className="bg-gray-100 font-medium px-2 py-0.5 rounded-md">{item.subject}</span>
-                          {item.type === 'assignment' && item.dueDate && (
-                            <span className="flex items-center bg-gray-50 px-2 py-0.5 rounded-md">
-                              <ClockIcon className="w-3.5 h-3.5 mr-1 text-gray-400" />
-                              Due: {new Date(item.dueDate).toLocaleDateString("ms-MY")}
-                            </span>
-                          )}
-                          {item.type === 'quiz' && item.durationMinutes > 0 && (
-                            <span className="flex items-center bg-gray-50 px-2 py-0.5 rounded-md">
-                              <ClockIcon className="w-3.5 h-3.5 mr-1 text-gray-400" />
-                              {item.durationMinutes}m
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="bg-gray-50 p-2 rounded-xl group-hover:bg-orange-500 group-hover:text-white transition-all shadow-sm">
-                      <ChevronRightIcon className="w-5 h-5" />
-                    </div>
-                  </motion.button>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
-  );
-};
+const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) => (
+    <ComingSoonScreen
+        title="Kuiz"
+        explanation={
+            'Kuiz dalam talian belum tersedia di dalam sistem ini. Buat masa ini ' +
+            'penilaian murid dijalankan oleh guru di dalam kelas melalui kaedah yang ' +
+            'ditetapkan sekolah, dan markahnya direkodkan melalui menu Penilaian. ' +
+            'Sila hubungi guru kelas untuk urusan berkaitan penilaian murid.'
+        }
+        handleBack={navigateTo ? () => navigateTo('studentDashboard', 'Papan Pemuka', { student }) : undefined}
+    />
+);
 
 export default QuizzesScreen;
