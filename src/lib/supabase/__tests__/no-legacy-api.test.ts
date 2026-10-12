@@ -96,6 +96,10 @@ const MIGRATED = [
     // showed a permanent zero, which reads as "nothing to report" rather than "not
     // connected".
     'components/admin/DashboardOverview.tsx',
+    // A child's own profile. Its loader imported five helpers that were never defined,
+    // so the import threw and the profile rendered empty — and it read
+    // `school_generated_id`, a column that exists nowhere.
+    'components/student/StudentProfileEnhanced.tsx',
     // Forms that accepted a submission and stored nothing: an incident report nobody
     // received, and permission slips recording CONSENT that was never saved — a trip taken
     // with no record that a parent agreed.
@@ -350,7 +354,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 24;
+        const CEILING = 23;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

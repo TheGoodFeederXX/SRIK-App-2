@@ -12,7 +12,6 @@ import {
 } from '../ui/simple-ui';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { api } from '../../lib/api';
 import { CANONICAL_TERMS } from '../../utils/annualReport';
 import {
     User, BookOpen, FileText, Calendar,
@@ -23,7 +22,11 @@ import {
 } from 'lucide-react';
 import DataUsageSettings from '../shared/DataUsageSettings';
 import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../lib/ai';
-import { fetchAcademicPerformance, fetchStudentStats, fetchUpcomingEvents, fetchStudentActivities, fetchStudentDocuments } from '../../lib/database';
+import { getStudent } from '../../src/lib/supabase/students';
+import { getClassSubjectNames, getCurrentAcademicYear } from '../../src/lib/supabase/academics';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
+import { listReportCards } from '../../src/lib/supabase/assessments';
+import { uploadFile } from '../../src/lib/supabase/storage';
 import { useUserIdentity } from '../../lib/hooks/useUserIdentity';
 
 // ... (existing imports)
@@ -76,8 +79,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
         if (initialStudent) {
             const normalized = {
                 ...initialStudent,
-                school_generated_id: initialStudent.school_generated_id || initialStudent.schoolGeneratedId || initialStudent.schoolId || initialStudent.admission_number,
-                admission_number: initialStudent.admission_number || initialStudent.school_generated_id || initialStudent.schoolGeneratedId || initialStudent.schoolId,
+                // The admission number IS the child's school identifier. There is no
+                // separate `school_generated_id` — that column exists nowhere.
+                school_id_display: initialStudent.admission_number,
+                admission_number: initialStudent.admission_number,
                 // Ensure grade/section are present for class display
                 grade: initialStudent.grade ?? '',
                 section: initialStudent.section || ''
@@ -92,7 +97,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             const ai = getAIClient();
 
             const prompt = `Analyze this student's performance and suggest 2 key learning focus areas for today.
-            Student: ${studentData.first_name}
+            Student: ${studentData.name}
             Grade: ${studentData.class_name || '10'}
             Performance: Average ${averageScore}%
             
@@ -153,65 +158,79 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             // 1. Fetch Basic Student Info if we don't have it or need fresh data
             let currentStudent = student;
 
-            const dbStudent = await api.getStudentProfile(id.toString());
+            // THE CHILD'S REAL RECORD, field by field. The old loader spread a response
+            // from an undeployed server and then read a dozen aliases off it —
+            // `firstName`, `first_name`, `schoolGeneratedId`, `school_generated_id`,
+            // `dob`, `birthday`, `dateOfBirth` — none of which the database has. It also
+            // read `school_generated_id`, which exists NOWHERE.
+            const dbStudent = await getStudent(id.toString());
 
             if (dbStudent) {
+                const year = await getCurrentAcademicYear();
+                const range = await getStudentAttendanceRange(
+                    dbStudent.id,
+                    year?.startDate ?? `${new Date().getFullYear()}-01-01`,
+                    year?.endDate ?? new Date().toISOString().slice(0, 10),
+                );
+
                 const mappedStudent = {
-                    ...dbStudent,
-                    name: dbStudent.name || dbStudent.full_name || `${dbStudent.firstName || dbStudent.first_name || ''} ${dbStudent.lastName || dbStudent.last_name || ''}`.trim() || student?.name || 'Student',
-                    // The record stores the photo as avatar_url; the UI reads avatarUrl —
-                    // map it so an uploaded/saved profile picture actually shows here.
-                    avatarUrl: dbStudent.avatarUrl || dbStudent.avatar_url || dbStudent.profile_photo || student?.avatarUrl || '',
-                    school_generated_id: dbStudent.schoolGeneratedId || dbStudent.school_generated_id,
-                    admission_number: dbStudent.schoolGeneratedId || dbStudent.school_generated_id || dbStudent.admission_number || 'Pending',
-                    grade: dbStudent.grade ?? dbStudent.class_name?.match(/\d+/)?.[0] ?? '10',
-                    section: dbStudent.section || dbStudent.class_name?.match(/[A-Z]$/)?.[0] || 'A',
-                    gender: dbStudent.gender || dbStudent.Gender,
-                    dob: dbStudent.dob || dbStudent.birthday || dbStudent.date_of_birth || dbStudent.dateOfBirth,
-                    address: dbStudent.address || dbStudent.Address || dbStudent.studentAddress,
-                    parentName: dbStudent.parentName || dbStudent.parent_name || 'N/A',
-                    parentPhone: dbStudent.parentPhone || dbStudent.parent_phone || 'N/A',
-                    parentEmail: dbStudent.parentEmail || dbStudent.parent_email || 'N/A',
-                    parentAddress: dbStudent.parentAddress || dbStudent.parent_address || 'N/A'
+                    id: dbStudent.id,
+                    name: dbStudent.fullName,
+                    admission_number: dbStudent.admissionNo,
+                    classId: dbStudent.classId ?? null,
+                    className: dbStudent.className ?? null,
+                    gender: dbStudent.gender ?? null,
+                    dob: dbStudent.birthDate ?? null,
+                    birth_place: dbStudent.birthPlace ?? null,
+                    nationality: dbStudent.nationality ?? null,
+                    identity_no: dbStudent.identityNo ?? null,
+                    address: dbStudent.address ?? null,
+                    previous_school: dbStudent.previousSchool ?? null,
+                    admission_date: dbStudent.admissionDate ?? null,
+                    status: dbStudent.status,
+                    // A live attendance rate, counted by the database over the school's year.
+                    attendance_rate: range.summary.attendanceRate,
                 };
                 setStudent(mappedStudent);
                 currentStudent = mappedStudent;
+
+                // The subjects of the class the child is really in.
+                if (dbStudent.classId) {
+                    try {
+                        setAssignedSubjects(await getClassSubjectNames(dbStudent.classId));
+                    } catch {
+                        setAssignedSubjects([]);
+                    }
+                }
+
+                // The child's report cards for the current term.
+                const { getCurrentTerm } = await import('../../src/lib/supabase/assessments');
+                const term = await getCurrentTerm();
+                if (term) {
+                    const cards = await listReportCards(term.id);
+                    setReportCards(cards.filter(c => c.studentId === dbStudent.id));
+                }
             }
 
             if (!currentStudent) return;
 
-            // 2. Fetch Related Data in Parallel
-            const [perfData, statsData, eventsData, activitiesData, docsData, subjectsData, reportCardsData] = await Promise.all([
-                fetchAcademicPerformance(id),
-                fetchStudentStats(id),
-                fetchUpcomingEvents(currentStudent.grade, currentStudent.section, id),
-                fetchStudentActivities(id),
-                fetchStudentDocuments(id),
-                api.getStudentSubjects(currentStudent.id),
-                api.getStudentReportCards(String(currentStudent.id))
-            ]);
-
-            setPerformance(perfData);
-            setAssignedSubjects(
-                (Array.isArray(subjectsData) ? subjectsData : [])
-                    .map((s: any) => (typeof s === 'string' ? s : s?.name))
-                    .filter(Boolean)
-            );
-            setReportCards(Array.isArray(reportCardsData) ? reportCardsData : []);
-            setStats(statsData);
-            setEvents(eventsData);
-            setActivities(activitiesData);
-            setDocuments(docsData);
-
-            // Update student object with real stats
-            setStudent(prev => ({
-                ...prev,
-                average_grade: statsData.averageScore,
-                attendance_rate: statsData.attendanceRate
-            }));
-
-            // 3. Trigger AI Analysis
-            generateLearningFocus(currentStudent, statsData.averageScore);
+            // THREE THINGS THAT ARE NOT LOADED, because they are not stored: academic
+            // performance as a separate series, a numeric average grade, and a list of
+            // events or activities. There is no table for any of them. They stay empty and
+            // the screen says so, rather than showing a confident 0.
+            setPerformance([]);
+            // The attendance rate is real — it came from the database above. The other
+            // four counters are not stored anywhere and stay zero.
+            setStats({
+                attendanceRate: (currentStudent as any).attendance_rate ?? 0,
+                averageScore: 0,
+                assignmentsSubmitted: 0,
+                studyHours: 0,
+                achievements: 0,
+            });
+            setEvents([]);
+            setActivities([]);
+            setDocuments([]);
 
             } catch (error) {
             console.error('Error fetching profile data:', error);
@@ -227,8 +246,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
 
         const toastId = toast.loading('Uploading document...');
         try {
-            const { url } = await api.uploadFileWithCategory(file, 'student_document');
-            if (!url) throw new Error('Upload did not return a file URL');
+            // Stored in the school's own bucket against this child. The old call uploaded
+            // to a server that is not deployed, so no document was ever kept.
+            const uploaded = await uploadFile({ type: 'STUDENT', id: student.id }, file);
+            const url = uploaded.storageKey;
             const docData = {
                 name: file.name,
                 url,
@@ -308,7 +329,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                     <h2 style="margin:0 0 12px">Academic Transcript</h2>
                     <p style="margin:0 0 16px;line-height:1.6">
                         <b>Name:</b> ${student.name || ''}<br/>
-                        <b>Student ID:</b> ${student.school_generated_id || student.admission_number || ''}<br/>
+                        <b>Student ID:</b> ${student.admission_number || ''}<br/>
                         <b>Class:</b> ${student.class_name || ('Grade ' + (student.grade ?? ''))}<br/>
                         <b>Overall Average:</b> ${stats.averageScore}%
                     </p>
@@ -432,8 +453,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                 <img src={student.avatarUrl || student.profile_photo} alt={student.name || 'Profile'} onClick={onImageClick} className="w-full h-full object-cover cursor-zoom-in" />
                                             ) : (
                                                 <span className="text-4xl lg:text-5xl font-bold tracking-tight">
-                                                    {student.first_name ? (
-                                                        `${student.first_name?.[0]}${student.last_name?.[0] || ''}`
+                                                    {/* Initials from the single stored name. The record has
+                                                        no separate first/last fields — only `full_name`. */}
+                                                    {student.name ? (
+                                                        student.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('')
                                                     ) : (
                                                         student.name?.[0] || 'S'
                                                     )}
@@ -447,7 +470,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                 {/* Name & Title */}
                                 <div className="text-center sm:text-left min-w-0">
                                     <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
-                                        {student.first_name ? `${student.first_name} ${student.last_name || ''}` : (student.name || 'Student Profile')}
+                                        {student.name || 'Student Profile'}
                                     </h1>
                                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-4">
                                         <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-1.5 text-sm font-semibold">
@@ -468,11 +491,11 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             whileHover={{ opacity: 0.85 }}
                                             whileTap={{ scale: 0.96 }}
                                             className="rounded-full min-h-[44px] inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
-                                            onClick={() => copyToClipboard(student.school_generated_id || student.admission_number || '')}
+                                            onClick={() => copyToClipboard(student.admission_number || '')}
                                             aria-label="Copy student ID to clipboard"
                                         >
                                             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-2.5 text-sm flex items-center gap-2">
-                                                ID: {student.school_generated_id || student.admission_number || 'Pending'}
+                                                ID: {student.admission_number || 'Pending'}
                                                 <Copy className="w-3 h-3 opacity-70" />
                                                 {copied && <span className="text-xs ml-1">Copied!</span>}
                                             </Badge>

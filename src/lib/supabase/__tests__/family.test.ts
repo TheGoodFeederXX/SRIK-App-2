@@ -42,6 +42,7 @@ const SCREENS = [
     'components/shared/ReportIncidentScreen.tsx',
     'components/shared/PermissionSlips.tsx',
     'components/admin/ManagePermissionSlipsScreen.tsx',
+    'components/student/StudentProfileEnhanced.tsx',
     'components/admin/SafetyHealthLogs.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
@@ -329,6 +330,25 @@ describe('F27: the parent portal reads the family from the session, not a parame
                 .not.toMatch(/getPermissionSlips|createPermissionSlip|getIncidentTypes|incident-types|getHealthIncidents/);
             expect(src).toMatch(/ComingSoonScreen/);
         }
+    });
+
+    it('a child\'s profile reads stored fields, not aliases of fields that do not exist', () => {
+        const src = code(read('components/student/StudentProfileEnhanced.tsx'));
+
+        // The old loader imported five helpers from `lib/database` that were never
+        // defined there, so the import threw and the profile showed nothing at all.
+        expect(src, 'the profile imports helpers that do not exist')
+            .not.toMatch(/fetchAcademicPerformance|fetchStudentStats|fetchUpcomingEvents|fetchStudentActivities|fetchStudentDocuments/);
+
+        // And it read `school_generated_id`, plus a dozen camel/snake aliases, none of
+        // which the students table has.
+        expect(src, 'the profile reads a column that exists nowhere').not.toMatch(/school_generated_id/);
+        expect(src, 'the profile reads alias fields that do not exist')
+            .not.toMatch(/first_name|firstName|dateOfBirth|schoolGeneratedId/);
+
+        // What it reads instead: the real record, and the child's real attendance.
+        expect(src).toMatch(/getStudent\(/);
+        expect(src).toMatch(/getStudentAttendanceRange/);
     });
 
     it('reads children without a school id, which does not exist', () => {
