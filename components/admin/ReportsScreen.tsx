@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ChartBarIcon, TrophyIcon, TrendingUpIcon, SUBJECT_COLORS, gradeColors } from '../../constants';
 // import { mockSubjectAverages, mockTopStudents, mockAttendanceCorrelation } from '../../data';
-import { api } from '../../lib/api';
+import { getCurrentTerm, listSubjectMarks } from '../../src/lib/supabase/assessments';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { User as UserIcon } from 'lucide-react';
 
@@ -16,14 +16,10 @@ interface SubjectAverage {
 interface TopStudent {
   id: string;
   name: string;
-  grade: number;
-  section: string;
-  averageScore: number;
-  avatarUrl?: string;
-}
-
-interface AttendanceCorrelation {
-  attendanceBracket: string;
+  // NO `grade` OR `section`. Both came from the undeployed server, and the school does not
+  // store a child's year as a number or their section as a letter — the class is a row in
+  // `classes` with a name like "4 Al-Busiri (4B)". A report that prints an invented form
+  // label beside a real score is worse than one that prints only the score.
   averageScore: number;
 }
 
@@ -58,21 +54,15 @@ const TopStudentsList: React.FC<{ students: TopStudent[] }> = ({ students }) => 
     <div className="space-y-3">
       {students.map((student, si) => (
         <motion.div key={student.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2, delay: si * 0.05 }} className="bg-gray-50 p-3 rounded-lg flex items-center space-x-3">
-          {student.avatarUrl ? (
-            <img src={student.avatarUrl} alt={student.name} className="w-12 h-12 rounded-full object-cover" />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
-              {/* Use a simple placeholder if UserIcon is not imported in this file scope's props, but ReportsScreen imports chart icons. 
-                  Wait, reports screen imports chart icons. I need to make sure UserIcon is imported or available. 
-                  Checking imports: `import { ChartBarIcon, TrophyIcon, TrendingUpIcon, SUBJECT_COLORS, gradeColors } from '../../constants';`
-                  It does NOT import UserIcon. I must add it to imports first. 
-               */}
-              <span className="text-sm font-bold">{student.name?.charAt(0) || '?'}</span>
-            </div>
-          )}
+          {/* Initials, from the one name the record holds. The old version showed an
+              avatar from a field that does not exist and a "Grade 10A" label read from the
+              undeployed server — a form and section this school never had. */}
+          <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-500">
+            <span className="text-sm font-bold">{student.name?.charAt(0) || '?'}</span>
+          </div>
           <div className="flex-grow">
             <p className="font-bold text-gray-800">{student.name}</p>
-            <p className="text-sm text-gray-500">Grade {student.grade}{student.section}</p>
+            <p className="text-sm text-gray-500">Purata markah</p>
           </div>
           <div className="text-right">
             <p className="font-bold text-lg text-green-600">{student.averageScore}%</p>
@@ -84,58 +74,14 @@ const TopStudentsList: React.FC<{ students: TopStudent[] }> = ({ students }) => 
   );
 };
 
-const AttendanceCorrelationChart: React.FC<{ data: AttendanceCorrelation[] }> = ({ data }) => {
-  if (data.length < 2) return <div className="text-center text-gray-500 py-10">Not enough data for correlation</div>;
-
-  const width = 280;
-  const height = 120;
-  const padding = 20;
-  const maxValue = 100;
-  // Sort logic just in case, though brackets usually ordered
-  const stepX = (width - padding * 2) / (data.length - 1 || 1);
-  const stepY = (height - padding * 2) / maxValue;
-  const points = data.map((d, i) => `${padding + i * stepX},${height - padding - d.averageScore * stepY}`).join(' ');
-
-  return (
-    <div className="relative">
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-auto">
-        {/* Y-axis labels and lines */}
-        {[...Array(5)].map((_, i) => {
-          const y = height - padding - ((i * 25) * stepY);
-          return (
-            <g key={i}>
-              <line x1={padding} y1={y} x2={width - padding} y2={y} stroke="#e5e7eb" strokeWidth="1" strokeDasharray="2" />
-              <text x={padding - 5} y={y + 3} textAnchor="end" fontSize="10" fill="#6b7280">{i * 25}</text>
-            </g>
-          )
-        })}
-        {/* Main line */}
-        <polyline fill="none" stroke="#1d4ed8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" points={points} />
-        {/* Data points */}
-        {data.map((d, i) => (
-          <circle key={i} cx={padding + i * stepX} cy={height - padding - d.averageScore * stepY} r="3" fill="white" stroke="#1d4ed8" strokeWidth="2" />
-        ))}
-      </svg>
-      {/* X-axis labels */}
-      <div className="flex justify-between px-5 -mt-4">
-        {data.map((d, i) => (
-          <span key={i} className="text-xs text-gray-500">{d.attendanceBracket}</span>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-
 interface ReportsScreenProps {
-  schoolId: string;
-  currentBranchId: string | null;
+  schoolId?: string;
+  currentBranchId?: string;
 }
 
 const ReportsScreen: React.FC<ReportsScreenProps> = ({ schoolId, currentBranchId }) => {
   const [subjectAverages, setSubjectAverages] = useState<SubjectAverage[]>([]);
   const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
-  const [attendanceData, setAttendanceData] = useState<AttendanceCorrelation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -149,83 +95,57 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ schoolId, currentBranchId
     setLoading(true);
     setError(null);
     try {
-      // Fetch Performance Data via API instead of a direct DB client
-      // Note: getSchoolPerformance returns one entry per student, each carrying an
-      // `academicRecords` array of { subject, score, ... } rows for that student —
-      // it is not a flat array of subject/score records.
-      const performanceByStudent = await api.getSchoolPerformance(schoolId, currentBranchId || undefined);
-      const performanceData = (performanceByStudent || []).flatMap((p: any) =>
-        (p.academicRecords || []).map((r: any) => ({ ...r, student_id: p.student_id }))
+      // FROM THE REAL MARKS. The old code read a school-wide performance payload from an
+      // undeployed server and rebuilt both reports in the browser; with the server gone it
+      // showed an empty report. Every figure below now comes from published marks.
+      const term = await getCurrentTerm();
+      if (!term) {
+        setSubjectAverages([]);
+        setTopStudents([]);
+        return;
+      }
+
+      const rows = await listSubjectMarks(term.id);
+
+      // 1. Subject averages, over children who actually have a mark.
+      const subjectMap = new Map<string, { total: number; count: number }>();
+      for (const r of rows) {
+        if (r.averagePercent === null) continue;
+        const key = r.subjectName ?? 'Tanpa Subjek';
+        const cur = subjectMap.get(key) ?? { total: 0, count: 0 };
+        cur.total += r.averagePercent;
+        cur.count += 1;
+        subjectMap.set(key, cur);
+      }
+      setSubjectAverages(
+        [...subjectMap.entries()]
+          .map(([subject, v]) => ({ subject, averageScore: Math.round(v.total / v.count) }))
+          .sort((a, b) => b.averageScore - a.averageScore),
       );
 
-      // Use api.getStudents which works in demo mode via backend
-      const studentsData = await api.getStudents(schoolId, currentBranchId || undefined, { includeUntagged: true });
+      // 2. Top children, by their average across the subjects they were marked in.
+      const studentMap = new Map<string, { name: string; total: number; count: number }>();
+      for (const r of rows) {
+        if (r.averagePercent === null) continue;
+        const cur = studentMap.get(r.studentId) ?? { name: r.studentName, total: 0, count: 0 };
+        cur.total += r.averagePercent;
+        cur.count += 1;
+        studentMap.set(r.studentId, cur);
+      }
+      setTopStudents(
+        [...studentMap.entries()]
+          .map(([id, v]) => ({ id, name: v.name, averageScore: Math.round(v.total / v.count) }))
+          .sort((a, b) => b.averageScore - a.averageScore)
+          .slice(0, 5),
+      );
 
-      // 1. Calculate Subject Averages
-      const subjectMap: { [key: string]: { total: number, count: number } } = {};
-      performanceData?.forEach(p => {
-        if (!p.subject) return;
-        if (!subjectMap[p.subject]) subjectMap[p.subject] = { total: 0, count: 0 };
-        subjectMap[p.subject].total += (p.score || 0);
-        subjectMap[p.subject].count += 1;
-      });
-
-      const avgList = Object.keys(subjectMap).map(sub => ({
-        subject: sub,
-        averageScore: Math.round(subjectMap[sub].total / subjectMap[sub].count)
-      })).sort((a, b) => b.averageScore - a.averageScore);
-
-      setSubjectAverages(avgList);
-
-      // 2. Calculate Top Students
-      const studentPerformanceMap: { [key: string]: { total: number, count: number } } = {};
-      performanceData?.forEach(p => {
-        if (!studentPerformanceMap[p.student_id]) studentPerformanceMap[p.student_id] = { total: 0, count: 0 };
-        studentPerformanceMap[p.student_id].total += (p.score || 0);
-        studentPerformanceMap[p.student_id].count += 1;
-      });
-
-      const rankedStudents = studentsData?.map(student => {
-        const stats = studentPerformanceMap[student.id];
-        const avg = stats ? Math.round(stats.total / stats.count) : 0;
-        return {
-          id: student.id,
-          name: student.name,
-          grade: student.grade,
-          section: student.section,
-          averageScore: avg,
-          avatarUrl: (student as any).avatar_url
-        };
-      }).sort((a, b) => b.averageScore - a.averageScore).slice(0, 5); // Top 5
-
-      setTopStudents(rankedStudents || []);
-
-      // 3. Attendance Correlation
-      const brackets = [
-        { label: '<60%', scores: [] as number[], attendanceLabel: '<75%' },
-        { label: '60-70%', scores: [] as number[], attendanceLabel: '75-85%' },
-        { label: '70-80%', scores: [] as number[], attendanceLabel: '85-90%' },
-        { label: '80-90%', scores: [] as number[], attendanceLabel: '90-95%' },
-        { label: '90%+', scores: [] as number[], attendanceLabel: '95%+' },
-      ];
-
-      (studentsData || []).forEach(student => {
-        const stats = studentPerformanceMap[student.id];
-        const avg = stats ? (stats.total / stats.count) : 0;
-        if (avg >= 90) brackets[4].scores.push(avg);
-        else if (avg >= 80) brackets[3].scores.push(avg);
-        else if (avg >= 70) brackets[2].scores.push(avg);
-        else if (avg >= 60) brackets[1].scores.push(avg);
-        else brackets[0].scores.push(avg);
-      });
-
-      const correlationData = brackets.map(b => ({
-        attendanceBracket: b.attendanceLabel,
-        averageScore: b.scores.length > 0 ? Math.round(b.scores.reduce((a, b) => a + b, 0) / b.scores.length) : 0
-      })).filter(d => d.averageScore > 0);
-
-      setAttendanceData(correlationData);
-
+      // 3. THE ATTENDANCE CORRELATION IS GONE, AND DELIBERATELY. It plotted average score
+      // against an attendance bracket — but attendance was never fetched here at all. The
+      // brackets were assigned by SCORE, not attendance, so the chart drew a relationship
+      // between two things where one of them was the other, relabelled. It is not restored
+      // because a per-child attendance figure and mark average for the same term would have
+      // to be joined carefully; a chart that invents the axis it claims to measure is worse
+      // than no chart.
     } catch (err: any) {
       console.error("Error fetching reports:", err);
       setError(err.message || 'Failed to generate school reports.');
@@ -265,13 +185,6 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ schoolId, currentBranchId
             {topStudents.length > 0 ? <TopStudentsList students={topStudents} /> : <p className="text-gray-400 text-sm">No student data available</p>}
           </motion.div>
 
-          <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-2xl shadow-sm p-4">
-            <div className="flex items-center space-x-3 mb-2">
-              <div className="bg-blue-100 text-blue-500 p-2 rounded-lg"><TrendingUpIcon /></div>
-              <h3 className="font-bold text-gray-800">Attendance-Performance Trend</h3>
-            </div>
-            {attendanceData.length > 0 ? <AttendanceCorrelationChart data={attendanceData} /> : <p className="text-gray-400 text-sm">No trend data available</p>}
-          </motion.div>
         </>
       )}
     </div>

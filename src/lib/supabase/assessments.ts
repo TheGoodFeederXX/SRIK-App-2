@@ -921,3 +921,49 @@ export async function getAcademicAnalytics(
     if (error) throw new Error(`Could not load academic analytics: ${error.message}`);
     return data as unknown as AcademicAnalytics;
 }
+
+/* -------------------------------------------------------------------------
+ * Per-subject marks, for reporting
+ * ---------------------------------------------------------------------- */
+
+export interface SubjectMarkRow {
+    studentId: string;
+    studentName: string;
+    subjectId: string;
+    subjectName: string | null;
+    /** Average percentage this child scored in this subject, or null if no mark. */
+    averagePercent: number | null;
+    marksCounted: number;
+}
+
+/**
+ * Every child's average mark per subject for a term.
+ *
+ * Returns ONE ROW PER CHILD PER SUBJECT rather than a school-wide aggregate, because the
+ * two reports the school actually asks for — subject averages and a ranked list of children
+ * — are both built from it. Aggregating here would force the screen to fetch every mark to
+ * rebuild the child-level figures, which is the download the 1,000-row cap truncates
+ * (audit F28).
+ *
+ * Only PUBLISHED assessments count, and only marks that carry a number. A child with no
+ * mark in a subject gets `averagePercent: null`, not 0 — "not marked" and "scored zero" are
+ * different, and a report that treats them alike ranks a child last for a subject they were
+ * never assessed in.
+ */
+export async function listSubjectMarks(termId: string): Promise<SubjectMarkRow[]> {
+    const db = requireSupabase();
+    const { data, error } = await db.rpc('subject_marks_for_term', { p_academic_term_id: termId });
+
+    if (error) throw new Error(`Could not load subject marks: ${error.message}`);
+    return ((data ?? []) as unknown as {
+        student_id: string; student_name: string; subject_id: string; subject_name: string | null;
+        average_percent: number | string | null; marks_counted: number;
+    }[]).map(r => ({
+        studentId: r.student_id,
+        studentName: r.student_name,
+        subjectId: r.subject_id,
+        subjectName: r.subject_name,
+        averagePercent: r.average_percent === null ? null : Number(r.average_percent),
+        marksCounted: r.marks_counted,
+    }));
+}

@@ -68,6 +68,10 @@ const MIGRATED = [
     'components/teacher/TeacherExamManagement.tsx',
     'components/admin/ExamManagement.tsx',
     'components/admin/AddExamScreen.tsx',
+    // The school reports. Subject averages and a ranked list of children were rebuilt in
+    // the browser from an undeployed server; they now come from published marks, computed
+    // by `subject_marks_for_term`.
+    'components/admin/ReportsScreen.tsx',
     // A teacher's reports for a class: averages from the marks, attendance from
     // the register, both read rather than estimated.
     'components/teacher/TeacherReportsScreen.tsx',
@@ -354,7 +358,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 23;
+        const CEILING = 22;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',
