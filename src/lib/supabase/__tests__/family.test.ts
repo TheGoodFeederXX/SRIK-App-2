@@ -31,6 +31,10 @@ const SCREENS = [
     'components/parent/ParentTodayWidget.tsx',
     'components/parent/ReportCardScreen.tsx',
     'components/student/AttendanceScreen.tsx',
+    'components/admin/AdminDashboard.tsx',
+    'components/parent/AppointmentScreen.tsx',
+    'components/auth/InviteAcceptScreen.tsx',
+    'components/teacher/ReportCardInputScreen.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -203,6 +207,41 @@ describe('F27: the parent portal reads the family from the session, not a parame
         // And the window is the school's YEAR, not a calendar month. Counting days the
         // school was closed shows a child as absent when no register was taken.
         expect(src).toMatch(/getCurrentAcademicYear/);
+    });
+
+    it('an invitation link actually signs the person in', () => {
+        const auth = code(read('src/lib/supabase/auth.ts'));
+        const screen = code(read('components/auth/InviteAcceptScreen.tsx'));
+
+        // A session has to be MINTED, not merely stored. The screen used to put the raw
+        // tokens in sessionStorage and call it done, so the next screen found no signed-in
+        // user and bounced a freshly invited person back to sign-in.
+        expect(auth).toMatch(/acceptInviteSession/);
+        expect(auth).toMatch(/setSession/);
+        expect(screen).toMatch(/acceptInviteSession\(/);
+        expect(screen, 'the screen still fakes a session with raw tokens')
+            .not.toMatch(/sessionStorage\.setItem\('auth_token'/);
+    });
+
+    it('does not edit a published report card, and does not offer a GPA the school does not use', () => {
+        const screen = code(read('components/teacher/ReportCardInputScreen.tsx'));
+
+        // `report_cards` is a frozen snapshot produced by publishing an assessment. An
+        // editor that writes to it would destroy the record of what the school issued.
+        expect(screen, 'a screen still writes to the report card table')
+            .not.toMatch(/upsertReportCard|from\('report_cards'\)/);
+        // Marks are entered per assessment. The menu is where that happens.
+        expect(screen).toMatch(/Penilaian/);
+    });
+
+    it('does not offer to book a meeting the school cannot receive', () => {
+        const src = code(read('components/parent/AppointmentScreen.tsx'));
+
+        // There is no appointments table. The old flow confirmed a booking that no teacher
+        // would ever see — a parent would arrive at the school having booked nothing.
+        expect(src, 'the appointment screen can confirm a booking again')
+            .not.toMatch(/createAppointment|getTeacherAvailability/);
+        expect(src).toMatch(/ComingSoonScreen/);
     });
 
     it('reads children without a school id, which does not exist', () => {

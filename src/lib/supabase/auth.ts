@@ -387,3 +387,31 @@ export function identityHasRole(identity: SrikIdentity | null, ...roles: string[
     if (!identity) return false;
     return roles.some((r) => identity.roles.includes(r));
 }
+
+/**
+ * Establish a session from an invitation link.
+ *
+ * AN INVITATION LINK CARRIES TOKENS, NOT A PASSWORD. The link arrives by email with
+ * `access_token` and `refresh_token` in its fragment, and the invitee has never chosen a
+ * password. Until those tokens are handed to Supabase, there IS no session — which is what
+ * this screen previously got wrong: it stored the raw tokens in `sessionStorage`, declared
+ * the account ready, and redirected. The next screen found no session and bounced the user
+ * back to sign-in, so a freshly invited person could never get in without going round again.
+ *
+ * Supabase verifies the access token and mints a real session from it. The refresh token
+ * goes along so the session survives past the first hour.
+ */
+export async function acceptInviteSession(
+    accessToken: string,
+    refreshToken: string,
+): Promise<AuthResult> {
+    if (!isSupabaseConfigured || !supabase) {
+        return { success: false, error: 'This app is not connected to the school database.' };
+    }
+    const { error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+    });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+}

@@ -4,7 +4,6 @@ import ErrorBoundary from '../ui/ErrorBoundary';
 import { MainAdminOnly } from '../shared/MainAdminOnly';
 import { useProfile } from '../../context/ProfileContext';
 import PremiumLoader from '../ui/PremiumLoader';
-import { api } from '../../lib/api';
 import { supabase } from '../../src/lib/supabase/client';
 import { syncEngine } from '../../lib/syncEngine';
 import { DashboardType } from '../../types';
@@ -293,7 +292,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
 
             // Listen for demo realtime events (BroadcastChannel/localStorage)
             const handleDemoUpdate = () => {
-                api.invalidateCache();
+                // The old cache lived in the Express server. There is no server cache any
+                // more — the screens read the database directly — so the only thing left
+                // to do is re-render with what the event says changed.
                 handleUpdate();
             };
             window.addEventListener('demo-realtime-update', handleDemoUpdate);
@@ -503,10 +504,14 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
 
     useEffect(() => {
         const getUser = async () => {
+            // WHO IS SIGNED IN. Read from the live session, not from a server that is no
+            // longer deployed. The auth context is the fallback so the dashboard still
+            // identifies the user if the session read is momentarily unavailable.
             try {
-                const authUser = await api.getMe();
-                if (authUser?.id) {
-                    setCurrentUserId(authUser.id);
+                const { data: auth } = await supabase.auth.getUser();
+                const authUserId = auth?.user?.id;
+                if (authUserId) {
+                    setCurrentUserId(authUserId);
                 } else if (user?.id) {
                     setCurrentUserId(user.id);
                 }

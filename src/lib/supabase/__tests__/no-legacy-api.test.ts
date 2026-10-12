@@ -328,7 +328,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 33;
+        const CEILING = 32;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

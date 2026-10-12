@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { api } from '../../lib/api';
 import { CheckCircle, XCircle, Loader2, School } from 'lucide-react';
+import { acceptInviteSession } from '../../src/lib/supabase/auth';
 
 /**
  * InviteAcceptScreen
@@ -83,30 +83,24 @@ const InviteAcceptScreen: React.FC = () => {
                     throw new Error('No valid tokens found. The invite link may have expired.');
                 }
 
-                // 2. Set the session (tab-scoped token storage)
+                // 2. ACTUALLY SIGN IN. Storing the tokens in sessionStorage was not a
+                // session: nothing ever handed them to Supabase, so the next screen saw
+                // no signed-in user and sent the invitee back to the sign-in page. The
+                // account existed; they just could not reach it.
                 setMessage('Verifying your invitation...');
-                if (accessToken) {
-                    sessionStorage.setItem('auth_token', accessToken);
+                if (!accessToken || !refreshToken) {
+                    throw new Error('The invitation link is incomplete. Please ask the office for a new one.');
                 }
-                if (refreshToken) {
-                    sessionStorage.setItem('auth_refresh_token', refreshToken);
+                const sessionResult = await acceptInviteSession(accessToken, refreshToken);
+                if (!sessionResult.success) {
+                    throw new Error(sessionResult.error || 'Could not sign you in from the invitation link.');
                 }
 
-                // 3. Call the backend to generate school_generated_id
-                setMessage('Generating your school ID...');
-                const currentToken = sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token');
-                if (!currentToken) throw new Error('Session could not be established.');
-
-                const data: any = await api.post('/invite/complete', {}, {
-                    headers: {
-                        Authorization: `Bearer ${currentToken}`,
-                    },
-                });
-
-                const genId = data.school_generated_id || null;
-                setSchoolGeneratedId(genId);
-                // Non-critical: if complete fails, user can still log in
-
+                // THERE IS NO SCHOOL ID TO GENERATE. This called an undeployed server to
+                // produce a `school_generated_id` — a column that exists nowhere in the
+                // database. Accepting the invitation has already created the account and
+                // the role in the steps above; there is nothing left to finish.
+                setSchoolGeneratedId(null);
                 setStatus('success');
                 setMessage('Welcome! Your account is ready.');
 
