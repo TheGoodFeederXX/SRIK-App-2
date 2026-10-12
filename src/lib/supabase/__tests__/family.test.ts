@@ -332,6 +332,16 @@ describe('F27: the parent portal reads the family from the session, not a parame
         }
     });
 
+    it('a teacher\'s notice is saved with the fields the table actually has', () => {
+        const src = code(read('components/teacher/TeacherCommunicationScreen.tsx'));
+        // No invented columns, and no school id — there is no such thing here.
+        expect(src).not.toMatch(/school_id|is_pinned|createNotice/);
+        // It saves through the real module, which always creates a DRAFT: a teacher does
+        // not publish to families, the office does.
+        expect(src).toMatch(/saveAnnouncement/);
+        expect(src).toMatch(/audience: 'STAFF'/);
+    });
+
     it('a child\'s profile reads stored fields, not aliases of fields that do not exist', () => {
         const src = code(read('components/student/StudentProfileEnhanced.tsx'));
 

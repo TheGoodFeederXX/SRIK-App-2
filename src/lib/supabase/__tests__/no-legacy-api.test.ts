@@ -68,6 +68,10 @@ const MIGRATED = [
     'components/teacher/TeacherExamManagement.tsx',
     'components/admin/ExamManagement.tsx',
     'components/admin/AddExamScreen.tsx',
+    // A teacher's notice to colleagues. The payload carried `category`, `is_pinned`,
+    // `school_id` and `timestamp` — no column by any of those names — and `school_id`
+    // exists nowhere in this database.
+    'components/teacher/TeacherCommunicationScreen.tsx',
     // The school reports. Subject averages and a ranked list of children were rebuilt in
     // the browser from an undeployed server; they now come from published marks, computed
     // by `subject_marks_for_term`.
@@ -358,7 +362,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 22;
+        const CEILING = 21;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

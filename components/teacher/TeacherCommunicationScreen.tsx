@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { AnnouncementCategory, Notice } from '../../types';
 import { CameraIcon, StopIcon, XCircleIcon, VideoIcon } from '../../constants';
+import { saveAnnouncement } from '../../src/lib/supabase/announcements';
+import { uploadFile } from '../../src/lib/supabase/storage';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
 import { getMyTeacherProfileCached } from '../../lib/queryClient';
 
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
@@ -23,7 +24,6 @@ const TeacherCommunicationScreen: React.FC = () => {
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
     const [teacherName, setTeacherName] = useState('');
-    const [schoolId, setSchoolId] = useState('');
 
     // Video state
     const [isRecording, setIsRecording] = useState(false);
@@ -44,8 +44,9 @@ const TeacherCommunicationScreen: React.FC = () => {
             try {
                 const teacher = await getMyTeacherProfileCached();
                 if (teacher) {
+                    // NO `school_id`. There is one school, and `teachers` has no such
+                    // column — the field was read, stored and never used.
                     setTeacherName(teacher.name || teacher.full_name || '');
-                    setSchoolId(teacher.school_id || '');
                 }
             } catch (err) {
                 console.error('Error fetching teacher profile:', err);
@@ -96,30 +97,26 @@ const TeacherCommunicationScreen: React.FC = () => {
             if (mode === 'video' && videoBlobUrl) {
                 const blob = await fetch(videoBlobUrl).then(r => r.blob());
                 const file = new File([blob], `announcement-${Date.now()}.webm`, { type: blob.type || 'video/webm' });
-                const { url } = await api.uploadFileWithCategory(file, 'announcements');
-                if (!url) {
-                    toast.error('The video could not be uploaded. Please try again.');
-                    return;
-                }
-                content = `${message ? message + '\n\n' : ''}📹 Video announcement: ${url}`;
+                const uploaded = await uploadFile({ type: 'SCHOOL' }, file);
+                content = `${message ? message + '\n\n' : ''}📹 Video: ${uploaded.storageKey}`;
             }
 
-            const payload = {
-                title,
-                content: content || '(Announcement)',
-                category: selectedCategory,
-                is_pinned: false,
-                audience: audienceArray, // JSONB
-                created_by: user?.id, // Use UUID from Auth
-                school_id: schoolId, // Required for RLS
-                timestamp: new Date().toISOString()
-            };
+            // THE REAL NOTICE. `announcements` carries title, body, audience and status —
+            // and nothing else. The old payload sent `category`, `is_pinned`, `school_id`
+            // and a `timestamp`: none is a column, and `school_id` does not exist anywhere
+            // in this database. The notice went to an undeployed server.
+            //
+            // A teacher does not choose the audience per notice — the school does, through
+            // permissions. A notice written here goes to STAFF: the teacher's own
+            // colleagues. Publishing to families is the office's deliberate act, and
+            // `saveAnnouncement` always creates a DRAFT for exactly that reason.
+            await saveAnnouncement({
+                title: title || 'Pengumuman',
+                body: content || '(Pengumuman)',
+                audience: 'STAFF',
+            });
 
-            // Only report success if the notice ACTUALLY saved — the old code
-            // toasted "sent" even when createNotice rejected.
-            await api.createNotice(payload);
-
-            toast.success(`Announcement sent to: ${audienceArray.join(', ')}`);
+            toast.success(`Pengumuman disimpan sebagai draf untuk: ${audienceArray.join(', ')}`);
             // Reset form
             setSelectedClasses(new Set());
             setTitle('');
