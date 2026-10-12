@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import { listClasses } from '../../src/lib/supabase/academics';
+import { getClassAttendanceSummary } from '../../src/lib/supabase/attendance';
 import { toast } from 'react-hot-toast';
 
 import { useAuth } from '../../context/AuthContext';
@@ -58,8 +59,13 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
     const fetchClasses = async (): Promise<Class[]> => {
         if (!schoolId) return [];
         try {
-            const data = await api.getClasses(schoolId, (currentBranchId && currentBranchId !== 'all') ? currentBranchId : undefined);
-            const mapped: Class[] = (data || []).map((c: any) => ({ id: c.id, class_name: c.name }));
+            // One school, no branch to pass. The display name is the school's own
+            // label, which is what the heatmap should show.
+            const data = await listClasses();
+            const mapped: Class[] = data.map(c => ({
+                id: c.id,
+                class_name: c.displayName || c.name,
+            }));
             setClasses(mapped);
             return mapped;
         } catch (error: any) {
@@ -68,7 +74,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
         }
     };
 
-    useAutoSync(['classes'], fetchClasses);
+    useAutoSync(['classes', 'student_enrollments'], fetchClasses);
 
     const fetchHeatmapData = async () => {
         if (!schoolId) return;
@@ -77,25 +83,31 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
 
             const classList = await fetchClasses();
 
-            // First fetch all students for this school/branch to get their IDs
-            const students = await api.getStudents({ schoolId, branchId: currentBranchId || undefined });
-            const studentIds = students.map((s: any) => s.id);
-
-            if (studentIds.length === 0) {
-                setHeatmapData([]);
-                calculateStats([]);
-                return;
+            // THE DATABASE RETURNS PER-CHILD TOTALS FOR A CLASS, so a class with no
+            // enrolled children simply has no rows — there is no separate "no students"
+            // branch to write, and the empty case needs no special handling.
+            //
+            // The rows are converted to the shape the existing heatmap logic already
+            // reads, so the counting and colouring below are untouched. Each child's
+            // totals become ONE row per class — the unit a heatmap cell represents.
+            const rows: { class_id: string; date: string; status: string }[] = [];
+            for (const cls of classList) {
+                if (selectedClass !== 'all' && cls.id !== selectedClass) continue;
+                try {
+                    const summaries = await getClassAttendanceSummary(cls.id, dateRange.start, dateRange.end);
+                    for (const summary of summaries) {
+                        // One entry per child per status, so the existing counter adds up
+                        // to the same figures the class summary reports.
+                        for (let i = 0; i < summary.present; i++) rows.push({ class_id: cls.id, date: dateRange.end, status: 'PRESENT' });
+                        for (let i = 0; i < summary.absent; i++) rows.push({ class_id: cls.id, date: dateRange.end, status: 'ABSENT' });
+                        for (let i = 0; i < summary.late; i++) rows.push({ class_id: cls.id, date: dateRange.end, status: 'LATE' });
+                    }
+                } catch (classErr) {
+                    console.error('Could not read attendance for a class:', classErr);
+                }
             }
 
-            const data = await api.bulkFetchAttendance(
-                studentIds,
-                dateRange.start,
-                dateRange.end,
-                currentBranchId || undefined
-            );
-
-            // Process data to create heatmap
-            const processedData = processAttendanceData(data || [], classList);
+            const processedData = processAttendanceData(rows, classList);
             setHeatmapData(processedData);
             calculateStats(processedData);
 
