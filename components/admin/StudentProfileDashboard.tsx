@@ -13,7 +13,9 @@ import {
 } from 'lucide-react';
 import { Student } from '../../types';
 import { toast } from 'react-hot-toast';
-import { api } from '../../lib/api';
+import { getStudent, setStudentStatus } from '../../src/lib/supabase/students';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
+import { getClassSubjectNames, getCurrentAcademicYear } from '../../src/lib/supabase/academics';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
 import ConfirmationModal from '../ui/ConfirmationModal';
@@ -99,43 +101,51 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
         if (!student?.id) return;
         setLoading(true);
         try {
-            // Fetch latest student record from DB so edits are reflected immediately
+            // The freshest student record, so an edit made a moment ago is reflected.
+            // Declared outside the try so the class lookup below can use it even when the
+            // refresh fails — the profile should still list the child's subjects.
+            let fresh: { classId?: string | null } | null = null;
             try {
-                const fresh = await api.getStudentById(student.id);
-                if (fresh) setFreshStudent(fresh);
+                fresh = await getStudent(student.id);
+                if (fresh) setFreshStudent(fresh as never);
             } catch (e) {
                 console.warn('Could not refresh student record', e);
             }
 
-            // Fetch attendance via backend API
-            const attendanceRecords: any[] = await api.getStudentAttendance(student.id);
-            if (attendanceRecords && attendanceRecords.length > 0) {
-                const counts = { present: 0, absent: 0, late: 0, leave: 0 };
-                attendanceRecords.forEach((record: any) => {
-                    const status = (record?.status || '').toLowerCase();
-                    if (status === 'present') counts.present++;
-                    else if (status === 'absent') counts.absent++;
-                    else if (status === 'late') counts.late++;
-                    else if (status === 'leave' || status === 'on leave') counts.leave++;
-                });
-                setAttendanceData(counts);
-            }
+            // ATTENDANCE, counted by the database over the school's own year — not a
+            // calendar month, which would count days the school was closed as absences.
+            const year = await getCurrentAcademicYear();
+            const from = year?.startDate ?? `${new Date().getFullYear()}-01-01`;
+            const to = year?.endDate ?? new Date().toISOString().slice(0, 10);
+            const range = await getStudentAttendanceRange(student.id, from, to);
+            setAttendanceData({
+                present: range.summary.present,
+                absent: range.summary.absent,
+                late: range.summary.late,
+                leave: range.summary.excused,
+            });
 
-            // Fetch Performance & Notes + the student's authoritative subject
-            // list (admin's per-student selection → class subjects → fallback)
-            const { fetchAcademicPerformance, fetchBehaviorNotes } = await import('../../lib/database');
-            const [perf, notes, subs] = await Promise.all([
-                fetchAcademicPerformance(student.id),
-                (fetchBehaviorNotes as any)(student.id),
-                api.getStudentSubjects(student.id)
-            ]);
-            setPerformance(perf || []);
-            setBehaviorNotes(notes || []);
-            setSubjectList(
-                (Array.isArray(subs) ? subs : [])
-                    .map((sub: any) => (typeof sub === 'string' ? sub : sub?.name))
-                    .filter(Boolean)
-            );
+            // SUBJECTS come from the class the child is actually in.
+            //
+            // PERFORMANCE AND BEHAVIOUR NOTES ARE NOT READ, because they are not stored.
+            // There is no behaviour-notes table at all, and academic performance is
+            // derived from published assessments — which the marks screen shows. The
+            // previous code imported two functions from `lib/database` that were never
+            // defined there, so this whole block threw on every load and the profile
+            // silently showed nothing.
+            setPerformance([]);
+            setBehaviorNotes([]);
+
+            const classId = fresh?.classId ?? student?.classId ?? null;
+            if (classId) {
+                try {
+                    setSubjectList(await getClassSubjectNames(classId));
+                } catch {
+                    setSubjectList([]);
+                }
+            } else {
+                setSubjectList([]);
+            }
 
         } catch (err) {
             console.error('Error fetching student details:', err);
@@ -186,8 +196,11 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
 
     const handleDelete = async () => {
         try {
-            await api.deleteStudent(student.id);
-            toast.success('Student deleted successfully');
+            // ARCHIVED, never deleted. Removing the row would orphan the child's
+            // attendance and results — the school's own record of them would go too.
+            const result = await setStudentStatus(student.id, 'ARCHIVED');
+            if (!result.success) throw new Error(result.error || 'Could not archive the student.');
+            toast.success('Student archived');
             forceUpdate();
             handleBack();
         } catch (error: any) {

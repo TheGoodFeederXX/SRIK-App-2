@@ -35,6 +35,7 @@ const SCREENS = [
     'components/parent/AppointmentScreen.tsx',
     'components/auth/InviteAcceptScreen.tsx',
     'components/teacher/ReportCardInputScreen.tsx',
+    'components/admin/StudentProfileDashboard.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -242,6 +243,25 @@ describe('F27: the parent portal reads the family from the session, not a parame
         expect(src, 'the appointment screen can confirm a booking again')
             .not.toMatch(/createAppointment|getTeacherAvailability/);
         expect(src).toMatch(/ComingSoonScreen/);
+    });
+
+    it('a child is archived, never deleted, and the profile reads what is stored', () => {
+        const src = code(read('components/admin/StudentProfileDashboard.tsx'));
+
+        // Deleting the row would orphan the child's attendance and results — the
+        // school's own record of them would go with it.
+        expect(src, 'the profile can delete a child outright again').not.toMatch(/deleteStudent/);
+        expect(src).toMatch(/setStudentStatus/);
+        expect(src).toMatch(/ARCHIVED/);
+
+        // Attendance over the school's own year, not a calendar month.
+        expect(src).toMatch(/getStudentAttendanceRange/);
+        expect(src).toMatch(/getCurrentAcademicYear/);
+
+        // No invented behaviour notes, and no import of helpers that do not exist.
+        expect(src, 'the profile reaches for functions that are not defined')
+            .not.toMatch(/fetchAcademicPerformance|fetchBehaviorNotes/);
+        expect(src).toMatch(/setBehaviorNotes\(\[\]\)/);
     });
 
     it('reads children without a school id, which does not exist', () => {

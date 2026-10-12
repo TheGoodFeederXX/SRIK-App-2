@@ -568,3 +568,18 @@ export async function getClassSubjects(classId: string): Promise<string[]> {
     const links = await listClassSubjects();
     return links.filter(l => l.classId === classId).map(l => l.subjectId);
 }
+
+/**
+ * The subjects a class studies, as names for display.
+ *
+ * The screen needs NAMES but the link table stores ids. Resolving them here keeps the
+ * screen from having to fetch the whole subject list and join it in the browser.
+ */
+export async function getClassSubjectNames(classId: string): Promise<string[]> {
+    const [links, subjects] = await Promise.all([listClassSubjects(), listSubjects()]);
+    const nameById = new Map(subjects.map(s => [s.id, s.name]));
+    return links
+        .filter(l => l.classId === classId)
+        .map(l => nameById.get(l.subjectId))
+        .filter((n): n is string => Boolean(n));
+}

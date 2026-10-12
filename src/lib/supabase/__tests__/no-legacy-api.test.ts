@@ -92,6 +92,10 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // One child's profile: their record, their attendance and their class's subjects.
+    // The loader also imported two functions from `lib/database` that were never defined
+    // there, so the whole block threw on every load and the profile showed nothing.
+    'components/admin/StudentProfileDashboard.tsx',
     // School-wide academic figures for a term, computed by the database. Every figure
     // on this screen came from an undeployed server, so it showed an empty chart and a
     // GPA out of 4.0 — on a scale where the school marks out of 100 and grades A-E.
@@ -328,7 +332,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 32;
+        const CEILING = 31;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',
