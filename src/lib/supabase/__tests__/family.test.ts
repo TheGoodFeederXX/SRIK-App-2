@@ -37,6 +37,9 @@ const SCREENS = [
     'components/teacher/ReportCardInputScreen.tsx',
     'components/admin/StudentProfileDashboard.tsx',
     'components/shared/EditProfileScreen.tsx',
+    'components/admin/DashboardOverview.tsx',
+    'components/admin/HealthLogScreen.tsx',
+    'components/admin/SafetyHealthLogs.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
     'components/parent/ParentDashboard.tsx',
@@ -284,6 +287,28 @@ describe('F27: the parent portal reads the family from the session, not a parame
         // and the login address is where invitations go.
         expect(screen, 'the screen can rewrite an identity the office issued')
             .not.toMatch(/school_generated_id/);
+    });
+
+    it('shows no register that cannot record anything', () => {
+        // These screens offered a health log, an incident register and a drill log. No
+        // table exists for any of them, so every recording went nowhere — and the screens
+        // DISPLAYED as clean records, which is the part that matters. An incident register
+        // that always says "none recorded" looks like a good safety record.
+        for (const file of [
+            'components/admin/HealthLogScreen.tsx',
+            'components/admin/SafetyHealthLogs.tsx',
+        ]) {
+            const src = code(read(file));
+            expect(src, `${file} can record a health or safety event again`)
+                .not.toMatch(/createHealthLog|getHealthLogs|getHealthIncidents|getEmergencyDrills/);
+            expect(src).toMatch(/ComingSoonScreen/);
+        }
+
+        // And the dashboard must not show a bus or health widget whose only possible value
+        // is zero — a widget that always reads 0 teaches the office to ignore it.
+        const dash = code(read('components/admin/DashboardOverview.tsx'));
+        expect(dash, 'the dashboard queries a buses table that does not exist').not.toMatch(/getBuses/);
+        expect(dash).not.toMatch(/BusRosterWidget|HealthLogWidget/);
     });
 
     it('reads children without a school id, which does not exist', () => {

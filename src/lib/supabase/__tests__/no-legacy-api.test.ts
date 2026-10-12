@@ -92,6 +92,14 @@ const MIGRATED = [
     // A class register for one day. Feeds on the class's real id, not a class name
     // the school can rename, and treats "not recorded" as distinct from absent.
     'components/admin/ClassAttendanceDetailScreen.tsx',
+    // The office dashboard. Its bus and health widgets read tables that do not exist and
+    // showed a permanent zero, which reads as "nothing to report" rather than "not
+    // connected".
+    'components/admin/DashboardOverview.tsx',
+    // Registers the school does not keep here: a health log, an incident log and a drill
+    // log. None has a table, and each DISPLAYED as a clean record.
+    'components/admin/HealthLogScreen.tsx',
+    'components/admin/SafetyHealthLogs.tsx',
     // A person editing their OWN profile. The save posted to an undeployed server, so it
     // always failed — and even written to the right table it would have been refused,
     // because `profiles` had no self-update policy at all.
@@ -336,7 +344,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 30;
+        const CEILING = 28;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

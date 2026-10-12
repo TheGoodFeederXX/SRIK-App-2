@@ -52,7 +52,6 @@ import { useAuth } from '../../context/AuthContext';
 import { useProfile } from '../../context/ProfileContext';
 import { getDashboardCounts } from '../../src/lib/supabase/stats';
 import { useApi } from '../../lib/hooks/useApi';
-import api from '../../lib/api';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { getStatCardLayout, PREFERENCES_APPLIED_EVENT, type StatCardLayout } from '../../lib/uiPreferences';
 import DashboardSkeletonLoader from '../ui/DashboardSkeletonLoader';
@@ -311,43 +310,6 @@ const AnnounceWidget = ({ onClick }: { onClick: () => void }) => (
 );
 
 
-const BusRosterWidget = ({ onClick, assigned, total }: { onClick: () => void; assigned: number; total: number }) => {
-    return (
-        <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col h-full">
-            <div className="flex items-center space-x-3">
-                <div className="p-2 bg-orange-100 rounded-lg"><BusVehicleIcon className="h-5 w-5 text-orange-600" /></div>
-                <h4 className="font-bold text-gray-800">Bus Roster</h4>
-            </div>
-            <div className="flex-grow flex flex-col items-center justify-center text-center">
-                <p className="text-5xl font-bold text-orange-600">{assigned}/{total}</p>
-                <p className="text-sm text-gray-600">routes assigned for today</p>
-            </div>
-            <button onClick={onClick} className="w-full mt-2 py-2 bg-orange-500 text-white font-semibold rounded-lg hover:bg-orange-600">View Roster</button>
-        </div>
-    );
-};
-
-const HealthLogWidget = ({ onClick, latestLog }: { onClick: () => void; latestLog: any }) => {
-    return (
-        <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col h-full">
-            <div className="flex items-center space-x-3">
-                <div className="p-2 bg-red-100 rounded-lg"><HeartIcon className="h-5 w-5 text-red-600" /></div>
-                <h4 className="font-bold text-gray-800">Recent Health Log</h4>
-            </div>
-            <div className="flex-grow space-y-2 mt-3 text-sm">
-                {latestLog ? (
-                    <div className="bg-gray-50 p-2 rounded-lg">
-                        <p className="font-bold text-gray-800">{latestLog.studentName}</p>
-                        <p className="text-gray-600">{latestLog.reason} - {latestLog.time}</p>
-                    </div>
-                ) : (
-                    <p className="text-gray-500 text-center">No recent health logs</p>
-                )}
-            </div>
-            <button onClick={onClick} className="w-full mt-2 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600">View Full Log</button>
-        </div>
-    );
-};
 
 // --- MAIN DASHBOARD COMPONENT ---
 
@@ -389,11 +351,12 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
-    const { data: buses = [] } = useQuery({
-        queryKey: ['buses', activeSchoolId],
-        queryFn: () => api.getBuses(activeSchoolId || ''),
-        enabled: !!activeSchoolId,
-    });
+    // THE BUS AND HEALTH WIDGETS ARE GONE. Both read from an undeployed server, and
+    // NEITHER TABLE EXISTS in the database — no `buses`, no `health_logs`. The bus widget
+    // showed a roster count that was always zero, and the health widget showed
+    // `latestHealthLog = null` hard-coded, which reads as "no incidents ever recorded"
+    // rather than "not connected". A widget that always shows zero is worse than no
+    // widget: the office learns to ignore it.
 
     useAutoSync(
         [
@@ -462,13 +425,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     const pendingApprovalsCount = 0;
     const attendancePercentage = 0;
     const timetablePreview: any[] = [];
-    const latestHealthLog = null;
 
     const recentActivities: any[] = [];
 
     // Bus Roster derived stats
-    const busRosterTotal = buses.length;
-    const busRosterAssigned = buses.filter((b: any) => (b.driverName || b.driver_name) && b.status === 'active').length;
 
     // No enrolment history source yet, so the chart shows the current roll as a
     // single point rather than an invented trend line between two guesses.
@@ -727,8 +687,6 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                             <PublishReportsWidget onClick={() => navigateTo('reportCardPublishing', 'Publish Reports', {})} count={unpublishedReports} />
                             <TimetableWidget onClick={() => navigateTo('timetable', 'Timetable Management')} schedule={timetablePreview} />
                             <AnnounceWidget onClick={() => navigateTo('communicationHub', 'Communication Hub')} />
-                            <BusRosterWidget onClick={() => navigateTo('busDutyRoster', 'Bus Duty Roster')} assigned={busRosterAssigned} total={busRosterTotal} />
-                            <HealthLogWidget onClick={() => navigateTo('healthLog', 'Health Log')} latestLog={latestHealthLog} />
                         </div>
                     </div>
 
