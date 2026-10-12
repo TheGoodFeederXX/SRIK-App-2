@@ -81,3 +81,20 @@ describe('F39 — password policy matches the server', () => {
         expect(DECISION).toMatch(/security_update_password_require_reauthentication/);
     });
 });
+
+describe('F33 — supply chain triage', () => {
+    it('records that the reachable advisory count is zero, and why the rest remain', () => {
+        const text = readFileSync(resolve(ROOT, 'docs/decisions/F33-dependency-triage.md'), 'utf8');
+        // The distinction the finding turns on: reachable vs. dev-only.
+        expect(text).toMatch(/boleh dicapai/);
+        expect(text).toMatch(/npm audit --omit=dev/);
+        expect(text).toMatch(/0 kerentanan/);
+        // The three runtimes must be named, because the answer depends on which one runs.
+        expect(text).toMatch(/Vercel/);
+        expect(text).toMatch(/Tidak dijalankan|TIDAK/);
+        // And each remaining high/critical must carry an explicit decision, not silence.
+        for (const pkg of ['concurrently', 'nodemon', 'js-yaml', 'braces']) {
+            expect(text, `${pkg} has no recorded triage`).toContain(pkg);
+        }
+    });
+});
