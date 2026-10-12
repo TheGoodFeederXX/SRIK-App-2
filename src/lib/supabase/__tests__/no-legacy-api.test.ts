@@ -96,6 +96,12 @@ const MIGRATED = [
     // showed a permanent zero, which reads as "nothing to report" rather than "not
     // connected".
     'components/admin/DashboardOverview.tsx',
+    // Forms that accepted a submission and stored nothing: an incident report nobody
+    // received, and permission slips recording CONSENT that was never saved — a trip taken
+    // with no record that a parent agreed.
+    'components/shared/ReportIncidentScreen.tsx',
+    'components/shared/PermissionSlips.tsx',
+    'components/admin/ManagePermissionSlipsScreen.tsx',
     // Registers the school does not keep here: a health log, an incident log and a drill
     // log. None has a table, and each DISPLAYED as a clean record.
     'components/admin/HealthLogScreen.tsx',
@@ -344,7 +350,7 @@ describe('the legacy client is going, not growing', () => {
         // A CEILING, not a pass/fail on the whole app. F27's remaining surface is
         // large; what this pins is that it only shrinks. Without it a new screen
         // written the old way is invisible.
-        const CEILING = 28;
+        const CEILING = 24;
         const dashes = [
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',

@@ -39,6 +39,9 @@ const SCREENS = [
     'components/shared/EditProfileScreen.tsx',
     'components/admin/DashboardOverview.tsx',
     'components/admin/HealthLogScreen.tsx',
+    'components/shared/ReportIncidentScreen.tsx',
+    'components/shared/PermissionSlips.tsx',
+    'components/admin/ManagePermissionSlipsScreen.tsx',
     'components/admin/SafetyHealthLogs.tsx',
     'components/parent/LinkChildScreen.tsx',
     'components/parent/SelectChildForReportScreen.tsx',
@@ -309,6 +312,23 @@ describe('F27: the parent portal reads the family from the session, not a parame
         const dash = code(read('components/admin/DashboardOverview.tsx'));
         expect(dash, 'the dashboard queries a buses table that does not exist').not.toMatch(/getBuses/);
         expect(dash).not.toMatch(/BusRosterWidget|HealthLogWidget/);
+    });
+
+    it('never accepts a report or a consent it cannot store', () => {
+        // An incident report and a permission slip are the two things here with a person
+        // waiting on the other end. A form that submits and confirms, while storing
+        // nothing, tells a teacher the school has been told — and tells a parent they gave
+        // permission. Both were true of the old screens.
+        for (const file of [
+            'components/shared/ReportIncidentScreen.tsx',
+            'components/shared/PermissionSlips.tsx',
+            'components/admin/ManagePermissionSlipsScreen.tsx',
+        ]) {
+            const src = code(read(file));
+            expect(src, `${file} can accept a submission again`)
+                .not.toMatch(/getPermissionSlips|createPermissionSlip|getIncidentTypes|incident-types|getHealthIncidents/);
+            expect(src).toMatch(/ComingSoonScreen/);
+        }
     });
 
     it('reads children without a school id, which does not exist', () => {
