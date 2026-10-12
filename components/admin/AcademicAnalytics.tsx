@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { api } from '../../lib/api';
+import { listClasses } from '../../src/lib/supabase/academics';
+import { getAcademicAnalytics, getCurrentTerm } from '../../src/lib/supabase/assessments';
 import { toast } from 'react-hot-toast';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { TrendingUp, Target, TrendingDown, Award, Users, AlertTriangle, Star } from 'lucide-react';
@@ -8,24 +9,26 @@ import CenteredLoader from '../ui/CenteredLoader';
 
 const CANONICAL_TERMS = ['Penggal 1', 'Penggal 2', 'Penggal 3'];
 
+// These mirror what the database returns. The screen previously carried a `percentage`
+// for each grade, a `passRate` per subject and a `GPA` per class — none of which any
+// query produced. They were rendered from undefined values.
 interface GradeDistribution {
     grade: string;
     count: number;
-    percentage: number;
 }
 
 interface SubjectPerformance {
-    subject: string;
-    totalStudents: number;
-    averageScore: number;
-    passRate: number;
+    subjectId: string;
+    subject: string | null;
+    average: number;
+    count: number;
 }
 
 interface ClassComparison {
-    className: string;
-    studentCount: number;
-    averageGPA: number;
-    passRate: number;
+    classId: string;
+    className: string | null;
+    average: number;
+    count: number;
 }
 
 interface AcademicAnalyticsProps {
@@ -40,17 +43,28 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
     const [loading, setLoading] = useState(true);
 
     // Filters
-    const [selectedTerm, setSelectedTerm] = useState('current');
+    const [selectedTerm, setSelectedTerm] = useState<string | null>(null);
     const [selectedClass, setSelectedClass] = useState<string | null>(null);
     const [classOptions, setClassOptions] = useState<{ id: string; name: string }[]>([]);
 
-    // Key Metrics
-    const [metrics, setMetrics] = useState({
-        overallGPA: 0,
-        passRate: 0,
-        topPerformer: '',
-        topPerformerGPA: 0,
-        improvement: 0
+    // Key metrics. There is no GPA: this school marks out of 100 and grades A-E, so a
+    // 4-point GPA is a number the school does not use and never produced. The honest
+    // headline is the average mark and the pass rate.
+    //
+    // passRate is NULL, not 0, until marks exist — a screen showing 0% for a term with
+    // nothing marked tells the school something untrue.
+    const [metrics, setMetrics] = useState<{
+        passRate: number | null;
+        marksCounted: number;
+        topPerformer: string | null;
+        topPerformerAverage: number | null;
+        overallAverage: number | null;
+    }>({
+        passRate: null,
+        marksCounted: 0,
+        topPerformer: null,
+        topPerformerAverage: null,
+        overallAverage: null,
     });
 
     useEffect(() => {
@@ -61,12 +75,12 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
 
     useEffect(() => {
         if (!schoolId) return;
-        api.getClasses(schoolId, currentBranchId || undefined)
-            .then((data: any[]) => setClassOptions((data || []).map(c => ({ id: c.id, name: c.name }))))
+        listClasses()
+            .then(data => setClassOptions(data.map(c => ({ id: c.id, name: c.displayName || c.name }))))
             .catch(() => setClassOptions([]));
     }, [schoolId, currentBranchId]);
 
-    useAutoSync(['academic_results', 'student_results', 'attendance', 'students', 'classes'], () => {
+    useAutoSync(['assessment_results', 'assessments', 'student_enrollments', 'students', 'classes'], () => {
         console.log('🔄 [AcademicAnalytics] Real-time auto-sync triggered');
         fetchAnalytics();
     });
@@ -74,20 +88,29 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
     const fetchAnalytics = async () => {
         try {
             setLoading(true);
-            const data = await api.getAcademicAnalytics(schoolId, currentBranchId || undefined, selectedTerm, selectedClass || undefined);
-
-            if (data) {
-                setGradeDistribution(data.gradeDistribution || []);
-                setSubjectPerformance(data.subjectPerformance || []);
-                setClassComparison(data.classComparison || []);
-                setMetrics(data.metrics || {
-                    overallGPA: 0,
-                    passRate: 0,
-                    topPerformer: 'N/A',
-                    topPerformerGPA: 0,
-                    improvement: 0
-                });
+            // The term is resolved from the school's own calendar when the screen has
+            // not chosen one, rather than sending an empty term the database would refuse.
+            let termId = selectedTerm;
+            if (!termId) {
+                const current = await getCurrentTerm();
+                termId = current?.id ?? null;
+                if (termId) setSelectedTerm(termId);
             }
+            if (!termId) {
+                // No term configured at all. An empty screen is honest here; 0% is not.
+                setGradeDistribution([]);
+                setSubjectPerformance([]);
+                setClassComparison([]);
+                setMetrics({ passRate: null, marksCounted: 0, topPerformer: null, topPerformerAverage: null, overallAverage: null });
+                return;
+            }
+
+            const data = await getAcademicAnalytics(termId, selectedClass || null);
+
+            setGradeDistribution(data.gradeDistribution ?? []);
+            setSubjectPerformance(data.subjectPerformance ?? []);
+            setClassComparison(data.classComparison ?? []);
+            setMetrics(data.metrics);
         } catch (error: any) {
             console.error('Error fetching analytics:', error);
             toast.error('Failed to load analytics');
@@ -116,9 +139,15 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
 
     // Honestly-derivable "predictive" stats — computed from the same real
     // classComparison/metrics data already on screen, not fabricated numbers.
-    const atRiskClasses = classComparison.filter(c => c.passRate < 60);
-    const topClasses = classComparison.filter(c => c.averageGPA >= 3.5);
-    const projectedGPA = Math.max(0, Math.min(4, metrics.overallGPA * (1 + metrics.improvement / 100)));
+    // A class is "at risk" when its average mark is below the school's own pass band
+    // (50% is the floor of a C on this scale). "Strongest" is simply the highest average
+    // — no GPA, because the school does not use one.
+    // The denominator for each grade's share. Summed from the counts the database
+    // returned, so the bars always add up to what was actually marked.
+    const gradeTotal = gradeDistribution.reduce((sum, g) => sum + g.count, 0);
+
+    const atRiskClasses = classComparison.filter(c => (c.average ?? 0) < 50);
+    const topClasses = classComparison.slice().sort((a, b) => b.average - a.average).slice(0, 3);
 
     return (
         <div className="p-4 sm:p-6 max-w-7xl mx-auto pb-24 lg:pb-6">
@@ -173,9 +202,17 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Overall GPA</p>
-                            <p className="text-2xl sm:text-3xl font-bold text-indigo-600">{metrics.overallGPA}</p>
-                            <p className="text-xs sm:text-xs text-gray-500 mt-1">out of 4.0</p>
+                            <p className="text-xs sm:text-sm text-gray-600">Purata Markah</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-indigo-600">
+                                {metrics.overallAverage === null ? '—' : metrics.overallAverage}
+                            </p>
+                            {/* A dash, not 0: a term with nothing marked has no average,
+                                and showing 0 would read as a school-wide failure. */}
+                            <p className="text-xs sm:text-xs text-gray-500 mt-1">
+                                {metrics.marksCounted > 0
+                                    ? `daripada ${metrics.marksCounted} markah`
+                                    : 'tiada markah lagi'}
+                            </p>
                         </div>
                         <div className="p-2 sm:p-3 bg-indigo-100 rounded-lg">
                             <Award className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-600" />
@@ -186,11 +223,15 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Pass Rate</p>
-                            <p className="text-2xl sm:text-3xl font-bold text-green-600">{metrics.passRate}%</p>
-                            <p className="text-xs sm:text-xs text-green-500 mt-1 flex items-center">
-                                <TrendingUp className="h-3 w-3 mr-1" />
-                                +{metrics.improvement}% from last term
+                            <p className="text-xs sm:text-sm text-gray-600">Kadar Lulus</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-green-600">
+                                {metrics.passRate === null ? '—' : `${metrics.passRate}%`}
+                            </p>
+                            {/* No "vs last term" comparison: no previous-term figures are
+                                stored, and inventing a trend line would be a claim about
+                                the school that nothing supports. */}
+                            <p className="text-xs sm:text-xs text-gray-500 mt-1">
+                                {metrics.marksCounted > 0 ? 'markah diterbitkan' : 'belum ada markah'}
                             </p>
                         </div>
                         <div className="p-2 sm:p-3 bg-green-100 rounded-lg">
@@ -203,8 +244,8 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-xs sm:text-sm text-gray-600">Top Performer</p>
-                            <p className="text-base sm:text-lg font-bold text-gray-900 truncate max-w-[120px] sm:max-w-none">{metrics.topPerformer}</p>
-                            <p className="text-xs sm:text-xs text-gray-500 mt-1">GPA: {metrics.topPerformerGPA || '—'}</p>
+                            <p className="text-base sm:text-lg font-bold text-gray-900 truncate max-w-[120px] sm:max-w-none">{metrics.topPerformer ?? '—'}</p>
+                            <p className="text-xs sm:text-xs text-gray-500 mt-1">Purata: {metrics.topPerformerAverage ?? '—'}</p>
                         </div>
                         <div className="p-2 sm:p-3 bg-yellow-100 rounded-lg">
                             <Award className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600" />
@@ -215,9 +256,9 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Total Students</p>
-                            <p className="text-2xl sm:text-3xl font-bold text-gray-900">{classComparison.reduce((sum, c) => sum + c.studentCount, 0)}</p>
-                            <p className="text-xs sm:text-xs text-gray-500 mt-1">across {classComparison.length} classes</p>
+                            <p className="text-xs sm:text-sm text-gray-600">Bilangan Markah</p>
+                            <p className="text-2xl sm:text-3xl font-bold text-gray-900">{metrics.marksCounted}</p>
+                            <p className="text-xs sm:text-xs text-gray-500 mt-1">dalam {classComparison.length} kelas</p>
                         </div>
                         <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
                             <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
@@ -234,17 +275,21 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                         <div key={item.grade}>
                             <div className="flex justify-between text-sm mb-1">
                                 <span className="font-semibold text-gray-900">Grade {item.grade}</span>
-                                <span className="text-gray-600">{item.count} students ({item.percentage.toFixed(1)}%)</span>
+                                <span className="text-gray-600">
+                                    {item.count} markah ({gradeTotal > 0 ? ((item.count / gradeTotal) * 100).toFixed(1) : '0.0'}%)
+                                </span>
                             </div>
                             <div className="w-full bg-gray-200 rounded-full h-4">
                                 <motion.div
                                     initial={{ width: 0 }}
-                                    animate={{ width: `${item.percentage}%` }}
+                                    animate={{ width: `${gradeTotal > 0 ? (item.count / gradeTotal) * 100 : 0}%` }}
                                     transition={{ duration: 0.5, delay: gi * 0.05, ease: 'easeOut' }}
                                     className={`${getGradeColor(item.grade)} h-4 rounded-full flex items-center justify-end pr-2`}
                                 >
-                                    {item.percentage > 10 && (
-                                        <span className="text-white text-xs font-semibold">{item.percentage.toFixed(0)}%</span>
+                                    {gradeTotal > 0 && (item.count / gradeTotal) * 100 > 10 && (
+                                        <span className="text-white text-xs font-semibold">
+                                            {((item.count / gradeTotal) * 100).toFixed(0)}%
+                                        </span>
                                     )}
                                 </motion.div>
                             </div>
@@ -260,11 +305,11 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <h3 className="text-lg font-bold text-gray-900 mb-4">📚 Subject Performance</h3>
                     <div className="space-y-3">
                         {subjectPerformance.length === 0 && (
-                            <p className="text-center text-gray-400 py-8 text-sm">No results recorded for this term/class yet.</p>
+                            <p className="text-center text-gray-400 py-8 text-sm">Belum ada markah untuk penggal atau kelas ini.</p>
                         )}
                         {subjectPerformance.slice(0, 6).map((subject, si) => (
                             <motion.div
-                                key={subject.subject}
+                                key={subject.subjectId}
                                 initial={{ opacity: 0, x: -8 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.2, delay: si * 0.05 }}
@@ -273,19 +318,21 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                             >
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
-                                        <h4 className="font-semibold text-gray-900">{subject.subject}</h4>
-                                        <p className="text-xs text-gray-500">{subject.totalStudents} students</p>
+                                        <h4 className="font-semibold text-gray-900">{subject.subject ?? '—'}</h4>
+                                        <p className="text-xs text-gray-500">{subject.count} markah</p>
                                     </div>
-                                    {getPerformanceIcon(subject.passRate)}
+                                    {/* Judged against the school's own pass line (50% is
+                                        the floor of a C), not an invented threshold. */}
+                                    {getPerformanceIcon(subject.average >= 50 ? 100 : 0)}
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <p className="text-gray-600">Avg Score</p>
-                                        <p className="text-lg font-bold text-indigo-600">{subject.averageScore}</p>
+                                        <p className="text-gray-600">Purata Markah</p>
+                                        <p className="text-lg font-bold text-indigo-600">{subject.average}</p>
                                     </div>
                                     <div>
-                                        <p className="text-gray-600">Pass Rate</p>
-                                        <p className="text-lg font-bold text-green-600">{subject.passRate.toFixed(1)}%</p>
+                                        <p className="text-gray-600">Markah</p>
+                                        <p className="text-lg font-bold text-gray-700">{subject.count}</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -298,11 +345,11 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <h3 className="text-lg font-bold text-gray-900 mb-4">🏆 Class Comparison</h3>
                     <div className="space-y-3">
                         {classComparison.length === 0 && (
-                            <p className="text-center text-gray-400 py-8 text-sm">No results recorded for this term/class yet.</p>
+                            <p className="text-center text-gray-400 py-8 text-sm">Belum ada markah untuk penggal atau kelas ini.</p>
                         )}
                         {classComparison.map((classData, index) => (
                             <motion.div
-                                key={classData.className}
+                                key={classData.classId}
                                 initial={{ opacity: 0, x: 8 }}
                                 animate={{ opacity: 1, x: 0 }}
                                 transition={{ duration: 0.2, delay: index * 0.05 }}
@@ -316,19 +363,19 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                             {index + 1}
                                         </div>
                                         <div>
-                                            <h4 className="font-semibold text-gray-900">{classData.className}</h4>
-                                            <p className="text-xs text-gray-500">{classData.studentCount} students</p>
+                                            <h4 className="font-semibold text-gray-900">{classData.className ?? '—'}</h4>
+                                            <p className="text-xs text-gray-500">{classData.count} markah</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 text-sm mt-3">
                                     <div className="bg-gray-50 rounded p-2">
-                                        <p className="text-xs text-gray-600">Avg GPA</p>
-                                        <p className="text-lg font-bold text-indigo-600">{classData.averageGPA}</p>
+                                        <p className="text-xs text-gray-600">Purata Markah</p>
+                                        <p className="text-lg font-bold text-indigo-600">{classData.average}</p>
                                     </div>
                                     <div className="bg-gray-50 rounded p-2">
-                                        <p className="text-xs text-gray-600">Pass Rate</p>
-                                        <p className="text-lg font-bold text-green-600">{classData.passRate}%</p>
+                                        <p className="text-xs text-gray-600">Markah</p>
+                                        <p className="text-lg font-bold text-gray-700">{classData.count}</p>
                                     </div>
                                 </div>
                             </motion.div>
@@ -337,34 +384,48 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 </div>
             </div>
 
-            {/* Predictive Analytics — every figure here is derived from the real
-                data already fetched above (classComparison + metrics.improvement),
-                not a fabricated placeholder. */}
+            {/* WHAT THIS PANEL USED TO SAY. It showed a "Projected GPA (at current
+                trend)" and an arrow comparing this term to the previous one. Neither
+                could be produced: no GPA exists on this scale, and no previous-term
+                figures are stored to compare against. It was a forecast with no inputs.
+                A school reading "↑ 3% vs. previous term" would reasonably believe
+                something had been measured. Nothing had.
+                What follows is only what the stored marks actually show. */}
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 sm:p-6 mt-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">🔮 Trend Insights</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">📊 Gambaran Keseluruhan</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-lg p-4">
-                        <p className="text-sm text-gray-600 mb-1">Projected GPA (at current trend)</p>
-                        <p className="text-2xl font-bold text-indigo-600">{projectedGPA.toFixed(1)}</p>
-                        <p className={`text-xs mt-1 ${metrics.improvement >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {metrics.improvement >= 0 ? '↑' : '↓'} {Math.abs(metrics.improvement)}% vs. previous term
+                        <p className="text-sm text-gray-600 mb-1">Purata Keseluruhan</p>
+                        <p className="text-2xl font-bold text-indigo-600">
+                            {metrics.overallAverage === null ? '—' : metrics.overallAverage}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            {metrics.marksCounted > 0
+                                ? `dikira daripada ${metrics.marksCounted} markah`
+                                : 'belum ada markah diterbitkan'}
                         </p>
                     </motion.div>
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.06 }} className="bg-white rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-1">
                             <AlertTriangle className="h-4 w-4 text-orange-500" />
-                            <p className="text-sm text-gray-600">At-Risk Classes</p>
+                            <p className="text-sm text-gray-600">Kelas Perlu Perhatian</p>
                         </div>
                         <p className="text-2xl font-bold text-orange-600">{atRiskClasses.length}</p>
-                        <p className="text-xs text-gray-500 mt-1">Pass rate under 60%</p>
+                        {/* 50% is the floor of a C on THIS school's scale — the line
+                            between a pass and a D, not a number I chose. */}
+                        <p className="text-xs text-gray-500 mt-1">purata bawah 50% (D atau E)</p>
                     </motion.div>
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.12 }} className="bg-white rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-1">
                             <Star className="h-4 w-4 text-green-500" />
-                            <p className="text-sm text-gray-600">Top-Performing Classes</p>
+                            <p className="text-sm text-gray-600">Kelas Terbaik</p>
                         </div>
-                        <p className="text-2xl font-bold text-green-600">{topClasses.length}</p>
-                        <p className="text-xs text-gray-500 mt-1">GPA 3.5+</p>
+                        <p className="text-2xl font-bold text-green-600">
+                            {topClasses[0]?.className ?? '—'}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                            {topClasses[0] ? `purata ${topClasses[0].average}` : 'belum ada data'}
+                        </p>
                     </motion.div>
                 </div>
             </div>

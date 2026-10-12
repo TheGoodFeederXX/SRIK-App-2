@@ -877,3 +877,47 @@ export function friendlyAssessmentError(message: string): string {
         return 'Kelas, subjek atau penggal itu tidak sah.';
     return message;
 }
+
+/* -------------------------------------------------------------------------
+ * Academic analytics
+ * ---------------------------------------------------------------------- */
+
+export interface AcademicAnalytics {
+    /** Marks per grade, from the school's own scale. */
+    gradeDistribution: { grade: string; count: number }[];
+    subjectPerformance: { subjectId: string; subject: string | null; average: number; count: number }[];
+    classComparison: { classId: string; className: string | null; average: number; count: number }[];
+    metrics: {
+        /**
+         * NULL when no marks have been published for the term — deliberately not 0.
+         * "Nobody passed" and "nothing marked yet" are different claims, and a screen
+         * showing 0% for an unmarked term tells the school something untrue.
+         */
+        passRate: number | null;
+        marksCounted: number;
+        topPerformer: string | null;
+        topPerformerAverage: number | null;
+        overallAverage: number | null;
+    };
+}
+
+/**
+ * School-wide academic figures for a term, computed by the database.
+ *
+ * The counting is done where the rows are, not in the browser: a pass rate built from a
+ * partial download is wrong in a way nobody can see (audit F28), and the grade scale has
+ * to be the same one the report card uses.
+ */
+export async function getAcademicAnalytics(
+    termId: string,
+    classId?: string | null,
+): Promise<AcademicAnalytics> {
+    const db = requireSupabase();
+    const { data, error } = await db.rpc('academic_analytics', {
+        p_academic_term_id: termId,
+        p_class_id: classId || null,
+    });
+
+    if (error) throw new Error(`Could not load academic analytics: ${error.message}`);
+    return data as unknown as AcademicAnalytics;
+}
