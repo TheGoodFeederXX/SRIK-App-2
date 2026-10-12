@@ -108,5 +108,40 @@
   },
   "pwa": {
     "installApp": "Pasang Aplikasi"
+  },
+  "comingSoon": {
+    "back": "Kembali",
+    "notAvailable": "Belum tersedia"
+  },
+  "attendanceRegister": {
+    "title": "Daftar Kehadiran",
+    "class": "Kelas",
+    "date": "Tarikh",
+    "noClasses": "Belum ada kelas disediakan",
+    "notSchoolDay": "Ini bukan hari persekolahan. Minggu persekolahan berjalan Ahad hingga Khamis.",
+    "loading": "Memuatkan senarai kelas...",
+    "loadFailed": "Tidak dapat memuatkan senarai kelas",
+    "nobodyInClass": "Tiada Murid Dalam Kelas Ini",
+    "nobodyInClassWhy": "Belum ada murid didaftarkan di sini, jadi tiada daftar untuk diambil.",
+    "everyoneMarked": "Semua sudah ditanda.",
+    "stillToMark": "{{count}} lagi perlu ditanda.",
+    "markRestPresent": "Tanda yang lain hadir",
+    "notRecorded": "belum direkod",
+    "recordedOfExpected": "{{recorded}}/{{expected}} direkod",
+    "saving": "Menyimpan...",
+    "saveRegisterWithCount": "Simpan daftar ({{count}})",
+    "registerIsSaved": "Daftar sudah disimpan",
+    "nobodyMarked": "Belum ada sesiapa ditanda.",
+    "couldNotSave": "Tidak dapat menyimpan daftar.",
+    "nothingChanged": "Tiada perubahan.",
+    "somethingWrong": "Sesuatu tidak kena. Sila cuba lagi.",
+    "present": "Hadir",
+    "sick": "Sakit",
+    "excused": "Berkecuali",
+    "late": "Lewat",
+    "absent": "Tidak Hadir",
+    "markFor": "{{mark}} untuk {{name}}",
+    "confirmUnmarked_one": "{{count}} murid belum ditanda. Dia akan kekal tidak direkod. Simpan juga?",
+    "confirmUnmarked_other": "{{count}} murid belum ditanda. Mereka akan kekal tidak direkod. Simpan juga?"
   }
 }

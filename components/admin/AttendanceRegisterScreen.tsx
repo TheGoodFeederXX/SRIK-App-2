@@ -27,6 +27,7 @@ import {
     CheckIcon, XIcon, ClockIcon, SaveIcon, UsersIcon, CalendarIcon,
 } from '../../constants';
 import CenteredLoader from '../ui/CenteredLoader';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { listClasses } from '../../src/lib/supabase/academics';
 import {
@@ -40,29 +41,32 @@ import {
 } from '../../src/lib/supabase/attendance';
 
 /** The marks a teacher can put against a child, in the order they appear. */
-const MARKS: { status: AttendanceStatus; label: string; short: string; icon: React.ReactNode; ring: string; fill: string }[] = [
+/** The marks a teacher can put against a child. `labelKey` is a translation key: the label
+ * used to be fixed English ("Present", "Sick"), so a Malay teacher read English words on the
+ * school's own register screen. */
+const MARKS: { status: AttendanceStatus; labelKey: string; short: string; icon: React.ReactNode; ring: string; fill: string }[] = [
     {
-        status: 'PRESENT', label: 'Present', short: 'H', ring: 'border-green-300',
+        status: 'PRESENT', labelKey: 'attendanceRegister.present', short: 'H', ring: 'border-green-300',
         fill: 'bg-green-500 text-white border-green-500',
         icon: <CheckIcon className="w-4 h-4" />,
     },
     {
-        status: 'SICK', label: 'Sick', short: 'S', ring: 'border-amber-300',
+        status: 'SICK', labelKey: 'attendanceRegister.sick', short: 'S', ring: 'border-amber-300',
         fill: 'bg-amber-500 text-white border-amber-500',
         icon: <span className="text-xs font-bold">S</span>,
     },
     {
-        status: 'EXCUSED', label: 'Excused', short: 'E', ring: 'border-sky-300',
+        status: 'EXCUSED', labelKey: 'attendanceRegister.excused', short: 'E', ring: 'border-sky-300',
         fill: 'bg-sky-500 text-white border-sky-500',
         icon: <span className="text-xs font-bold">E</span>,
     },
     {
-        status: 'LATE', label: 'Late', short: 'L', ring: 'border-orange-300',
+        status: 'LATE', labelKey: 'attendanceRegister.late', short: 'L', ring: 'border-orange-300',
         fill: 'bg-orange-500 text-white border-orange-500',
         icon: <ClockIcon className="w-4 h-4" />,
     },
     {
-        status: 'ABSENT', label: 'Absent', short: 'T', ring: 'border-red-300',
+        status: 'ABSENT', labelKey: 'attendanceRegister.absent', short: 'T', ring: 'border-red-300',
         fill: 'bg-red-500 text-white border-red-500',
         icon: <XIcon className="w-4 h-4" />,
     },
@@ -71,6 +75,7 @@ const MARKS: { status: AttendanceStatus; label: string; short: string; icon: Rea
 const AttendanceRegisterScreen: React.FC = () => {
     const queryClient = useQueryClient();
     const { user } = useAuth();
+    const { t } = useTranslation();
 
     const [date, setDate] = useState(() => todayInKualaLumpur());
     const [classId, setClassId] = useState<string>('');
@@ -140,7 +145,7 @@ const AttendanceRegisterScreen: React.FC = () => {
             .map(r => ({ studentId: r.studentId, status: marks[r.studentId], remark: r.remark }));
 
         if (entries.length === 0) {
-            toast.error('Nobody has been marked yet.');
+            toast.error(t('attendanceRegister.nobodyMarked'));
             return;
         }
 
@@ -149,8 +154,7 @@ const AttendanceRegisterScreen: React.FC = () => {
         // stop and say how many are missing.
         if (unmarkedCount > 0) {
             const proceed = window.confirm(
-                `${unmarkedCount} ${unmarkedCount === 1 ? 'student has' : 'students have'} no mark yet. ` +
-                `They will stay unrecorded. Save anyway?`
+                t('attendanceRegister.confirmUnmarked', { count: unmarkedCount }),
             );
             if (!proceed) return;
         }
@@ -159,19 +163,19 @@ const AttendanceRegisterScreen: React.FC = () => {
         try {
             const result = await recordRegister(classId, date, entries);
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save the register.');
+                toast.error(result.error ?? t('attendanceRegister.couldNotSave'));
                 return;
             }
 
             const parts: string[] = [];
-            if (result.recorded) parts.push(`${result.recorded} recorded`);
-            if (result.corrected) parts.push(`${result.corrected} corrected`);
-            toast.success(parts.length ? parts.join(', ') : 'Nothing changed.');
+            if (result.recorded) parts.push(t('attendanceRegister.recordedOfExpected', { recorded: result.recorded, expected: result.recorded }));
+            if (result.corrected) parts.push(t('attendanceRegister.recordedOfExpected', { recorded: result.corrected, expected: result.corrected }));
+            toast.success(parts.length ? parts.join(', ') : t('attendanceRegister.nothingChanged'));
 
             // Refresh so "corrected" flags and the stored state stay truthful.
             await queryClient.invalidateQueries({ queryKey: ['register', classId, date] });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('attendanceRegister.somethingWrong'));
         } finally {
             setIsSaving(false);
         }
@@ -185,7 +189,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-3 px-1">
                     <div className="flex-1">
                         <label htmlFor="registerClass" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Class
+                            {t('attendanceRegister.class')}
                         </label>
                         <select
                             id="registerClass"
@@ -193,7 +197,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                             onChange={e => setClassId(e.target.value)}
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                         >
-                            {classes.length === 0 && <option value="">No classes set up yet</option>}
+                            {classes.length === 0 && <option value="">{t('attendanceRegister.noClasses')}</option>}
                             {classes.map(c => (
                                 <option key={c.id} value={c.id}>{c.displayName}</option>
                             ))}
@@ -201,7 +205,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                     </div>
                     <div className="sm:w-48">
                         <label htmlFor="registerDate" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Date
+                            {t('attendanceRegister.date')}
                         </label>
                         <input
                             id="registerDate"
@@ -219,7 +223,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                 {!isSchoolDay(date) && (
                     <div className="mx-1 p-3 bg-amber-50 border border-amber-200 rounded-xl">
                         <p className="text-sm text-amber-800 font-medium">
-                            This is not a school day. The school week runs Sunday to Thursday.
+                            {t('attendanceRegister.notSchoolDay')}
                         </p>
                     </div>
                 )}
@@ -228,21 +232,21 @@ const AttendanceRegisterScreen: React.FC = () => {
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4">
                         <div className="flex items-center justify-between mb-3">
                             <h2 className="font-bold text-gray-800 text-sm">
-                                {selectedClass?.displayName ?? 'Class'} — {date}
+                                {selectedClass?.displayName ?? t('attendanceRegister.class')} — {date}
                             </h2>
                             <span className={`text-xs font-bold px-2 py-1 rounded-lg ${
                                 summary.notRecorded === 0 ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
                             }`}>
-                                {summary.recorded}/{summary.expected} recorded
+                                {t('attendanceRegister.recordedOfExpected', { recorded: summary.recorded, expected: summary.expected })}
                             </span>
                         </div>
                         <div className="grid grid-cols-5 gap-2 text-center">
                             {[
-                                ['Present', summary.present, 'text-green-600'],
-                                ['Sick', summary.sick, 'text-amber-600'],
-                                ['Excused', summary.excused, 'text-sky-600'],
-                                ['Late', summary.late, 'text-orange-600'],
-                                ['Absent', summary.absent, 'text-red-600'],
+                                [t('attendanceRegister.present'), summary.present, 'text-green-600'],
+                                [t('attendanceRegister.sick'), summary.sick, 'text-amber-600'],
+                                [t('attendanceRegister.excused'), summary.excused, 'text-sky-600'],
+                                [t('attendanceRegister.late'), summary.late, 'text-orange-600'],
+                                [t('attendanceRegister.absent'), summary.absent, 'text-red-600'],
                             ].map(([label, value, colour]) => (
                                 <div key={String(label)}>
                                     <p className={`text-lg font-bold ${colour}`}>{String(value)}</p>
@@ -254,18 +258,18 @@ const AttendanceRegisterScreen: React.FC = () => {
                 )}
 
                 {registerQuery.isLoading ? (
-                    <CenteredLoader fullScreen={false} message="Loading the class list..." className="h-40" />
+                    <CenteredLoader fullScreen={false} message={t('attendanceRegister.loading')} className="h-40" />
                 ) : registerQuery.isError ? (
                     <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                        <p className="font-bold text-gray-900 mb-1">Could not load the class list</p>
+                        <p className="font-bold text-gray-900 mb-1">{t('attendanceRegister.loadFailed')}</p>
                         <p className="text-sm text-gray-500">{String(registerQuery.error)}</p>
                     </div>
                 ) : rows.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
                         <UsersIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <h3 className="text-lg font-bold text-gray-800">Nobody In This Class</h3>
+                        <h3 className="text-lg font-bold text-gray-800">{t('attendanceRegister.nobodyInClass')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
-                            No students are enrolled here yet, so there is no register to take.
+                            {t('attendanceRegister.nobodyInClassWhy')}
                         </p>
                     </div>
                 ) : (
@@ -273,14 +277,14 @@ const AttendanceRegisterScreen: React.FC = () => {
                         <div className="flex items-center justify-between px-1">
                             <p className="text-xs font-medium text-gray-500">
                                 {unmarkedCount === 0
-                                    ? 'Everyone has a mark.'
-                                    : `${unmarkedCount} still to mark.`}
+                                    ? t('attendanceRegister.everyoneMarked')
+                                    : t('attendanceRegister.stillToMark', { count: unmarkedCount })}
                             </p>
                             <button
                                 onClick={markAllPresent}
                                 className="text-xs font-bold text-indigo-600 hover:text-indigo-700 px-2 py-1"
                             >
-                                Mark the rest present
+                                {t('attendanceRegister.markRestPresent')}
                             </button>
                         </div>
 
@@ -305,7 +309,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                                                 <p className="text-sm font-bold text-gray-800 truncate">{row.studentName}</p>
                                                 <p className="text-xs uppercase tracking-wider font-semibold text-gray-400">
                                                     {row.admissionNo}
-                                                    {!current && row.status === null && ' · not recorded'}
+                                                    {!current && row.status === null && ` · ${t('attendanceRegister.notRecorded')}`}
                                                 </p>
                                             </div>
                                         </div>
@@ -317,7 +321,7 @@ const AttendanceRegisterScreen: React.FC = () => {
                                                     <button
                                                         key={m.status}
                                                         onClick={() => setMark(row.studentId, m.status)}
-                                                        aria-label={`${m.label} for ${row.studentName}`}
+                                                        aria-label={t('attendanceRegister.markFor', { mark: t(m.labelKey), name: row.studentName })}
                                                         aria-pressed={selected}
                                                         className={`flex items-center justify-center gap-1 py-2 rounded-lg border font-bold text-sm transition-colors ${
                                                             selected ? m.fill : `bg-white text-gray-500 ${m.ring} hover:bg-gray-50`
@@ -350,10 +354,10 @@ const AttendanceRegisterScreen: React.FC = () => {
                         >
                             <SaveIcon className="w-4 h-4" />
                             {isSaving
-                                ? 'Saving...'
+                                ? t('attendanceRegister.saving')
                                 : isDirty
-                                    ? `Save register (${markedCount})`
-                                    : 'Register is saved'}
+                                    ? t('attendanceRegister.saveRegisterWithCount', { count: markedCount })
+                                    : t('attendanceRegister.registerIsSaved')}
                         </button>
                     </motion.div>
                 )}

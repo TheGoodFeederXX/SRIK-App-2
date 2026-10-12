@@ -12,6 +12,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router';
 import AttendanceRegisterScreen from '../AttendanceRegisterScreen';
+import i18n from '../../../lib/i18n';
 
 const { listClasses, getClassRegister, recordRegister } = vi.hoisted(() => ({
     listClasses: vi.fn(), getClassRegister: vi.fn(), recordRegister: vi.fn(),
@@ -221,3 +222,86 @@ describe('Attendance date handling — Malaysia', () => {
         expect(actual.isSchoolDay('2026-10-10')).toBe(false);
     });
 });
+
+describe('AttendanceRegisterScreen — the reader\'s language (MR default, EN selectable)', () => {
+    /**
+     * The school's rule: MALAY is the default, English is selectable. This screen was written
+     * entirely in English — every label, every mark, every message — so a Malay teacher read
+     * English on the school's own register. These tests change the language for real and assert
+     * what is on the screen, because a test that only checked the locale files would pass while
+     * the screen ignored them.
+     */
+    beforeEach(() => {
+        vi.clearAllMocks();
+        // `window.confirm` is only reset inside the first describe block, so without this
+        // the mock array carries calls over from an earlier test and `calls[0]` is not this
+        // test's call — the assertion then reads a message from a different language.
+        window.confirm = vi.fn(() => true);
+        toastError.mockClear();
+        toastSuccess.mockClear();
+    });
+
+    afterEach(async () => {
+        await i18n.changeLanguage('ms');
+    });
+
+    it('shows Malay by default, because that is the school\'s language', async () => {
+        await i18n.changeLanguage('ms');
+        listClasses.mockResolvedValue([CLS]);
+        getClassRegister.mockResolvedValue([row()]);
+        renderScreen();
+
+        await screen.findByText('Ahmad Zaki');
+        // The date label and the mark buttons must both be Malay.
+        expect(screen.getByText('Tarikh')).toBeTruthy();
+        expect(screen.getByLabelText('Hadir untuk Ahmad Zaki')).toBeTruthy();
+    });
+
+    it('shows the SAME screen in English once English is chosen', async () => {
+        await i18n.changeLanguage('en');
+        listClasses.mockResolvedValue([CLS]);
+        getClassRegister.mockResolvedValue([row()]);
+        renderScreen();
+
+        await screen.findByText('Ahmad Zaki');
+        // THE DEFECT: these used to read "Tarikh"/"Hadir" only because they were hard-coded
+        // English and the test happened to run in English.
+        expect(screen.getByText('Date')).toBeTruthy();
+        expect(screen.getByLabelText(/Present for Ahmad Zaki/)).toBeTruthy();
+        // And the Malay must be GONE, not merely joined by English.
+        expect(screen.queryAllByText('Tarikh')).toHaveLength(0);
+    });
+
+    it('translates the warning message, keeping singular and plural correct', async () => {
+        // The original English distinguished "1 student has" from "2 students have". Moving
+        // the text into a translation file must not flatten that — a warning that reads
+        // "1 students have" looks careless at the moment a teacher is being asked to confirm.
+        await i18n.changeLanguage('en');
+        listClasses.mockResolvedValue([CLS]);
+        getClassRegister.mockResolvedValue([row(), row({ studentId: 's2', studentName: 'Nur Aisyah', admissionNo: 'P3S2', enrollmentId: 'e2' })]);
+        recordRegister.mockResolvedValue({ success: true, recorded: 1, corrected: 0 });
+        renderScreen();
+
+        await screen.findByText('Ahmad Zaki');
+        fireEvent.click(screen.getByLabelText('Present for Ahmad Zaki'));
+        fireEvent.click(screen.getByText(/Save register/));
+        await waitFor(() => expect(window.confirm).toHaveBeenCalled());
+        // ONE unmarked student, so the singular form.
+        expect(String((window.confirm as any).mock.calls[0][0])).toMatch(/1 student has no mark/i);
+    });
+
+    it('keeps the Malay form grammatical for one child too', async () => {
+        await i18n.changeLanguage('ms');
+        listClasses.mockResolvedValue([CLS]);
+        getClassRegister.mockResolvedValue([row(), row({ studentId: 's2', studentName: 'Nur Aisyah', admissionNo: 'P3S2', enrollmentId: 'e2' })]);
+        recordRegister.mockResolvedValue({ success: true, recorded: 1, corrected: 0 });
+        renderScreen();
+
+        await screen.findByText('Ahmad Zaki');
+        fireEvent.click(screen.getByLabelText('Hadir untuk Ahmad Zaki'));
+        fireEvent.click(screen.getByText(/Simpan daftar/));
+        await waitFor(() => expect(window.confirm).toHaveBeenCalled());
+        expect(String((window.confirm as any).mock.calls[0][0])).toMatch(/murid belum ditanda/);
+    });
+});
+
