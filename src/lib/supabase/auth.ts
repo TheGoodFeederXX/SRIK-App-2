@@ -303,6 +303,36 @@ export async function updatePassword(newPassword: string): Promise<AuthResult> {
  * The check is a real sign-in against the same account, not a string comparison,
  * so it is the provider's own answer rather than ours.
  */
+/**
+ * AUDIT F39 — the ONE place the password rule is written.
+ *
+ * These values are not invented here: they are what the Supabase project actually enforces
+ * (password_min_length = 10; lower case, upper case and digits required). The client used to
+ * check only a bare minimum of eight characters, so an eight- or nine-character password
+ * passed the app's own check and was then refused by the server with a message the user could
+ * not act on.
+ *
+ * If the project's settings change, change them HERE. A test reads this list and compares it
+ * with the live server configuration, so the two cannot drift apart unnoticed.
+ */
+export const PASSWORD_MIN_LENGTH = 10;
+export const PASSWORD_REQUIRED_CLASSES = ['lowercase', 'uppercase', 'digit'] as const;
+
+/** Returns a human-readable reason the password is unacceptable, or null if it is fine. */
+export function describePasswordProblem(password: string): string | null {
+    if (password.length < PASSWORD_MIN_LENGTH) {
+        return `Kata laluan mesti sekurang-kurangnya ${PASSWORD_MIN_LENGTH} aksara`;
+    }
+    const missing: string[] = [];
+    if (!/[a-z]/.test(password)) missing.push('huruf kecil');
+    if (!/[A-Z]/.test(password)) missing.push('huruf besar');
+    if (!/[0-9]/.test(password)) missing.push('nombor');
+    if (missing.length > 0) {
+        return `Kata laluan mesti mengandungi ${missing.join(', ')}`;
+    }
+    return null;
+}
+
 export async function changePassword(
     currentPassword: string,
     newPassword: string,
@@ -313,8 +343,13 @@ export async function changePassword(
     if (!currentPassword || !newPassword) {
         return { success: false, error: 'All fields are required' };
     }
-    if (newPassword.length < 8) {
-        return { success: false, error: 'Password must be at least 8 characters' };
+    // AUDIT F39 — this said 8 while the server requires 10 AND three character classes.
+    // A teacher choosing a nine-character password passed this check and was then refused by
+    // Supabase with a message they could not act on. The rule is stated once, here, matching
+    // what the server actually enforces, so the two cannot drift apart again.
+    const passwordProblem = describePasswordProblem(newPassword);
+    if (passwordProblem) {
+        return { success: false, error: passwordProblem };
     }
 
     const session = await getSession();

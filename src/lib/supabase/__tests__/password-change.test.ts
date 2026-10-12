@@ -46,24 +46,34 @@ describe('changing a password', () => {
         );
     });
 
-    it('the minimum length agrees between the screen and the function', () => {
-        // A screen that accepts 6 characters while the function refuses anything
-        // under 8 tells the user "your new password is too short" AFTER they have
-        // typed the current one, which reads as a broken screen.
-        const auth = code(read('src/lib/supabase/auth.ts'));
-        const fn = auth.slice(
-            auth.indexOf('export async function changePassword'),
-            auth.indexOf('export async function changePassword') + 900,
-        );
-        const m = fn.match(/newPassword\.length < (\d+)/);
-        expect(m, 'the function has no minimum length').not.toBeNull();
-        const min = m![1];
+    it('the minimum length is stated ONCE and agrees with the server (audit F39)', () => {
+        // A screen that accepts 6 characters while the function refuses anything under 10
+        // tells the user "too short" AFTER they have typed the current one, which reads as a
+        // broken screen.
+        //
+        // THE OLD SHAPE OF THIS TEST pinned a hard-coded `/newPassword\.length < N/` inside
+        // `changePassword` and required every screen to repeat the same number. That is how
+        // the number DRIFTED: four screens, one function, and nothing tying them to the
+        // server. The check now lives once — `describePasswordProblem`, which reads
+        // `PASSWORD_MIN_LENGTH` — and every screen calls `changePassword` instead of
+        // re-implementing the rule. So this test asserts the SINGLE SOURCE rather than
+        // four copies of a magic number.
+        const raw = read('src/lib/supabase/auth.ts');
+        const auth = code(raw);
 
+        // The rule is defined once, at the server's real minimum of 10.
+        const defs = auth.match(/export const PASSWORD_MIN_LENGTH = (\d+);/g) ?? [];
+        expect(defs, 'PASSWORD_MIN_LENGTH must be defined exactly once').toHaveLength(1);
+        const min = defs[0].match(/(\d+)/)![1];
+        expect(min, 'the minimum must match the server, which requires 10').toBe('10');
+
+        // And no screen re-implements it. A second copy is how the two disagree again.
         for (const rel of SCREENS) {
             const src = code(read(rel));
-            expect(src, `${rel} uses a different minimum`).toMatch(
-                new RegExp(`newPassword\\.length < ${min}`),
+            expect(src, `${rel} re-implements the length rule`).not.toMatch(
+                /newPassword\.length\s*</,
             );
+            expect(src, `${rel} does not use changePassword`).toMatch(/changePassword\s*\(/);
         }
     });
 });

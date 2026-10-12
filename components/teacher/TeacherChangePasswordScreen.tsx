@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { LockIcon, EyeIcon, EyeOffIcon } from '../../constants';
-import { changePassword } from '../../src/lib/supabase/auth';
+import { changePassword, describePasswordProblem } from '../../src/lib/supabase/auth';
 
 const PasswordInput = ({ id, label, value, onChange }: { id: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
     const [showPassword, setShowPassword] = useState(false);
@@ -45,8 +45,13 @@ const TeacherChangePasswordScreen: React.FC = () => {
             return;
         }
 
-        if (newPassword.length < 8) {
-            toast.error("Password must be at least 8 characters.");
+        // AUDIT F39 — this used to hard-code eight characters while the server requires ten
+        // plus three character classes. A nine-character password was refused HERE, by the
+        // school's own screen, before the server ever saw it. The rule is asked for, not
+        // repeated, so the screen and the server cannot disagree.
+        const passwordProblem = describePasswordProblem(newPassword);
+        if (passwordProblem) {
+            toast.error(passwordProblem);
             return;
         }
 
