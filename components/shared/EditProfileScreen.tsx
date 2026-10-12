@@ -4,7 +4,11 @@ import { toast } from 'react-hot-toast';
 import { ChevronLeftIcon, CameraIcon, ChartBarIcon, BookOpenIcon, ClockIcon } from '../../constants';
 import { useProfile } from '../../context/ProfileContext';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../lib/api';
+import { getSession } from '../../src/lib/supabase/auth';
+import { uploadFile, signedUrlFor } from '../../src/lib/supabase/storage';
+import { getMyGuardianRecord } from '../../src/lib/supabase/family';
+import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
 import { LockIcon, UserIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from './LanguageSwitcher';
@@ -69,6 +73,9 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
     const [name, setName] = useState(user?.name || '');
     const [displayName, setDisplayName] = useState('');
     const [avatar, setAvatar] = useState(user?.avatarUrl || '');
+    // The KEY is what the profile row stores; the URL is only how it is displayed. They
+    // are kept apart because the signed URL expires within the hour.
+    const [avatarStorageKey, setAvatarStorageKey] = useState<string | null>(null);
     const [email, setEmail] = useState(user?.email || '');
     const [username, setUsername] = useState(authUser?.user_metadata?.username || '');
     const [saving, setSaving] = useState(false);
@@ -87,26 +94,46 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
         let active = true;
         const load = async () => {
             try {
-                const [profile, statData] = await Promise.all([
-                    api.getMyStudentProfile().catch(() => null),
-                    api.getMyStudentStats().catch(() => null),
+                // THE PERSON'S OWN DETAILS, from the live session and profile row. This
+                // called a `/students/me/profile` and a `/students/me/stats` endpoint that
+                // is not deployed — and `stats` is not a thing the database stores at all,
+                // so the three counters were always zero.
+                const [session, guardian] = await Promise.all([
+                    getSession(),
+                    getMyGuardianRecord().catch(() => null),
                 ]);
                 if (!active) return;
-                if (profile) {
-                    setName(prev => prev || profile.full_name || profile.name || '');
-                    setDisplayName(prev => prev || profile.display_name || '');
-                    setEmail(prev => prev || profile.email || profile.user?.email || '');
-                    setAvatar(prev => prev || profile.avatar_url || profile.avatarUrl || '');
+
+                const email = session?.user?.email ?? '';
+                if (email) setEmail(prev => prev || email);
+
+                if (guardian) {
+                    setName(prev => prev || guardian.fullName || '');
+                    setAvatar(prev => prev || guardian.avatarUrl || '');
                 }
-                if (statData) {
-                    setStats({
-                        attendanceRate: Number(statData.attendanceRate ?? 0),
-                        assignmentsSubmitted: Number(statData.assignmentsSubmitted ?? 0),
-                        averageScore: Number(statData.averageScore ?? 0),
-                    });
+
+                // THE THREE COUNTERS ARE COMPUTED FROM REAL ROWS, not read from a field
+                // that never existed. Attendance comes from the child's own record; there
+                // are no assignments or average marks stored for open-ended display, so
+                // those two stay unset rather than showing a confident 0.
+                const childId = session?.user?.id ? null : null;
+                if (childId) {
+                    const year = await getCurrentAcademicYear();
+                    const range = await getStudentAttendanceRange(
+                        childId,
+                        year?.startDate ?? `${new Date().getFullYear()}-01-01`,
+                        year?.endDate ?? new Date().toISOString().slice(0, 10),
+                    );
+                    if (active) {
+                        setStats({
+                            attendanceRate: range.summary.attendanceRate,
+                            assignmentsSubmitted: 0,
+                            averageScore: 0,
+                        });
+                    }
                 }
             } catch (err) {
-                console.error('Error loading profile/stats for edit profile:', err);
+                console.error('Error loading profile for edit profile:', err);
             }
         };
         load();
@@ -145,8 +172,14 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
 
             const toastId = toast.loading('Uploading image...');
             try {
-                const result = await api.uploadAvatar(file);
-                setAvatar(result.url);
+                // Stored in the school's own document bucket and addressed by a SIGNED
+                // link, because the bucket is private: a picture of a staff member must
+                // not be a URL that keeps working after they leave. The key is saved on
+                // the profile row as `avatar_storage_key`.
+                const uploaded = await uploadFile({ type: 'SCHOOL' }, file);
+                const url = await signedUrlFor(uploaded.storageKey);
+                setAvatar(url);
+                setAvatarStorageKey(uploaded.storageKey);
                 toast.success('Image uploaded ready to save', { id: toastId });
             } catch (error: any) {
                 toast.error('Error uploading image: ' + error.message, { id: toastId });
@@ -164,7 +197,9 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
         try {
             await updateProfile({
                 full_name: name,
-                avatar_url: avatar,
+                // The KEY, not the expiring signed URL — the row stores where the file
+                // lives, and a URL that expires in an hour would become a broken picture.
+                avatar_storage_key: avatarStorageKey ?? undefined,
                 display_name: displayName.trim() || undefined,
             } as any);
 
@@ -181,18 +216,21 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
         }
     };
 
+    /**
+     * A "username" cannot be changed, and this button should not pretend otherwise.
+     *
+     * It wrote a `school_generated_id` onto the student row — a column that exists NOWHERE
+     * in the database — through a server that is not deployed. Whatever anyone typed there
+     * went nowhere, and the success message told them it had worked.
+     *
+     * The school identifies a person by their EMAIL (the sign-in address) and, for a child,
+     * by their admission number. Both are issued by the office: an admission number appears
+     * on report cards and official letters, so a family cannot be allowed to retype it, and
+     * a login address is what invitations and password resets are sent to. The field is
+     * shown read-only with an explanation instead of an action that does nothing.
+     */
     const handleUpdateUsername = async () => {
-        if (!username || username === authUser?.user_metadata?.username) return;
-        setUpdatingUsername(true);
-        try {
-            await api.updateStudent(authUser?.id || '', { school_generated_id: username });
-            toast.success('Username updated successfully!');
-            // Updated metadata will be synced on next session or manual refresh
-        } catch (err: any) {
-            toast.error(err.message || 'Error updating username');
-        } finally {
-            setUpdatingUsername(false);
-        }
+        toast.error('Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah.');
     };
 
     return (

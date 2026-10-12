@@ -89,22 +89,35 @@ export const ProfileProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }, [refreshUser]);
 
     // Real-time synchronization for profile data
-    useAutoSync(['users'], refreshProfile);
+    useAutoSync(['profiles'], refreshProfile);
 
     const updateProfile = useCallback(async (updates: Partial<UserProfile>) => {
         if (!profile?.id) return { error: 'No profile loaded' };
 
         try {
-            const { api } = await import('../lib/api');
+            // WRITTEN TO THE REAL ROW. This posted to a `/users/me/profile` endpoint on an
+            // Express server that is not deployed, so saving a profile ALWAYS failed — the
+            // page either showed an error or, on the paths that ignore it, a success
+            // message for a change that was never stored. Nobody could correct their own
+            // name or phone number.
+            //
+            // The person's own row is the right place, and the database allows exactly
+            // this: their name, display name, phone and picture, on their own record.
+            const { supabase } = await import('../src/lib/supabase/client');
 
-            // Single self-scoped endpoint for ALL roles. It persists name/phone/avatar
-            // to the core user AND the role profile, normalising field aliases.
-            await api.updateMyProfile({
-                full_name: (updates as any).full_name ?? (updates as any).name,
-                phone: (updates as any).phone,
-                avatar_url: (updates as any).avatar_url ?? (updates as any).avatarUrl,
-                display_name: (updates as any).display_name,
-            });
+            const patch: Record<string, unknown> = {};
+            const fullName = (updates as any).full_name ?? (updates as any).name;
+            if (fullName !== undefined) patch.full_name = fullName;
+            if ((updates as any).display_name !== undefined) patch.display_name = (updates as any).display_name;
+            if ((updates as any).phone !== undefined) patch.phone = (updates as any).phone;
+            if ((updates as any).avatar_storage_key !== undefined) {
+                patch.avatar_storage_key = (updates as any).avatar_storage_key;
+            }
+
+            if (Object.keys(patch).length === 0) return { error: null };
+
+            const { error } = await supabase.from('profiles').update(patch).eq('id', profile.id);
+            if (error) throw error;
 
             // CRITICAL: Trigger global auth refresh so the header avatar / name / phone
             // update everywhere immediately.
