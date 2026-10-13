@@ -195,7 +195,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
                                text-sm font-bold hover:bg-slate-900"
                 >
                     <PrinterIcon className="w-4 h-4" />
-                    Cetak penyata
+                    {t('studentFeesScreen.printStatement')}
                 </button>
             </div>
 

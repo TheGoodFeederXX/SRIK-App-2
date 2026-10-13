@@ -177,6 +177,6 @@ describe('StudentFeesScreen', () => {
 
     it('offers a print button so a parent can be handed a statement', async () => {
         await selectStudent();
-        expect(screen.getByRole('button', { name: /Cetak penyata/ })).toBeTruthy();
+        expect(screen.getByRole('button', { name: /Print statement/ })).toBeTruthy();
     });
 });

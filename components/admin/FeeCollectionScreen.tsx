@@ -139,7 +139,7 @@ export default function FeeCollectionScreen() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                             <div className="bg-white rounded-2xl border border-slate-200 p-4">
                                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                                    Jumlah tertunggak
+                                    {t('feeCollectionScreen.outstandingTotal')}
                                 </p>
                                 <p className="text-2xl font-bold text-slate-800 mt-1">
                                     {outstandingQuery.isLoading ? '—' : formatMoney(totalOutstanding)}
@@ -177,13 +177,13 @@ export default function FeeCollectionScreen() {
                             <EmptyState
                                 icon={<CheckIcon className="w-8 h-8 text-emerald-500" />}
                                 title={t('feeCollectionScreen.tiadaTunggakan')}
-                                body="Semua pelajar sudah menyelesaikan bayaran mereka, atau yuran bulan ini belum dijana."
+                                body={t('feeCollectionScreen.allStudentsSettledOrNotGenerated')}
                             />
                         ) : !visible.length ? (
                             <EmptyState
                                 icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
                                 title={t('feeCollectionScreen.tiadaPelajarSepadan')}
-                                body="Cuba nama atau nombor pendaftaran yang lain."
+                                body={t('feeCollectionScreen.tryAnotherNameOrAdmissionNo')}
                             />
                         ) : (
                             <ul className="space-y-2">
@@ -401,13 +401,13 @@ function CollectPanel({
                         <EmptyState
                             icon={<CheckIcon className="w-8 h-8 text-emerald-500" />}
                             title={t('feeCollectionScreen.tiadaCajTertunggak')}
-                            body="Pelajar ini tidak mempunyai caj yang belum dibayar."
+                            body={t('feeCollectionScreen.noUnpaidChargesForStudent')}
                         />
                     ) : (
                         <>
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                    Jumlah diterima (RM)
+                                    {t('feeCollectionScreen.amountReceivedRM')}
                                 </label>
                                 <input
                                     type="number"
@@ -421,7 +421,8 @@ function CollectPanel({
                                                focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 />
                                 <p className="text-xs text-slate-500 mt-1">
-                                    Jumlah tertunggak: <strong>{formatMoney(student.outstanding)}</strong>
+                                    {t('feeCollectionScreen.outstandingLabel')}{' '}
+                                    <strong>{formatMoney(student.outstanding)}</strong>
                                 </p>
                             </div>
 
@@ -474,7 +475,7 @@ function CollectPanel({
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                        Cara bayaran
+                                        {t('feeCollectionScreen.paymentMethod')}
                                     </label>
                                     <select
                                         value={method}
@@ -584,7 +585,7 @@ function ChargeRow({
                 />
                 {over && (
                     <span className="text-xs font-semibold text-rose-600">
-                        Melebihi baki
+                        {t('feeCollectionScreen.exceedsBalance')}
                     </span>
                 )}
             </div>
@@ -610,7 +611,7 @@ function ReceiptsTab({
             <EmptyState
                 icon={<ReceiptIcon className="w-8 h-8 text-slate-400" />}
                 title={t('feeCollectionScreen.tiadaResitLagi')}
-                body="Resit akan muncul di sini sebaik bayaran pertama direkodkan."
+                body={t('feeCollectionScreen.receiptsAppearAfterFirstPayment')}
             />
         );
     }
@@ -711,7 +712,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                             className="text-xs font-semibold text-slate-500 hover:text-rose-600 inline-flex items-center gap-1"
                         >
                             <RotateCcwIcon className="w-3.5 h-3.5" />
-                            Batalkan bayaran ini
+                            {t('feeCollectionScreen.cancelThisPayment')}
                         </button>
                     ) : (
                         <div className="space-y-2">

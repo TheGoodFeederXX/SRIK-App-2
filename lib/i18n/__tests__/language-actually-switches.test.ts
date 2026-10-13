@@ -133,4 +133,25 @@ describe('bahasa benar-benar bertukar', () => {
         visit(en);
         expect(offenders, `pembaca bahasa Inggeris akan melihat Melayu:\n${offenders.join('\n')}`).toEqual([]);
     });
+    it('tiada teks Melayu antara tag, termasuk ayat berbilang baris', () => {
+        // The per-line scan above cannot see a sentence split across lines, nor text sitting
+        // inside a multi-line JSX block. This scan joins the whole file first, which is how
+        // "Cetak penyata" and "Jumlah tertunggak keluarga" were finally caught.
+        const offenders: string[] = [];
+        const files = [...walk(COMPONENTS), ...fs.readdirSync(ROOT).filter((f) => f.endsWith('.tsx')).map((f) => path.join(ROOT, f))];
+        for (const file of files) {
+            let src = fs.readFileSync(file, 'utf8');
+            src = src.replace(/\/\*[\s\S]*?\*\//g, '');
+            src = src.replace(/^\s*\/\/.*$/gm, '');
+            for (const m of src.matchAll(/>([^<>{}]{3,300}?)</g)) {
+                const text = m[1].trim();
+                // A `t(` inside the captured run means this is a translated expression split
+                // over lines, not literal text.
+                if (!text || text.includes('t(') || !MALAY.test(text)) continue;
+                const line = src.slice(0, m.index).split('\n').length;
+                offenders.push(`${path.relative(ROOT, file)}:${line} ${JSON.stringify(text.replace(/\s+/g, ' ').slice(0, 80))}`);
+            }
+        }
+        expect(offenders, `teks ini tidak akan bertukar bahasa:\n${offenders.join('\n')}`).toEqual([]);
+    });
 });

@@ -168,7 +168,7 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         const alloc = document.querySelector('li input[type="number"].w-28') as HTMLInputElement;
         fireEvent.change(alloc, { target: { value: '500' } });
         await waitFor(() => {
-            expect(screen.getByText('Melebihi baki')).toBeTruthy();
+            expect(screen.getByText('Exceeds the balance')).toBeTruthy();
         });
         const save = screen.getByRole('button', { name: 'Save payment' }) as HTMLButtonElement;
         expect(save.disabled).toBe(true);
@@ -260,7 +260,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         // There must be no way to delete a payment: the books are append-only.
         expect(screen.queryByText(/Delete/i)).toBeNull();
 
-        fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Cancel this payment/ }));
         fireEvent.click(await screen.findByRole('button', { name: 'Confirm cancellation' }));
 
         await waitFor(() => expect(toastError).toHaveBeenCalledWith('Please state the reason for cancellation.'));
@@ -272,7 +272,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         reversePayment.mockResolvedValue(undefined);
         await openReceipts();
 
-        fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Cancel this payment/ }));
         fireEvent.change(await screen.findByPlaceholderText('Reason for cancellation (required)'), {
             target: { value: 'Duit masuk akaun salah' },
         });
@@ -293,7 +293,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         expect(screen.getByText('Cancelled')).toBeTruthy();
         expect(screen.getByText(/Duit masuk akaun salah/)).toBeTruthy();
         // And it cannot be reversed a second time.
-        expect(screen.queryByRole('button', { name: /Batalkan bayaran ini/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Cancel this payment/ })).toBeNull();
     });
 
     it('says a reversal cannot be repeated when the server refuses', async () => {
@@ -301,7 +301,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         reversePayment.mockRejectedValue(new Error('That payment has already been reversed'));
         await openReceipts();
 
-        fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Cancel this payment/ }));
         fireEvent.change(await screen.findByPlaceholderText('Reason for cancellation (required)'), {
             target: { value: 'sekali lagi' },
         });

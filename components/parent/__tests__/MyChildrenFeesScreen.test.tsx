@@ -136,7 +136,7 @@ describe('MyChildrenFeesScreen', () => {
     it('offers a print button so a parent can keep a statement', async () => {
         renderScreen();
         await screen.findByText('Ahmad Zaki');
-        expect(screen.getByRole('button', { name: /Cetak penyata/ })).toBeTruthy();
+        expect(screen.getByRole('button', { name: /Print statement/ })).toBeTruthy();
     });
 
     it('says so plainly when the statement cannot be opened', async () => {

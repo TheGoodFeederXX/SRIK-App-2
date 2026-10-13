@@ -1505,11 +1505,13 @@
     "fees": "Fees",
     "cannotOpenStatementNow": "Sorry, the fee statement cannot be opened right now. Please try again shortly.",
     "accountNotConnected": "Your account is not yet connected to any child. Please contact the school office to connect it.",
-    "feePaymentsForChild": "Fee payments for your child. Payments are made at the school or through",
+    "feePaymentsForChild": "Your child’s fee payments, including cash and bank transfer.",
     "allFeesSettled": "All fees are settled. Thank you.",
     "paymentNotShownContactOffice": "If a payment has been made but is not shown yet, please contact the school",
     "noFeeChargesForChild": "There are no fee charges for this child yet.",
-    "resolved": "Resolved"
+    "resolved": "Resolved",
+    "printStatement": "Print statement",
+    "familyOutstandingTotal": "Family outstanding total"
   },
   "pTAMeetingScreen": {
     "ptameeting": "PTAMeeting"
@@ -1719,7 +1721,8 @@
     "name": "Name",
     "previewExplanation": "This is a preview — it shows what the report card would say if published now. It is not yet published and will not take effect until you publish it.",
     "print": "Print",
-    "year": "Year"
+    "year": "Year",
+    "reason": "Reason"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "School Policies"
@@ -3070,7 +3073,17 @@
     "paymentNotDeleted": "The payment will not be deleted. It is marked as cancelled so the original record remains.",
     "amountMatches": "Total matches: {{amount}}",
     "overAllocated": "Allocation exceeds the payment by {{amount}}.",
-    "remaining": "Remaining"
+    "remaining": "Remaining",
+    "allStudentsSettledOrNotGenerated": "Every student has settled, or this month’s fees have not been generated yet.",
+    "tryAnotherNameOrAdmissionNo": "Try another name or admission number.",
+    "noUnpaidChargesForStudent": "This student has no unpaid charges.",
+    "receiptsAppearAfterFirstPayment": "Receipts will appear here once the first payment is recorded.",
+    "outstandingTotal": "Outstanding total",
+    "amountReceivedRM": "Amount received (RM)",
+    "paymentMethod": "Payment method",
+    "exceedsBalance": "Exceeds the balance",
+    "cancelThisPayment": "Cancel this payment",
+    "outstandingLabel": "Outstanding:"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Fee Settings",
@@ -3093,10 +3106,14 @@
     "addFeeTypeThenGenerate": "Add a fee type first, then generate the monthly bills.",
     "inactive": "Inactive",
     "createThisMonthsCharges": "Create this month’s charges for every active student. Safe to press twice — the system",
-    "noMonthlyFeeInList": "There is no monthly fee in the list. Add a fee type with the frequency",
+    "noMonthlyFeeInList": "No monthly fee in the list. Add a \"Monthly\" fee first.",
     "noNewChargesMonthAlreadyGenerated": "No new charges — that month has already been generated.",
     "feeName": "Fee name",
-    "leaveBlankMeansUndecided": "Leaving it blank means the amount is not yet decided. A fee without an amount"
+    "leaveBlankMeansUndecided": "Leaving it blank means the amount is not yet decided. A fee without an amount",
+    "amountRM": "Amount (RM)",
+    "month": "Month",
+    "year": "Year",
+    "dueDateOptional": "Due date (optional)"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Default Currency",
@@ -3159,7 +3176,8 @@
     "noChildLinkedYet": "No child is linked yet. This parent will not see anything",
     "unlinkRemovesAccessImmediately": "Unlinking removes access immediately — with no delay.",
     "parentCannotChangeAnything": "A parent cannot change anything. They only read their children’s fees",
-    "recordGuardianFirst": "Record the guardian first. A login account is created after this."
+    "recordGuardianFirst": "Record the guardian first. A login account is created after this.",
+    "hasAccount": "Has account"
   },
   "healthLogScreen": {
     "logKesihatan": "Health Log"
@@ -3258,7 +3276,9 @@
     "enrolStudentToClassFirst": "Enrol a student into this class first before entering marks.",
     "marksSavedCount": "{{count}} saved",
     "marksClearedCount": "{{count}} cleared",
-    "noChanges": "No changes."
+    "noChanges": "No changes.",
+    "reason": "Reason",
+    "class": "Class"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Mark Student Exit"
@@ -3524,7 +3544,8 @@
     "viewChargesPaymentsBalance": "View a student’s charges, payments and balance. Can be printed for parents.",
     "charged": "Charged",
     "remaining": "Remaining",
-    "feeStatementFor": "Fee Statement — {{name}}"
+    "feeStatementFor": "Fee Statement — {{name}}",
+    "printStatement": "Print statement"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Student ID Card"

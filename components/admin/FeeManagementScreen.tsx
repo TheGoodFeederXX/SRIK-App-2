@@ -222,14 +222,13 @@ function GeneratePanel({
             {!monthlyFees.length ? (
                 <Notice tone="info">
                      {t('feeManagementScreen.noMonthlyFeeInList')}
-                    "Bulanan" dahulu.
                 </Notice>
             ) : (
                 <>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                Bulan
+                                {t('feeManagementScreen.month')}
                             </label>
                             <select
                                 value={month}
@@ -246,7 +245,7 @@ function GeneratePanel({
                         </div>
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                Tahun
+                                {t('feeManagementScreen.year')}
                             </label>
                             <input
                                 type="number"
@@ -260,7 +259,7 @@ function GeneratePanel({
                         </div>
                         <div>
                             <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                Tarikh akhir (pilihan)
+                                {t('feeManagementScreen.dueDateOptional')}
                             </label>
                             <input
                                 type="date"
@@ -395,7 +394,7 @@ function FeeForm({
                     </div>
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Jumlah (RM)
+                            {t('feeManagementScreen.amountRM')}
                         </label>
                         <input
                             type="number"

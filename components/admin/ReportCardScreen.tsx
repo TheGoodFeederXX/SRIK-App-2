@@ -568,7 +568,7 @@ export default function ReportCardScreen() {
                         value={reason}
                         onChange={e => setReason(e.target.value)}
                         placeholder={t('reportCardScreen.sebabPilihan')}
-                        aria-label="Sebab"
+                        aria-label={t('reportCardScreen.reason')}
                         className="flex-1 min-w-[10rem] text-sm p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                     />
 

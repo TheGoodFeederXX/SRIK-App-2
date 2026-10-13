@@ -156,7 +156,7 @@ export default function GuardianAccountsScreen() {
                                             <span className="inline-flex items-center gap-1 text-xs font-semibold
                                                              text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full">
                                                 <CheckIcon className="w-3 h-3" />
-                                                Ada akaun
+                                                {t('guardianAccountsScreen.hasAccount')}
                                             </span>
                                         ) : (
                                             <span className="inline-flex items-center gap-1 text-xs font-semibold

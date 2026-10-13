@@ -93,7 +93,7 @@ describe('GuardianAccountsScreen — the list', () => {
     it('says when a parent already has an account', async () => {
         listGuardians.mockResolvedValue([guardian({ has_login: true, email: 'bapa@srik.test' })]);
         renderScreen();
-        expect(await screen.findByText('Ada akaun')).toBeTruthy();
+        expect(await screen.findByText('Has account')).toBeTruthy();
     });
 
     it('says plainly when nobody is registered yet', async () => {

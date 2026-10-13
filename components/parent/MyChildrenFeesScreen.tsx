@@ -99,13 +99,12 @@ export default function MyChildrenFeesScreen() {
             <div className="no-print">
                 <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myChildrenFeesScreen.yuranAnakSaya')}</h1>
                 <p className="text-sm text-slate-500 mb-5">
-                     {t('myChildrenFeesScreen.feePaymentsForChild')}
-                    pindahan bank.
+                    {t('myChildrenFeesScreen.feePaymentsForChild')}
                 </p>
 
                 <div className="bg-white rounded-2xl border border-slate-200 p-5 mb-5">
                     <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                        Jumlah tertunggak keluarga
+                        {t('myChildrenFeesScreen.familyOutstandingTotal')}
                     </p>
                     <p
                         className={`text-3xl font-bold mt-1 ${
@@ -129,7 +128,7 @@ export default function MyChildrenFeesScreen() {
                                text-white text-sm font-bold hover:bg-slate-900 mb-5"
                 >
                     <PrinterIcon className="w-4 h-4" />
-                    Cetak penyata
+                    {t('myChildrenFeesScreen.printStatement')}
                 </button>
             </div>
 

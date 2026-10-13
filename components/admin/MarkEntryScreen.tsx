@@ -340,7 +340,7 @@ export default function MarkEntryScreen() {
 
                     <div>
                         <label htmlFor="mkClass" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Kelas
+                            {t('markEntryScreen.class')}
                         </label>
                         <select
                             id="mkClass"
@@ -582,7 +582,7 @@ export default function MarkEntryScreen() {
                         value={reason}
                         onChange={e => setReason(e.target.value)}
                         placeholder={t('markEntryScreen.sebabPilihanDisimpanDalamRekodAudit')}
-                        aria-label="Sebab"
+                        aria-label={t('markEntryScreen.reason')}
                         className="w-full text-sm p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                     />
                     <div className="flex gap-2">

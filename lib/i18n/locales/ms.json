@@ -1505,11 +1505,13 @@
     "fees": "Yuran",
     "cannotOpenStatementNow": "Maaf, penyata yuran tidak dapat dibuka sekarang. Sila cuba sebentar lagi.",
     "accountNotConnected": "Akaun anda belum disambungkan kepada mana-mana anak. Sila hubungi pejabat sekolah untuk menyambungkannya.",
-    "feePaymentsForChild": "Bayaran yuran untuk anak anda. Bayaran dibuat di sekolah atau melalui",
+    "feePaymentsForChild": "Bayaran yuran untuk anak anda, termasuk tunai dan pindahan bank.",
     "allFeesSettled": "Semua yuran sudah selesai. Terima kasih.",
     "paymentNotShownContactOffice": "Jika ada bayaran yang sudah dibuat tetapi belum dipaparkan, sila hubungi pejabat",
     "noFeeChargesForChild": "Belum ada caj yuran untuk anak ini.",
-    "resolved": "Selesai"
+    "resolved": "Selesai",
+    "printStatement": "Cetak penyata",
+    "familyOutstandingTotal": "Jumlah tertunggak keluarga"
   },
   "pTAMeetingScreen": {
     "ptameeting": "Mesyuarat PIBG"
@@ -1719,7 +1721,8 @@
     "year": "Tahun",
     "marks": "Markah",
     "previewExplanation": "Ini pratonton — menunjukkan apa yang kad laporan akan katakan jika diterbitkan sekarang. Ia belum diterbitkan dan tidak akan berkuat kuasa sehingga anda menerbitkannya.",
-    "print": "Cetak"
+    "print": "Cetak",
+    "reason": "Sebab"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "Dasar Sekolah"
@@ -3070,7 +3073,17 @@
     "paymentNotDeleted": "Bayaran tidak akan dipadam. Ia ditanda dibatalkan supaya rekod asal kekal.",
     "amountMatches": "Jumlah sepadan: {{amount}}",
     "overAllocated": "Agihan melebihi bayaran sebanyak {{amount}}.",
-    "remaining": "Baki"
+    "remaining": "Baki",
+    "allStudentsSettledOrNotGenerated": "Semua pelajar sudah menyelesaikan bayaran mereka, atau yuran bulan ini belum dijana.",
+    "tryAnotherNameOrAdmissionNo": "Cuba nama atau nombor pendaftaran yang lain.",
+    "noUnpaidChargesForStudent": "Pelajar ini tidak mempunyai caj yang belum dibayar.",
+    "receiptsAppearAfterFirstPayment": "Resit akan muncul di sini sebaik bayaran pertama direkodkan.",
+    "outstandingTotal": "Jumlah tertunggak",
+    "amountReceivedRM": "Jumlah diterima (RM)",
+    "paymentMethod": "Cara bayaran",
+    "exceedsBalance": "Melebihi baki",
+    "cancelThisPayment": "Batalkan bayaran ini",
+    "outstandingLabel": "Jumlah tertunggak:"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Tetapan Yuran",
@@ -3093,10 +3106,14 @@
     "addFeeTypeThenGenerate": "Tambah jenis yuran dahulu, kemudian jana bil bulanan.",
     "inactive": "Tidak aktif",
     "createThisMonthsCharges": "Cipta caj bulan ini untuk semua pelajar aktif. Selamat ditekan dua kali — sistem",
-    "noMonthlyFeeInList": "Tiada yuran bulanan dalam senarai. Tambah satu jenis yuran dengan kekerapan",
+    "noMonthlyFeeInList": "Tiada yuran bulanan dalam senarai. Tambah yuran \"Bulanan\" dahulu.",
     "noNewChargesMonthAlreadyGenerated": "Tiada caj baharu — bulan itu sudah dijana sebelum ini.",
     "feeName": "Nama yuran",
-    "leaveBlankMeansUndecided": "Biarkan kosong bermaksud jumlah belum diputuskan. Yuran tanpa jumlah"
+    "leaveBlankMeansUndecided": "Biarkan kosong bermaksud jumlah belum diputuskan. Yuran tanpa jumlah",
+    "amountRM": "Jumlah (RM)",
+    "month": "Bulan",
+    "year": "Tahun",
+    "dueDateOptional": "Tarikh akhir (pilihan)"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Mata Wang Lalai",
@@ -3159,7 +3176,8 @@
     "noChildLinkedYet": "Belum ada anak dipautkan. Ibu bapa ini tidak akan melihat apa-apa",
     "unlinkRemovesAccessImmediately": "Nyahpaut menolak akses serta-merta — tiada kelewatan.",
     "parentCannotChangeAnything": "Ibu bapa tidak boleh mengubah apa-apa. Mereka hanya membaca yuran anak",
-    "recordGuardianFirst": "Rekod penjaga dahulu. Akaun log masuk dicipta selepas ini."
+    "recordGuardianFirst": "Rekod penjaga dahulu. Akaun log masuk dicipta selepas ini.",
+    "hasAccount": "Ada akaun"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -3258,7 +3276,9 @@
     "enrolStudentToClassFirst": "Daftarkan pelajar ke kelas ini dahulu sebelum mengisi markah.",
     "marksSavedCount": "{{count}} disimpan",
     "marksClearedCount": "{{count}} dikosongkan",
-    "noChanges": "Tiada perubahan."
+    "noChanges": "Tiada perubahan.",
+    "reason": "Sebab",
+    "class": "Kelas"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Tanda Keluar Murid"
@@ -3524,7 +3544,8 @@
     "viewChargesPaymentsBalance": "Lihat caj, bayaran dan baki seorang pelajar. Boleh dicetak untuk ibu bapa.",
     "charged": "Dicaj",
     "remaining": "Baki",
-    "feeStatementFor": "Penyata Yuran — {{name}}"
+    "feeStatementFor": "Penyata Yuran — {{name}}",
+    "printStatement": "Cetak penyata"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Kad Pengenalan Murid"
