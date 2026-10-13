@@ -341,7 +341,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                                 onClick={() => setShowNameSheet(true)}
                                 className="px-4 py-1.5 bg-orange-500 text-white text-sm font-semibold rounded-full hover:bg-orange-600 transition-colors"
                             >
-                                Next
+                                {t('common.next')}
                             </button>
                         )}
                     </div>

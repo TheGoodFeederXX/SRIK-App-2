@@ -25,7 +25,22 @@
     "address": "Address",
     "selectLanguage": "Select language",
     "language": "Language",
-    "retry": "Try again"
+    "retry": "Try again",
+    "print": "Print",
+    "done": "Done",
+    "clearSearch": "Clear Search",
+    "backToDashboard": "Back to Dashboard",
+    "backToHome": "Back to Home",
+    "backToLogin": "Back to Login",
+    "searchByGuardianOrChild": "Search by guardian or child",
+    "closeWithOutcome": "Close with Outcome",
+    "submitNewReferral": "+ Submit New Referral",
+    "submitReferral": "Submit Referral",
+    "confirmDisable": "Confirm Disable",
+    "provideReasonForWithdrawing": "Please provide a reason for withdrawing",
+    "selectItemFromLeft": "Select an item from the left to view more information and settings.",
+    "noStudentRecordLinked": "We couldn't find a student record linked to your account.",
+    "noTeacherRecordLinked": "We couldn't find a teacher record linked to your account."
   },
   "auth": {
     "signIn": "Sign In",
@@ -1259,7 +1274,8 @@
     "collaborationForum": "Collaboration Forum",
     "messages": "Messages",
     "settings": "Settings",
-    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue.",
+    "contactAdminToSetUpProfile": "We couldn't find a teacher record linked to your account. Please contact the school administrator to set up your profile."
   },
   "teacherExamManagement": {
     "published": "Published",
@@ -1422,7 +1438,8 @@
     "addAnExtraLayerOfSecurity": "Add an extra layer of security.",
     "failedToStart2FASetup": "Failed to start 2FA setup.",
     "invalidCodePleaseTryAgain": "Invalid code — please try again.",
-    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Scan this QR code with an authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code it shows."
+    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Scan this QR code with an authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code it shows.",
+    "disable": "Disable"
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Loading attendance records...",
@@ -3323,7 +3340,8 @@
     "addGuardian": "Add guardian",
     "couldNotSaveTheGuardian": "Could not save the guardian.",
     "couldNotRemoveTheGuardian": "Could not remove the guardian.",
-    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
+    "searchPlaceholder": "Search by guardian or child's name, phone, or email"
   },
   "pastStudentsScreen": {
     "pastStudents": "Past Students"
@@ -3978,5 +3996,9 @@
     "submitWork": "Submit Work",
     "startQuiz": "Start Quiz",
     "viewLesson": "View Lesson"
+  },
+  "app": {
+    "dashboardError": "Dashboard Error",
+    "dashboardErrorMessage": "We encountered a critical error while loading the dashboard."
   }
 }

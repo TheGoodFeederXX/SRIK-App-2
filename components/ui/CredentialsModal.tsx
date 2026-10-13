@@ -335,7 +335,7 @@ Visit: https://your-school-app.com/login
             onClick={onClose}
             className="w-full sm:w-auto px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium text-sm"
           >
-            Close
+            {t('common.close')}
           </button>
         </div>
       </div>

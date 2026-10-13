@@ -169,7 +169,7 @@ const ClassGradebookScreen: React.FC<{
                         onClick={handleBack}
                         className="text-sm font-semibold text-purple-600 hover:text-purple-800"
                     >
-                        Back
+                        {t('common.back')}
                     </button>
                 </div>
                 {!classInfo && (

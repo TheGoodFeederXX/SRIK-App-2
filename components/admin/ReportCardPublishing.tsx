@@ -673,7 +673,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                     onClick={() => setSearchTerm('')}
                     className="px-8 py-3 bg-white border border-gray-200 text-gray-500 font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-gray-50 transition-all shadow-sm"
                   >
-                    Clear Search
+                    {t('common.clearSearch')}
                   </button>
                 )}
               </div>
@@ -690,7 +690,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                 <h3 className="text-lg font-black text-gray-900">{history.student.name}</h3>
                 <p className="text-xs text-gray-500">{selectedClassKey || ''} · {selectedTerm || ''} {selectedYear || ''}</p>
               </div>
-              <button onClick={() => setHistory(null)} className="p-2 rounded-full hover:bg-gray-100" aria-label="Close"><XCircleIcon className="w-5 h-5 text-gray-400" /></button>
+              <button onClick={() => setHistory(null)} className="p-2 rounded-full hover:bg-gray-100" aria-label={t('common.close')}><XCircleIcon className="w-5 h-5 text-gray-400" /></button>
             </div>
             <div className="overflow-y-auto p-5 space-y-3">
               {history.entries === null && <p className="text-sm text-gray-500">{t('reportCardPublishing.loading')}</p>}

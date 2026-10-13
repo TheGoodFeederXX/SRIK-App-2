@@ -44,7 +44,7 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
                         <ShareIcon className="w-4 h-4" /><span>Share</span>
                     </button>
                     <button onClick={handlePrint} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-purple-700 bg-purple-100 rounded-md hover:bg-purple-200">
-                        <DocumentTextIcon className="w-4 h-4" /><span>Print</span>
+                        <DocumentTextIcon className="w-4 h-4" /><span>{t('common.print')}</span>
                     </button>
                 </div>
             </div>

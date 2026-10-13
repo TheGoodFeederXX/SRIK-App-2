@@ -439,7 +439,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
                             className="flex items-center space-x-2 px-4 py-2 bg-green-500 text-white font-sans font-semibold rounded-lg shadow-md hover:bg-green-600 disabled:opacity-50"
                         >
                             <DocumentTextIcon className="w-5 h-5" />
-                            <span className="hidden sm:inline">Print</span>
+                            <span className="hidden sm:inline">{t('common.print')}</span>
                         </motion.button>
                     </div>
                 </div>

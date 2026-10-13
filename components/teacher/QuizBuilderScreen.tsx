@@ -235,7 +235,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                 </div>
                 <div className="flex space-x-3">
                     <button onClick={onClose} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg">
-                        Close
+                        {t('common.close')}
                     </button>
                     <button
                         onClick={() => handleSaveQuiz('draft')}

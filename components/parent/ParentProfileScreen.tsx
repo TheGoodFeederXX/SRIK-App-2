@@ -60,7 +60,7 @@ const SettingsPlaceholder: React.FC = () => {
     <SettingsIcon className="w-24 h-24 text-gray-300" />
     <h1 className="text-3xl font-light text-gray-600 mt-4">{t('parentProfileScreen.moreOptions')}</h1>
     <p className="mt-2 text-sm text-gray-500 max-w-sm">
-      Select an item from the left to view more information and settings.
+      {t('common.selectItemFromLeft')}
     </p>
   </div>
     );

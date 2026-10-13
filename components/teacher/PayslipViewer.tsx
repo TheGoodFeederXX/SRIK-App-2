@@ -291,7 +291,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                     onClick={() => setSelectedPayslip(null)}
                                     className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-medium border"
                                 >
-                                    Close
+                                    {t('common.close')}
                                 </button>
                                 <button
                                     onClick={() => printPayslip(selectedPayslip)}

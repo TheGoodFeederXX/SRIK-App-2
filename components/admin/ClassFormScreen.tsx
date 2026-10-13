@@ -255,7 +255,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
                         onClick={handleBack}
                         className="flex-1 py-3 px-4 bg-white border border-gray-300 text-gray-700 font-bold rounded-xl hover:bg-gray-100 transition-colors"
                     >
-                        Cancel
+                        {t('common.cancel')}
                     </motion.button>
                     <motion.button
                         whileHover={!isLoading ? { scale: 1.02 } : {}}

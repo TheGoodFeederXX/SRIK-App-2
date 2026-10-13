@@ -798,7 +798,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                     onClick={() => replaceView('dashboard', t('parentDashboard.parentDashboard'))}
                     className="mt-6 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors"
                 >
-                    Back to Home
+                    {t('common.backToHome')}
                 </button>
             </div>
         </div>
@@ -834,7 +834,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                         onClick={() => onLogout?.()}
                         className="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200"
                     >
-                        Back to Login
+                        {t('common.backToLogin')}
                     </button>
                 </div>
             </div>

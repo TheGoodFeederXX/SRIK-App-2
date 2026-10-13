@@ -131,7 +131,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
 
                         <button onClick={() => setOpen(null)}
                             className="w-full py-3 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-colors">
-                            Close
+                            {t('common.close')}
                         </button>
                     </div>
                 </div>

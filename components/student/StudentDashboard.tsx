@@ -860,14 +860,13 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('studentDashboard.studentProfileNotFound')}</h2>
                     <p className="text-gray-600 mb-6">
                         We couldn't find a student record linked to your account.
-                        Please contact the school administrator to set up your student profile.
                     </p>
                     <div className="flex flex-col gap-3 w-full">
                         <button
                             onClick={() => onLogout?.()}
                             className="w-full py-3 px-4 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
                         >
-                            Back to Login
+                            {t('common.backToLogin')}
                         </button>
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-100">

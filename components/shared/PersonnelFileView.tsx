@@ -544,7 +544,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                                 <div className="flex gap-2">
                                                     <button onClick={() => setRespondingTo(null)}
                                                         className="flex-1 py-2.5 border border-gray-200 rounded-xl text-gray-600 font-bold hover:bg-gray-50 transition-colors text-sm">
-                                                        Cancel
+                                                        {t('common.cancel')}
                                                     </button>
                                                     <button onClick={handleRespond} disabled={saving}
                                                         className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm disabled:opacity-60">
@@ -563,7 +563,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                     {canClose && (
                                         <button onClick={() => setClosingQuery(q)}
                                             className="w-full py-2.5 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors text-sm">
-                                            Close with Outcome
+                                            {t('common.closeWithOutcome')}
                                         </button>
                                     )}
                                 </div>
@@ -632,7 +632,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         </div>
                         <div className="flex space-x-3">
                             <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowAddRecord(false)}
-                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
+                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">{t('common.cancel')}</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleAddRecord} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">
                                 {saving ? t('personnelFileView.saving') : t('personnelFileView.addToFile')}
@@ -697,7 +697,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         </div>
                         <div className="flex space-x-3">
                             <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowIssueQuery(false)}
-                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
+                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">{t('common.cancel')}</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleIssueQuery} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-200 disabled:opacity-60">
                                 {saving ? t('personnelFileView.sending') : t('personnelFileView.sendQueryLetter')}
@@ -753,7 +753,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         </div>
                         <div className="flex space-x-3">
                             <motion.button whileTap={{ scale: 0.97 }} onClick={() => setClosingQuery(null)}
-                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
+                                className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">{t('common.cancel')}</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleCloseQuery} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-60">
                                 {saving ? t('personnelFileView.closing') : t('personnelFileView.closeQuery')}

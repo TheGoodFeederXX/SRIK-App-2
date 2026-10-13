@@ -1,5 +1,6 @@
 import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react';
 import { DashboardType } from './types';
+import i18n from './lib/i18n';
 import { OfflineIndicator } from './components/shared/OfflineIndicator';
 import { RealtimeStatusIndicator } from './components/shared/RealtimeStatusIndicator';
 import { AppearanceSync } from './components/shared/LiquidGlassControl';
@@ -79,8 +80,8 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
     if (this.state.hasError) {
       return (
         <PremiumErrorPage
-          title="Dashboard Error"
-          message="We encountered a critical error while loading the dashboard."
+          title={i18n.t('app.dashboardError')}
+          message={i18n.t('app.dashboardErrorMessage')}
           error={this.state.error}
           resetErrorBoundary={this.handleReset}
         />

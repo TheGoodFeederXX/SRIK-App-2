@@ -162,7 +162,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                                     className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                                     disabled={isActivating}
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </motion.button>
                                 <button
                                     onPointerDown={startHold}
@@ -202,7 +202,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                             Sent at {sentAlert.time}{sentAlert.id ? ` · Ref #${sentAlert.id.slice(0, 8)}` : ''}. Security and admin have been notified.
                         </p>
                     </div>
-                    <button onClick={() => setSentAlert(null)} className="text-red-100 hover:text-white font-bold text-sm">Close</button>
+                    <button onClick={() => setSentAlert(null)} className="text-red-100 hover:text-white font-bold text-sm">{t('common.close')}</button>
                 </motion.div>
             )}
             </AnimatePresence>

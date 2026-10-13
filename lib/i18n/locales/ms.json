@@ -25,7 +25,22 @@
     "address": "Alamat",
     "selectLanguage": "Pilih bahasa",
     "language": "Bahasa",
-    "retry": "Cuba lagi"
+    "retry": "Cuba lagi",
+    "print": "Cetak",
+    "done": "Selesai",
+    "clearSearch": "Kosongkan Carian",
+    "backToDashboard": "Kembali ke Papan Pemuka",
+    "backToHome": "Kembali ke Utama",
+    "backToLogin": "Kembali ke Log Masuk",
+    "searchByGuardianOrChild": "Cari mengikut penjaga atau anak",
+    "closeWithOutcome": "Tutup dengan Keputusan",
+    "submitNewReferral": "+ Hantar Rujukan Baharu",
+    "submitReferral": "Hantar Rujukan",
+    "confirmDisable": "Sahkan Nyahaktif",
+    "provideReasonForWithdrawing": "Sila berikan sebab untuk menarik diri",
+    "selectItemFromLeft": "Pilih item di sebelah kiri untuk melihat maklumat dan tetapan lanjut.",
+    "noStudentRecordLinked": "Kami tidak menemui rekod pelajar yang dipautkan kepada akaun anda.",
+    "noTeacherRecordLinked": "Kami tidak menemui rekod guru yang dipautkan kepada akaun anda."
   },
   "auth": {
     "signIn": "Log Masuk",
@@ -1259,7 +1274,8 @@
     "collaborationForum": "Forum Kerjasama",
     "messages": "Mesej",
     "settings": "Tetapan",
-    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara."
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara.",
+    "contactAdminToSetUpProfile": "Kami tidak menemui rekod guru yang dipautkan kepada akaun anda. Sila hubungi pentadbir sekolah untuk menyediakan profil anda."
   },
   "teacherExamManagement": {
     "published": "Diterbitkan",
@@ -1422,7 +1438,8 @@
     "addAnExtraLayerOfSecurity": "Tambah satu lapisan keselamatan lagi.",
     "failedToStart2FASetup": "Gagal memulakan persediaan 2FA.",
     "invalidCodePleaseTryAgain": "Kod tidak sah — sila cuba lagi.",
-    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Imbas kod QR ini dengan aplikasi pengesah (Google Authenticator, Authy, dll.), kemudian masukkan kod 6 digit yang dipaparkan."
+    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Imbas kod QR ini dengan aplikasi pengesah (Google Authenticator, Authy, dll.), kemudian masukkan kod 6 digit yang dipaparkan.",
+    "disable": "Nyahaktif"
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Memuatkan rekod kehadiran...",
@@ -3323,7 +3340,8 @@
     "addGuardian": "Tambah penjaga",
     "couldNotSaveTheGuardian": "Tidak dapat menyimpan penjaga.",
     "couldNotRemoveTheGuardian": "Tidak dapat membuang penjaga.",
-    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
+    "searchPlaceholder": "Cari mengikut nama penjaga atau anak, telefon, atau emel"
   },
   "pastStudentsScreen": {
     "pastStudents": "Murid Lepas"
@@ -3978,5 +3996,9 @@
     "submitWork": "Hantar Kerja",
     "startQuiz": "Mula Kuiz",
     "viewLesson": "Lihat Pelajaran"
+  },
+  "app": {
+    "dashboardError": "Ralat Papan Pemuka",
+    "dashboardErrorMessage": "Kami menghadapi ralat kritikal semasa memuatkan papan pemuka."
   }
 }

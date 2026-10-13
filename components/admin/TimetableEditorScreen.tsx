@@ -417,7 +417,7 @@ const SlotEditor: React.FC<{
                             {slot.period.startTime} - {slot.period.endTime} · {className}
                         </p>
                     </div>
-                    <button onClick={onClose} aria-label="Close" className="p-2 hover:bg-gray-100 rounded-lg">
+                    <button onClick={onClose} aria-label={t('common.close')} className="p-2 hover:bg-gray-100 rounded-lg">
                         <XIcon className="w-5 h-5 text-gray-500" />
                     </button>
                 </div>

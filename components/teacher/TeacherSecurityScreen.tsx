@@ -127,7 +127,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                             onClick={() => setDisabling(v => !v)}
                             className="text-sm font-semibold text-red-600 hover:text-red-700 disabled:opacity-50"
                         >
-                            Disable
+                            {t('teacherSecurityScreen.disable')}
                         </button>
                     ) : (
                         <button
@@ -161,7 +161,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                                 onClick={() => { setEnrolling(false); setEnableCode(''); setQrCodeUrl(''); setSecret(''); }}
                                 className="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50"
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 type="button"
@@ -193,7 +193,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                                 onClick={() => { setDisabling(false); setDisableCode(''); }}
                                 className="flex-1 py-2 rounded-lg border border-gray-200 text-gray-600 font-semibold hover:bg-gray-50"
                             >
-                                Cancel
+                                {t('common.cancel')}
                             </button>
                             <button
                                 type="button"
@@ -201,7 +201,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                                 onClick={confirmDisable}
                                 className="flex-1 py-2 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-700 disabled:opacity-50"
                             >
-                                Confirm Disable
+                                {t('common.confirmDisable')}
                             </button>
                         </div>
                     </div>

@@ -247,7 +247,7 @@ export const SubjectListScreen: React.FC = () => {
                                 </h2>
                                 <button
                                     onClick={closeForm}
-                                    aria-label="Close"
+                                    aria-label={t('common.close')}
                                     className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                 >
                                     <XIcon className="w-4 h-4" />
@@ -322,7 +322,7 @@ export const SubjectListScreen: React.FC = () => {
                                         onClick={closeForm}
                                         className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                     <button
                                         type="submit"

@@ -749,7 +749,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
             >
               <h3 className="font-bold text-gray-900 text-lg mb-1">{t('studentListScreen.withdrawStudent')}</h3>
               <p className="text-sm text-gray-500 mb-4">
-                Please provide a reason for withdrawing <strong className="text-gray-700">{pendingStatusChange.student.name}</strong>.
+                {t('common.provideReasonForWithdrawing')} <strong className="text-gray-700">{pendingStatusChange.student.name}</strong>.
               </p>
               <textarea
                 value={withdrawalReason}
@@ -765,7 +765,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
                   disabled={isChangingStatus}
                   className="flex-1 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors disabled:opacity-50"
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </motion.button>
                 <motion.button
                   whileTap={{ scale: 0.97 }}

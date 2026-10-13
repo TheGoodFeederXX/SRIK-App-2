@@ -417,7 +417,7 @@ const AuditTrailViewer: React.FC = () => {
                                 onClick={() => setShowDetailsModal(false)}
                                 className="mt-6 w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
                             >
-                                Close
+                                {t('common.close')}
                             </motion.button>
                         </div>
                     </motion.div>

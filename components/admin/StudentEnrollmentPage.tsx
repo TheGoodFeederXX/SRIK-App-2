@@ -196,7 +196,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                 </div>
                 <button onClick={handleBack} className="p-1 sm:p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-indigo-600 transition-colors shrink-0 flex items-center gap-1 font-medium text-sm">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-                    <span className="hidden sm:inline">Back</span>
+                    <span className="hidden sm:inline">{t('common.back')}</span>
                 </button>
             </div>
 
@@ -401,7 +401,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                     onClick={handleBack}
                     className="order-2 sm:order-1 px-6 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-100 transition-colors text-sm sm:text-base"
                 >
-                    Cancel
+                    {t('common.cancel')}
                 </motion.button>
                 <motion.button
                     whileHover={!loading ? { scale: 1.02 } : {}} whileTap={!loading ? { scale: 0.98 } : {}}

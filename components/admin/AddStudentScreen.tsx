@@ -480,7 +480,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     onClick={handleBack}
                     className="flex-1 py-3 text-gray-700 bg-gray-100 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
                 >
-                    Cancel
+                    {t('common.cancel')}
                 </button>
                 <button
                     type="submit"

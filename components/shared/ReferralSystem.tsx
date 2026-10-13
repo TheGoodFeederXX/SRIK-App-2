@@ -181,7 +181,7 @@ const ReferralSystem: React.FC = () => {
                     onClick={() => setShowForm(true)}
                     className="w-full px-6 py-4 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold text-lg mb-6 transition-colors"
                 >
-                    + Submit New Referral
+                    {t('common.submitNewReferral')}
                 </motion.button>
             )}
 
@@ -277,7 +277,7 @@ const ReferralSystem: React.FC = () => {
                             }}
                             className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </motion.button>
                         <motion.button
                             whileHover={{ scale: 1.02 }}
@@ -285,7 +285,7 @@ const ReferralSystem: React.FC = () => {
                             onClick={handleSubmitReferral}
                             className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
                         >
-                            Submit Referral
+                            {t('common.submitReferral')}
                         </motion.button>
                     </div>
                 </motion.div>

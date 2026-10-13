@@ -177,7 +177,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                         type="search"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        placeholder="Search by guardian or child's name, phone, or email"
+                        placeholder={t('parentListScreen.searchPlaceholder')}
                         aria-label={t('parentListScreen.searchGuardians')}
                         className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
@@ -302,7 +302,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                                 </h2>
                                 <button
                                     onClick={() => setIsFormOpen(false)}
-                                    aria-label="Close"
+                                    aria-label={t('common.close')}
                                     className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                 >
                                     <XIcon className="w-4 h-4" />
@@ -402,7 +402,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                                         onClick={() => setIsFormOpen(false)}
                                         className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                     <button
                                         type="submit"

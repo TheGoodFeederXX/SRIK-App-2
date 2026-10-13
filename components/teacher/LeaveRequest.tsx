@@ -350,7 +350,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         onClick={() => setShowForm(false)}
                                         className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                 </div>
                             </form>

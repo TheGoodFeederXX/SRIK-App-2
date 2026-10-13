@@ -25,7 +25,7 @@ const ExternalExamsPage: React.FC = () => {
                     className="flex items-center text-sm text-indigo-600 font-semibold hover:text-indigo-800 transition-colors"
                 >
                     <ChevronLeftIcon className="w-4 h-4 mr-1" />
-                    Back to Dashboard
+                    {t('common.backToDashboard')}
                 </button>
             </div>
 

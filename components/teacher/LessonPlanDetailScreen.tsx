@@ -324,7 +324,7 @@ export const AIActivitySuggester: React.FC<{ topic: string, subject: string, han
         <div className="p-4 bg-gray-50 h-full overflow-y-auto pb-24">
             {toastMessage && <Toast message={toastMessage} onClear={() => setToastMessage('')} />}
             <header className="mb-6">
-                <button onClick={handleBack} className="text-gray-500 mb-2 font-bold flex items-center">&larr; Back</button>
+                <button onClick={handleBack} className="text-gray-500 mb-2 font-bold flex items-center">{t('common.back')}</button>
                 <h2 className="text-2xl font-bold text-gray-800 font-outfit">{t('lessonPlanDetailScreen.aiActivityIdeas')}</h2>
                 <p className="text-sm text-gray-500">{t('lessonPlanDetailScreen.creativeIdeasFor')} <span className="text-purple-600 font-bold">{topic}</span></p>
             </header>

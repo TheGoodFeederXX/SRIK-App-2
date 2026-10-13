@@ -111,7 +111,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
              <div className="p-3 border-b border-gray-200 flex justify-end items-center space-x-2 flex-shrink-0 bg-white print:hidden">
                 <button onClick={handlePrint} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-purple-700 bg-purple-100 rounded-md hover:bg-purple-200">
                     <DocumentTextIcon className="w-4 h-4"/>
-                    <span>Print</span>
+                    <span>{t('common.print')}</span>
                 </button>
                 {onPublish && !isPublished && (
                     <button onClick={onPublish} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-green-700 bg-green-100 rounded-md hover:bg-green-200">

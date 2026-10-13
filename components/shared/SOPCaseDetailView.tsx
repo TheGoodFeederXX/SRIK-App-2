@@ -305,7 +305,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                             </div>
                         </div>
                         <div className="flex space-x-3">
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowDecision(false)} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setShowDecision(false)} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">{t('common.cancel')}</motion.button>
                             <motion.button whileHover={!savingDecision ? { scale: 1.02 } : {}} whileTap={!savingDecision ? { scale: 0.98 } : {}} onClick={handleRecordDecision} disabled={savingDecision}
                                 className="flex-grow py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">
                                 {savingDecision ? 'Saving...' : 'Record'}
@@ -354,7 +354,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                             )}
                         </div>
                         <div className="flex space-x-3">
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => { setShowLetter(false); setLetterDraft(''); }} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Close</motion.button>
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => { setShowLetter(false); setLetterDraft(''); }} className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">{t('common.close')}</motion.button>
                             {letterDraft && caseData.letters[0]?.status !== 'sent' && (
                                 <motion.button whileHover={recipientId ? { scale: 1.02 } : {}} whileTap={recipientId ? { scale: 0.98 } : {}} onClick={() => handleSendLetter(caseData.letters[0]?.id)} disabled={!recipientId}
                                     className="flex-grow flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">

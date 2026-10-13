@@ -230,7 +230,7 @@ const AdminStudentReportCardScreen: React.FC<AdminStudentReportCardScreenProps> 
                     </div>
                     <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handlePrint} className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-sans font-semibold rounded-lg shadow-md hover:bg-indigo-700">
                         <DocumentTextIcon className="w-5 h-5"/>
-                        <span>Print</span>
+                        <span>{t('common.print')}</span>
                     </motion.button>
                 </div>
 

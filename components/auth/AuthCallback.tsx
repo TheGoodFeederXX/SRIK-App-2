@@ -148,7 +148,7 @@ const AuthCallback: React.FC = () => {
                             onClick={() => window.location.href = '/'}
                             className="mt-6 w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-indigo-200"
                         >
-                            Back to Login
+                            {t('common.backToLogin')}
                         </button>
                     </div>
                 )}

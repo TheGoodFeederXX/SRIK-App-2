@@ -67,7 +67,7 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                             <h3 className="text-xl font-bold text-gray-900 mb-2">{t('emergencyBroadcastModal.broadcastSent')}</h3>
                             <p className="text-gray-500 mb-6">{t('emergencyBroadcastModal.yourEmergencyAlertHasBeenQueuedForDelivery')}</p>
                             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="px-6 py-2 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-black">
-                                Close
+                                {t('common.close')}
                             </motion.button>
                         </motion.div>
                     ) : (

@@ -364,7 +364,7 @@ const CommunityResourceDirectory: React.FC = () => {
                                     onClick={() => setSelectedResource(null)}
                                     className="flex-1 px-4 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
                                 >
-                                    Close
+                                    {t('common.close')}
                                 </motion.button>
                                 <motion.a
                                     whileHover={{ scale: 1.02 }}

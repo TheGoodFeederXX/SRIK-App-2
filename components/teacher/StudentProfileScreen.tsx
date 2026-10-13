@@ -243,7 +243,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                                 className="w-full h-20 p-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
                             />
                             <div className="flex justify-end space-x-2">
-                                <button onClick={() => setIsAddingNote(false)} className="px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
+                                <button onClick={() => setIsAddingNote(false)} className="px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">{t('common.cancel')}</button>
                                 <button onClick={handleAddNote} className="px-3 py-1 text-xs font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">{t('studentProfileScreen.save')}</button>
                             </div>
                         </div>

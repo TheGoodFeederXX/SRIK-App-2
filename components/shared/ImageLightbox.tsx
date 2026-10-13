@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 
 /**
@@ -22,6 +23,7 @@ export const onImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
 };
 
 export const ImageLightbox: React.FC = () => {
+    const { t } = useTranslation();
     const [image, setImage] = useState<{ src: string; alt: string } | null>(null);
 
     useEffect(() => {
@@ -49,7 +51,7 @@ export const ImageLightbox: React.FC = () => {
                     <button
                         type="button"
                         onClick={() => setImage(null)}
-                        aria-label="Close"
+                        aria-label={t('common.close')}
                         className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/15 text-white text-2xl leading-none flex items-center justify-center hover:bg-white/25"
                     >
                         ×

@@ -568,7 +568,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         className="flex flex-col items-center justify-center gap-1.5 py-4 bg-[#FFE5E5] text-red-600 rounded-2xl hover:bg-[#FFD9D9] transition-colors"
                     >
                         <Trash2 className="w-5 h-5" />
-                        <span className="text-xs font-bold">Delete</span>
+                        <span className="text-xs font-bold">{t('common.delete')}</span>
                     </motion.button>
                 </div>
             </div>

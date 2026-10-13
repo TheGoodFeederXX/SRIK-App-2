@@ -262,7 +262,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                 className="flex items-center gap-1 text-sm font-semibold text-gray-500 hover:text-gray-700 mb-1"
                             >
                                 <ArrowLeft className="w-4 h-4" />
-                                Back
+                                {t('common.back')}
                             </button>
                         )}
                         <h1 className="text-lg font-bold text-gray-800">
@@ -390,7 +390,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                 <h2 className="text-lg font-bold text-gray-900">{t('teacherAssignmentsScreen.assignDuties')}</h2>
                                 <button
                                     onClick={() => setShowAssign(false)}
-                                    aria-label="Close"
+                                    aria-label={t('common.close')}
                                     className="p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                 >
                                     <XIcon className="w-4 h-4" />
@@ -521,7 +521,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                         onClick={() => setShowAssign(false)}
                                         className="flex-1 py-3 bg-gray-100 text-gray-700 font-bold rounded-xl hover:bg-gray-200 transition-colors"
                                     >
-                                        Cancel
+                                        {t('common.cancel')}
                                     </button>
                                     <button
                                         type="submit"
