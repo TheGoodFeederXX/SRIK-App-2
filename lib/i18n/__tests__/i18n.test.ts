@@ -11,7 +11,13 @@
  * What is asserted now is the thing that was actually broken:
  *   - Malay is the default and the fallback.
  *   - a Malay bundle EXISTS (it did not, so choosing Malay changed nothing).
- *   - a Malay device gets Malay, and an English device gets English.
+ *   - Malay is where the app STARTS, whatever the device is set to.
+ *
+ * The last line changed after the owner reported the real-world symptom: Malay on
+ * a phone, English on a desktop, in the same app. The cause was the detection order
+ * consulting `navigator`, so each device was answered in its own language although
+ * nobody had chosen one. The device language is no longer consulted, and
+ * `app-opens-in-malay.test.ts` guards that.
  */
 import { describe, it, expect } from 'vitest';
 import { LANGUAGES, DEFAULT_LANGUAGE, isRtlLanguage } from '../languages';

@@ -1,6 +1,21 @@
 import '@testing-library/jest-dom';
 import { vi } from 'vitest';
-import './lib/i18n'; // initialize translations so t() resolves to English in tests
+import i18n, { ensureLanguageLoaded } from './lib/i18n';
+import en from './lib/i18n/locales/en.json';
+
+// The tests assert against English strings, so the suite pins English EXPLICITLY.
+// This line used to read "initialize translations so t() resolves to English in tests"
+// and relied on the detector reading `navigator`, which jsdom reports as en-US. That was
+// the app's own defect — the desktop opened in English because of the DEVICE language — so
+// the moment the app stopped consulting the device, the whole suite flipped to Malay and
+// 178 assertions failed at once. Pinning it here makes the test language a decision of the
+// tests, not a side effect of a bug.
+//
+// The bundle is added and the language set SYNCHRONOUSLY: `changeLanguage` is async, and a
+// promise nobody awaits would leave the first assertions reading Malay.
+i18n.addResourceBundle('en', 'translation', en, true, true);
+i18n.changeLanguage('en');
+void ensureLanguageLoaded;
 
 // Global API mock
 vi.mock('./lib/api', () => {

@@ -7,11 +7,13 @@
  * succeed — and if it failed, English stayed. A school whose first language is
  * Malay should never open in another language and wait.
  *
- * Language is detected from (1) an explicit choice in localStorage, (2) the
- * device's language, and applied app-wide. A device set to English still gets
- * English, because a relief teacher or an inspector may not read Malay — but a
- * device set to anything else gets Malay rather than a silent fall-through to
- * English, and a device set to Malay finally gets Malay.
+ * Language is a DELIBERATE choice, not a guess about the device. The app always
+ * opens in Malay — the school's own language — unless someone has explicitly
+ * chosen otherwise from Settings, and that choice is remembered on the device.
+ * The device's language is deliberately NOT consulted: it used to be, which meant
+ * a Malay phone opened in Malay while an English laptop opened in English, though
+ * nobody had chosen either. A relief teacher or inspector who needs English picks
+ * it from Settings; the app never decides for them based on where it happens to run.
  */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
@@ -72,10 +74,13 @@ i18n
     nonExplicitSupportedLngs: true,
     interpolation: { escapeValue: false }, // React already escapes
     detection: {
-      // An explicit choice wins, then the device's own language, then the page's
-      // `lang` attribute. `htmlTag` is last because `index.html` declares `ms` for
-      // the document, which would otherwise override a device set to English.
-      order: ['localStorage', 'navigator', 'htmlTag'],
+      // ONLY an explicit choice is honoured; the device's own language is NOT
+      // consulted. Malay is this school's language, so a computer set to English
+      // must still open in Malay, and the reader switches language deliberately
+      // from Settings. Consulting `navigator` was the defect: a Malay phone opened
+      // in Malay while an English laptop opened in English, though nobody had
+      // chosen either. `htmlTag` is dropped for the same reason.
+      order: ['localStorage'],
       lookupLocalStorage: STORAGE_KEY,
       caches: ['localStorage'],
     },

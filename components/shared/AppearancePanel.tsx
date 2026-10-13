@@ -8,6 +8,7 @@ import {
 } from './LiquidGlassControl';
 import { useAuth } from '../../context/AuthContext';
 import { ColorScheme, applyColorScheme, getColorScheme, PREFERENCES_APPLIED_EVENT, StatCardLayout, applyStatCardLayout, getStatCardLayout } from '../../lib/uiPreferences';
+import LanguageSwitcher from './LanguageSwitcher';
 
 /**
  * Appearance & Theme — one screen shared by every role (admin, teacher,
@@ -144,22 +145,22 @@ const AppearancePanel: React.FC = () => {
           {isDemo ? <MonitorSmartphone className="w-4 h-4 shrink-0" /> : <CloudCheck className="w-4 h-4 shrink-0" />}
           <span>
             {isDemo
-              ? 'Demo mode: your look is kept on this device only.'
+              ? t('appearancePanel.demoModeDeviceOnly')
               : savedAt
-                ? 'Saved to your account — it will follow you to any device you sign in on.'
-                : 'Choices are saved to your account and follow you to every device.'}
+                ? t('appearancePanel.savedToAccountFollows')
+                : t('appearancePanel.choicesSavedToAccount')}
           </span>
         </div>
 
         {/* Live preview */}
         <div className="mt-6">
-          <SectionTitle hint="updates as you choose">{t('appearancePanel.preview')}</SectionTitle>
+          <SectionTitle hint={t('appearancePanel.updatesAsYouChoose')}>{t('appearancePanel.preview')}</SectionTitle>
           <LivePreview a={a} roleLabel={roleLabel} />
         </div>
 
         {/* Theme mode */}
         <div className="mt-6">
-          <SectionTitle>Theme</SectionTitle>
+          <SectionTitle>{t('appearancePanel.theme')}</SectionTitle>
           <div className="grid grid-cols-2 gap-2">
             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => update({ mode: 'normal' })} className={modeBtn(a.mode === 'normal')} aria-pressed={a.mode === 'normal'}>
               <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Square className="w-4 h-4" /> Normal</span>
@@ -174,9 +175,9 @@ const AppearancePanel: React.FC = () => {
 
         {/* Colour scheme — html.dark + styles/dark-theme.css re-colour every screen */}
         <div className="mt-6">
-          <SectionTitle hint={scheme === 'system' ? 'follows your device' : undefined}>{t('appearancePanel.colourScheme')}</SectionTitle>
+          <SectionTitle hint={scheme === 'system' ? t('appearancePanel.followsYourDevice') : undefined}>{t('appearancePanel.colourScheme')}</SectionTitle>
           <div className="grid grid-cols-1 min-[360px]:grid-cols-3 gap-2">
-            {([['light', 'Light', Sun], ['dark', 'Dark', Moon], ['system', 'System', Laptop]] as const).map(([key, label, Icon]) => (
+            {([['light', t('appearancePanel.light'), Sun], ['dark', t('appearancePanel.dark'), Moon], ['system', t('appearancePanel.system'), Laptop]] as const).map(([key, label, Icon]) => (
               <motion.button key={key} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => chooseScheme(key)} aria-pressed={scheme === key}
                 className={`flex flex-row min-[360px]:flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-2 min-h-11 px-2 sm:px-3 py-3 rounded-2xl text-xs font-black uppercase tracking-wide border transition-all ${scheme === key ? 'bg-indigo-600 text-white border-indigo-600 shadow-lg shadow-indigo-900/20' : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'}`}>
                 <Icon className="w-4 h-4" /> {label}
@@ -185,9 +186,18 @@ const AppearancePanel: React.FC = () => {
           </div>
         </div>
 
+        {/* Language — the app opens in Malay; English is here for a relief teacher
+            or a visiting officer. This is the ONLY place a signed-in user can change
+            it, so without this section a desktop kept whatever language it started in
+            and the user had no way to switch. */}
+        <div className="mt-6">
+          <SectionTitle hint={t('appearancePanel.languageHint')}>{t('appearancePanel.language')}</SectionTitle>
+          <LanguageSwitcher variant="inline" persistToAccount />
+        </div>
+
         {/* Dashboard total cards — how many sit on a row, and how big they read */}
         <div className="mt-6">
-          <SectionTitle hint={cardLayout === 'compact' ? 'more per row' : 'roomier cards'}>{t('appearancePanel.dashboardCards')}</SectionTitle>
+          <SectionTitle hint={cardLayout === 'compact' ? t('appearancePanel.morePerRow') : t('appearancePanel.roomierCards')}>{t('appearancePanel.dashboardCards')}</SectionTitle>
           <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
             {([['comfortable', 'Comfortable', Rows2, 'Bigger cards, one or two per row'],
                ['compact', 'Compact', Grid2x2, 'Smaller cards, more per row']] as const).map(([key, label, Icon, hint]) => (
@@ -238,11 +248,11 @@ const AppearancePanel: React.FC = () => {
               ))}
             </div>
             <SectionTitle>{t('appearancePanel.fineTuning')}</SectionTitle>
-            <Slider label="Blur" min={0} max={40} step={1} value={a.glass.blur} display={`${a.glass.blur}px`} onChange={(v) => updateGlass({ blur: v })} />
-            <Slider label="Frost" min={0.3} max={0.95} step={0.01} value={a.glass.opacity} display={`${Math.round(a.glass.opacity * 100)}%`} onChange={(v) => updateGlass({ opacity: v })} />
-            <Slider label="Sheen" min={0} max={1} step={0.01} value={a.glass.sheen} display={`${Math.round(a.glass.sheen * 100)}%`} onChange={(v) => updateGlass({ sheen: v })} />
+            <Slider label={t('appearancePanel.blur')} min={0} max={40} step={1} value={a.glass.blur} display={`${a.glass.blur}px`} onChange={(v) => updateGlass({ blur: v })} />
+            <Slider label={t('appearancePanel.frost')} min={0.3} max={0.95} step={0.01} value={a.glass.opacity} display={`${Math.round(a.glass.opacity * 100)}%`} onChange={(v) => updateGlass({ opacity: v })} />
+            <Slider label={t('appearancePanel.sheen')} min={0} max={1} step={0.01} value={a.glass.sheen} display={`${Math.round(a.glass.sheen * 100)}%`} onChange={(v) => updateGlass({ sheen: v })} />
             <Slider label={t('appearancePanel.vividness')} min={100} max={220} step={5} value={a.glass.saturate} display={`${a.glass.saturate}%`} onChange={(v) => updateGlass({ saturate: v })} />
-            <Slider label="Depth" min={0} max={0.3} step={0.01} value={a.glass.shadow} display={`${Math.round(a.glass.shadow * 100)}%`} onChange={(v) => updateGlass({ shadow: v })} />
+            <Slider label={t('appearancePanel.depth')} min={0} max={0.3} step={0.01} value={a.glass.shadow} display={`${Math.round(a.glass.shadow * 100)}%`} onChange={(v) => updateGlass({ shadow: v })} />
           </motion.div>
         )}
         </AnimatePresence>
