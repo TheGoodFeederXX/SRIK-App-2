@@ -247,7 +247,7 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
         <div className="p-4 bg-gray-50 border-t border-gray-200">
           <motion.button whileTap={{ scale: 0.97 }} onClick={onLogout} className="w-full flex items-center justify-center space-x-2 py-3 px-4 font-medium text-red-500 bg-white rounded-lg shadow-sm border hover:bg-red-50">
             <LogoutIcon className="h-5 w-5" />
-            <span>Logout</span>
+            <span>{t('common.logout')}</span>
           </motion.button>
         </div>
       </div>

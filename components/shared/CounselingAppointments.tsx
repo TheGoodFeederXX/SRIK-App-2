@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { useProfile } from '../../context/ProfileContext';
 import { toast } from 'react-hot-toast';
@@ -17,6 +18,7 @@ interface Appointment {
 }
 
 const CounselingAppointments: React.FC = () => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [showBooking, setShowBooking] = useState(false);
@@ -178,7 +180,7 @@ const CounselingAppointments: React.FC = () => {
                                     onClick={() => setShowBooking(false)}
                                     className="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                                 <button
                                     type="submit"

@@ -556,7 +556,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                 <div className="flex flex-wrap gap-3 mt-6">
                                     <Button onClick={handleDownloadTranscript} className="flex-auto sm:flex-none min-h-[44px] !bg-white !text-orange-700 hover:!bg-orange-50 shadow-lg font-bold order-2 sm:order-1">
                                         <Download className="w-4 h-4 mr-2" />
-                                        Download Transcript
+                                        {t('studentProfileEnhanced.downloadTranscript')}
                                     </Button>
                                     <Button onClick={async () => {
                                         try {
@@ -567,7 +567,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         }
                                     }} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-1 sm:order-2">
                                         <Share2 className="w-4 h-4 mr-2" />
-                                        Share Profile
+                                        {t('studentProfileEnhanced.shareProfile')}
                                     </Button>
                                     {navigateTo && (
                                         <>
@@ -881,7 +881,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             onClick={() => document.getElementById('doc-upload')?.click()}
                                         >
                                             <Share2 className="w-4 h-4 mr-2" />
-                                            Upload New
+                                            {t('studentProfileEnhanced.uploadNew')}
                                         </Button>
                                     </div>
                                 </CardHeader>

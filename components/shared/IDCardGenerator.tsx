@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Student, Teacher } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -12,6 +13,7 @@ interface IDCardGeneratorProps {
 }
 
 const IDCardGenerator: React.FC<IDCardGeneratorProps> = ({ user, userType }) => {
+    const { t } = useTranslation();
     const cardRef = useRef<HTMLDivElement>(null);
     const { currentSchool } = useAuth();
 
@@ -281,7 +283,7 @@ const IDCardGenerator: React.FC<IDCardGeneratorProps> = ({ user, userType }) => 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 relative z-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                 </svg>
-                <span className="relative z-10 uppercase tracking-widest text-sm">Download Official ID (PDF)</span>
+                <span className="relative z-10 uppercase tracking-widest text-sm">{t('common.downloadOfficialIdPdf')}</span>
             </button>
 
             <p className="text-xs text-gray-400 font-medium uppercase tracking-[0.2em]">

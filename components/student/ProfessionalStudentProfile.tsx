@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { User, Mail, Phone, MapPin, Calendar, Award, TrendingUp, BookOpen, Download, FileText, Users } from 'lucide-react';
 import { api } from '../../lib/api';
@@ -8,6 +9,7 @@ interface StudentProfileProps {
 }
 
 export default function ProfessionalStudentProfile({ studentId }: StudentProfileProps) {
+    const { t } = useTranslation();
     const [student, setStudent] = useState<any>(null);
     const [loading, setLoading] = useState(true);
 
@@ -65,9 +67,9 @@ export default function ProfessionalStudentProfile({ studentId }: StudentProfile
                 <div className="max-w-7xl mx-auto">
                     {/* Breadcrumb */}
                     <div className="flex items-center text-white/80 text-sm mb-8">
-                        <span className="hover:text-white cursor-pointer">Dashboard</span>
+                        <span className="hover:text-white cursor-pointer">{t('common.dashboard')}</span>
                         <span className="mx-2">/</span>
-                        <span className="text-white font-medium">My Profile</span>
+                        <span className="text-white font-medium">{t('common.myProfile')}</span>
                     </div>
 
                     {/* Profile Header */}
@@ -105,7 +107,7 @@ export default function ProfessionalStudentProfile({ studentId }: StudentProfile
                                 <Download className="w-5 h-5" />
                             </button>
                             <button className="px-6 py-3 bg-white text-indigo-600 rounded-lg font-semibold hover:shadow-xl transition-all">
-                                Edit Profile
+                                {t('common.editProfile')}
                             </button>
                         </div>
                     </div>
@@ -248,6 +250,7 @@ export default function ProfessionalStudentProfile({ studentId }: StudentProfile
 
 // Stat Card Component
 function StatCard({ icon, label, value, color, trend, badge }: any) {
+    const { t } = useTranslation();
     return (
         <div className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-lg transition-shadow">
             <div className="flex items-center justify-between mb-4">

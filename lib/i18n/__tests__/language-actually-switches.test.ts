@@ -26,7 +26,11 @@ const COMPONENTS = path.join(ROOT, 'components');
 
 /** Malay function words and everyday nouns. A narrow list is what let "Kelas" through. */
 const MALAY =
-    /\b(yang|tidak|belum|sudah|dengan|untuk|adalah|dari|dalam|pada|akan|boleh|sila|kepada|oleh|atau|jika|mana|sebab|murid|pelajar|guru|ibu|bapa|sekolah|kelas|markah|yuran|bayaran|penjaga|anak|ini|itu|juga|hanya|masih|telah|selepas|semua|hari|bulan|tahun|nama|jumlah|baki|tarikh|baru|atas|bawah|sini|sana|jangan|mesti|harus|perlu|dapat|mahu|ada|tiada|cetak|terbitkan|sunting|padam|simpan|tutup|buka|hantar|cari|tambah|ubah|lihat|penyata|kad|penggal)\b/i;
+    /\b(yang|tidak|belum|sudah|dengan|untuk|adalah|dari|dalam|pada|akan|boleh|sila|kepada|oleh|atau|jika|mana|sebab|murid|pelajar|guru|ibu|bapa|sekolah|kelas|markah|yuran|bayaran|penjaga|anak|ini|itu|juga|hanya|masih|telah|selepas|semua|hari|bulan|tahun|nama|jumlah|baki|tarikh|baru|atas|bawah|sini|sana|jangan|mesti|harus|perlu|dapat|mahu|ada|tiada|cetak|terbitkan|sunting|padam|simpan|tutup|buka|batal|kembali|hantar|cari|tambah|ubah|lihat|penyata|kad|penggal|masukkan|pilih|hubungi|mohon|setiap|keputusan|sandi|akaun|daftar|muat|kongsi|surat|soalan|catatan|jadual|penuh|keluar)\b/i;
+
+/** Obvious English UI words. If one appears as bare JSX text it is frozen for a Malay reader. */
+const ENGLISH_UI =
+    /\b(Cancel|Close|Print|Back|Done|Next|Submit|Delete|Disable|Confirm|Save|Search|Select|Apply|Reset|Update|Logout|Login|Referral|Outcome|Clear|Remove|Add|Edit|View|Open|Send|Upload|Download|Dashboard|Error|Warning|Success|Settings|Profile|Pricing|Transcript|Letter|Entry|Tasks|Timetable|Question Bank|Announcement)\b/;
 
 /** Strip comments and every t() call, so only text that renders verbatim is left. */
 function displayedText(line: string): string {
@@ -76,8 +80,12 @@ describe('bahasa benar-benar bertukar', () => {
                 if (/\bt\s*\(/.test(raw)) stripped = stripped.replace(/["'][^"']*["']/g, '');
                 for (const m of stripped.matchAll(/>([^<>]{2,200})</g)) {
                     const text = m[1].trim();
-                    if (!text || !MALAY.test(text)) continue;
+                    if (!text || (!MALAY.test(text) && !ENGLISH_UI.test(text))) continue;
                     if (/^[a-z-]+$/.test(text)) continue;
+                    // Inside an SVG path or a JS expression, not display text.
+                    if (/^(const|let|var|return|\)|\};)/.test(text) || /^[.);\]}]+/.test(text)) continue;
+                    // Inside an SVG path or a raw JS fragment, not display text.
+                    if (/^<|^\/>|\);|^\}\)|d="/.test(text)) continue;
                     offenders.push(`${path.relative(ROOT, file)}:${i + 1} ${JSON.stringify(text.slice(0, 80))}`);
                 }
             });
@@ -147,7 +155,9 @@ describe('bahasa benar-benar bertukar', () => {
                 const text = m[1].trim();
                 // A `t(` inside the captured run means this is a translated expression split
                 // over lines, not literal text.
-                if (!text || text.includes('t(') || !MALAY.test(text)) continue;
+                if (!text || text.includes('t(') || text.includes('i18n.t(') || (!MALAY.test(text) && !ENGLISH_UI.test(text))) continue;
+                // Code fragments and SVG geometry, not display text.
+                if (/^[)\];}]/.test(text) || /^<|\/>|^d="/.test(text) || text.includes('=>')) continue;
                 const line = src.slice(0, m.index).split('\n').length;
                 offenders.push(`${path.relative(ROOT, file)}:${line} ${JSON.stringify(text.replace(/\s+/g, ' ').slice(0, 80))}`);
             }

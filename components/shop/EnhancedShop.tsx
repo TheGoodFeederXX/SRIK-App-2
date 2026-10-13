@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { EnhancedStoreProduct, ShoppingCartItem, StoreOrderFull } from '../../types-additional';
 import { toast } from 'react-hot-toast';
@@ -6,6 +7,7 @@ import { ShoppingCartIcon } from '../../constants';
 import { formatMoney } from '../../src/lib/supabase/finance';
 
 const EnhancedShop: React.FC = () => {
+    const { t } = useTranslation();
     const [products, setProducts] = useState<EnhancedStoreProduct[]>([]);
     const [cart, setCart] = useState<ShoppingCartItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -201,7 +203,7 @@ const EnhancedShop: React.FC = () => {
                                             onClick={() => addToCart(product.id)}
                                             className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
                                         >
-                                            Add to Cart
+                                            {t('common.addToCart')}
                                         </button>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-2">Stock: {product.stock}</p>
@@ -236,7 +238,7 @@ const EnhancedShop: React.FC = () => {
                                                 onClick={() => removeFromCart(item.id)}
                                                 className="text-red-500 hover:text-red-700"
                                             >
-                                                Remove
+                                                {t('common.remove')}
                                             </button>
                                         </div>
                                     </div>

@@ -165,7 +165,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                         className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all shrink-0"
                     >
                         <PlusIcon className="w-4 h-4" />
-                        Add Guardian
+                        {t('parentListScreen.addGuardian')}
                     </button>
                 </div>
 
@@ -259,7 +259,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                                     </div>
                                 ) : (
                                     <p className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-400 italic">
-                                        Not linked to any student yet. Add them from the student's record.
+                                        {t('parentListScreen.notLinkedYetHint')}
                                     </p>
                                 )}
                             </motion.div>

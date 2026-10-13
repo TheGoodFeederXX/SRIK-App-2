@@ -589,7 +589,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
     const renderContent = () => {
     const { t } = useTranslation();
         if (isInitializing) return <DashboardSkeletonLoader type="overview" />;
-        if (!ComponentToRender) return <div className="p-8 text-center">View Not Found: {view}</div>;
+        if (!ComponentToRender) return <div className="p-8 text-center">{t('common.viewNotFound')} {view}</div>;
 
         if (view === 'notifications') return (
             <Suspense fallback={<DashboardSkeletonLoader type="list" />}>

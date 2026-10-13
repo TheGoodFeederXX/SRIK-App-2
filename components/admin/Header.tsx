@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Bell, Search, LogOut, ChevronLeft, Menu } from 'lucide-react';
 
 interface HeaderProps {
@@ -24,6 +25,7 @@ export const Header: React.FC<HeaderProps> = ({
     onSearchClick,
     onMenuClick
 }) => {
+    const { t } = useTranslation();
     return (
         <header className={`${bgColor} text-white shadow-lg z-40 transition-colors duration-300`}>
             <div className="flex items-center justify-between px-4 py-3 lg:px-8">
@@ -85,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({
                             className="hidden sm:flex items-center space-x-2 px-3 py-1.5 bg-white/10 hover:bg-red-500/20 text-xs font-semibold rounded-lg transition-all border border-transparent hover:border-red-400/30"
                         >
                             <LogOut className="w-3.5 h-3.5" />
-                            <span>Logout</span>
+                            <span>{t('common.logout')}</span>
                         </button>
                     </div>
                 </div>

@@ -827,8 +827,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                     </div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('parentDashboard.parentProfileNotFound')}</h2>
                     <p className="text-gray-600 mb-6">
-                        We couldn't find a parent record linked to your account.
-                        Please contact the school administrator to link your account to your children.
+                        {t('parentDashboard.contactAdminToSetUpProfile')}
                     </p>
                     <button
                         onClick={() => onLogout?.()}

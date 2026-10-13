@@ -52,7 +52,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, featureNam
                         onClick={onClose}
                         className="w-full bg-gradient-to-r from-orange-500 to-rose-500 text-white font-bold py-4 rounded-2xl shadow-lg hover:shadow-orange-200 hover:-translate-y-0.5 transition-all active:scale-95 mb-4"
                     >
-                        View Pricing Plans
+                        {t('premiumModal.viewPricingPlans')}
                     </button>
                     <button 
                         onClick={onClose}

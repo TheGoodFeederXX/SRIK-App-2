@@ -117,7 +117,7 @@ const AssessmentDisplay: React.FC<{ assessment: GeneratedAssessment, subject: st
                 onClick={() => navigateTo('assignmentView', `${t('lessonPlanDetailScreen.assignment')}: ${assessment.type}`, { assessment, subject, className })}
                 className="w-full text-center py-2 px-4 bg-purple-100 text-purple-700 font-semibold rounded-lg hover:bg-purple-200 transition-colors"
             >
-                View as Assignment
+                {t('lessonPlanDetailScreen.viewAsAssignment')}
             </button>
         </div>
     </div>

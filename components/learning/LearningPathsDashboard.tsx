@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { LearningPathFull, StudentLearningPath, ModuleProgress } from '../../types-additional';
 import { toast } from 'react-hot-toast';
@@ -11,6 +12,7 @@ interface LearningPathsDashboardProps {
 }
 
 const LearningPathsDashboard: React.FC<LearningPathsDashboardProps> = ({ studentId, isTeacher, teacherId }) => {
+    const { t } = useTranslation();
     const [paths, setPaths] = useState<LearningPathFull[]>([]);
     const [studentPaths, setStudentPaths] = useState<StudentLearningPath[]>([]);
     const [selectedPath, setSelectedPath] = useState<StudentLearningPath | null>(null);
@@ -182,7 +184,7 @@ const LearningPathsDashboard: React.FC<LearningPathsDashboardProps> = ({ student
                             }}
                             className="text-indigo-600 hover:text-indigo-800 mb-2"
                         >
-                            ← Back to Paths
+                            {t('common.backToPaths')}
                         </button>
                         <h2 className="text-2xl font-bold text-gray-800">{selectedPath.path?.name}</h2>
                         <p className="text-gray-600">{selectedPath.path?.description}</p>

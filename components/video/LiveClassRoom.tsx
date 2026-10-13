@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { JITSI_DOMAIN, getVideoProvider } from '../../lib/videoConfig';
 import DailyClassRoom from './DailyClassRoom';
@@ -45,6 +46,7 @@ const loadJitsiExternalApi = (domain: string): Promise<any> => {
 const EmbeddedClassRoom: React.FC<LiveClassRoomProps> = ({
     sessionId, displayName, actionLabel = 'Leave Class', onExit,
 }) => {
+    const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const apiRef = useRef<any>(null);
     const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -126,7 +128,7 @@ const EmbeddedClassRoom: React.FC<LiveClassRoomProps> = ({
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-white gap-4 px-4 text-center">
                         <p className="text-slate-300">Could not connect to the class room.</p>
                         <button onClick={onExit} className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-bold transition-all active:scale-95">
-                            Go Back
+                            {t('common.goBack')}
                         </button>
                     </div>
                 )}

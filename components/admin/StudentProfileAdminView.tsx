@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { Student, ClassInfo } from '../../types';
 import { toast } from 'react-hot-toast';
 import {
@@ -43,6 +44,7 @@ const ClassSelectionModal: React.FC<{
     schoolId: string;
     currentBranchId?: string | null;
 }> = ({ isOpen, onClose, onSelect, schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const [classes, setClasses] = useState<ClassInfo[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -68,7 +70,7 @@ const ClassSelectionModal: React.FC<{
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                 <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden">
                     <div className="p-6 border-b flex justify-between items-center bg-indigo-50">
-                        <h3 className="text-xl font-bold text-gray-800">Select New Class</h3>
+                        <h3 className="text-xl font-bold text-gray-800">{t('common.selectNewClass')}</h3>
                         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onClose} className="p-2 hover:bg-white/50 rounded-full transition-colors">
                             <XIcon className="w-6 h-6 text-gray-500" />
                         </motion.button>
@@ -99,7 +101,7 @@ const ClassSelectionModal: React.FC<{
                             onClick={onClose}
                             className="w-full py-3 px-4 bg-white border border-gray-200 text-gray-600 font-bold rounded-2xl hover:bg-gray-100 transition-all"
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </motion.button>
                     </div>
                 </motion.div>
@@ -131,6 +133,7 @@ const SimpleBarChart = ({ data }: { data: { subject: string, score: number }[] }
 };
 
 const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ student: initialStudent, navigateTo, forceUpdate, handleBack }) => {
+    const { t } = useTranslation();
     // Publishes this bar's height so the floating install button sits above it.
     const dockRef = useDockedBar();
 
@@ -299,7 +302,7 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
                                 onClick={() => navigateTo('addStudent', `Edit ${student.name}`, { studentToEdit: student })}
                                 className="flex-grow sm:w-full px-6 py-2.5 bg-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-200 transition-all text-sm"
                             >
-                                Edit Profile
+                                {t('common.editProfile')}
                             </motion.button>
                         </div>
                     </motion.div>
@@ -530,7 +533,7 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
                     className="flex flex-col items-center justify-center space-y-1 py-3 bg-red-50 text-red-600 font-bold rounded-2xl hover:bg-red-100 transition-all border border-red-100 shadow-sm"
                 >
                     <TrashIcon className="w-5 h-5" />
-                    <span className="text-xs uppercase text-red-500">Delete</span>
+                    <span className="text-xs uppercase text-red-500">{t('common.delete')}</span>
                 </motion.button>
             </div>
 

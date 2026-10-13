@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -128,6 +129,7 @@ const TermCard: React.FC<{
     onChange: (t: CalendarTerm) => void;
     isOnly?: boolean;
 }> = ({ term, onChange, isOnly }) => {
+    const { t } = useTranslation();
     const addEvent = () => {
         const ev: CalendarEvent = { id: makeId(), type: 'custom', name: 'Custom Activity', start_date: '', end_date: '' };
         onChange({ ...term, events: [...term.events, ev] });
@@ -187,7 +189,7 @@ const TermCard: React.FC<{
                 onClick={addEvent}
                 className="w-full py-2 text-sm font-semibold text-indigo-600 border-2 border-dashed border-indigo-200 rounded-xl hover:bg-indigo-50 transition-colors"
             >
-                + Add Activity / Event
+                {t('common.addActivityOrEvent')}
             </button>
         </div>
     );
@@ -196,6 +198,7 @@ const TermCard: React.FC<{
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const CalendarManager: React.FC = () => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId, refreshCurrentSchool } = useAuth();
     const schoolId = currentSchool?.id;
     const appStartYear: number = (currentSchool as any)?.settings?.app_start_year || new Date().getFullYear() - 1;
@@ -339,7 +342,7 @@ const CalendarManager: React.FC = () => {
                     {saving ? (
                         <><div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Saving…</>
                     ) : (
-                        <><span>💾</span> Save Calendar</>
+                        <><span>💾</span> {t('common.saveCalendar')}</>
                     )}
                 </button>
             </div>

@@ -10,11 +10,13 @@
  */
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSyncStatus } from '../../hooks/useOfflineQuery';
 import { useOnlineStatus } from '../../components/shared/OfflineIndicator';
 import { useNetworkStatus } from '../../lib/networkManager';
 
 export function SyncStatusIndicator() {
+    const { t } = useTranslation();
     const syncStatus = useSyncStatus();
     const isOnline = useOnlineStatus();
 
@@ -110,7 +112,7 @@ export function SyncStatusIndicator() {
                     />
                 </svg>
                 <span className="text-red-700 dark:text-red-300 font-medium">
-                    Sync Error
+                    {t('common.syncError')}
                 </span>
                 <button
                     onClick={triggerSync}
@@ -169,6 +171,7 @@ export function SyncStatusIndicator() {
  * Compact sync status badge
  */
 export function SyncStatusBadge() {
+    const { t } = useTranslation();
     const { isSyncing, pendingOperations, status } = useSyncStatus();
     const isOnline = useOnlineStatus();
 
@@ -199,7 +202,7 @@ export function SyncStatusBadge() {
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
-                <span>Error</span>
+                <span>{t('common.error')}</span>
             </div>
         );
     }

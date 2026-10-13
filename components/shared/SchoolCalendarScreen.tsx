@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { SchoolCalendar, CalendarTerm, CalendarEvent, EVENT_TYPE_CONFIG } from '../admin/CalendarManager';
 
@@ -25,6 +26,7 @@ function daysLeft(dateStr: string): number | null {
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
 const EventBadge: React.FC<{ event: CalendarEvent }> = ({ event }) => {
+    const { t } = useTranslation();
     const cfg = EVENT_TYPE_CONFIG[event.type];
     const days = daysLeft(event.start_date);
     const upcoming = days !== null && days >= 0 && days <= 30;
@@ -107,6 +109,7 @@ const TermBlock: React.FC<{ term: CalendarTerm; index: number }> = ({ term, inde
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 const SchoolCalendarScreen: React.FC<{ onNavigate?: (view: string) => void }> = ({ onNavigate }) => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const settings = (currentSchool as any)?.settings || {};
     const appStartYear: number = settings.app_start_year || new Date().getFullYear() - 1;
@@ -154,7 +157,7 @@ const SchoolCalendarScreen: React.FC<{ onNavigate?: (view: string) => void }> = 
                     <div className={`rounded-2xl p-4 flex items-center gap-4 border ${EVENT_TYPE_CONFIG[nextEvent.type].color}`}>
                         <span className="text-3xl">{EVENT_TYPE_CONFIG[nextEvent.type].emoji}</span>
                         <div>
-                            <p className="text-xs font-bold uppercase tracking-wider opacity-60">Next Coming Up</p>
+                            <p className="text-xs font-bold uppercase tracking-wider opacity-60">{t('common.nextComingUp')}</p>
                             <p className="font-black text-base">{nextEvent.name}</p>
                             <p className="text-sm font-medium opacity-70">
                                 {formatDate(nextEvent.start_date)}

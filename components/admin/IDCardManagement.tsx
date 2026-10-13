@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { Student, Teacher } from '../../types';
 import IDCardGenerator from '../shared/IDCardGenerator';
@@ -13,6 +14,7 @@ interface IDCardManagementProps {
 }
 
 const IDCardManagement: React.FC<IDCardManagementProps> = ({ initialUser, initialView = 'students' }) => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId } = useAuth();
     const [view, setView] = useState<'students' | 'teachers'>('students');
     const [students, setStudents] = useState<Student[]>([]);
@@ -82,7 +84,7 @@ const IDCardManagement: React.FC<IDCardManagementProps> = ({ initialUser, initia
                     onClick={() => setSelectedUser(null)}
                     className="text-indigo-600 hover:text-indigo-800 font-semibold"
                 >
-                    ← Back to List
+                    {t('common.backToList')}
                 </button>
                 <IDCardGenerator
                     user={selectedUser}

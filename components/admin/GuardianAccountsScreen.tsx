@@ -330,7 +330,7 @@ function GuardianPanel({
                         type="button"
                         onClick={onClose}
                         className="text-slate-400 hover:text-slate-600 text-xl leading-none px-2"
-                        aria-label="Tutup"
+                        aria-label={t('common.close')}
                     >
                         ×
                     </button>
@@ -610,7 +610,7 @@ function AddGuardianModal({
                             className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-600 font-semibold text-sm
                                        hover:bg-slate-200"
                         >
-                            Batal
+                            {t('common.cancel')}
                         </button>
                     </div>
                 </div>

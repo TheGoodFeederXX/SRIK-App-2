@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     loadSchedule, saveSchedule, loadDaySchedule, saveDaySchedule,
@@ -19,6 +20,7 @@ interface Props {
 }
 
 const EditTimesModal: React.FC<Props> = ({ schoolId, open, onClose, onSaved }) => {
+    const { t } = useTranslation();
     const [editDay, setEditDay] = useState<string>('All');
     const [draft, setDraft] = useState<PeriodDef[]>([]);
 
@@ -50,8 +52,8 @@ const EditTimesModal: React.FC<Props> = ({ schoolId, open, onClose, onSaved }) =
                 <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[85vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                     <div className="p-5 border-b border-gray-100 flex items-center justify-between">
                         <div>
-                            <h3 className="text-lg font-bold text-gray-900">Edit Period &amp; Break Times</h3>
-                            <p className="text-xs text-gray-500">{editDay === 'All' ? 'Applies to all weekdays (the default).' : `Custom times for ${editDay} only.`}</p>
+                            <h3 className="text-lg font-bold text-gray-900">{t('common.editPeriodAndBreakTimes')}</h3>
+                            <p className="text-xs text-gray-500">{editDay === 'All' ? t('editTimesModal.appliesToAllWeekdays') : t('editTimesModal.customTimesFor', { day: editDay })}</p>
                         </div>
                         <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={onClose} className="text-gray-400 hover:text-gray-700 text-2xl leading-none">×</motion.button>
                     </div>
@@ -80,11 +82,11 @@ const EditTimesModal: React.FC<Props> = ({ schoolId, open, onClose, onSaved }) =
 
                     <div className="p-5 border-t border-gray-100 flex justify-between gap-2">
                         {editDay !== 'All'
-                            ? <button onClick={resetDay} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset {editDay.slice(0, 3)} to default</button>
+                            ? <button onClick={resetDay} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100">{t('editTimesModal.resetDayToDefault', { day: editDay.slice(0, 3) })}</button>
                             : <span />}
                         <div className="flex gap-2">
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100">Cancel</motion.button>
-                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={save} className="px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700">Save times</motion.button>
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100">{t('common.cancel')}</motion.button>
+                            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={save} className="px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 text-white hover:bg-indigo-700">{t('common.saveTimes')}</motion.button>
                         </div>
                     </div>
                 </motion.div>

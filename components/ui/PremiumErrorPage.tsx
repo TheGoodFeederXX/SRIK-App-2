@@ -54,7 +54,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                             <Shield className="w-4 h-4 text-indigo-100" />
                             <span className="text-indigo-100 text-xs font-bold tracking-wider uppercase">{t('premiumErrorPage.secureEnvironment')}</span>
                         </div>
-                        <p className="text-white/60 text-xs italic">Error ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
+                        <p className="text-white/60 text-xs italic">{t('common.errorId')} {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
                     </div>
                 </div>
 

@@ -538,7 +538,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         className="flex flex-col items-center justify-center gap-1.5 py-4 bg-[#EEF2FF] text-[#5D5CDE] rounded-2xl hover:bg-[#E0E7FF] transition-colors"
                     >
                         <Edit className="w-5 h-5" />
-                        <span className="text-xs font-bold">Edit</span>
+                        <span className="text-xs font-bold">{t('common.edit')}</span>
                     </motion.button>
                     <motion.button
                         whileHover={{ y: -2, boxShadow: '0 8px 16px -4px rgba(93, 92, 222, 0.25)' }}

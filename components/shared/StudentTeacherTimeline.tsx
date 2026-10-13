@@ -86,7 +86,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
                 <h3 className="font-bold text-gray-900 flex items-center gap-2"><Sparkles className="w-4 h-4 text-indigo-500" /> Timeline</h3>
                 {canEdit && (
                     <button onClick={() => setShowAdd(v => !v)} className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 hover:text-indigo-700">
-                        <PlusCircle className="w-4 h-4" /> Add Entry
+                        <PlusCircle className="w-4 h-4" /> {t('studentTeacherTimeline.addEntry')}
                     </button>
                 )}
             </div>

@@ -154,7 +154,7 @@ export const SubjectListScreen: React.FC = () => {
                         className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all"
                     >
                         <PlusIcon className="w-4 h-4" />
-                        Add Subject
+                        {t('subjectListScreen.addSubject')}
                     </button>
                 </div>
 
@@ -212,14 +212,14 @@ export const SubjectListScreen: React.FC = () => {
                         <BookOpenIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                         <h3 className="text-lg font-bold text-gray-800">{t('subjectListScreen.noSubjectsYet')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
-                            Add the subjects the school teaches, then choose them per class.
+                            {t('subjectListScreen.addSubjectHint')}
                         </p>
                         <button
                             onClick={openAdd}
                             className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all mt-6"
                         >
                             <PlusIcon className="w-4 h-4 inline mr-2" />
-                            Add First Subject
+                            {t('subjectListScreen.addFirstSubject')}
                         </button>
                     </div>
                 )}

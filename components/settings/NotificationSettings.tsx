@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
 import { requestNotificationPermission, areNotificationsEnabled, getNotificationPermission } from '../../lib/push-notifications';
@@ -10,6 +11,7 @@ interface NotificationPreferences {
 }
 
 export function NotificationSettings() {
+    const { t } = useTranslation();
     const [preferences, setPreferences] = useState<NotificationPreferences>({
         push: true,
         sms: true,
@@ -100,7 +102,7 @@ export function NotificationSettings() {
     return (
         <div className="max-w-2xl mx-auto p-6">
             <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">Notification Settings</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('common.notificationSettings')}</h2>
                 <p className="text-gray-600">Choose how you want to receive notifications</p>
             </div>
 

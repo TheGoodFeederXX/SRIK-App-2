@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import DailyIframe, { DailyCall } from '@daily-co/daily-js';
 import { api } from '../../lib/api';
@@ -26,6 +27,7 @@ interface DailyClassRoomProps {
 const DailyClassRoom: React.FC<DailyClassRoomProps> = ({
     sessionId, displayName, subject, topic, actionLabel = 'Leave Class', onExit,
 }) => {
+    const { t } = useTranslation();
     const containerRef = useRef<HTMLDivElement>(null);
     const callRef = useRef<DailyCall | null>(null);
     const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
@@ -107,7 +109,7 @@ const DailyClassRoom: React.FC<DailyClassRoomProps> = ({
                             onClick={onExit}
                             className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 rounded-xl font-bold transition-all active:scale-95"
                         >
-                            Go Back
+                            {t('common.goBack')}
                         </button>
                     </div>
                 )}

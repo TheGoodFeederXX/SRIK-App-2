@@ -283,7 +283,7 @@ const TeacherCommunicationScreen: React.FC = () => {
                 </main>
                 <div className="p-4 mt-auto bg-white border-t border-gray-200">
                     <button type="submit" className="w-full flex justify-center py-3 px-4 rounded-lg shadow-sm font-medium text-white bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400">
-                        Send Announcement
+                        {t('teacherCommunicationScreen.sendAnnouncement')}
                     </button>
                 </div>
             </form>

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { getStudentAttendanceStats, getDropoutAlerts, resolveDropoutAlert } from '../../lib/qr-attendance';
 
 export function AttendanceAnalytics() {
+    const { t } = useTranslation();
     const [stats, setStats] = useState<any>(null);
     const [alerts, setAlerts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -260,7 +262,7 @@ export function AttendanceAnalytics() {
                                     onClick={() => setSelectedAlert(null)}
                                     className="flex-1 border border-gray-300 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-50 transition"
                                 >
-                                    Cancel
+                                    {t('common.cancel')}
                                 </button>
                                 <button
                                     onClick={() => handleResolveAlert(selectedAlert.id)}

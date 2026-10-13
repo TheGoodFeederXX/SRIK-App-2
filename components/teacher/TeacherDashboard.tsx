@@ -438,7 +438,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
               <ComponentToRender {...routeProps} {...commonProps} />
             </Suspense>
           ) : (
-            <div className="p-6 text-center text-gray-500">View not found: {view}</div>
+            <div className="p-6 text-center text-gray-500">{t('common.viewNotFound')} {view}</div>
           )}
         </ErrorBoundary>
       </div>

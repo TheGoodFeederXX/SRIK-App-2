@@ -514,7 +514,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                         <div className="flex items-start gap-2 bg-indigo-50/60 rounded-xl p-3">
                                             <CheckCircle2 className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-semibold text-indigo-900">Outcome: {t(st.labelKey)}</p>
+                                                <p className="text-sm font-semibold text-indigo-900">{t('common.outcomeLabel')} {t(st.labelKey)}</p>
                                                 {q.outcome_note && <p className="text-sm text-indigo-800/80">{q.outcome_note}</p>}
                                                 <p className="text-xs text-indigo-400 mt-0.5">Closed {fmtDate(q.closed_at)}</p>
                                             </div>

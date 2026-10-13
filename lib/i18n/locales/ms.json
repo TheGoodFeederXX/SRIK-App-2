@@ -40,7 +40,42 @@
     "provideReasonForWithdrawing": "Sila berikan sebab untuk menarik diri",
     "selectItemFromLeft": "Pilih item di sebelah kiri untuk melihat maklumat dan tetapan lanjut.",
     "noStudentRecordLinked": "Kami tidak menemui rekod pelajar yang dipautkan kepada akaun anda.",
-    "noTeacherRecordLinked": "Kami tidak menemui rekod guru yang dipautkan kepada akaun anda."
+    "noTeacherRecordLinked": "Kami tidak menemui rekod guru yang dipautkan kepada akaun anda.",
+    "clear": "Kosongkan",
+    "logout": "Log Keluar",
+    "error": "Ralat",
+    "viewNotFound": "Paparan Tidak Ditemui:",
+    "selectTermFor": "Pilih Penggal untuk",
+    "addActivityOrEvent": "+ Tambah Aktiviti / Acara",
+    "saveCalendar": "Simpan Kalendar",
+    "saveTimes": "Simpan masa",
+    "sendEmergencyBroadcast": "Hantar Siaran Kecemasan",
+    "selectNewClass": "Pilih Kelas Baharu",
+    "editProfile": "Sunting Profil",
+    "scanNextStudent": "Imbas Pelajar Seterusnya",
+    "scanError": "Ralat Imbasan",
+    "selectChannelToStart": "Pilih saluran untuk mula menghantar mesej",
+    "errorLoadingData": "Ralat memuatkan data:",
+    "notificationSettings": "Tetapan Pemberitahuan",
+    "dashboard": "Papan Pemuka",
+    "downloadOfficialIdPdf": "Muat Turun ID Rasmi (PDF)",
+    "errorInvalidUserType": "Ralat: Jenis pengguna tidak sah",
+    "selectConversationToStart": "Pilih perbualan untuk bermula.",
+    "outcomeLabel": "Keputusan:",
+    "nextComingUp": "Akan Datang Seterusnya",
+    "readFullLetter": "Baca Surat Penuh",
+    "syncError": "Ralat Penyegerakan",
+    "remove": "Buang",
+    "addToCart": "Tambah ke Troli",
+    "myProfile": "Profil Saya",
+    "goBack": "Kembali",
+    "returnToDashboard": "Kembali ke Papan Pemuka",
+    "errorId": "ID Ralat:",
+    "editPeriodAndBreakTimes": "Sunting Waktu Period & Rehat",
+    "confirmBroadcast": "Sahkan Siaran?",
+    "backToList": "Kembali ke Senarai",
+    "backToPaths": "Kembali ke Laluan",
+    "saveAttendance": "Simpan Kehadiran"
   },
   "auth": {
     "signIn": "Log Masuk",
@@ -565,7 +600,8 @@
     "assessmentsQuizzes": "Penilaian & Kuiz",
     "gamesHub": "Hab Permainan",
     "myProfile": "Profil Saya",
-    "assigned": "Ditugaskan"
+    "assigned": "Ditugaskan",
+    "viewAllTasks": "Lihat Semua Tugasan"
   },
   "studentFinanceScreen": {
     "studentFinance": "Kewangan Murid"
@@ -636,7 +672,10 @@
     "uploadFailed": "Muat naik gagal: ",
     "todaySLearningFocus": "🎯 Fokus Pembelajaran Hari Ini",
     "todaysLearningFocus": "🎯 Fokus Pembelajaran Hari Ini",
-    "studentID": "ID Murid:"
+    "studentID": "ID Murid:",
+    "downloadTranscript": "Muat Turun Transkrip",
+    "shareProfile": "Kongsi Profil",
+    "uploadNew": "Muat Naik Baharu"
   },
   "studyBuddy": {
     "uploadImage": "Muat naik imej",
@@ -1017,7 +1056,8 @@
     "aiGeneratedLessonPlan": "Rancangan Pelajaran Dijana AI",
     "publishing": "Menerbitkan...",
     "publishToLibrary": "Terbitkan ke Perpustakaan",
-    "assignment": "Tugasan"
+    "assignment": "Tugasan",
+    "viewAsAssignment": "Lihat sebagai Tugasan"
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Perancang Pelajaran",
@@ -1257,7 +1297,8 @@
     "failedToSendNotice": "Gagal menghantar notis: ",
     "1SelectClasses": "1. Pilih Kelas",
     "2AnnouncementType": "2. Jenis Pengumuman",
-    "3ComposeMessage": "3. Karang Mesej"
+    "3ComposeMessage": "3. Karang Mesej",
+    "sendAnnouncement": "Hantar Pengumuman"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Memuatkan kelas anda...",
@@ -1351,7 +1392,8 @@
     "manageAssignments": "Urus Tugasan",
     "timetableDashboard": "Papan Pemuka Jadual Waktu",
     "teacher": "Guru",
-    "submissions": "Penyerahan"
+    "submissions": "Penyerahan",
+    "viewFullTimetable": "Lihat Jadual Penuh"
   },
   "teacherProfileEnhanced": {
     "myProfile": "Profil Saya"
@@ -1578,7 +1620,8 @@
     "messages": "Mesej",
     "moreOptions": "Pilihan Lain",
     "pending": "Menunggu",
-    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara."
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara.",
+    "contactAdminToSetUpProfile": "Kami tidak menemui rekod ibu bapa yang dipautkan kepada akaun anda. Sila hubungi pentadbir sekolah untuk memautkan akaun anda kepada anak-anak anda."
   },
   "parentNewChatScreen": {
     "parentNewChat": "Sembang Baharu Ibu Bapa"
@@ -1882,7 +1925,8 @@
     "glassVividHint": "Kabur lebih dalam, lebih berkilau",
     "defaultLookInUse": "Rupa lalai sedang digunakan",
     "resetToDefault": "Set semula ke lalai",
-    "liquidGlass": "Liquid Glass"
+    "liquidGlass": "Liquid Glass",
+    "roleDashboard": "Papan Pemuka {{role}}"
   },
   "askAIWidget": {
     "askAI": "Tanya AI",
@@ -2269,7 +2313,8 @@
     "descriptionOptional": "Penerangan (pilihan)",
     "timelineEntryAdded": "Catatan garis masa ditambah",
     "failedToAddEntry": "Gagal menambah catatan",
-    "failedToRemoveEntry": "Gagal membuang catatan"
+    "failedToRemoveEntry": "Gagal membuang catatan",
+    "addEntry": "Tambah Catatan"
   },
   "surveysAndPolls": {
     "surveysAndPolls": "Tinjauan dan Undian"
@@ -2318,7 +2363,8 @@
   },
   "inviteAcceptScreen": {
     "thisWillOnlyTakeAMoment": "Ini hanya mengambil masa sebentar.",
-    "yourSchoolID": "ID Sekolah Anda"
+    "yourSchoolID": "ID Sekolah Anda",
+    "goToLogin": "Pergi ke Log Masuk"
   },
   "login": {
     "forgotPassword": "Lupa Kata Laluan",
@@ -2329,7 +2375,9 @@
     "sendingCode": "Menghantar Kod...",
     "sendResetCode": "Hantar Kod Set Semula",
     "sending": "Menghantar...",
-    "sendNewLink": "Hantar Pautan Baharu"
+    "sendNewLink": "Hantar Pautan Baharu",
+    "openLinkToChoosePassword": "Buka pautan itu untuk memilih kata laluan baharu.",
+    "resetLinkSentTo": "Kami telah menghantar pautan set semula kata laluan kepada"
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Mengesahkan bukti kelayakan..."
@@ -2411,7 +2459,8 @@
     "upgradeToPremium": "Naik Taraf ke Premium",
     "advancedPerformanceAnalytics": "Analitik Prestasi Lanjutan",
     "realTimeAttendanceTracking": "Penjejakan Kehadiran Masa Nyata",
-    "prioritySupportMore": "Sokongan Keutamaan & Lain-lain"
+    "prioritySupportMore": "Sokongan Keutamaan & Lain-lain",
+    "viewPricingPlans": "Lihat Pelan Harga"
   },
   "motion-ui": {
     "closeModal": "Tutup tetingkap",
@@ -2529,7 +2578,8 @@
     "anEmailAddressIsRequired": "Alamat e-mel diperlukan",
     "couldNotSaveTheTeacher": "Tidak dapat menyimpan guru",
     "couldNotCreateTheLoginAccount": "Tidak dapat mencipta akaun log masuk",
-    "teacherSavedButDutiesWereNot": "Guru disimpan, tetapi tugas tidak"
+    "teacherSavedButDutiesWereNot": "Guru disimpan, tetapi tugas tidak",
+    "createLoginAccount": "Cipta Akaun Log Masuk"
   },
   "adminActionsScreen": {
     "quickActions": "Tindakan Pantas",
@@ -2916,7 +2966,10 @@
     "student": "Murid",
     "students": "Murid",
     "couldNotRemoveTheClass": "Tidak dapat membuang kelas.",
-    "couldNotLoadTheStudents": "Tidak dapat memuatkan murid."
+    "couldNotLoadTheStudents": "Tidak dapat memuatkan murid.",
+    "addClass": "Tambah Kelas",
+    "addFirstClassHint": "Tambah kelas pertama sekolah untuk mula menempatkan pelajar.",
+    "addFirstClass": "Tambah Kelas Pertama"
   },
   "classVerificationScreen": {
     "classVerification": "Pengesahan Kelas"
@@ -3101,7 +3154,8 @@
     "paymentMethod": "Cara bayaran",
     "exceedsBalance": "Melebihi baki",
     "cancelThisPayment": "Batalkan bayaran ini",
-    "outstandingLabel": "Jumlah tertunggak:"
+    "outstandingLabel": "Jumlah tertunggak:",
+    "receiptNoOptional": "No. resit (pilihan)"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Tetapan Yuran",
@@ -3131,7 +3185,8 @@
     "amountRM": "Jumlah (RM)",
     "month": "Bulan",
     "year": "Tahun",
-    "dueDateOptional": "Tarikh akhir (pilihan)"
+    "dueDateOptional": "Tarikh akhir (pilihan)",
+    "descriptionOptional": "Keterangan (pilihan)"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Mata Wang Lalai",
@@ -3337,11 +3392,12 @@
     "noMatches": "Tiada Padanan",
     "noGuardiansYet": "Belum Ada Penjaga",
     "editGuardian": "Sunting penjaga",
-    "addGuardian": "Tambah penjaga",
+    "addGuardian": "Tambah Penjaga",
     "couldNotSaveTheGuardian": "Tidak dapat menyimpan penjaga.",
     "couldNotRemoveTheGuardian": "Tidak dapat membuang penjaga.",
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
-    "searchPlaceholder": "Cari mengikut nama penjaga atau anak, telefon, atau emel"
+    "searchPlaceholder": "Cari mengikut nama penjaga atau anak, telefon, atau emel",
+    "notLinkedYetHint": "Belum dipautkan kepada mana-mana pelajar. Tambah dari rekod pelajar."
   },
   "pastStudentsScreen": {
     "pastStudents": "Murid Lepas"
@@ -3628,12 +3684,14 @@
     "subject": "Subjek",
     "subjects": "Subjek",
     "editSubject": "Sunting subjek",
-    "addSubject": "Tambah subjek",
+    "addSubject": "Tambah Mata Pelajaran",
     "couldNotSaveTheSubject": "Tidak dapat menyimpan subjek.",
     "couldNotRemoveTheSubject": "Tidak dapat membuang subjek.",
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
     "taughtIn": "Diajar dalam",
-    "eGBahasaMelayu": "cth., Bahasa Melayu"
+    "eGBahasaMelayu": "cth., Bahasa Melayu",
+    "addSubjectHint": "Tambah mata pelajaran yang diajar sekolah, kemudian pilih mengikut kelas.",
+    "addFirstSubject": "Tambah Mata Pelajaran Pertama"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Liputan Ganti"
@@ -3735,7 +3793,8 @@
     "pending": "Menunggu",
     "onLeave": "Sedang Bercuti",
     "resetChanges": "Set semula perubahan",
-    "failedToSaveAttendanceChanges": "Gagal menyimpan perubahan kehadiran"
+    "failedToSaveAttendanceChanges": "Gagal menyimpan perubahan kehadiran",
+    "saveAttendanceCount": "Simpan Kehadiran ({{count}})"
   },
   "teacherDetailAdminView": {
     "noTeacherSelectedOpenThisViewFromATeacherRowIn": "Tiada guru dipilih. Buka paparan ini dari baris guru dalam Senarai Guru.",
@@ -4000,5 +4059,31 @@
   "app": {
     "dashboardError": "Ralat Papan Pemuka",
     "dashboardErrorMessage": "Kami menghadapi ralat kritikal semasa memuatkan papan pemuka."
+  },
+  "adminMessagesScreen": {
+    "manageParentChatAccess": "Urus Akses Sembang Ibu Bapa"
+  },
+  "sopCaseDetailView": {
+    "sendLetter": "Hantar Surat"
+  },
+  "adventureHomeScreen": {
+    "uploadFile": "Muat Naik Fail"
+  },
+  "cbtManagementScreen": {
+    "uploadQuestionBank": "Muat Naik Bank Soalan"
+  },
+  "editTimesModal": {
+    "appliesToAllWeekdays": "Terpakai untuk semua hari bekerja (lalai).",
+    "customTimesFor": "Waktu tersuai untuk {{day}} sahaja.",
+    "resetDayToDefault": "Set semula {{day}} ke lalai"
+  },
+  "noChatSelected": {
+    "schoolAppMessaging": "Sembang Aplikasi Sekolah",
+    "sendAndReceiveHere": "Hantar dan terima mesej dengan guru, ibu bapa, dan pelajar di sini pada desktop anda."
+  },
+  "emergencyBroadcast": {
+    "hideHistory": "Sembunyikan Sejarah",
+    "viewHistoryCount": "Lihat Sejarah ({{count}})",
+    "sendCriticalAlertsDescription": "Hantar amaran kritikal kepada semua pengguna melalui pemberitahuan push, SMS, dan emel"
   }
 }

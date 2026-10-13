@@ -67,7 +67,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
                             </p>
                             <button onClick={() => setOpen(s)}
                                 className="mt-2 text-sm font-bold text-red-700 underline hover:text-red-900">
-                                Read Full Letter
+                                {t('common.readFullLetter')}
                             </button>
                         </div>
                         <button onClick={() => setDismissedIds(d => [...d, s.id])}

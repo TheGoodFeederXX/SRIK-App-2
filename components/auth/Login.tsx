@@ -113,8 +113,9 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
           </div>
           <h2 className="text-xl font-bold text-slate-800 text-center mb-2">{t('login.checkYourEmail')}</h2>
           <p className="text-xs text-slate-500 text-center mb-6">
-            We have sent a password reset link to <span className="font-semibold text-slate-700">{email}</span>.
-            Open it to choose a new password.
+            {t('login.resetLinkSentTo')}{' '}
+            <span className="font-semibold text-slate-700">{email}</span>.
+            {' '}{t('login.openLinkToChoosePassword')}
           </p>
 
           <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 mb-6">

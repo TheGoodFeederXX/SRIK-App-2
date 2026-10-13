@@ -87,7 +87,7 @@ export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, school
                         className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                         <LogoutIcon className="h-6 w-6" />
-                        <span className="font-medium">Logout</span>
+                        <span className="font-medium">{t('common.logout')}</span>
                     </motion.button>
                 </div>
             )}
@@ -138,7 +138,7 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
                         className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                         <LogoutIcon className="h-6 w-6" />
-                        <span className="font-medium">Logout</span>
+                        <span className="font-medium">{t('common.logout')}</span>
                     </motion.button>
                 </div>
             )}
@@ -195,7 +195,7 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
                         className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                         <LogoutIcon className="h-6 w-6" />
-                        <span className="font-medium">Logout</span>
+                        <span className="font-medium">{t('common.logout')}</span>
                     </motion.button>
                 </div>
             )}
@@ -250,7 +250,7 @@ export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolN
                         className="w-full flex items-center space-x-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                     >
                         <LogoutIcon className="h-6 w-6" />
-                        <span className="font-medium">Logout</span>
+                        <span className="font-medium">{t('common.logout')}</span>
                     </motion.button>
                 </div>
             )}

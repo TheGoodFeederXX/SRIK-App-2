@@ -62,7 +62,7 @@ const LivePreview: React.FC<{ a: Appearance; roleLabel: string }> = ({ a, roleLa
   return (
     <div className={`rounded-2xl p-3 ${surface}`} aria-label={t('appearancePanel.previewOfYourLook')}>
       <div className="rounded-xl p-3 text-white" style={{ background: 'linear-gradient(135deg, rgb(var(--accent-600)), rgb(var(--accent-500)))' }}>
-        <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">{roleLabel} Dashboard</p>
+        <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">{t('appearancePanel.roleDashboard', { role: roleLabel })}</p>
         <p className="text-sm font-black">{t('appearancePanel.goodMorning')}</p>
       </div>
       <div className="flex items-center gap-2 mt-3">

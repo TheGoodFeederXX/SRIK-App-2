@@ -1,4 +1,5 @@
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
@@ -19,6 +20,7 @@ interface AlertRecord {
 }
 
 export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const [title, setTitle] = useState('');
     const [message, setMessage] = useState('');
@@ -167,11 +169,11 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
                         onClick={() => setShowHistory(!showHistory)}
                         className="text-sm font-medium text-red-700 hover:text-red-900 underline"
                     >
-                        {showHistory ? 'Hide History' : `View History (${history.length})`}
+                        {showHistory ? t('emergencyBroadcast.hideHistory') : t('emergencyBroadcast.viewHistoryCount', { count: history.length })}
                     </button>
                 </div>
                 <p className="text-red-700">
-                    Send critical alerts to all users via push notifications, SMS, and email
+                    {t('emergencyBroadcast.sendCriticalAlertsDescription')}
                 </p>
             </div>
 
@@ -326,7 +328,7 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
             <AnimatePresence mode="wait">
             {confirming ? (
                 <motion.div key="confirm" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="bg-orange-50 border border-orange-200 rounded-lg p-5 mb-4">
-                    <h4 className="font-bold text-orange-800 text-lg mb-2">⚠️ Confirm Broadcast?</h4>
+                    <h4 className="font-bold text-orange-800 text-lg mb-2">⚠️ {t('common.confirmBroadcast')}</h4>
                     <p className="text-orange-700 mb-4">
                         You are about to send a <strong className="uppercase">{urgency}</strong> alert to{' '}
                         <strong>{targetAudience.includes('all') ? 'EVERYONE' : targetAudience.join(', ')}</strong>.
@@ -339,7 +341,7 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
                             onClick={handleCancel}
                             className="flex-1 py-3 px-4 bg-white border border-gray-300 text-gray-700 font-bold rounded-lg hover:bg-gray-50"
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </motion.button>
                         <motion.button
                             whileHover={{ scale: 1.02 }}
@@ -374,7 +376,7 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
                             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
                             </svg>
-                            Send Emergency Broadcast
+                            {t('common.sendEmergencyBroadcast')}
                         </>
                     )}
                 </motion.button>
@@ -388,7 +390,7 @@ export function EmergencyBroadcast({ onClose }: EmergencyBroadcastProps) {
                     onClick={onClose}
                     className="w-full mt-3 border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 transition"
                 >
-                    Cancel
+                    {t('common.cancel')}
                 </motion.button>
             )}
         </div>

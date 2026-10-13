@@ -73,7 +73,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
                             style={{ left: 4 }}
                         />
                         <button onClick={() => setInputType('file')} className={`relative z-10 w-1/2 py-2 text-sm font-semibold rounded-md transition-colors ${inputType === 'file' ? 'text-gray-900' : 'text-gray-600'}`}>
-                            Upload File
+                            {t('adventureHomeScreen.uploadFile')}
                         </button>
                         <button onClick={() => setInputType('url')} className={`relative z-10 w-1/2 py-2 text-sm font-semibold rounded-md transition-colors ${inputType === 'url' ? 'text-gray-900' : 'text-gray-600'}`}>
                             Paste Link

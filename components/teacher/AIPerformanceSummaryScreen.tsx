@@ -127,7 +127,7 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
     if (error) {
         return (
             <div className="p-6 text-center bg-gray-100 h-full">
-                <h2 className="text-xl font-bold text-red-600">Error</h2>
+                <h2 className="text-xl font-bold text-red-600">{t('common.error')}</h2>
                 <p className="text-gray-600 mt-2">{error}</p>
             </div>
         );

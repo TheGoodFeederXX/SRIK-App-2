@@ -40,7 +40,42 @@
     "provideReasonForWithdrawing": "Please provide a reason for withdrawing",
     "selectItemFromLeft": "Select an item from the left to view more information and settings.",
     "noStudentRecordLinked": "We couldn't find a student record linked to your account.",
-    "noTeacherRecordLinked": "We couldn't find a teacher record linked to your account."
+    "noTeacherRecordLinked": "We couldn't find a teacher record linked to your account.",
+    "clear": "Clear",
+    "logout": "Logout",
+    "error": "Error",
+    "viewNotFound": "View Not Found:",
+    "selectTermFor": "Select Term for",
+    "addActivityOrEvent": "+ Add Activity / Event",
+    "saveCalendar": "Save Calendar",
+    "saveTimes": "Save times",
+    "sendEmergencyBroadcast": "Send Emergency Broadcast",
+    "selectNewClass": "Select New Class",
+    "editProfile": "Edit Profile",
+    "scanNextStudent": "Scan Next Student",
+    "scanError": "Scan Error",
+    "selectChannelToStart": "Select a channel to start messaging",
+    "errorLoadingData": "Error loading data:",
+    "notificationSettings": "Notification Settings",
+    "dashboard": "Dashboard",
+    "downloadOfficialIdPdf": "Download Official ID (PDF)",
+    "errorInvalidUserType": "Error: Invalid user type",
+    "selectConversationToStart": "Select a conversation to get started.",
+    "outcomeLabel": "Outcome:",
+    "nextComingUp": "Next Coming Up",
+    "readFullLetter": "Read Full Letter",
+    "syncError": "Sync Error",
+    "remove": "Remove",
+    "addToCart": "Add to Cart",
+    "myProfile": "My Profile",
+    "goBack": "Go Back",
+    "returnToDashboard": "Return to Dashboard",
+    "errorId": "Error ID:",
+    "editPeriodAndBreakTimes": "Edit Period & Break Times",
+    "confirmBroadcast": "Confirm Broadcast?",
+    "backToList": "Back to List",
+    "backToPaths": "Back to Paths",
+    "saveAttendance": "Save Attendance"
   },
   "auth": {
     "signIn": "Sign In",
@@ -565,7 +600,8 @@
     "assessmentsQuizzes": "Assessments & Quizzes",
     "gamesHub": "Games Hub",
     "myProfile": "My Profile",
-    "assigned": "Assigned"
+    "assigned": "Assigned",
+    "viewAllTasks": "View All Tasks"
   },
   "studentFinanceScreen": {
     "studentFinance": "Student Finance"
@@ -636,7 +672,10 @@
     "uploadFailed": "Upload failed: ",
     "todaySLearningFocus": "🎯 Today's Learning Focus",
     "todaysLearningFocus": "🎯 Today's Learning Focus",
-    "studentID": "Student ID:"
+    "studentID": "Student ID:",
+    "downloadTranscript": "Download Transcript",
+    "shareProfile": "Share Profile",
+    "uploadNew": "Upload New"
   },
   "studyBuddy": {
     "uploadImage": "Upload image",
@@ -1017,7 +1056,8 @@
     "aiGeneratedLessonPlan": "AI Generated Lesson Plan",
     "publishing": "Publishing...",
     "publishToLibrary": "Publish to Library",
-    "assignment": "Assignment"
+    "assignment": "Assignment",
+    "viewAsAssignment": "View as Assignment"
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Lesson Planner",
@@ -1257,7 +1297,8 @@
     "failedToSendNotice": "Failed to send notice: ",
     "1SelectClasses": "1. Select Classes",
     "2AnnouncementType": "2. Announcement Type",
-    "3ComposeMessage": "3. Compose Message"
+    "3ComposeMessage": "3. Compose Message",
+    "sendAnnouncement": "Send Announcement"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Loading your classes...",
@@ -1351,7 +1392,8 @@
     "manageAssignments": "Manage Assignments",
     "timetableDashboard": "Timetable Dashboard",
     "teacher": "Teacher",
-    "submissions": "Submissions"
+    "submissions": "Submissions",
+    "viewFullTimetable": "View Full Timetable"
   },
   "teacherProfileEnhanced": {
     "myProfile": "My Profile"
@@ -1578,7 +1620,8 @@
     "messages": "Messages",
     "moreOptions": "More Options",
     "pending": "Pending",
-    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue.",
+    "contactAdminToSetUpProfile": "We couldn't find a parent record linked to your account. Please contact the school administrator to link your account to your children."
   },
   "parentNewChatScreen": {
     "parentNewChat": "Parent New Chat"
@@ -1882,7 +1925,8 @@
     "glassVividHint": "Deeper blur, more shine",
     "defaultLookInUse": "Default look in use",
     "resetToDefault": "Reset to default",
-    "liquidGlass": "Liquid Glass"
+    "liquidGlass": "Liquid Glass",
+    "roleDashboard": "{{role}} Dashboard"
   },
   "askAIWidget": {
     "askAI": "Ask AI",
@@ -2269,7 +2313,8 @@
     "descriptionOptional": "Description (optional)",
     "timelineEntryAdded": "Timeline entry added",
     "failedToAddEntry": "Failed to add entry",
-    "failedToRemoveEntry": "Failed to remove entry"
+    "failedToRemoveEntry": "Failed to remove entry",
+    "addEntry": "Add Entry"
   },
   "surveysAndPolls": {
     "surveysAndPolls": "Surveys And Polls"
@@ -2318,7 +2363,8 @@
   },
   "inviteAcceptScreen": {
     "thisWillOnlyTakeAMoment": "This will only take a moment.",
-    "yourSchoolID": "Your School ID"
+    "yourSchoolID": "Your School ID",
+    "goToLogin": "Go to Login"
   },
   "login": {
     "forgotPassword": "Forgot Password",
@@ -2329,7 +2375,9 @@
     "sendingCode": "Sending Code...",
     "sendResetCode": "Send Reset Code",
     "sending": "Sending...",
-    "sendNewLink": "Send New Link"
+    "sendNewLink": "Send New Link",
+    "openLinkToChoosePassword": "Open it to choose a new password.",
+    "resetLinkSentTo": "We have sent a password reset link to"
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Verifying credentials..."
@@ -2411,7 +2459,8 @@
     "upgradeToPremium": "Upgrade to Premium",
     "advancedPerformanceAnalytics": "Advanced Performance Analytics",
     "realTimeAttendanceTracking": "Real-time Attendance Tracking",
-    "prioritySupportMore": "Priority Support & More"
+    "prioritySupportMore": "Priority Support & More",
+    "viewPricingPlans": "View Pricing Plans"
   },
   "motion-ui": {
     "closeModal": "Close modal",
@@ -2529,7 +2578,8 @@
     "anEmailAddressIsRequired": "An email address is required",
     "couldNotSaveTheTeacher": "Could not save the teacher",
     "couldNotCreateTheLoginAccount": "Could not create the login account",
-    "teacherSavedButDutiesWereNot": "Teacher saved, but duties were not"
+    "teacherSavedButDutiesWereNot": "Teacher saved, but duties were not",
+    "createLoginAccount": "Create Login Account"
   },
   "adminActionsScreen": {
     "quickActions": "Quick Actions",
@@ -2916,7 +2966,10 @@
     "student": "Student",
     "students": "Students",
     "couldNotRemoveTheClass": "Could not remove the class.",
-    "couldNotLoadTheStudents": "Could not load the students."
+    "couldNotLoadTheStudents": "Could not load the students.",
+    "addClass": "Add Class",
+    "addFirstClassHint": "Add the school's first class to begin placing students.",
+    "addFirstClass": "Add First Class"
   },
   "classVerificationScreen": {
     "classVerification": "Class Verification"
@@ -3101,7 +3154,8 @@
     "paymentMethod": "Payment method",
     "exceedsBalance": "Exceeds the balance",
     "cancelThisPayment": "Cancel this payment",
-    "outstandingLabel": "Outstanding:"
+    "outstandingLabel": "Outstanding:",
+    "receiptNoOptional": "Receipt no. (optional)"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Fee Settings",
@@ -3131,7 +3185,8 @@
     "amountRM": "Amount (RM)",
     "month": "Month",
     "year": "Year",
-    "dueDateOptional": "Due date (optional)"
+    "dueDateOptional": "Due date (optional)",
+    "descriptionOptional": "Description (optional)"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Default Currency",
@@ -3337,11 +3392,12 @@
     "noMatches": "No Matches",
     "noGuardiansYet": "No Guardians Yet",
     "editGuardian": "Edit guardian",
-    "addGuardian": "Add guardian",
+    "addGuardian": "Add Guardian",
     "couldNotSaveTheGuardian": "Could not save the guardian.",
     "couldNotRemoveTheGuardian": "Could not remove the guardian.",
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
-    "searchPlaceholder": "Search by guardian or child's name, phone, or email"
+    "searchPlaceholder": "Search by guardian or child's name, phone, or email",
+    "notLinkedYetHint": "Not linked to any student yet. Add them from the student's record."
   },
   "pastStudentsScreen": {
     "pastStudents": "Past Students"
@@ -3628,12 +3684,14 @@
     "subject": "Subject",
     "subjects": "Subjects",
     "editSubject": "Edit subject",
-    "addSubject": "Add subject",
+    "addSubject": "Add Subject",
     "couldNotSaveTheSubject": "Could not save the subject.",
     "couldNotRemoveTheSubject": "Could not remove the subject.",
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
     "taughtIn": "Taught in",
-    "eGBahasaMelayu": "e.g., Bahasa Melayu"
+    "eGBahasaMelayu": "e.g., Bahasa Melayu",
+    "addSubjectHint": "Add the subjects the school teaches, then choose them per class.",
+    "addFirstSubject": "Add First Subject"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3735,7 +3793,8 @@
     "pending": "Pending",
     "onLeave": "On Leave",
     "resetChanges": "Reset changes",
-    "failedToSaveAttendanceChanges": "Failed to save attendance changes"
+    "failedToSaveAttendanceChanges": "Failed to save attendance changes",
+    "saveAttendanceCount": "Save Attendance ({{count}})"
   },
   "teacherDetailAdminView": {
     "noTeacherSelectedOpenThisViewFromATeacherRowIn": "No teacher selected. Open this view from a teacher row in the Teacher List.",
@@ -4000,5 +4059,31 @@
   "app": {
     "dashboardError": "Dashboard Error",
     "dashboardErrorMessage": "We encountered a critical error while loading the dashboard."
+  },
+  "adminMessagesScreen": {
+    "manageParentChatAccess": "Manage Parent Chat Access"
+  },
+  "sopCaseDetailView": {
+    "sendLetter": "Send Letter"
+  },
+  "adventureHomeScreen": {
+    "uploadFile": "Upload File"
+  },
+  "cbtManagementScreen": {
+    "uploadQuestionBank": "Upload Question Bank"
+  },
+  "editTimesModal": {
+    "appliesToAllWeekdays": "Applies to all weekdays (the default).",
+    "customTimesFor": "Custom times for {{day}} only.",
+    "resetDayToDefault": "Reset {{day}} to default"
+  },
+  "noChatSelected": {
+    "schoolAppMessaging": "School App Messaging",
+    "sendAndReceiveHere": "Send and receive messages with teachers, parents, and students right here on your desktop."
+  },
+  "emergencyBroadcast": {
+    "hideHistory": "Hide History",
+    "viewHistoryCount": "View History ({{count}})",
+    "sendCriticalAlertsDescription": "Send critical alerts to all users via push notifications, SMS, and email"
   }
 }

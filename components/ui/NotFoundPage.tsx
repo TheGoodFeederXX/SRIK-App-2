@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Home, ArrowLeft, Search, Map } from 'lucide-react';
 import { useNavigate } from 'react-router';
 
 const NotFoundPage: React.FC = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
 
     return (
@@ -48,7 +50,7 @@ const NotFoundPage: React.FC = () => {
                             className="w-full py-4 bg-indigo-50 text-indigo-700 font-bold rounded-2xl border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 transition-all flex items-center justify-center space-x-2 group"
                         >
                             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform shrink-0" />
-                            <span className="min-w-0">Go Back</span>
+                            <span className="min-w-0">{t('common.goBack')}</span>
                         </button>
 
                         <button
@@ -56,7 +58,7 @@ const NotFoundPage: React.FC = () => {
                             className="w-full py-4 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-xl transition-all flex items-center justify-center space-x-2 group"
                         >
                             <Home className="w-5 h-5 group-hover:scale-110 transition-transform shrink-0" />
-                            <span className="min-w-0">Return to Dashboard</span>
+                            <span className="min-w-0">{t('common.returnToDashboard')}</span>
                         </button>
                     </div>
 

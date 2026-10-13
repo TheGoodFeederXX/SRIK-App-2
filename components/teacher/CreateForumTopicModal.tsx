@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X as XMarkIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
@@ -16,6 +17,7 @@ interface CreateForumTopicModalProps {
 }
 
 const CreateForumTopicModal: React.FC<CreateForumTopicModalProps> = ({ isOpen, onClose, onTopicCreated, currentUser }) => {
+    const { t } = useTranslation();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -94,7 +96,7 @@ const CreateForumTopicModal: React.FC<CreateForumTopicModalProps> = ({ isOpen, o
                             onClick={onClose}
                             className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
                         >
-                            Cancel
+                            {t('common.cancel')}
                         </button>
                         <button
                             type="submit"

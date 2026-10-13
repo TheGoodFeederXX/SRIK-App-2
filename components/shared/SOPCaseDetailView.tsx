@@ -358,7 +358,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                             {letterDraft && caseData.letters[0]?.status !== 'sent' && (
                                 <motion.button whileHover={recipientId ? { scale: 1.02 } : {}} whileTap={recipientId ? { scale: 0.98 } : {}} onClick={() => handleSendLetter(caseData.letters[0]?.id)} disabled={!recipientId}
                                     className="flex-grow flex items-center justify-center gap-2 py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">
-                                    <Send className="w-4 h-4" /> Send Letter
+                                    <Send className="w-4 h-4" /> {t('sopCaseDetailView.sendLetter')}
                                 </motion.button>
                             )}
                         </div>

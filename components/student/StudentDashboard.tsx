@@ -186,7 +186,7 @@ const TodayFocus: React.FC<{
                             onClick={() => navigateTo('assignments', t('studentDashboard.myAssignments'))}
                             className="w-full text-xs text-gray-400 text-center font-medium hover:text-gray-600 transition-colors"
                         >
-                            View All Tasks
+                            {t('studentDashboard.viewAllTasks')}
                         </button>
                     )}
                 </div>
@@ -1003,7 +1003,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
 
                                 return <ComponentToRender {...componentProps} />;
                             })() : (
-                                <div className="p-6 text-center text-gray-500">View not found: {view}</div>
+                                <div className="p-6 text-center text-gray-500">{t('common.viewNotFound')} {view}</div>
                             )}
                         </Suspense>
                     </ErrorBoundary>

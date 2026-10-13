@@ -386,7 +386,7 @@ function CollectPanel({
                         type="button"
                         onClick={onClose}
                         className="text-slate-400 hover:text-slate-600 text-xl leading-none px-2"
-                        aria-label="Tutup"
+                        aria-label={t('common.close')}
                     >
                         ×
                     </button>
@@ -492,7 +492,7 @@ function CollectPanel({
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                        No. resit (pilihan)
+                                        {t('feeCollectionScreen.receiptNoOptional')}
                                     </label>
                                     <input
                                         type="text"
@@ -746,7 +746,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                                     className="px-3 py-2 rounded-lg bg-slate-100 text-slate-600 text-xs font-semibold
                                                hover:bg-slate-200"
                                 >
-                                    Kembali
+                                    {t('common.back')}
                                 </button>
                             </div>
                         </div>

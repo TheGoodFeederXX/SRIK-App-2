@@ -185,7 +185,7 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
               role="menuitem"
             >
               <LogoutIcon className="mr-3 h-5 w-5 text-gray-500" />
-              <span>Logout</span>
+              <span>{t('common.logout')}</span>
             </button>
           </div>
         </motion.div>

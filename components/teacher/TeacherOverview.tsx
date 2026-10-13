@@ -612,7 +612,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                   </button>
                 )}
                 <button onClick={() => navigateTo('timetable', t('teacherOverview.timetableDashboard'), {})} className="text-sm font-semibold text-purple-600 w-full text-center mt-1 py-2.5 rounded-lg hover:bg-purple-50 transition-colors">
-                  View Full Timetable
+                  {t('teacherOverview.viewFullTimetable')}
                 </button>
               </div>
             )}

@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { DashboardType, Conversation } from '../../types';
 import AdminMessagesScreen from '../admin/AdminMessagesScreen';
 import TeacherMessagesScreen from '../teacher/TeacherMessagesScreen';
@@ -15,6 +16,7 @@ interface MessagingLayoutProps {
 }
 
 const MessagingLayout: React.FC<MessagingLayoutProps> = ({ dashboardType, currentUserId: propUserId, navigateTo }) => {
+    const { t } = useTranslation();
     const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
 
     const handleSelectConversation = (conversation: Conversation) => {
@@ -48,7 +50,7 @@ const MessagingLayout: React.FC<MessagingLayoutProps> = ({ dashboardType, curren
             case DashboardType.Student:
                 return <StudentMessagesScreen onSelectChat={handleSelectConversation} studentId={stringUserId} navigateTo={navigateTo} />;
             default:
-                return <div>Error: Invalid user type</div>;
+                return <div>{t('common.errorInvalidUserType')}</div>;
         }
     }, [dashboardType, currentUserId, navigateTo]);
 

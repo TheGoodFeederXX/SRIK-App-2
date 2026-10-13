@@ -481,7 +481,7 @@ const SlotEditor: React.FC<{
                             className="flex items-center justify-center gap-2 px-4 py-3 border border-red-200 text-red-600 font-bold rounded-xl hover:bg-red-50 transition-colors"
                         >
                             <TrashIcon className="w-4 h-4" />
-                            Clear
+                            {t('common.clear')}
                         </button>
                     )}
                     <button

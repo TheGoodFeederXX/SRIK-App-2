@@ -154,7 +154,7 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
 
     if (error) {
         return <div className="p-8 text-center text-red-600 bg-red-50 rounded-xl shadow-sm border border-red-100">
-            <p>Error loading data: {error}</p>
+            <p>{t('common.errorLoadingData')} {error}</p>
             <p>{t('parentTodayWidget.pleaseTryAgainLater')}</p>
         </div>;
     }

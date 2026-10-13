@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getUserChannels, getChannelMessages, postChannelMessage, markMessageAsRead, subscribeToChannel, type ChannelMessage } from '../../lib/messaging-channels';
 
 export function ChannelMessaging() {
+    const { t } = useTranslation();
     const [channels, setChannels] = useState<any[]>([]);
     const [selectedChannel, setSelectedChannel] = useState<any>(null);
     const [messages, setMessages] = useState<ChannelMessage[]>([]);
@@ -191,7 +193,7 @@ export function ChannelMessaging() {
                             <svg className="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                             </svg>
-                            <p>Select a channel to start messaging</p>
+                            <p>{t('common.selectChannelToStart')}</p>
                         </div>
                     </div>
                 )}

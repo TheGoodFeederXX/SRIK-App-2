@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     X,
     ChevronRight,
@@ -64,6 +65,7 @@ interface OnboardingTourProps {
 }
 
 const OnboardingTour: React.FC<OnboardingTourProps> = ({ role, onComplete, onSkip }) => {
+    const { t } = useTranslation();
     const [currentStep, setCurrentStep] = useState(0);
 
     const lowerRole = role?.toLowerCase();
@@ -110,7 +112,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ role, onComplete, onSki
                     <div className="flex items-center justify-between mt-6">
                         <button onClick={() => setCurrentStep(s => Math.max(0, s - 1))} disabled={currentStep === 0}
                             className="flex items-center space-x-1 px-4 py-2.5 text-gray-500 font-bold text-sm hover:text-gray-700 disabled:opacity-30 transition-all">
-                            <ChevronLeft className="w-4 h-4" /><span>Back</span>
+                            <ChevronLeft className="w-4 h-4" /><span>{t('common.back')}</span>
                         </button>
                         {isLast ? (
                             <button onClick={onComplete}
@@ -120,7 +122,7 @@ const OnboardingTour: React.FC<OnboardingTourProps> = ({ role, onComplete, onSki
                         ) : (
                             <button onClick={() => setCurrentStep(s => Math.min(steps.length - 1, s + 1))}
                                 className="flex items-center space-x-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-100">
-                                <span>Next</span><ChevronRight className="w-5 h-5" />
+                                <span>{t('common.next')}</span><ChevronRight className="w-5 h-5" />
                             </button>
                         )}
                     </div>

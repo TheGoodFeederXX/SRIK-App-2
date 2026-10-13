@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Html5QrcodeScanner } from 'html5-qrcode';
 import { scanQRCodeForAttendance } from '../../lib/qr-attendance';
 
 export function QRScanner() {
+    const { t } = useTranslation();
     const [scanning, setScanning] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [error, setError] = useState('');
@@ -109,7 +111,7 @@ export function QRScanner() {
                         }}
                         className="w-full bg-green-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-green-700 transition"
                     >
-                        Scan Next Student
+                        {t('common.scanNextStudent')}
                     </button>
                 </div>
             )}
@@ -121,7 +123,7 @@ export function QRScanner() {
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                         </svg>
                         <div className="flex-1">
-                            <h3 className="font-semibold text-red-900">Scan Error</h3>
+                            <h3 className="font-semibold text-red-900">{t('common.scanError')}</h3>
                             <p className="text-red-700 mt-1">{error}</p>
                         </div>
                     </div>

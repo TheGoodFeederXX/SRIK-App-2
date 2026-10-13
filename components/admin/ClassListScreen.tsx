@@ -159,7 +159,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                         className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all"
                     >
                         <PlusIcon className="w-4 h-4" />
-                        Add Class
+                        {t('classListScreen.addClass')}
                     </button>
                 </div>
 
@@ -304,14 +304,14 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                         <BookOpenIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                         <h3 className="text-lg font-bold text-gray-800">{t('classListScreen.noClassesYet')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
-                            Add the school's first class to begin placing students.
+                            {t('classListScreen.addFirstClassHint')}
                         </p>
                         <button
                             onClick={() => navigateTo('classForm', t('classListScreen.addNewClass'))}
                             className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all mt-6"
                         >
                             <PlusIcon className="w-4 h-4 inline mr-2" />
-                            Add First Class
+                            {t('classListScreen.addFirstClass')}
                         </button>
                     </div>
                 )}
