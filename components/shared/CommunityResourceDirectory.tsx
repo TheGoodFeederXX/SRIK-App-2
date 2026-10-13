@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -26,6 +27,7 @@ interface CommunityResource {
 }
 
 const CommunityResourceDirectory: React.FC = () => {
+    const { t } = useTranslation();
     const [resources, setResources] = useState<CommunityResource[]>([]);
     const [filteredResources, setFilteredResources] = useState<CommunityResource[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -61,7 +63,7 @@ const CommunityResourceDirectory: React.FC = () => {
             setFilteredResources(data || []);
         } catch (error: any) {
             console.error('Error fetching resources:', error);
-            toast.error('Failed to load resources');
+            toast.error(t('communityResourceDirectory.failedToLoadResources'));
         } finally {
             setLoading(false);
         }
@@ -113,7 +115,7 @@ const CommunityResourceDirectory: React.FC = () => {
             {/* Header */}
             <div className="bg-gradient-to-r from-teal-600 to-green-600 rounded-xl p-6 text-white mb-6">
                 <h1 className="text-3xl font-bold mb-2">🗺️ Community Resource Directory</h1>
-                <p className="text-teal-100">Find support services near you - health, food, training & more</p>
+                <p className="text-teal-100">{t('communityResourceDirectory.findSupportServicesNearYouHealthFoodTrainingMo')}</p>
             </div>
 
             {/* Search */}
@@ -122,14 +124,14 @@ const CommunityResourceDirectory: React.FC = () => {
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by name, location, or service..."
+                    placeholder={t('communityResourceDirectory.searchByNameLocationOrService')}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500"
                 />
             </div>
 
             {/* Category Filters */}
             <div className="mb-6">
-                <h2 className="text-lg font-bold text-gray-900 mb-3">Filter by Category</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-3">{t('communityResourceDirectory.filterByCategory')}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3">
                     {categories.map(category => {
                         const Icon = category.icon;
@@ -164,8 +166,8 @@ const CommunityResourceDirectory: React.FC = () => {
                 {filteredResources.length === 0 ? (
                     <div className="col-span-full bg-white rounded-xl shadow-sm p-12 text-center text-gray-500">
                         <MapPin className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg">No resources found</p>
-                        <p className="text-sm">Try a different search or category</p>
+                        <p className="text-lg">{t('communityResourceDirectory.noResourcesFound')}</p>
+                        <p className="text-sm">{t('communityResourceDirectory.tryADifferentSearchOrCategory')}</p>
                     </div>
                 ) : (
                     filteredResources.map((resource, i) => {
@@ -323,7 +325,7 @@ const CommunityResourceDirectory: React.FC = () => {
 
                                 {selectedResource.services_offered && selectedResource.services_offered.length > 0 && (
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 mb-2">Services Offered</h3>
+                                        <h3 className="font-semibold text-gray-900 mb-2">{t('communityResourceDirectory.servicesOffered')}</h3>
                                         <div className="flex flex-wrap gap-2">
                                             {selectedResource.services_offered.map((service, index) => (
                                                 <span key={index} className="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-sm">
@@ -336,14 +338,14 @@ const CommunityResourceDirectory: React.FC = () => {
 
                                 {selectedResource.languages_spoken && selectedResource.languages_spoken.length > 0 && (
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 mb-2">Languages</h3>
+                                        <h3 className="font-semibold text-gray-900 mb-2">{t('communityResourceDirectory.languages')}</h3>
                                         <p className="text-gray-700">{selectedResource.languages_spoken.join(', ')}</p>
                                     </div>
                                 )}
 
                                 {selectedResource.eligibility_criteria && (
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 mb-2">Eligibility</h3>
+                                        <h3 className="font-semibold text-gray-900 mb-2">{t('communityResourceDirectory.eligibility')}</h3>
                                         <p className="text-gray-700">{selectedResource.eligibility_criteria}</p>
                                     </div>
                                 )}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { AlertTriangle, Paperclip, X } from 'lucide-react';
 
@@ -30,6 +31,7 @@ function fmtDate(value: string | null | undefined): string {
 }
 
 const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode }) => {
+    const { t } = useTranslation();
     const [suspensions, setSuspensions] = useState<Suspension[]>([]);
     const [open, setOpen] = useState<Suspension | null>(null);
     const [dismissedIds, setDismissedIds] = useState<string[]>([]);
@@ -69,7 +71,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
                             </button>
                         </div>
                         <button onClick={() => setDismissedIds(d => [...d, s.id])}
-                            className="p-1 text-red-400 hover:text-red-600 flex-shrink-0" aria-label="Dismiss">
+                            className="p-1 text-red-400 hover:text-red-600 flex-shrink-0" aria-label={t('suspensionNoticeBanner.dismiss')}>
                             <X className="w-4 h-4" />
                         </button>
                     </div>
@@ -81,7 +83,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
                     <div className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-5 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
                         <div className="flex items-start justify-between">
                             <div>
-                                <h2 className="text-xl font-bold text-gray-900 font-outfit">Suspension Letter</h2>
+                                <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('suspensionNoticeBanner.suspensionLetter')}</h2>
                                 {mode === 'parent' && open.student_name && (
                                     <p className="text-sm text-gray-500">{open.student_name}</p>
                                 )}
@@ -93,11 +95,11 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
 
                         <div className="space-y-3 text-sm">
                             <div className="grid grid-cols-2 gap-3">
-                                <div><p className="text-gray-400 font-semibold text-xs uppercase">Start Date</p><p className="font-semibold text-gray-900">{fmtDate(open.start_date)}</p></div>
-                                <div><p className="text-gray-400 font-semibold text-xs uppercase">Return Date</p><p className="font-semibold text-gray-900">{fmtDate(open.return_date)}</p></div>
+                                <div><p className="text-gray-400 font-semibold text-xs uppercase">{t('suspensionNoticeBanner.startDate')}</p><p className="font-semibold text-gray-900">{fmtDate(open.start_date)}</p></div>
+                                <div><p className="text-gray-400 font-semibold text-xs uppercase">{t('suspensionNoticeBanner.returnDate')}</p><p className="font-semibold text-gray-900">{fmtDate(open.return_date)}</p></div>
                             </div>
                             {open.issued_by_name && (
-                                <div><p className="text-gray-400 font-semibold text-xs uppercase">Issued By</p><p className="font-semibold text-gray-900">{open.issued_by_name}</p></div>
+                                <div><p className="text-gray-400 font-semibold text-xs uppercase">{t('suspensionNoticeBanner.issuedBy')}</p><p className="font-semibold text-gray-900">{open.issued_by_name}</p></div>
                             )}
                             <div>
                                 <p className="text-gray-400 font-semibold text-xs uppercase">Reason</p>
@@ -105,7 +107,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
                             </div>
                             {open.return_conditions && (
                                 <div>
-                                    <p className="text-gray-400 font-semibold text-xs uppercase">Conditions for Return</p>
+                                    <p className="text-gray-400 font-semibold text-xs uppercase">{t('suspensionNoticeBanner.conditionsForReturn')}</p>
                                     <p className="text-gray-700 whitespace-pre-wrap mt-1">{open.return_conditions}</p>
                                 </div>
                             )}

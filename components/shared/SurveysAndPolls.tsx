@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from './../ui/ComingSoonScreen';
 
 /**
@@ -17,12 +18,15 @@ import ComingSoonScreen from './../ui/ComingSoonScreen';
  * This shows no data and accepts no input. It is not a placeholder that pretends to
  * work — it is a statement that this part does not exist yet.
  */
-const SurveysAndPolls: React.FC<any> = ({ handleBack }) => (
+const SurveysAndPolls: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Surveys And Polls"
+        title={t('surveysAndPolls.surveysAndPolls')}
         explanation="Surveys And Polls is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default SurveysAndPolls;

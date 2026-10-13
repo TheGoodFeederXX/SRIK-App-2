@@ -90,7 +90,10 @@ const protect = (text) => {
     return token;
 };
 src = src.replace(/`(?:[^`\\]|\\.)*`/gs, protect);           // template literals
-src = src.replace(/\/\*[\s\S]*?\*\//g, protect);               // block and JSX comments
+// Block and JSX comments: protect each physical line on its own, so every newline stays exactly
+// where it was. Collapsing a multi-line comment removed newlines, which merged a component
+// signature onto a code line and stopped the hook from being inserted.
+src = src.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.split('\n').map((l) => protect(l)).join('\n'));
 // Line comments: require start-of-line or whitespace before `//`, so a URL inside a string
 // (`https://…`) is not mistaken for a comment.
 // Keep the newline OUTSIDE the protected region. Protecting the whole match swallowed the
@@ -213,7 +216,20 @@ function addHooks(fileSource) {
                 const m = prev.match(nameOnLine);
                 if (m) { name = m[1]; break; }
                 // Only a signature CONTINUATION may sit between the name and the opening brace.
-                if (!/[,>{=(]\s*$/.test(prev)) break;
+                // A generic type spans several lines and its members end in `;` or `,`, so those
+                // are continuations too; a statement keyword or a closing brace is not.
+                // A protected comment line is a bare token, which must also count as a
+                // continuation — otherwise a JSDoc line inside a generic type ends the search.
+                // A destructured prop with a default ends in a QUOTE (`newChatView = 'newChat'`),
+                // and one with a type ends in a word. Both are continuations.
+                const isContinuation = /[,>{=(]\s*$/.test(prev)
+                    || (/;\s*$/.test(prev) && !/^(?:const|let|var|return|import|export\s+const)\b/.test(prev))
+                    || /^\s*\/?\*/.test(prev)
+                    || /^\uE000\d+\uE001$/.test(prev.trim())
+                    || prev === ''
+                    || /[\w$]\s*=\s*(?:'[^']*'|"[^"]*"|`[^`]*`|\d+|true|false|null)\s*$/.test(prev)
+                    || /^[\w$]+\s*:\s*.+$/.test(prev);
+                if (!isContinuation) break;
             }
         }
         if (!name) { out.push(line); continue; }

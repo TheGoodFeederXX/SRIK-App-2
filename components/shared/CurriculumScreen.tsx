@@ -1,5 +1,6 @@
 
 import React, { useMemo, useEffect, useState, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { getCurriculum } from '../../curriculumData';
@@ -31,6 +32,7 @@ interface CurriculumScreenProps {
 }
 
 const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }) => {
+    const { t } = useTranslation();
   const [dbSubjects, setDbSubjects] = useState<CurriculumSubject[]>([]);
   // True once a load has completed, so background refreshes never flash a skeleton.
   const hasLoadedOnceRef = useRef(false);
@@ -100,7 +102,7 @@ const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }
     return (
         <div className="flex flex-col items-center justify-center py-16">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500 mb-3" />
-            <p className="text-gray-400 text-sm font-medium">Loading curriculum...</p>
+            <p className="text-gray-400 text-sm font-medium">{t('curriculumScreen.loadingCurriculum')}</p>
         </div>
     );
   }
@@ -110,7 +112,7 @@ const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }
       {Object.keys(groupedSubjects).length === 0 ? (
         <div className="text-center py-10 bg-white rounded-lg shadow-sm">
           <BookOpenIcon className="mx-auto h-12 w-12 text-gray-300" />
-          <h3 className="mt-2 text-sm font-medium text-gray-900">No Curriculum Found</h3>
+          <h3 className="mt-2 text-sm font-medium text-gray-900">{t('curriculumScreen.noCurriculumFound')}</h3>
           <p className="mt-1 text-sm text-gray-500">Could not find subjects for the selected level ({level}).</p>
         </div>
       ) : (

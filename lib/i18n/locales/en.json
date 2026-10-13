@@ -1477,5 +1477,412 @@
   },
   "volunteeringScreen": {
     "volunteering": "Volunteering"
+  },
+  "aIChatScreen": {
+    "voiceInputNeedsChromeOrEdgePleaseTypeYourQuest": "Voice input needs Chrome or Edge. Please type your question instead.",
+    "couldNotHearYouTryAgain": "Could not hear you — try again.",
+    "couldNotAccessMicrophone": "Could not access microphone.",
+    "readAloudIsNotSupportedInThisBrowser": "Read-aloud is not supported in this browser."
+  },
+  "aIChatWidget": {
+    "openAIAssistant": "Open AI Assistant"
+  },
+  "aIInsightsPanel": {
+    "aiInsights": "AI Insights",
+    "nothingUrgentRightNowAllClear": "Nothing urgent right now — all clear."
+  },
+  "accessibilitySettings": {
+    "accessibilitySettings": "Accessibility Settings",
+    "highContrastMode": "High Contrast Mode",
+    "increaseColorContrastForBetterVisibility": "Increase color contrast for better visibility",
+    "textToSpeech": "Text-to-Speech",
+    "readTextAloud": "Read text aloud",
+    "reduceMotion": "Reduce Motion",
+    "minimizeAnimations": "Minimize animations",
+    "english": "English",
+    "settingsSavedSuccessfully": "Settings saved successfully!",
+    "failedToSaveSettings": "Failed to save settings"
+  },
+  "appearancePanel": {
+    "goodMorning": "Good morning",
+    "primaryAction": "Primary action",
+    "highlight": "Highlight",
+    "appearance": "Appearance",
+    "makeTheAppYours": "Make the app yours",
+    "preview": "Preview",
+    "solidPanelsFastestOnOlderPhones": "Solid panels, fastest on older phones",
+    "frostedTranslucentPanels": "Frosted, translucent panels",
+    "colourScheme": "Colour scheme",
+    "dashboardCards": "Dashboard cards",
+    "accentColour": "Accent colour",
+    "changesEveryButtonTabAndHighlightAcrossTheWhol": "Changes every button, tab and highlight across the whole app.",
+    "glassStyle": "Glass style",
+    "fineTuning": "Fine-tuning",
+    "previewOfYourLook": "Preview of your look",
+    "vividness": "Vividness",
+    "balanced": "Balanced",
+    "custom": "Custom",
+    "glassSubtle": "Subtle",
+    "glassSubtleHint": "Light frost, calm",
+    "glassBalanced": "Balanced",
+    "glassBalancedHint": "The default look",
+    "glassVivid": "Vivid",
+    "glassVividHint": "Deeper blur, more shine"
+  },
+  "askAIWidget": {
+    "askAI": "Ask AI",
+    "askAQuestion": "Ask a question..."
+  },
+  "busRouteScreen": {
+    "busRoute": "Bus Route"
+  },
+  "calendarScreen": {
+    "calendar": "Calendar"
+  },
+  "childRiskBanner": {
+    "dismiss": "Dismiss"
+  },
+  "communityResourceDirectory": {
+    "findSupportServicesNearYouHealthFoodTrainingMo": "Find support services near you - health, food, training & more",
+    "filterByCategory": "Filter by Category",
+    "noResourcesFound": "No resources found",
+    "tryADifferentSearchOrCategory": "Try a different search or category",
+    "servicesOffered": "Services Offered",
+    "languages": "Languages",
+    "eligibility": "Eligibility",
+    "searchByNameLocationOrService": "Search by name, location, or service...",
+    "failedToLoadResources": "Failed to load resources"
+  },
+  "conferenceScheduling": {
+    "penjadualanPerjumpaan": "Penjadualan Perjumpaan"
+  },
+  "contextualMarquee": {
+    "syncingData": "Syncing Data..."
+  },
+  "curriculumScreen": {
+    "loadingCurriculum": "Loading curriculum...",
+    "noCurriculumFound": "No Curriculum Found"
+  },
+  "dataUsageSettings": {
+    "lowDataMode": "Low data mode",
+    "whenItSOn": "When it's on"
+  },
+  "donationPortal": {
+    "donationPortal": "Donation Portal"
+  },
+  "editProfileScreen": {
+    "myProfile": "My Profile",
+    "student": "Student",
+    "chatDisplayName": "Chat Display Name",
+    "thisNameShowsInChatsInsteadOfYourFullName": "This name shows in chats instead of your full name",
+    "accountSecurity": "Account Security",
+    "username": "Username",
+    "changePassword": "Change Password",
+    "changeProfilePhoto": "Change profile photo",
+    "attendance": "Attendance",
+    "assignments": "Assignments",
+    "avgGrade": "Avg Grade",
+    "studentID": "Student ID",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "howOthersSeeYouInChatOptional": "How others see you in chat (optional)",
+    "enterNewUsername": "Enter new username",
+    "profile": "Profile",
+    "imageUploadedReadyToSave": "Image uploaded ready to save",
+    "profileUpdatedSuccessfully": "Profile updated successfully!",
+    "pleaseEnterYourFullNameBeforeSaving": "Please enter your full name before saving.",
+    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah."
+  },
+  "examSchedule": {
+    "examSchedule": "Exam Schedule"
+  },
+  "gamePlayerScreen": {
+    "gameDataNotFound": "Game Data Not Found",
+    "theSelectedGameIsCurrentlyUnavailableOrHasNoQu": "The selected game is currently unavailable or has no questions.",
+    "goBack": "Go Back",
+    "youAnswered": "You answered"
+  },
+  "globalSearchScreen": {
+    "trySearchingForSomethingElse": "Try searching for something else."
+  },
+  "learningHubResourceViewer": {
+    "learningHubResourceViewer": "Learning Hub Resource Viewer"
+  },
+  "leaveBalanceTracker": {
+    "noLeaveBalancesConfigured": "No leave balances configured",
+    "leaveBalance": "Leave Balance",
+    "remaining": "Remaining",
+    "totalLeaveDays": "Total Leave Days"
+  },
+  "libraryScreen": {
+    "library": "Library"
+  },
+  "liquidGlassControl": {
+    "emerald": "Emerald",
+    "graphite": "Graphite"
+  },
+  "mainAdminOnly": {
+    "managedByTheMainAdmin": "Managed by the main admin"
+  },
+  "mediaGenerator": {
+    "creatingMagicWithAI": "Creating magic with AI...",
+    "yourCreationWillAppearHere": "Your creation will appear here",
+    "uploadReferenceImage": "Upload Reference Image",
+    "aspectRatio": "Aspect Ratio",
+    "createImage": "Create Image",
+    "createVideo": "Create Video",
+    "editImage": "Edit Image",
+    "animate": "Animate",
+    "generated": "Generated",
+    "pleaseUploadAReferenceImageFirst": "Please upload a reference image first."
+  },
+  "mentalHealthResources": {
+    "mentalHealthResources": "Mental Health Resources"
+  },
+  "messagesLayout": {
+    "messages": "Messages",
+    "noConversationsYet": "No conversations yet",
+    "tapToStartANewMessage": "Tap + to start a new message",
+    "newMessage": "New Message",
+    "noContactsFound": "No contacts found",
+    "browseAllContacts": "Browse all contacts",
+    "noConversationSelected": "No conversation selected",
+    "pickAChatFromTheListOrTapToStartANewConversati": "Pick a chat from the list or tap + to start a new conversation.",
+    "searchMessages": "Search messages...",
+    "searchByName": "Search by name…"
+  },
+  "noticeboardScreen": {
+    "noticeboard": "Noticeboard"
+  },
+  "notificationDigestSettings": {
+    "notificationPreferences": "Notification Preferences",
+    "controlHowAndWhenYouReceiveNotifications": "Control how and when you receive notifications.",
+    "dailyDigestTime": "Daily Digest Time",
+    "whenDigestModeNotificationsAreBatchedAndSent": "When digest-mode notifications are batched and sent.",
+    "emergencyAlerts": "Emergency Alerts",
+    "alwaysInstant": "Always Instant",
+    "homeworkAssignments": "Homework & Assignments",
+    "feeReminders": "Fee Reminders",
+    "attendance": "Attendance",
+    "eventsCalendar": "Events & Calendar",
+    "behaviorReports": "Behavior Reports",
+    "generalAnnouncements": "General Announcements",
+    "instant": "Instant",
+    "whatsapp": "WhatsApp",
+    "loadingYourPreferences": "Loading your preferences...",
+    "newAssignmentsSubmissionRemindersGrades": "New assignments, submission reminders, grades.",
+    "paymentDueDatesReceiptsBalanceUpdates": "Payment due dates, receipts, balance updates.",
+    "dailyAttendanceStatusLateArrivalAlerts": "Daily attendance status, late arrival alerts.",
+    "schoolEmergenciesSafetyAlertsClosures": "School emergencies, safety alerts, closures.",
+    "schoolEventsPTAMeetingsHolidays": "School events, PTA meetings, holidays.",
+    "behaviorLogsMeritsDemerits": "Behavior logs, merits, demerits.",
+    "schoolWideAnnouncementsAndUpdates": "School-wide announcements and updates.",
+    "notificationPreferencesSaved": "Notification preferences saved!",
+    "emergencyAlertsMustAlwaysBeInstant": "Emergency alerts must always be instant!",
+    "failedToSavePreferences": "Failed to save preferences"
+  },
+  "notificationsScreen": {
+    "notifications": "Notifications"
+  },
+  "offlineIndicator": {
+    "slowConnectionSyncMayBeDelayed": "Slow Connection - Sync may be delayed",
+    "dismiss": "Dismiss"
+  },
+  "panicButton": {
+    "alertSentHelpIsOnTheWay": "Alert Sent — Help Is On The Way",
+    "emergencyPanicButton": "Emergency Panic Button",
+    "failedToSendAlertPleaseCallEmergencyServicesDi": "Failed to send alert. Please call emergency services directly."
+  },
+  "permissionSlips": {
+    "slipKebenaran": "Slip Kebenaran"
+  },
+  "personnelFileView": {
+    "loadingPersonnelFile": "Loading personnel file...",
+    "personnelFileUnavailable": "Personnel file unavailable.",
+    "addRecord": "Add Record",
+    "issueQueryLetter": "Issue Query Letter",
+    "personalInformation": "Personal Information",
+    "employmentDetails": "Employment Details",
+    "qualifications": "Qualifications",
+    "teachingHistory": "Teaching History",
+    "onlyAdminsCanViewTeachingHistoryHere": "Only admins can view teaching history here.",
+    "noClassOrSubjectAssignmentsOnRecord": "No class or subject assignments on record.",
+    "recentDailyAttendanceLast30": "Recent Daily Attendance (last 30)",
+    "noAttendanceRecordsYet": "No attendance records yet.",
+    "performanceHistory": "Performance History",
+    "noPerformanceEvaluationsYet": "No performance evaluations yet.",
+    "permanentRecords": "Permanent Records",
+    "noRecordsInTheFileYet": "No records in the file yet.",
+    "noQueryLettersOnFile": "No query letters on file.",
+    "overdue": "Overdue",
+    "noResponseSubmittedYet": "No response submitted yet.",
+    "addRecordToFile": "Add Record to File",
+    "recordType": "Record Type",
+    "commendation": "Commendation",
+    "promotion": "Promotion",
+    "warning": "Warning",
+    "disciplinaryRecord": "Disciplinary Record",
+    "generalNote": "General Note",
+    "detailsOptional": "Details (optional)",
+    "effectiveDate": "Effective Date",
+    "recordsArePermanentTheyCanBeCorrectedOnlyOnThe": "Records are permanent. They can be corrected only on the day they are written.",
+    "subject": "Subject",
+    "reasonForQuery": "Reason for Query",
+    "issueDate": "Issue Date",
+    "responseDeadline": "Response Deadline",
+    "closeQueryLetter": "Close Query Letter",
+    "outcome": "Outcome",
+    "resolvedNoFurtherAction": "Resolved — no further action",
+    "warningIssuedAddedToFile": "Warning Issued (added to file)",
+    "escalated": "Escalated",
+    "noteOptional": "Note (optional)",
+    "disciplinary": "Disciplinary",
+    "awaitingResponse": "Awaiting Response",
+    "responseReceived": "Response Received",
+    "resolved": "Resolved",
+    "warningIssued": "Warning Issued",
+    "overview": "Overview",
+    "teaching": "Teaching",
+    "attendance": "Attendance",
+    "performance": "Performance",
+    "records": "Records",
+    "queryLetters": "Query Letters",
+    "daysPresent": "Days Present",
+    "daysAbsent": "Days Absent",
+    "daysLate": "Days Late",
+    "lessonsCompleted": "Lessons Completed",
+    "writeYourFormalResponseToThisQuery": "Write your formal response to this query...",
+    "stateTheFullReasonForThisQuery": "State the full reason for this query...",
+    "recordAddedToPersonnelFile": "Record added to personnel file",
+    "queryLetterIssuedTheTeacherHasBeenNotified": "Query letter issued — the teacher has been notified",
+    "queryLetterClosed": "Query letter closed",
+    "yourResponseHasBeenSubmitted": "Your response has been submitted",
+    "failedToUploadDocument": "Failed to upload document",
+    "pleaseEnterATitle": "Please enter a title",
+    "pleaseEnterASubject": "Please enter a subject",
+    "pleaseStateTheReasonForTheQuery": "Please state the reason for the query",
+    "pleaseSetAResponseDeadline": "Please set a response deadline",
+    "pleaseWriteYourResponse": "Please write your response",
+    "note": "Note"
+  },
+  "projectBoardScreen": {
+    "projectBoard": "Project Board"
+  },
+  "realtimeStatusIndicator": {
+    "liveUpdatesUnavailableReconnecting": "Live updates unavailable — reconnecting…",
+    "dismiss": "Dismiss"
+  },
+  "referralSystem": {
+    "getConnectedToCommunitySupportServices": "Get connected to community support services",
+    "confidentialSupport": "Confidential Support:",
+    "newReferralRequest": "New Referral Request",
+    "selectStudent": "Select Student*",
+    "typeOfNeed": "Type of Need*",
+    "shelter": "Shelter",
+    "counseling": "Counseling",
+    "financial": "Financial",
+    "urgencyLevel": "Urgency Level*",
+    "critical": "Critical",
+    "describeTheNeed": "Describe the Need*",
+    "beAsDetailedAsPossibleToHelpUsMatchYouWithTheR": "Be as detailed as possible to help us match you with the right resources",
+    "noReferralsSubmittedYet": "No referrals submitted yet",
+    "clickSubmitNewReferralToGetStarted": "Click \"Submit New Referral\" to get started",
+    "matchedWith": "Matched with:",
+    "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Please describe the situation and what support is needed...",
+    "referralSubmittedSuccessfullyASocialWorkerWill": "Referral submitted successfully! A social worker will review it soon.",
+    "pleaseSelectAStudentAndDescribeTheNeed": "Please select a student and describe the need",
+    "failedToSubmitReferral": "Failed to submit referral"
+  },
+  "reportIncidentScreen": {
+    "laporInsiden": "Lapor Insiden"
+  },
+  "sOPCaseDetailView": {
+    "caseNotFound": "Case not found.",
+    "aCriticalAlertWasSentWhenThisCaseWasReported": "A critical alert was sent when this case was reported.",
+    "workflow": "Workflow",
+    "evidence": "Evidence",
+    "noEvidenceUploadedYet": "No evidence uploaded yet.",
+    "decisions": "Decisions",
+    "noDecisionsRecordedYet": "No decisions recorded yet.",
+    "letters": "Letters",
+    "noLettersGeneratedYet": "No letters generated yet.",
+    "recordDecision": "Record Decision",
+    "outcome": "Outcome",
+    "noAction": "No Action",
+    "warning": "Warning",
+    "suspension": "Suspension",
+    "expulsion": "Expulsion",
+    "decisionDetails": "Decision Details",
+    "generateLetter": "Generate Letter",
+    "recipientType": "Recipient Type",
+    "student": "Student",
+    "teacher": "Teacher",
+    "recipientUserID": "Recipient User ID",
+    "letterTextEditable": "Letter Text (editable)",
+    "notesForThisStageOptional": "Notes for this stage (optional)",
+    "loadingCase": "Loading case...",
+    "evidenceUploaded": "Evidence uploaded",
+    "stageCompleted": "Stage completed",
+    "decisionRecorded": "Decision recorded",
+    "letterDraftedReviewAndSendWhenReady": "Letter drafted — review and send when ready",
+    "letterSent": "Letter sent",
+    "pleaseDescribeTheDecision": "Please describe the decision",
+    "sendThisLetterNowItCannotBeEditedAfterward": "Send this letter now? It cannot be edited afterward."
+  },
+  "selectReportTermScreen": {
+    "selectAStudentFirst": "Select a student first.",
+    "reportCard": "Report Card",
+    "selectAcademicSession": "Select Academic Session",
+    "chooseTermToView": "Choose Term to View"
+  },
+  "studentGateScreen": {
+    "studentGate": "Student Gate"
+  },
+  "studentTeacherTimeline": {
+    "newTimelineEntry": "New timeline entry",
+    "loadingTimeline": "Loading timeline...",
+    "noEventsRecordedYet": "No events recorded yet.",
+    "titleEGWonSpellingCompetition": "Title (e.g. Won spelling competition)",
+    "descriptionOptional": "Description (optional)",
+    "timelineEntryAdded": "Timeline entry added"
+  },
+  "surveysAndPolls": {
+    "surveysAndPolls": "Surveys And Polls"
+  },
+  "suspensionNoticeBanner": {
+    "suspensionLetter": "Suspension Letter",
+    "startDate": "Start Date",
+    "returnDate": "Return Date",
+    "issuedBy": "Issued By",
+    "conditionsForReturn": "Conditions for Return",
+    "dismiss": "Dismiss"
+  },
+  "versionStatusCard": {
+    "systemVersion": "System Version",
+    "viewAndManageYourApplicationVersionStatus": "View and manage your application version status",
+    "localClient": "Local Client",
+    "schoolTarget": "School Target",
+    "synchronizationRequired": "Synchronization Required",
+    "updateNow": "Update Now"
+  },
+  "voiceSearchWidget": {
+    "voiceSearchNotAvailablePleaseTypeYourQuery": "Voice search not available. Please type your query.",
+    "voiceSearchIsNotSupportedInThisBrowser": "Voice search is not supported in this browser."
+  },
+  "accent": {
+    "indigo": "Indigo",
+    "blue": "Blue",
+    "violet": "Violet",
+    "emerald": "Emerald",
+    "rose": "Rose",
+    "amber": "Amber",
+    "teal": "Teal",
+    "slate": "Graphite",
+    "graphite": "Graphite",
+    "orange": "Orange",
+    "green": "Green",
+    "red": "Red",
+    "pink": "Pink",
+    "cyan": "Cyan"
   }
 }

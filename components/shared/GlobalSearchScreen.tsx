@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { DashboardType } from '../../types';
 import { api } from '../../lib/api';
@@ -48,6 +49,7 @@ const getIconForType = (type: SearchResult['type']) => {
 };
 
 const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, navigateTo, onClose }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const { currentBranchId } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
@@ -243,7 +245,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                 {searchTerm.trim().length > 1 && results.length === 0 && (
                     <div className="text-center py-16">
                         <p className="font-semibold text-gray-700">No results found for "{searchTerm}"</p>
-                        <p className="text-sm text-gray-500 mt-1">Try searching for something else.</p>
+                        <p className="text-sm text-gray-500 mt-1">{t('globalSearchScreen.trySearchingForSomethingElse')}</p>
                     </div>
                 )}
                 {/* FIX: Explicitly typed the parameters of the `map` callback to resolve a TypeScript type inference issue. */}

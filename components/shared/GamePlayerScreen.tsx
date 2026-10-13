@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AIGame, AIGameQuestion } from '../../types';
 import { CheckCircleIcon, XCircleIcon } from '../../constants';
 
@@ -9,6 +10,7 @@ interface GamePlayerScreenProps {
 }
 
 const GamePlayerScreen: React.FC<GamePlayerScreenProps> = ({ game, mode, handleBack }) => {
+    const { t } = useTranslation();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [score, setScore] = useState(0);
@@ -17,9 +19,9 @@ const GamePlayerScreen: React.FC<GamePlayerScreenProps> = ({ game, mode, handleB
   if (!game || !game.questions || game.questions.length === 0) {
     return (
       <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-50">
-        <h2 className="text-xl font-bold text-red-600">Game Data Not Found</h2>
-        <p className="text-gray-600 mt-2">The selected game is currently unavailable or has no questions.</p>
-        <button onClick={handleBack} className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg">Go Back</button>
+        <h2 className="text-xl font-bold text-red-600">{t('gamePlayerScreen.gameDataNotFound')}</h2>
+        <p className="text-gray-600 mt-2">{t('gamePlayerScreen.theSelectedGameIsCurrentlyUnavailableOrHasNoQu')}</p>
+        <button onClick={handleBack} className="mt-4 px-4 py-2 bg-purple-600 text-white rounded-lg">{t('gamePlayerScreen.goBack')}</button>
       </div>
     );
   }
@@ -50,7 +52,7 @@ const GamePlayerScreen: React.FC<GamePlayerScreenProps> = ({ game, mode, handleB
       <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-50">
         <h2 className="text-2xl font-bold text-gray-800">{mode === 'test' ? 'Test Complete!' : 'Game Over!'}</h2>
         <p className="text-5xl font-bold my-4 text-purple-600">{percentage}%</p>
-        <p className="text-gray-600">You answered <span className="font-semibold">{score}</span> out of <span className="font-semibold">{game.questions.length}</span> questions correctly.</p>
+        <p className="text-gray-600">{t('gamePlayerScreen.youAnswered')} <span className="font-semibold">{score}</span> out of <span className="font-semibold">{game.questions.length}</span> questions correctly.</p>
         <button onClick={handleBack} className="mt-8 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-sm hover:bg-purple-700">
           {mode === 'test' ? 'Back to Editor' : 'Back to Games'}
         </button>

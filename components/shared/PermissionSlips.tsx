@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface PermissionSlipsProps {
@@ -26,9 +27,11 @@ interface PermissionSlipsProps {
  * long the record is kept. The paper slip in a child's file is, for now, the safer record —
  * because it is certainly real.
  */
-const PermissionSlips: React.FC<PermissionSlipsProps> = ({ handleBack, onBack }) => (
+const PermissionSlips: React.FC<PermissionSlipsProps> = ({ handleBack, onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Slip Kebenaran"
+        title={t('permissionSlips.slipKebenaran')}
         explanation={
             'Sekolah belum menggunakan slip kebenaran dalam talian. Buat masa ini slip ' +
             'kebenaran diedarkan dan dikumpul secara bertulis melalui guru kelas. Sekolah ' +
@@ -39,6 +42,7 @@ const PermissionSlips: React.FC<PermissionSlipsProps> = ({ handleBack, onBack })
         }
         handleBack={handleBack || onBack}
     />
-);
+    );
+};
 
 export default PermissionSlips;

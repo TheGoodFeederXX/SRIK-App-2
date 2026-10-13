@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { networkManager, ConnectionQuality } from '../../lib/networkManager';
 import { syncEngine } from '../../lib/syncEngine';
 
@@ -7,6 +8,7 @@ interface OfflineIndicatorProps {
 }
 
 export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
+    const { t } = useTranslation();
     const [isOnline, setIsOnline] = useState(typeof navigator !== 'undefined' ? navigator.onLine : true);
     const [showReconnected, setShowReconnected] = useState(false);
     const [quality, setQuality] = useState<ConnectionQuality>(ConnectionQuality.UNKNOWN);
@@ -137,7 +139,7 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                             <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
                         </svg>
-                        <span>Slow Connection - Sync may be delayed</span>
+                        <span>{t('offlineIndicator.slowConnectionSyncMayBeDelayed')}</span>
                         {pendingCount > 0 && (
                             <button
                                 onClick={handleManualSync}
@@ -150,7 +152,7 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
                         <button
                             onClick={() => setIsSlowDismissed(true)}
                             className="absolute right-0 p-1 hover:bg-black/10 rounded-full transition-colors"
-                            aria-label="Dismiss"
+                            aria-label={t('offlineIndicator.dismiss')}
                         >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

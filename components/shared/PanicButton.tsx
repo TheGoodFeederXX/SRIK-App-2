@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProfile } from '../../context/ProfileContext';
 import { api } from '../../lib/api';
@@ -13,6 +14,7 @@ interface PanicButtonProps {
 const HOLD_DURATION_MS = 1200;
 
 const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [isActivating, setIsActivating] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
@@ -62,7 +64,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
 
         } catch (error: any) {
             console.error('Error activating panic button:', error);
-            toast.error('Failed to send alert. Please call emergency services directly.');
+            toast.error(t('panicButton.failedToSendAlertPleaseCallEmergencyServicesDi'));
         } finally {
             setIsActivating(false);
             setHoldProgress(0);
@@ -100,7 +102,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                     ? 'fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-2xl z-50'
                     : 'w-full py-4 rounded-xl'
                     } bg-red-600 hover:bg-red-700 text-white font-bold flex items-center justify-center transition-transform hover:scale-105 active:scale-95 animate-pulse`}
-                title="Emergency Panic Button"
+                title={t('panicButton.emergencyPanicButton')}
             >
                 <ExclamationCircleIcon className="w-8 h-8" />
             </button>
@@ -195,7 +197,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                 >
                     <ExclamationCircleIcon className="w-6 h-6 flex-shrink-0 mt-0.5 shrink-0" />
                     <div className="flex-1 min-w-0">
-                        <p className="font-bold">Alert Sent — Help Is On The Way</p>
+                        <p className="font-bold">{t('panicButton.alertSentHelpIsOnTheWay')}</p>
                         <p className="text-xs text-red-100 mt-0.5">
                             Sent at {sentAlert.time}{sentAlert.id ? ` · Ref #${sentAlert.id.slice(0, 8)}` : ''}. Security and admin have been notified.
                         </p>

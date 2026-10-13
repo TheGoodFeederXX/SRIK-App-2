@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProfile } from '../../context/ProfileContext';
 import { api } from '../../lib/api';
@@ -22,6 +23,7 @@ interface Referral {
 }
 
 const ReferralSystem: React.FC = () => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [referrals, setReferrals] = useState<Referral[]>([]);
     const [students, setStudents] = useState<any[]>([]);
@@ -99,7 +101,7 @@ const ReferralSystem: React.FC = () => {
 
     const handleSubmitReferral = async () => {
         if (!selectedStudentId || !needDescription) {
-            toast.error('Please select a student and describe the need');
+            toast.error(t('referralSystem.pleaseSelectAStudentAndDescribeTheNeed'));
             return;
         }
 
@@ -119,12 +121,12 @@ const ReferralSystem: React.FC = () => {
 
             if (error) throw error;
 
-            toast.success('Referral submitted successfully! A social worker will review it soon.');
+            toast.success(t('referralSystem.referralSubmittedSuccessfullyASocialWorkerWill'));
             resetForm();
             setShowForm(false);
             fetchReferrals();
         } catch (error: any) {
-            toast.error('Failed to submit referral');
+            toast.error(t('referralSystem.failedToSubmitReferral'));
             console.error(error);
         }
     };
@@ -156,7 +158,7 @@ const ReferralSystem: React.FC = () => {
             {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-6">
                 <h1 className="text-3xl font-bold mb-2">🤝 Family Referral System</h1>
-                <p className="text-indigo-100">Get connected to community support services</p>
+                <p className="text-indigo-100">{t('referralSystem.getConnectedToCommunitySupportServices')}</p>
             </div>
 
             {/* Info Banner */}
@@ -165,7 +167,7 @@ const ReferralSystem: React.FC = () => {
                     <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
                     <div>
                         <p className="text-sm text-blue-900">
-                            <strong>Confidential Support:</strong> This referral system connects you with local resources for health, food, legal aid, and more. All referrals are confidential and reviewed by trained staff.
+                            <strong>{t('referralSystem.confidentialSupport')}</strong> This referral system connects you with local resources for health, food, legal aid, and more. All referrals are confidential and reviewed by trained staff.
                         </p>
                     </div>
                 </div>
@@ -193,11 +195,11 @@ const ReferralSystem: React.FC = () => {
                     transition={{ duration: 0.25 }}
                     className="bg-white rounded-xl shadow-lg p-6 mb-6 overflow-hidden"
                 >
-                    <h2 className="text-2xl font-bold text-gray-900 mb-4">New Referral Request</h2>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('referralSystem.newReferralRequest')}</h2>
 
                     <div className="space-y-4 mb-6">
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Select Student*</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('referralSystem.selectStudent')}</label>
                             <select
                                 value={selectedStudentId || ''}
                                 onChange={(e) => setSelectedStudentId(Number(e.target.value))}
@@ -210,7 +212,7 @@ const ReferralSystem: React.FC = () => {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Type of Need*</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('referralSystem.typeOfNeed')}</label>
                             <select
                                 value={referralType}
                                 onChange={(e) => setReferralType(e.target.value)}
@@ -218,16 +220,16 @@ const ReferralSystem: React.FC = () => {
                             >
                                 <option>Health</option>
                                 <option>Food</option>
-                                <option>Shelter</option>
+                                <option>{t('referralSystem.shelter')}</option>
                                 <option>Legal</option>
-                                <option>Counseling</option>
-                                <option>Financial</option>
+                                <option>{t('referralSystem.counseling')}</option>
+                                <option>{t('referralSystem.financial')}</option>
                                 <option>Other</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Urgency Level*</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('referralSystem.urgencyLevel')}</label>
                             <select
                                 value={urgency}
                                 onChange={(e) => setUrgency(e.target.value)}
@@ -236,20 +238,20 @@ const ReferralSystem: React.FC = () => {
                                 <option>Low</option>
                                 <option>Medium</option>
                                 <option>High</option>
-                                <option>Critical</option>
+                                <option>{t('referralSystem.critical')}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Describe the Need*</label>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">{t('referralSystem.describeTheNeed')}</label>
                             <textarea
                                 value={needDescription}
                                 onChange={(e) => setNeedDescription(e.target.value)}
-                                placeholder="Please describe the situation and what support is needed..."
+                                placeholder={t('referralSystem.pleaseDescribeTheSituationAndWhatSupportIsNeed')}
                                 rows={5}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                             ></textarea>
-                            <p className="text-xs text-gray-500 mt-1">Be as detailed as possible to help us match you with the right resources</p>
+                            <p className="text-xs text-gray-500 mt-1">{t('referralSystem.beAsDetailedAsPossibleToHelpUsMatchYouWithTheR')}</p>
                         </div>
 
                         <div className="flex items-center">
@@ -297,8 +299,8 @@ const ReferralSystem: React.FC = () => {
                 {referrals.length === 0 ? (
                     <div className="bg-white rounded-xl shadow-sm p-12 text-center text-gray-500">
                         <FileText className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                        <p className="text-lg">No referrals submitted yet</p>
-                        <p className="text-sm">Click "Submit New Referral" to get started</p>
+                        <p className="text-lg">{t('referralSystem.noReferralsSubmittedYet')}</p>
+                        <p className="text-sm">{t('referralSystem.clickSubmitNewReferralToGetStarted')}</p>
                     </div>
                 ) : (
                     <div className="space-y-4">
@@ -340,7 +342,7 @@ const ReferralSystem: React.FC = () => {
                                 {referral.community_resources && (
                                     <div className="flex items-center space-x-2 text-sm text-green-700 bg-green-50 p-2 rounded-lg">
                                         <CheckCircle className="h-4 w-4" />
-                                        <span>Matched with: <strong>{referral.community_resources.resource_name}</strong></span>
+                                        <span>{t('referralSystem.matchedWith')} <strong>{referral.community_resources.resource_name}</strong></span>
                                     </div>
                                 )}
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, RotateCcw, Check, Layers, Square, CloudCheck, MonitorSmartphone, Bell, Home, MessageSquare, Settings, Wand2, Sun, Moon, Laptop, Rows2, Grid2x2 } from 'lucide-react';
 import {
@@ -21,10 +22,10 @@ import { ColorScheme, applyColorScheme, getColorScheme, PREFERENCES_APPLIED_EVEN
  * Light / Dark / System is safe to offer everywhere.
  */
 
-const GLASS_PRESETS: Record<string, { label: string; hint: string; glass: GlassParams }> = {
-  subtle:   { label: 'Subtle',   hint: 'Light frost, calm',      glass: { blur: 10, opacity: 0.8,  sheen: 0.3,  saturate: 140, shadow: 0.06 } },
-  balanced: { label: 'Balanced', hint: 'The default look',       glass: DEFAULT_GLASS },
-  vivid:    { label: 'Vivid',    hint: 'Deeper blur, more shine', glass: { blur: 28, opacity: 0.5,  sheen: 0.8,  saturate: 210, shadow: 0.2 } },
+const GLASS_PRESETS: Record<string, { labelKey: string; hintKey: string; glass: GlassParams }> = {
+  subtle:   { labelKey: 'appearancePanel.glassSubtle',  hintKey: 'appearancePanel.glassSubtleHint',  glass: { blur: 10, opacity: 0.8,  sheen: 0.3,  saturate: 140, shadow: 0.06 } },
+  balanced: { labelKey: 'appearancePanel.glassBalanced', hintKey: 'appearancePanel.glassBalancedHint', glass: DEFAULT_GLASS },
+  vivid:    { labelKey: 'appearancePanel.glassVivid',   hintKey: 'appearancePanel.glassVividHint',   glass: { blur: 28, opacity: 0.5,  sheen: 0.8,  saturate: 210, shadow: 0.2 } },
 };
 
 const presetOf = (g: GlassParams) =>
@@ -56,16 +57,17 @@ const SectionTitle: React.FC<{ children: React.ReactNode; hint?: string }> = ({ 
 /** A miniature of the app drawn with the live accent variables, so the effect
  *  of every choice is visible in one place before scrolling around the app. */
 const LivePreview: React.FC<{ a: Appearance; roleLabel: string }> = ({ a, roleLabel }) => {
+    const { t } = useTranslation();
   const surface = a.mode === 'glass' ? 'liquid-glass' : 'bg-white border border-gray-200';
   return (
-    <div className={`rounded-2xl p-3 ${surface}`} aria-label="Preview of your look">
+    <div className={`rounded-2xl p-3 ${surface}`} aria-label={t('appearancePanel.previewOfYourLook')}>
       <div className="rounded-xl p-3 text-white" style={{ background: 'linear-gradient(135deg, rgb(var(--accent-600)), rgb(var(--accent-500)))' }}>
         <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">{roleLabel} Dashboard</p>
-        <p className="text-sm font-black">Good morning</p>
+        <p className="text-sm font-black">{t('appearancePanel.goodMorning')}</p>
       </div>
       <div className="flex items-center gap-2 mt-3">
-        <span className="px-3 py-1.5 rounded-full text-[11px] font-bold text-white" style={{ background: 'rgb(var(--accent-600))' }}>Primary action</span>
-        <span className="px-3 py-1.5 rounded-full text-[11px] font-bold accent-tint-chip">Highlight</span>
+        <span className="px-3 py-1.5 rounded-full text-[11px] font-bold text-white" style={{ background: 'rgb(var(--accent-600))' }}>{t('appearancePanel.primaryAction')}</span>
+        <span className="px-3 py-1.5 rounded-full text-[11px] font-bold accent-tint-chip">{t('appearancePanel.highlight')}</span>
         <span className="ml-auto w-7 h-7 rounded-full flex items-center justify-center text-white" style={{ background: 'rgb(var(--accent-500))' }}><Bell className="w-3.5 h-3.5" /></span>
       </div>
       <div className="grid grid-cols-4 gap-1 mt-3 pt-2 border-t border-gray-200/60">
@@ -81,6 +83,7 @@ const LivePreview: React.FC<{ a: Appearance; roleLabel: string }> = ({ a, roleLa
 };
 
 const AppearancePanel: React.FC = () => {
+    const { t } = useTranslation();
   const scope = useScope();
   const auth = useAuth() as any;
   const isDemo = !!auth?.isDemo;
@@ -133,8 +136,8 @@ const AppearancePanel: React.FC = () => {
             <Sparkles className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-lg font-black text-gray-900 uppercase tracking-tight">Appearance</h2>
-            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Make the app yours</p>
+            <h2 className="text-lg font-black text-gray-900 uppercase tracking-tight">{t('appearancePanel.appearance')}</h2>
+            <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">{t('appearancePanel.makeTheAppYours')}</p>
           </div>
         </div>
         <div className={`mt-4 flex items-center gap-2 rounded-2xl px-3 py-2 text-[11px] font-semibold ${isDemo ? 'bg-amber-50 text-amber-800' : 'bg-emerald-50 text-emerald-800'}`}>
@@ -150,7 +153,7 @@ const AppearancePanel: React.FC = () => {
 
         {/* Live preview */}
         <div className="mt-6">
-          <SectionTitle hint="updates as you choose">Preview</SectionTitle>
+          <SectionTitle hint="updates as you choose">{t('appearancePanel.preview')}</SectionTitle>
           <LivePreview a={a} roleLabel={roleLabel} />
         </div>
 
@@ -160,18 +163,18 @@ const AppearancePanel: React.FC = () => {
           <div className="grid grid-cols-2 gap-2">
             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => update({ mode: 'normal' })} className={modeBtn(a.mode === 'normal')} aria-pressed={a.mode === 'normal'}>
               <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Square className="w-4 h-4" /> Normal</span>
-              <span className={`text-[11px] ${a.mode === 'normal' ? 'text-white/80' : 'text-gray-400'}`}>Solid panels, fastest on older phones</span>
+              <span className={`text-[11px] ${a.mode === 'normal' ? 'text-white/80' : 'text-gray-400'}`}>{t('appearancePanel.solidPanelsFastestOnOlderPhones')}</span>
             </motion.button>
             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => update({ mode: 'glass' })} className={modeBtn(a.mode === 'glass')} aria-pressed={a.mode === 'glass'}>
               <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Layers className="w-4 h-4" /> Liquid Glass</span>
-              <span className={`text-[11px] ${a.mode === 'glass' ? 'text-white/80' : 'text-gray-400'}`}>Frosted, translucent panels</span>
+              <span className={`text-[11px] ${a.mode === 'glass' ? 'text-white/80' : 'text-gray-400'}`}>{t('appearancePanel.frostedTranslucentPanels')}</span>
             </motion.button>
           </div>
         </div>
 
         {/* Colour scheme — html.dark + styles/dark-theme.css re-colour every screen */}
         <div className="mt-6">
-          <SectionTitle hint={scheme === 'system' ? 'follows your device' : undefined}>Colour scheme</SectionTitle>
+          <SectionTitle hint={scheme === 'system' ? 'follows your device' : undefined}>{t('appearancePanel.colourScheme')}</SectionTitle>
           <div className="grid grid-cols-1 min-[360px]:grid-cols-3 gap-2">
             {([['light', 'Light', Sun], ['dark', 'Dark', Moon], ['system', 'System', Laptop]] as const).map(([key, label, Icon]) => (
               <motion.button key={key} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => chooseScheme(key)} aria-pressed={scheme === key}
@@ -184,7 +187,7 @@ const AppearancePanel: React.FC = () => {
 
         {/* Dashboard total cards — how many sit on a row, and how big they read */}
         <div className="mt-6">
-          <SectionTitle hint={cardLayout === 'compact' ? 'more per row' : 'roomier cards'}>Dashboard cards</SectionTitle>
+          <SectionTitle hint={cardLayout === 'compact' ? 'more per row' : 'roomier cards'}>{t('appearancePanel.dashboardCards')}</SectionTitle>
           <div className="grid grid-cols-1 min-[360px]:grid-cols-2 gap-2">
             {([['comfortable', 'Comfortable', Rows2, 'Bigger cards, one or two per row'],
                ['compact', 'Compact', Grid2x2, 'Smaller cards, more per row']] as const).map(([key, label, Icon, hint]) => (
@@ -199,17 +202,17 @@ const AppearancePanel: React.FC = () => {
 
         {/* Accent colour — re-themes the whole app */}
         <div className="mt-6">
-          <SectionTitle hint={ACCENTS[a.accent]?.label}>Accent colour</SectionTitle>
+          <SectionTitle hint={a.accent && ACCENTS[a.accent] ? t(ACCENTS[a.accent].labelKey) : ''}>{t('appearancePanel.accentColour')}</SectionTitle>
           <div className="flex flex-wrap gap-2.5">
-            {Object.entries(ACCENTS).map(([key, { label, swatch }]) => {
+            {Object.entries(ACCENTS).map(([key, { labelKey, swatch }]) => {
               const active = a.accent === key;
               return (
                 <motion.button
                   key={key}
                   whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}
                   onClick={() => update({ accent: key })}
-                  title={label}
-                  aria-label={label}
+                  title={t(labelKey)}
+                  aria-label={t(labelKey)}
                   aria-pressed={active}
                   className="w-11 h-11 rounded-full flex items-center justify-center"
                   style={{ background: swatch, boxShadow: active ? `0 0 0 2px #fff, 0 0 0 4px ${swatch}` : 'none' }}
@@ -219,26 +222,26 @@ const AppearancePanel: React.FC = () => {
               );
             })}
           </div>
-          <p className="text-[11px] text-gray-400 mt-2">Changes every button, tab and highlight across the whole app.</p>
+          <p className="text-[11px] text-gray-400 mt-2">{t('appearancePanel.changesEveryButtonTabAndHighlightAcrossTheWhol')}</p>
         </div>
 
         {/* Glass presets + fine-tuning (glass mode only) */}
         <AnimatePresence>
         {a.mode === 'glass' && (
           <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} className="mt-6 pt-5 border-t border-gray-200/70 overflow-hidden">
-            <SectionTitle hint={preset === 'custom' ? 'Custom' : GLASS_PRESETS[preset].hint}>Glass style</SectionTitle>
+            <SectionTitle hint={preset === 'custom' ? t('appearancePanel.custom') : t(GLASS_PRESETS[preset].hintKey)}>{t('appearancePanel.glassStyle')}</SectionTitle>
             <div className="flex flex-wrap gap-2 mb-4">
               {Object.entries(GLASS_PRESETS).map(([key, p]) => (
                 <button key={key} onClick={() => update({ glass: p.glass })} className={chip(preset === key)} aria-pressed={preset === key}>
-                  <Wand2 className="w-3 h-3 inline mr-1 -mt-0.5" />{p.label}
+                  <Wand2 className="w-3 h-3 inline mr-1 -mt-0.5" />{t(p.labelKey)}
                 </button>
               ))}
             </div>
-            <SectionTitle>Fine-tuning</SectionTitle>
+            <SectionTitle>{t('appearancePanel.fineTuning')}</SectionTitle>
             <Slider label="Blur" min={0} max={40} step={1} value={a.glass.blur} display={`${a.glass.blur}px`} onChange={(v) => updateGlass({ blur: v })} />
             <Slider label="Frost" min={0.3} max={0.95} step={0.01} value={a.glass.opacity} display={`${Math.round(a.glass.opacity * 100)}%`} onChange={(v) => updateGlass({ opacity: v })} />
             <Slider label="Sheen" min={0} max={1} step={0.01} value={a.glass.sheen} display={`${Math.round(a.glass.sheen * 100)}%`} onChange={(v) => updateGlass({ sheen: v })} />
-            <Slider label="Vividness" min={100} max={220} step={5} value={a.glass.saturate} display={`${a.glass.saturate}%`} onChange={(v) => updateGlass({ saturate: v })} />
+            <Slider label={t('appearancePanel.vividness')} min={100} max={220} step={5} value={a.glass.saturate} display={`${a.glass.saturate}%`} onChange={(v) => updateGlass({ saturate: v })} />
             <Slider label="Depth" min={0} max={0.3} step={0.01} value={a.glass.shadow} display={`${Math.round(a.glass.shadow * 100)}%`} onChange={(v) => updateGlass({ shadow: v })} />
           </motion.div>
         )}

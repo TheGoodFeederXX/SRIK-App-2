@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useProfile } from '../../context/ProfileContext';
 import { toast } from 'react-hot-toast';
@@ -15,6 +16,7 @@ const DEFAULT_SETTINGS = {
 const storageKey = (userId?: string) => `accessibility_settings:${userId || 'anonymous'}`;
 
 const AccessibilitySettings: React.FC = () => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [settings, setSettings] = useState(DEFAULT_SETTINGS);
     const [loading, setLoading] = useState(false);
@@ -56,9 +58,9 @@ const AccessibilitySettings: React.FC = () => {
             setLoading(true);
             localStorage.setItem(storageKey(profile?.id), JSON.stringify(settings));
             applySettings(settings);
-            toast.success('Settings saved successfully!');
+            toast.success(t('accessibilitySettings.settingsSavedSuccessfully'));
         } catch (error: any) {
-            toast.error('Failed to save settings');
+            toast.error(t('accessibilitySettings.failedToSaveSettings'));
         } finally {
             setLoading(false);
         }
@@ -67,7 +69,7 @@ const AccessibilitySettings: React.FC = () => {
     return (
         <div className="p-6 max-w-2xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-xl shadow-lg p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Accessibility Settings</h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('accessibilitySettings.accessibilitySettings')}</h2>
 
                 <div className="space-y-6">
                     <div>
@@ -91,8 +93,8 @@ const AccessibilitySettings: React.FC = () => {
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
-                            <p className="font-medium text-gray-900">High Contrast Mode</p>
-                            <p className="text-sm text-gray-600">Increase color contrast for better visibility</p>
+                            <p className="font-medium text-gray-900">{t('accessibilitySettings.highContrastMode')}</p>
+                            <p className="text-sm text-gray-600">{t('accessibilitySettings.increaseColorContrastForBetterVisibility')}</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
@@ -107,8 +109,8 @@ const AccessibilitySettings: React.FC = () => {
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
-                            <p className="font-medium text-gray-900">Text-to-Speech</p>
-                            <p className="text-sm text-gray-600">Read text aloud</p>
+                            <p className="font-medium text-gray-900">{t('accessibilitySettings.textToSpeech')}</p>
+                            <p className="text-sm text-gray-600">{t('accessibilitySettings.readTextAloud')}</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
@@ -123,8 +125,8 @@ const AccessibilitySettings: React.FC = () => {
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
-                            <p className="font-medium text-gray-900">Reduce Motion</p>
-                            <p className="text-sm text-gray-600">Minimize animations</p>
+                            <p className="font-medium text-gray-900">{t('accessibilitySettings.reduceMotion')}</p>
+                            <p className="text-sm text-gray-600">{t('accessibilitySettings.minimizeAnimations')}</p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input
@@ -146,7 +148,7 @@ const AccessibilitySettings: React.FC = () => {
                             onChange={(e) => setSettings({ ...settings, language: e.target.value })}
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                         >
-                            <option value="en">English</option>
+                            <option value="en">{t('accessibilitySettings.english')}</option>
                             <option value="yo">Yoruba</option>
                             <option value="ig">Igbo</option>
                             <option value="ha">Hausa</option>

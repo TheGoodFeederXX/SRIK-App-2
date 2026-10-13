@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const StudentGateScreen: React.FC<any> = ({ navigateTo }) => (
+const StudentGateScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Student Gate"
+        title={t('studentGateScreen.studentGate')}
         explanation="Pickup authorisation is not managed in this system yet, so it cannot be relied on to decide who may collect a child. The office keeps that list."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default StudentGateScreen;

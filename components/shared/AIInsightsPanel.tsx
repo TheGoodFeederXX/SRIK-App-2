@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Sparkles, AlertCircle } from 'lucide-react';
 import { formatMoney } from '../../src/lib/supabase/finance';
@@ -16,6 +17,7 @@ const STAT_LABELS: Record<string, string> = {
  * from the Insight Engine (rules-based) — this component only presents them
  * and surfaces the plain-English recommendations it returns. */
 const AIInsightsPanel = () => {
+    const { t } = useTranslation();
     const [insights, setInsights] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -61,7 +63,7 @@ const AIInsightsPanel = () => {
                 <div className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center">
                     <Sparkles className="w-4 h-4" />
                 </div>
-                <h3 className="font-bold text-gray-900">AI Insights</h3>
+                <h3 className="font-bold text-gray-900">{t('aIInsightsPanel.aiInsights')}</h3>
             </div>
 
             {statEntries.length > 0 && (
@@ -126,7 +128,7 @@ const AIInsightsPanel = () => {
                     ))}
                 </ul>
             ) : (
-                <p className="text-sm text-gray-400">Nothing urgent right now — all clear.</p>
+                <p className="text-sm text-gray-400">{t('aIInsightsPanel.nothingUrgentRightNowAllClear')}</p>
             )}
         </motion.div>
     );

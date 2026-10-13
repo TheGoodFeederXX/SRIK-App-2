@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -27,6 +28,7 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) => {
+    const { t } = useTranslation();
     const [caseData, setCaseData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [uploading, setUploading] = useState(false);
@@ -71,7 +73,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                     await api.post(`/sop/cases/${caseId}/evidence`, { url, file_type: f.type, description: f.name });
                 }
             }
-            toast.success('Evidence uploaded');
+            toast.success(t('sOPCaseDetailView.evidenceUploaded'));
             fetchCase();
         } catch (err: any) {
             toast.error(err?.message || 'Failed to upload evidence');
@@ -85,7 +87,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
         setAdvancing(true);
         try {
             await api.post(`/sop/cases/${caseId}/advance`, { notes: advanceNotes });
-            toast.success('Stage completed');
+            toast.success(t('sOPCaseDetailView.stageCompleted'));
             setAdvanceNotes('');
             fetchCase();
         } catch (err: any) {
@@ -96,11 +98,11 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
     };
 
     const handleRecordDecision = async () => {
-        if (!decisionText.trim()) { toast.error('Please describe the decision'); return; }
+        if (!decisionText.trim()) { toast.error(t('sOPCaseDetailView.pleaseDescribeTheDecision')); return; }
         setSavingDecision(true);
         try {
             await api.post(`/sop/cases/${caseId}/decision`, { decision_text: decisionText, outcome });
-            toast.success('Decision recorded');
+            toast.success(t('sOPCaseDetailView.decisionRecorded'));
             setShowDecision(false);
             setDecisionText(''); setOutcome('no_action');
             fetchCase();
@@ -116,7 +118,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
         try {
             const letter: any = await api.post(`/sop/cases/${caseId}/letters`, { recipient_type: recipientType });
             setLetterDraft(letter.draft_text);
-            toast.success('Letter drafted — review and send when ready');
+            toast.success(t('sOPCaseDetailView.letterDraftedReviewAndSendWhenReady'));
             fetchCase();
         } catch (err: any) {
             toast.error(err?.message || 'Failed to draft letter');
@@ -126,11 +128,11 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
     };
 
     const handleSendLetter = async (letterId: string) => {
-        if (!window.confirm('Send this letter now? It cannot be edited afterward.')) return;
+        if (!window.confirm(t('sOPCaseDetailView.sendThisLetterNowItCannotBeEditedAfterward'))) return;
         try {
             await api.put(`/sop/letters/${letterId}`, { draft_text: letterDraft, recipient_id: recipientId, recipient_type: recipientType });
             await api.post(`/sop/letters/${letterId}/send`, {});
-            toast.success('Letter sent');
+            toast.success(t('sOPCaseDetailView.letterSent'));
             setShowLetter(false);
             fetchCase();
         } catch (err: any) {
@@ -138,8 +140,8 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
         }
     };
 
-    if (loading) return <CenteredLoader message="Loading case..." className="py-12" />;
-    if (!caseData) return <div className="text-center py-12 text-gray-500">Case not found.</div>;
+    if (loading) return <CenteredLoader message={t('sOPCaseDetailView.loadingCase')} className="py-12" />;
+    if (!caseData) return <div className="text-center py-12 text-gray-500">{t('sOPCaseDetailView.caseNotFound')}</div>;
 
     const stages = caseData.incident_type.stages;
     const currentStage = stages.find((s: any) => s.order === caseData.current_stage_order);
@@ -163,14 +165,14 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                 {caseData.critical_alert_sent && (
                     <div className="flex items-center gap-2 mt-3 bg-red-50 border border-red-200 rounded-xl p-3">
                         <AlertTriangle className="w-4 h-4 text-red-600" />
-                        <p className="text-sm text-red-700 font-semibold">A critical alert was sent when this case was reported.</p>
+                        <p className="text-sm text-red-700 font-semibold">{t('sOPCaseDetailView.aCriticalAlertWasSentWhenThisCaseWasReported')}</p>
                     </div>
                 )}
             </motion.div>
 
             {/* Stage timeline */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">Workflow</h3></div>
+                <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.workflow')}</h3></div>
                 <div className="divide-y divide-gray-50">
                     {stages.map((stage: any) => {
                         const log = caseData.stage_logs.find((l: any) => l.stage_order === stage.order);
@@ -194,7 +196,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                 </div>
                 {canAct && !isArchived && currentStage && (
                     <div className="p-4 bg-gray-50 border-t border-gray-100 space-y-2">
-                        <textarea rows={2} placeholder="Notes for this stage (optional)"
+                        <textarea rows={2} placeholder={t('sOPCaseDetailView.notesForThisStageOptional')}
                             className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500 outline-none"
                             value={advanceNotes} onChange={e => setAdvanceNotes(e.target.value)} />
                         <motion.button whileHover={!advancing ? { scale: 1.01 } : {}} whileTap={!advancing ? { scale: 0.98 } : {}} onClick={handleAdvance} disabled={advancing}
@@ -208,7 +210,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             {/* Evidence */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="font-bold text-gray-900">Evidence</h3>
+                    <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.evidence')}</h3>
                     {!isArchived && (
                         <label className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 cursor-pointer hover:text-indigo-800">
                             <Paperclip className="w-4 h-4" /> {uploading ? 'Uploading...' : 'Upload'}
@@ -217,7 +219,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                     )}
                 </div>
                 {caseData.evidence.length === 0
-                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No evidence uploaded yet.</p>
+                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('sOPCaseDetailView.noEvidenceUploadedYet')}</p>
                     : <div className="divide-y divide-gray-50">
                         {caseData.evidence.map((ev: any) => (
                             <a key={ev.id} href={ev.url} target="_blank" rel="noopener noreferrer" className="px-5 py-3 flex items-center gap-2 hover:bg-gray-50">
@@ -232,13 +234,13 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             {/* Decisions */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="font-bold text-gray-900">Decisions</h3>
+                    <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.decisions')}</h3>
                     {canAct && (
                         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowDecision(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Record Decision</motion.button>
                     )}
                 </div>
                 {caseData.decisions.length === 0
-                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No decisions recorded yet.</p>
+                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('sOPCaseDetailView.noDecisionsRecordedYet')}</p>
                     : <div className="divide-y divide-gray-50">
                         {caseData.decisions.map((d: any) => (
                             <div key={d.id} className="px-5 py-3">
@@ -253,13 +255,13 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             {/* Letters */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.2 }} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="font-bold text-gray-900">Letters</h3>
+                    <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.letters')}</h3>
                     {canAct && (
                         <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowLetter(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Generate Letter</motion.button>
                     )}
                 </div>
                 {caseData.letters.length === 0
-                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No letters generated yet.</p>
+                    ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('sOPCaseDetailView.noLettersGeneratedYet')}</p>
                     : <div className="divide-y divide-gray-50">
                         {caseData.letters.map((l: any) => (
                             <div key={l.id} className="px-5 py-3">
@@ -280,16 +282,16 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             {showDecision && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl">
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Record Decision</h2>
+                        <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('sOPCaseDetailView.recordDecision')}</h2>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Outcome</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.outcome')}</label>
                                 <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={outcome} onChange={e => setOutcome(e.target.value)}>
-                                    <option value="no_action">No Action</option>
-                                    <option value="warning">Warning</option>
-                                    <option value="suspension">Suspension</option>
-                                    <option value="expulsion">Expulsion</option>
+                                    <option value="no_action">{t('sOPCaseDetailView.noAction')}</option>
+                                    <option value="warning">{t('sOPCaseDetailView.warning')}</option>
+                                    <option value="suspension">{t('sOPCaseDetailView.suspension')}</option>
+                                    <option value="expulsion">{t('sOPCaseDetailView.expulsion')}</option>
                                     <option value="other">Other</option>
                                 </select>
                                 {(outcome === 'warning' || outcome === 'suspension') && (
@@ -297,7 +299,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                                 )}
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Decision Details</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.decisionDetails')}</label>
                                 <textarea rows={5} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={decisionText} onChange={e => setDecisionText(e.target.value)} />
                             </div>
@@ -319,21 +321,21 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             {showLetter && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
                     <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-3xl p-6 max-w-lg w-full space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Generate Letter</h2>
+                        <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('sOPCaseDetailView.generateLetter')}</h2>
                         <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Recipient Type</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.recipientType')}</label>
                                     <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={recipientType} onChange={e => setRecipientType(e.target.value)}>
                                         <option value="parent">Parent</option>
-                                        <option value="student">Student</option>
-                                        <option value="teacher">Teacher</option>
+                                        <option value="student">{t('sOPCaseDetailView.student')}</option>
+                                        <option value="teacher">{t('sOPCaseDetailView.teacher')}</option>
                                         <option value="other">Other</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Recipient User ID</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.recipientUserID')}</label>
                                     <input type="text" placeholder="Paste recipient's user ID" className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={recipientId} onChange={e => setRecipientId(e.target.value)} />
                                 </div>
@@ -345,7 +347,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                                 </motion.button>
                             ) : (
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Letter Text (editable)</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.letterTextEditable')}</label>
                                     <textarea rows={10} className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-sm"
                                         value={letterDraft} onChange={e => setLetterDraft(e.target.value)} />
                                 </div>

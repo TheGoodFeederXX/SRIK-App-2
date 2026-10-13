@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -28,29 +29,29 @@ interface PersonnelFileViewProps {
     mode: 'admin' | 'teacher';
 }
 
-const RECORD_META: Record<string, { label: string; icon: React.ReactNode; classes: string }> = {
-    promotion: { label: 'Promotion', icon: <TrendingUp className="w-4 h-4" />, classes: 'bg-green-50 text-green-700' },
-    commendation: { label: 'Commendation', icon: <ThumbsUp className="w-4 h-4" />, classes: 'bg-indigo-50 text-indigo-700' },
-    warning: { label: 'Warning', icon: <AlertTriangle className="w-4 h-4" />, classes: 'bg-amber-50 text-amber-700' },
-    disciplinary: { label: 'Disciplinary', icon: <XCircle className="w-4 h-4" />, classes: 'bg-red-50 text-red-700' },
-    note: { label: 'Note', icon: <FileText className="w-4 h-4" />, classes: 'bg-gray-100 text-gray-600' },
+const RECORD_META: Record<string, { labelKey: string; icon: React.ReactNode; classes: string }> = {
+    promotion: { labelKey: 'personnelFileView.promotion', icon: <TrendingUp className="w-4 h-4" />, classes: 'bg-green-50 text-green-700' },
+    commendation: { labelKey: 'personnelFileView.commendation', icon: <ThumbsUp className="w-4 h-4" />, classes: 'bg-indigo-50 text-indigo-700' },
+    warning: { labelKey: 'personnelFileView.warning', icon: <AlertTriangle className="w-4 h-4" />, classes: 'bg-amber-50 text-amber-700' },
+    disciplinary: { labelKey: 'personnelFileView.disciplinary', icon: <XCircle className="w-4 h-4" />, classes: 'bg-red-50 text-red-700' },
+    note: { labelKey: 'personnelFileView.note', icon: <FileText className="w-4 h-4" />, classes: 'bg-gray-100 text-gray-600' },
 };
 
-const QUERY_STATUS: Record<string, { label: string; classes: string }> = {
-    pending: { label: 'Awaiting Response', classes: 'bg-amber-50 text-amber-700' },
-    responded: { label: 'Response Received', classes: 'bg-blue-50 text-blue-700' },
-    resolved: { label: 'Resolved', classes: 'bg-green-50 text-green-700' },
-    warning_issued: { label: 'Warning Issued', classes: 'bg-red-50 text-red-700' },
-    escalated: { label: 'Escalated', classes: 'bg-purple-50 text-purple-700' },
+const QUERY_STATUS: Record<string, { labelKey: string; classes: string }> = {
+    pending: { labelKey: 'personnelFileView.awaitingResponse', classes: 'bg-amber-50 text-amber-700' },
+    responded: { labelKey: 'personnelFileView.responseReceived', classes: 'bg-blue-50 text-blue-700' },
+    resolved: { labelKey: 'personnelFileView.resolved', classes: 'bg-green-50 text-green-700' },
+    warning_issued: { labelKey: 'personnelFileView.warningIssued', classes: 'bg-red-50 text-red-700' },
+    escalated: { labelKey: 'personnelFileView.escalated', classes: 'bg-purple-50 text-purple-700' },
 };
 
 const TABS = [
-    { key: 'overview', label: 'Overview', icon: <User className="w-4 h-4" /> },
-    { key: 'teaching', label: 'Teaching', icon: <BookOpen className="w-4 h-4" /> },
-    { key: 'attendance', label: 'Attendance', icon: <CalendarDays className="w-4 h-4" /> },
-    { key: 'performance', label: 'Performance', icon: <TrendingUp className="w-4 h-4" /> },
-    { key: 'records', label: 'Records', icon: <FolderOpen className="w-4 h-4" /> },
-    { key: 'queries', label: 'Query Letters', icon: <Mail className="w-4 h-4" /> },
+    { key: 'overview', labelKey: 'personnelFileView.overview', icon: <User className="w-4 h-4" /> },
+    { key: 'teaching', labelKey: 'personnelFileView.teaching', icon: <BookOpen className="w-4 h-4" /> },
+    { key: 'attendance', labelKey: 'personnelFileView.attendance', icon: <CalendarDays className="w-4 h-4" /> },
+    { key: 'performance', labelKey: 'personnelFileView.performance', icon: <TrendingUp className="w-4 h-4" /> },
+    { key: 'records', labelKey: 'personnelFileView.records', icon: <FolderOpen className="w-4 h-4" /> },
+    { key: 'queries', labelKey: 'personnelFileView.queryLetters', icon: <Mail className="w-4 h-4" /> },
 ];
 
 function fmtDate(value: string | null | undefined): string {
@@ -66,6 +67,7 @@ function todayStr(): string {
 
 /** Shared multi-file attach control: uploads immediately, returns URLs. */
 const AttachmentInput: React.FC<{ urls: string[]; onChange: (urls: string[]) => void }> = ({ urls, onChange }) => {
+    const { t } = useTranslation();
     const [uploading, setUploading] = useState(false);
     const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files || []);
@@ -82,7 +84,7 @@ const AttachmentInput: React.FC<{ urls: string[]; onChange: (urls: string[]) => 
             if (uploaded.length) toast.success(`${uploaded.length} document(s) attached`);
         } catch (err) {
             console.error('Attachment upload failed:', err);
-            toast.error('Failed to upload document');
+            toast.error(t('personnelFileView.failedToUploadDocument'));
         } finally {
             setUploading(false);
             e.target.value = '';
@@ -117,6 +119,7 @@ const AttachmentLinks: React.FC<{ urls?: string[] }> = ({ urls }) => {
 };
 
 const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }) => {
+    const { t } = useTranslation();
     const [file, setFile] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [tab, setTab] = useState('overview');
@@ -161,11 +164,11 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
     }, [fetchFile, mode, teacherId]);
 
     const handleAddRecord = async () => {
-        if (!recordForm.title.trim()) { toast.error('Please enter a title'); return; }
+        if (!recordForm.title.trim()) { toast.error(t('personnelFileView.pleaseEnterATitle')); return; }
         setSaving(true);
         try {
             await api.post('/personnel/records', { ...recordForm, teacher_id: file.teacher.id });
-            toast.success('Record added to personnel file');
+            toast.success(t('personnelFileView.recordAddedToPersonnelFile'));
             setShowAddRecord(false);
             setRecordForm({ type: 'commendation', title: '', details: '', effective_date: todayStr(), attachment_urls: [] });
             fetchFile();
@@ -175,13 +178,13 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
     };
 
     const handleIssueQuery = async () => {
-        if (!queryForm.subject.trim()) { toast.error('Please enter a subject'); return; }
-        if (!queryForm.reason.trim()) { toast.error('Please state the reason for the query'); return; }
-        if (!queryForm.response_deadline) { toast.error('Please set a response deadline'); return; }
+        if (!queryForm.subject.trim()) { toast.error(t('personnelFileView.pleaseEnterASubject')); return; }
+        if (!queryForm.reason.trim()) { toast.error(t('personnelFileView.pleaseStateTheReasonForTheQuery')); return; }
+        if (!queryForm.response_deadline) { toast.error(t('personnelFileView.pleaseSetAResponseDeadline')); return; }
         setSaving(true);
         try {
             await api.post('/personnel/query-letters', { ...queryForm, teacher_id: file.teacher.id });
-            toast.success('Query letter issued — the teacher has been notified');
+            toast.success(t('personnelFileView.queryLetterIssuedTheTeacherHasBeenNotified'));
             setShowIssueQuery(false);
             setQueryForm({ subject: '', reason: '', issue_date: todayStr(), response_deadline: '', attachment_urls: [] });
             fetchFile();
@@ -194,7 +197,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
         setSaving(true);
         try {
             await api.post(`/personnel/query-letters/${closingQuery.id}/close`, closeForm);
-            toast.success('Query letter closed');
+            toast.success(t('personnelFileView.queryLetterClosed'));
             setClosingQuery(null);
             setCloseForm({ outcome: 'resolved', outcome_note: '' });
             fetchFile();
@@ -204,11 +207,11 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
     };
 
     const handleRespond = async () => {
-        if (!responseForm.response_text.trim()) { toast.error('Please write your response'); return; }
+        if (!responseForm.response_text.trim()) { toast.error(t('personnelFileView.pleaseWriteYourResponse')); return; }
         setSaving(true);
         try {
             await api.post(`/personnel/query-letters/${respondingTo.id}/respond`, responseForm);
-            toast.success('Your response has been submitted');
+            toast.success(t('personnelFileView.yourResponseHasBeenSubmitted'));
             setRespondingTo(null);
             setResponseForm({ response_text: '', attachment_urls: [] });
             fetchFile();
@@ -218,13 +221,13 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
     };
 
     if (loading) {
-        return <div className="text-center py-12 text-gray-500">Loading personnel file...</div>;
+        return <div className="text-center py-12 text-gray-500">{t('personnelFileView.loadingPersonnelFile')}</div>;
     }
     if (!file) {
-        return <div className="text-center py-12 text-gray-500">Personnel file unavailable.</div>;
+        return <div className="text-center py-12 text-gray-500">{t('personnelFileView.personnelFileUnavailable')}</div>;
     }
 
-    const t = file.teacher;
+    const teacher = file.teacher;
     const records: any[] = file.records || [];
     const queries: any[] = file.query_letters || [];
     const evaluations: any[] = file.evaluations || [];
@@ -246,27 +249,27 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                 transition={{ duration: 0.3 }}
                 className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4"
             >
-                {t.avatar_url
-                    ? <img src={t.avatar_url} alt={t.full_name} className="w-16 h-16 rounded-full object-cover" />
+                {teacher.avatar_url
+                    ? <img src={teacher.avatar_url} alt={teacher.full_name} className="w-16 h-16 rounded-full object-cover" />
                     : <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center">
                         <User className="w-8 h-8 text-indigo-600 shrink-0" />
                     </div>}
                 <div className="flex-1 min-w-0">
-                    <h1 className="text-xl font-bold text-gray-900 font-outfit truncate">{t.full_name}</h1>
-                    <p className="text-sm text-gray-500 font-mono">{t.school_generated_id || ''}</p>
-                    <p className="text-xs text-gray-400">{t.branch_name || ''}{t.status ? ` · ${t.status}` : ''}</p>
+                    <h1 className="text-xl font-bold text-gray-900 font-outfit truncate">{teacher.full_name}</h1>
+                    <p className="text-sm text-gray-500 font-mono">{teacher.school_generated_id || ''}</p>
+                    <p className="text-xs text-gray-400">{teacher.branch_name || ''}{teacher.status ? ` · ${teacher.status}` : ''}</p>
                 </div>
                 {mode === 'admin' && (
                     <div className="flex flex-row gap-2">
                         <motion.button whileHover={{ y: -1 }} whileTap={{ scale: 0.96 }} onClick={() => setShowAddRecord(true)}
-                            aria-label="Add Record"
+                            aria-label={t('personnelFileView.addRecord')}
                             className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-2 bg-indigo-50 text-indigo-700 rounded-xl font-semibold text-sm hover:bg-indigo-100 transition-colors">
-                            <PlusIcon className="w-4 h-4 flex-shrink-0" /> <span className="hidden sm:inline">Add Record</span>
+                            <PlusIcon className="w-4 h-4 flex-shrink-0" /> <span className="hidden sm:inline">{t('personnelFileView.addRecord')}</span>
                         </motion.button>
                         <motion.button whileHover={{ y: -1 }} whileTap={{ scale: 0.96 }} onClick={() => setShowIssueQuery(true)}
-                            aria-label="Issue Query Letter"
+                            aria-label={t('personnelFileView.issueQueryLetter')}
                             className="flex items-center justify-center gap-1.5 p-2.5 sm:px-3 sm:py-2 bg-amber-50 text-amber-700 rounded-xl font-semibold text-sm hover:bg-amber-100 transition-colors">
-                            <Mail className="w-4 h-4 flex-shrink-0" /> <span className="hidden sm:inline">Issue Query Letter</span>
+                            <Mail className="w-4 h-4 flex-shrink-0" /> <span className="hidden sm:inline">{t('personnelFileView.issueQueryLetter')}</span>
                         </motion.button>
                     </div>
                 )}
@@ -282,7 +285,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                             <motion.div layoutId="personnelFileTab" transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="absolute inset-0 bg-indigo-600 rounded-xl" />
                         )}
                         <span className="relative z-10 flex items-center gap-1.5">
-                            {tb.icon} {tb.label}
+                            {tb.icon} {t(tb.labelKey)}
                             {tb.key === 'queries' && queries.some(q => q.status === 'pending') && (
                                 <span className="w-2 h-2 rounded-full bg-amber-400" />
                             )}
@@ -298,31 +301,31 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             {tab === 'overview' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 className="font-bold text-gray-900 mb-2">Personal Information</h3>
-                        {infoRow('Full Name', t.full_name)}
-                        {infoRow('Staff ID', t.school_generated_id)}
-                        {infoRow('Email', t.email)}
-                        {infoRow('Phone', t.phone)}
+                        <h3 className="font-bold text-gray-900 mb-2">{t('personnelFileView.personalInformation')}</h3>
+                        {infoRow('Full Name', teacher.full_name)}
+                        {infoRow('Staff ID', teacher.school_generated_id)}
+                        {infoRow('Email', teacher.email)}
+                        {infoRow('Phone', teacher.phone)}
                     </div>
                     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-                        <h3 className="font-bold text-gray-900 mb-2">Employment Details</h3>
-                        {infoRow('Branch', t.branch_name)}
-                        {infoRow('Status', t.status)}
-                        {infoRow('Employed Since', fmtDate(t.employed_since))}
-                        {infoRow('Curriculum', t.curriculum_type)}
+                        <h3 className="font-bold text-gray-900 mb-2">{t('personnelFileView.employmentDetails')}</h3>
+                        {infoRow('Branch', teacher.branch_name)}
+                        {infoRow('Status', teacher.status)}
+                        {infoRow('Employed Since', fmtDate(teacher.employed_since))}
+                        {infoRow('Curriculum', teacher.curriculum_type)}
                     </div>
                     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
-                        <h3 className="font-bold text-gray-900 mb-2">Qualifications</h3>
-                        {infoRow('Subject Specialty', (t.subject_specialty || []).join(', '))}
-                        {infoRow('Curriculum Eligibility', (t.curriculum_eligibility || []).join(', '))}
-                        {infoRow('Degree Certificate', t.degree_certificate ? <a className="text-indigo-600 underline" href={t.degree_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
+                        <h3 className="font-bold text-gray-900 mb-2">{t('personnelFileView.qualifications')}</h3>
+                        {infoRow('Subject Specialty', (teacher.subject_specialty || []).join(', '))}
+                        {infoRow('Curriculum Eligibility', (teacher.curriculum_eligibility || []).join(', '))}
+                        {infoRow('Degree Certificate', teacher.degree_certificate ? <a className="text-indigo-600 underline" href={teacher.degree_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
                         {/* The certificate named was the teaching licence of a
                             foreign country. A Malaysian teacher does not hold
                             one, so the file listed every teacher as missing a
                             foreign licence; the document is kept under the
                             neutral Malay term. */}
-                        {infoRow('Sijil Perguruan', t.trcn_certificate ? <a className="text-indigo-600 underline" href={t.trcn_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
-                        {infoRow('British Qualification', t.british_qualification)}
+                        {infoRow('Sijil Perguruan', teacher.trcn_certificate ? <a className="text-indigo-600 underline" href={teacher.trcn_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
+                        {infoRow('British Qualification', teacher.british_qualification)}
                     </div>
                 </div>
             )}
@@ -330,11 +333,11 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             {/* ---- Teaching (roles + history) ---- */}
             {tab === 'teaching' && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">Teaching History</h3></div>
+                    <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">{t('personnelFileView.teachingHistory')}</h3></div>
                     {mode !== 'admin' ? (
-                        <p className="px-5 py-6 text-sm text-gray-400 text-center">Only admins can view teaching history here.</p>
+                        <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('personnelFileView.onlyAdminsCanViewTeachingHistoryHere')}</p>
                     ) : teachingHistory.length === 0 ? (
-                        <p className="px-5 py-6 text-sm text-gray-400 text-center">No class or subject assignments on record.</p>
+                        <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('personnelFileView.noClassOrSubjectAssignmentsOnRecord')}</p>
                     ) : (
                         <div className="divide-y divide-gray-50">
                             {teachingHistory.map((h: any) => (
@@ -369,10 +372,10 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                         {[
-                            { label: 'Days Present', value: att.present ?? 0, classes: 'text-green-600' },
-                            { label: 'Days Absent', value: att.absent ?? 0, classes: 'text-red-600' },
-                            { label: 'Days Late', value: att.late ?? 0, classes: 'text-amber-600' },
-                            { label: 'Lessons Completed', value: att.lessons?.completed ?? 0, classes: 'text-indigo-600' },
+                            { label: t('personnelFileView.daysPresent'), value: att.present ?? 0, classes: 'text-green-600' },
+                            { label: t('personnelFileView.daysAbsent'), value: att.absent ?? 0, classes: 'text-red-600' },
+                            { label: t('personnelFileView.daysLate'), value: att.late ?? 0, classes: 'text-amber-600' },
+                            { label: t('personnelFileView.lessonsCompleted'), value: att.lessons?.completed ?? 0, classes: 'text-indigo-600' },
                         ].map((c, i) => (
                             <div key={i} className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                                 <p className={`text-2xl font-bold ${c.classes}`}>{c.value}</p>
@@ -381,9 +384,9 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         ))}
                     </div>
                     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">Recent Daily Attendance (last 30)</h3></div>
+                        <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">{t('personnelFileView.recentDailyAttendanceLast30')}</h3></div>
                         {(att.recent || []).length === 0
-                            ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No attendance records yet.</p>
+                            ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('personnelFileView.noAttendanceRecordsYet')}</p>
                             : <div className="divide-y divide-gray-50">
                                 {(att.recent || []).map((a: any) => (
                                     <div key={a.id} className="px-5 py-2.5 flex justify-between items-center">
@@ -402,9 +405,9 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             {/* ---- Performance ---- */}
             {tab === 'performance' && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                    <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">Performance History</h3></div>
+                    <div className="px-5 py-4 border-b border-gray-100"><h3 className="font-bold text-gray-900">{t('personnelFileView.performanceHistory')}</h3></div>
                     {evaluations.length === 0
-                        ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No performance evaluations yet.</p>
+                        ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('personnelFileView.noPerformanceEvaluationsYet')}</p>
                         : <div className="divide-y divide-gray-50">
                             {evaluations.map((e: any) => (
                                 <div key={e.id} className="px-5 py-4">
@@ -427,13 +430,13 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             {tab === 'records' && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                     <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
-                        <h3 className="font-bold text-gray-900">Permanent Records</h3>
+                        <h3 className="font-bold text-gray-900">{t('personnelFileView.permanentRecords')}</h3>
                         {mode === 'admin' && (
                             <button onClick={() => setShowAddRecord(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Add Record</button>
                         )}
                     </div>
                     {records.length === 0
-                        ? <p className="px-5 py-6 text-sm text-gray-400 text-center">No records in the file yet.</p>
+                        ? <p className="px-5 py-6 text-sm text-gray-400 text-center">{t('personnelFileView.noRecordsInTheFileYet')}</p>
                         : <div className="divide-y divide-gray-50">
                             {records.map((r: any, i: number) => {
                                 const meta = RECORD_META[r.type] || RECORD_META.note;
@@ -441,7 +444,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                     <motion.div key={r.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.04 }} className="px-5 py-4">
                                         <div className="flex items-center justify-between gap-3">
                                             <span className={`flex items-center gap-1.5 text-xs font-bold px-2.5 py-1 rounded-full ${meta.classes}`}>
-                                                {meta.icon} {meta.label}
+                                                {meta.icon} {t(meta.labelKey)}
                                             </span>
                                             <span className="text-xs text-gray-400">{fmtDate(r.effective_date || r.created_at)}</span>
                                         </div>
@@ -461,7 +464,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                     {queries.length === 0 && (
                         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 text-center">
                             <Mail className="w-10 h-10 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500 font-semibold">No query letters on file.</p>
+                            <p className="text-gray-500 font-semibold">{t('personnelFileView.noQueryLettersOnFile')}</p>
                         </div>
                     )}
                     {queries.map((q: any, qi: number) => {
@@ -474,8 +477,8 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                         <h4 className="font-bold text-gray-900">{q.subject}</h4>
                                         <div className="flex items-center gap-1.5">
-                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${st.classes}`}>{st.label}</span>
-                                            {q.is_overdue && <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700">Overdue</span>}
+                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${st.classes}`}>{t(st.labelKey)}</span>
+                                            {q.is_overdue && <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-red-50 text-red-700">{t('personnelFileView.overdue')}</span>}
                                         </div>
                                     </div>
                                     <p className="text-xs text-gray-400 mt-1">
@@ -504,14 +507,14 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                             <AttachmentLinks urls={q.response_attachment_urls} />
                                         </div>
                                     ) : (
-                                        <p className="text-sm text-gray-400 italic">No response submitted yet.</p>
+                                        <p className="text-sm text-gray-400 italic">{t('personnelFileView.noResponseSubmittedYet')}</p>
                                     )}
 
                                     {q.closed_at && (
                                         <div className="flex items-start gap-2 bg-indigo-50/60 rounded-xl p-3">
                                             <CheckCircle2 className="w-4 h-4 text-indigo-600 mt-0.5 flex-shrink-0" />
                                             <div>
-                                                <p className="text-sm font-semibold text-indigo-900">Outcome: {st.label}</p>
+                                                <p className="text-sm font-semibold text-indigo-900">Outcome: {t(st.labelKey)}</p>
                                                 {q.outcome_note && <p className="text-sm text-indigo-800/80">{q.outcome_note}</p>}
                                                 <p className="text-xs text-indigo-400 mt-0.5">Closed {fmtDate(q.closed_at)}</p>
                                             </div>
@@ -529,7 +532,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                                 )}
                                                 <textarea
                                                     rows={5}
-                                                    placeholder="Write your formal response to this query..."
+                                                    placeholder={t('personnelFileView.writeYourFormalResponseToThisQuery')}
                                                     className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm"
                                                     value={responseForm.response_text}
                                                     onChange={e => setResponseForm({ ...responseForm, response_text: e.target.value })}
@@ -588,18 +591,18 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         onClick={(e) => e.stopPropagation()}
                         className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl"
                     >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Add Record to File</h2>
+                        <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('personnelFileView.addRecordToFile')}</h2>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Record Type</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.recordType')}</label>
                                 <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={recordForm.type}
                                     onChange={e => setRecordForm({ ...recordForm, type: e.target.value })}>
-                                    <option value="commendation">Commendation</option>
-                                    <option value="promotion">Promotion</option>
-                                    <option value="warning">Warning</option>
-                                    <option value="disciplinary">Disciplinary Record</option>
-                                    <option value="note">General Note</option>
+                                    <option value="commendation">{t('personnelFileView.commendation')}</option>
+                                    <option value="promotion">{t('personnelFileView.promotion')}</option>
+                                    <option value="warning">{t('personnelFileView.warning')}</option>
+                                    <option value="disciplinary">{t('personnelFileView.disciplinaryRecord')}</option>
+                                    <option value="note">{t('personnelFileView.generalNote')}</option>
                                 </select>
                             </div>
                             <div>
@@ -610,14 +613,14 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                     onChange={e => setRecordForm({ ...recordForm, title: e.target.value })} />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Details (optional)</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.detailsOptional')}</label>
                                 <textarea rows={3}
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={recordForm.details}
                                     onChange={e => setRecordForm({ ...recordForm, details: e.target.value })} />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Effective Date</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.effectiveDate')}</label>
                                 <input type="date"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={recordForm.effective_date}
@@ -625,7 +628,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                             </div>
                             <AttachmentInput urls={recordForm.attachment_urls}
                                 onChange={urls => setRecordForm({ ...recordForm, attachment_urls: urls })} />
-                            <p className="text-xs text-gray-400">Records are permanent. They can be corrected only on the day they are written.</p>
+                            <p className="text-xs text-gray-400">{t('personnelFileView.recordsArePermanentTheyCanBeCorrectedOnlyOnThe')}</p>
                         </div>
                         <div className="flex space-x-3">
                             <motion.button whileTap={{ scale: 0.97 }} onClick={() => setShowAddRecord(false)}
@@ -656,33 +659,33 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         onClick={(e) => e.stopPropagation()}
                         className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto"
                     >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Issue Query Letter</h2>
-                        <p className="text-sm text-gray-500 -mt-3">To: <span className="font-semibold text-gray-800">{t.full_name}</span></p>
+                        <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('personnelFileView.issueQueryLetter')}</h2>
+                        <p className="text-sm text-gray-500 -mt-3">To: <span className="font-semibold text-gray-800">{teacher.full_name}</span></p>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Subject</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.subject')}</label>
                                 <input type="text" placeholder="e.g. Unauthorized absence on 10 July"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={queryForm.subject}
                                     onChange={e => setQueryForm({ ...queryForm, subject: e.target.value })} />
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Reason for Query</label>
-                                <textarea rows={5} placeholder="State the full reason for this query..."
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.reasonForQuery')}</label>
+                                <textarea rows={5} placeholder={t('personnelFileView.stateTheFullReasonForThisQuery')}
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={queryForm.reason}
                                     onChange={e => setQueryForm({ ...queryForm, reason: e.target.value })} />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Issue Date</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.issueDate')}</label>
                                     <input type="date"
                                         className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={queryForm.issue_date}
                                         onChange={e => setQueryForm({ ...queryForm, issue_date: e.target.value })} />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-semibold text-gray-700 mb-1">Response Deadline</label>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.responseDeadline')}</label>
                                     <input type="date"
                                         className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={queryForm.response_deadline}
@@ -721,21 +724,21 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         onClick={(e) => e.stopPropagation()}
                         className="bg-white rounded-3xl p-6 max-w-md w-full space-y-5 shadow-2xl"
                     >
-                        <h2 className="text-xl font-bold text-gray-900 font-outfit">Close Query Letter</h2>
+                        <h2 className="text-xl font-bold text-gray-900 font-outfit">{t('personnelFileView.closeQueryLetter')}</h2>
                         <p className="text-sm text-gray-500 -mt-3">"{closingQuery.subject}"</p>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Outcome</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.outcome')}</label>
                                 <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={closeForm.outcome}
                                     onChange={e => setCloseForm({ ...closeForm, outcome: e.target.value })}>
-                                    <option value="resolved">Resolved — no further action</option>
-                                    <option value="warning_issued">Warning Issued (added to file)</option>
-                                    <option value="escalated">Escalated</option>
+                                    <option value="resolved">{t('personnelFileView.resolvedNoFurtherAction')}</option>
+                                    <option value="warning_issued">{t('personnelFileView.warningIssuedAddedToFile')}</option>
+                                    <option value="escalated">{t('personnelFileView.escalated')}</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Note (optional)</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.noteOptional')}</label>
                                 <textarea rows={3}
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={closeForm.outcome_note}

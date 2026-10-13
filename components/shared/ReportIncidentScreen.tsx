@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface ReportIncidentScreenProps {
@@ -26,9 +27,11 @@ interface ReportIncidentScreenProps {
  * school's duty, not a schema I should guess at. Until the school settles them, the office
  * is the channel that actually reaches someone.
  */
-const ReportIncidentScreen: React.FC<ReportIncidentScreenProps> = ({ handleBack, onBack }) => (
+const ReportIncidentScreen: React.FC<ReportIncidentScreenProps> = ({ handleBack, onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Lapor Insiden"
+        title={t('reportIncidentScreen.laporInsiden')}
         explanation={
             'Borang laporan insiden belum tersedia di dalam sistem ini. Buat masa ini sila ' +
             'laporkan sebarang insiden terus kepada pejabat sekolah di 010-511 9582 atau ' +
@@ -38,6 +41,7 @@ const ReportIncidentScreen: React.FC<ReportIncidentScreenProps> = ({ handleBack,
         }
         handleBack={handleBack || onBack}
     />
-);
+    );
+};
 
 export default ReportIncidentScreen;

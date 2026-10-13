@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
 import ReactMarkdown from 'react-markdown';
@@ -38,6 +39,7 @@ const fileToGenerativePart = async (file: File) => {
 
 // --- Main Component ---
 const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) => {
+    const { t } = useTranslation();
     const theme = THEME_CONFIG[dashboardType];
     const [activeTab, setActiveTab] = useState<'chat' | 'school' | 'live' | 'create'>('chat');
 
@@ -63,7 +65,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
     const startRecording = () => {
         const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
         if (!SR) {
-            toast.error('Voice input needs Chrome or Edge. Please type your question instead.');
+            toast.error(t('aIChatScreen.voiceInputNeedsChromeOrEdgePleaseTypeYourQuest'));
             return;
         }
         try {
@@ -78,14 +80,14 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
             rec.onend = () => setIsRecording(false);
             rec.onerror = (e: any) => {
                 setIsRecording(false);
-                if (e?.error !== 'no-speech' && e?.error !== 'aborted') toast.error('Could not hear you — try again.');
+                if (e?.error !== 'no-speech' && e?.error !== 'aborted') toast.error(t('aIChatScreen.couldNotHearYouTryAgain'));
             };
             recognitionRef.current = rec;
             rec.start();
             setIsRecording(true);
         } catch (e) {
             console.error('Mic error', e);
-            toast.error('Could not access microphone.');
+            toast.error(t('aIChatScreen.couldNotAccessMicrophone'));
         }
     };
 
@@ -98,7 +100,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
     // network). The old flow asked the model for audio it can't produce.
     const playTTS = (text: string) => {
         try {
-            if (!('speechSynthesis' in window)) { toast.error('Read-aloud is not supported in this browser.'); return; }
+            if (!('speechSynthesis' in window)) { toast.error(t('aIChatScreen.readAloudIsNotSupportedInThisBrowser')); return; }
             window.speechSynthesis.cancel();
             const clean = text.replace(/[*_#`>\[\]]/g, '').replace(/\n+/g, '. ');
             const utter = new SpeechSynthesisUtterance(clean);

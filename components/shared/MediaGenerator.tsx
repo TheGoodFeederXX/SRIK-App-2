@@ -1,5 +1,6 @@
 
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -17,6 +18,7 @@ const RATIO_DIMS: Record<string, { width: number; height: number }> = {
 };
 
 const MediaGenerator: React.FC = () => {
+    const { t } = useTranslation();
     const [mode, setMode] = useState<'image' | 'video' | 'edit' | 'animate'>('image');
     const [prompt, setPrompt] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +45,7 @@ const MediaGenerator: React.FC = () => {
         if (!prompt && mode !== 'animate') return;
         if (!isAIAllowedClient()) { toast.error(AI_LOCKED_MESSAGE); return; }
         if ((mode === 'edit' || mode === 'animate') && !uploadImage) {
-            toast.error('Please upload a reference image first.');
+            toast.error(t('mediaGenerator.pleaseUploadAReferenceImageFirst'));
             return;
         }
         setIsLoading(true);
@@ -122,10 +124,10 @@ const MediaGenerator: React.FC = () => {
             {/* Mode Selector */}
             <div className="flex space-x-2 bg-white p-1.5 rounded-xl shadow-sm overflow-x-auto">
                 {[
-                    { id: 'image', label: 'Create Image', icon: PhotoIcon },
-                    { id: 'video', label: 'Create Video', icon: VideoIcon },
-                    { id: 'edit', label: 'Edit Image', icon: SparklesIcon },
-                    { id: 'animate', label: 'Animate', icon: VideoIcon },
+                    { id: 'image', label: t('mediaGenerator.createImage'), icon: PhotoIcon },
+                    { id: 'video', label: t('mediaGenerator.createVideo'), icon: VideoIcon },
+                    { id: 'edit', label: t('mediaGenerator.editImage'), icon: SparklesIcon },
+                    { id: 'animate', label: t('mediaGenerator.animate'), icon: VideoIcon },
                 ].map(m => (
                     <button
                         key={m.id}
@@ -144,7 +146,7 @@ const MediaGenerator: React.FC = () => {
                 {/* Result Display */}
                 {resultUrl ? (
                     <div className="bg-black rounded-xl overflow-hidden shadow-lg relative group">
-                        <img src={resultUrl} alt="Generated" className="w-full h-auto max-h-[60vh] object-contain" />
+                        <img src={resultUrl} alt={t('mediaGenerator.generated')} className="w-full h-auto max-h-[60vh] object-contain" />
                         <a href={resultUrl} download="generated_media" className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/40 opacity-0 group-hover:opacity-100 transition-opacity">
                             <DownloadIcon className="w-6 h-6" />
                         </a>
@@ -160,12 +162,12 @@ const MediaGenerator: React.FC = () => {
                         {isLoading ? (
                             <div className="flex flex-col items-center">
                                 <div className="w-12 h-12 border-4 border-purple-200 border-t-purple-600 rounded-full animate-spin mb-4"></div>
-                                <p className="animate-pulse">Creating magic with AI...</p>
+                                <p className="animate-pulse">{t('mediaGenerator.creatingMagicWithAI')}</p>
                             </div>
                         ) : (
                             <>
                                 <SparklesIcon className="w-12 h-12 mb-2 opacity-50" />
-                                <p>Your creation will appear here</p>
+                                <p>{t('mediaGenerator.yourCreationWillAppearHere')}</p>
                             </>
                         )}
                     </div>
@@ -184,7 +186,7 @@ const MediaGenerator: React.FC = () => {
                             ) : (
                                 <div className="flex flex-col items-center text-gray-500">
                                     <CameraIcon className="w-8 h-8 mb-1" />
-                                    <span className="text-sm">Upload Reference Image</span>
+                                    <span className="text-sm">{t('mediaGenerator.uploadReferenceImage')}</span>
                                 </div>
                             )}
                         </div>
@@ -192,7 +194,7 @@ const MediaGenerator: React.FC = () => {
 
                     {(mode === 'image' || mode === 'video') && (
                         <div>
-                            <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">Aspect Ratio</label>
+                            <label className="text-xs font-bold text-gray-500 uppercase mb-2 block">{t('mediaGenerator.aspectRatio')}</label>
                             <div className="flex flex-wrap gap-2">
                                 {(mode === 'video' ? videoRatios : aspectRatios).map(r => (
                                     <button

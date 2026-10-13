@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import {
     Mic,
@@ -15,6 +16,7 @@ interface VoiceSearchWidgetProps {
 }
 
 const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeholder = 'Search or speak...', showInput = true }) => {
+    const { t } = useTranslation();
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [inputValue, setInputValue] = useState('');
@@ -39,7 +41,7 @@ const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeho
             };
             recognition.onerror = () => {
                 setIsListening(false);
-                toast.error('Voice search not available. Please type your query.');
+                toast.error(t('voiceSearchWidget.voiceSearchNotAvailablePleaseTypeYourQuery'));
             };
             recognition.onend = () => setIsListening(false);
             recognitionRef.current = recognition;
@@ -49,7 +51,7 @@ const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeho
 
     const toggleListening = () => {
         if (!recognitionRef.current) {
-            toast.error('Voice search is not supported in this browser.');
+            toast.error(t('voiceSearchWidget.voiceSearchIsNotSupportedInThisBrowser'));
             return;
         }
         if (isListening) {

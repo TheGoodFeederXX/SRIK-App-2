@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { Sparkles, GraduationCap, Ban, UserPlus, Trophy, PlusCircle, Trash2, X } from 'lucide-react';
@@ -25,6 +26,7 @@ function yearOf(dateStr: string): number {
 }
 
 const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectType: 'student' | 'teacher'; subjectId: string; canEdit: boolean }) => {
+    const { t } = useTranslation();
     const [events, setEvents] = useState<TimelineEvent[]>([]);
     const [loading, setLoading] = useState(true);
     const [showAdd, setShowAdd] = useState(false);
@@ -52,7 +54,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
         setSaving(true);
         try {
             await api.addTimelineEvent({ subject_type: subjectType, subject_id: subjectId, title: title.trim(), description: description.trim() || undefined, event_date: eventDate, event_type: 'Custom' });
-            toast.success('Timeline entry added');
+            toast.success(t('studentTeacherTimeline.timelineEntryAdded'));
             setTitle(''); setDescription(''); setShowAdd(false);
             fetchData();
         } catch (err: any) {
@@ -92,12 +94,12 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
             {showAdd && (
                 <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-4 space-y-2">
                     <div className="flex items-center justify-between">
-                        <p className="text-sm font-semibold text-gray-700">New timeline entry</p>
+                        <p className="text-sm font-semibold text-gray-700">{t('studentTeacherTimeline.newTimelineEntry')}</p>
                         <button onClick={() => setShowAdd(false)}><X className="w-4 h-4 text-gray-400" /></button>
                     </div>
-                    <input value={title} onChange={e => setTitle(e.target.value)} placeholder="Title (e.g. Won spelling competition)"
+                    <input value={title} onChange={e => setTitle(e.target.value)} placeholder={t('studentTeacherTimeline.titleEGWonSpellingCompetition')}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400" />
-                    <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Description (optional)" rows={2}
+                    <textarea value={description} onChange={e => setDescription(e.target.value)} placeholder={t('studentTeacherTimeline.descriptionOptional')} rows={2}
                         className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400" />
                     <input type="date" value={eventDate} onChange={e => setEventDate(e.target.value)}
                         className="border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400" />
@@ -108,9 +110,9 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
             )}
 
             {loading ? (
-                <p className="text-sm text-gray-400">Loading timeline...</p>
+                <p className="text-sm text-gray-400">{t('studentTeacherTimeline.loadingTimeline')}</p>
             ) : events.length === 0 ? (
-                <p className="text-sm text-gray-400">No events recorded yet.</p>
+                <p className="text-sm text-gray-400">{t('studentTeacherTimeline.noEventsRecordedYet')}</p>
             ) : (
                 <div className="space-y-6">
                     {years.map(year => (

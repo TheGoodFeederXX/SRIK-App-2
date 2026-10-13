@@ -1477,5 +1477,412 @@
   },
   "volunteeringScreen": {
     "volunteering": "Kerelawanan"
+  },
+  "aIChatScreen": {
+    "voiceInputNeedsChromeOrEdgePleaseTypeYourQuest": "Input suara memerlukan Chrome atau Edge. Sila taip soalan anda.",
+    "couldNotHearYouTryAgain": "Tidak dapat mendengar anda — cuba lagi.",
+    "couldNotAccessMicrophone": "Tidak dapat mengakses mikrofon.",
+    "readAloudIsNotSupportedInThisBrowser": "Bacaan kuat tidak disokong pada pelayar ini."
+  },
+  "aIChatWidget": {
+    "openAIAssistant": "Buka Pembantu AI"
+  },
+  "aIInsightsPanel": {
+    "aiInsights": "Pandangan AI",
+    "nothingUrgentRightNowAllClear": "Tiada perkara mendesak sekarang — semuanya jelas."
+  },
+  "accessibilitySettings": {
+    "accessibilitySettings": "Tetapan Kebolehcapaian",
+    "highContrastMode": "Mod Kontras Tinggi",
+    "increaseColorContrastForBetterVisibility": "Tingkatkan kontras warna untuk penglihatan lebih baik",
+    "textToSpeech": "Teks ke Ucapan",
+    "readTextAloud": "Baca teks dengan kuat",
+    "reduceMotion": "Kurangkan Gerakan",
+    "minimizeAnimations": "Kurangkan animasi",
+    "english": "Bahasa Inggeris",
+    "settingsSavedSuccessfully": "Tetapan berjaya disimpan!",
+    "failedToSaveSettings": "Gagal menyimpan tetapan"
+  },
+  "appearancePanel": {
+    "goodMorning": "Selamat pagi",
+    "primaryAction": "Tindakan utama",
+    "highlight": "Sorotan",
+    "appearance": "Penampilan",
+    "makeTheAppYours": "Jadikan aplikasi ini milik anda",
+    "preview": "Pratonton",
+    "solidPanelsFastestOnOlderPhones": "Panel pepejal, terpantas pada telefon lama",
+    "frostedTranslucentPanels": "Panel legap berfros",
+    "colourScheme": "Skema warna",
+    "dashboardCards": "Kad papan pemuka",
+    "accentColour": "Warna aksen",
+    "changesEveryButtonTabAndHighlightAcrossTheWhol": "Mengubah setiap butang, tab dan sorotan dalam seluruh aplikasi.",
+    "glassStyle": "Gaya kaca",
+    "fineTuning": "Penyelarasan halus",
+    "previewOfYourLook": "Pratonton rupa anda",
+    "vividness": "Kecerahan",
+    "balanced": "Seimbang",
+    "custom": "Tersuai",
+    "glassSubtle": "Halus",
+    "glassSubtleHint": "Fros cerah, tenang",
+    "glassBalanced": "Seimbang",
+    "glassBalancedHint": "Rupa lalai",
+    "glassVivid": "Terang",
+    "glassVividHint": "Kabur lebih dalam, lebih berkilau"
+  },
+  "askAIWidget": {
+    "askAI": "Tanya AI",
+    "askAQuestion": "Tanya soalan..."
+  },
+  "busRouteScreen": {
+    "busRoute": "Laluan Bas"
+  },
+  "calendarScreen": {
+    "calendar": "Kalendar"
+  },
+  "childRiskBanner": {
+    "dismiss": "Tutup"
+  },
+  "communityResourceDirectory": {
+    "findSupportServicesNearYouHealthFoodTrainingMo": "Cari perkhidmatan sokongan berhampiran anda - kesihatan, makanan, latihan & banyak lagi",
+    "filterByCategory": "Tapis mengikut Kategori",
+    "noResourcesFound": "Tiada sumber dijumpai",
+    "tryADifferentSearchOrCategory": "Cuba carian atau kategori lain",
+    "servicesOffered": "Perkhidmatan Ditawarkan",
+    "languages": "Bahasa",
+    "eligibility": "Kelayakan",
+    "searchByNameLocationOrService": "Cari mengikut nama, lokasi, atau perkhidmatan...",
+    "failedToLoadResources": "Gagal memuatkan sumber"
+  },
+  "conferenceScheduling": {
+    "penjadualanPerjumpaan": "Penjadualan Perjumpaan"
+  },
+  "contextualMarquee": {
+    "syncingData": "Menyegerakkan Data..."
+  },
+  "curriculumScreen": {
+    "loadingCurriculum": "Memuatkan kurikulum...",
+    "noCurriculumFound": "Tiada Kurikulum Dijumpai"
+  },
+  "dataUsageSettings": {
+    "lowDataMode": "Mod data rendah",
+    "whenItSOn": "Apabila ia hidup"
+  },
+  "donationPortal": {
+    "donationPortal": "Portal Sumbangan"
+  },
+  "editProfileScreen": {
+    "myProfile": "Profil Saya",
+    "student": "Murid",
+    "chatDisplayName": "Nama Paparan Sembang",
+    "thisNameShowsInChatsInsteadOfYourFullName": "Nama ini dipaparkan dalam sembang dan bukan nama penuh anda",
+    "accountSecurity": "Keselamatan Akaun",
+    "username": "Nama Pengguna",
+    "changePassword": "Tukar Kata Laluan",
+    "changeProfilePhoto": "Tukar foto profil",
+    "attendance": "Kehadiran",
+    "assignments": "Tugasan",
+    "avgGrade": "Purata Gred",
+    "studentID": "ID Murid",
+    "fullName": "Nama Penuh",
+    "emailAddress": "Alamat E-mel",
+    "howOthersSeeYouInChatOptional": "Cara orang lain melihat anda dalam sembang (pilihan)",
+    "enterNewUsername": "Masuk nama pengguna baharu",
+    "profile": "Profil",
+    "imageUploadedReadyToSave": "Imej dimuat naik sedia untuk disimpan",
+    "profileUpdatedSuccessfully": "Profil berjaya dikemas kini!",
+    "pleaseEnterYourFullNameBeforeSaving": "Sila masukkan nama penuh anda sebelum menyimpan.",
+    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah."
+  },
+  "examSchedule": {
+    "examSchedule": "Jadual Peperiksaan"
+  },
+  "gamePlayerScreen": {
+    "gameDataNotFound": "Data Permainan Tidak Dijumpai",
+    "theSelectedGameIsCurrentlyUnavailableOrHasNoQu": "Permainan yang dipilih tidak tersedia sekarang atau tiada soalan.",
+    "goBack": "Kembali",
+    "youAnswered": "Anda menjawab"
+  },
+  "globalSearchScreen": {
+    "trySearchingForSomethingElse": "Cuba cari perkara lain."
+  },
+  "learningHubResourceViewer": {
+    "learningHubResourceViewer": "Paparan Sumber Hab Pembelajaran"
+  },
+  "leaveBalanceTracker": {
+    "noLeaveBalancesConfigured": "Tiada baki cuti dikonfigurasi",
+    "leaveBalance": "Baki Cuti",
+    "remaining": "Baki",
+    "totalLeaveDays": "Jumlah Hari Cuti"
+  },
+  "libraryScreen": {
+    "library": "Perpustakaan"
+  },
+  "liquidGlassControl": {
+    "emerald": "Zamrud",
+    "graphite": "Grafit"
+  },
+  "mainAdminOnly": {
+    "managedByTheMainAdmin": "Diurus oleh pentadbir utama"
+  },
+  "mediaGenerator": {
+    "creatingMagicWithAI": "Mencipta keajaiban dengan AI...",
+    "yourCreationWillAppearHere": "Ciptaan anda akan muncul di sini",
+    "uploadReferenceImage": "Muat Naik Imej Rujukan",
+    "aspectRatio": "Nisbah Aspek",
+    "createImage": "Cipta Imej",
+    "createVideo": "Cipta Video",
+    "editImage": "Sunting Imej",
+    "animate": "Animasi",
+    "generated": "Dijana",
+    "pleaseUploadAReferenceImageFirst": "Sila muat naik imej rujukan dahulu."
+  },
+  "mentalHealthResources": {
+    "mentalHealthResources": "Sumber Kesihatan Mental"
+  },
+  "messagesLayout": {
+    "messages": "Mesej",
+    "noConversationsYet": "Belum ada perbualan",
+    "tapToStartANewMessage": "Ketik + untuk mula mesej baharu",
+    "newMessage": "Mesej Baharu",
+    "noContactsFound": "Tiada kenalan dijumpai",
+    "browseAllContacts": "Layari semua kenalan",
+    "noConversationSelected": "Tiada perbualan dipilih",
+    "pickAChatFromTheListOrTapToStartANewConversati": "Pilih sembang daripada senarai atau ketik + untuk memulakan perbualan baharu.",
+    "searchMessages": "Cari mesej...",
+    "searchByName": "Cari mengikut nama…"
+  },
+  "noticeboardScreen": {
+    "noticeboard": "Papan Notis"
+  },
+  "notificationDigestSettings": {
+    "notificationPreferences": "Keutamaan Pemberitahuan",
+    "controlHowAndWhenYouReceiveNotifications": "Kawal cara dan masa anda menerima pemberitahuan.",
+    "dailyDigestTime": "Masa Ringkasan Harian",
+    "whenDigestModeNotificationsAreBatchedAndSent": "Apabila pemberitahuan mod ringkasan dikumpulkan dan dihantar.",
+    "emergencyAlerts": "Makluman Kecemasan",
+    "alwaysInstant": "Sentiasa Segera",
+    "homeworkAssignments": "Kerja Rumah & Tugasan",
+    "feeReminders": "Peringatan Yuran",
+    "attendance": "Kehadiran",
+    "eventsCalendar": "Acara & Kalendar",
+    "behaviorReports": "Laporan Tingkah Laku",
+    "generalAnnouncements": "Pengumuman Umum",
+    "instant": "Segera",
+    "whatsapp": "WhatsApp",
+    "loadingYourPreferences": "Memuatkan keutamaan anda...",
+    "newAssignmentsSubmissionRemindersGrades": "Tugasan baharu, peringatan penyerahan, gred.",
+    "paymentDueDatesReceiptsBalanceUpdates": "Tarikh akhir bayaran, resit, kemas kini baki.",
+    "dailyAttendanceStatusLateArrivalAlerts": "Status kehadiran harian, makluman ketibaan lewat.",
+    "schoolEmergenciesSafetyAlertsClosures": "Kecemasan sekolah, makluman keselamatan, penutupan.",
+    "schoolEventsPTAMeetingsHolidays": "Acara sekolah, mesyuarat PIBG, cuti.",
+    "behaviorLogsMeritsDemerits": "Log tingkah laku, merit, demerit.",
+    "schoolWideAnnouncementsAndUpdates": "Pengumuman dan kemas kini seluruh sekolah.",
+    "notificationPreferencesSaved": "Keutamaan pemberitahuan disimpan!",
+    "emergencyAlertsMustAlwaysBeInstant": "Makluman kecemasan mesti sentiasa segera!",
+    "failedToSavePreferences": "Gagal menyimpan keutamaan"
+  },
+  "notificationsScreen": {
+    "notifications": "Pemberitahuan"
+  },
+  "offlineIndicator": {
+    "slowConnectionSyncMayBeDelayed": "Sambungan Perlahan - Penyegerakan mungkin lewat",
+    "dismiss": "Tutup"
+  },
+  "panicButton": {
+    "alertSentHelpIsOnTheWay": "Makluman Dihantar — Bantuan Sedang Tiba",
+    "emergencyPanicButton": "Butang Panik Kecemasan",
+    "failedToSendAlertPleaseCallEmergencyServicesDi": "Gagal menghantar makluman. Sila hubungi perkhidmatan kecemasan terus."
+  },
+  "permissionSlips": {
+    "slipKebenaran": "Slip Kebenaran"
+  },
+  "personnelFileView": {
+    "loadingPersonnelFile": "Memuatkan fail peribadi...",
+    "personnelFileUnavailable": "Fail peribadi tidak tersedia.",
+    "addRecord": "Tambah Rekod",
+    "issueQueryLetter": "Keluarkan Surat Pertanyaan",
+    "personalInformation": "Maklumat Peribadi",
+    "employmentDetails": "Butiran Pekerjaan",
+    "qualifications": "Kelayakan",
+    "teachingHistory": "Sejarah Pengajaran",
+    "onlyAdminsCanViewTeachingHistoryHere": "Hanya pentadbir boleh melihat sejarah pengajaran di sini.",
+    "noClassOrSubjectAssignmentsOnRecord": "Tiada tugasan kelas atau subjek direkodkan.",
+    "recentDailyAttendanceLast30": "Kehadiran Harian Terkini (30 terakhir)",
+    "noAttendanceRecordsYet": "Belum ada rekod kehadiran.",
+    "performanceHistory": "Sejarah Prestasi",
+    "noPerformanceEvaluationsYet": "Belum ada penilaian prestasi.",
+    "permanentRecords": "Rekod Kekal",
+    "noRecordsInTheFileYet": "Belum ada rekod dalam fail.",
+    "noQueryLettersOnFile": "Tiada surat pertanyaan dalam fail.",
+    "overdue": "Tertunggak",
+    "noResponseSubmittedYet": "Belum ada balasan dihantar.",
+    "addRecordToFile": "Tambah Rekod ke Fail",
+    "recordType": "Jenis Rekod",
+    "commendation": "Pujian",
+    "promotion": "Kenaikan",
+    "warning": "Amaran",
+    "disciplinaryRecord": "Rekod Disiplin",
+    "generalNote": "Nota Umum",
+    "detailsOptional": "Butiran (pilihan)",
+    "effectiveDate": "Tarikh Berkuat Kuasa",
+    "recordsArePermanentTheyCanBeCorrectedOnlyOnThe": "Rekod adalah kekal. Ia hanya boleh dibetulkan pada hari ia ditulis.",
+    "subject": "Subjek",
+    "reasonForQuery": "Sebab Pertanyaan",
+    "issueDate": "Tarikh Keluaran",
+    "responseDeadline": "Tarikh Akhir Balasan",
+    "closeQueryLetter": "Tutup Surat Pertanyaan",
+    "outcome": "Hasil",
+    "resolvedNoFurtherAction": "Selesai — tiada tindakan lanjut",
+    "warningIssuedAddedToFile": "Amaran Dikeluarkan (ditambah ke fail)",
+    "escalated": "Ditingkatkan",
+    "noteOptional": "Nota (pilihan)",
+    "disciplinary": "Disiplin",
+    "awaitingResponse": "Menunggu Balasan",
+    "responseReceived": "Balasan Diterima",
+    "resolved": "Selesai",
+    "warningIssued": "Amaran Dikeluarkan",
+    "overview": "Gambaran Keseluruhan",
+    "teaching": "Pengajaran",
+    "attendance": "Kehadiran",
+    "performance": "Prestasi",
+    "records": "Rekod",
+    "queryLetters": "Surat Pertanyaan",
+    "daysPresent": "Hari Hadir",
+    "daysAbsent": "Hari Tidak Hadir",
+    "daysLate": "Hari Lewat",
+    "lessonsCompleted": "Pelajaran Selesai",
+    "writeYourFormalResponseToThisQuery": "Tulis balasan rasmi anda untuk pertanyaan ini...",
+    "stateTheFullReasonForThisQuery": "Nyatakan sebab penuh pertanyaan ini...",
+    "recordAddedToPersonnelFile": "Rekod ditambah ke fail peribadi",
+    "queryLetterIssuedTheTeacherHasBeenNotified": "Surat pertanyaan dikeluarkan — guru telah dimaklumkan",
+    "queryLetterClosed": "Surat pertanyaan ditutup",
+    "yourResponseHasBeenSubmitted": "Balasan anda telah dihantar",
+    "failedToUploadDocument": "Gagal memuat naik dokumen",
+    "pleaseEnterATitle": "Sila masukkan tajuk",
+    "pleaseEnterASubject": "Sila masukkan subjek",
+    "pleaseStateTheReasonForTheQuery": "Sila nyatakan sebab pertanyaan",
+    "pleaseSetAResponseDeadline": "Sila tetapkan tarikh akhir balasan",
+    "pleaseWriteYourResponse": "Sila tulis balasan anda",
+    "note": "Nota"
+  },
+  "projectBoardScreen": {
+    "projectBoard": "Papan Projek"
+  },
+  "realtimeStatusIndicator": {
+    "liveUpdatesUnavailableReconnecting": "Kemas kini langsung tidak tersedia — menyambung semula…",
+    "dismiss": "Tutup"
+  },
+  "referralSystem": {
+    "getConnectedToCommunitySupportServices": "Dapatkan sambungan kepada perkhidmatan sokongan komuniti",
+    "confidentialSupport": "Sokongan Sulit:",
+    "newReferralRequest": "Permohonan Rujukan Baharu",
+    "selectStudent": "Pilih Murid*",
+    "typeOfNeed": "Jenis Keperluan*",
+    "shelter": "Perlindungan",
+    "counseling": "Kaunseling",
+    "financial": "Kewangan",
+    "urgencyLevel": "Tahap Keterdesakan*",
+    "critical": "Kritikal",
+    "describeTheNeed": "Terangkan Keperluan*",
+    "beAsDetailedAsPossibleToHelpUsMatchYouWithTheR": "Berikan seberapa terperinci untuk membantu kami padankan anda dengan sumber yang betul",
+    "noReferralsSubmittedYet": "Belum ada rujukan dihantar",
+    "clickSubmitNewReferralToGetStarted": "Klik \"Hantar Rujukan Baharu\" untuk bermula",
+    "matchedWith": "Dipadankan dengan:",
+    "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Sila terangkan keadaan dan sokongan yang diperlukan...",
+    "referralSubmittedSuccessfullyASocialWorkerWill": "Rujukan berjaya dihantar! Pekerja sosial akan menyemaknya tidak lama lagi.",
+    "pleaseSelectAStudentAndDescribeTheNeed": "Sila pilih murid dan terangkan keperluan",
+    "failedToSubmitReferral": "Gagal menghantar rujukan"
+  },
+  "reportIncidentScreen": {
+    "laporInsiden": "Lapor Insiden"
+  },
+  "sOPCaseDetailView": {
+    "caseNotFound": "Kes tidak dijumpai.",
+    "aCriticalAlertWasSentWhenThisCaseWasReported": "Makluman kritikal dihantar apabila kes ini dilaporkan.",
+    "workflow": "Aliran Kerja",
+    "evidence": "Bukti",
+    "noEvidenceUploadedYet": "Belum ada bukti dimuat naik.",
+    "decisions": "Keputusan",
+    "noDecisionsRecordedYet": "Belum ada keputusan direkodkan.",
+    "letters": "Surat",
+    "noLettersGeneratedYet": "Belum ada surat dijana.",
+    "recordDecision": "Rekod Keputusan",
+    "outcome": "Hasil",
+    "noAction": "Tiada Tindakan",
+    "warning": "Amaran",
+    "suspension": "Penggantungan",
+    "expulsion": "Buang Sekolah",
+    "decisionDetails": "Butiran Keputusan",
+    "generateLetter": "Jana Surat",
+    "recipientType": "Jenis Penerima",
+    "student": "Murid",
+    "teacher": "Guru",
+    "recipientUserID": "ID Pengguna Penerima",
+    "letterTextEditable": "Teks Surat (boleh disunting)",
+    "notesForThisStageOptional": "Nota untuk peringkat ini (pilihan)",
+    "loadingCase": "Memuatkan kes...",
+    "evidenceUploaded": "Bukti dimuat naik",
+    "stageCompleted": "Peringkat selesai",
+    "decisionRecorded": "Keputusan direkodkan",
+    "letterDraftedReviewAndSendWhenReady": "Surat didraf — semak dan hantar apabila sedia",
+    "letterSent": "Surat dihantar",
+    "pleaseDescribeTheDecision": "Sila terangkan keputusan itu",
+    "sendThisLetterNowItCannotBeEditedAfterward": "Hantar surat ini sekarang? Ia tidak boleh disunting selepas ini."
+  },
+  "selectReportTermScreen": {
+    "selectAStudentFirst": "Pilih murid dahulu.",
+    "reportCard": "Kad Laporan",
+    "selectAcademicSession": "Pilih Sesi Akademik",
+    "chooseTermToView": "Pilih Penggal untuk Dilihat"
+  },
+  "studentGateScreen": {
+    "studentGate": "Pintu Murid"
+  },
+  "studentTeacherTimeline": {
+    "newTimelineEntry": "Catatan garis masa baharu",
+    "loadingTimeline": "Memuatkan garis masa...",
+    "noEventsRecordedYet": "Belum ada acara direkodkan.",
+    "titleEGWonSpellingCompetition": "Tajuk (cth. Menang pertandingan ejaan)",
+    "descriptionOptional": "Penerangan (pilihan)",
+    "timelineEntryAdded": "Catatan garis masa ditambah"
+  },
+  "surveysAndPolls": {
+    "surveysAndPolls": "Tinjauan dan Undian"
+  },
+  "suspensionNoticeBanner": {
+    "suspensionLetter": "Surat Penggantungan",
+    "startDate": "Tarikh Mula",
+    "returnDate": "Tarikh Pulang",
+    "issuedBy": "Dikeluarkan Oleh",
+    "conditionsForReturn": "Syarat Pemulangan",
+    "dismiss": "Tutup"
+  },
+  "versionStatusCard": {
+    "systemVersion": "Versi Sistem",
+    "viewAndManageYourApplicationVersionStatus": "Lihat dan urus status versi aplikasi anda",
+    "localClient": "Klien Tempatan",
+    "schoolTarget": "Sasaran Sekolah",
+    "synchronizationRequired": "Penyegerakan Diperlukan",
+    "updateNow": "Kemas Kini Sekarang"
+  },
+  "voiceSearchWidget": {
+    "voiceSearchNotAvailablePleaseTypeYourQuery": "Carian suara tidak tersedia. Sila taip pertanyaan anda.",
+    "voiceSearchIsNotSupportedInThisBrowser": "Carian suara tidak disokong pada pelayar ini."
+  },
+  "accent": {
+    "indigo": "Indigo",
+    "blue": "Biru",
+    "violet": "Ungu",
+    "emerald": "Zamrud",
+    "rose": "Merah Jambu",
+    "amber": "Amber",
+    "teal": "Teal",
+    "slate": "Grafit",
+    "graphite": "Grafit",
+    "orange": "Oren",
+    "green": "Hijau",
+    "red": "Merah",
+    "pink": "Merah Jambu",
+    "cyan": "Sian"
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { getMyPreferences, saveMyPreferences } from '../../src/lib/supabase/preferences';
@@ -33,6 +34,7 @@ interface NotificationCategory {
 }
 
 const NotificationDigestSettings = () => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [digestTime, setDigestTime] = useState('19:00');
     // Which channels this deployment can actually send on. The API reports it;
@@ -42,13 +44,13 @@ const NotificationDigestSettings = () => {
     const [loading, setLoading] = useState(true);
 
     const [categories, setCategories] = useState<NotificationCategory[]>([
-        { id: 'homework', label: 'Homework & Assignments', icon: <BookOpen className="w-5 h-5" />, description: 'New assignments, submission reminders, grades.', mode: 'digest', channel: 'push' },
-        { id: 'fees', label: 'Fee Reminders', icon: <CreditCard className="w-5 h-5" />, description: 'Payment due dates, receipts, balance updates.', mode: 'instant', channel: 'whatsapp' },
-        { id: 'attendance', label: 'Attendance', icon: <CheckCircle2 className="w-5 h-5" />, description: 'Daily attendance status, late arrival alerts.', mode: 'instant', channel: 'push' },
-        { id: 'emergency', label: 'Emergency Alerts', icon: <AlertTriangle className="w-5 h-5" />, description: 'School emergencies, safety alerts, closures.', mode: 'instant', channel: 'sms' },
-        { id: 'events', label: 'Events & Calendar', icon: <Calendar className="w-5 h-5" />, description: 'School events, PTA meetings, holidays.', mode: 'digest', channel: 'push' },
-        { id: 'behavior', label: 'Behavior Reports', icon: <Users className="w-5 h-5" />, description: 'Behavior logs, merits, demerits.', mode: 'instant', channel: 'push' },
-        { id: 'general', label: 'General Announcements', icon: <Bell className="w-5 h-5" />, description: 'School-wide announcements and updates.', mode: 'digest', channel: 'push' },
+        { id: 'homework', label: t('notificationDigestSettings.homeworkAssignments'), icon: <BookOpen className="w-5 h-5" />, description: t('notificationDigestSettings.newAssignmentsSubmissionRemindersGrades'), mode: 'digest', channel: 'push' },
+        { id: 'fees', label: t('notificationDigestSettings.feeReminders'), icon: <CreditCard className="w-5 h-5" />, description: t('notificationDigestSettings.paymentDueDatesReceiptsBalanceUpdates'), mode: 'instant', channel: 'whatsapp' },
+        { id: 'attendance', label: t('notificationDigestSettings.attendance'), icon: <CheckCircle2 className="w-5 h-5" />, description: t('notificationDigestSettings.dailyAttendanceStatusLateArrivalAlerts'), mode: 'instant', channel: 'push' },
+        { id: 'emergency', label: t('notificationDigestSettings.emergencyAlerts'), icon: <AlertTriangle className="w-5 h-5" />, description: t('notificationDigestSettings.schoolEmergenciesSafetyAlertsClosures'), mode: 'instant', channel: 'sms' },
+        { id: 'events', label: t('notificationDigestSettings.eventsCalendar'), icon: <Calendar className="w-5 h-5" />, description: t('notificationDigestSettings.schoolEventsPTAMeetingsHolidays'), mode: 'digest', channel: 'push' },
+        { id: 'behavior', label: t('notificationDigestSettings.behaviorReports'), icon: <Users className="w-5 h-5" />, description: t('notificationDigestSettings.behaviorLogsMeritsDemerits'), mode: 'instant', channel: 'push' },
+        { id: 'general', label: t('notificationDigestSettings.generalAnnouncements'), icon: <Bell className="w-5 h-5" />, description: t('notificationDigestSettings.schoolWideAnnouncementsAndUpdates'), mode: 'digest', channel: 'push' },
     ]);
 
     useEffect(() => {
@@ -80,7 +82,7 @@ const NotificationDigestSettings = () => {
 
     const updateCategory = (id: string, field: 'mode' | 'channel', value: string) => {
         if (id === 'emergency' && field === 'mode' && value !== 'instant') {
-            toast.error('Emergency alerts must always be instant!');
+            toast.error(t('notificationDigestSettings.emergencyAlertsMustAlwaysBeInstant'));
             return;
         }
         if (field === 'channel' && available[value] === false) {
@@ -99,16 +101,16 @@ const NotificationDigestSettings = () => {
                 digest_time: digestTime,
                 categories: categories.map(c => ({ id: c.id, mode: c.mode, channel: c.channel })),
             });
-            toast.success('Notification preferences saved!');
+            toast.success(t('notificationDigestSettings.notificationPreferencesSaved'));
         } catch (err) {
-            toast.error('Failed to save preferences');
+            toast.error(t('notificationDigestSettings.failedToSavePreferences'));
         } finally {
             setIsSaving(false);
         }
     };
 
     const modes = [
-        { value: 'instant', label: 'Instant', icon: <Volume2 className="w-4 h-4" />, color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+        { value: 'instant', label: t('notificationDigestSettings.instant'), icon: <Volume2 className="w-4 h-4" />, color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
         { value: 'digest', label: 'Digest', icon: <Clock className="w-4 h-4" />, color: 'bg-amber-100 text-amber-700 border-amber-200' },
         { value: 'off', label: 'Off', icon: <VolumeX className="w-4 h-4" />, color: 'bg-gray-100 text-gray-500 border-gray-200' },
     ];
@@ -118,18 +120,18 @@ const NotificationDigestSettings = () => {
         { value: 'email', label: 'Email', icon: <Mail className="w-4 h-4" /> },
         { value: 'push', label: 'Push', icon: <Smartphone className="w-4 h-4" /> },
         { value: 'sms', label: 'SMS', icon: <MessageSquare className="w-4 h-4" /> },
-        { value: 'whatsapp', label: 'WhatsApp', icon: <MessageSquare className="w-4 h-4" /> },
+        { value: 'whatsapp', label: t('notificationDigestSettings.whatsapp'), icon: <MessageSquare className="w-4 h-4" /> },
     ];
 
     if (loading) {
-        return <CenteredLoader message="Loading your preferences..." className="min-h-[400px]" />;
+        return <CenteredLoader message={t('notificationDigestSettings.loadingYourPreferences')} className="min-h-[400px]" />;
     }
 
     return (
         <div className="p-6 max-w-4xl mx-auto space-y-8">
             <header>
-                <h1 className="text-3xl font-bold text-gray-900 font-outfit">Notification Preferences</h1>
-                <p className="text-gray-500 text-sm mt-1">Control how and when you receive notifications.</p>
+                <h1 className="text-3xl font-bold text-gray-900 font-outfit">{t('notificationDigestSettings.notificationPreferences')}</h1>
+                <p className="text-gray-500 text-sm mt-1">{t('notificationDigestSettings.controlHowAndWhenYouReceiveNotifications')}</p>
             </header>
 
             {/* Digest Time */}
@@ -138,8 +140,8 @@ const NotificationDigestSettings = () => {
                     <div className="flex items-center space-x-4">
                         <div className="p-3 rounded-2xl bg-indigo-50 text-indigo-600"><Clock className="w-6 h-6" /></div>
                         <div>
-                            <h3 className="font-bold text-gray-800">Daily Digest Time</h3>
-                            <p className="text-xs text-gray-500">When digest-mode notifications are batched and sent.</p>
+                            <h3 className="font-bold text-gray-800">{t('notificationDigestSettings.dailyDigestTime')}</h3>
+                            <p className="text-xs text-gray-500">{t('notificationDigestSettings.whenDigestModeNotificationsAreBatchedAndSent')}</p>
                         </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -152,7 +154,7 @@ const NotificationDigestSettings = () => {
             {/* Emergency Warning */}
             <div className="bg-red-50 border border-red-100 rounded-2xl px-5 py-3 flex items-center space-x-3">
                 <AlertTriangle className="w-5 h-5 text-red-500 shrink-0" />
-                <p className="text-sm text-red-700 min-w-0"><strong>Emergency alerts</strong> always arrive instantly via all channels and cannot be muted or delayed.</p>
+                <p className="text-sm text-red-700 min-w-0"><strong>{t('notificationDigestSettings.emergencyAlerts')}</strong> always arrive instantly via all channels and cannot be muted or delayed.</p>
             </div>
 
             {/* Categories */}
@@ -164,7 +166,7 @@ const NotificationDigestSettings = () => {
                             <div className="flex-grow min-w-0">
                                 <div className="flex items-center justify-between mb-1">
                                     <h3 className="font-bold text-gray-800">{cat.label}</h3>
-                                    {cat.id === 'emergency' && <span className="text-xs font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">Always Instant</span>}
+                                    {cat.id === 'emergency' && <span className="text-xs font-bold bg-red-100 text-red-700 px-2 py-0.5 rounded-full">{t('notificationDigestSettings.alwaysInstant')}</span>}
                                 </div>
                                 <p className="text-xs text-gray-500 mb-3">{cat.description}</p>
                                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">

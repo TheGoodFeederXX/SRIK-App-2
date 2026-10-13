@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { HeartHandshake, X } from 'lucide-react';
 
@@ -21,6 +22,7 @@ const seenRecently = (studentId: string) => {
 const markSeen = (studentId: string) => { try { localStorage.setItem(seenKey(studentId), String(Date.now())); } catch { /* ignore */ } };
 
 const ChildRiskBanner = () => {
+    const { t } = useTranslation();
     const [flags, setFlags] = useState<ChildRisk[]>([]);
     const [dismissedIds, setDismissedIds] = useState<string[]>([]);
 
@@ -50,7 +52,7 @@ const ChildRiskBanner = () => {
                         <p className="text-sm text-amber-700 mt-0.5">{f.message}</p>
                     </div>
                     <button onClick={() => { markSeen(f.student_id); setDismissedIds(d => [...d, f.student_id]); }}
-                        className="p-1 text-amber-400 hover:text-amber-600 flex-shrink-0" aria-label="Dismiss">
+                        className="p-1 text-amber-400 hover:text-amber-600 flex-shrink-0" aria-label={t('childRiskBanner.dismiss')}>
                         <X className="w-4 h-4" />
                     </button>
                 </div>

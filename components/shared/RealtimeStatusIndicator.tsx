@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { socketService, RealtimeStatus } from '../../lib/socketService';
 
 // Real-time (the notification bell, live class alerts, attendance/grade
@@ -16,6 +17,7 @@ import { socketService, RealtimeStatus } from '../../lib/socketService';
 const SHOW_AFTER_MS = 8000;
 
 export function RealtimeStatusIndicator({ className = '' }: { className?: string }) {
+    const { t } = useTranslation();
     const [status, setStatus] = useState<RealtimeStatus>(socketService.getStatus());
     const [showBanner, setShowBanner] = useState(false);
     const [dismissed, setDismissed] = useState(false);
@@ -46,11 +48,11 @@ export function RealtimeStatusIndicator({ className = '' }: { className?: string
                     <svg className="w-4 h-4 animate-pulse" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.367zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clipRule="evenodd" />
                     </svg>
-                    <span>Live updates unavailable — reconnecting…</span>
+                    <span>{t('realtimeStatusIndicator.liveUpdatesUnavailableReconnecting')}</span>
                     <button
                         onClick={() => setDismissed(true)}
                         className="absolute right-0 p-1 hover:bg-black/10 rounded-full transition-colors"
-                        aria-label="Dismiss"
+                        aria-label={t('realtimeStatusIndicator.dismiss')}
                     >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />

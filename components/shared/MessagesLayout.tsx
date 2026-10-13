@@ -65,7 +65,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     onSelectChat,
     newChatView = 'newChat'
 }) => {
-    const t = THEME[themeColor];
+    const theme = THEME[themeColor];
 
     const [rooms, setRooms] = useState<any[]>(_roomsCache.data);
     const [loading, setLoading] = useState(!_roomsCache.ready);
@@ -171,7 +171,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                         <div className="flex items-center gap-2">
                             <h1 className="text-xl font-bold text-gray-800 tracking-tight">Messages</h1>
                             {totalUnread > 0 && (
-                                <span className={`${t.badge} text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
+                                <span className={`${theme.badge} text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
                                     {totalUnread > 99 ? '99+' : totalUnread}
                                 </span>
                             )}
@@ -181,7 +181,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.92, rotate: 90 }}
                             onClick={handlePlusClick}
-                            className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full ${t.btn} transition-colors`}
+                            className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full ${theme.btn} transition-colors`}
                             aria-label="New Message"
                         >
                             <PlusIcon className="w-5 h-5" />
@@ -208,7 +208,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                 key={f}
                                 whileTap={{ scale: 0.95 }}
                                 onClick={() => setActiveFilter(f)}
-                                className={`px-3 py-2 min-h-[36px] text-xs font-semibold rounded-full transition-colors ${activeFilter === f ? t.filterActive + ' shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                                className={`px-3 py-2 min-h-[36px] text-xs font-semibold rounded-full transition-colors ${activeFilter === f ? theme.filterActive + ' shadow-sm' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                             >
                                 {f}
                                 {f === 'Unread' && totalUnread > 0 && (
@@ -245,7 +245,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.2, delay: Math.min(i, 12) * 0.03 }}
                                         onClick={() => handleSelect(room)}
-                                        className={`w-full text-left px-4 py-3.5 flex items-center gap-3 transition-colors ${isSelected ? t.selected + ' shadow-sm' : t.hover} border-b border-gray-50/80 last:border-b-0`}
+                                        className={`w-full text-left px-4 py-3.5 flex items-center gap-3 transition-colors ${isSelected ? theme.selected + ' shadow-sm' : theme.hover} border-b border-gray-50/80 last:border-b-0`}
                                         style={{ touchAction: 'manipulation' }}
                                     >
                                         <div className="relative flex-shrink-0">
@@ -255,7 +255,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                                 className={`w-12 h-12 rounded-full object-cover ring-2 ring-white shadow-sm ${isSelected ? 'ring-offset-1' : ''}`}
                                             />
                                             {hasUnread && (
-                                                <span className={`absolute -top-0.5 -right-0.5 w-5 h-5 ${t.badge} text-white text-xs font-bold flex items-center justify-center rounded-full ring-2 ring-white`}>
+                                                <span className={`absolute -top-0.5 -right-0.5 w-5 h-5 ${theme.badge} text-white text-xs font-bold flex items-center justify-center rounded-full ring-2 ring-white`}>
                                                     {room.unreadCount > 9 ? '9+' : room.unreadCount}
                                                 </span>
                                             )}
@@ -266,7 +266,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                                 <h4 className={`text-sm font-${hasUnread ? 'bold' : 'semibold'} truncate text-gray-900`}>
                                                     {room.displayName}
                                                 </h4>
-                                                <span className={`text-xs flex-shrink-0 ml-2 font-medium ${hasUnread ? t.accent : 'text-gray-400'}`}>
+                                                <span className={`text-xs flex-shrink-0 ml-2 font-medium ${hasUnread ? theme.accent : 'text-gray-400'}`}>
                                                     {formatTimestamp(room.lastMessageAt)}
                                                 </span>
                                             </div>
@@ -275,7 +275,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                                     {room.lastMessage}
                                                 </p>
                                                 {hasUnread && (
-                                                    <div className={`w-2 h-2 ${t.dot} rounded-full flex-shrink-0`} />
+                                                    <div className={`w-2 h-2 ${theme.dot} rounded-full flex-shrink-0`} />
                                                 )}
                                             </div>
                                         </div>
@@ -312,11 +312,11 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                 {newChatContacts.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center h-full p-8 text-center">
                                         <p className="text-sm text-gray-400 mb-3">No contacts found</p>
-                                        <button onClick={() => { setNewChatMode(false); navigateTo?.(newChatView, 'New Message', {}); }} className={`px-4 py-2 text-sm font-semibold ${t.filterActive} rounded-xl`}>Browse all contacts</button>
+                                        <button onClick={() => { setNewChatMode(false); navigateTo?.(newChatView, 'New Message', {}); }} className={`px-4 py-2 text-sm font-semibold ${theme.filterActive} rounded-xl`}>Browse all contacts</button>
                                     </div>
                                 ) : (
                                     newChatContacts.map(room => (
-                                        <button key={room.id} onClick={() => handleSelect(room)} className={`w-full text-left px-4 py-3.5 flex items-center gap-3 ${t.hover} border-b border-gray-50/80 last:border-0 transition-colors`} style={{ touchAction: 'manipulation' }}>
+                                        <button key={room.id} onClick={() => handleSelect(room)} className={`w-full text-left px-4 py-3.5 flex items-center gap-3 ${theme.hover} border-b border-gray-50/80 last:border-0 transition-colors`} style={{ touchAction: 'manipulation' }}>
                                             <img src={room.avatar} alt={room.displayName} className="w-10 h-10 rounded-full object-cover ring-2 ring-white shadow-sm flex-shrink-0" />
                                             <div className="min-w-0">
                                                 <p className="font-semibold text-sm text-gray-800 truncate">{room.displayName}</p>

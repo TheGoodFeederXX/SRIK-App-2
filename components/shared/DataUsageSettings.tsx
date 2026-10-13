@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { WifiOff, Image as ImageIcon, RefreshCw, Upload } from 'lucide-react';
 import { useLowDataMode, isLowDataModeEnabledByUser, setLowDataMode } from '../../lib/lowDataMode';
 
@@ -12,6 +13,7 @@ const DataUsageSettings: React.FC<{
     /** 'card': flat rows for embedding inside an existing Card (student profile). */
     variant?: 'page' | 'card';
 }> = ({ accent = 'indigo', variant = 'page' }) => {
+    const { t } = useTranslation();
     const effective = useLowDataMode();
     const chosen = isLowDataModeEnabledByUser();
     const browserSaver = effective && !chosen;
@@ -25,7 +27,7 @@ const DataUsageSettings: React.FC<{
                 <div className="flex items-center space-x-4 min-w-0 flex-1 basis-52">
                     <div className="bg-gray-100 p-2 rounded-lg shrink-0"><WifiOff className="h-5 w-5 text-gray-600" /></div>
                     <div className="min-w-0">
-                        <p className="font-semibold text-gray-800">Low data mode</p>
+                        <p className="font-semibold text-gray-800">{t('dataUsageSettings.lowDataMode')}</p>
                         <p className="text-sm text-gray-500">
                             {browserSaver
                                 ? "On because your phone's Data Saver is on."
@@ -37,7 +39,7 @@ const DataUsageSettings: React.FC<{
                     type="button"
                     role="switch"
                     aria-checked={effective}
-                    aria-label="Low data mode"
+                    aria-label={t('dataUsageSettings.lowDataMode')}
                     disabled={browserSaver}
                     onClick={() => setLowDataMode(!chosen)}
                     className={`relative inline-flex items-center h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 ${ring} ${effective ? on : 'bg-gray-300'} disabled:cursor-default`}
@@ -47,7 +49,7 @@ const DataUsageSettings: React.FC<{
             </div>
 
             <div className={`${box} divide-y divide-gray-100`}>
-                <p className="px-4 pt-3 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider">When it's on</p>
+                <p className="px-4 pt-3 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('dataUsageSettings.whenItSOn')}</p>
                 {[
                     [ImageIcon, 'Photos load only when you tap them', 'Student, teacher and chat photos show initials until tapped.'],
                     [RefreshCw, 'Checks for updates less often', 'Fewer background requests; recently loaded screens are reused for longer.'],

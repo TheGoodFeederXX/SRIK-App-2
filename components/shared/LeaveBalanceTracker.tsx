@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { ClockIcon, CheckCircleIcon, CalendarIcon } from '../../constants';
 
@@ -15,6 +16,7 @@ interface LeaveBalanceTrackerProps {
 }
 
 const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, compact = false }) => {
+    const { t } = useTranslation();
     const [balances, setBalances] = useState<LeaveBalance[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -77,7 +79,7 @@ const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, co
         return (
             <div className="text-center p-6 bg-gray-50 rounded-lg border border-gray-200">
                 <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-600">No leave balances configured</p>
+                <p className="text-gray-600">{t('leaveBalanceTracker.noLeaveBalancesConfigured')}</p>
             </div>
         );
     }
@@ -98,7 +100,7 @@ const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, co
 
     return (
         <div className="space-y-4">
-            <h3 className="text-lg font-bold text-gray-900">Leave Balance</h3>
+            <h3 className="text-lg font-bold text-gray-900">{t('leaveBalanceTracker.leaveBalance')}</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {balances.map((balance, index) => (
@@ -137,7 +139,7 @@ const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, co
                                 <p className="text-sm font-semibold text-gray-900">{balance.used_days} days</p>
                             </div>
                             <div>
-                                <p className="text-xs text-gray-600">Remaining</p>
+                                <p className="text-xs text-gray-600">{t('leaveBalanceTracker.remaining')}</p>
                                 <p className="text-sm font-semibold text-green-600">{balance.remaining_days} days</p>
                             </div>
                         </div>
@@ -150,7 +152,7 @@ const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, co
                 <div className="flex items-center space-x-3">
                     <CheckCircleIcon className="w-6 h-6 text-indigo-600" />
                     <div>
-                        <h4 className="font-semibold text-gray-900">Total Leave Days</h4>
+                        <h4 className="font-semibold text-gray-900">{t('leaveBalanceTracker.totalLeaveDays')}</h4>
                         <p className="text-sm text-gray-600 mt-1">
                             {balances.reduce((sum, b) => sum + b.remaining_days, 0)} days available across all leave types
                         </p>

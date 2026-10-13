@@ -180,7 +180,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                 const url = await signedUrlFor(uploaded.storageKey);
                 setAvatar(url);
                 setAvatarStorageKey(uploaded.storageKey);
-                toast.success('Image uploaded ready to save', { id: toastId });
+                toast.success(t('editProfileScreen.imageUploadedReadyToSave'), { id: toastId });
             } catch (error: any) {
                 toast.error('Error uploading image: ' + error.message, { id: toastId });
                 console.error('Upload error:', error);
@@ -190,7 +190,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
 
     const handleSave = async () => {
         if (!name.trim()) {
-            toast.error('Please enter your full name before saving.');
+            toast.error(t('editProfileScreen.pleaseEnterYourFullNameBeforeSaving'));
             return;
         }
         setSaving(true);
@@ -203,7 +203,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                 display_name: displayName.trim() || undefined,
             } as any);
 
-            toast.success('Profile updated successfully!');
+            toast.success(t('editProfileScreen.profileUpdatedSuccessfully'));
             if (onProfileUpdate) {
                 onProfileUpdate({ name, avatarUrl: avatar });
             }
@@ -230,7 +230,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
      * shown read-only with an explanation instead of an action that does nothing.
      */
     const handleUpdateUsername = async () => {
-        toast.error('Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah.');
+        toast.error(t('editProfileScreen.namaPenggunaTidakBolehDiubahSendiriSilaHubungi'));
     };
 
     return (
@@ -247,7 +247,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                         <button onClick={onBack} className="p-2 -ml-2 rounded-full hover:bg-white/10 transition-colors">
                             <ChevronLeftIcon className="w-6 h-6" />
                         </button>
-                        <h1 className="text-2xl font-bold tracking-tight ml-2">My Profile</h1>
+                        <h1 className="text-2xl font-bold tracking-tight ml-2">{t('editProfileScreen.myProfile')}</h1>
                     </div>
                 </div>
             </header>
@@ -265,7 +265,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                         <div className="relative">
                             <div className="w-32 h-32 rounded-full p-1 bg-white shadow-xl ring-4 ring-orange-50 ring-offset-2 overflow-hidden">
                                 {avatar ? (
-                                    <img src={avatar} alt="Profile" className="w-full h-full rounded-full object-cover" />
+                                    <img src={avatar} alt={t('editProfileScreen.profile')} className="w-full h-full rounded-full object-cover" />
                                 ) : (
                                     <div className="w-full h-full rounded-full bg-orange-100 flex items-center justify-center text-orange-400">
                                         <span className="text-4xl font-bold">{initials}</span>
@@ -277,7 +277,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                                 PRO
                             </div>
                             {/* Camera Button */}
-                            <label className="absolute bottom-1 right-1 bg-gray-800 text-white p-2 rounded-full shadow-lg border-[3px] border-white hover:bg-gray-700 transition-transform hover:scale-110 active:scale-95 cursor-pointer" aria-label="Change profile photo">
+                            <label className="absolute bottom-1 right-1 bg-gray-800 text-white p-2 rounded-full shadow-lg border-[3px] border-white hover:bg-gray-700 transition-transform hover:scale-110 active:scale-95 cursor-pointer" aria-label={t('editProfileScreen.changeProfilePhoto')}>
                                 <CameraIcon className="w-4 h-4" />
                                 <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
                             </label>
@@ -287,14 +287,14 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                     {/* Name & Role */}
                     <div className="text-center mt-2 mb-8">
                         <h2 className="text-2xl font-bold text-gray-800">{name}</h2>
-                        <p className="text-sm text-gray-500 font-medium">Student</p>
+                        <p className="text-sm text-gray-500 font-medium">{t('editProfileScreen.student')}</p>
                     </div>
 
                     {/* Stats Cards */}
                     <div className="flex justify-between w-full gap-3 mb-8">
-                        <StatCard icon={<ClockIcon />} label="Attendance" value={`${stats.attendanceRate}%`} color="text-green-500 bg-green-500" />
-                        <StatCard icon={<BookOpenIcon />} label="Assignments" value={stats.assignmentsSubmitted.toString()} color="text-blue-500 bg-blue-500" />
-                        <StatCard icon={<ChartBarIcon />} label="Avg Grade" value={stats.averageScore >= 80 ? 'A' : stats.averageScore >= 70 ? 'B' : stats.averageScore >= 60 ? 'C' : 'D'} color="text-purple-500 bg-purple-500" />
+                        <StatCard icon={<ClockIcon />} label={t('editProfileScreen.attendance')} value={`${stats.attendanceRate}%`} color="text-green-500 bg-green-500" />
+                        <StatCard icon={<BookOpenIcon />} label={t('editProfileScreen.assignments')} value={stats.assignmentsSubmitted.toString()} color="text-blue-500 bg-blue-500" />
+                        <StatCard icon={<ChartBarIcon />} label={t('editProfileScreen.avgGrade')} value={stats.averageScore >= 80 ? 'A' : stats.averageScore >= 70 ? 'B' : stats.averageScore >= 60 ? 'C' : 'D'} color="text-purple-500 bg-purple-500" />
                     </div>
 
                     {/* Form Fields */}
@@ -302,21 +302,21 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                         <div className="flex gap-4">
                             <div className="w-full">
                                 <InputField
-                                    label="Student ID"
+                                    label={t('editProfileScreen.studentID')}
                                     value={formatId(customId, 'student') || 'Pending Generation'}
                                     readOnly
                                 />
                             </div>
                         </div>
-                        <InputField label="Full Name" value={name} onChange={setName} />
+                        <InputField label={t('editProfileScreen.fullName')} value={name} onChange={setName} />
                         <div className="w-full mb-4">
-                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">Chat Display Name</label>
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">{t('editProfileScreen.chatDisplayName')}</label>
                             <div className="relative">
                                 <input
                                     type="text"
                                     value={displayName}
                                     onChange={e => setDisplayName(e.target.value)}
-                                    placeholder="How others see you in chat (optional)"
+                                    placeholder={t('editProfileScreen.howOthersSeeYouInChatOptional')}
                                     maxLength={40}
                                     className="w-full bg-gray-50 border border-gray-100 text-gray-800 text-sm rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent block p-3 transition-all"
                                 />
@@ -324,9 +324,9 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                                 </div>
                             </div>
-                            <p className="text-[11px] text-gray-400 mt-1 ml-1">This name shows in chats instead of your full name</p>
+                            <p className="text-[11px] text-gray-400 mt-1 ml-1">{t('editProfileScreen.thisNameShowsInChatsInsteadOfYourFullName')}</p>
                         </div>
-                        <InputField label="Email Address" value={email} type="email" readOnly />
+                        <InputField label={t('editProfileScreen.emailAddress')} value={email} type="email" readOnly />
 
                         {/* Language preference — saved to the account, follows the user across devices */}
                         <div className="w-full mb-4">
@@ -336,11 +336,11 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
 
                         {authUser?.user_metadata?.email_verified && (
                             <div className="mt-8 pt-8 border-t border-gray-100 space-y-6 w-full">
-                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider">Account Security</h3>
+                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider">{t('editProfileScreen.accountSecurity')}</h3>
 
                                 <div className="space-y-4">
                                     <div className="w-full">
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">Username</label>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">{t('editProfileScreen.username')}</label>
                                         <div className="flex gap-2">
                                             <div className="relative flex-1">
                                                 <input
@@ -348,7 +348,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                                                     value={username}
                                                     onChange={e => setUsername(e.target.value)}
                                                     className="w-full bg-gray-50 border border-gray-100 text-gray-800 text-sm rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent block p-3 transition-all"
-                                                    placeholder="Enter new username"
+                                                    placeholder={t('editProfileScreen.enterNewUsername')}
                                                 />
                                             </div>
                                             <motion.button
@@ -372,7 +372,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                                         >
                                             <span className="flex items-center space-x-2">
                                                 <LockIcon className="w-4 h-4 text-orange-500" />
-                                                <span className="text-xs font-bold text-orange-700 uppercase">Change Password</span>
+                                                <span className="text-xs font-bold text-orange-700 uppercase">{t('editProfileScreen.changePassword')}</span>
                                             </span>
                                             <ChevronLeftIcon className="w-4 h-4 text-orange-400 rotate-180" />
                                         </motion.button>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -13,9 +14,11 @@ interface ConferenceSchedulingProps {
     handleBack?: () => void;
 }
 
-const ConferenceScheduling: React.FC<ConferenceSchedulingProps> = ({ handleBack }) => (
+const ConferenceScheduling: React.FC<ConferenceSchedulingProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Penjadualan Perjumpaan"
+        title={t('conferenceScheduling.penjadualanPerjumpaan')}
         explanation={
             'Sekolah belum membuka tempahan perjumpaan guru secara dalam talian. Buat ' +
             'masa ini sebarang pertemuan dengan guru boleh diatur terus melalui ' +
@@ -25,6 +28,7 @@ const ConferenceScheduling: React.FC<ConferenceSchedulingProps> = ({ handleBack 
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default ConferenceScheduling;

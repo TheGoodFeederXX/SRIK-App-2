@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -14,6 +15,7 @@ interface AskEntry { question: string; answer: string; data: any; }
  * Without it the component is a self-contained floating widget.
  */
 const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
+    const { t } = useTranslation();
     const [open, setOpen] = useState(embedded);
     const [question, setQuestion] = useState('');
     const [asking, setAsking] = useState(false);
@@ -91,7 +93,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
 
             <div className="p-3 border-t border-gray-100 flex items-center gap-2">
                 <input value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAsk()}
-                    placeholder="Ask a question..." disabled={asking}
+                    placeholder={t('askAIWidget.askAQuestion')} disabled={asking}
                     className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400" />
                 <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleAsk()} disabled={asking || !question.trim()} className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center disabled:opacity-50 flex-shrink-0">
                     <Send className="w-4 h-4" />
@@ -114,7 +116,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setOpen(true)}
                     className="fixed bottom-[calc(1.5rem+var(--bottom-nav-height,0px)+var(--docked-bar-height,0px))] right-4 z-40 flex items-center gap-2 bg-indigo-600 text-white px-4 py-3 rounded-full shadow-xl hover:bg-indigo-700 transition-colors">
-                    <Sparkles className="w-5 h-5" /> <span className="text-sm font-bold hidden sm:inline">Ask AI</span>
+                    <Sparkles className="w-5 h-5" /> <span className="text-sm font-bold hidden sm:inline">{t('askAIWidget.askAI')}</span>
                 </motion.button>
             ) : (
                 <motion.div
@@ -128,7 +130,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
                     <div className="px-5 py-4 bg-indigo-600 text-white rounded-t-3xl flex items-center justify-between">
                         <div className="flex items-center gap-2">
                             <Sparkles className="w-5 h-5" />
-                            <h3 className="font-bold">Ask AI</h3>
+                            <h3 className="font-bold">{t('askAIWidget.askAI')}</h3>
                         </div>
                         <motion.button whileTap={{ scale: 0.9 }} onClick={() => setOpen(false)}><X className="w-5 h-5" /></motion.button>
                     </div>
@@ -173,7 +175,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
 
                     <div className="p-3 border-t border-gray-100 flex items-center gap-2">
                         <input value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAsk()}
-                            placeholder="Ask a question..." disabled={asking}
+                            placeholder={t('askAIWidget.askAQuestion')} disabled={asking}
                             className="flex-1 border border-gray-200 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-indigo-400" />
                         <motion.button whileTap={{ scale: 0.9 }} onClick={() => handleAsk()} disabled={asking || !question.trim()} className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center disabled:opacity-50 flex-shrink-0">
                             <Send className="w-4 h-4" />
