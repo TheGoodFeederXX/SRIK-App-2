@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 
 interface ConfirmationModalProps {
@@ -14,8 +15,14 @@ interface ConfirmationModalProps {
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
-    isOpen, onClose, onConfirm, title, message, confirmText = "Confirm", cancelText = "Cancel", isDanger = false
+    isOpen, onClose, onConfirm, title, message, confirmText, cancelText, isDanger = false
 }) => {
+    const { t } = useTranslation();
+    // The defaults were English literals, so a Malay reader saw "Confirm"/"Cancel"
+    // while every label around them was translated. The fallback now follows the
+    // chosen language; a caller may still override it with its own words.
+    const confirmLabel = confirmText ?? t('common.confirm');
+    const cancelLabel = cancelText ?? t('common.cancel');
     if (!isOpen) return null;
 
     // Portaled to document.body on purpose. DashboardLayout wraps every screen in
@@ -35,13 +42,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                         onClick={onClose}
                         className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg transition-colors"
                     >
-                        {cancelText}
+                        {cancelLabel}
                     </button>
                     <button
                         onClick={() => { onConfirm(); onClose(); }}
                         className={`px-4 py-2 text-white font-medium rounded-lg shadow-sm transition-colors ${isDanger ? 'bg-red-600 hover:bg-red-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}
                     >
-                        {confirmText}
+                        {confirmLabel}
                     </button>
                 </div>
             </div>

@@ -3972,5 +3972,11 @@
     "entityPaymentAllocations": "Agihan bayaran",
     "entityDocuments": "Dokumen",
     "entityAnnouncements": "Pengumuman"
+  },
+  "nextUpTask": {
+    "nextPriority": "Keutamaan Seterusnya",
+    "submitWork": "Hantar Kerja",
+    "startQuiz": "Mula Kuiz",
+    "viewLesson": "Lihat Pelajaran"
   }
 }

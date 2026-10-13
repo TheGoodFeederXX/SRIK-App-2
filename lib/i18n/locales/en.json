@@ -3972,5 +3972,11 @@
     "entityPaymentAllocations": "Payment allocations",
     "entityDocuments": "Documents",
     "entityAnnouncements": "Announcements"
+  },
+  "nextUpTask": {
+    "nextPriority": "Next Priority",
+    "submitWork": "Submit Work",
+    "startQuiz": "Start Quiz",
+    "viewLesson": "View Lesson"
   }
 }

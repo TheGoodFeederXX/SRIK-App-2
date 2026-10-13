@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Clock, BookOpen, ChevronRight } from 'lucide-react';
 
@@ -34,6 +35,7 @@ export const NextUpTask: React.FC<TaskProps> = ({
     type,
     onClick
 }) => {
+    const { t } = useTranslation();
     return (
         <motion.button
             initial={{ opacity: 0, y: 20 }}
@@ -49,7 +51,7 @@ export const NextUpTask: React.FC<TaskProps> = ({
             
             <div className="flex justify-between items-start mb-4">
                 <span className="px-3 py-1 bg-white/20 rounded-full text-xs font-medium uppercase tracking-wider">
-                    Next Priority
+                    {t('nextUpTask.nextPriority')}
                 </span>
                 <div className="bg-white/10 p-2 rounded-xl">
                     <BookOpen className="w-5 h-5" />
@@ -73,7 +75,7 @@ export const NextUpTask: React.FC<TaskProps> = ({
 
             <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-4">
                 <span className="text-sm font-medium opacity-80">
-                    {type === 'assignment' ? 'Submit Work' : type === 'quiz' ? 'Start Quiz' : 'View Lesson'}
+                    {type === 'assignment' ? t('nextUpTask.submitWork') : type === 'quiz' ? t('nextUpTask.startQuiz') : t('nextUpTask.viewLesson')}
                 </span>
                 <ChevronRight className="w-5 h-5 opacity-80 transition-transform duration-200 group-hover:translate-x-1" />
             </div>
