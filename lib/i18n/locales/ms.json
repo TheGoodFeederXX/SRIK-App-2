@@ -605,7 +605,15 @@
     "subjects": "Subjek",
     "assign": "Tugasan",
     "profile": "Profil",
-    "pending": "Menunggu"
+    "pending": "Menunggu",
+    "academicTranscript": "Transkrip Akademik",
+    "name": "Nama",
+    "studentId": "ID Murid",
+    "class": "Kelas",
+    "overallAverage": "Purata Keseluruhan",
+    "score": "Markah",
+    "grade": "Gred",
+    "noPublishedResultsYet": "Belum ada keputusan yang diterbitkan."
   },
   "studyBuddy": {
     "uploadImage": "Muat naik imej",
@@ -794,7 +802,8 @@
     "assignmentPreview": "Pratonton Tugasan",
     "spaceForPracticalWorkDiagram": "Ruang untuk kerja amali/rajah.",
     "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "Untuk berkongsi, sila cetak/simpan sebagai PDF atau ambil tangkapan skrin.",
-    "assessment": "Penilaian"
+    "assessment": "Penilaian",
+    "assignment": "Tugasan"
   },
   "badgeSystem": {
     "badgeSystem": "Sistem Lencana"
@@ -850,7 +859,8 @@
     "loadingMarks": "Memuatkan markah...",
     "noMarksRecordedYet": "Belum ada markah direkodkan.",
     "student": "Murid",
-    "average": "Purata"
+    "average": "Purata",
+    "couldNotLoadTheMarks": "Tidak dapat memuatkan markah."
   },
   "collaborationForumScreen": {
     "collaborationForum": "Forum Kerjasama"
@@ -916,7 +926,8 @@
     "gradesWillAutoSave": "Gred akan disimpan secara automatik.",
     "selectAnExamToEnterGrades": "Pilih peperiksaan untuk memasukkan gred.",
     "loadingStudentList": "Memuatkan senarai murid...",
-    "pending": "Menunggu"
+    "pending": "Menunggu",
+    "couldNotLoadTheMarks": "Tidak dapat memuatkan markah."
   },
   "gradeSubmissionScreen": {
     "gradeSubmission": "Penyerahan Gred"
@@ -971,7 +982,8 @@
     "suggestAIActivity": "Cadangkan Aktiviti AI",
     "aiGeneratedLessonPlan": "Rancangan Pelajaran Dijana AI",
     "publishing": "Menerbitkan...",
-    "publishToLibrary": "Terbitkan ke Perpustakaan"
+    "publishToLibrary": "Terbitkan ke Perpustakaan",
+    "assignment": "Tugasan"
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Perancang Pelajaran",
@@ -1141,7 +1153,8 @@
     "createOneToGetStarted": "Cipta satu untuk bermula!",
     "submissions": "Penyerahan",
     "loadingAssignments": "Memuatkan tugasan...",
-    "createAssignment": "Cipta Tugasan"
+    "createAssignment": "Cipta Tugasan",
+    "assignments": "Tugasan"
   },
   "teacherAttendanceHistoryScreen": {
     "loadingHistory": "Memuatkan sejarah...",
@@ -1170,7 +1183,11 @@
     "attendanceRecorded": "Kehadiran direkodkan.",
     "failedToLoadTeacherAttendanceData": "Gagal memuatkan data kehadiran guru",
     "thatStatusCannotBeRecorded": "Status itu tidak boleh direkodkan.",
-    "attendanceApprovals": "Kelulusan Kehadiran"
+    "attendanceApprovals": "Kelulusan Kehadiran",
+    "couldNotRecordThat": "Tidak dapat merekodkan itu.",
+    "couldNotSaveAttendancePleaseTryAgain": "Tidak dapat menyimpan kehadiran. Sila cuba lagi.",
+    "couldNotLoadTheRegister": "Tidak dapat memuatkan daftar.",
+    "couldNotSaveAttendance": "Tidak dapat menyimpan kehadiran."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Kata Laluan Semasa",
@@ -1628,7 +1645,8 @@
     "drawingArtSkills": "Kemahiran Melukis/Seni",
     "craftSkills": "Kemahiran Kraf",
     "musicDance": "Muzik & Tarian",
-    "sportsParticipation": "Penyertaan Sukan"
+    "sportsParticipation": "Penyertaan Sukan",
+    "gagalMenerbitkanKadLaporan": "Gagal menerbitkan kad laporan."
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "Dasar Sekolah"
@@ -1850,7 +1868,8 @@
     "trySearchingForSomethingElse": "Cuba cari perkara lain.",
     "classes": "Kelas",
     "quizzes": "Kuiz",
-    "noticeboard": "Papan Notis"
+    "noticeboard": "Papan Notis",
+    "submissions": "Penyerahan"
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Paparan Sumber Hab Pembelajaran"
@@ -2316,7 +2335,8 @@
     "errorLoadingAcademicSettings": "Ralat memuatkan tetapan akademik.",
     "schoolContextMissing": "Konteks sekolah hilang.",
     "saving": "Menyimpan...",
-    "saveChanges": "Simpan Perubahan"
+    "saveChanges": "Simpan Perubahan",
+    "failedToSaveSettings": "Gagal menyimpan tetapan"
   },
   "addExamScreen": {
     "examType": "Jenis Peperiksaan",
@@ -2352,7 +2372,11 @@
     "studentDetails": "Butiran murid",
     "schoolBackground": "Latar belakang sekolah",
     "parentOrGuardian": "Ibu bapa atau penjaga",
-    "studentDetailsSaved": "Butiran murid disimpan."
+    "studentDetailsSaved": "Butiran murid disimpan.",
+    "couldNotSaveTheChanges": "Tidak dapat menyimpan perubahan.",
+    "couldNotRegisterTheStudent": "Tidak dapat mendaftarkan murid.",
+    "couldNotLoadThisStudent": "Tidak dapat memuatkan murid ini.",
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "addTeacherScreen": {
     "notStated": "Tidak dinyatakan",
@@ -2715,14 +2739,18 @@
     "subjectsTaught": "Subjek diajar",
     "loadingSubjects": "Memuatkan subjek...",
     "pleaseChooseAYearLevelFrom1To6": "Sila pilih peringkat tahun dari 1 hingga 6.",
-    "pleaseEnterAClassName": "Sila masukkan nama kelas."
+    "pleaseEnterAClassName": "Sila masukkan nama kelas.",
+    "couldNotSaveTheClass": "Tidak dapat menyimpan kelas.",
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "classListScreen": {
     "noClassesYet": "Belum Ada Kelas",
     "loadingClasses": "Memuatkan kelas...",
     "addNewClass": "Tambah Kelas Baharu",
     "student": "Murid",
-    "students": "Murid"
+    "students": "Murid",
+    "couldNotRemoveTheClass": "Tidak dapat membuang kelas.",
+    "couldNotLoadTheStudents": "Tidak dapat memuatkan murid."
   },
   "classVerificationScreen": {
     "classVerification": "Pengesahan Kelas"
@@ -3000,7 +3028,9 @@
     "catatanPilihan": "Catatan (pilihan)",
     "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit",
     "menyimpan": "Menyimpan…",
-    "simpanMarkah": "Simpan markah"
+    "simpanMarkah": "Simpan markah",
+    "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
+    "gagalMenerbitkan": "Gagal menerbitkan."
   },
   "markStudentExitScreen": {
     "markStudentExit": "Tanda Keluar Murid"
@@ -3041,7 +3071,10 @@
     "noMatches": "Tiada Padanan",
     "noGuardiansYet": "Belum Ada Penjaga",
     "editGuardian": "Sunting penjaga",
-    "addGuardian": "Tambah penjaga"
+    "addGuardian": "Tambah penjaga",
+    "couldNotSaveTheGuardian": "Tidak dapat menyimpan penjaga.",
+    "couldNotRemoveTheGuardian": "Tidak dapat membuang penjaga.",
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "pastStudentsScreen": {
     "pastStudents": "Murid Lepas"
@@ -3111,7 +3144,11 @@
     "filterStudents": "Tapis murid...",
     "filterByClassOrStudentName": "Tapis mengikut kelas atau nama murid...",
     "couldNotLoadHistory": "Tidak dapat memuatkan sejarah",
-    "unknown": "Tidak Diketahui"
+    "unknown": "Tidak Diketahui",
+    "statusPublished": "Diterbitkan",
+    "statusDraft": "Draf",
+    "drafting": "Sedang Draf",
+    "noReportYet": "Belum Ada Laporan"
   },
   "reportsScreen": {
     "purataMarkah": "Purata markah",
@@ -3308,7 +3345,10 @@
     "subject": "Subjek",
     "subjects": "Subjek",
     "editSubject": "Sunting subjek",
-    "addSubject": "Tambah subjek"
+    "addSubject": "Tambah subjek",
+    "couldNotSaveTheSubject": "Tidak dapat menyimpan subjek.",
+    "couldNotRemoveTheSubject": "Tidak dapat membuang subjek.",
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Liputan Ganti"
@@ -3376,7 +3416,10 @@
     "noAcademicYearIsSetAsCurrent": "Tiada tahun akademik ditetapkan semasa.",
     "couldNotLoadThisTeachersDuties": "Tidak dapat memuatkan tugas guru ini.",
     "saving": "Menyimpan...",
-    "saveDuties": "Simpan tugas"
+    "saveDuties": "Simpan tugas",
+    "couldNotSaveTheDuties": "Tidak dapat menyimpan tugas.",
+    "couldNotClearTheDuties": "Tidak dapat mengosongkan tugas.",
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Kelulusan Kehadiran",
@@ -3458,7 +3501,10 @@
     "timetablePublished": "Jadual waktu diterbitkan.",
     "chooseASubjectFirst": "Pilih subjek dahulu.",
     "publishing": "Menerbitkan...",
-    "publishTimetable": "Terbitkan Jadual Waktu"
+    "publishTimetable": "Terbitkan Jadual Waktu",
+    "couldNotClearThatLesson": "Tidak dapat mengosongkan pelajaran itu.",
+    "couldNotPublish": "Tidak dapat menerbitkan.",
+    "couldNotSaveTheLesson": "Tidak dapat menyimpan pelajaran."
   },
   "timetableScreen": {
     "jadualTidakDapatDimuatkan": "Jadual tidak dapat dimuatkan",

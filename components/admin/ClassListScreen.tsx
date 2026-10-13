@@ -102,7 +102,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                 }));
             setClassStudents(prev => ({ ...prev, [classId]: rows }));
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Could not load the students.');
+            toast.error(err instanceof Error ? err.message : t('classListScreen.couldNotLoadTheStudents'));
         } finally {
             setLoadingStudents(prev => ({ ...prev, [classId]: false }));
         }
@@ -115,7 +115,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
 
         const result = await deleteClass(cls.id);
         if (!result.success) {
-            toast.error(result.error ?? 'Could not remove the class.');
+            toast.error(result.error ?? t('classListScreen.couldNotRemoveTheClass'));
             return;
         }
         toast.success(`${cls.displayName} was removed.`);

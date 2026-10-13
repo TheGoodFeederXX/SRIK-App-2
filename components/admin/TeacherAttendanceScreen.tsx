@@ -155,7 +155,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
             // Put the row back. Leaving an optimistic value that did not save is how
             // the office ends up believing a record exists.
             setTeachers(previous);
-            toast.error(err instanceof Error ? err.message : 'Could not record that.');
+            toast.error(err instanceof Error ? err.message : t('teacherAttendanceScreen.couldNotRecordThat'));
         }
     }, [teachers]);
 

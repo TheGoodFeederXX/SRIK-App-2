@@ -466,7 +466,7 @@ export default function ReportCardScreen() {
             await queryClient.invalidateQueries({ queryKey: ['reportCards', termId] });
             await queryClient.invalidateQueries({ queryKey: ['reportSnapshot', studentId, termId] });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Gagal menerbitkan kad laporan.');
+            toast.error(err instanceof Error ? err.message : t('reportCardScreen.gagalMenerbitkanKadLaporan'));
         } finally {
             setIsBusy(false);
         }

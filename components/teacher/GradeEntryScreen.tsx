@@ -94,7 +94,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
             setScores(scoreMap);
         } catch (err) {
             console.error('Error loading grade entry data:', err);
-            toast.error(err instanceof Error ? err.message : 'Could not load the marks.');
+            toast.error(err instanceof Error ? err.message : t('gradeEntryScreen.couldNotLoadTheMarks'));
         } finally {
             setLoading(false);
         }

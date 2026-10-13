@@ -102,7 +102,9 @@ const LessonPlansTab: React.FC<{ plans: TermResources['lessonPlans'], notes?: De
     );
 };
 
-const AssessmentDisplay: React.FC<{ assessment: GeneratedAssessment, subject: string, className: string, navigateTo: (view: string, title: string, props?: any) => void; }> = ({ assessment, subject, className, navigateTo }) => (
+const AssessmentDisplay: React.FC<{ assessment: GeneratedAssessment, subject: string, className: string, navigateTo: (view: string, title: string, props?: any) => void; }> = ({ assessment, subject, className, navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <div className="bg-white p-4 rounded-lg border border-gray-200">
         <h4 className="font-bold text-xl mb-2 text-gray-800">{assessment.type} ({assessment.totalMarks} Marks)</h4>
         {assessment.questions.slice(0, 2).map(q => ( // Show a preview of first 2 questions
@@ -112,14 +114,15 @@ const AssessmentDisplay: React.FC<{ assessment: GeneratedAssessment, subject: st
         ))}
         <div className="mt-4 border-t pt-3">
             <button
-                onClick={() => navigateTo('assignmentView', `Assignment: ${assessment.type}`, { assessment, subject, className })}
+                onClick={() => navigateTo('assignmentView', `${t('lessonPlanDetailScreen.assignment')}: ${assessment.type}`, { assessment, subject, className })}
                 className="w-full text-center py-2 px-4 bg-purple-100 text-purple-700 font-semibold rounded-lg hover:bg-purple-200 transition-colors"
             >
                 View as Assignment
             </button>
         </div>
     </div>
-);
+    );
+};
 
 const AssessmentsTab: React.FC<{ assessments: TermResources['assessments'], subject: string, className: string, navigateTo: (view: string, title: string, props?: any) => void; }> = ({ assessments, subject, className, navigateTo }) => {
     const { t } = useTranslation();

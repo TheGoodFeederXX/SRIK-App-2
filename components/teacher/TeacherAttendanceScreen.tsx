@@ -173,7 +173,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
             // only one of them means the office has work to do.
             console.error('Error fetching attendance data:', err);
             toast.error(
-                err instanceof Error ? `Could not load the register: ${err.message}` : 'Could not load the register.'
+                err instanceof Error ? `${t('teacherAttendanceScreen.couldNotLoadTheRegister')}: ${err.message}` : 'Could not load the register.'
             );
             setStudents([]);
         } finally {
@@ -241,7 +241,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
             const result = await recordRegister(classInfo.id, selectedDate, entries);
 
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save attendance. Please try again.');
+                toast.error(result.error ?? t('teacherAttendanceScreen.couldNotSaveAttendancePleaseTryAgain'));
                 return;
             }
 
@@ -254,7 +254,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         } catch (err) {
             console.error('Error submitting attendance:', err);
             toast.error(
-                err instanceof Error ? `Could not save attendance: ${err.message}` : 'Could not save attendance.'
+                err instanceof Error ? `${t('teacherAttendanceScreen.couldNotSaveAttendance')}: ${err.message}` : 'Could not save attendance.'
             );
         }
     };

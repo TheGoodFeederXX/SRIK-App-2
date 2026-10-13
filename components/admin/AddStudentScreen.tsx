@@ -188,7 +188,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                 }
             } catch (err) {
                 if (!cancelled) {
-                    toast.error(err instanceof Error ? err.message : 'Could not load this student.');
+                    toast.error(err instanceof Error ? err.message : t('addStudentScreen.couldNotLoadThisStudent'));
                 }
             } finally {
                 if (!cancelled) setIsLoadingRecord(false);
@@ -238,7 +238,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
             if (isEditing && studentToEdit?.id) {
                 const result = await updateStudent(studentToEdit.id, input);
                 if (!result.success) {
-                    toast.error(result.error ?? 'Could not save the changes.');
+                    toast.error(result.error ?? t('addStudentScreen.couldNotSaveTheChanges'));
                     return;
                 }
                 // A class change is a separate, audited step.
@@ -262,7 +262,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
             });
 
             if (!result.success) {
-                toast.error(result.error ?? 'Could not register the student.');
+                toast.error(result.error ?? t('addStudentScreen.couldNotRegisterTheStudent'));
                 return;
             }
 
@@ -278,7 +278,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
             forceUpdate?.();
             handleBack();
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('addStudentScreen.somethingWentWrongPleaseTryAgain'));
         } finally {
             setIsLoading(false);
         }

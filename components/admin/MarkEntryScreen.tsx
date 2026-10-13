@@ -277,7 +277,7 @@ export default function MarkEntryScreen() {
             await queryClient.invalidateQueries({ queryKey: ['markRegister', assessment.id] });
             await queryClient.invalidateQueries({ queryKey: ['assessments', termId] });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Gagal menyimpan. Sila cuba lagi.');
+            toast.error(err instanceof Error ? err.message : t('markEntryScreen.gagalMenyimpanSilaCubaLagi'));
         } finally {
             setIsSaving(false);
         }
@@ -301,7 +301,7 @@ export default function MarkEntryScreen() {
             await queryClient.invalidateQueries({ queryKey: ['markRegister', assessment.id] });
             await queryClient.invalidateQueries({ queryKey: ['assessments', termId] });
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Gagal menerbitkan.');
+            toast.error(err instanceof Error ? err.message : t('markEntryScreen.gagalMenerbitkan'));
         } finally {
             setIsSaving(false);
         }

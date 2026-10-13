@@ -132,7 +132,7 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
                                 transition={{ duration: 0.2, delay: Math.min(i, 12) * 0.04 }}
                                 whileHover={{ y: -2 }}
                                 whileTap={{ scale: 0.98 }}
-                                onClick={() => navigateTo('classAssignments', `Assignments: ${className}`, { className })}
+                                onClick={() => navigateTo('classAssignments', `${t('teacherAssignmentsListScreen.assignments')}: ${className}`, { className })}
                                 className="w-full bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow flex justify-between items-center gap-3 text-left"
                             >
                                 {/*

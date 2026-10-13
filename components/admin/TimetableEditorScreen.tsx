@@ -134,7 +134,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
         setSlot(null);
         const result = await clearLesson(period.id, classId);
         if (!result.success) {
-            toast.error(result.error ?? 'Could not clear that lesson.');
+            toast.error(result.error ?? t('timetableEditorScreen.couldNotClearThatLesson'));
             return;
         }
         toast.success(t('timetableEditorScreen.lessonRemoved'));
@@ -153,7 +153,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
         try {
             const result = await publishTimetable(timetable.id, 'Published from the editor');
             if (!result.success) {
-                toast.error(result.error ?? 'Could not publish.');
+                toast.error(result.error ?? t('timetableEditorScreen.couldNotPublish'));
                 return;
             }
             toast.success(t('timetableEditorScreen.timetablePublished'));
@@ -373,7 +373,7 @@ const SlotEditor: React.FC<{
                 teacherId: chosen.teacherId,
             });
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save the lesson.');
+                toast.error(result.error ?? t('timetableEditorScreen.couldNotSaveTheLesson'));
                 return;
             }
             toast.success(`${chosen.code} set for ${className}.`);

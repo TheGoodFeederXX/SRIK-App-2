@@ -142,7 +142,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                     subtitle: `Due: ${a.due_date ? new Date(a.due_date).toLocaleDateString("ms-MY") : 'N/A'}`,
                     type: 'Assignment',
                     onClick: () => {
-                        if (dashboardType === DashboardType.Teacher) navigateTo('assignmentSubmissions', `Submissions: ${a.title}`, { assignment: a });
+                        if (dashboardType === DashboardType.Teacher) navigateTo('assignmentSubmissions', `${t('globalSearchScreen.submissions')}: ${a.title}`, { assignment: a });
                         else if (dashboardType === DashboardType.Student) navigateTo('assignmentDetail', a.title, { assignment: a });
                     }
                 });

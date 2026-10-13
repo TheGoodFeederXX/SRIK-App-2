@@ -89,6 +89,20 @@ const protect = (text) => {
     protected_.push(text);
     return token;
 };
+// A TEMPLATE LITERAL whose literal text is a message we know:
+// `\`Could not load the register: ${err.message}\``. The TEXT is translated and the
+// INTERPOLATION is kept exactly as written, so the value still reaches the sentence. The label is
+// looked up with a trailing period added (`...register.`), because the dictionary holds the
+// sentence form; the template drops the period when it appends a value. The whole template is left
+// alone if the label is unknown, which keeps SQL, filenames and HTML markup untouched. This must
+// run BEFORE the protection step below, which hides templates from the later rules.
+src = src.replace(/`([^`$]{2,120}?)\s*:\s*(\$\{[^`]*\})`/g, (full, lead, expr) => {
+    const key = MAP[lead] ? lead : (MAP[lead + '.'] ? lead + '.' : null);
+    if (!key) return full;
+    used.add(key); missed.delete(key);
+    changes.push(['template label', key]);
+    return '`' + `\${t('${keyFor(key)}')}: ${expr}` + '`';
+});
 src = src.replace(/`(?:[^`\\]|\\.)*`/gs, protect);           // template literals
 // Block and JSX comments: protect each physical line on its own, so every newline stays exactly
 // where it was. Collapsing a multi-line comment removed newlines, which merged a component
@@ -229,6 +243,24 @@ src = src.replace(/(\breturn\s*)\[([^\[\]]{4,600})\]/g, (full, kw, inner) => {
     return `${kw}[${texts.map((x) => `t('${keyFor(x)}')`).join(', ')}]`;
 });
 
+// 3a-5. A LITERAL ERROR FALLBACK after `??` in a toast: `toast.error(result.error ?? 'Could not
+// save the changes.')`. Same reasoning as the `||` form above.
+src = src.replace(/\b(toast\.\w+\s*\(\s*)([^,)\n]{1,80}?\s*\?\?\s*)(['"])([^'"]{1,90})\3/g,
+    (full, pre, mid, q, text) => {
+        if (!MAP[text]) return full;
+        used.add(text); missed.delete(text);
+        changes.push(['toast ??', text]);
+        return `${pre}${mid}t('${keyFor(text)}')`;
+    });
+// An `Error`-guarded toast: `toast.error(err instanceof Error ? err.message : 'Something ...')`.
+src = src.replace(/\b(toast\.\w+\s*\(\s*)(err\s+instanceof\s+Error\s*\?\s*err\.message\s*:\s*)(['"])([^'"]{1,110})\3/g,
+    (full, pre, mid, q, text) => {
+        if (!MAP[text]) return full;
+        used.add(text); missed.delete(text);
+        changes.push(['toast err', text]);
+        return `${pre}${mid}t('${keyFor(text)}')`;
+    });
+
 // 3b. A JSX TERNARY that CHOOSES BETWEEN TWO LITERALS: `{cond ? 'Class Report Cards' : 'Report
 // Cards'}`. Whichever branch runs, a literal is rendered, so both must be translated. The
 // condition is left untouched.
@@ -313,7 +345,11 @@ function addHooks(fileSource) {
         // The difference is what follows the `=` — an arrow function is a component, and any
         // other expression (a `||` fallback, a call, an array access) is not. Requiring this
         // to be about what FOLLOWS the `=` is what stops `React.FC = () => {` being rejected.
-        const afterAssign = head.slice(head.indexOf('=') + 1);
+        // The assignment `=` is the one that is NOT part of an arrow `=>`. Using the first `=` on
+        // the line picked up the `=>` inside a type annotation
+        // (`navigateTo: (view: string) => void`), which made the component look like a value.
+        const assignAt = head.search(/=(?!=|>)/);
+        const afterAssign = assignAt === -1 ? '' : head.slice(assignAt + 1);
         const isArrowComponent = /^\s*(?:\([^)]*\)|[\w$]+)\s*(?::[^=]+)?=>/.test(afterAssign);
         const assignsExpression = head.includes('=')
             && !isArrowComponent
@@ -361,11 +397,18 @@ function addHooks(fileSource) {
         if (!name) { out.push(line); continue; }
 
         // The body's extent, for the uses/has decision only. Count from the body's own brace.
+        // For a CONCISE body (`=> (`) the body starts AFTER this line, so the brace search must not
+        // run at all: the line carries a `{` inside its type annotation (`React.FC<{ ... }>`), and
+        // lastIndexOf('{') would land there and collapse the range to nothing.
         const from = opensBlock ? line.lastIndexOf('{') : line.length;
         let depth = 0, j = i, body = '';
         for (; j < lines.length; j++) {
             const chunk = j === i ? (opensBlock ? line.slice(from) : '') : lines[j];
-            body += `${chunk}\n`;
+            // RESOLVE placeholders while measuring. A template literal is protected, and the
+            // template rule inserts a `t(...)` call INTO it before protection — so without this
+            // the body looked as though it used no `t`, no hook was added, and `t` was undefined.
+            const visible = chunk.replace(/\uE000(\d+)\uE001/g, (_m, n) => protected_[Number(n)] ?? '');
+            body += `${visible}\n`;
             depth += (chunk.match(/\{/g) || []).length - (chunk.match(/\}/g) || []).length;
             if (opensBlock && depth <= 0) break;
             if (opensParen && (lines[j].trim() === ');' || lines[j].trim() === ')')) break;

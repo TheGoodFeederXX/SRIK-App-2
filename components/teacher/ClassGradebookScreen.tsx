@@ -141,7 +141,7 @@ const ClassGradebookScreen: React.FC<{
             setAssessmentTitles(relevant.map(a => a.title));
         } catch (err) {
             console.error('Error loading gradebook:', err);
-            toast.error(err instanceof Error ? err.message : 'Could not load the marks.');
+            toast.error(err instanceof Error ? err.message : t('classGradebookScreen.couldNotLoadTheMarks'));
         } finally {
             setLoading(false);
         }

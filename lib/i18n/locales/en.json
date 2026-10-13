@@ -605,7 +605,15 @@
     "subjects": "Subjects",
     "assign": "Assign.",
     "profile": "Profile",
-    "pending": "Pending"
+    "pending": "Pending",
+    "academicTranscript": "Academic Transcript",
+    "name": "Name",
+    "studentId": "Student ID",
+    "class": "Class",
+    "overallAverage": "Overall Average",
+    "score": "Score",
+    "grade": "Grade",
+    "noPublishedResultsYet": "No published results yet."
   },
   "studyBuddy": {
     "uploadImage": "Upload image",
@@ -794,7 +802,8 @@
     "assignmentPreview": "Assignment Preview",
     "spaceForPracticalWorkDiagram": "Space for practical work/diagram.",
     "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "To share, please print/save as PDF or take a screenshot.",
-    "assessment": "Assessment"
+    "assessment": "Assessment",
+    "assignment": "Assignment"
   },
   "badgeSystem": {
     "badgeSystem": "Badge System"
@@ -850,7 +859,8 @@
     "loadingMarks": "Loading marks...",
     "noMarksRecordedYet": "No marks recorded yet.",
     "student": "Student",
-    "average": "Average"
+    "average": "Average",
+    "couldNotLoadTheMarks": "Could not load the marks."
   },
   "collaborationForumScreen": {
     "collaborationForum": "Collaboration Forum"
@@ -916,7 +926,8 @@
     "gradesWillAutoSave": "Grades will auto-save.",
     "selectAnExamToEnterGrades": "Select an exam to enter grades.",
     "loadingStudentList": "Loading student list...",
-    "pending": "Pending"
+    "pending": "Pending",
+    "couldNotLoadTheMarks": "Could not load the marks."
   },
   "gradeSubmissionScreen": {
     "gradeSubmission": "Grade Submission"
@@ -971,7 +982,8 @@
     "suggestAIActivity": "Suggest AI Activity",
     "aiGeneratedLessonPlan": "AI Generated Lesson Plan",
     "publishing": "Publishing...",
-    "publishToLibrary": "Publish to Library"
+    "publishToLibrary": "Publish to Library",
+    "assignment": "Assignment"
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Lesson Planner",
@@ -1141,7 +1153,8 @@
     "createOneToGetStarted": "Create one to get started!",
     "submissions": "Submissions",
     "loadingAssignments": "Loading assignments...",
-    "createAssignment": "Create Assignment"
+    "createAssignment": "Create Assignment",
+    "assignments": "Assignments"
   },
   "teacherAttendanceHistoryScreen": {
     "loadingHistory": "Loading history...",
@@ -1170,7 +1183,11 @@
     "attendanceRecorded": "Attendance recorded.",
     "failedToLoadTeacherAttendanceData": "Failed to load teacher attendance data",
     "thatStatusCannotBeRecorded": "That status cannot be recorded.",
-    "attendanceApprovals": "Attendance Approvals"
+    "attendanceApprovals": "Attendance Approvals",
+    "couldNotRecordThat": "Could not record that.",
+    "couldNotSaveAttendancePleaseTryAgain": "Could not save attendance. Please try again.",
+    "couldNotLoadTheRegister": "Could not load the register.",
+    "couldNotSaveAttendance": "Could not save attendance."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Current Password",
@@ -1628,7 +1645,8 @@
     "drawingArtSkills": "Drawing/Art Skills",
     "craftSkills": "Craft Skills",
     "musicDance": "Music & Dance",
-    "sportsParticipation": "Sports Participation"
+    "sportsParticipation": "Sports Participation",
+    "gagalMenerbitkanKadLaporan": "Gagal menerbitkan kad laporan."
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "School Policies"
@@ -1850,7 +1868,8 @@
     "trySearchingForSomethingElse": "Try searching for something else.",
     "classes": "Classes",
     "quizzes": "Quizzes",
-    "noticeboard": "Noticeboard"
+    "noticeboard": "Noticeboard",
+    "submissions": "Submissions"
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Learning Hub Resource Viewer"
@@ -2316,7 +2335,8 @@
     "errorLoadingAcademicSettings": "Error loading academic settings.",
     "schoolContextMissing": "School context missing.",
     "saving": "Saving...",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "failedToSaveSettings": "Failed to save settings"
   },
   "addExamScreen": {
     "examType": "Exam Type",
@@ -2352,7 +2372,11 @@
     "studentDetails": "Student details",
     "schoolBackground": "School background",
     "parentOrGuardian": "Parent or guardian",
-    "studentDetailsSaved": "Student details saved."
+    "studentDetailsSaved": "Student details saved.",
+    "couldNotSaveTheChanges": "Could not save the changes.",
+    "couldNotRegisterTheStudent": "Could not register the student.",
+    "couldNotLoadThisStudent": "Could not load this student.",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
   },
   "addTeacherScreen": {
     "notStated": "Not stated",
@@ -2715,14 +2739,18 @@
     "subjectsTaught": "Subjects taught",
     "loadingSubjects": "Loading subjects...",
     "pleaseChooseAYearLevelFrom1To6": "Please choose a year level from 1 to 6.",
-    "pleaseEnterAClassName": "Please enter a class name."
+    "pleaseEnterAClassName": "Please enter a class name.",
+    "couldNotSaveTheClass": "Could not save the class.",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
   },
   "classListScreen": {
     "noClassesYet": "No Classes Yet",
     "loadingClasses": "Loading classes...",
     "addNewClass": "Add New Class",
     "student": "Student",
-    "students": "Students"
+    "students": "Students",
+    "couldNotRemoveTheClass": "Could not remove the class.",
+    "couldNotLoadTheStudents": "Could not load the students."
   },
   "classVerificationScreen": {
     "classVerification": "Class Verification"
@@ -3000,7 +3028,9 @@
     "catatanPilihan": "Catatan (pilihan)",
     "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit",
     "menyimpan": "Menyimpan…",
-    "simpanMarkah": "Simpan markah"
+    "simpanMarkah": "Simpan markah",
+    "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
+    "gagalMenerbitkan": "Gagal menerbitkan."
   },
   "markStudentExitScreen": {
     "markStudentExit": "Mark Student Exit"
@@ -3041,7 +3071,10 @@
     "noMatches": "No Matches",
     "noGuardiansYet": "No Guardians Yet",
     "editGuardian": "Edit guardian",
-    "addGuardian": "Add guardian"
+    "addGuardian": "Add guardian",
+    "couldNotSaveTheGuardian": "Could not save the guardian.",
+    "couldNotRemoveTheGuardian": "Could not remove the guardian.",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
   },
   "pastStudentsScreen": {
     "pastStudents": "Past Students"
@@ -3111,7 +3144,11 @@
     "filterStudents": "Filter students...",
     "filterByClassOrStudentName": "Filter by class or student name...",
     "couldNotLoadHistory": "Could not load history",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "statusPublished": "Published",
+    "statusDraft": "Draft",
+    "drafting": "Drafting",
+    "noReportYet": "No Report Yet"
   },
   "reportsScreen": {
     "purataMarkah": "Purata markah",
@@ -3308,7 +3345,10 @@
     "subject": "Subject",
     "subjects": "Subjects",
     "editSubject": "Edit subject",
-    "addSubject": "Add subject"
+    "addSubject": "Add subject",
+    "couldNotSaveTheSubject": "Could not save the subject.",
+    "couldNotRemoveTheSubject": "Could not remove the subject.",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3376,7 +3416,10 @@
     "noAcademicYearIsSetAsCurrent": "No academic year is set as current.",
     "couldNotLoadThisTeachersDuties": "Could not load this teacher's duties.",
     "saving": "Saving...",
-    "saveDuties": "Save duties"
+    "saveDuties": "Save duties",
+    "couldNotSaveTheDuties": "Could not save the duties.",
+    "couldNotClearTheDuties": "Could not clear the duties.",
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Attendance Approvals",
@@ -3458,7 +3501,10 @@
     "timetablePublished": "Timetable published.",
     "chooseASubjectFirst": "Choose a subject first.",
     "publishing": "Publishing...",
-    "publishTimetable": "Publish Timetable"
+    "publishTimetable": "Publish Timetable",
+    "couldNotClearThatLesson": "Could not clear that lesson.",
+    "couldNotPublish": "Could not publish.",
+    "couldNotSaveTheLesson": "Could not save the lesson."
   },
   "timetableScreen": {
     "jadualTidakDapatDimuatkan": "Jadual tidak dapat dimuatkan",

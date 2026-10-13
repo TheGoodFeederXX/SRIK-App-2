@@ -82,7 +82,7 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
 
       {/* Action Buttons */}
       <div className="p-4 grid grid-cols-2 gap-3 bg-white border-b border-gray-200">
-        <button onClick={() => navigateTo('markAttendance', `Attendance: ${formattedClassName}`, { classInfo })} className="flex items-center justify-center space-x-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
+        <button onClick={() => navigateTo('markAttendance', `${t('classDetailScreen.attendance')}: ${formattedClassName}`, { classInfo })} className="flex items-center justify-center space-x-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
           <TeacherAttendanceIcon className="w-5 h-5" />
           <span>{t('classDetailScreen.attendance')}</span>
         </button>

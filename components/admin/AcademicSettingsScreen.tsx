@@ -93,7 +93,7 @@ const AcademicSettingsScreen: React.FC = () => {
       toast.success(t('academicSettingsScreen.settingsSavedSuccessfully'));
     } catch (err: any) {
       console.error('Error saving settings:', err);
-      toast.error(`Failed to save settings: ${err.message}`);
+      toast.error(`${t('academicSettingsScreen.failedToSaveSettings')}: ${err.message}`);
     } finally {
       setSaving(false);
     }

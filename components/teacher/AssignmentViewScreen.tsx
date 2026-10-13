@@ -24,7 +24,7 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
     const handleShare = () => {
         if (navigator.share) {
             navigator.share({
-                title: `Assignment: ${assessment.type}`,
+                title: `${t('assignmentViewScreen.assignment')}: ${assessment.type}`,
                 text: `Here is the assignment for ${assessment.type}. Please review and complete the questions.`,
                 // In a real app, you might share a URL to a student-facing version of this assignment
                 // url: window.location.href, 

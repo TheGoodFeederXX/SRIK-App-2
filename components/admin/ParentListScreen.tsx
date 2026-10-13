@@ -103,7 +103,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
             });
 
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save the guardian.');
+                toast.error(result.error ?? t('parentListScreen.couldNotSaveTheGuardian'));
                 return;
             }
             toast.success(form.id ? 'Guardian updated.' : `${form.fullName.trim()} was added.`);
@@ -111,7 +111,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
             setIsFormOpen(false);
             setForm(emptyForm);
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('parentListScreen.somethingWentWrongPleaseTryAgain'));
         } finally {
             setIsSaving(false);
         }
@@ -122,7 +122,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
 
         const result = await deleteGuardian(g.id);
         if (!result.success) {
-            toast.error(result.error ?? 'Could not remove the guardian.');
+            toast.error(result.error ?? t('parentListScreen.couldNotRemoveTheGuardian'));
             return;
         }
         toast.success(`${g.fullName} was removed.`);

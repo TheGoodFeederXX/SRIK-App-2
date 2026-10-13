@@ -93,14 +93,14 @@ export const SubjectListScreen: React.FC = () => {
                 : await createSubject(input);
 
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save the subject.');
+                toast.error(result.error ?? t('subjectListScreen.couldNotSaveTheSubject'));
                 return;
             }
             toast.success(editing ? 'Subject updated.' : `${form.name.trim()} was added.`);
             await queryClient.invalidateQueries({ queryKey });
             closeForm();
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('subjectListScreen.somethingWentWrongPleaseTryAgain'));
         } finally {
             setIsSaving(false);
         }
@@ -111,7 +111,7 @@ export const SubjectListScreen: React.FC = () => {
 
         const result = await deleteSubject(subject.id);
         if (!result.success) {
-            toast.error(result.error ?? 'Could not remove the subject.');
+            toast.error(result.error ?? t('subjectListScreen.couldNotRemoveTheSubject'));
             return;
         }
         toast.success(`${subject.name} was removed.`);

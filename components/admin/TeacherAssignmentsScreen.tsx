@@ -212,7 +212,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
             );
 
             if (!result.success) {
-                toast.error(result.error ?? 'Could not save the duties.');
+                toast.error(result.error ?? t('teacherAssignmentsScreen.couldNotSaveTheDuties'));
                 return;
             }
 
@@ -220,7 +220,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
             await refreshAll();
             setShowAssign(false);
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('teacherAssignmentsScreen.somethingWentWrongPleaseTryAgain'));
         } finally {
             setIsSaving(false);
         }
@@ -238,7 +238,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
 
         const result = await setTeacherAssignments(teacher.id, yearId, [], []);
         if (!result.success) {
-            toast.error(result.error ?? 'Could not clear the duties.');
+            toast.error(result.error ?? t('teacherAssignmentsScreen.couldNotClearTheDuties'));
             return;
         }
         toast.success(`${teacher.fullName}'s duties were cleared.`);

@@ -104,7 +104,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
                 : await createClass(input);
 
             if (!saved.success || !saved.id) {
-                toast.error(saved.error ?? 'Could not save the class.');
+                toast.error(saved.error ?? t('classFormScreen.couldNotSaveTheClass'));
                 return;
             }
 
@@ -123,7 +123,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
             forceUpdate?.();
             handleBack();
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+            toast.error(err instanceof Error ? err.message : t('classFormScreen.somethingWentWrongPleaseTryAgain'));
         } finally {
             setIsLoading(false);
         }
