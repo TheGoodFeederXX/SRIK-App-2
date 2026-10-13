@@ -452,7 +452,7 @@ function GuardianPanel({
                                             className="shrink-0 p-1.5 rounded-lg text-slate-400
                                                        hover:text-rose-600 hover:bg-rose-50
                                                        disabled:opacity-40"
-                                            aria-label={`Nyahpaut ${student.full_name}`}
+                                            aria-label={`${t('guardianAccountsScreen.nyahpaut')} ${student.full_name}`}
                                         >
                                             <TrashIcon className="w-4 h-4" />
                                         </button>

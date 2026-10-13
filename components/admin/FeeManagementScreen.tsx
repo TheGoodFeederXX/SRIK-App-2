@@ -283,7 +283,7 @@ function GeneratePanel({
                         className="px-5 py-2.5 rounded-xl bg-slate-800 text-white text-sm font-bold
                                    hover:bg-slate-900 disabled:bg-slate-300"
                     >
-                        {busy ? 'Menjana…' : `Jana untuk ${MONTH_NAMES[month - 1]} ${year}`}
+                        {busy ? 'Menjana…' : `${t('feeManagementScreen.janaUntuk')} ${MONTH_NAMES[month - 1]} ${year}`}
                     </button>
 
                     {lastResult !== null && (

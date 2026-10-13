@@ -143,7 +143,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
             }
         } catch (error: any) {
             console.error('Error updating profile:', error);
-            toast.error(`Failed to update profile: ${error.message || error}`);
+            toast.error(`${t('editTeacherProfileScreen.failedToUpdateProfile')}: ${error.message || error}`);
         } finally {
             setSaving(false);
         }

@@ -373,7 +373,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                         const result = await setTeacherStatus(teacher.id, pendingStatus as 'ACTIVE' | 'INACTIVE' | 'ARCHIVED');
                         if (!result.success) throw new Error(result.error || 'Could not change the status.');
                         setTeacher({ ...teacher, status: pendingStatus as any });
-                        toast.success(`Status changed to ${pendingStatus}`);
+                        toast.success(`${t('teacherDetailAdminView.statusChangedTo')} ${pendingStatus}`);
                         forceUpdate();
                     } catch (err: any) {
                         toast.error('Failed to update status: ' + err.message);

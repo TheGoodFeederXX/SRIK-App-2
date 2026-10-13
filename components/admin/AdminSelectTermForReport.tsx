@@ -34,7 +34,7 @@ const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ stu
 
   const handleSelectTerm = (term: string) => {
     // Navigate to the reusable ReportCardInputScreen, aliased as 'adminReportCardInput' in the dashboard
-    navigateTo('adminReportCardInput', `Edit Report: ${student?.name || 'Student'}`, { student, term, session: session || undefined, isAdmin: true });
+    navigateTo('adminReportCardInput', `${t('adminSelectTermForReport.editReport')}: ${student?.name || 'Student'}`, { student, term, session: session || undefined, isAdmin: true });
   };
 
   if (!student) {

@@ -259,7 +259,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
             const weekStart = new Date(date);
             weekStart.setDate(date.getDate() - date.getDay());
             const key = weekStart.toISOString().split('T')[0];
-            return { key, label: `Wk of ${weekStart.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' })}` };
+            return { key, label: `${t('attendanceHeatmap.wkOf')} ${weekStart.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' })}` };
         }
         return { key: dateStr, label: date.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short' }) };
     };

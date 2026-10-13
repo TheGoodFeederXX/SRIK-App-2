@@ -266,7 +266,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                             </button>
                         )}
                         <h1 className="text-lg font-bold text-gray-800">
-                            {teacherId ? `Duties — ${teacherName ?? 'Teacher'}` : 'Teacher Duties'}
+                            {teacherId ? `${t('teacherAssignmentsScreen.duties')} ${teacherName ?? 'Teacher'}` : 'Teacher Duties'}
                         </h1>
                         <p className="text-xs text-gray-500">
                             Who is responsible for which class, and who teaches which subject.
@@ -550,6 +550,7 @@ const DutyList: React.FC<{
     onEdit: (t: TeacherRecord) => void;
     onClear: (t: TeacherRecord) => void;
 }> = ({ rows, teachers, emptyText, renderDetail, renderCount, onEdit, onClear }) => {
+    const { t } = useTranslation();
     const byTeacher = useMemo(() => {
         const map = new Map<string, AssignmentRecord[]>();
         for (const a of rows) {
@@ -584,14 +585,14 @@ const DutyList: React.FC<{
                                 <div className="flex items-center gap-1 shrink-0">
                                     <button
                                         onClick={() => onEdit(teacher)}
-                                        aria-label={`Edit duties for ${teacher.fullName}`}
+                                        aria-label={`${t('teacherAssignmentsScreen.editDutiesFor')} ${teacher.fullName}`}
                                         className="p-2 text-gray-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
                                     >
                                         <Users className="w-4 h-4" />
                                     </button>
                                     <button
                                         onClick={() => onClear(teacher)}
-                                        aria-label={`Clear duties for ${teacher.fullName}`}
+                                        aria-label={`${t('teacherAssignmentsScreen.clearDutiesFor')} ${teacher.fullName}`}
                                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                     >
                                         <Trash2 className="w-4 h-4" />

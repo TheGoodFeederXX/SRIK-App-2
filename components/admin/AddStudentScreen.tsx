@@ -245,7 +245,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                 if (classId) {
                     const enrolled = await enrollStudent(studentToEdit.id, classId, 'Class changed by admin');
                     if (!enrolled.success) {
-                        toast.error(`Saved, but the class was not changed: ${enrolled.error}`);
+                        toast.error(`${t('addStudentScreen.savedButTheClassWasNotChanged')}: ${enrolled.error}`);
                         return;
                     }
                 }

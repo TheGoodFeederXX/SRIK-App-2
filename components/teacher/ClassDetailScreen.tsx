@@ -105,7 +105,7 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
                 key={student.id}
                 onClick={() => navigateTo('studentProfile', student.name, { student, subjectContext: classInfo.subject })}
                 className="w-full bg-white rounded-xl shadow-sm p-3 flex items-center space-x-4 transition-all hover:shadow-md hover:ring-2 hover:ring-purple-200"
-                aria-label={`View profile for ${student.name}`}
+                aria-label={`${t('classDetailScreen.viewProfileFor')} ${student.name}`}
               >
                 <img src={student.avatarUrl} alt={student.name} className="w-12 h-12 rounded-full object-cover" />
                 <div className="flex-grow text-left">

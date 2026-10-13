@@ -105,7 +105,7 @@ const AdminResultsEntrySelector: React.FC<AdminResultsEntrySelectorProps> = ({ n
                                         key={getFormattedClassName(grade, cls.section)}
                                         whileHover={{ scale: 1.01 }}
                                         whileTap={{ scale: 0.99 }}
-                                        onClick={() => navigateTo('classGradebook', `Gradebook: ${getFormattedClassName(grade, cls.section, true, cls.subject)}`, { classInfo: cls })}
+                                        onClick={() => navigateTo('classGradebook', `${t('adminResultsEntrySelector.gradebook')}: ${getFormattedClassName(grade, cls.section, true, cls.subject)}`, { classInfo: cls })}
                                         className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-100"
                                     >
                                         <div className="flex items-center space-x-3">

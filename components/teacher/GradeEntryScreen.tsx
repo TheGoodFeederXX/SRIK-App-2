@@ -144,7 +144,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
             // Without this the status was left on 'saving' forever, which also kept
             // the Done button disabled — the teacher was trapped on the screen and
             // never told the grade had not been saved.
-            console.error(`Failed to auto-save grade for student ${studentId}`, err);
+            console.error(`${t('gradeEntryScreen.failedToAutoSaveGradeForStudent')} ${studentId}`, err);
             failedSavesRef.current.add(studentId);
             setSaveStatus('error');
             toast.error(
@@ -217,7 +217,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
                                     placeholder="--"
                                     max={100}
                                     min={0}
-                                    aria-label={`Score for ${student.name}`}
+                                    aria-label={`${t('gradeEntryScreen.scoreFor')} ${student.name}`}
                                     className={`w-16 sm:w-20 h-12 text-center text-lg rounded-lg border-2 transition-colors ${getScoreIndicatorStyle(scores[student.id] || '')}`}
                                 />
                             </li>

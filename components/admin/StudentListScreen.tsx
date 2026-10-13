@@ -90,7 +90,7 @@ const StudentRow: React.FC<{
       <button
         onClick={() => onSelect(student)}
         className="flex items-center space-x-3 flex-grow min-w-0"
-        aria-label={`View profile for ${student.name}`}
+        aria-label={`${t('studentListScreen.viewProfileFor')} ${student.name}`}
       >
         <motion.div
           whileTap={{ scale: 0.95 }}

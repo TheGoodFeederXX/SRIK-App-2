@@ -851,7 +851,8 @@
     "attendance": "Kehadiran",
     "newAssignment": "Tugasan Baharu",
     "noStudentsFoundInThisClass": "Tiada murid dijumpai dalam kelas ini.",
-    "pending": "Menunggu"
+    "pending": "Menunggu",
+    "viewProfileFor": "Lihat profil untuk"
   },
   "classGradebookScreen": {
     "gradebook": "Buku Gred",
@@ -900,7 +901,8 @@
     "failedToUploadPhotoPleaseTryAgain": "Gagal memuat naik foto. Sila cuba lagi.",
     "saving": "Menyimpan...",
     "saveChanges": "Simpan Perubahan",
-    "errorUpdatingUsername": "Ralat mengemas kini nama pengguna"
+    "errorUpdatingUsername": "Ralat mengemas kini nama pengguna",
+    "failedToUpdateProfile": "Gagal mengemas kini profil"
   },
   "educationalGamesScreen": {
     "educationalGames": "Permainan Pendidikan"
@@ -927,7 +929,9 @@
     "selectAnExamToEnterGrades": "Pilih peperiksaan untuk memasukkan gred.",
     "loadingStudentList": "Memuatkan senarai murid...",
     "pending": "Menunggu",
-    "couldNotLoadTheMarks": "Tidak dapat memuatkan markah."
+    "couldNotLoadTheMarks": "Tidak dapat memuatkan markah.",
+    "failedToAutoSaveGradeForStudent": "Gagal menyimpan markah secara automatik untuk murid",
+    "scoreFor": "Markah untuk"
   },
   "gradeSubmissionScreen": {
     "gradeSubmission": "Penyerahan Gred"
@@ -1067,7 +1071,9 @@
     "missingSchoolIDPleaseTryReloading": "ID Sekolah hilang. Sila cuba muat semula.",
     "loadingClasses": "Memuatkan kelas...",
     "selectAClass": "Pilih Kelas",
-    "correctAnswer": "Jawapan betul"
+    "correctAnswer": "Jawapan betul",
+    "failedToCreateQuiz": "Gagal mencipta kuiz",
+    "removeQuestion": "Buang soalan"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Platform Pengiktirafan"
@@ -1213,7 +1219,8 @@
     "pleaseSelectAtLeastOneClassAndProvideATitle": "Sila pilih sekurang-kurangnya satu kelas dan berikan tajuk.",
     "pleaseProvideAMessageForTheTextAnnouncement": "Sila berikan mesej untuk pengumuman teks.",
     "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Sila rakam atau berikan video untuk pengumuman video.",
-    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Kebenaran kamera/mikrofon ditolak. Sila hidupkannya dalam tetapan pelayar anda."
+    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Kebenaran kamera/mikrofon ditolak. Sila hidupkannya dalam tetapan pelayar anda.",
+    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Memuatkan kelas anda...",
@@ -1304,7 +1311,8 @@
     "myReportedCases": "Kes Dilaporkan Saya",
     "manageAssignments": "Urus Tugasan",
     "timetableDashboard": "Papan Pemuka Jadual Waktu",
-    "teacher": "Guru"
+    "teacher": "Guru",
+    "submissions": "Penyerahan"
   },
   "teacherProfileEnhanced": {
     "myProfile": "Profil Saya"
@@ -2053,7 +2061,8 @@
     "failedToAddRecord": "Gagal menambah rekod",
     "failedToIssueQueryLetter": "Gagal mengeluarkan surat pertanyaan",
     "failedToCloseQueryLetter": "Gagal menutup surat pertanyaan",
-    "failedToSubmitResponse": "Gagal menghantar balasan"
+    "failedToSubmitResponse": "Gagal menghantar balasan",
+    "classTeacher": "Guru Kelas —"
   },
   "projectBoardScreen": {
     "projectBoard": "Papan Projek"
@@ -2376,7 +2385,8 @@
     "couldNotSaveTheChanges": "Tidak dapat menyimpan perubahan.",
     "couldNotRegisterTheStudent": "Tidak dapat mendaftarkan murid.",
     "couldNotLoadThisStudent": "Tidak dapat memuatkan murid ini.",
-    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
+    "savedButTheClassWasNotChanged": "Disimpan, tetapi kelas tidak ditukar"
   },
   "addTeacherScreen": {
     "notStated": "Tidak dinyatakan",
@@ -2397,7 +2407,8 @@
     "anEmailAddressIsNeededToCreateALoginAccount": "Alamat e-mel diperlukan untuk mencipta akaun log masuk",
     "anEmailAddressIsRequired": "Alamat e-mel diperlukan",
     "couldNotSaveTheTeacher": "Tidak dapat menyimpan guru",
-    "couldNotCreateTheLoginAccount": "Tidak dapat mencipta akaun log masuk"
+    "couldNotCreateTheLoginAccount": "Tidak dapat mencipta akaun log masuk",
+    "teacherSavedButDutiesWereNot": "Guru disimpan, tetapi tugas tidak"
   },
   "adminActionsScreen": {
     "quickActions": "Tindakan Pantas",
@@ -2476,13 +2487,15 @@
     "resultsEntrySelection": "Pemilihan Kemasukan Keputusan",
     "chooseAClassToEnterStudentAcademicResults": "Pilih kelas untuk memasukkan keputusan akademik murid.",
     "noClassesFound": "Tiada kelas dijumpai.",
-    "loadingClasses": "Memuatkan kelas..."
+    "loadingClasses": "Memuatkan kelas...",
+    "gradebook": "Buku Gred"
   },
   "adminSelectClassForReport": {
     "selectAClass": "Pilih Kelas",
     "chooseAClassToViewStudentReportCards": "Pilih kelas untuk melihat kad laporan murid.",
     "noClassesFound": "Tiada kelas dijumpai.",
-    "loadingLiveData": "Memuatkan data langsung..."
+    "loadingLiveData": "Memuatkan data langsung...",
+    "reports": "Laporan"
   },
   "adminSelectTermForReport": {
     "noStudentSelected": "Tiada murid dipilih.",
@@ -2490,7 +2503,8 @@
     "student": "Murid",
     "penggal1": "Penggal 1",
     "penggal2": "Penggal 2",
-    "penggal3": "Penggal 3"
+    "penggal3": "Penggal 3",
+    "editReport": "Sunting Laporan"
   },
   "adminStudentListForReport": {
     "noClassSelectedOpenThisViewByPickingAClassFrom": "Tiada kelas dipilih. Buka paparan ini dengan memilih kelas daripada Laporan.",
@@ -2498,7 +2512,9 @@
     "loadingClassRoster": "Memuatkan senarai kelas...",
     "failedToLoadClassRoster": "Gagal memuatkan senarai kelas",
     "student": "Murid",
-    "pending": "Menunggu"
+    "pending": "Menunggu",
+    "selectTermFor": "Pilih Penggal untuk",
+    "viewReportFor": "Lihat laporan untuk"
   },
   "adminStudentReportCardScreen": {
     "endOfTermReportCard": "Kad Laporan Akhir Penggal",
@@ -2639,7 +2655,8 @@
     "below70": "Bawah 70%",
     "reportExportedSuccessfully": "Laporan berjaya dieksport!",
     "failedToLoadAttendanceData": "Gagal memuatkan data kehadiran",
-    "unknown": "Tidak Diketahui"
+    "unknown": "Tidak Diketahui",
+    "wkOf": "Mg"
   },
   "attendanceOverviewScreen": {
     "attendance": "Kehadiran",
@@ -2711,7 +2728,9 @@
     "pleaseWaitForTheLogoToFinishUploading": "Sila tunggu logo selesai dimuat naik.",
     "saving": "Menyimpan...",
     "saveBrandingSettings": "Simpan Tetapan Jenama",
-    "uploadingLogo": "Memuat naik logo..."
+    "uploadingLogo": "Memuat naik logo...",
+    "failedToSave": "Gagal menyimpan",
+    "logoUploadFailed": "Muat naik logo gagal"
   },
   "budgetPlanner": {
     "budgetPlanner": "Perancang Belanjawan"
@@ -2916,7 +2935,8 @@
     "contohBULANAN": "Contoh: BULANAN",
     "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
     "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan.",
-    "ubahJenisYuran": "Ubah jenis yuran"
+    "ubahJenisYuran": "Ubah jenis yuran",
+    "janaUntuk": "Jana untuk"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Mata Wang Lalai",
@@ -2955,7 +2975,8 @@
     "mencipta": "Mencipta…",
     "ciptaAkaun": "Cipta akaun",
     "menyimpan": "Menyimpan…",
-    "simpanPenjaga": "Simpan penjaga"
+    "simpanPenjaga": "Simpan penjaga",
+    "nyahpaut": "Nyahpaut"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -3030,7 +3051,8 @@
     "menyimpan": "Menyimpan…",
     "simpanMarkah": "Simpan markah",
     "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
-    "gagalMenerbitkan": "Gagal menerbitkan."
+    "gagalMenerbitkan": "Gagal menerbitkan.",
+    "catatan": "Catatan"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Tanda Keluar Murid"
@@ -3224,7 +3246,8 @@
     "whatTypeOfUserDoYouWantToAdd": "Jenis pengguna apa yang anda mahu tambah?",
     "addNewStudent": "Tambah Murid Baharu",
     "addNewTeacher": "Tambah Guru Baharu",
-    "addNewParent": "Tambah Ibu Bapa Baharu"
+    "addNewParent": "Tambah Ibu Bapa Baharu",
+    "addNew": "Tambah Baharu"
   },
   "sessionManagementScreen": {
     "sessionManagement": "Pengurusan Sesi"
@@ -3303,7 +3326,8 @@
     "failedToUpdateStatusPleaseTryAgain": "Gagal mengemas kini status. Sila cuba lagi.",
     "noStudentsInThisClass": "Tiada murid dalam kelas ini.",
     "saving": "Menyimpan…",
-    "confirmWithdrawal": "Sahkan Pengeluaran"
+    "confirmWithdrawal": "Sahkan Pengeluaran",
+    "viewProfileFor": "Lihat profil untuk"
   },
   "studentProfileDashboard": {
     "noStudentSelected": "Tiada murid dipilih.",
@@ -3348,7 +3372,8 @@
     "addSubject": "Tambah subjek",
     "couldNotSaveTheSubject": "Tidak dapat menyimpan subjek.",
     "couldNotRemoveTheSubject": "Tidak dapat membuang subjek.",
-    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
+    "taughtIn": "Diajar dalam"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Liputan Ganti"
@@ -3419,7 +3444,10 @@
     "saveDuties": "Simpan tugas",
     "couldNotSaveTheDuties": "Tidak dapat menyimpan tugas.",
     "couldNotClearTheDuties": "Tidak dapat mengosongkan tugas.",
-    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
+    "duties": "Tugas —",
+    "editDutiesFor": "Sunting tugas untuk",
+    "clearDutiesFor": "Kosongkan tugas untuk"
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Kelulusan Kehadiran",
@@ -3436,7 +3464,9 @@
     "failedToLoadPendingAttendanceRequests": "Gagal memuatkan permintaan kehadiran menunggu",
     "anErrorOccurredWhileApprovingAttendance": "Ralat berlaku semasa meluluskan kehadiran.",
     "anErrorOccurredWhileRejectingAttendance": "Ralat berlaku semasa menolak kehadiran.",
-    "unknownTeacher": "Guru Tidak Diketahui"
+    "unknownTeacher": "Guru Tidak Diketahui",
+    "failedToApprove": "Gagal meluluskan",
+    "failedToReject": "Gagal menolak"
   },
   "teacherAttendanceDetail": {
     "noTeacherSelectedOpenThisViewFromATeacherRow": "Tiada guru dipilih. Buka paparan ini dari baris guru.",
@@ -3461,7 +3491,8 @@
     "changeTeacherStatus": "Tukar Status Guru",
     "confirm": "Sahkan",
     "unknownError": "Ralat tidak diketahui",
-    "general": "Umum"
+    "general": "Umum",
+    "statusChangedTo": "Status ditukar kepada"
   },
   "teacherListScreen": {
     "teacherManagement": "Pengurusan Guru",

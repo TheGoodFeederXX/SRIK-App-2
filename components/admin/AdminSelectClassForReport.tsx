@@ -108,7 +108,7 @@ const AdminSelectClassForReport: React.FC<AdminSelectClassForReportProps> = ({ n
                                         key={getFormattedClassName(grade, cls.section)}
                                         whileHover={{ scale: 1.01 }}
                                         whileTap={{ scale: 0.99 }}
-                                        onClick={() => navigateTo('studentListForReport', `Reports: ${getFormattedClassName(grade, cls.section)}`, { classInfo: { ...cls, section: undefined } })}
+                                        onClick={() => navigateTo('studentListForReport', `${t('adminSelectClassForReport.reports')}: ${getFormattedClassName(grade, cls.section)}`, { classInfo: { ...cls, section: undefined } })}
                                         className="w-full flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors border border-gray-100"
                                         aria-label={`View reports for ${getFormattedClassName(grade, cls.section)} - ${cls.subject}`}
                                     >

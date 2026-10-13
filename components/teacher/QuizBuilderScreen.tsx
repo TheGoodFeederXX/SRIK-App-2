@@ -219,7 +219,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
 
         } catch (error: any) {
             console.error('Error creating quiz:', error);
-            toast.error(`Failed to create quiz: ${error.message}`);
+            toast.error(`${t('quizBuilderScreen.failedToCreateQuiz')}: ${error.message}`);
         } finally {
             setIsSubmitting(false);
         }
@@ -346,7 +346,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                     {questions.map((q, index) => (
                         <div key={q.id} className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 relative group transition-all hover:shadow-md">
                             <div className="absolute top-4 right-4">
-                                <button onClick={() => removeQuestion(Number(q.id))} className="text-gray-400 hover:text-red-500" aria-label={`Remove question ${index + 1}`}>
+                                <button onClick={() => removeQuestion(Number(q.id))} className="text-gray-400 hover:text-red-500" aria-label={`${t('quizBuilderScreen.removeQuestion')} ${index + 1}`}>
                                     <TrashIcon className="w-5 h-5" />
                                 </button>
                             </div>

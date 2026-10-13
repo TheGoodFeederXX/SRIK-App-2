@@ -67,7 +67,7 @@ const BrandingSettingsScreen: React.FC = () => {
             if (sendingLogo) setSeededLogo(logo);
             toast.success(t('brandingSettingsScreen.brandingSettingsSavedSuccessfully'));
         } catch (error: any) {
-            toast.error(`Failed to save: ${error.message}`);
+            toast.error(`${t('brandingSettingsScreen.failedToSave')}: ${error.message}`);
         } finally {
             setIsLoading(false);
         }
@@ -101,7 +101,7 @@ const BrandingSettingsScreen: React.FC = () => {
             toast.success(t('brandingSettingsScreen.logoUploadedPressSaveToApplyIt'), { id: toastId });
         } catch (error: any) {
             setLogo(seededLogo);
-            toast.error(`Logo upload failed: ${error?.message || 'please try again'}`, { id: toastId });
+            toast.error(`${t('brandingSettingsScreen.logoUploadFailed')}: ${error?.message || 'please try again'}`, { id: toastId });
         } finally {
             setUploading(false);
             URL.revokeObjectURL(preview);

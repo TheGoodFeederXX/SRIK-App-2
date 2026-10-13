@@ -256,7 +256,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                     if (!assignments.success) {
                         // The teacher saved, so this is a partial success and is
                         // reported as such rather than as a total failure.
-                        toast.error(`Teacher saved, but duties were not: ${assignments.error}`);
+                        toast.error(`${t('addTeacherScreen.teacherSavedButDutiesWereNot')}: ${assignments.error}`);
                         forceUpdate();
                         handleBack();
                         return;

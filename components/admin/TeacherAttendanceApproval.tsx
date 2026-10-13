@@ -57,7 +57,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                 toast.success(t('teacherAttendanceApproval.attendanceApprovedSuccessfully'));
                 loadPendingRequests();
             } else {
-                toast.error(`Failed to approve: ${result.error}`);
+                toast.error(`${t('teacherAttendanceApproval.failedToApprove')}: ${result.error}`);
             }
         } catch (error) {
             console.error('Error approving attendance:', error);
@@ -79,7 +79,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                 toast.success(t('teacherAttendanceApproval.attendanceRejected'));
                 loadPendingRequests();
             } else {
-                toast.error(`Failed to reject: ${result.error}`);
+                toast.error(`${t('teacherAttendanceApproval.failedToReject')}: ${result.error}`);
             }
         } catch (error) {
             console.error('Error rejecting attendance:', error);

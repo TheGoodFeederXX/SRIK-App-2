@@ -96,12 +96,15 @@ const protect = (text) => {
 // sentence form; the template drops the period when it appends a value. The whole template is left
 // alone if the label is unknown, which keeps SQL, filenames and HTML markup untouched. This must
 // run BEFORE the protection step below, which hides templates from the later rules.
-src = src.replace(/`([^`$]{2,120}?)\s*:\s*(\$\{[^`]*\})`/g, (full, lead, expr) => {
+// The colon is OPTIONAL: `\`Could not load the register: ${err.message}\`` carries one, but
+// `\`View profile for ${student.name}\`` does not. Both are messages with a value appended, so
+// both are handled — the leading text is translated and the interpolation is kept verbatim.
+src = src.replace(/`([^`$]{2,120}?)(:?)\s*(\$\{[^`]*\})`/g, (full, lead, colon, expr) => {
     const key = MAP[lead] ? lead : (MAP[lead + '.'] ? lead + '.' : null);
     if (!key) return full;
     used.add(key); missed.delete(key);
     changes.push(['template label', key]);
-    return '`' + `\${t('${keyFor(key)}')}: ${expr}` + '`';
+    return '`' + `\${t('${keyFor(key)}')}${colon ? ':' : ''} ${expr}` + '`';
 });
 src = src.replace(/`(?:[^`\\]|\\.)*`/gs, protect);           // template literals
 // Block and JSX comments: protect each physical line on its own, so every newline stays exactly

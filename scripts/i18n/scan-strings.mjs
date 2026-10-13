@@ -63,6 +63,23 @@ for (const file of files) {
         for (const m of line.matchAll(/(['"])([A-Z][a-zA-Z][^'"]{4,90})\1/g)) {
             if (looksLikeProse(m[2])) found.push({ line: i + 1, text: m[2].trim(), kind: 'string' });
         }
+        // TEXT INSIDE A TEMPLATE LITERAL — the part before any `${...}`. Without this the scanner
+        // never saw the most common error message in the app
+        // (`\`Could not load the register: ${err.message}\``), so those messages stayed English and
+        // no dictionary ever held them. The interpolated part is skipped deliberately: it is code.
+        for (const m of line.matchAll(/`([^`$]*\$\{)/g)) {
+            // Drop the trailing `$` + `{` of the interpolation before judging, because
+            // `looksLikeProse` rejects anything containing braces.
+            const text = m[1].replace(/\$\{$/, '').replace(/\s*:?\s*$/, '');
+            // A CLASS-STRING template is not prose: `p-2 rounded-lg`, `h-6 w-6`,
+            // `flex items-center gap-3`. A real message has at least one word that is neither a
+            // CSS utility nor a bare number.
+            const words = text.trim().split(/\s+/);
+            const cssLike = words.every((w) => /^[a-z0-9:.[\]/%-]+$/.test(w));
+            if (!cssLike && looksLikeProse(text)) {
+                found.push({ line: i + 1, text: text.trim(), kind: 'template' });
+            }
+        }
     });
 
     if (found.length) results.push({ file, count: found.length, strings: found });

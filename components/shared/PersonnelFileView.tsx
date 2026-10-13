@@ -348,7 +348,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                         </div>
                                         <div>
                                             <p className="font-semibold text-gray-900 text-sm">
-                                                {h.role === 'class_teacher' ? `Class Teacher — ${h.class?.name}` : `${h.subject?.name} — ${h.class?.name}`}
+                                                {h.role === 'class_teacher' ? `${t('personnelFileView.classTeacher')} ${h.class?.name}` : `${h.subject?.name} — ${h.class?.name}`}
                                             </p>
                                             <p className="text-xs text-gray-400">
                                                 {h.session ? `${h.session} Term ${h.term}` : ''}

@@ -851,7 +851,8 @@
     "attendance": "Attendance",
     "newAssignment": "New Assignment",
     "noStudentsFoundInThisClass": "No students found in this class.",
-    "pending": "Pending"
+    "pending": "Pending",
+    "viewProfileFor": "View profile for"
   },
   "classGradebookScreen": {
     "gradebook": "Gradebook",
@@ -900,7 +901,8 @@
     "failedToUploadPhotoPleaseTryAgain": "Failed to upload photo. Please try again.",
     "saving": "Saving...",
     "saveChanges": "Save Changes",
-    "errorUpdatingUsername": "Error updating username"
+    "errorUpdatingUsername": "Error updating username",
+    "failedToUpdateProfile": "Failed to update profile"
   },
   "educationalGamesScreen": {
     "educationalGames": "Educational Games"
@@ -927,7 +929,9 @@
     "selectAnExamToEnterGrades": "Select an exam to enter grades.",
     "loadingStudentList": "Loading student list...",
     "pending": "Pending",
-    "couldNotLoadTheMarks": "Could not load the marks."
+    "couldNotLoadTheMarks": "Could not load the marks.",
+    "failedToAutoSaveGradeForStudent": "Failed to auto-save grade for student",
+    "scoreFor": "Score for"
   },
   "gradeSubmissionScreen": {
     "gradeSubmission": "Grade Submission"
@@ -1067,7 +1071,9 @@
     "missingSchoolIDPleaseTryReloading": "Missing School ID. Please try reloading.",
     "loadingClasses": "Loading classes...",
     "selectAClass": "Select a Class",
-    "correctAnswer": "Correct answer"
+    "correctAnswer": "Correct answer",
+    "failedToCreateQuiz": "Failed to create quiz",
+    "removeQuestion": "Remove question"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Recognition Platform"
@@ -1213,7 +1219,8 @@
     "pleaseSelectAtLeastOneClassAndProvideATitle": "Please select at least one class and provide a title.",
     "pleaseProvideAMessageForTheTextAnnouncement": "Please provide a message for the text announcement.",
     "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Please record or provide a video for the video announcement.",
-    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Camera/microphone permission denied. Please enable it in your browser settings."
+    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Camera/microphone permission denied. Please enable it in your browser settings.",
+    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Loading your classes...",
@@ -1304,7 +1311,8 @@
     "myReportedCases": "My Reported Cases",
     "manageAssignments": "Manage Assignments",
     "timetableDashboard": "Timetable Dashboard",
-    "teacher": "Teacher"
+    "teacher": "Teacher",
+    "submissions": "Submissions"
   },
   "teacherProfileEnhanced": {
     "myProfile": "My Profile"
@@ -2053,7 +2061,8 @@
     "failedToAddRecord": "Failed to add record",
     "failedToIssueQueryLetter": "Failed to issue query letter",
     "failedToCloseQueryLetter": "Failed to close query letter",
-    "failedToSubmitResponse": "Failed to submit response"
+    "failedToSubmitResponse": "Failed to submit response",
+    "classTeacher": "Class Teacher —"
   },
   "projectBoardScreen": {
     "projectBoard": "Project Board"
@@ -2376,7 +2385,8 @@
     "couldNotSaveTheChanges": "Could not save the changes.",
     "couldNotRegisterTheStudent": "Could not register the student.",
     "couldNotLoadThisStudent": "Could not load this student.",
-    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
+    "savedButTheClassWasNotChanged": "Saved, but the class was not changed"
   },
   "addTeacherScreen": {
     "notStated": "Not stated",
@@ -2397,7 +2407,8 @@
     "anEmailAddressIsNeededToCreateALoginAccount": "An email address is needed to create a login account",
     "anEmailAddressIsRequired": "An email address is required",
     "couldNotSaveTheTeacher": "Could not save the teacher",
-    "couldNotCreateTheLoginAccount": "Could not create the login account"
+    "couldNotCreateTheLoginAccount": "Could not create the login account",
+    "teacherSavedButDutiesWereNot": "Teacher saved, but duties were not"
   },
   "adminActionsScreen": {
     "quickActions": "Quick Actions",
@@ -2476,13 +2487,15 @@
     "resultsEntrySelection": "Results Entry Selection",
     "chooseAClassToEnterStudentAcademicResults": "Choose a class to enter student academic results.",
     "noClassesFound": "No classes found.",
-    "loadingClasses": "Loading classes..."
+    "loadingClasses": "Loading classes...",
+    "gradebook": "Gradebook"
   },
   "adminSelectClassForReport": {
     "selectAClass": "Select a Class",
     "chooseAClassToViewStudentReportCards": "Choose a class to view student report cards.",
     "noClassesFound": "No classes found.",
-    "loadingLiveData": "Loading live data..."
+    "loadingLiveData": "Loading live data...",
+    "reports": "Reports"
   },
   "adminSelectTermForReport": {
     "noStudentSelected": "No student selected.",
@@ -2490,7 +2503,8 @@
     "student": "Student",
     "penggal1": "Penggal 1",
     "penggal2": "Penggal 2",
-    "penggal3": "Penggal 3"
+    "penggal3": "Penggal 3",
+    "editReport": "Edit Report"
   },
   "adminStudentListForReport": {
     "noClassSelectedOpenThisViewByPickingAClassFrom": "No class selected. Open this view by picking a class from Reports.",
@@ -2498,7 +2512,9 @@
     "loadingClassRoster": "Loading class roster...",
     "failedToLoadClassRoster": "Failed to load class roster",
     "student": "Student",
-    "pending": "Pending"
+    "pending": "Pending",
+    "selectTermFor": "Select Term for",
+    "viewReportFor": "View report for"
   },
   "adminStudentReportCardScreen": {
     "endOfTermReportCard": "End of Term Report Card",
@@ -2639,7 +2655,8 @@
     "below70": "Below 70%",
     "reportExportedSuccessfully": "Report exported successfully!",
     "failedToLoadAttendanceData": "Failed to load attendance data",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "wkOf": "Wk of"
   },
   "attendanceOverviewScreen": {
     "attendance": "Attendance",
@@ -2711,7 +2728,9 @@
     "pleaseWaitForTheLogoToFinishUploading": "Please wait for the logo to finish uploading.",
     "saving": "Saving...",
     "saveBrandingSettings": "Save Branding Settings",
-    "uploadingLogo": "Uploading logo..."
+    "uploadingLogo": "Uploading logo...",
+    "failedToSave": "Failed to save",
+    "logoUploadFailed": "Logo upload failed"
   },
   "budgetPlanner": {
     "budgetPlanner": "Budget Planner"
@@ -2916,7 +2935,8 @@
     "contohBULANAN": "Contoh: BULANAN",
     "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
     "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan.",
-    "ubahJenisYuran": "Ubah jenis yuran"
+    "ubahJenisYuran": "Ubah jenis yuran",
+    "janaUntuk": "Jana untuk"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Default Currency",
@@ -2955,7 +2975,8 @@
     "mencipta": "Mencipta…",
     "ciptaAkaun": "Cipta akaun",
     "menyimpan": "Menyimpan…",
-    "simpanPenjaga": "Simpan penjaga"
+    "simpanPenjaga": "Simpan penjaga",
+    "nyahpaut": "Nyahpaut"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -3030,7 +3051,8 @@
     "menyimpan": "Menyimpan…",
     "simpanMarkah": "Simpan markah",
     "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
-    "gagalMenerbitkan": "Gagal menerbitkan."
+    "gagalMenerbitkan": "Gagal menerbitkan.",
+    "catatan": "Catatan"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Mark Student Exit"
@@ -3224,7 +3246,8 @@
     "whatTypeOfUserDoYouWantToAdd": "What type of user do you want to add?",
     "addNewStudent": "Add New Student",
     "addNewTeacher": "Add New Teacher",
-    "addNewParent": "Add New Parent"
+    "addNewParent": "Add New Parent",
+    "addNew": "Add New"
   },
   "sessionManagementScreen": {
     "sessionManagement": "Session Management"
@@ -3303,7 +3326,8 @@
     "failedToUpdateStatusPleaseTryAgain": "Failed to update status. Please try again.",
     "noStudentsInThisClass": "No students in this class.",
     "saving": "Saving…",
-    "confirmWithdrawal": "Confirm Withdrawal"
+    "confirmWithdrawal": "Confirm Withdrawal",
+    "viewProfileFor": "View profile for"
   },
   "studentProfileDashboard": {
     "noStudentSelected": "No student selected.",
@@ -3348,7 +3372,8 @@
     "addSubject": "Add subject",
     "couldNotSaveTheSubject": "Could not save the subject.",
     "couldNotRemoveTheSubject": "Could not remove the subject.",
-    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
+    "taughtIn": "Taught in"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3419,7 +3444,10 @@
     "saveDuties": "Save duties",
     "couldNotSaveTheDuties": "Could not save the duties.",
     "couldNotClearTheDuties": "Could not clear the duties.",
-    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
+    "duties": "Duties —",
+    "editDutiesFor": "Edit duties for",
+    "clearDutiesFor": "Clear duties for"
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Attendance Approvals",
@@ -3436,7 +3464,9 @@
     "failedToLoadPendingAttendanceRequests": "Failed to load pending attendance requests",
     "anErrorOccurredWhileApprovingAttendance": "An error occurred while approving attendance.",
     "anErrorOccurredWhileRejectingAttendance": "An error occurred while rejecting attendance.",
-    "unknownTeacher": "Unknown Teacher"
+    "unknownTeacher": "Unknown Teacher",
+    "failedToApprove": "Failed to approve",
+    "failedToReject": "Failed to reject"
   },
   "teacherAttendanceDetail": {
     "noTeacherSelectedOpenThisViewFromATeacherRow": "No teacher selected. Open this view from a teacher row.",
@@ -3461,7 +3491,8 @@
     "changeTeacherStatus": "Change Teacher Status",
     "confirm": "Confirm",
     "unknownError": "Unknown error",
-    "general": "General"
+    "general": "General",
+    "statusChangedTo": "Status changed to"
   },
   "teacherListScreen": {
     "teacherManagement": "Teacher Management",

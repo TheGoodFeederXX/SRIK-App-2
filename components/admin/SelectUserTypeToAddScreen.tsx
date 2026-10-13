@@ -34,7 +34,7 @@ const SelectUserTypeToAddScreen: React.FC<SelectUserTypeToAddScreenProps> = ({ n
         >
           <div className="flex items-center space-x-4">
             <div className="p-3 bg-gray-100 rounded-lg">{userType.icon}</div>
-            <p className="font-bold text-lg text-gray-800">{`Add New ${userType.type}`}</p>
+            <p className="font-bold text-lg text-gray-800">{`${t('selectUserTypeToAddScreen.addNew')} ${userType.type}`}</p>
           </div>
           <ChevronRightIcon className="text-gray-400" />
         </motion.button>

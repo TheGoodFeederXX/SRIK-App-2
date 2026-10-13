@@ -549,7 +549,7 @@ export default function MarkEntryScreen() {
                                                 value={d?.comment ?? ''}
                                                 onChange={e => setRow(r.studentId, { comment: e.target.value })}
                                                 placeholder={t('markEntryScreen.catatanPilihan')}
-                                                aria-label={`Catatan ${r.studentName}`}
+                                                aria-label={`${t('markEntryScreen.catatan')} ${r.studentName}`}
                                                 className="mt-2 w-full text-sm p-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                                             />
                                         )}

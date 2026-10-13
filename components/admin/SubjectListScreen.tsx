@@ -182,7 +182,7 @@ export const SubjectListScreen: React.FC = () => {
                                     </div>
                                     <p className="text-xs text-gray-400 font-medium mt-0.5">
                                         {subject.classCount > 0
-                                            ? `Taught in ${subject.classCount} ${subject.classCount === 1 ? 'class' : 'classes'}`
+                                            ? `${t('subjectListScreen.taughtIn')} ${subject.classCount} ${subject.classCount === 1 ? 'class' : 'classes'}`
                                             : 'Not taught in any class yet'}
                                         {subject.status !== 'ACTIVE' && ` · ${subject.status}`}
                                     </p>

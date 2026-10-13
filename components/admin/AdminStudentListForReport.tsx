@@ -65,9 +65,9 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2, delay: Math.min(index, 20) * 0.03 }}
             whileHover={{ x: 4 }}
-            onClick={() => navigateTo('adminSelectTermForReport', `Select Term for ${student?.name || 'Student'}`, { student })}
+            onClick={() => navigateTo('adminSelectTermForReport', `${t('adminStudentListForReport.selectTermFor')} ${student?.name || 'Student'}`, { student })}
             className="w-full bg-white rounded-2xl p-4 flex items-center space-x-4 transition-colors duration-200 hover:shadow-lg hover:bg-indigo-50/30 border border-transparent hover:border-indigo-100 group"
-            aria-label={`View report for ${student?.name || 'Student'}`}
+            aria-label={`${t('adminStudentListForReport.viewReportFor')} ${student?.name || 'Student'}`}
           >
             <div className="relative">
               {student?.avatarUrl ? (

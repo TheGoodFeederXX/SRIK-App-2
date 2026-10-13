@@ -118,7 +118,7 @@ const TeacherCommunicationScreen: React.FC = () => {
                 audience: 'STAFF',
             });
 
-            toast.success(`Pengumuman disimpan sebagai draf untuk: ${audienceArray.join(', ')}`);
+            toast.success(`${t('teacherCommunicationScreen.pengumumanDisimpanSebagaiDrafUntuk')}: ${audienceArray.join(', ')}`);
             // Reset form
             setSelectedClasses(new Set());
             setTitle('');
@@ -197,7 +197,9 @@ const TeacherCommunicationScreen: React.FC = () => {
         </div>
     );
 
-    const VideoPreviewUI = () => (
+    const VideoPreviewUI = () => {
+    const { t } = useTranslation();
+    return (
         <div className="bg-white p-4 rounded-xl shadow-sm space-y-3">
             <video src={videoBlobUrl!} controls className="w-full aspect-video bg-black rounded-lg"></video>
             <div className="grid grid-cols-2 gap-3 items-center">
@@ -209,6 +211,7 @@ const TeacherCommunicationScreen: React.FC = () => {
             </div>
         </div>
     );
+};
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
