@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -18,9 +19,11 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  * a teacher asking to change their own details goes through the office, which is
  * what actually happens today.
  */
-const TeacherProfileEnhanced: React.FC<any> = ({ handleBack }) => (
+const TeacherProfileEnhanced: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="My Profile"
+        title={t('teacherProfileEnhanced.myProfile')}
         explanation={
             'Teaching qualifications and curriculum eligibility are not recorded in this '
             + 'system yet. The office keeps your contact details - ask them to change those. '
@@ -29,6 +32,7 @@ const TeacherProfileEnhanced: React.FC<any> = ({ handleBack }) => (
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default TeacherProfileEnhanced;

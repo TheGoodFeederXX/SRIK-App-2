@@ -82,15 +82,24 @@ const protected_ = [];
 // The placeholder is plain ASCII on purpose. An earlier version used a NUL byte, which leaked
 // into the output and made three files "binary" to every tool that read them.
 const protect = (text) => {
-    const token = `__I18N_PROTECTED_${protected_.length}__`;
+    // The marker uses characters that do not occur in TypeScript source: a private-use
+    // codepoint bracket. An earlier ASCII marker appeared inside a comment that had been
+    // written by a previous run, producing a token inside a token that never restored.
+    const token = `\uE000${protected_.length}\uE001`;
     protected_.push(text);
     return token;
 };
 src = src.replace(/`(?:[^`\\]|\\.)*`/gs, protect);           // template literals
-src = src.replace(/\/\*[\s\S]*?\*\//g, protect);               // block comments
+src = src.replace(/\/\*[\s\S]*?\*\//g, protect);               // block and JSX comments
 // Line comments: require start-of-line or whitespace before `//`, so a URL inside a string
 // (`https://…`) is not mistaken for a comment.
-src = src.replace(/(^|\n)([ \t]*)\/\/[^\n]*/g, (m) => protect(m));
+// Keep the newline OUTSIDE the protected region. Protecting the whole match swallowed the
+// line break, which glued 26 lines together and stopped `addHooks` from recognising a component
+// head — so a screen with `t(` calls got no hook and did not compile.
+// A trailing `// comment` used to be protected as a token at the END of its line, so a component
+// head stopped ending in `=> {` and no hook was inserted — leaving a file that did not compile.
+// Moving the comment's own text onto a line of its own keeps every CODE line exactly as it was.
+src = src.replace(/(^|\n)([ \t]*)\/\/[^\n]*/g, (m, lead) => lead + protect(m.slice(lead.length)));
 
 // 1. JSX text nodes.
 src = src.replace(/>(\s*)([A-Z][^<>{}]{1,90}?)(\s*)</g, (full, pre, text, post) => {
@@ -163,8 +172,13 @@ function addHooks(fileSource) {
         const line = lines[i];
 
         // Only a body opening ends this way. `=> {` may follow a long multi-line generic.
-        const opensBlock = /(?:=>|\))\s*\{\s*$/.test(line.trim());
-        const opensParen = /=>\s*\(\s*$/.test(line.trim());
+        const trimmed = line.trim();
+        // A control-flow statement also ends with `{` — `switch (x) {`, `if (y) {`, `else {`.
+        // These are NOT component bodies, and putting a hook inside one is invalid.
+        const isControlFlow = /^(?:switch|if|else|for|while|do|try|catch|finally)\b/.test(trimmed)
+            || /^\}\s*(?:else|catch|finally)\b/.test(trimmed);
+        const opensBlock = !isControlFlow && /(?:=>|\))\s*\{\s*$/.test(trimmed);
+        const opensParen = /=>\s*\(\s*$/.test(trimmed);
 
         if (!opensBlock && !opensParen) { out.push(line); continue; }
 
@@ -172,9 +186,9 @@ function addHooks(fileSource) {
         // that belong to a type annotation.
         let name = null;
         for (let k = i; k >= 0 && k > i - 30; k--) {
-            const m = lines[k].match(/^(?:export\s+)?(?:const|function)\s+([A-Z]\w*)\b/);
+            const m = lines[k].match(/^(?:export\s+(?:default\s+)?)?(?:const|function)\s+([A-Z]\w*)\b/);
             if (m) { name = m[1]; break; }
-            if (/^(?:export\s+)?(?:const|function)\s+[a-z]/.test(lines[k].trim())) break;
+            if (/^(?:export\s+(?:default\s+)?)?(?:const|function)\s+[a-z]/.test(lines[k].trim())) break;
         }
         if (!name) { out.push(line); continue; }
 
@@ -190,7 +204,10 @@ function addHooks(fileSource) {
         }
 
         const usesT = /(^|[^\w.$])t\(/.test(body);
-        const hasT = /const\s*\{\s*t\s*\}\s*=\s*useTranslation/.test(body);
+        // Match the HOOK CALL, not the word `useTranslation`. The import statement contains the
+        // same word, and a body range that happened to include it made a component look as
+        // though it already had a hook — so the hook was never added and `t` stayed undefined.
+        const hasT = /const\s*\{\s*t\s*\}\s*=\s*useTranslation\s*\(\s*\)/.test(body);
         if (!usesT || hasT) { out.push(line); continue; }
 
         if (opensBlock) {
@@ -220,11 +237,19 @@ if (!dry) {
     }
 }
 
-src = addHooks(src);
 
 // Put the protected regions back EXACTLY as they were. Anything matched inside them was never
 // recorded as a change, so no key was created for it either.
-src = src.replace(/__I18N_PROTECTED_(\d+)__/g, (_, n) => protected_[Number(n)]);
+// The hook pass runs AFTER the replacements (so `t(` calls exist to be found) and BEFORE the
+// protected regions come back (comments and template literals never hold a component body, and
+// their placeholders keep the line structure intact).
+src = addHooks(src);
+
+// Restore REPEATEDLY: a protected region's own text may itself contain a marker from an earlier
+// pass, and one sweep would leave it behind.
+for (let pass = 0; pass < 5 && /\uE000\d+\uE001/.test(src); pass++) {
+    src = src.replace(/\uE000(\d+)\uE001/g, (_, n) => protected_[Number(n)] ?? '');
+}
 
 const out = { file, changes: changes.length, keys: Object.fromEntries(keys), unused: [...missed] };
 if (dry) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import SOPCaseDetailView from '../shared/SOPCaseDetailView';
 
 interface SOPCaseDetailScreenProps {
@@ -6,7 +7,8 @@ interface SOPCaseDetailScreenProps {
 }
 
 const SOPCaseDetailScreen: React.FC<SOPCaseDetailScreenProps> = ({ caseId }) => {
-    if (!caseId) return <div className="text-center py-12 text-gray-500">No case selected.</div>;
+    const { t } = useTranslation();
+    if (!caseId) return <div className="text-center py-12 text-gray-500">{t('sOPCaseDetailScreen.noCaseSelected')}</div>;
     return <SOPCaseDetailView caseId={caseId} mode="teacher" />;
 };
 

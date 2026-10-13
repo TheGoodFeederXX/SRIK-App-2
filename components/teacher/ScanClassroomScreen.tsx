@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const ScanClassroomScreen: React.FC<any> = ({ navigateTo }) => (
+const ScanClassroomScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Scan Classroom"
+        title={t('scanClassroomScreen.scanClassroom')}
         explanation="Scanning is not set up for this school yet. Attendance is taken from the class register, which works."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default ScanClassroomScreen;

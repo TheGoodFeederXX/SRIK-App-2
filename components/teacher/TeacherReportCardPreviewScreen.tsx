@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SchoolLogoIcon, DocumentTextIcon, XCircleIcon, PublishIcon, getFormattedClassName } from '../../constants';
 import { Student, Teacher } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -26,6 +27,7 @@ const InfoField: React.FC<{ label: string; value: string | number }> = ({ label,
 );
 
 const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenProps> = ({ student, handleBack, onPublish }) => {
+    const { t } = useTranslation();
     const { user: authUser, currentSchool } = useAuth();
     const [currentUserTeacher, setCurrentUserTeacher] = useState<Teacher | null>(null);
     const { classes: teacherClasses, subjects: teacherSubjects, loading: loadingPermissions } = useTeacherClasses();
@@ -78,7 +80,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
         return isAssigned || hasAssignment;
     }, [currentUserTeacher, student, teacherClasses]);
 
-    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a student to preview their report card.</div>;
+    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('teacherReportCardPreviewScreen.selectAStudentToPreviewTheirReportCard')}</div>;
 
     const report = student.reportCards?.[student.reportCards.length - 1];
     const isPublished = report?.status === 'Published';
@@ -90,9 +92,9 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
     if (!report) {
         return (
             <div className="p-6 text-center bg-gray-50 h-full flex flex-col justify-center">
-                <h3 className="font-bold text-lg text-gray-800">No Report Card Data</h3>
-                <p className="text-gray-600 mt-2">This student does not have a report card draft to preview yet.</p>
-                <button onClick={handleBack} className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">Go Back</button>
+                <h3 className="font-bold text-lg text-gray-800">{t('teacherReportCardPreviewScreen.noReportCardData')}</h3>
+                <p className="text-gray-600 mt-2">{t('teacherReportCardPreviewScreen.thisStudentDoesNotHaveAReportCardDraftToPrevie')}</p>
+                <button onClick={handleBack} className="mt-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-lg">{t('teacherReportCardPreviewScreen.goBack')}</button>
             </div>
         );
     }
@@ -114,7 +116,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                 {onPublish && !isPublished && (
                     <button onClick={onPublish} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-green-700 bg-green-100 rounded-md hover:bg-green-200">
                         <PublishIcon className="w-4 h-4" />
-                        <span>Publish</span>
+                        <span>{t('teacherReportCardPreviewScreen.publish')}</span>
                     </button>
                 )}
             </div>
@@ -123,21 +125,21 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                  <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm max-w-md mx-auto printable-area">
                     <header className="text-center border-b-2 border-gray-300 pb-4 mb-4">
                         <div className="flex justify-center items-center gap-2"><SchoolLogoIcon className="text-purple-500 h-10 w-10"/><h1 className="text-2xl font-bold text-gray-800">{currentSchool?.name || 'School'}</h1></div>
-                        <p className="text-gray-600 font-semibold mt-1">END OF TERM REPORT CARD</p>
+                        <p className="text-gray-600 font-semibold mt-1">{t('teacherReportCardPreviewScreen.endOFTERMREPORTCARD')}</p>
                     </header>
                     
-                    <SectionHeader title="Student Information" />
+                    <SectionHeader title={t('teacherReportCardPreviewScreen.studentInformation')} />
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-gray-900">
-                        <InfoField label="Full Name" value={student.name} />
-                        <InfoField label="Class/Grade" value={getFormattedClassName(student.grade, student.section)} />
-                        <InfoField label="Term/Semester" value={report.term} />
-                        <InfoField label="Session" value={report.session} />
+                        <InfoField label={t('teacherReportCardPreviewScreen.fullName')} value={student.name} />
+                        <InfoField label={t('teacherReportCardPreviewScreen.classGrade')} value={getFormattedClassName(student.grade, student.section)} />
+                        <InfoField label={t('teacherReportCardPreviewScreen.termSemester')} value={report.term} />
+                        <InfoField label={t('teacherReportCardPreviewScreen.session')} value={report.session} />
                     </div>
 
-                    <SectionHeader title="Academic Performance" />
+                    <SectionHeader title={t('teacherReportCardPreviewScreen.academicPerformance')} />
                     <div className="overflow-x-auto text-xs">
                         <table className="min-w-full border">
-                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">Subject</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">Total</th><th className="p-2 border w-12 text-center">Grade</th><th className="p-2 border">Remark</th></tr></thead>
+                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">{t('teacherReportCardPreviewScreen.subject')}</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">Total</th><th className="p-2 border w-12 text-center">Grade</th><th className="p-2 border">Remark</th></tr></thead>
                             <tbody>
                                 {filteredRecords.length > 0 ? (
                                     filteredRecords.map((record, index) => (
@@ -145,7 +147,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan={6} className="p-4 text-center text-gray-500 italic">No assigned subjects found for this students report.</td>
+                                        <td colSpan={6} className="p-4 text-center text-gray-500 italic">{t('teacherReportCardPreviewScreen.noAssignedSubjectsFoundForThisStudentsReport')}</td>
                                     </tr>
                                 )}
                             </tbody>
@@ -155,21 +157,21 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                     {isClassTeacher && (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-                                <div><SectionHeader title="Skills & Behaviour" /><table className="w-full text-sm"><tbody>{SKILL_BEHAVIOUR_DOMAINS.map(skill => (<tr key={skill}><td className="py-1 text-gray-800">{skill}</td><td className="w-20 text-center font-bold">{report.skills?.[skill] || '-'}</td></tr>))}</tbody></table></div>
-                                <div><SectionHeader title="Psychomotor Skills" /><table className="w-full text-sm"><tbody>{PSYCHOMOTOR_SKILLS.map(skill => (<tr key={skill}><td className="py-1 text-gray-800">{skill}</td><td className="w-20 text-center font-bold">{report.psychomotor?.[skill] || '-'}</td></tr>))}</tbody></table></div>
+                                <div><SectionHeader title={t('teacherReportCardPreviewScreen.skillsBehaviour')} /><table className="w-full text-sm"><tbody>{SKILL_BEHAVIOUR_DOMAINS.map(skill => (<tr key={skill}><td className="py-1 text-gray-800">{skill}</td><td className="w-20 text-center font-bold">{report.skills?.[skill] || '-'}</td></tr>))}</tbody></table></div>
+                                <div><SectionHeader title={t('teacherReportCardPreviewScreen.psychomotorSkills')} /><table className="w-full text-sm"><tbody>{PSYCHOMOTOR_SKILLS.map(skill => (<tr key={skill}><td className="py-1 text-gray-800">{skill}</td><td className="w-20 text-center font-bold">{report.psychomotor?.[skill] || '-'}</td></tr>))}</tbody></table></div>
                             </div>
 
-                            <SectionHeader title="Attendance Record" />
+                            <SectionHeader title={t('teacherReportCardPreviewScreen.attendanceRecord')} />
                             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-center">
-                                <div><p className="text-xs text-gray-500">Total Days</p><p className="font-bold text-lg">{report.attendance?.total || 0}</p></div>
-                                <div><p className="text-xs text-gray-500">Present</p><p className="font-bold text-lg">{report.attendance?.present || 0}</p></div>
+                                <div><p className="text-xs text-gray-500">{t('teacherReportCardPreviewScreen.totalDays')}</p><p className="font-bold text-lg">{report.attendance?.total || 0}</p></div>
+                                <div><p className="text-xs text-gray-500">{t('teacherReportCardPreviewScreen.present')}</p><p className="font-bold text-lg">{report.attendance?.present || 0}</p></div>
                                 <div><p className="text-xs text-gray-500">Absent</p><p className="font-bold text-lg">{report.attendance?.absent || 0}</p></div>
                                 <div><p className="text-xs text-gray-500">Late</p><p className="font-bold text-lg">{report.attendance?.late || 0}</p></div>
                             </div>
 
                             <div className="mt-6 space-y-4">
-                                <div><label className="font-semibold text-sm text-gray-700">Teacher's Comment:</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || 'No comment yet.'}"</p></div>
-                                <div><label className="font-semibold text-sm text-gray-700">Principal's Comment:</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || 'No comment yet.'}"</p></div>
+                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.teacherSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || 'No comment yet.'}"</p></div>
+                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.principalSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || 'No comment yet.'}"</p></div>
                             </div>
                         </>
                     )}

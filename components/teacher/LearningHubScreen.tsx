@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
@@ -12,6 +13,7 @@ interface LearningHubScreenProps {
 }
 
 const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo, schoolId }) => {
+    const { t } = useTranslation();
   const [tab, setTab] = useState<'browse' | 'monitor'>('browse');
   const [level, setLevel] = useState('');
   const [subject, setSubject] = useState('');
@@ -53,7 +55,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
       const res = await api.getLearningHubResources({ grade_level: level || undefined, subject: subject || undefined, search: search || undefined });
       setResources(Array.isArray(res) ? res : []);
     } catch {
-      toast.error('Could not load Learning Hub resources');
+      toast.error(t('learningHubScreen.couldNotLoadLearningHubResources'));
     } finally {
       setLoading(false);
     }
@@ -83,7 +85,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
 
   const handleRecommend = async (resource: any) => {
     if (!classStudents.length) {
-      toast.error('Select one of your classes in the Monitor tab first, so I know who to recommend this to.');
+      toast.error(t('learningHubScreen.selectOneOfYourClassesInTheMonitorTabFirstSoIK'));
       return;
     }
     try {
@@ -94,7 +96,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
       })));
       toast.success(`Recommended to ${classStudents.length} student(s).`);
     } catch {
-      toast.error('Could not recommend this resource');
+      toast.error(t('learningHubScreen.couldNotRecommendThisResource'));
     }
   };
 
@@ -106,8 +108,8 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             <ElearningIcon className="h-6 w-6" />
           </div>
           <div>
-            <h3 className="font-bold text-lg text-blue-800">Learning Hub</h3>
-            <p className="text-sm text-blue-700">Recommend free resources and monitor your students' progress.</p>
+            <h3 className="font-bold text-lg text-blue-800">{t('learningHubScreen.learningHub')}</h3>
+            <p className="text-sm text-blue-700">{t('learningHubScreen.recommendFreeResourcesAndMonitorYourStudentsPr')}</p>
           </div>
         </div>
 
@@ -124,7 +126,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             className="py-3 bg-white border border-gray-200 rounded-xl font-bold text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
           >
             <GameControllerIcon className="w-4 h-4 text-blue-600 shrink-0" />
-            Educational Games
+            {t('learningHubScreen.educationalGames')}
           </button>
         </div>
 
@@ -151,13 +153,13 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search topics, keywords..."
+                placeholder={t('learningHubScreen.searchTopicsKeywords')}
                 className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
               />
             </div>
             {myLevels.length > 0 && (
               <div className="flex gap-2 overflow-x-auto pb-1">
-                <button onClick={() => setLevel('')} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${level === '' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>All My Classes</button>
+                <button onClick={() => setLevel('')} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${level === '' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>{t('learningHubScreen.allMyClasses')}</button>
                 {myLevels.map(l => (
                   <button key={l} onClick={() => setLevel(l)} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${level === l ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>{l}</button>
                 ))}
@@ -165,7 +167,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             )}
             {mySubjects.length > 0 && (
               <div className="flex gap-2 overflow-x-auto pb-1">
-                <button onClick={() => setSubject('')} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${subject === '' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>All My Subjects</button>
+                <button onClick={() => setSubject('')} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${subject === '' ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>{t('learningHubScreen.allMySubjects')}</button>
                 {mySubjects.map(s => (
                   <button key={s} onClick={() => setSubject(s)} className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap ${subject === s ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200'}`}>{s}</button>
                 ))}
@@ -182,7 +184,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             ) : resources.length === 0 ? (
               <div className="py-12 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                 <BookOpenIcon className="w-10 h-10 text-gray-200 mx-auto mb-2" />
-                <p className="text-gray-400 font-bold">No resources found.</p>
+                <p className="text-gray-400 font-bold">{t('learningHubScreen.noResourcesFound')}</p>
               </div>
             ) : (
               <div className="space-y-2 pt-2">
@@ -235,12 +237,12 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             {myClasses.length === 0 ? (
               <div className="py-12 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                 <UserGroupIcon className="w-10 h-10 text-gray-200 mx-auto mb-2" />
-                <p className="text-gray-400 font-bold">You have no assigned classes yet.</p>
+                <p className="text-gray-400 font-bold">{t('learningHubScreen.youHaveNoAssignedClassesYet')}</p>
               </div>
             ) : !selectedClassId ? (
               <div className="py-12 text-center bg-white rounded-3xl border border-dashed border-gray-200">
                 <UserGroupIcon className="w-10 h-10 text-gray-200 mx-auto mb-2" />
-                <p className="text-gray-400 font-bold">Select one of your classes to monitor progress.</p>
+                <p className="text-gray-400 font-bold">{t('learningHubScreen.selectOneOfYourClassesToMonitorProgress')}</p>
               </div>
             ) : loadingMonitor ? (
               <div className="space-y-3">{[1, 2, 3].map(i => <div key={i} className="h-16 bg-white rounded-2xl animate-pulse border border-gray-100" />)}</div>

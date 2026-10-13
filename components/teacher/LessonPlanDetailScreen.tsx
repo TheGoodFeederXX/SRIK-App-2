@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { GeneratedResources, TermResources, GeneratedLessonPlan, GeneratedAssessment, AssessmentQuestion, DetailedNote } from '../../types';
@@ -47,6 +48,7 @@ const SchemeOfWorkTab: React.FC<{ scheme: TermResources['schemeOfWork'] }> = ({ 
 
 
 const LessonPlanLink: React.FC<{ plan: GeneratedLessonPlan, onSuggest: () => void, onClick: () => void }> = ({ plan, onSuggest, onClick }) => {
+    const { t } = useTranslation();
     return (
         <div className="flex items-center space-x-2">
             <button onClick={onClick} className="flex-grow text-left p-3 font-semibold flex justify-between items-center hover:bg-purple-50 bg-white rounded-lg border group transition-colors">
@@ -56,7 +58,7 @@ const LessonPlanLink: React.FC<{ plan: GeneratedLessonPlan, onSuggest: () => voi
             <button 
                 onClick={(e) => { e.stopPropagation(); onSuggest(); }}
                 className="p-3 bg-indigo-50 text-indigo-600 rounded-lg border border-indigo-100 hover:bg-indigo-100 transition-colors"
-                title="Suggest AI Activity"
+                title={t('lessonPlanDetailScreen.suggestAIActivity')}
             >
                 <SparklesIcon className="w-5 h-5" />
             </button>
@@ -65,6 +67,7 @@ const LessonPlanLink: React.FC<{ plan: GeneratedLessonPlan, onSuggest: () => voi
 };
 
 const LessonPlansTab: React.FC<{ plans: TermResources['lessonPlans'], notes?: DetailedNote[], context: any, navigateTo: (view: string, title: string, props: any) => void; onSuggestActivity: (topic: string) => void; }> = ({ plans, notes, context, navigateTo, onSuggestActivity }) => {
+    const { t } = useTranslation();
     const handlePlanClick = (plan: GeneratedLessonPlan) => {
         const noteData = notes?.find(n => n.topic === plan.topic);
         navigateTo('lessonContent', `Week ${plan.week}`, {
@@ -79,8 +82,8 @@ const LessonPlansTab: React.FC<{ plans: TermResources['lessonPlans'], notes?: De
         return (
             <div className="flex flex-col items-center justify-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
                 <BookOpenIcon className="h-16 w-16 text-gray-300 mb-4" />
-                <p className="text-gray-500 font-medium mb-1">No Lesson Plans Available</p>
-                <p className="text-gray-400 text-sm">Generate AI resources to create lesson plans</p>
+                <p className="text-gray-500 font-medium mb-1">{t('lessonPlanDetailScreen.noLessonPlansAvailable')}</p>
+                <p className="text-gray-400 text-sm">{t('lessonPlanDetailScreen.generateAIResourcesToCreateLessonPlans')}</p>
             </div>
         );
     }
@@ -119,13 +122,14 @@ const AssessmentDisplay: React.FC<{ assessment: GeneratedAssessment, subject: st
 );
 
 const AssessmentsTab: React.FC<{ assessments: TermResources['assessments'], subject: string, className: string, navigateTo: (view: string, title: string, props?: any) => void; }> = ({ assessments, subject, className, navigateTo }) => {
+    const { t } = useTranslation();
     // Check if assessments exist and have content
     if (!assessments || assessments.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300">
                 <ClipboardListIcon className="h-16 w-16 text-gray-300 mb-4" />
-                <p className="text-gray-500 font-medium mb-1">No Assessments Available</p>
-                <p className="text-gray-400 text-sm">Generate AI resources to create assessments</p>
+                <p className="text-gray-500 font-medium mb-1">{t('lessonPlanDetailScreen.noAssessmentsAvailable')}</p>
+                <p className="text-gray-400 text-sm">{t('lessonPlanDetailScreen.generateAIResourcesToCreateAssessments')}</p>
             </div>
         );
     }
@@ -145,6 +149,7 @@ const TermContent: React.FC<{
     resources: GeneratedResources,
     navigateTo: (view: string, title: string, props?: any) => void;
 }> = ({ termResource, resources, navigateTo }) => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<'scheme' | 'plans' | 'assessments'>('scheme');
 
     // Extract context IDs from resources (passed from LessonPlannerScreen)
@@ -158,8 +163,8 @@ const TermContent: React.FC<{
         <div>
             <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg mb-4 print:hidden">
                 <button onClick={() => setActiveTab('scheme')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'scheme' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>Scheme</button>
-                <button onClick={() => setActiveTab('plans')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'plans' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>Lesson Plans</button>
-                <button onClick={() => setActiveTab('assessments')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'assessments' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>Assessments</button>
+                <button onClick={() => setActiveTab('plans')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'plans' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>{t('lessonPlanDetailScreen.lessonPlans')}</button>
+                <button onClick={() => setActiveTab('assessments')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'assessments' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>{t('lessonPlanDetailScreen.assessments')}</button>
             </div>
             {activeTab === 'scheme' && <SchemeOfWorkTab scheme={termResource.schemeOfWork} />}
             {activeTab === 'plans' && <LessonPlansTab plans={termResource.lessonPlans} notes={resources.detailedNotes} context={context} navigateTo={navigateTo} onSuggestActivity={navigateTo.bind(null, 'suggestActivity')} />}
@@ -169,12 +174,13 @@ const TermContent: React.FC<{
 };
 
 const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigateTo: (view: string, title: string, props?: any) => void; }> = ({ resources, navigateTo }) => {
+    const { t } = useTranslation();
     const [currentResources, setCurrentResources] = useState<GeneratedResources | null>(resources || null);
     const [activeTerm, setActiveTerm] = useState<string>(resources?.terms[0]?.term || '');
     const [toastMessage, setToastMessage] = useState('');
     const [isPublishing, setIsPublishing] = useState(false);
 
-    if (!resources || !currentResources) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Open a lesson plan to view its details.</div>;
+    if (!resources || !currentResources) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('lessonPlanDetailScreen.openALessonPlanToViewItsDetails')}</div>;
 
     const activeTermData = currentResources.terms.find(t => t.term === activeTerm);
 
@@ -197,7 +203,7 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
                 subject: currentResources.subject,
                 grade: 0, 
                 url: publicUrl,
-                description: 'AI Generated Lesson Plan',
+                description: t('lessonPlanDetailScreen.aiGeneratedLessonPlan'),
                 is_public: true,
                 language: 'English'
             }, { useBackend: true });
@@ -239,7 +245,7 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
                         </button>
                     ))}
                 </div>
-                {activeTermData ? <TermContent termResource={activeTermData} resources={currentResources} navigateTo={navigateTo} /> : <p className="text-gray-900">Select a term to view resources.</p>}
+                {activeTermData ? <TermContent termResource={activeTermData} resources={currentResources} navigateTo={navigateTo} /> : <p className="text-gray-900">{t('lessonPlanDetailScreen.selectATermToViewResources')}</p>}
             </main>
         </div>
     );
@@ -251,6 +257,7 @@ export default LessonPlanDetailScreen;
 import { getAIClient, SchemaType as Type } from '../../lib/ai';
 
 export const AIActivitySuggester: React.FC<{ topic: string, subject: string, handleBack: () => void }> = ({ topic, subject, handleBack }) => {
+    const { t } = useTranslation();
     const [isGenerating, setIsGenerating] = useState(true);
     const [suggestions, setSuggestions] = useState<any[]>([]);
     const [toastMessage, setToastMessage] = useState('');
@@ -315,14 +322,14 @@ export const AIActivitySuggester: React.FC<{ topic: string, subject: string, han
             {toastMessage && <Toast message={toastMessage} onClear={() => setToastMessage('')} />}
             <header className="mb-6">
                 <button onClick={handleBack} className="text-gray-500 mb-2 font-bold flex items-center">&larr; Back</button>
-                <h2 className="text-2xl font-bold text-gray-800 font-outfit">AI Activity Ideas</h2>
-                <p className="text-sm text-gray-500">Creative ideas for: <span className="text-purple-600 font-bold">{topic}</span></p>
+                <h2 className="text-2xl font-bold text-gray-800 font-outfit">{t('lessonPlanDetailScreen.aiActivityIdeas')}</h2>
+                <p className="text-sm text-gray-500">{t('lessonPlanDetailScreen.creativeIdeasFor')} <span className="text-purple-600 font-bold">{topic}</span></p>
             </header>
 
             {isGenerating ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
                     <RotateCcwIcon className="w-12 h-12 text-indigo-600 animate-spin mb-4" />
-                    <p className="text-gray-600 font-medium">Generating creative classroom activities...</p>
+                    <p className="text-gray-600 font-medium">{t('lessonPlanDetailScreen.generatingCreativeClassroomActivities')}</p>
                 </div>
             ) : (
                 <div className="space-y-6">
@@ -338,7 +345,7 @@ export const AIActivitySuggester: React.FC<{ topic: string, subject: string, han
                             </div>
                             
                             <div className="mb-4">
-                                <h4 className="text-sm font-bold text-gray-800 mb-2">Materials Needed:</h4>
+                                <h4 className="text-sm font-bold text-gray-800 mb-2">{t('lessonPlanDetailScreen.materialsNeeded')}</h4>
                                 <div className="flex flex-wrap gap-2">
                                     {act.materials.map((m: string, j: number) => (
                                         <span key={j} className="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-lg border">{m}</span>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const ReportMaintenanceIssue: React.FC<any> = ({ navigateTo }) => (
+const ReportMaintenanceIssue: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Report a Maintenance Issue"
+        title={t('reportMaintenanceIssue.reportAMaintenanceIssue')}
         explanation="Maintenance reports are not recorded here yet. Please tell the office about a fault, and it will be logged their way."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default ReportMaintenanceIssue;

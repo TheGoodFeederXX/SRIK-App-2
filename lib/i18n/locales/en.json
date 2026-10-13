@@ -452,7 +452,18 @@
     "freeLearningResources": "Free Learning Resources"
   },
   "learningHubScreen": {
-    "learningHub": "Learning Hub"
+    "learningHub": "Learning Hub",
+    "recommendFreeResourcesAndMonitorYourStudentsPr": "Recommend free resources and monitor your students' progress.",
+    "educationalGames": "Educational Games",
+    "allMyClasses": "All My Classes",
+    "allMySubjects": "All My Subjects",
+    "noResourcesFound": "No resources found.",
+    "youHaveNoAssignedClassesYet": "You have no assigned classes yet.",
+    "selectOneOfYourClassesToMonitorProgress": "Select one of your classes to monitor progress.",
+    "searchTopicsKeywords": "Search topics, keywords...",
+    "couldNotLoadLearningHubResources": "Could not load Learning Hub resources",
+    "selectOneOfYourClassesInTheMonitorTabFirstSoIK": "Select one of your classes in the Monitor tab first, so I know who to recommend this to.",
+    "couldNotRecommendThisResource": "Could not recommend this resource"
   },
   "newMessageScreen": {
     "nameYourGroup": "Name Your Group",
@@ -697,5 +708,533 @@
   },
   "vocabularyPictionaryGame": {
     "vocabularyPictionaryGame": "Vocabulary Pictionary Game"
+  },
+  "aIGameCreatorScreen": {
+    "aigameCreator": "AIGame Creator"
+  },
+  "aIPerformanceSummaryScreen": {
+    "analyzingClassPerformance": "Analyzing Class Performance...",
+    "theAIIsCrunchingTheNumbersToProvideYouWithActi": "The AI is crunching the numbers to provide you with actionable insights.",
+    "overallSummary": "Overall Summary",
+    "topPerformers": "Top Performers",
+    "studentsNeedingSupport": "Students Needing Support"
+  },
+  "assessmentsHub": {
+    "assessmentsQuizzes": "Assessments & Quizzes",
+    "manageAllYourClassroomAssessmentsAndPracticeMa": "Manage all your classroom assessments and practice materials in one place.",
+    "teachingTip": "Teaching Tip",
+    "manageAssignments": "Manage Assignments",
+    "quizBuilder": "Quiz Builder",
+    "createEditAndGradeStudentAssignments": "Create, edit and grade student assignments",
+    "createManualAssessmentsAndPracticeQuizzes": "Create manual assessments and practice quizzes"
+  },
+  "assignmentSubmissionsScreen": {
+    "assignmentSubmissions": "Assignment Submissions"
+  },
+  "assignmentViewScreen": {
+    "openAnAssignmentToViewIt": "Open an assignment to view it.",
+    "assignmentPreview": "Assignment Preview",
+    "spaceForPracticalWorkDiagram": "Space for practical work/diagram.",
+    "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "To share, please print/save as PDF or take a screenshot."
+  },
+  "badgeSystem": {
+    "badgeSystem": "Badge System"
+  },
+  "cBTManagementScreen": {
+    "cbtExaminations": "CBT & Examinations",
+    "createAssessmentsFromExcelQuestionBank": "Create assessments from Excel (\"Question Bank\")",
+    "selectClass": "Select Class",
+    "subject": "Subject",
+    "selectSubject": "Select Subject",
+    "durationMins": "Duration (Mins)",
+    "totalMarks": "Total Marks",
+    "processing": "Processing...",
+    "uploadExcelFile": "Upload Excel File",
+    "columnsNoQuestionABCDAnswer": "Columns: No, Question, A, B, C, D, Answer",
+    "managedExams": "Managed Exams",
+    "loadingData": "Loading data...",
+    "noAssessmentFoundUploadOneToStart": "No assessment found. Upload one to start.",
+    "uploadQuestionBankExcelFile": "Upload question bank Excel file",
+    "deleteExam": "Delete Exam",
+    "areYouSureYouWantToDeleteThisExamThisActionCan": "Are you sure you want to delete this exam? This action cannot be undone.",
+    "quizUploadedSuccessfully": "Quiz uploaded successfully!",
+    "examDeletedSuccessfully": "Exam deleted successfully",
+    "pleaseSelectAValidClassAndSubjectFirst": "Please select a valid Class and Subject first.",
+    "couldNotDetermineYourSchoolPleaseRefreshAndTry": "Could not determine your school. Please refresh and try again.",
+    "failedToUpdateStatus": "Failed to update status.",
+    "failedToDeleteExam": "Failed to delete exam"
+  },
+  "cBTScoresScreen": {
+    "cbtscores": "CBTScores"
+  },
+  "certificateViewer": {
+    "certificateViewer": "Certificate Viewer"
+  },
+  "classAssignmentsScreen": {
+    "classAssignments": "Class Assignments"
+  },
+  "classDetailScreen": {
+    "selectAClassToViewItsDetails": "Select a class to view its details.",
+    "attendance": "Attendance",
+    "newAssignment": "New Assignment",
+    "noStudentsFoundInThisClass": "No students found in this class."
+  },
+  "classGradebookScreen": {
+    "gradebook": "Gradebook",
+    "selectAClass": "Select a class...",
+    "loadingMarks": "Loading marks...",
+    "noMarksRecordedYet": "No marks recorded yet.",
+    "student": "Student",
+    "average": "Average"
+  },
+  "collaborationForumScreen": {
+    "collaborationForum": "Collaboration Forum"
+  },
+  "courseCatalog": {
+    "courseCatalog": "Course Catalog"
+  },
+  "createAssignmentScreen": {
+    "createAssignment": "Create Assignment"
+  },
+  "createForumTopicScreen": {
+    "createNewTopic": "Create New Topic",
+    "shareYourThoughtsWithTheTeacherCommunity": "Share your thoughts with the teacher community",
+    "postingAsYourself": "Posting as yourself",
+    "category": "Category",
+    "shareYourIdeasQuestionsOrStartADiscussion": "Share your ideas, questions, or start a discussion...",
+    "topicPostedSuccessfully": "Topic posted successfully!",
+    "pleaseFillInBothTheTitleAndContent": "Please fill in both the title and content.",
+    "failedToCreateTopicPleaseTryAgain": "Failed to create topic. Please try again."
+  },
+  "editTeacherProfileScreen": {
+    "profileNotFound": "Profile not found.",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "emailCannotBeChangedDirectly": "Email cannot be changed directly.",
+    "phoneNumber": "Phone Number",
+    "subjectSpecializationCommaSeparated": "Subject Specialization (comma separated)",
+    "accountSecurity": "Account Security",
+    "username": "Username",
+    "changePassword": "Change Password",
+    "mathematicsEnglishEtc": "Mathematics, English, etc.",
+    "enterNewUsername": "Enter new username",
+    "teacher": "Teacher",
+    "profileUpdatedSuccessfully": "Profile updated successfully!",
+    "usernameUpdatedSuccessfully": "Username updated successfully!",
+    "failedToUploadPhotoPleaseTryAgain": "Failed to upload photo. Please try again."
+  },
+  "educationalGamesScreen": {
+    "educationalGames": "Educational Games"
+  },
+  "forumTopicScreen": {
+    "noRepliesYetBeTheFirstToRespond": "No replies yet. Be the first to respond!",
+    "writeAReply": "Write a reply...",
+    "replyPosted": "Reply posted",
+    "failedToLoadConversation": "Failed to load conversation.",
+    "failedToSendReply": "Failed to send reply"
+  },
+  "globalForumTopicScreen": {
+    "globalForumTopic": "Global Forum Topic"
+  },
+  "globalTeacherCommunityScreen": {
+    "globalTeacherCommunity": "Global Teacher Community"
+  },
+  "gradeEntryScreen": {
+    "saving": "Saving...",
+    "allChangesSaved": "All changes saved",
+    "someGradesCouldNotBeSavedReEnterThemToRetry": "Some grades could not be saved — re-enter them to retry.",
+    "gradesWillAutoSave": "Grades will auto-save.",
+    "selectAnExamToEnterGrades": "Select an exam to enter grades.",
+    "loadingStudentList": "Loading student list..."
+  },
+  "gradeSubmissionScreen": {
+    "gradeSubmission": "Grade Submission"
+  },
+  "helpSupportScreen": {
+    "helpAndSupport": "Help and Support"
+  },
+  "leaveRequest": {
+    "teacherProfileNotFoundPleaseContactHR": "Teacher profile not found. Please contact HR.",
+    "couldnTLoadYourLeaveRequests": "Couldn't load your leave requests",
+    "thereWasAProblemReachingTheServerPleaseTryAgai": "There was a problem reaching the server. Please try again.",
+    "leaveRequests": "Leave Requests",
+    "submitAndTrackYourLeaveApplications": "Submit and track your leave applications",
+    "newRequest": "New Request",
+    "submitLeaveRequest": "Submit Leave Request",
+    "duration": "Duration:",
+    "myLeaveRequests": "My Leave Requests",
+    "adminComment": "Admin Comment:",
+    "briefReasonForLeaveRequest": "Brief reason for leave request",
+    "anyAdditionalInformation": "Any additional information",
+    "leaveRequestSubmittedSuccessfully": "Leave request submitted successfully",
+    "teacherIDNotFound": "Teacher ID not found",
+    "pleaseSelectStartAndEndDates": "Please select start and end dates",
+    "endDateMustBeAfterStartDate": "End date must be after start date",
+    "failedToSubmitLeaveRequest": "Failed to submit leave request"
+  },
+  "lessonContentScreen": {
+    "lessonContent": "Lesson Content"
+  },
+  "lessonNotesUploadScreen": {
+    "lessonNotes": "Lesson Notes"
+  },
+  "lessonPlanDetailScreen": {
+    "noLessonPlansAvailable": "No Lesson Plans Available",
+    "generateAIResourcesToCreateLessonPlans": "Generate AI resources to create lesson plans",
+    "noAssessmentsAvailable": "No Assessments Available",
+    "generateAIResourcesToCreateAssessments": "Generate AI resources to create assessments",
+    "lessonPlans": "Lesson Plans",
+    "assessments": "Assessments",
+    "openALessonPlanToViewItsDetails": "Open a lesson plan to view its details.",
+    "selectATermToViewResources": "Select a term to view resources.",
+    "aiActivityIdeas": "AI Activity Ideas",
+    "creativeIdeasFor": "Creative ideas for:",
+    "generatingCreativeClassroomActivities": "Generating creative classroom activities...",
+    "materialsNeeded": "Materials Needed:",
+    "suggestAIActivity": "Suggest AI Activity",
+    "aiGeneratedLessonPlan": "AI Generated Lesson Plan"
+  },
+  "lessonPlannerScreen": {
+    "lessonPlanner": "Lesson Planner"
+  },
+  "mentoringMatching": {
+    "mentoringMatching": "Mentoring Matching"
+  },
+  "myAtRiskStudents": {
+    "myAtRiskStudents": "My At-Risk Students"
+  },
+  "myClassHubScreen": {
+    "myClassHub": "My Class Hub"
+  },
+  "myObservations": {
+    "myObservations": "My Observations"
+  },
+  "myPDCourses": {
+    "myPDCourses": "My PDCourses"
+  },
+  "mySOPCasesScreen": {
+    "myReportedCases": "My Reported Cases"
+  },
+  "newChatScreen": {
+    "newChat": "New Chat"
+  },
+  "pDCalendar": {
+    "pdcalendar": "PDCalendar"
+  },
+  "payslipViewer": {
+    "myPayslips": "My Payslips",
+    "viewAndDownloadYourSalaryPayslips": "View and download your salary payslips",
+    "couldnTLoadYourPayslips": "Couldn't load your payslips",
+    "thereWasAProblemReachingThePayrollServicePleas": "There was a problem reaching the payroll service. Please try again.",
+    "noPayslipsAvailableYet": "No payslips available yet",
+    "grossSalary": "Gross Salary",
+    "deductions": "Deductions",
+    "netSalary": "Net Salary",
+    "payslipDetails": "Payslip Details",
+    "employeeID": "Employee ID",
+    "lineItems": "Line Items",
+    "totalDeductions": "Total Deductions",
+    "netPayout": "Net Payout",
+    "downloadPDF": "Download PDF",
+    "pleaseAllowPopUpsToDownloadYourPayslip": "Please allow pop-ups to download your payslip."
+  },
+  "photoGalleryScreen": {
+    "photoGallery": "Photo Gallery"
+  },
+  "professionalDevelopmentScreen": {
+    "professionalDevelopment": "Professional Development"
+  },
+  "quickAttendance": {
+    "classAttendance": "Class Attendance",
+    "noClassSelectedPleaseGoBackAndPickAClassFirst": "No class selected. Please go back and pick a class first."
+  },
+  "quizBuilderScreen": {
+    "quizBuilder": "Quiz Builder",
+    "createAssessmentsForYourStudents": "Create assessments for your students",
+    "saveDraft": "Save Draft",
+    "quizDetails": "Quiz Details",
+    "quizTitle": "Quiz Title",
+    "subject": "Subject",
+    "targetClass": "Target Class",
+    "durationMinutes": "Duration (Minutes)",
+    "descriptionInstructions": "Description / Instructions",
+    "clickTheCircleNextToAnOptionToMarkItAsTheCorre": "Click the circle next to an option to mark it as the correct answer.",
+    "noQuestionsAddedYet": "No questions added yet.",
+    "clickTheButtonsAboveToAddYourFirstQuestion": "Click the buttons above to add your first question.",
+    "markAsCorrectAnswer": "Mark as correct answer",
+    "instructionsForStudents": "Instructions for students...",
+    "enterYourQuestionHere": "Enter your question here...",
+    "pleaseProvideATitleSubjectAndAtLeastOneQuestio": "Please provide a title, subject, and at least one question.",
+    "teacherProfileNotFoundPleaseTryReloading": "Teacher profile not found. Please try reloading.",
+    "missingSchoolIDPleaseTryReloading": "Missing School ID. Please try reloading."
+  },
+  "recognitionPlatform": {
+    "recognitionPlatform": "Recognition Platform"
+  },
+  "reportCardInputScreen": {
+    "kemasukanMarkah": "Kemasukan Markah"
+  },
+  "reportMaintenanceIssue": {
+    "reportAMaintenanceIssue": "Report a Maintenance Issue"
+  },
+  "resourceSharing": {
+    "resourceSharing": "Resource Sharing",
+    "shareAndDiscoverTeachingMaterials": "Share and discover teaching materials",
+    "uploadResource": "Upload Resource",
+    "noResourcesFound": "No resources found",
+    "subject": "Subject:",
+    "download": "Download",
+    "noFileIsAttachedToThisResource": "No file is attached to this resource."
+  },
+  "resultsEntryEnhanced": {
+    "kemasukanMarkah": "Kemasukan Markah"
+  },
+  "sOPCaseDetailScreen": {
+    "noCaseSelected": "No case selected."
+  },
+  "scanClassroomScreen": {
+    "scanClassroom": "Scan Classroom"
+  },
+  "selectTermForReportScreen": {
+    "selectAStudentFirst": "Select a student first.",
+    "academicContext": "Academic Context",
+    "selectAcademicSession": "Select Academic Session",
+    "chooseTermToOpen": "Choose Term to Open"
+  },
+  "studentCredentialsScreen": {
+    "studentCredentials": "Student Credentials"
+  },
+  "studentProfileScreen": {
+    "selectAStudentToViewTheirProfile": "Select a student to view their profile.",
+    "enterReportCard": "Enter Report Card",
+    "academicPerformance": "Academic Performance",
+    "pendingResult": "Pending Result",
+    "noData": "No Data",
+    "behavioralNotes": "Behavioral Notes",
+    "addNote": "Add Note",
+    "positive": "Positive",
+    "negative": "Negative",
+    "loadingNotes": "Loading notes...",
+    "noBehavioralNotesRecorded": "No behavioral notes recorded.",
+    "deleteNote": "Delete Note",
+    "titleEGHelpful": "Title (e.g. Helpful)",
+    "noteDetails": "Note details...",
+    "areYouSureYouWantToDeleteThisNoteThisCannotBeU": "Are you sure you want to delete this note? This cannot be undone.",
+    "noteAddedSuccessfully": "Note added successfully",
+    "noteDeletedSuccessfully": "Note deleted successfully",
+    "failedToLoadStudentData": "Failed to load student data",
+    "pleaseFillInBothATitleAndANote": "Please fill in both a title and a note.",
+    "failedToSaveNote": "Failed to save note",
+    "errorSavingNote": "Error saving note",
+    "failedToDeleteNote": "Failed to delete note",
+    "anErrorOccurredWhileDeletingTheNote": "An error occurred while deleting the note"
+  },
+  "substituteAssignment": {
+    "substituteAssignments": "Substitute Assignments"
+  },
+  "teacherAppointmentsScreen": {
+    "appointments": "Appointments"
+  },
+  "teacherAssignmentsListScreen": {
+    "noAssignmentsFound": "No assignments found",
+    "createOneToGetStarted": "Create one to get started!",
+    "submissions": "Submissions",
+    "loadingAssignments": "Loading assignments..."
+  },
+  "teacherAttendanceHistoryScreen": {
+    "loadingHistory": "Loading history...",
+    "present": "Present",
+    "pending": "Pending",
+    "onLeave": "On Leave",
+    "stayConsistent": "Stay Consistent!",
+    "everyCheckInReflectsYourCommitmentToExcellence": "Every check-in reflects your commitment to excellence.",
+    "attendanceHistory": "Attendance History",
+    "noRecordsFound": "No Records Found",
+    "youHavenTMarkedYourAttendanceYetCheckInFromThe": "You haven't marked your attendance yet. Check-in from the main dashboard.",
+    "approvedByAdmin": "Approved by Admin"
+  },
+  "teacherAttendanceScreen": {
+    "selectAClassToMarkAttendance": "Select a class to mark attendance.",
+    "selectADateToViewOrMarkAttendance": "Select a date to view or mark attendance.",
+    "markAllPresent": "Mark All Present",
+    "markAllAbsent": "Mark All Absent",
+    "loadingAttendanceData": "Loading attendance data...",
+    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis)."
+  },
+  "teacherChangePasswordScreen": {
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordUpdatedSuccessfully": "Password updated successfully!",
+    "newPasswordsDoNotMatch": "New passwords do not match."
+  },
+  "teacherCommunicationScreen": {
+    "discard": "Discard",
+    "loadingYourClasses": "Loading your classes…",
+    "noClassesFoundAssignedToYou": "No classes found assigned to you.",
+    "category": "Category",
+    "general": "General",
+    "homework": "Homework",
+    "testReminder": "Test Reminder",
+    "holiday": "Holiday",
+    "announcementTitle": "Announcement Title",
+    "typeYourMessageHere": "Type your message here...",
+    "pleaseSelectAtLeastOneClassAndProvideATitle": "Please select at least one class and provide a title.",
+    "pleaseProvideAMessageForTheTextAnnouncement": "Please provide a message for the text announcement.",
+    "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Please record or provide a video for the video announcement.",
+    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Camera/microphone permission denied. Please enable it in your browser settings."
+  },
+  "teacherCurriculumSelectionScreen": {
+    "loadingYourClasses": "Loading your classes...",
+    "selectAClass": "Select a Class",
+    "chooseAClassToViewItsOfficialSubjectCurriculum": "Choose a class to view its official subject curriculum.",
+    "noClassesAssignedToYouYet": "No classes assigned to you yet."
+  },
+  "teacherDashboard": {
+    "teacherProfileNotFound": "Teacher Profile Not Found"
+  },
+  "teacherExamManagement": {
+    "published": "Published",
+    "pending": "Pending",
+    "enterGrades": "Enter Grades",
+    "noExamsHaveBeenScheduledForYourClassesYet": "No exams have been scheduled for your classes yet."
+  },
+  "teacherNotificationSettingsScreen": {
+    "loadingSettings": "Loading settings...",
+    "newAssignmentSubmissions": "New Assignment Submissions",
+    "parentMessages": "Parent Messages",
+    "weeklyPerformanceSummary": "Weekly Performance Summary",
+    "forumAccess": "Forum Access",
+    "getAnEmailWhenAStudentSubmits": "Get an email when a student submits.",
+    "getPushNotificationsForNewMessages": "Get push notifications for new messages.",
+    "getAClassSummaryEveryThursday": "Get a class summary every Thursday.",
+    "enableOrDisableYourAccessToTheCollaborationFor": "Enable or disable your access to the collaboration forum.",
+    "couldNotSaveThisSettingPleaseTryAgain": "Could not save this setting. Please try again."
+  },
+  "teacherOverview": {
+    "readyToInspireToday": "Ready to inspire today?",
+    "recentAssignments": "Recent Assignments",
+    "noPendingTasksGreatJob": "No pending tasks. Great job!",
+    "quickActions": "Quick Actions",
+    "todaySSchedule": "Today's Schedule",
+    "itSTheWeekend": "It's the Weekend!",
+    "noClassesTodayEnjoyYourRest": "No classes today. Enjoy your rest.",
+    "beforeSchool": "Before School",
+    "inClassNow": "In Class Now",
+    "onBreak": "On Break",
+    "closingTime": "Closing Time",
+    "allClassesDoneForTodaySeeYouTomorrow": "All classes done for today. See you tomorrow!",
+    "totalStudents": "Total Students",
+    "totalAssignedClasses": "Total Assigned Classes",
+    "myClass": "My Class",
+    "attendance": "Attendance",
+    "myAttendance": "My Attendance",
+    "gradebook": "Gradebook",
+    "assessments": "Assessments",
+    "aiPlanner": "AI Planner",
+    "lessonNotes": "Lesson Notes",
+    "addStudent": "Add Student",
+    "atRiskStudents": "At-Risk Students",
+    "observationFeedback": "Observation Feedback",
+    "studentGate": "Student Gate",
+    "appointments": "Appointments",
+    "virtualClass": "Virtual Class",
+    "myFile": "My File",
+    "scanClassroom": "Scan Classroom",
+    "substituteRequests": "Substitute Requests",
+    "learningHub": "Learning Hub",
+    "reportIncident": "Report Incident",
+    "reportAnIssue": "Report an Issue",
+    "teaching": "Teaching",
+    "students": "Students",
+    "communication": "Communication",
+    "supportResources": "Support & Resources"
+  },
+  "teacherProfileEnhanced": {
+    "myProfile": "My Profile"
+  },
+  "teacherReportCardPreviewScreen": {
+    "selectAStudentToPreviewTheirReportCard": "Select a student to preview their report card.",
+    "noReportCardData": "No Report Card Data",
+    "thisStudentDoesNotHaveAReportCardDraftToPrevie": "This student does not have a report card draft to preview yet.",
+    "goBack": "Go Back",
+    "publish": "Publish",
+    "endOFTERMREPORTCARD": "END OF TERM REPORT CARD",
+    "subject": "Subject",
+    "noAssignedSubjectsFoundForThisStudentsReport": "No assigned subjects found for this students report.",
+    "totalDays": "Total Days",
+    "present": "Present",
+    "teacherSComment": "Teacher's Comment:",
+    "principalSComment": "Principal's Comment:",
+    "fullName": "Full Name",
+    "classGrade": "Class/Grade",
+    "termSemester": "Term/Semester",
+    "session": "Session",
+    "studentInformation": "Student Information",
+    "academicPerformance": "Academic Performance",
+    "skillsBehaviour": "Skills & Behaviour",
+    "psychomotorSkills": "Psychomotor Skills",
+    "attendanceRecord": "Attendance Record"
+  },
+  "teacherReportsScreen": {
+    "loadingClasses": "Loading classes...",
+    "selectAClassToViewReports": "Select a Class to View Reports",
+    "allClasses": "All Classes",
+    "generateAIClassSummary": "Generate AI Class Summary",
+    "loadingStudentData": "Loading student data...",
+    "avgScore": "Avg Score:",
+    "attendance": "Attendance:",
+    "noStudentsInThisClass": "No students in this class."
+  },
+  "teacherSalaryProfile": {
+    "couldnTLoadYourSalaryProfile": "Couldn't load your salary profile",
+    "thereWasAProblemReachingTheFinanceServicePleas": "There was a problem reaching the finance service. Please try again.",
+    "noSalaryConfigurationFoundPleaseContactHR": "No salary configuration found. Please contact HR.",
+    "mySalary": "My Salary",
+    "viewYourSalaryDetailsAndPayslips": "View your salary details and payslips",
+    "monthlySalary": "Monthly Salary",
+    "salaryDetails": "Salary Details",
+    "baseSalary": "Base Salary",
+    "paymentFrequency": "Payment Frequency",
+    "currency": "Currency",
+    "paymentDetails": "Payment Details",
+    "bankName": "Bank Name",
+    "accountNumber": "Account Number",
+    "recentPayslips": "Recent Payslips"
+  },
+  "teacherSecurityScreen": {
+    "checkingSecurityProtocols": "Checking security protocols...",
+    "changePassword": "Change Password",
+    "twoFactorAuthentication": "Two-Factor Authentication",
+    "enterYourCurrentAuthenticatorCodeToConfirmDisa": "Enter your current authenticator code to confirm disabling 2FA.",
+    "twoFactorAuthenticationEnabled": "Two-factor authentication enabled.",
+    "twoFactorAuthenticationDisabled": "Two-factor authentication disabled.",
+    "enterThe6DigitCodeFromYourAuthenticatorApp": "Enter the 6-digit code from your authenticator app.",
+    "enterYourCurrent6DigitAuthenticatorCodeToConfi": "Enter your current 6-digit authenticator code to confirm."
+  },
+  "teacherSelfAttendance": {
+    "loadingAttendanceRecords": "Loading attendance records...",
+    "couldnTLoadYourAttendance": "Couldn't load your attendance",
+    "thereWasAProblemReachingTheServerPleaseTryAgai": "There was a problem reaching the server. Please try again.",
+    "todaySAttendance": "Today's Attendance",
+    "checkInTime": "Check-in Time",
+    "checkOutTime": "Check-out Time",
+    "completed": "Completed",
+    "attendanceHistory": "Attendance History",
+    "noAttendanceRecordsYet": "No attendance records yet.",
+    "viewAttendanceHistory": "View Attendance History",
+    "attendanceMarkedSuccessfully": "Attendance marked successfully!"
+  },
+  "teacherSettingsScreen": {
+    "settings": "Settings"
+  },
+  "teacherUnifiedAttendanceScreen": {
+    "teacherUnifiedAttendance": "Teacher Unified Attendance"
+  },
+  "virtualClassScreen": {
+    "virtualClasses": "Virtual Classes"
+  },
+  "workloadCalculator": {
+    "workloadCalculator": "Workload Calculator"
   }
 }

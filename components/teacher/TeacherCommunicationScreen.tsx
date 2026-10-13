@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { AnnouncementCategory, Notice } from '../../types';
 import { CameraIcon, StopIcon, XCircleIcon, VideoIcon } from '../../constants';
@@ -16,6 +17,7 @@ const formatTime = (seconds: number) => {
 };
 
 const TeacherCommunicationScreen: React.FC = () => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [classes, setClasses] = useState<any[]>([]);
     const [mode, setMode] = useState<'text' | 'video'>('text');
@@ -76,15 +78,15 @@ const TeacherCommunicationScreen: React.FC = () => {
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
         if (selectedClasses.size === 0 || !title) {
-            toast.error("Please select at least one class and provide a title.");
+            toast.error(t('teacherCommunicationScreen.pleaseSelectAtLeastOneClassAndProvideATitle'));
             return;
         }
         if (mode === 'text' && !message) {
-            toast.error("Please provide a message for the text announcement.");
+            toast.error(t('teacherCommunicationScreen.pleaseProvideAMessageForTheTextAnnouncement'));
             return;
         }
         if (mode === 'video' && !videoBlobUrl) {
-            toast.error("Please record or provide a video for the video announcement.");
+            toast.error(t('teacherCommunicationScreen.pleaseRecordOrProvideAVideoForTheVideoAnnounce'));
             return;
         }
 
@@ -162,7 +164,7 @@ const TeacherCommunicationScreen: React.FC = () => {
             recordingIntervalRef.current = window.setInterval(() => setRecordingTime(t => t + 1), 1000);
         } catch (err) {
             console.error(err);
-            toast.error("Camera/microphone permission denied. Please enable it in your browser settings.");
+            toast.error(t('teacherCommunicationScreen.cameraMicrophonePermissionDeniedPleaseEnableIt'));
         }
     };
 
@@ -199,7 +201,7 @@ const TeacherCommunicationScreen: React.FC = () => {
         <div className="bg-white p-4 rounded-xl shadow-sm space-y-3">
             <video src={videoBlobUrl!} controls className="w-full aspect-video bg-black rounded-lg"></video>
             <div className="grid grid-cols-2 gap-3 items-center">
-                <button type="button" onClick={handleDiscardVideo} className="w-full py-2 bg-gray-200 text-gray-800 font-bold rounded-lg">Discard</button>
+                <button type="button" onClick={handleDiscardVideo} className="w-full py-2 bg-gray-200 text-gray-800 font-bold rounded-lg">{t('teacherCommunicationScreen.discard')}</button>
                 <div className="w-full flex items-center justify-center gap-1.5 text-green-700 font-semibold text-sm" aria-live="polite">
                     <span className="w-2 h-2 rounded-full bg-green-500" />
                     Video Attached
@@ -226,12 +228,12 @@ const TeacherCommunicationScreen: React.FC = () => {
                                             </button>
                                         );
                                     })}
-                                    {classesLoading && <p className="text-sm text-gray-500 col-span-2">Loading your classes…</p>}
+                                    {classesLoading && <p className="text-sm text-gray-500 col-span-2">{t('teacherCommunicationScreen.loadingYourClasses')}</p>}
                                     {/* classesLoading gates fetchMeta (see effect above) but not this
                                         render — `classes` stays [] for the whole loading window, which
                                         used to show "No classes found" before the fetch had a chance to
                                         finish, not just when it genuinely came back empty. */}
-                                    {!classesLoading && classes.length === 0 && <p className="text-sm text-gray-500 col-span-2">No classes found assigned to you.</p>}
+                                    {!classesLoading && classes.length === 0 && <p className="text-sm text-gray-500 col-span-2">{t('teacherCommunicationScreen.noClassesFoundAssignedToYou')}</p>}
                                 </div>
                             </div>
 
@@ -244,19 +246,19 @@ const TeacherCommunicationScreen: React.FC = () => {
                             </div>
 
                             <div>
-                                <label htmlFor="announcement-category" className="text-lg font-bold text-gray-800 mb-2 block">Category</label>
+                                <label htmlFor="announcement-category" className="text-lg font-bold text-gray-800 mb-2 block">{t('teacherCommunicationScreen.category')}</label>
                                 <select
                                     id="announcement-category"
                                     value={selectedCategory}
                                     onChange={(e) => setSelectedCategory(e.target.value as AnnouncementCategory)}
                                     className="w-full px-4 py-2 text-gray-800 bg-white border rounded-lg font-semibold shadow-sm"
                                 >
-                                    <option value="General">General</option>
-                                    <option value="Homework">Homework</option>
-                                    <option value="Test Reminder">Test Reminder</option>
+                                    <option value="General">{t('teacherCommunicationScreen.general')}</option>
+                                    <option value="Homework">{t('teacherCommunicationScreen.homework')}</option>
+                                    <option value="Test Reminder">{t('teacherCommunicationScreen.testReminder')}</option>
                                     <option value="Event">Event</option>
                                     <option value="Urgent">Urgent</option>
-                                    <option value="Holiday">Holiday</option>
+                                    <option value="Holiday">{t('teacherCommunicationScreen.holiday')}</option>
                                 </select>
                             </div>
                         </div>
@@ -265,9 +267,9 @@ const TeacherCommunicationScreen: React.FC = () => {
                             <h3 className="text-lg font-bold text-gray-800 mb-2">3. Compose Message</h3>
                             <div className="space-y-4">
                                 <div className="bg-white p-4 rounded-xl shadow-sm space-y-4">
-                                    <input id="announcement-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Announcement Title" required className="w-full px-4 py-2 text-gray-800 bg-gray-50 border rounded-lg font-semibold" />
+                                    <input id="announcement-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('teacherCommunicationScreen.announcementTitle')} required className="w-full px-4 py-2 text-gray-800 bg-gray-50 border rounded-lg font-semibold" />
                                     {mode === 'text' && (
-                                        <textarea id="announcement-message" value={message} onChange={(e) => setMessage(e.target.value)} rows={10} placeholder="Type your message here..." className="w-full px-4 py-2 text-gray-700 bg-gray-50 border rounded-lg" />
+                                        <textarea id="announcement-message" value={message} onChange={(e) => setMessage(e.target.value)} rows={10} placeholder={t('teacherCommunicationScreen.typeYourMessageHere')} className="w-full px-4 py-2 text-gray-700 bg-gray-50 border rounded-lg" />
                                     )}
                                 </div>
                                 {mode === 'video' && !videoBlobUrl && <VideoRecorderUI />}

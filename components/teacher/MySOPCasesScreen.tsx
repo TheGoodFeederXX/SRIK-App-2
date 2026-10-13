@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const MySOPCasesScreen: React.FC<any> = ({ navigateTo }) => (
+const MySOPCasesScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="My Reported Cases"
+        title={t('mySOPCasesScreen.myReportedCases')}
         explanation="SOP case notes are not part of this school's records yet. Nothing you report here would be stored, so it has been switched off rather than leaving you with a box that silently loses what you type."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default MySOPCasesScreen;

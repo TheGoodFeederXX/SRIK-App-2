@@ -452,7 +452,18 @@
     "freeLearningResources": "Sumber Pembelajaran Percuma"
   },
   "learningHubScreen": {
-    "learningHub": "Hab Pembelajaran"
+    "learningHub": "Hab Pembelajaran",
+    "recommendFreeResourcesAndMonitorYourStudentsPr": "Syorkan sumber percuma dan pantau kemajuan murid anda.",
+    "educationalGames": "Permainan Pendidikan",
+    "allMyClasses": "Semua Kelas Saya",
+    "allMySubjects": "Semua Subjek Saya",
+    "noResourcesFound": "Tiada sumber dijumpai.",
+    "youHaveNoAssignedClassesYet": "Anda belum ada kelas ditugaskan.",
+    "selectOneOfYourClassesToMonitorProgress": "Pilih salah satu kelas anda untuk memantau kemajuan.",
+    "searchTopicsKeywords": "Cari topik, kata kunci...",
+    "couldNotLoadLearningHubResources": "Tidak dapat memuatkan sumber Hab Pembelajaran",
+    "selectOneOfYourClassesInTheMonitorTabFirstSoIK": "Pilih salah satu kelas anda dalam tab Pantau dahulu, supaya saya tahu kepada siapa hendak disyorkan.",
+    "couldNotRecommendThisResource": "Tidak dapat mengesyorkan sumber ini"
   },
   "newMessageScreen": {
     "nameYourGroup": "Namakan Kumpulan Anda",
@@ -697,5 +708,533 @@
   },
   "vocabularyPictionaryGame": {
     "vocabularyPictionaryGame": "Permainan Pictionary Perbendaharaan Kata"
+  },
+  "aIGameCreatorScreen": {
+    "aigameCreator": "Pencipta Permainan AI"
+  },
+  "aIPerformanceSummaryScreen": {
+    "analyzingClassPerformance": "Menganalisis Prestasi Kelas...",
+    "theAIIsCrunchingTheNumbersToProvideYouWithActi": "AI sedang menganalisis angka untuk memberikan pandangan yang boleh diambil tindakan.",
+    "overallSummary": "Ringkasan Keseluruhan",
+    "topPerformers": "Pencapai Terbaik",
+    "studentsNeedingSupport": "Murid Memerlukan Sokongan"
+  },
+  "assessmentsHub": {
+    "assessmentsQuizzes": "Penilaian & Kuiz",
+    "manageAllYourClassroomAssessmentsAndPracticeMa": "Urus semua penilaian kelas dan bahan latihan anda di satu tempat.",
+    "teachingTip": "Petua Pengajaran",
+    "manageAssignments": "Urus Tugasan",
+    "quizBuilder": "Pembina Kuiz",
+    "createEditAndGradeStudentAssignments": "Cipta, sunting dan gred tugasan murid",
+    "createManualAssessmentsAndPracticeQuizzes": "Cipta penilaian manual dan kuiz latihan"
+  },
+  "assignmentSubmissionsScreen": {
+    "assignmentSubmissions": "Penyerahan Tugasan"
+  },
+  "assignmentViewScreen": {
+    "openAnAssignmentToViewIt": "Buka tugasan untuk melihatnya.",
+    "assignmentPreview": "Pratonton Tugasan",
+    "spaceForPracticalWorkDiagram": "Ruang untuk kerja amali/rajah.",
+    "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "Untuk berkongsi, sila cetak/simpan sebagai PDF atau ambil tangkapan skrin."
+  },
+  "badgeSystem": {
+    "badgeSystem": "Sistem Lencana"
+  },
+  "cBTManagementScreen": {
+    "cbtExaminations": "CBT & Peperiksaan",
+    "createAssessmentsFromExcelQuestionBank": "Cipta penilaian daripada Excel (\"Bank Soalan\")",
+    "selectClass": "Pilih Kelas",
+    "subject": "Subjek",
+    "selectSubject": "Pilih Subjek",
+    "durationMins": "Tempoh (Minit)",
+    "totalMarks": "Jumlah Markah",
+    "processing": "Memproses...",
+    "uploadExcelFile": "Muat Naik Fail Excel",
+    "columnsNoQuestionABCDAnswer": "Lajur: No, Soalan, A, B, C, D, Jawapan",
+    "managedExams": "Peperiksaan Diurus",
+    "loadingData": "Memuatkan data...",
+    "noAssessmentFoundUploadOneToStart": "Tiada penilaian dijumpai. Muat naik satu untuk bermula.",
+    "uploadQuestionBankExcelFile": "Muat naik fail Excel bank soalan",
+    "deleteExam": "Padam Peperiksaan",
+    "areYouSureYouWantToDeleteThisExamThisActionCan": "Adakah anda pasti mahu memadam peperiksaan ini? Tindakan ini tidak boleh dibatalkan.",
+    "quizUploadedSuccessfully": "Kuiz berjaya dimuat naik!",
+    "examDeletedSuccessfully": "Peperiksaan berjaya dipadam",
+    "pleaseSelectAValidClassAndSubjectFirst": "Sila pilih Kelas dan Subjek yang sah dahulu.",
+    "couldNotDetermineYourSchoolPleaseRefreshAndTry": "Tidak dapat menentukan sekolah anda. Sila muat semula dan cuba lagi.",
+    "failedToUpdateStatus": "Gagal mengemas kini status.",
+    "failedToDeleteExam": "Gagal memadam peperiksaan"
+  },
+  "cBTScoresScreen": {
+    "cbtscores": "Skor CBT"
+  },
+  "certificateViewer": {
+    "certificateViewer": "Paparan Sijil"
+  },
+  "classAssignmentsScreen": {
+    "classAssignments": "Tugasan Kelas"
+  },
+  "classDetailScreen": {
+    "selectAClassToViewItsDetails": "Pilih kelas untuk melihat butirannya.",
+    "attendance": "Kehadiran",
+    "newAssignment": "Tugasan Baharu",
+    "noStudentsFoundInThisClass": "Tiada murid dijumpai dalam kelas ini."
+  },
+  "classGradebookScreen": {
+    "gradebook": "Buku Gred",
+    "selectAClass": "Pilih kelas...",
+    "loadingMarks": "Memuatkan markah...",
+    "noMarksRecordedYet": "Belum ada markah direkodkan.",
+    "student": "Murid",
+    "average": "Purata"
+  },
+  "collaborationForumScreen": {
+    "collaborationForum": "Forum Kerjasama"
+  },
+  "courseCatalog": {
+    "courseCatalog": "Katalog Kursus"
+  },
+  "createAssignmentScreen": {
+    "createAssignment": "Cipta Tugasan"
+  },
+  "createForumTopicScreen": {
+    "createNewTopic": "Cipta Topik Baharu",
+    "shareYourThoughtsWithTheTeacherCommunity": "Kongsi pandangan anda dengan komuniti guru",
+    "postingAsYourself": "Menghantar sebagai diri anda",
+    "category": "Kategori",
+    "shareYourIdeasQuestionsOrStartADiscussion": "Kongsi idea, soalan, atau mulakan perbincangan...",
+    "topicPostedSuccessfully": "Topik berjaya dihantar!",
+    "pleaseFillInBothTheTitleAndContent": "Sila isi kedua-dua tajuk dan kandungan.",
+    "failedToCreateTopicPleaseTryAgain": "Gagal mencipta topik. Sila cuba lagi."
+  },
+  "editTeacherProfileScreen": {
+    "profileNotFound": "Profil tidak dijumpai.",
+    "fullName": "Nama Penuh",
+    "emailAddress": "Alamat E-mel",
+    "emailCannotBeChangedDirectly": "E-mel tidak boleh diubah secara terus.",
+    "phoneNumber": "Nombor Telefon",
+    "subjectSpecializationCommaSeparated": "Pengkhususan Subjek (dipisah koma)",
+    "accountSecurity": "Keselamatan Akaun",
+    "username": "Nama Pengguna",
+    "changePassword": "Tukar Kata Laluan",
+    "mathematicsEnglishEtc": "Matematik, Bahasa Inggeris, dsb.",
+    "enterNewUsername": "Masuk nama pengguna baharu",
+    "teacher": "Guru",
+    "profileUpdatedSuccessfully": "Profil berjaya dikemas kini!",
+    "usernameUpdatedSuccessfully": "Nama pengguna berjaya dikemas kini!",
+    "failedToUploadPhotoPleaseTryAgain": "Gagal memuat naik foto. Sila cuba lagi."
+  },
+  "educationalGamesScreen": {
+    "educationalGames": "Permainan Pendidikan"
+  },
+  "forumTopicScreen": {
+    "noRepliesYetBeTheFirstToRespond": "Belum ada balasan. Jadilah yang pertama membalas!",
+    "writeAReply": "Tulis balasan...",
+    "replyPosted": "Balasan dihantar",
+    "failedToLoadConversation": "Gagal memuatkan perbualan.",
+    "failedToSendReply": "Gagal menghantar balasan"
+  },
+  "globalForumTopicScreen": {
+    "globalForumTopic": "Topik Forum Global"
+  },
+  "globalTeacherCommunityScreen": {
+    "globalTeacherCommunity": "Komuniti Guru Global"
+  },
+  "gradeEntryScreen": {
+    "saving": "Menyimpan...",
+    "allChangesSaved": "Semua perubahan disimpan",
+    "someGradesCouldNotBeSavedReEnterThemToRetry": "Sesetengah gred tidak dapat disimpan — masukkan semula untuk mencuba lagi.",
+    "gradesWillAutoSave": "Gred akan disimpan secara automatik.",
+    "selectAnExamToEnterGrades": "Pilih peperiksaan untuk memasukkan gred.",
+    "loadingStudentList": "Memuatkan senarai murid..."
+  },
+  "gradeSubmissionScreen": {
+    "gradeSubmission": "Penyerahan Gred"
+  },
+  "helpSupportScreen": {
+    "helpAndSupport": "Bantuan dan Sokongan"
+  },
+  "leaveRequest": {
+    "teacherProfileNotFoundPleaseContactHR": "Profil guru tidak dijumpai. Sila hubungi HR.",
+    "couldnTLoadYourLeaveRequests": "Tidak dapat memuatkan permohonan cuti anda",
+    "thereWasAProblemReachingTheServerPleaseTryAgai": "Ada masalah menghubungi pelayan. Sila cuba lagi.",
+    "leaveRequests": "Permohonan Cuti",
+    "submitAndTrackYourLeaveApplications": "Hantar dan jejak permohonan cuti anda",
+    "newRequest": "Permohonan Baharu",
+    "submitLeaveRequest": "Hantar Permohonan Cuti",
+    "duration": "Tempoh:",
+    "myLeaveRequests": "Permohonan Cuti Saya",
+    "adminComment": "Ulasan Pentadbir:",
+    "briefReasonForLeaveRequest": "Sebab ringkas permohonan cuti",
+    "anyAdditionalInformation": "Maklumat tambahan",
+    "leaveRequestSubmittedSuccessfully": "Permohonan cuti berjaya dihantar",
+    "teacherIDNotFound": "ID Guru tidak dijumpai",
+    "pleaseSelectStartAndEndDates": "Sila pilih tarikh mula dan tamat",
+    "endDateMustBeAfterStartDate": "Tarikh tamat mesti selepas tarikh mula",
+    "failedToSubmitLeaveRequest": "Gagal menghantar permohonan cuti"
+  },
+  "lessonContentScreen": {
+    "lessonContent": "Kandungan Pelajaran"
+  },
+  "lessonNotesUploadScreen": {
+    "lessonNotes": "Nota Pelajaran"
+  },
+  "lessonPlanDetailScreen": {
+    "noLessonPlansAvailable": "Tiada Rancangan Pelajaran Tersedia",
+    "generateAIResourcesToCreateLessonPlans": "Jana sumber AI untuk mencipta rancangan pelajaran",
+    "noAssessmentsAvailable": "Tiada Penilaian Tersedia",
+    "generateAIResourcesToCreateAssessments": "Jana sumber AI untuk mencipta penilaian",
+    "lessonPlans": "Rancangan Pelajaran",
+    "assessments": "Penilaian",
+    "openALessonPlanToViewItsDetails": "Buka rancangan pelajaran untuk melihat butirannya.",
+    "selectATermToViewResources": "Pilih penggal untuk melihat sumber.",
+    "aiActivityIdeas": "Idea Aktiviti AI",
+    "creativeIdeasFor": "Idea kreatif untuk:",
+    "generatingCreativeClassroomActivities": "Menjana aktiviti kelas yang kreatif...",
+    "materialsNeeded": "Bahan Diperlukan:",
+    "suggestAIActivity": "Cadangkan Aktiviti AI",
+    "aiGeneratedLessonPlan": "Rancangan Pelajaran Dijana AI"
+  },
+  "lessonPlannerScreen": {
+    "lessonPlanner": "Perancang Pelajaran"
+  },
+  "mentoringMatching": {
+    "mentoringMatching": "Padanan Pementoran"
+  },
+  "myAtRiskStudents": {
+    "myAtRiskStudents": "Murid Berisiko Saya"
+  },
+  "myClassHubScreen": {
+    "myClassHub": "Hab Kelas Saya"
+  },
+  "myObservations": {
+    "myObservations": "Pemerhatian Saya"
+  },
+  "myPDCourses": {
+    "myPDCourses": "Kursus PD Saya"
+  },
+  "mySOPCasesScreen": {
+    "myReportedCases": "Kes Dilaporkan Saya"
+  },
+  "newChatScreen": {
+    "newChat": "Sembang Baharu"
+  },
+  "pDCalendar": {
+    "pdcalendar": "Kalendar PD"
+  },
+  "payslipViewer": {
+    "myPayslips": "Slip Gaji Saya",
+    "viewAndDownloadYourSalaryPayslips": "Lihat dan muat turun slip gaji anda",
+    "couldnTLoadYourPayslips": "Tidak dapat memuatkan slip gaji anda",
+    "thereWasAProblemReachingThePayrollServicePleas": "Ada masalah menghubungi perkhidmatan gaji. Sila cuba lagi.",
+    "noPayslipsAvailableYet": "Belum ada slip gaji tersedia",
+    "grossSalary": "Gaji Kasar",
+    "deductions": "Potongan",
+    "netSalary": "Gaji Bersih",
+    "payslipDetails": "Butiran Slip Gaji",
+    "employeeID": "ID Pekerja",
+    "lineItems": "Item Baris",
+    "totalDeductions": "Jumlah Potongan",
+    "netPayout": "Bayaran Bersih",
+    "downloadPDF": "Muat Turun PDF",
+    "pleaseAllowPopUpsToDownloadYourPayslip": "Sila benarkan tetingkap timbul untuk memuat turun slip gaji anda."
+  },
+  "photoGalleryScreen": {
+    "photoGallery": "Galeri Foto"
+  },
+  "professionalDevelopmentScreen": {
+    "professionalDevelopment": "Pembangunan Profesional"
+  },
+  "quickAttendance": {
+    "classAttendance": "Kehadiran Kelas",
+    "noClassSelectedPleaseGoBackAndPickAClassFirst": "Tiada kelas dipilih. Sila kembali dan pilih kelas dahulu."
+  },
+  "quizBuilderScreen": {
+    "quizBuilder": "Pembina Kuiz",
+    "createAssessmentsForYourStudents": "Cipta penilaian untuk murid anda",
+    "saveDraft": "Simpan Draf",
+    "quizDetails": "Butiran Kuiz",
+    "quizTitle": "Tajuk Kuiz",
+    "subject": "Subjek",
+    "targetClass": "Kelas Sasaran",
+    "durationMinutes": "Tempoh (Minit)",
+    "descriptionInstructions": "Penerangan / Arahan",
+    "clickTheCircleNextToAnOptionToMarkItAsTheCorre": "Klik bulatan di sebelah pilihan untuk menandakannya sebagai jawapan betul.",
+    "noQuestionsAddedYet": "Belum ada soalan ditambah.",
+    "clickTheButtonsAboveToAddYourFirstQuestion": "Klik butang di atas untuk menambah soalan pertama anda.",
+    "markAsCorrectAnswer": "Tanda sebagai jawapan betul",
+    "instructionsForStudents": "Arahan untuk murid...",
+    "enterYourQuestionHere": "Masukkan soalan anda di sini...",
+    "pleaseProvideATitleSubjectAndAtLeastOneQuestio": "Sila berikan tajuk, subjek, dan sekurang-kurangnya satu soalan.",
+    "teacherProfileNotFoundPleaseTryReloading": "Profil guru tidak dijumpai. Sila cuba muat semula.",
+    "missingSchoolIDPleaseTryReloading": "ID Sekolah hilang. Sila cuba muat semula."
+  },
+  "recognitionPlatform": {
+    "recognitionPlatform": "Platform Pengiktirafan"
+  },
+  "reportCardInputScreen": {
+    "kemasukanMarkah": "Kemasukan Markah"
+  },
+  "reportMaintenanceIssue": {
+    "reportAMaintenanceIssue": "Laporkan Isu Penyelenggaraan"
+  },
+  "resourceSharing": {
+    "resourceSharing": "Perkongsian Sumber",
+    "shareAndDiscoverTeachingMaterials": "Kongsi dan temui bahan pengajaran",
+    "uploadResource": "Muat Naik Sumber",
+    "noResourcesFound": "Tiada sumber dijumpai",
+    "subject": "Subjek:",
+    "download": "Muat Turun",
+    "noFileIsAttachedToThisResource": "Tiada fail dilampirkan pada sumber ini."
+  },
+  "resultsEntryEnhanced": {
+    "kemasukanMarkah": "Kemasukan Markah"
+  },
+  "sOPCaseDetailScreen": {
+    "noCaseSelected": "Tiada kes dipilih."
+  },
+  "scanClassroomScreen": {
+    "scanClassroom": "Imbas Kelas"
+  },
+  "selectTermForReportScreen": {
+    "selectAStudentFirst": "Pilih murid dahulu.",
+    "academicContext": "Konteks Akademik",
+    "selectAcademicSession": "Pilih Sesi Akademik",
+    "chooseTermToOpen": "Pilih Penggal untuk Dibuka"
+  },
+  "studentCredentialsScreen": {
+    "studentCredentials": "Kelayakan Murid"
+  },
+  "studentProfileScreen": {
+    "selectAStudentToViewTheirProfile": "Pilih murid untuk melihat profilnya.",
+    "enterReportCard": "Masuk Kad Laporan",
+    "academicPerformance": "Prestasi Akademik",
+    "pendingResult": "Menunggu Keputusan",
+    "noData": "Tiada Data",
+    "behavioralNotes": "Nota Tingkah Laku",
+    "addNote": "Tambah Nota",
+    "positive": "Positif",
+    "negative": "Negatif",
+    "loadingNotes": "Memuatkan nota...",
+    "noBehavioralNotesRecorded": "Tiada nota tingkah laku direkodkan.",
+    "deleteNote": "Padam Nota",
+    "titleEGHelpful": "Tajuk (cth. Membantu)",
+    "noteDetails": "Butiran nota...",
+    "areYouSureYouWantToDeleteThisNoteThisCannotBeU": "Adakah anda pasti mahu memadam nota ini? Ini tidak boleh dibatalkan.",
+    "noteAddedSuccessfully": "Nota berjaya ditambah",
+    "noteDeletedSuccessfully": "Nota berjaya dipadam",
+    "failedToLoadStudentData": "Gagal memuatkan data murid",
+    "pleaseFillInBothATitleAndANote": "Sila isi kedua-dua tajuk dan nota.",
+    "failedToSaveNote": "Gagal menyimpan nota",
+    "errorSavingNote": "Ralat menyimpan nota",
+    "failedToDeleteNote": "Gagal memadam nota",
+    "anErrorOccurredWhileDeletingTheNote": "Ralat berlaku semasa memadam nota"
+  },
+  "substituteAssignment": {
+    "substituteAssignments": "Tugasan Ganti"
+  },
+  "teacherAppointmentsScreen": {
+    "appointments": "Temu Janji"
+  },
+  "teacherAssignmentsListScreen": {
+    "noAssignmentsFound": "Tiada tugasan dijumpai",
+    "createOneToGetStarted": "Cipta satu untuk bermula!",
+    "submissions": "Penyerahan",
+    "loadingAssignments": "Memuatkan tugasan..."
+  },
+  "teacherAttendanceHistoryScreen": {
+    "loadingHistory": "Memuatkan sejarah...",
+    "present": "Hadir",
+    "pending": "Menunggu",
+    "onLeave": "Bercuti",
+    "stayConsistent": "Kekal Konsisten!",
+    "everyCheckInReflectsYourCommitmentToExcellence": "Setiap kehadiran mencerminkan komitmen anda kepada kecemerlangan.",
+    "attendanceHistory": "Sejarah Kehadiran",
+    "noRecordsFound": "Tiada Rekod Dijumpai",
+    "youHavenTMarkedYourAttendanceYetCheckInFromThe": "Anda belum menanda kehadiran anda. Daftar masuk dari papan pemuka utama.",
+    "approvedByAdmin": "Diluluskan oleh Pentadbir"
+  },
+  "teacherAttendanceScreen": {
+    "selectAClassToMarkAttendance": "Pilih kelas untuk menanda kehadiran.",
+    "selectADateToViewOrMarkAttendance": "Pilih tarikh untuk melihat atau menanda kehadiran.",
+    "markAllPresent": "Tanda Semua Hadir",
+    "markAllAbsent": "Tanda Semua Tidak Hadir",
+    "loadingAttendanceData": "Memuatkan data kehadiran...",
+    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis)."
+  },
+  "teacherChangePasswordScreen": {
+    "currentPassword": "Kata Laluan Semasa",
+    "newPassword": "Kata Laluan Baharu",
+    "confirmNewPassword": "Sahkan Kata Laluan Baharu",
+    "passwordUpdatedSuccessfully": "Kata laluan berjaya dikemas kini!",
+    "newPasswordsDoNotMatch": "Kata laluan baharu tidak sepadan."
+  },
+  "teacherCommunicationScreen": {
+    "discard": "Buang",
+    "loadingYourClasses": "Memuatkan kelas anda…",
+    "noClassesFoundAssignedToYou": "Tiada kelas ditugaskan kepada anda.",
+    "category": "Kategori",
+    "general": "Umum",
+    "homework": "Kerja Rumah",
+    "testReminder": "Peringatan Ujian",
+    "holiday": "Cuti Umum",
+    "announcementTitle": "Tajuk Pengumuman",
+    "typeYourMessageHere": "Taip mesej anda di sini...",
+    "pleaseSelectAtLeastOneClassAndProvideATitle": "Sila pilih sekurang-kurangnya satu kelas dan berikan tajuk.",
+    "pleaseProvideAMessageForTheTextAnnouncement": "Sila berikan mesej untuk pengumuman teks.",
+    "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Sila rakam atau berikan video untuk pengumuman video.",
+    "cameraMicrophonePermissionDeniedPleaseEnableIt": "Kebenaran kamera/mikrofon ditolak. Sila hidupkannya dalam tetapan pelayar anda."
+  },
+  "teacherCurriculumSelectionScreen": {
+    "loadingYourClasses": "Memuatkan kelas anda...",
+    "selectAClass": "Pilih Kelas",
+    "chooseAClassToViewItsOfficialSubjectCurriculum": "Pilih kelas untuk melihat kurikulum subjek rasminya.",
+    "noClassesAssignedToYouYet": "Belum ada kelas ditugaskan kepada anda."
+  },
+  "teacherDashboard": {
+    "teacherProfileNotFound": "Profil Guru Tidak Dijumpai"
+  },
+  "teacherExamManagement": {
+    "published": "Diterbitkan",
+    "pending": "Menunggu",
+    "enterGrades": "Masuk Gred",
+    "noExamsHaveBeenScheduledForYourClassesYet": "Belum ada peperiksaan dijadualkan untuk kelas anda."
+  },
+  "teacherNotificationSettingsScreen": {
+    "loadingSettings": "Memuatkan tetapan...",
+    "newAssignmentSubmissions": "Penyerahan Tugasan Baharu",
+    "parentMessages": "Mesej Ibu Bapa",
+    "weeklyPerformanceSummary": "Ringkasan Prestasi Mingguan",
+    "forumAccess": "Akses Forum",
+    "getAnEmailWhenAStudentSubmits": "Dapatkan e-mel apabila murid menghantar.",
+    "getPushNotificationsForNewMessages": "Dapatkan pemberitahuan tolak untuk mesej baharu.",
+    "getAClassSummaryEveryThursday": "Dapatkan ringkasan kelas setiap Khamis.",
+    "enableOrDisableYourAccessToTheCollaborationFor": "Hidupkan atau matikan akses anda ke forum kerjasama.",
+    "couldNotSaveThisSettingPleaseTryAgain": "Tidak dapat menyimpan tetapan ini. Sila cuba lagi."
+  },
+  "teacherOverview": {
+    "readyToInspireToday": "Sedia memberi inspirasi hari ini?",
+    "recentAssignments": "Tugasan Terkini",
+    "noPendingTasksGreatJob": "Tiada tugasan tertunggak. Syabas!",
+    "quickActions": "Tindakan Pantas",
+    "todaySSchedule": "Jadual Hari Ini",
+    "itSTheWeekend": "Ini Hujung Minggu!",
+    "noClassesTodayEnjoyYourRest": "Tiada kelas hari ini. Nikmati masa rehat anda.",
+    "beforeSchool": "Sebelum Sekolah",
+    "inClassNow": "Sedang Dalam Kelas",
+    "onBreak": "Sedang Rehat",
+    "closingTime": "Masa Tutup",
+    "allClassesDoneForTodaySeeYouTomorrow": "Semua kelas hari ini selesai. Jumpa esok!",
+    "totalStudents": "Jumlah Murid",
+    "totalAssignedClasses": "Jumlah Kelas Ditugaskan",
+    "myClass": "Kelas Saya",
+    "attendance": "Kehadiran",
+    "myAttendance": "Kehadiran Saya",
+    "gradebook": "Buku Gred",
+    "assessments": "Penilaian",
+    "aiPlanner": "Perancang AI",
+    "lessonNotes": "Nota Pelajaran",
+    "addStudent": "Tambah Murid",
+    "atRiskStudents": "Murid Berisiko",
+    "observationFeedback": "Maklum Balas Pemerhatian",
+    "studentGate": "Pintu Murid",
+    "appointments": "Temu Janji",
+    "virtualClass": "Kelas Maya",
+    "myFile": "Fail Saya",
+    "scanClassroom": "Imbas Kelas",
+    "substituteRequests": "Permohonan Ganti",
+    "learningHub": "Hab Pembelajaran",
+    "reportIncident": "Laporkan Insiden",
+    "reportAnIssue": "Laporkan Isu",
+    "teaching": "Pengajaran",
+    "students": "Murid",
+    "communication": "Komunikasi",
+    "supportResources": "Sokongan & Sumber"
+  },
+  "teacherProfileEnhanced": {
+    "myProfile": "Profil Saya"
+  },
+  "teacherReportCardPreviewScreen": {
+    "selectAStudentToPreviewTheirReportCard": "Pilih murid untuk pratonton kad laporannya.",
+    "noReportCardData": "Tiada Data Kad Laporan",
+    "thisStudentDoesNotHaveAReportCardDraftToPrevie": "Murid ini belum mempunyai draf kad laporan untuk dipratonton.",
+    "goBack": "Kembali",
+    "publish": "Terbitkan",
+    "endOFTERMREPORTCARD": "KAD LAPORAN AKHIR PENGGAL",
+    "subject": "Subjek",
+    "noAssignedSubjectsFoundForThisStudentsReport": "Tiada subjek ditugaskan untuk laporan murid ini.",
+    "totalDays": "Jumlah Hari",
+    "present": "Hadir",
+    "teacherSComment": "Ulasan Guru:",
+    "principalSComment": "Ulasan Pengetua:",
+    "fullName": "Nama Penuh",
+    "classGrade": "Kelas/Gred",
+    "termSemester": "Penggal/Semester",
+    "session": "Sesi",
+    "studentInformation": "Maklumat Murid",
+    "academicPerformance": "Prestasi Akademik",
+    "skillsBehaviour": "Kemahiran & Tingkah Laku",
+    "psychomotorSkills": "Kemahiran Psikomotor",
+    "attendanceRecord": "Rekod Kehadiran"
+  },
+  "teacherReportsScreen": {
+    "loadingClasses": "Memuatkan kelas...",
+    "selectAClassToViewReports": "Pilih Kelas untuk Lihat Laporan",
+    "allClasses": "Semua Kelas",
+    "generateAIClassSummary": "Jana Ringkasan Kelas AI",
+    "loadingStudentData": "Memuatkan data murid...",
+    "avgScore": "Purata Skor:",
+    "attendance": "Kehadiran:",
+    "noStudentsInThisClass": "Tiada murid dalam kelas ini."
+  },
+  "teacherSalaryProfile": {
+    "couldnTLoadYourSalaryProfile": "Tidak dapat memuatkan profil gaji anda",
+    "thereWasAProblemReachingTheFinanceServicePleas": "Ada masalah menghubungi perkhidmatan kewangan. Sila cuba lagi.",
+    "noSalaryConfigurationFoundPleaseContactHR": "Tiada konfigurasi gaji dijumpai. Sila hubungi HR.",
+    "mySalary": "Gaji Saya",
+    "viewYourSalaryDetailsAndPayslips": "Lihat butiran gaji dan slip gaji anda",
+    "monthlySalary": "Gaji Bulanan",
+    "salaryDetails": "Butiran Gaji",
+    "baseSalary": "Gaji Asas",
+    "paymentFrequency": "Kekerapan Bayaran",
+    "currency": "Mata Wang",
+    "paymentDetails": "Butiran Bayaran",
+    "bankName": "Nama Bank",
+    "accountNumber": "Nombor Akaun",
+    "recentPayslips": "Slip Gaji Terkini"
+  },
+  "teacherSecurityScreen": {
+    "checkingSecurityProtocols": "Memeriksa protokol keselamatan...",
+    "changePassword": "Tukar Kata Laluan",
+    "twoFactorAuthentication": "Pengesahan Dua Faktor",
+    "enterYourCurrentAuthenticatorCodeToConfirmDisa": "Masukkan kod pengesah semasa anda untuk mengesahkan mematikan 2FA.",
+    "twoFactorAuthenticationEnabled": "Pengesahan dua faktor dihidupkan.",
+    "twoFactorAuthenticationDisabled": "Pengesahan dua faktor dimatikan.",
+    "enterThe6DigitCodeFromYourAuthenticatorApp": "Masukkan kod 6 digit daripada aplikasi pengesah anda.",
+    "enterYourCurrent6DigitAuthenticatorCodeToConfi": "Masukkan kod pengesah 6 digit semasa anda untuk mengesahkan."
+  },
+  "teacherSelfAttendance": {
+    "loadingAttendanceRecords": "Memuatkan rekod kehadiran...",
+    "couldnTLoadYourAttendance": "Tidak dapat memuatkan kehadiran anda",
+    "thereWasAProblemReachingTheServerPleaseTryAgai": "Ada masalah menghubungi pelayan. Sila cuba lagi.",
+    "todaySAttendance": "Kehadiran Hari Ini",
+    "checkInTime": "Masa Masuk",
+    "checkOutTime": "Masa Keluar",
+    "completed": "Selesai",
+    "attendanceHistory": "Sejarah Kehadiran",
+    "noAttendanceRecordsYet": "Belum ada rekod kehadiran.",
+    "viewAttendanceHistory": "Lihat Sejarah Kehadiran",
+    "attendanceMarkedSuccessfully": "Kehadiran berjaya ditanda!"
+  },
+  "teacherSettingsScreen": {
+    "settings": "Tetapan"
+  },
+  "teacherUnifiedAttendanceScreen": {
+    "teacherUnifiedAttendance": "Kehadiran Bersepadu Guru"
+  },
+  "virtualClassScreen": {
+    "virtualClasses": "Kelas Maya"
+  },
+  "workloadCalculator": {
+    "workloadCalculator": "Kalkulator Beban Kerja"
   }
 }

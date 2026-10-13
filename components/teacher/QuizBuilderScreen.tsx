@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
 import { PlusIcon, TrashIcon, SaveIcon, CheckCircleIcon, XCircleIcon, ClockIcon, getFormattedClassName } from '../../constants';
@@ -24,6 +25,7 @@ const INITIAL_FORM_DATA = {
 };
 
 const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherId: passedTeacherId }) => {
+    const { t } = useTranslation();
     const { user, currentSchool } = useAuth();
     const { currentBranch } = useSchoolScope();
     
@@ -144,7 +146,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
 
     const handleSaveQuiz = async (targetStatus: 'draft' | 'pending' | 'published' = 'published') => {
         if (!title || !subject || (targetStatus !== 'draft' && questions.length === 0)) {
-            toast.error('Please provide a title, subject, and at least one question.');
+            toast.error(t('quizBuilderScreen.pleaseProvideATitleSubjectAndAtLeastOneQuestio'));
             return;
         }
 
@@ -152,12 +154,12 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
         const finalTeacherId = passedTeacherId || profileId;
 
         if (!finalTeacherId) {
-            toast.error('Teacher profile not found. Please try reloading.');
+            toast.error(t('quizBuilderScreen.teacherProfileNotFoundPleaseTryReloading'));
             return;
         }
 
         if (!schoolId) {
-            toast.error('Missing School ID. Please try reloading.');
+            toast.error(t('quizBuilderScreen.missingSchoolIDPleaseTryReloading'));
             return;
         }
 
@@ -228,8 +230,8 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
             {/* Header */}
             <div className="bg-white px-6 py-4 border-b border-gray-200 flex justify-between items-center sticky top-0 z-10">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">Quiz Builder</h1>
-                    <p className="text-gray-500 text-sm">Create assessments for your students</p>
+                    <h1 className="text-2xl font-bold text-gray-800">{t('quizBuilderScreen.quizBuilder')}</h1>
+                    <p className="text-gray-500 text-sm">{t('quizBuilderScreen.createAssessmentsForYourStudents')}</p>
                 </div>
                 <div className="flex space-x-3">
                     <button onClick={onClose} className="px-4 py-2 text-gray-600 font-medium hover:bg-gray-100 rounded-lg">
@@ -241,7 +243,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                         className="px-4 py-2 bg-gray-600 text-white font-bold rounded-lg shadow hover:bg-gray-700 disabled:opacity-50 flex items-center space-x-2"
                     >
                         <SaveIcon className="w-5 h-5" />
-                        <span>Save Draft</span>
+                        <span>{t('quizBuilderScreen.saveDraft')}</span>
                     </button>
                     <button
                         onClick={() => handleSaveQuiz('pending')}
@@ -258,10 +260,10 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
 
                 {/* Quiz Details Card */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 space-y-4">
-                    <h2 className="text-lg font-bold text-gray-800 border-b pb-2">Quiz Details</h2>
+                    <h2 className="text-lg font-bold text-gray-800 border-b pb-2">{t('quizBuilderScreen.quizDetails')}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Quiz Title</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('quizBuilderScreen.quizTitle')}</label>
                             <input
                                 type="text"
                                 value={title}
@@ -271,7 +273,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('quizBuilderScreen.subject')}</label>
                             <input
                                 type="text"
                                 value={subject}
@@ -281,7 +283,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Target Class</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('quizBuilderScreen.targetClass')}</label>
                             <select
                                 value={selectedClassId}
                                 onChange={e => setSelectedClassId(e.target.value)}
@@ -297,7 +299,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                             </select>
                         </div>
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Duration (Minutes)</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('quizBuilderScreen.durationMinutes')}</label>
                             <div className="relative">
                                 <ClockIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                                 <input
@@ -309,13 +311,13 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                             </div>
                         </div>
                         <div className="md:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Description / Instructions</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">{t('quizBuilderScreen.descriptionInstructions')}</label>
                             <textarea
                                 value={description}
                                 onChange={e => setDescription(e.target.value)}
                                 className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                 rows={2}
-                                placeholder="Instructions for students..."
+                                placeholder={t('quizBuilderScreen.instructionsForStudents')}
                             />
                         </div>
                     </div>
@@ -356,7 +358,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                         type="text"
                                         value={q.text}
                                         onChange={e => updateQuestionText(Number(q.id), e.target.value)}
-                                        placeholder="Enter your question here..."
+                                        placeholder={t('quizBuilderScreen.enterYourQuestionHere')}
                                         className="w-full text-lg font-medium border-b border-gray-200 outline-none focus:border-blue-500 pb-2 bg-transparent"
                                     />
 
@@ -368,7 +370,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                                         onClick={() => setCorrectOption(Number(q.id), opt.id)}
                                                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${opt.isCorrect ? 'border-green-500 bg-green-50' : 'border-gray-300'
                                                             }`}
-                                                        title="Mark as correct answer"
+                                                        title={t('quizBuilderScreen.markAsCorrectAnswer')}
                                                         aria-label={opt.isCorrect ? 'Correct answer' : 'Mark as correct answer'}
                                                         aria-pressed={opt.isCorrect}
                                                     >
@@ -383,7 +385,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                                     />
                                                 </div>
                                             ))}
-                                            <p className="text-xs text-gray-400 italic mt-2 ml-9">Click the circle next to an option to mark it as the correct answer.</p>
+                                            <p className="text-xs text-gray-400 italic mt-2 ml-9">{t('quizBuilderScreen.clickTheCircleNextToAnOptionToMarkItAsTheCorre')}</p>
                                         </div>
                                     )}
 
@@ -399,8 +401,8 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
 
                     {questions.length === 0 && (
                         <div className="text-center py-12 bg-white rounded-xl border-2 border-dashed border-gray-200 text-gray-400">
-                            <p>No questions added yet.</p>
-                            <p className="text-sm">Click the buttons above to add your first question.</p>
+                            <p>{t('quizBuilderScreen.noQuestionsAddedYet')}</p>
+                            <p className="text-sm">{t('quizBuilderScreen.clickTheButtonsAboveToAddYourFirstQuestion')}</p>
                         </div>
                     )}
                 </div>

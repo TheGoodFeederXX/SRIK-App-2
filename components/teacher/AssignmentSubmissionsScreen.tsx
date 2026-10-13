@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const AssignmentSubmissionsScreen: React.FC<any> = ({ handleBack }) => (
+const AssignmentSubmissionsScreen: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Assignment Submissions"
+        title={t('assignmentSubmissionsScreen.assignmentSubmissions')}
         explanation="Assignment submissions are not managed here yet. There is no place in this system where a child hands work in, so nothing is collected."
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default AssignmentSubmissionsScreen;

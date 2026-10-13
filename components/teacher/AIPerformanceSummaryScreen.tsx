@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../lib/ai';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -16,6 +17,7 @@ interface AIPerformanceSummaryScreenProps {
 }
 
 const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({ students = [] }) => {
+    const { t } = useTranslation();
     const [summary, setSummary] = useState<SummaryData | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -116,8 +118,8 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
         return (
             <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-100">
                 <AIIcon className="w-12 h-12 text-purple-400 animate-pulse mb-4" />
-                <h2 className="text-xl font-bold text-gray-700">Analyzing Class Performance...</h2>
-                <p className="text-gray-500 mt-2">The AI is crunching the numbers to provide you with actionable insights.</p>
+                <h2 className="text-xl font-bold text-gray-700">{t('aIPerformanceSummaryScreen.analyzingClassPerformance')}</h2>
+                <p className="text-gray-500 mt-2">{t('aIPerformanceSummaryScreen.theAIIsCrunchingTheNumbersToProvideYouWithActi')}</p>
             </div>
         );
     }
@@ -138,7 +140,7 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
                     <div className="lg:col-span-2 bg-white rounded-xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-3">
                             <UserGroupIcon className="h-6 w-6 text-purple-600" />
-                            <h4 className="font-bold text-lg text-gray-800">Overall Summary</h4>
+                            <h4 className="font-bold text-lg text-gray-800">{t('aIPerformanceSummaryScreen.overallSummary')}</h4>
                         </div>
                         <div className="prose prose-sm max-w-none text-gray-700">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{summary.overallSummary}</ReactMarkdown>
@@ -148,7 +150,7 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
                     <div className="bg-white rounded-xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-3">
                             <CheckCircleIcon className="h-6 w-6 text-green-500" />
-                            <h4 className="font-bold text-lg text-gray-800">Top Performers</h4>
+                            <h4 className="font-bold text-lg text-gray-800">{t('aIPerformanceSummaryScreen.topPerformers')}</h4>
                         </div>
                         <ul className="space-y-3">
                             {summary.topPerformers.map((student, idx) => (
@@ -166,7 +168,7 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
                     <div className="bg-white rounded-xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-3">
                             <TrendingUpIcon className="h-6 w-6 text-amber-500" />
-                            <h4 className="font-bold text-lg text-gray-800">Students Needing Support</h4>
+                            <h4 className="font-bold text-lg text-gray-800">{t('aIPerformanceSummaryScreen.studentsNeedingSupport')}</h4>
                         </div>
                         <ul className="space-y-3">
                             {summary.studentsNeedingSupport.map((student, idx) => (

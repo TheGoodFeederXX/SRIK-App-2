@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const MyClassHubScreen: React.FC<any> = ({ navigateTo }) => (
+const MyClassHubScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="My Class Hub"
+        title={t('myClassHubScreen.myClassHub')}
         explanation="This summary is not built yet. Your class list, the register and the gradebook all work and are the places to go."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default MyClassHubScreen;

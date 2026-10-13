@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import readXlsxFile from 'read-excel-file';
 import { api } from '../../lib/api';
@@ -18,6 +19,7 @@ interface CBTManagementScreenProps {
 }
 
 const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, teacherId, schoolId: propSchoolId }) => {
+    const { t } = useTranslation();
     const [exams, setExams] = useState<CBTExam[]>([]);
     const { profile } = useProfile();
 
@@ -109,7 +111,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
         if (!file) return;
 
         if (!selectedClassId || !selectedSubjectId) {
-            toast.error("Please select a valid Class and Subject first.");
+            toast.error(t('cBTManagementScreen.pleaseSelectAValidClassAndSubjectFirst'));
             if (fileInputRef.current) fileInputRef.current.value = '';
             return;
         }
@@ -164,7 +166,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                 // upload must never silently attach to a different school's
                 // data. Fail closed with a clear error instead.
                 if (!activeSchoolId) {
-                    toast.error('Could not determine your school. Please refresh and try again.');
+                    toast.error(t('cBTManagementScreen.couldNotDetermineYourSchoolPleaseRefreshAndTry'));
                     setIsUploading(false);
                     return;
                 }
@@ -202,7 +204,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                 questions: questionsPayload
             });
 
-            toast.success("Quiz uploaded successfully!");
+            toast.success(t('cBTManagementScreen.quizUploadedSuccessfully'));
             loadInitialData();
 
         } catch (err: any) {
@@ -223,7 +225,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
         try {
             await api.updateQuizStatus(exam.id, { is_published: newStatus });
         } catch (error) {
-            toast.error("Failed to update status.");
+            toast.error(t('cBTManagementScreen.failedToUpdateStatus'));
             loadInitialData(); // Revert
         }
     };
@@ -231,10 +233,10 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
     const handleDelete = async (id: string) => {
         try {
             await api.deleteQuiz(id);
-            toast.success("Exam deleted successfully");
+            toast.success(t('cBTManagementScreen.examDeletedSuccessfully'));
             setExams(prev => prev.filter(e => e.id !== id));
         } catch (error) {
-            toast.error("Failed to delete exam");
+            toast.error(t('cBTManagementScreen.failedToDeleteExam'));
         }
     };
 
@@ -245,8 +247,8 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-gray-200">
                     <div>
-                        <h1 className="text-xl md:text-2xl font-bold text-slate-800">CBT & Examinations</h1>
-                        <p className="text-slate-500 mt-1 text-sm">Create assessments from Excel ("Question Bank")</p>
+                        <h1 className="text-xl md:text-2xl font-bold text-slate-800">{t('cBTManagementScreen.cbtExaminations')}</h1>
+                        <p className="text-slate-500 mt-1 text-sm">{t('cBTManagementScreen.createAssessmentsFromExcelQuestionBank')}</p>
                     </div>
                     {!isOnline && (
                         <div className="flex items-center text-amber-600 bg-amber-50 px-3 py-1 rounded-full text-xs font-bold mt-2 md:mt-0 self-start md:self-auto">
@@ -288,7 +290,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                 <div>
                                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Class</label>
                                     <select value={selectedClassId} onChange={(e) => setSelectedClassId(e.target.value)} className="w-full rounded-lg border-slate-300 py-2 text-sm">
-                                        <option value="">Select Class</option>
+                                        <option value="">{t('cBTManagementScreen.selectClass')}</option>
                                         {teacherClasses.map(c => (
                                             <option key={c.id} value={c.id}>
                                                 {getFormattedClassName(c.grade, c.section)}
@@ -297,20 +299,20 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                     </select>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Subject</label>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">{t('cBTManagementScreen.subject')}</label>
                                     <select value={selectedSubjectId} onChange={(e) => setSelectedSubjectId(e.target.value)} className="w-full rounded-lg border-slate-300 py-2 text-sm">
-                                        <option value="">Select Subject</option>
+                                        <option value="">{t('cBTManagementScreen.selectSubject')}</option>
                                         {filteredSubjects.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                                     </select>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Duration (Mins)</label>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">{t('cBTManagementScreen.durationMins')}</label>
                                     <input type="number" value={duration} onChange={(e) => setDuration(parseInt(e.target.value))} className="w-full rounded-lg border-slate-300 py-2 text-sm" />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Total Marks</label>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">{t('cBTManagementScreen.totalMarks')}</label>
                                     <input type="number" value={totalMarks} onChange={(e) => setTotalMarks(parseInt(e.target.value))} className="w-full rounded-lg border-slate-300 py-2 text-sm" />
                                 </div>
                             </div>
@@ -321,21 +323,21 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                             type="button"
                             onClick={() => fileInputRef.current?.click()}
                             className="w-full border-2 border-dashed border-slate-300 rounded-xl flex flex-col justify-center items-center p-6 cursor-pointer hover:bg-slate-50 hover:border-indigo-400 transition-all group"
-                            aria-label="Upload question bank Excel file"
+                            aria-label={t('cBTManagementScreen.uploadQuestionBankExcelFile')}
                         >
                             <input type="file" ref={fileInputRef} onChange={handleFileUpload} accept=".xlsx, .xls" className="hidden" />
                             {isUploading ? (
                                 <div className="text-center animate-pulse">
                                     <CloudUploadIcon className="h-10 w-10 text-indigo-500 mx-auto mb-2" />
-                                    <p className="text-indigo-600 font-medium text-sm">Processing...</p>
+                                    <p className="text-indigo-600 font-medium text-sm">{t('cBTManagementScreen.processing')}</p>
                                 </div>
                             ) : (
                                 <div className="text-center">
                                     <div className="bg-indigo-50 p-3 rounded-full inline-block mb-3 group-hover:bg-indigo-100 transition-colors">
                                         <CloudUploadIcon className="h-6 w-6 text-indigo-600" />
                                     </div>
-                                    <p className="font-semibold text-slate-700 text-sm">Upload Excel File</p>
-                                    <p className="text-xs text-slate-400 mt-1">Columns: No, Question, A, B, C, D, Answer</p>
+                                    <p className="font-semibold text-slate-700 text-sm">{t('cBTManagementScreen.uploadExcelFile')}</p>
+                                    <p className="text-xs text-slate-400 mt-1">{t('cBTManagementScreen.columnsNoQuestionABCDAnswer')}</p>
                                 </div>
                             )}
                         </button>
@@ -352,11 +354,11 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
 
                 {/* List of Exams */}
                 <div>
-                    <h2 className="text-lg font-bold text-slate-800 mb-4 px-1">Managed Exams</h2>
+                    <h2 className="text-lg font-bold text-slate-800 mb-4 px-1">{t('cBTManagementScreen.managedExams')}</h2>
                     {loading ? (
                         <div className="text-center py-12">
                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 mx-auto mb-2"></div>
-                            <p className="text-slate-500 text-sm">Loading data...</p>
+                            <p className="text-slate-500 text-sm">{t('cBTManagementScreen.loadingData')}</p>
                         </div>
                     ) : (
                         <div className="grid grid-cols-1 gap-4">
@@ -407,8 +409,8 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                                         setDeleteId(exam.id);
                                                     }}
                                                     className="text-red-500 hover:bg-red-50 p-2 rounded-full transition-colors"
-                                                    title="Delete Exam"
-                                                    aria-label="Delete Exam"
+                                                    title={t('cBTManagementScreen.deleteExam')}
+                                                    aria-label={t('cBTManagementScreen.deleteExam')}
                                                 >
                                                     <TrashIcon className="w-5 h-5" />
                                                 </button>
@@ -417,7 +419,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                     </div>
                                 ))}
                             {exams.length === 0 && (
-                                <div className="text-center py-12 text-slate-400 bg-slate-50 rounded-lg">No assessment found. Upload one to start.</div>
+                                <div className="text-center py-12 text-slate-400 bg-slate-50 rounded-lg">{t('cBTManagementScreen.noAssessmentFoundUploadOneToStart')}</div>
                             )}
                         </div>
                     )}
@@ -426,8 +428,8 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                 {/* Confirmation Modal for Deletion */}
                 <ConfirmationModal
                     isOpen={!!deleteId}
-                    title="Delete Exam"
-                    message="Are you sure you want to delete this exam? This action cannot be undone."
+                    title={t('cBTManagementScreen.deleteExam')}
+                    message={t('cBTManagementScreen.areYouSureYouWantToDeleteThisExamThisActionCan')}
                     onConfirm={async () => {
                         if (deleteId) {
                             await handleDelete(deleteId);

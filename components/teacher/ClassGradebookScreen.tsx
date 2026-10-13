@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { listClassOptions } from '../../src/lib/supabase/academics';
@@ -45,6 +46,7 @@ const ClassGradebookScreen: React.FC<{
     classInfo?: { id: string, grade: number, section: string, subject: string, studentCount?: number };
     handleBack: () => void;
 }> = ({ classInfo, handleBack }) => {
+    const { t } = useTranslation();
     const [classes, setClasses] = useState<{ id: string; label: string }[]>(
         classInfo ? [{ id: classInfo.id, label: `${classInfo.grade}${classInfo.section ? ' ' + classInfo.section : ''}` }] : [],
     );
@@ -162,7 +164,7 @@ const ClassGradebookScreen: React.FC<{
         <div className="flex flex-col h-full bg-gray-100">
             <header className="p-4 bg-white border-b border-gray-200 space-y-3">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-gray-800">Gradebook</h2>
+                    <h2 className="text-xl font-bold text-gray-800">{t('classGradebookScreen.gradebook')}</h2>
                     <button
                         onClick={handleBack}
                         className="text-sm font-semibold text-purple-600 hover:text-purple-800"
@@ -176,7 +178,7 @@ const ClassGradebookScreen: React.FC<{
                         onChange={e => setSelectedClass(e.target.value)}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-700"
                     >
-                        <option value="" disabled>Select a class...</option>
+                        <option value="" disabled>{t('classGradebookScreen.selectAClass')}</option>
                         {classes.map(c => (
                             <option key={c.id} value={c.id}>{c.label}</option>
                         ))}
@@ -197,10 +199,10 @@ const ClassGradebookScreen: React.FC<{
 
             <main className="flex-grow p-4 overflow-auto">
                 {loading ? (
-                    <p className="text-center py-6 text-gray-500">Loading marks...</p>
+                    <p className="text-center py-6 text-gray-500">{t('classGradebookScreen.loadingMarks')}</p>
                 ) : rows.length === 0 ? (
                     <div className="text-center py-10 space-y-2">
-                        <p className="text-gray-600 font-medium">No marks recorded yet.</p>
+                        <p className="text-gray-600 font-medium">{t('classGradebookScreen.noMarksRecordedYet')}</p>
                         <p className="text-sm text-gray-500">
                             Marks are entered from a scheduled exam or PBD, using
                             &ldquo;Enter Grades&rdquo;. Nothing has been scheduled for this class yet.
@@ -211,11 +213,11 @@ const ClassGradebookScreen: React.FC<{
                         <table className="min-w-full text-sm">
                             <thead>
                                 <tr className="border-b border-gray-200 text-left text-gray-600">
-                                    <th className="px-3 py-2 font-semibold">Student</th>
+                                    <th className="px-3 py-2 font-semibold">{t('classGradebookScreen.student')}</th>
                                     {assessmentTitles.map(title => (
                                         <th key={title} className="px-3 py-2 font-semibold">{title}</th>
                                     ))}
-                                    <th className="px-3 py-2 font-semibold">Average</th>
+                                    <th className="px-3 py-2 font-semibold">{t('classGradebookScreen.average')}</th>
                                 </tr>
                             </thead>
                             <tbody>

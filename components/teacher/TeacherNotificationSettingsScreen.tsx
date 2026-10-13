@@ -1,5 +1,6 @@
 import { toast } from 'react-hot-toast';
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MailIcon, BellIcon, NotificationIcon, ShieldCheckIcon } from '../../constants';
 import { api } from '../../lib/api';
 
@@ -29,6 +30,7 @@ interface TeacherNotificationSettingsScreenProps {
 }
 
 const TeacherNotificationSettingsScreen: React.FC<TeacherNotificationSettingsScreenProps> = ({ teacherId }) => {
+    const { t } = useTranslation();
     const [settings, setSettings] = useState({
         newSubmission: true,
         parentMessage: true,
@@ -68,39 +70,39 @@ const TeacherNotificationSettingsScreen: React.FC<TeacherNotificationSettingsScr
         } catch (err) {
             console.error('Error updating settings:', err);
             setSettings(settings); // roll the switch back — it was never saved
-            toast.error('Could not save this setting. Please try again.');
+            toast.error(t('teacherNotificationSettingsScreen.couldNotSaveThisSettingPleaseTryAgain'));
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-400">Loading settings...</div>;
+    if (loading) return <div className="p-8 text-center text-gray-400">{t('teacherNotificationSettingsScreen.loadingSettings')}</div>;
 
     return (
         <div className="p-4 space-y-4 bg-gray-50 h-full overflow-y-auto">
             <SettingToggle
                 icon={<MailIcon className="text-purple-500" />}
-                label="New Assignment Submissions"
-                description="Get an email when a student submits."
+                label={t('teacherNotificationSettingsScreen.newAssignmentSubmissions')}
+                description={t('teacherNotificationSettingsScreen.getAnEmailWhenAStudentSubmits')}
                 enabled={settings.newSubmission}
                 onToggle={() => toggleSetting('newSubmission')}
             />
             <SettingToggle
                 icon={<BellIcon className="text-green-500" />}
-                label="Parent Messages"
-                description="Get push notifications for new messages."
+                label={t('teacherNotificationSettingsScreen.parentMessages')}
+                description={t('teacherNotificationSettingsScreen.getPushNotificationsForNewMessages')}
                 enabled={settings.parentMessage}
                 onToggle={() => toggleSetting('parentMessage')}
             />
             <SettingToggle
                 icon={<NotificationIcon className="text-sky-500" />}
-                label="Weekly Performance Summary"
-                description="Get a class summary every Thursday."
+                label={t('teacherNotificationSettingsScreen.weeklyPerformanceSummary')}
+                description={t('teacherNotificationSettingsScreen.getAClassSummaryEveryThursday')}
                 enabled={settings.weeklySummary}
                 onToggle={() => toggleSetting('weeklySummary')}
             />
             <SettingToggle
                 icon={<ShieldCheckIcon className="text-amber-500" />}
-                label="Forum Access"
-                description="Enable or disable your access to the collaboration forum."
+                label={t('teacherNotificationSettingsScreen.forumAccess')}
+                description={t('teacherNotificationSettingsScreen.enableOrDisableYourAccessToTheCollaborationFor')}
                 enabled={settings.forumEnabled}
                 onToggle={() => toggleSetting('forumEnabled')}
             />

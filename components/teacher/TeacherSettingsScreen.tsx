@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const TeacherSettingsScreen: React.FC<any> = ({ navigateTo }) => (
+const TeacherSettingsScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Settings"
+        title={t('teacherSettingsScreen.settings')}
         explanation="There are no settings to change here yet. Ask the office if your details need correcting."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default TeacherSettingsScreen;

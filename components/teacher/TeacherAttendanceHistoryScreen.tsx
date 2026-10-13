@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from '../../constants';
 import { toast } from 'react-hot-toast';
 import {
@@ -24,6 +25,7 @@ interface TeacherAttendanceHistoryScreenProps {
 }
 
 const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenProps> = ({ teacherId, handleBack }) => {
+    const { t } = useTranslation();
     const [history, setHistory] = useState<TeacherAttendance[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -141,7 +143,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
         return (
             <div className="flex flex-col items-center justify-center p-20">
                 <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-500 font-medium">Loading history...</p>
+                <p className="mt-4 text-gray-500 font-medium">{t('teacherAttendanceHistoryScreen.loadingHistory')}</p>
             </div>
         );
     }
@@ -190,10 +192,10 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
 
                     <div className="flex justify-center flex-wrap gap-4 mt-8 pb-2">
                         <span className="flex items-center text-xs font-black uppercase text-gray-500 tracking-wider">
-                            <div className="w-2.5 h-2.5 rounded-full bg-green-400 mr-2 shadow-sm"></div>Present
+                            <div className="w-2.5 h-2.5 rounded-full bg-green-400 mr-2 shadow-sm"></div>{t('teacherAttendanceHistoryScreen.present')}
                         </span>
                         <span className="flex items-center text-xs font-black uppercase text-gray-500 tracking-wider">
-                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-2 shadow-sm"></div>Pending
+                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-400 mr-2 shadow-sm"></div>{t('teacherAttendanceHistoryScreen.pending')}
                         </span>
                         <span className="flex items-center text-xs font-black uppercase text-gray-500 tracking-wider">
                             <div className="w-2.5 h-2.5 rounded-full bg-red-400 mr-2 shadow-sm"></div>Absent
@@ -209,7 +211,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 text-center group hover:border-green-100 transition-colors">
                             <p className="font-black text-3xl text-green-500 mb-1 leading-none">{stats.present}</p>
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Present</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('teacherAttendanceHistoryScreen.present')}</p>
                         </div>
                         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 text-center group hover:border-red-100 transition-colors">
                             <p className="font-black text-3xl text-red-500 mb-1 leading-none">{stats.absent}</p>
@@ -217,14 +219,14 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                         </div>
                         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 text-center group hover:border-amber-100 transition-colors">
                             <p className="font-black text-3xl text-amber-500 mb-1 leading-none">{stats.leave}</p>
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">On Leave</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('teacherAttendanceHistoryScreen.onLeave')}</p>
                         </div>
                     </div>
 
                     <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-3xl shadow-lg shadow-purple-100 text-white relative overflow-hidden">
                         <div className="relative z-10">
-                            <h4 className="font-black text-lg mb-1 tracking-tight">Stay Consistent!</h4>
-                            <p className="text-purple-100 text-xs font-medium leading-relaxed opacity-90">Every check-in reflects your commitment to excellence.</p>
+                            <h4 className="font-black text-lg mb-1 tracking-tight">{t('teacherAttendanceHistoryScreen.stayConsistent')}</h4>
+                            <p className="text-purple-100 text-xs font-medium leading-relaxed opacity-90">{t('teacherAttendanceHistoryScreen.everyCheckInReflectsYourCommitmentToExcellence')}</p>
                         </div>
                         <div className="absolute -right-4 -bottom-4 opacity-10 bg-white w-24 h-24 rounded-full"></div>
                         <CalendarIcon className="absolute right-4 top-4 w-12 h-12 text-white opacity-10" />
@@ -234,7 +236,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
 
             <div className="pt-6 border-t border-gray-100">
                 <div className="flex items-center justify-between mb-6 px-1">
-                    <h2 className="text-2xl font-black text-gray-800 tracking-tight">Attendance History</h2>
+                    <h2 className="text-2xl font-black text-gray-800 tracking-tight">{t('teacherAttendanceHistoryScreen.attendanceHistory')}</h2>
                     <div className="bg-purple-50 text-purple-600 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest border border-purple-100">
                         Last 100 Records
                     </div>
@@ -245,8 +247,8 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                         <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
                             <CalendarIcon className="h-10 w-10 text-gray-300" />
                         </div>
-                        <h3 className="text-xl font-black text-gray-700">No Records Found</h3>
-                        <p className="text-gray-400 max-w-xs mt-2 font-medium">You haven't marked your attendance yet. Check-in from the main dashboard.</p>
+                        <h3 className="text-xl font-black text-gray-700">{t('teacherAttendanceHistoryScreen.noRecordsFound')}</h3>
+                        <p className="text-gray-400 max-w-xs mt-2 font-medium">{t('teacherAttendanceHistoryScreen.youHavenTMarkedYourAttendanceYetCheckInFromThe')}</p>
                     </div>
                 ) : (
                     <div className="grid gap-4">
@@ -283,7 +285,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                                     {record.approved_by && (
                                         <div className="flex items-center gap-1.5 px-3 py-1 bg-gray-50 rounded-full">
                                             <div className="w-1 h-1 rounded-full bg-gray-300"></div>
-                                            <p className="text-xs text-gray-400 font-black uppercase tracking-widest">Approved by Admin</p>
+                                            <p className="text-xs text-gray-400 font-black uppercase tracking-widest">{t('teacherAttendanceHistoryScreen.approvedByAdmin')}</p>
                                         </div>
                                     )}
                                 </div>

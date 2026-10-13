@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
 
@@ -34,6 +35,7 @@ interface PayslipViewerProps {
 }
 
 const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslipId }) => {
+    const { t } = useTranslation();
     const [payslips, setPayslips] = useState<Payslip[]>([]);
     const [selectedPayslip, setSelectedPayslip] = useState<Payslip | null>(null);
     const [loading, setLoading] = useState(true);
@@ -111,7 +113,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                 </td>
             </tr>`).join('');
         const w = window.open('', '_blank', 'width=720,height=900');
-        if (!w) { toast.error('Please allow pop-ups to download your payslip.'); return; }
+        if (!w) { toast.error(t('payslipViewer.pleaseAllowPopUpsToDownloadYourPayslip')); return; }
         w.document.write(`<!doctype html><html><head><title>Payslip — ${period}</title>
             <style>
                 body{font-family:system-ui,Arial,sans-serif;color:#111827;padding:40px;max-width:640px;margin:0 auto}
@@ -147,8 +149,8 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
         <div className="p-6 space-y-6">
             {/* Header */}
             <div>
-                <h2 className="text-2xl font-bold text-gray-900">My Payslips</h2>
-                <p className="text-sm text-gray-600 mt-1">View and download your salary payslips</p>
+                <h2 className="text-2xl font-bold text-gray-900">{t('payslipViewer.myPayslips')}</h2>
+                <p className="text-sm text-gray-600 mt-1">{t('payslipViewer.viewAndDownloadYourSalaryPayslips')}</p>
             </div>
 
             {/* Payslips List */}
@@ -156,8 +158,8 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                 {errorOccurred ? (
                     <div className="col-span-2 bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
                         <DollarSignIcon className="w-16 h-16 text-amber-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-amber-900 mb-2">Couldn't load your payslips</h3>
-                        <p className="text-amber-700 mb-4">There was a problem reaching the payroll service. Please try again.</p>
+                        <h3 className="text-xl font-bold text-amber-900 mb-2">{t('payslipViewer.couldnTLoadYourPayslips')}</h3>
+                        <p className="text-amber-700 mb-4">{t('payslipViewer.thereWasAProblemReachingThePayrollServicePleas')}</p>
                         <button
                             onClick={() => { setErrorOccurred(false); fetchPayslips(); }}
                             className="px-5 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium"
@@ -168,7 +170,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                 ) : payslips.length === 0 ? (
                     <div className="col-span-2 text-center py-12 text-gray-500">
                         <DocumentTextIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p>No payslips available yet</p>
+                        <p>{t('payslipViewer.noPayslipsAvailableYet')}</p>
                     </div>
                 ) : (
                     payslips.map((payslip) => (
@@ -194,17 +196,17 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
 
                             <div className="space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-600">Gross Salary</span>
+                                    <span className="text-gray-600">{t('payslipViewer.grossSalary')}</span>
                                     <span className="font-medium">{formatMoney(payslip.gross_salary)}</span>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-600">Deductions</span>
+                                    <span className="text-gray-600">{t('payslipViewer.deductions')}</span>
                                     <span className="font-medium text-red-600">
                                         {formatMoney(payslip.total_deductions)}
                                     </span>
                                 </div>
                                 <div className="flex justify-between font-bold pt-2 border-t">
-                                    <span>Net Salary</span>
+                                    <span>{t('payslipViewer.netSalary')}</span>
                                     <span className="text-green-600">{formatMoney(payslip.net_salary)}</span>
                                 </div>
                             </div>
@@ -225,7 +227,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                             {/* Header */}
                             <div className="flex items-center justify-between mb-6 pb-4 border-b">
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">Payslip Details</h3>
+                                    <h3 className="text-xl font-bold text-gray-900">{t('payslipViewer.payslipDetails')}</h3>
                                     <p className="text-sm text-gray-600">
                                         {new Date(selectedPayslip.period_start).toLocaleDateString('ms-MY', {
                                             month: 'long',
@@ -240,7 +242,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                             <div className="mb-6 p-4 bg-gray-50 rounded-lg">
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <p className="text-gray-600">Employee ID</p>
+                                        <p className="text-gray-600">{t('payslipViewer.employeeID')}</p>
                                         <p className="font-semibold">{teacherId}</p>
                                     </div>
                                     <div>
@@ -254,7 +256,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
 
                             {/* Payslip Items */}
                             <div className="mb-6">
-                                <h4 className="font-semibold text-gray-900 mb-3">Line Items</h4>
+                                <h4 className="font-semibold text-gray-900 mb-3">{t('payslipViewer.lineItems')}</h4>
                                 <div className="space-y-2 border rounded-lg p-4">
                                     {selectedPayslip.items.map((item, idx) => (
                                         <div key={idx} className="flex justify-between items-center text-sm">
@@ -266,11 +268,11 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                     ))}
                                     <div className="pt-4 mt-2 border-t space-y-2">
                                         <div className="flex justify-between font-semibold">
-                                            <span className="text-gray-700">Gross Salary</span>
+                                            <span className="text-gray-700">{t('payslipViewer.grossSalary')}</span>
                                             <span>{formatMoney(selectedPayslip.gross_salary)}</span>
                                         </div>
                                         <div className="flex justify-between font-semibold text-red-600">
-                                            <span>Total Deductions</span>
+                                            <span>{t('payslipViewer.totalDeductions')}</span>
                                             <span>-{formatMoney(selectedPayslip.total_deductions)}</span>
                                         </div>
                                     </div>
@@ -279,7 +281,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
 
                             {/* Net Salary */}
                             <div className="p-6 bg-gradient-to-r from-green-600 to-green-800 rounded-lg text-white mb-6">
-                                <p className="text-sm text-green-100 font-medium">Net Payout</p>
+                                <p className="text-sm text-green-100 font-medium">{t('payslipViewer.netPayout')}</p>
                                 <p className="text-3xl font-bold mt-1">{formatMoney(selectedPayslip.net_salary)}</p>
                             </div>
 
@@ -296,7 +298,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                     className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center justify-center space-x-2"
                                 >
                                     <DownloadIcon className="w-5 h-5" />
-                                    <span>Download PDF</span>
+                                    <span>{t('payslipViewer.downloadPDF')}</span>
                                 </button>
                             </div>
                         </div>

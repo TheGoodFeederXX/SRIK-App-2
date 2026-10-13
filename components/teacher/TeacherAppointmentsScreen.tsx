@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const TeacherAppointmentsScreen: React.FC<any> = ({ navigateTo }) => (
+const TeacherAppointmentsScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Appointments"
+        title={t('teacherAppointmentsScreen.appointments')}
         explanation="Appointment requests are not managed here yet. Please arrange them with the office directly."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default TeacherAppointmentsScreen;

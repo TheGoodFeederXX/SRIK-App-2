@@ -2,6 +2,7 @@
 
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { CheckCircleIcon, XCircleIcon } from '../../constants';
@@ -123,6 +124,7 @@ interface TeacherMarkAttendanceScreenProps {
 }
 
 const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = ({ classInfo, currentBranchId }) => {
+    const { t } = useTranslation();
     const theme = THEME_CONFIG[DashboardType.Teacher];
     const [students, setStudents] = useState<Student[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -270,7 +272,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         return { total, present, absent, onLeave, late, presentPercentage };
     }, [visibleStudents]);
 
-    if (!classInfo) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a class to mark attendance.</div>;
+    if (!classInfo) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('teacherAttendanceScreen.selectAClassToMarkAttendance')}</div>;
 
     const formattedClassName = getFormattedClassName(classInfo.grade, classInfo.section, true, classInfo.subject);
 
@@ -288,7 +290,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         // normal school day, was refused with "Weekends are disabled", while
         // Friday, when there is no school, was accepted. `day === 5` is Friday.
         if (day === 5 || day === 6) {
-            toast.error('Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis).');
+            toast.error(t('teacherAttendanceScreen.tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer'));
             return;
         }
         // A teacher marks a register for today or a past day — never the future.
@@ -309,7 +311,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <div>
                         <p className="font-bold text-lg text-gray-800">{formattedClassName} Attendance</p>
-                        <p className="text-sm text-gray-500">Select a date to view or mark attendance.</p>
+                        <p className="text-sm text-gray-500">{t('teacherAttendanceScreen.selectADateToViewOrMarkAttendance')}</p>
                     </div>
                     <div className="flex items-center gap-3">
                         <input
@@ -342,7 +344,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                         className="flex justify-center items-center space-x-2 py-2 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-green-500 hover:bg-green-600 focus:outline-none"
                     >
                         <CheckCircleIcon className="w-5 h-5" />
-                        <span>Mark All Present</span>
+                        <span>{t('teacherAttendanceScreen.markAllPresent')}</span>
                     </motion.button>
                     <motion.button
                         whileHover={{ y: -1 }}
@@ -351,7 +353,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                         className="flex justify-center items-center space-x-2 py-2 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-red-500 hover:bg-red-600 focus:outline-none"
                     >
                         <XCircleIcon className="w-5 h-5" />
-                        <span>Mark All Absent</span>
+                        <span>{t('teacherAttendanceScreen.markAllAbsent')}</span>
                     </motion.button>
                 </div>
             </div>
@@ -359,7 +361,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
             {/* Student List */}
             <main className="flex-grow overflow-y-auto">
                 {isLoading ? (
-                    <CenteredLoader message="Loading attendance data..." className="py-12" />
+                    <CenteredLoader message={t('teacherAttendanceScreen.loadingAttendanceData')} className="py-12" />
                 ) : (
                     <ul className="divide-y divide-gray-200">
                         {visibleStudents.map((student, i) => (

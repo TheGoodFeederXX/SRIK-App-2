@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const LessonNotesUploadScreen: React.FC<any> = ({ handleBack }) => (
+const LessonNotesUploadScreen: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Lesson Notes"
+        title={t('lessonNotesUploadScreen.lessonNotes')}
         explanation="Lesson notes cannot be uploaded yet. Documents for a child are kept in the child's record instead."
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default LessonNotesUploadScreen;

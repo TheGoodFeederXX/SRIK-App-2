@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -22,9 +23,10 @@ interface ResultsEntryProps {
 }
 
 export default function ResultsEntryEnhanced({ handleBack }: ResultsEntryProps) {
+    const { t } = useTranslation();
     return (
         <ComingSoonScreen
-            title="Kemasukan Markah"
+            title={t('resultsEntryEnhanced.kemasukanMarkah')}
             explanation={
                 'Kemasukan markah penilaian dibuat melalui menu Penilaian. Sila gunakan ' +
                 'menu tersebut untuk merekod markah murid bagi penilaian yang telah ' +

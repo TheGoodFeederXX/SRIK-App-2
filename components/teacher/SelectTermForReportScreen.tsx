@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Student } from '../../types';
 import { ChevronRightIcon, DocumentTextIcon } from '../../constants';
 
@@ -10,7 +11,8 @@ interface SelectTermForReportScreenProps {
 }
 
 const SelectTermForReportScreen: React.FC<SelectTermForReportScreenProps> = ({ student, navigateTo, handleBack, subjectContext }) => {
-  if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a student first.</div>;
+    const { t } = useTranslation();
+  if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('selectTermForReportScreen.selectAStudentFirst')}</div>;
   const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
   
   // Helper to map grade number to class label
@@ -122,13 +124,13 @@ const SelectTermForReportScreen: React.FC<SelectTermForReportScreenProps> = ({ s
         <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-3xl text-center shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-16 -mt-16"></div>
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-5 rounded-full -ml-12 -mb-12"></div>
-          <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">Academic Context</h3>
+          <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">{t('selectTermForReportScreen.academicContext')}</h3>
           <p className="text-purple-100 font-medium text-sm">{student.name}</p>
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-4 px-2">
-            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">Select Academic Session</label>
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">{t('selectTermForReportScreen.selectAcademicSession')}</label>
             <span className="text-xs font-bold text-purple-600 bg-purple-50 px-3 py-1 rounded-full border border-purple-100">
                Swipe SideWays →
             </span>
@@ -187,7 +189,7 @@ const SelectTermForReportScreen: React.FC<SelectTermForReportScreenProps> = ({ s
         </div>
 
         <div className="space-y-4">
-          <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-2 block">Choose Term to Open</label>
+          <label className="text-xs font-bold text-gray-400 uppercase tracking-widest px-2 block">{t('selectTermForReportScreen.chooseTermToOpen')}</label>
           <div className="grid gap-4">
             {terms.map((term) => (
               <button

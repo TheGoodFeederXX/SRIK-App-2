@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { EXAM_TYPE_COLORS, EnterResultsIcon } from '../../constants';
 import { Exam } from '../../types';
@@ -24,6 +25,7 @@ interface TeacherExamManagementProps {
 }
 
 const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateTo, forceUpdate, handleBack, schoolId, teacherId, branchId }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [exams, setExams] = useState<Exam[]>([]);
     const [loading, setLoading] = useState(true);
@@ -105,8 +107,8 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                     <div className="flex justify-between items-center mt-2">
                                         <p className="text-sm font-medium">Status:
                                             {exam.isPublished
-                                                ? <span className="text-green-600 ml-1">Published</span>
-                                                : <span className="text-amber-600 ml-1">Pending</span>
+                                                ? <span className="text-green-600 ml-1">{t('teacherExamManagement.published')}</span>
+                                                : <span className="text-amber-600 ml-1">{t('teacherExamManagement.pending')}</span>
                                             }
                                         </p>
                                         <p className="text-sm text-gray-600 font-medium">{new Date(exam.date).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
@@ -118,7 +120,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                         className="text-green-600 p-1 flex items-center space-x-1.5 text-sm font-semibold hover:bg-green-50 rounded-md"
                                     >
                                         <EnterResultsIcon className="w-5 h-5" />
-                                        <span>Enter Grades</span>
+                                        <span>{t('teacherExamManagement.enterGrades')}</span>
                                     </button>
                                     {/* NO EDIT OR DELETE HERE, deliberately.
                                         A teacher holds `assessments.enter_scores` but
@@ -133,7 +135,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                     </div>
                 )}
 
-                {!loading && exams.length === 0 && <p className="text-center text-gray-500 py-8">No exams have been scheduled for your classes yet.</p>}
+                {!loading && exams.length === 0 && <p className="text-center text-gray-500 py-8">{t('teacherExamManagement.noExamsHaveBeenScheduledForYourClassesYet')}</p>}
             </main>
 
         </div>

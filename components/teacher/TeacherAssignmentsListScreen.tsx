@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Assignment } from '../../types';
 import { ChevronRightIcon, PlusIcon, CheckCircleIcon, ClipboardListIcon } from '../../constants';
@@ -15,6 +16,7 @@ interface TeacherAssignmentsListScreenProps {
 }
 
 const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> = ({ navigateTo, handleBack, forceUpdate, teacherId, branchId }) => {
+    const { t } = useTranslation();
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
     const [rawAssignments, setRawAssignments] = useState<any[]>([]);
@@ -105,15 +107,15 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
              */}
             <main className="flex-grow p-4 overflow-y-auto pb-40 lg:pb-28">
                 {loading && rawAssignments.length === 0 ? (
-                    <CenteredLoader message="Loading assignments..." />
+                    <CenteredLoader message={t('teacherAssignmentsListScreen.loadingAssignments')} />
                 ) : (
                     <>
                 {/* Empty State */}
                 {!loading && assignments.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-64 text-gray-500">
                         <ClipboardListIcon className="w-16 h-16 text-gray-300 mb-4" />
-                        <p className="text-lg font-medium">No assignments found</p>
-                        <p className="text-sm">Create one to get started!</p>
+                        <p className="text-lg font-medium">{t('teacherAssignmentsListScreen.noAssignmentsFound')}</p>
+                        <p className="text-sm">{t('teacherAssignmentsListScreen.createOneToGetStarted')}</p>
                     </div>
                 )}
 
@@ -152,7 +154,7 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
                                 <div className="flex items-center space-x-3 shrink-0">
                                     <div className="text-right">
                                         <p className="font-semibold text-purple-700 whitespace-nowrap">{totalSubmissions} / {totalStudentsPossibleSubmissions}</p>
-                                        <p className="text-xs text-gray-500">Submissions</p>
+                                        <p className="text-xs text-gray-500">{t('teacherAssignmentsListScreen.submissions')}</p>
                                     </div>
                                     <ChevronRightIcon className="h-5 w-5 text-gray-400" />
                                 </div>

@@ -1,5 +1,6 @@
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
 import { useAuth } from '../../context/AuthContext';
 import { ClassInfo } from '../../types';
@@ -17,6 +18,7 @@ interface TeacherCurriculumSelectionScreenProps {
 }
 
 const TeacherCurriculumSelectionScreen: React.FC<TeacherCurriculumSelectionScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const { classes: teacherClasses, loading } = useTeacherClasses(user?.id);
 
@@ -30,19 +32,19 @@ const TeacherCurriculumSelectionScreen: React.FC<TeacherCurriculumSelectionScree
     };
 
     if (loading) {
-        return <div className="p-8 text-center text-gray-500">Loading your classes...</div>;
+        return <div className="p-8 text-center text-gray-500">{t('teacherCurriculumSelectionScreen.loadingYourClasses')}</div>;
     }
 
     return (
         <div className="p-4 space-y-4 bg-gray-50">
              <div className="bg-purple-50 p-4 rounded-xl text-center">
                 <BookOpenIcon className="h-10 w-10 mx-auto text-purple-400 mb-2"/>
-                <h3 className="font-bold text-lg text-purple-800">Select a Class</h3>
-                <p className="text-sm text-purple-700">Choose a class to view its official subject curriculum.</p>
+                <h3 className="font-bold text-lg text-purple-800">{t('teacherCurriculumSelectionScreen.selectAClass')}</h3>
+                <p className="text-sm text-purple-700">{t('teacherCurriculumSelectionScreen.chooseAClassToViewItsOfficialSubjectCurriculum')}</p>
             </div>
             {teacherClasses.length === 0 ? (
                 <div className="text-center py-10 text-gray-500 bg-white rounded-xl shadow-sm border border-dashed border-gray-200">
-                    <p>No classes assigned to you yet.</p>
+                    <p>{t('teacherCurriculumSelectionScreen.noClassesAssignedToYouYet')}</p>
                 </div>
             ) : (
                 teacherClasses.map(classInfo => {

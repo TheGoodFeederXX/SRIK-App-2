@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -14,9 +15,11 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  * class has no homework set" — a claim about the teacher's own planning. Saying the
  * feature is not built is both true and impossible to mistake for information.
  */
-const ClassAssignmentsScreen: React.FC<any> = ({ handleBack }) => (
+const ClassAssignmentsScreen: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Class Assignments"
+        title={t('classAssignmentsScreen.classAssignments')}
         explanation={
             'Homework and assignments are not recorded in this system yet. '
             + 'When they are, you will be able to set work for a class, give it a due date, '
@@ -24,6 +27,7 @@ const ClassAssignmentsScreen: React.FC<any> = ({ handleBack }) => (
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default ClassAssignmentsScreen;

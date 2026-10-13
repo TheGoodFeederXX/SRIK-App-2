@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const VirtualClassScreen: React.FC<any> = ({ navigateTo }) => (
+const VirtualClassScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Virtual Classes"
+        title={t('virtualClassScreen.virtualClasses')}
         explanation="Virtual classrooms are not set up for this school yet. Online sessions are arranged separately when they are needed."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default VirtualClassScreen;

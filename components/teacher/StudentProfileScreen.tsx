@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { Student, BehaviorNote } from '../../types';
 import { DocumentTextIcon, BookOpenIcon, ClipboardListIcon, CheckCircleIcon, PlusIcon, SUBJECT_COLORS, ReportIcon, TrashIcon } from '../../constants';
@@ -15,6 +16,7 @@ interface StudentProfileScreenProps {
 }
 
 const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: rawStudent, navigateTo, handleBack, teacherId, subjectContext }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     // Defensive normalization: some callers (historically MyClassHubScreen)
     // passed the raw snake_case API row instead of the camelCase shape this
@@ -42,7 +44,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
         loadData();
     }, [student?.id]);
 
-    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a student to view their profile.</div>;
+    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('studentProfileScreen.selectAStudentToViewTheirProfile')}</div>;
 
     const loadData = async () => {
         setLoadingNotes(true);
@@ -55,7 +57,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
             setAcademicRecords(performance);
         } catch (error) {
             console.error('Error loading student profile data:', error);
-            toast.error('Failed to load student data');
+            toast.error(t('studentProfileScreen.failedToLoadStudentData'));
         } finally {
             setLoadingNotes(false);
         }
@@ -63,7 +65,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
 
     const handleAddNote = async () => {
         if (!newNote.trim() || !newNoteTitle.trim()) {
-            toast.error('Please fill in both a title and a note.');
+            toast.error(t('studentProfileScreen.pleaseFillInBothATitleAndANote'));
             return;
         }
 
@@ -86,18 +88,18 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
             });
 
             if (success) {
-                toast.success('Note added successfully');
+                toast.success(t('studentProfileScreen.noteAddedSuccessfully'));
                 setNewNote('');
                 setNewNoteTitle('');
                 setNewNoteType('Positive');
                 setIsAddingNote(false);
                 loadData(); // Refresh list
             } else {
-                toast.error('Failed to save note');
+                toast.error(t('studentProfileScreen.failedToSaveNote'));
             }
         } catch (error) {
             console.error('Error adding note:', error);
-            toast.error('Error saving note');
+            toast.error(t('studentProfileScreen.errorSavingNote'));
         }
     };
 
@@ -105,14 +107,14 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
         try {
             const success = await deleteBehaviorNote(id);
             if (success) {
-                toast.success('Note deleted successfully');
+                toast.success(t('studentProfileScreen.noteDeletedSuccessfully'));
                 loadData();
             } else {
-                toast.error('Failed to delete note');
+                toast.error(t('studentProfileScreen.failedToDeleteNote'));
             }
         } catch (error) {
             console.error('Error deleting behavior note:', error);
-            toast.error('An error occurred while deleting the note');
+            toast.error(t('studentProfileScreen.anErrorOccurredWhileDeletingTheNote'));
         }
     };
 
@@ -155,7 +157,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                         className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors"
                     >
                         <ReportIcon className="w-5 h-5" />
-                        <span>Enter Report Card</span>
+                        <span>{t('studentProfileScreen.enterReportCard')}</span>
                     </button>
                 </div>
 
@@ -163,7 +165,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                 <div className="lg:col-span-2 bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center space-x-2 mb-3">
                         <BookOpenIcon className="h-5 w-5 text-purple-600" />
-                        <h4 className="font-bold text-gray-800">Academic Performance</h4>
+                        <h4 className="font-bold text-gray-800">{t('studentProfileScreen.academicPerformance')}</h4>
                     </div>
                     <div className="space-y-2">
                         {(() => {
@@ -191,12 +193,12 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                                     return (
                                         <div key={termName} className="p-3 rounded-lg flex justify-between items-center bg-gray-50 border border-dashed border-gray-200 opacity-60">
                                             <div>
-                                                <span className="font-medium text-gray-400 block">Pending Result</span>
+                                                <span className="font-medium text-gray-400 block">{t('studentProfileScreen.pendingResult')}</span>
                                                 <span className="text-xs text-gray-400">{termName}</span>
                                             </div>
                                             <div className="text-right">
                                                 <span className="font-bold text-gray-300 block">--%</span>
-                                                <span className="text-xs font-bold text-gray-200 uppercase tracking-tighter">No Data</span>
+                                                <span className="text-xs font-bold text-gray-200 uppercase tracking-tighter">{t('studentProfileScreen.noData')}</span>
                                             </div>
                                         </div>
                                     );
@@ -211,12 +213,12 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                     <div className="flex justify-between items-center mb-3">
                         <div className="flex items-center space-x-2">
                             <ClipboardListIcon className="h-5 w-5 text-purple-600" />
-                            <h4 className="font-bold text-gray-800">Behavioral Notes</h4>
+                            <h4 className="font-bold text-gray-800">{t('studentProfileScreen.behavioralNotes')}</h4>
                         </div>
                         {!isAddingNote && (
                             <button onClick={() => setIsAddingNote(true)} className="flex items-center space-x-1 px-2 py-1 text-xs font-semibold text-purple-700 bg-purple-100 rounded-full hover:bg-purple-200">
                                 <PlusIcon className="w-4 h-4" />
-                                <span>Add Note</span>
+                                <span>{t('studentProfileScreen.addNote')}</span>
                             </button>
                         )}
                     </div>
@@ -224,20 +226,20 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                     {isAddingNote && (
                         <div className="space-y-3 mb-4 p-3 bg-purple-50 rounded-lg border border-purple-200 animate-fade-in">
                             <div className="flex justify-around bg-white p-1 rounded-lg shadow-inner">
-                                <button type="button" onClick={() => setNewNoteType('Positive')} className={`w-1/2 py-1 text-sm font-semibold rounded-md transition-colors ${newNoteType === 'Positive' ? 'bg-green-500 text-white shadow' : 'text-gray-600'}`}>Positive</button>
-                                <button type="button" onClick={() => setNewNoteType('Negative')} className={`w-1/2 py-1 text-sm font-semibold rounded-md transition-colors ${newNoteType === 'Negative' ? 'bg-red-500 text-white shadow' : 'text-gray-600'}`}>Negative</button>
+                                <button type="button" onClick={() => setNewNoteType('Positive')} className={`w-1/2 py-1 text-sm font-semibold rounded-md transition-colors ${newNoteType === 'Positive' ? 'bg-green-500 text-white shadow' : 'text-gray-600'}`}>{t('studentProfileScreen.positive')}</button>
+                                <button type="button" onClick={() => setNewNoteType('Negative')} className={`w-1/2 py-1 text-sm font-semibold rounded-md transition-colors ${newNoteType === 'Negative' ? 'bg-red-500 text-white shadow' : 'text-gray-600'}`}>{t('studentProfileScreen.negative')}</button>
                             </div>
                             <input
                                 type="text"
                                 value={newNoteTitle}
                                 onChange={(e) => setNewNoteTitle(e.target.value)}
-                                placeholder="Title (e.g. Helpful)"
+                                placeholder={t('studentProfileScreen.titleEGHelpful')}
                                 className="w-full p-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
                             />
                             <textarea
                                 value={newNote}
                                 onChange={(e) => setNewNote(e.target.value)}
-                                placeholder="Note details..."
+                                placeholder={t('studentProfileScreen.noteDetails')}
                                 className="w-full h-20 p-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
                             />
                             <div className="flex justify-end space-x-2">
@@ -249,7 +251,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
 
                     <div className="space-y-3 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
                         {loadingNotes ? (
-                            <div className="text-center py-4"><span className="text-purple-600 text-sm animate-pulse">Loading notes...</span></div>
+                            <div className="text-center py-4"><span className="text-purple-600 text-sm animate-pulse">{t('studentProfileScreen.loadingNotes')}</span></div>
                         ) : behaviorNotes.length > 0 ? (
                             behaviorNotes.map(note => {
                                 const isPositive = note.type === 'Positive';
@@ -264,8 +266,8 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                                                 <button
                                                     onClick={() => setNoteToDelete(note.id)}
                                                     className="p-1 hover:bg-gray-200 rounded-full transition-colors text-gray-400 hover:text-red-500"
-                                                    title="Delete note"
-                                                    aria-label="Delete note"
+                                                    title={t('studentProfileScreen.deleteNote')}
+                                                    aria-label={t('studentProfileScreen.deleteNote')}
                                                 >
                                                     <TrashIcon className="h-4 w-4" />
                                                 </button>
@@ -277,7 +279,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                                 );
                             })
                         ) : (
-                            <p className="text-sm text-gray-400 text-center py-4">No behavioral notes recorded.</p>
+                            <p className="text-sm text-gray-400 text-center py-4">{t('studentProfileScreen.noBehavioralNotesRecorded')}</p>
                         )}
                     </div>
                 </div>
@@ -286,8 +288,8 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                 isOpen={!!noteToDelete}
                 onClose={() => setNoteToDelete(null)}
                 onConfirm={() => { if (noteToDelete) handleDeleteNote(noteToDelete); }}
-                title="Delete Note"
-                message="Are you sure you want to delete this note? This cannot be undone."
+                title={t('studentProfileScreen.deleteNote')}
+                message={t('studentProfileScreen.areYouSureYouWantToDeleteThisNoteThisCannotBeU')}
                 confirmText="Delete"
                 isDanger
             />

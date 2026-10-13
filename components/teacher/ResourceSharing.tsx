@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 import { DocumentTextIcon, DownloadIcon, PlusIcon } from '../../constants';
@@ -22,6 +23,7 @@ interface ResourceSharingProps {
 }
 
 const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
+    const { t } = useTranslation();
     const [resources, setResources] = useState<Resource[]>([]);
     const [filter, setFilter] = useState('all');
     const [loading, setLoading] = useState(true);
@@ -61,7 +63,7 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
 
     const handleDownload = (resource: Resource) => {
         if (!resource.url) {
-            toast.error('No file is attached to this resource.');
+            toast.error(t('resourceSharing.noFileIsAttachedToThisResource'));
             return;
         }
         window.open(resource.url, '_blank', 'noopener,noreferrer');
@@ -87,15 +89,15 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
         <div className="p-6 space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Resource Sharing</h2>
-                    <p className="text-sm text-gray-600 mt-1">Share and discover teaching materials</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{t('resourceSharing.resourceSharing')}</h2>
+                    <p className="text-sm text-gray-600 mt-1">{t('resourceSharing.shareAndDiscoverTeachingMaterials')}</p>
                 </div>
                 <button
                     onClick={() => setIsUploadOpen(true)}
                     className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium flex items-center space-x-2"
                 >
                     <PlusIcon className="w-4 h-4" />
-                    <span>Upload Resource</span>
+                    <span>{t('resourceSharing.uploadResource')}</span>
                 </button>
             </div>
 
@@ -140,7 +142,7 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
                 ) : filteredResources.length === 0 ? (
                     <div className="col-span-full text-center py-12 text-gray-500">
                         <DocumentTextIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <p>No resources found</p>
+                        <p>{t('resourceSharing.noResourcesFound')}</p>
                     </div>
                 ) : (
                     filteredResources.map(resource => (
@@ -155,7 +157,7 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
                             <p className="text-sm text-gray-600 mb-4 line-clamp-2">{resource.description}</p>
 
                             <div className="space-y-2 text-sm text-gray-600 mb-4">
-                                <p><strong>Subject:</strong> {resource.subject}</p>
+                                <p><strong>{t('resourceSharing.subject')}</strong> {resource.subject}</p>
                                 {!!resource.grade && <p><strong>Grade:</strong> {resource.grade}</p>}
                                 <p><strong>By:</strong> {resource.author_name}</p>
                             </div>
@@ -169,7 +171,7 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
                                     className="px-3 py-1.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium flex items-center space-x-1"
                                 >
                                     <DownloadIcon className="w-4 h-4" />
-                                    <span>Download</span>
+                                    <span>{t('resourceSharing.download')}</span>
                                 </button>
                             </div>
                         </div>

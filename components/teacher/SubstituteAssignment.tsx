@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const SubstituteAssignment: React.FC<any> = ({ navigateTo }) => (
+const SubstituteAssignment: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Substitute Assignments"
+        title={t('substituteAssignment.substituteAssignments')}
         explanation="Cover arrangements are not managed here yet. The office tells you directly when you are covering a class."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default SubstituteAssignment;

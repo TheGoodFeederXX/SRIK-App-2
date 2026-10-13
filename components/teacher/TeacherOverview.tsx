@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import AIInsightsPanel from '../shared/AIInsightsPanel';
@@ -84,6 +85,7 @@ const parseClassName = (name: string) => {
 };
 
 const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUser, profile, teacherProfile, teacherId, schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
   const theme = THEME_CONFIG[DashboardType.Teacher];
 
   const { classes: teacherClasses, loading: classesLoading, teacherId: resolvedTeacherId, schoolId: resolvedSchoolId } = useTeacherClasses(teacherId);
@@ -295,53 +297,53 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
   const quickActionGroups = [
     {
-      title: 'Teaching',
+      title: t('teacherOverview.teaching'),
       items: [
         // Class Teacher only — the class-wide management hub.
         ...(isClassTeacher ? [{
-          label: "My Class", icon: <UserGroupIcon className="h-7 w-7" />,
+          label: t('teacherOverview.myClass'), icon: <UserGroupIcon className="h-7 w-7" />,
           action: () => navigateTo('myClassHub', 'My Class', { teacherId, schoolId, currentBranchId, classId: myRoles.class_teacher_of[0]?.id })
         }] : []),
-        { label: "Attendance", icon: <TeacherAttendanceIcon className="h-7 w-7" />, action: () => navigateTo('selectClassForAttendance', 'Select Class', { teacherId, schoolId }) },
-        { label: "My Attendance", icon: <CheckCircleIcon className="h-7 w-7" />, action: () => navigateTo('teacherSelfAttendance', 'My Attendance', { teacherId }) },
-        { label: "Gradebook", icon: <CalculatorIcon className="h-7 w-7" />, action: () => navigateTo('classGradebook', 'Class Gradebook', { teacherId }) },
+        { label: t('teacherOverview.attendance'), icon: <TeacherAttendanceIcon className="h-7 w-7" />, action: () => navigateTo('selectClassForAttendance', 'Select Class', { teacherId, schoolId }) },
+        { label: t('teacherOverview.myAttendance'), icon: <CheckCircleIcon className="h-7 w-7" />, action: () => navigateTo('teacherSelfAttendance', 'My Attendance', { teacherId }) },
+        { label: t('teacherOverview.gradebook'), icon: <CalculatorIcon className="h-7 w-7" />, action: () => navigateTo('classGradebook', 'Class Gradebook', { teacherId }) },
         { label: "Exams", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('examManagement', 'Manage Exams', { schoolId, teacherId, branchId: currentBranchId }) },
-        { label: "Assessments", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('assessmentsHub', 'Assessments & Quizzes', { teacherId, branchId: currentBranchId }) },
-        { label: "AI Planner", icon: <SparklesIcon className="h-7 w-7" />, action: () => navigateTo('lessonPlanner', 'AI Lesson Planner', { teacherId }) },
-        { label: "Lesson Notes", icon: <BookOpenIcon className="h-7 w-7" />, action: () => navigateTo('lessonNotesUpload', 'Upload Lesson Notes', { teacherId }) },
+        { label: t('teacherOverview.assessments'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('assessmentsHub', 'Assessments & Quizzes', { teacherId, branchId: currentBranchId }) },
+        { label: t('teacherOverview.aiPlanner'), icon: <SparklesIcon className="h-7 w-7" />, action: () => navigateTo('lessonPlanner', 'AI Lesson Planner', { teacherId }) },
+        { label: t('teacherOverview.lessonNotes'), icon: <BookOpenIcon className="h-7 w-7" />, action: () => navigateTo('lessonNotesUpload', 'Upload Lesson Notes', { teacherId }) },
         // "Reports" removed: already a direct nav item on both desktop (sidebar) and mobile (bottom nav).
       ],
     },
     {
-      title: 'Students',
+      title: t('teacherOverview.students'),
       items: [
-        { label: "Add Student", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>, action: () => navigateTo('addStudent', 'Add Student', { schoolId }) },
-        { label: "At-Risk Students", icon: atRiskIcon, action: () => navigateTo('myAtRiskStudents', 'At-Risk Students') },
-        { label: "Observation Feedback", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('myObservations', 'Classroom Observation Feedback') },
-        { label: "Student Gate", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>, action: () => navigateTo('studentGate', 'Student Departure') },
+        { label: t('teacherOverview.addStudent'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>, action: () => navigateTo('addStudent', 'Add Student', { schoolId }) },
+        { label: t('teacherOverview.atRiskStudents'), icon: atRiskIcon, action: () => navigateTo('myAtRiskStudents', 'At-Risk Students') },
+        { label: t('teacherOverview.observationFeedback'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('myObservations', 'Classroom Observation Feedback') },
+        { label: t('teacherOverview.studentGate'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>, action: () => navigateTo('studentGate', 'Student Departure') },
       ],
     },
     {
-      title: 'Communication',
+      title: t('teacherOverview.communication'),
       items: [
-        { label: "Appointments", icon: <CalendarPlusIcon className="h-7 w-7" />, action: () => navigateTo('appointments', 'Appointments', { teacherId }) },
-        { label: "Virtual Class", icon: <VideoIcon className="h-7 w-7" />, action: () => navigateTo('virtualClass', 'Virtual Classroom', { teacherId, schoolId }) },
+        { label: t('teacherOverview.appointments'), icon: <CalendarPlusIcon className="h-7 w-7" />, action: () => navigateTo('appointments', 'Appointments', { teacherId }) },
+        { label: t('teacherOverview.virtualClass'), icon: <VideoIcon className="h-7 w-7" />, action: () => navigateTo('virtualClass', 'Virtual Classroom', { teacherId, schoolId }) },
         // "Forum" removed: duplicates the Forum link already in both the
         // sidebar and the mobile bottom nav.
       ],
     },
     {
-      title: 'Support & Resources',
+      title: t('teacherOverview.supportResources'),
       items: [
-        { label: "My File", icon: <BriefcaseIcon className="h-7 w-7" />, action: () => navigateTo('myPersonnelFile', 'My Personnel File', { teacherId }) },
-        { label: "Scan Classroom", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10" /></svg>, action: () => navigateTo('scanClassroom', 'Scan Classroom', { teacherId }) },
-        { label: "Substitute Requests", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4" /></svg>, action: () => navigateTo('substituteAssignments', 'Substitute Assignments') },
+        { label: t('teacherOverview.myFile'), icon: <BriefcaseIcon className="h-7 w-7" />, action: () => navigateTo('myPersonnelFile', 'My Personnel File', { teacherId }) },
+        { label: t('teacherOverview.scanClassroom'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10" /></svg>, action: () => navigateTo('scanClassroom', 'Scan Classroom', { teacherId }) },
+        { label: t('teacherOverview.substituteRequests'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4" /></svg>, action: () => navigateTo('substituteAssignments', 'Substitute Assignments') },
         // "Resources" folded into Learning Hub below — AI Lesson Planner already
         // has its own tile above; E-Learning Library and Educational Games are
         // now quick-links inside the Learning Hub screen instead of a separate hub.
-        { label: "Learning Hub", icon: <ElearningIcon className="h-7 w-7" />, action: () => navigateTo('learningHub', 'Learning Hub', { teacherId, schoolId }) },
-        { label: "Report Incident", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, action: () => navigateTo('mySopCases', 'My Reported Cases') },
-        { label: "Report an Issue", icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>, action: () => navigateTo('reportMaintenanceIssue', 'Report an Issue') },
+        { label: t('teacherOverview.learningHub'), icon: <ElearningIcon className="h-7 w-7" />, action: () => navigateTo('learningHub', 'Learning Hub', { teacherId, schoolId }) },
+        { label: t('teacherOverview.reportIncident'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, action: () => navigateTo('mySopCases', 'My Reported Cases') },
+        { label: t('teacherOverview.reportAnIssue'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>, action: () => navigateTo('reportMaintenanceIssue', 'Report an Issue') },
       ],
     },
   ];
@@ -350,7 +352,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
     <div className="p-4 lg:p-6 space-y-6 bg-gray-50">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className={`p-5 rounded-2xl text-white shadow-lg ${theme.mainBg}`}>
         <h3 className="text-2xl font-bold">Welcome, {teacherProfile?.name || 'Teacher'}!</h3>
-        <p className="text-sm opacity-90 mt-1">Ready to inspire today?</p>
+        <p className="text-sm opacity-90 mt-1">{t('teacherOverview.readyToInspireToday')}</p>
         {(isClassTeacher || isSubjectTeacher) && (
           <div className="flex flex-wrap gap-2 mt-3">
             {isClassTeacher && myRoles.class_teacher_of.map((c: any) => (
@@ -369,10 +371,10 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
       <div className="grid grid-cols-2 gap-4">
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', bounce: 0, duration: 0.35, delay: 0.05 }}>
-          <StatCard label="Total Students" value={statsLoading ? '...' : stats.totalStudents} icon={<BriefcaseIcon />} />
+          <StatCard label={t('teacherOverview.totalStudents')} value={statsLoading ? '...' : stats.totalStudents} icon={<BriefcaseIcon />} />
         </motion.div>
         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ type: 'spring', bounce: 0, duration: 0.35, delay: 0.1 }}>
-          <StatCard label="Total Assigned Classes" value={statsLoading ? '...' : stats.totalClasses} icon={<ViewGridIcon />} />
+          <StatCard label={t('teacherOverview.totalAssignedClasses')} value={statsLoading ? '...' : stats.totalClasses} icon={<ViewGridIcon />} />
         </motion.div>
       </div>
 
@@ -420,7 +422,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
         <div className="lg:col-span-2 space-y-6">
           <div>
             <div className="flex justify-between items-end mb-2 px-1">
-              <h3 className="text-lg font-bold text-gray-800">Recent Assignments</h3>
+              <h3 className="text-lg font-bold text-gray-800">{t('teacherOverview.recentAssignments')}</h3>
               {ungradedAssignments.length > 1 && (
                 <button onClick={() => navigateTo('assignmentsList', 'Manage Assignments', {})} className="text-sm font-bold text-purple-600 hover:text-purple-800 px-2 py-1.5 -my-1 -mr-2 rounded-lg">
                   See more
@@ -458,12 +460,12 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                     <ChevronRightIcon className="w-5 h-5" />
                   </div>
                 </motion.button>
-              )) : <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">No pending tasks. Great job!</motion.div>}
+              )) : <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">{t('teacherOverview.noPendingTasksGreatJob')}</motion.div>}
             </div>
           </div>
 
           <div className="space-y-5">
-            <h3 className="text-lg font-bold text-gray-800 px-1">Quick Actions</h3>
+            <h3 className="text-lg font-bold text-gray-800 px-1">{t('teacherOverview.quickActions')}</h3>
             {quickActionGroups.filter(group => group.items.length > 0).map((group) => (
               <div key={group.title}>
                 <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">{group.title}</h4>
@@ -494,7 +496,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
         <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-6 lg:self-start">
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">Today's Schedule</h3>
+            <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">{t('teacherOverview.todaySSchedule')}</h3>
             {loading ? (
               <div className="space-y-3">
                 {Array(3).fill(0).map((_, i) => (
@@ -511,8 +513,8 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
             ) : scheduleStatus.type === 'weekend' ? (
               <div className="bg-white p-4 rounded-xl shadow-sm text-center">
                 <p className="text-2xl mb-1">🎉</p>
-                <p className="font-bold text-gray-700">It's the Weekend!</p>
-                <p className="text-xs text-gray-500 mt-1">No classes today. Enjoy your rest.</p>
+                <p className="font-bold text-gray-700">{t('teacherOverview.itSTheWeekend')}</p>
+                <p className="text-xs text-gray-500 mt-1">{t('teacherOverview.noClassesTodayEnjoyYourRest')}</p>
               </div>
             ) : todaySchedule.length === 0 ? (
               <div className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">
@@ -525,7 +527,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                 <AnimatePresence mode="wait">
                 {scheduleStatus.type === 'before_school' && (
                   <motion.div key="before" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="bg-blue-50 border border-blue-200 rounded-xl p-3">
-                    <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-0.5">Before School</p>
+                    <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-0.5">{t('teacherOverview.beforeSchool')}</p>
                     <p className="text-sm font-semibold text-blue-800">
                       First class at {formatTime12Hour((scheduleStatus as any).next.start_time)}
                     </p>
@@ -536,7 +538,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                   <motion.div key="inclass" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="bg-green-50 border-2 border-green-300 rounded-xl p-3 flex items-start gap-2.5">
                     <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse flex-shrink-0 mt-1" />
                     <div>
-                      <p className="text-xs font-bold text-green-700 uppercase tracking-wide mb-0.5">In Class Now</p>
+                      <p className="text-xs font-bold text-green-700 uppercase tracking-wide mb-0.5">{t('teacherOverview.inClassNow')}</p>
                       <p className="text-sm font-bold text-green-900">{(scheduleStatus as any).current.subject}</p>
                       <p className="text-xs text-green-700">{(scheduleStatus as any).current.class_name}</p>
                       {(scheduleStatus as any).current.end_time && (
@@ -547,7 +549,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                 )}
                 {scheduleStatus.type === 'break' && (
                   <motion.div key="break" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="bg-amber-50 border border-amber-200 rounded-xl p-3">
-                    <p className="text-xs font-bold text-amber-600 uppercase tracking-wide mb-0.5">On Break</p>
+                    <p className="text-xs font-bold text-amber-600 uppercase tracking-wide mb-0.5">{t('teacherOverview.onBreak')}</p>
                     <p className="text-sm font-semibold text-amber-800">
                       Next: {(scheduleStatus as any).next.subject} at {formatTime12Hour((scheduleStatus as any).next.start_time)}
                     </p>
@@ -557,8 +559,8 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                 {scheduleStatus.type === 'after_school' && (
                   <motion.div key="afterschool" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }} className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-center">
                     <p className="text-lg mb-0.5">🏠</p>
-                    <p className="font-bold text-slate-700 text-sm">Closing Time</p>
-                    <p className="text-xs text-slate-500">All classes done for today. See you tomorrow!</p>
+                    <p className="font-bold text-slate-700 text-sm">{t('teacherOverview.closingTime')}</p>
+                    <p className="text-xs text-slate-500">{t('teacherOverview.allClassesDoneForTodaySeeYouTomorrow')}</p>
                   </motion.div>
                 )}
                 </AnimatePresence>

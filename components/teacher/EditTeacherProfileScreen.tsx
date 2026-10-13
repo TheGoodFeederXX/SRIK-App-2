@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UserIcon, MailIcon, PhoneIcon, CameraIcon, BookOpenIcon } from '../../constants';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -15,6 +16,7 @@ interface EditTeacherProfileScreenProps {
 }
 
 const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onProfileUpdate, navigateTo }) => {
+    const { t } = useTranslation();
     // 1. Use centralized Profile Context
     const { profile, updateProfile } = useProfile();
     const { user: authUser } = useAuth();
@@ -78,7 +80,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
             setUploadingAvatar(true);
             api.uploadAvatar(file)
                 .then(({ url }) => { if (url) { setAvatar(url); setAvatarPreview(null); } })
-                .catch(() => { toast.error('Failed to upload photo. Please try again.'); })
+                .catch(() => { toast.error(t('editTeacherProfileScreen.failedToUploadPhotoPleaseTryAgain')); })
                 .finally(() => setUploadingAvatar(false));
 
             // Compress Image for an instant preview while the real upload runs
@@ -134,7 +136,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                 subjects // Passed to api.updateTeacher via ProfileContext
             } as any);
 
-            toast.success('Profile updated successfully!');
+            toast.success(t('editTeacherProfileScreen.profileUpdatedSuccessfully'));
 
             if (onProfileUpdate) {
                 onProfileUpdate({ name, avatarUrl: avatar });
@@ -152,7 +154,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
         setUpdatingUsername(true);
         try {
             await api.patch('/auth/update-username', { username });
-            toast.success('Username updated successfully!');
+            toast.success(t('editTeacherProfileScreen.usernameUpdatedSuccessfully'));
         } catch (err: any) {
             toast.error(err.message || 'Error updating username');
         } finally {
@@ -160,7 +162,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
         }
     };
 
-    if (!profile) return <div className="p-8 text-center text-gray-500">Profile not found.</div>;
+    if (!profile) return <div className="p-8 text-center text-gray-500">{t('editTeacherProfileScreen.profileNotFound')}</div>;
 
     return (
         <div className="flex flex-col h-full bg-gray-50">
@@ -169,7 +171,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                     {/* Photo Upload */}
                     <div className="flex justify-center">
                         <div className="relative">
-                            <img src={avatarPreview || avatar} alt="Teacher" className={`w-28 h-28 rounded-full object-cover shadow-md flex-shrink-0 aspect-square ${uploadingAvatar ? 'opacity-60' : ''}`} />
+                            <img src={avatarPreview || avatar} alt={t('editTeacherProfileScreen.teacher')} className={`w-28 h-28 rounded-full object-cover shadow-md flex-shrink-0 aspect-square ${uploadingAvatar ? 'opacity-60' : ''}`} />
                             <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-purple-600 p-2 rounded-full border-2 border-white cursor-pointer hover:bg-purple-700">
                                 <CameraIcon className="text-white h-4 w-4" />
                                 <input id="photo-upload" name="photo-upload" type="file" className="sr-only" accept="image/*" onChange={handleImageChange} />
@@ -180,7 +182,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                     {/* Form Fields */}
                     <div className="bg-white p-4 rounded-xl shadow-sm space-y-4">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">{t('editTeacherProfileScreen.fullName')}</label>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                                     <UserIcon className="w-5 h-5" />
@@ -189,17 +191,17 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">{t('editTeacherProfileScreen.emailAddress')}</label>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                                     <MailIcon className="w-5 h-5" />
                                 </span>
                                 <input type="email" id="email" value={email} disabled className="w-full pl-10 pr-3 py-3 text-gray-500 bg-gray-100 border border-gray-300 rounded-lg cursor-not-allowed" />
-                                <p className="text-xs text-gray-400 mt-1">Email cannot be changed directly.</p>
+                                <p className="text-xs text-gray-400 mt-1">{t('editTeacherProfileScreen.emailCannotBeChangedDirectly')}</p>
                             </div>
                         </div>
                         <div>
-                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">{t('editTeacherProfileScreen.phoneNumber')}</label>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                                     <PhoneIcon className="w-5 h-5" />
@@ -209,7 +211,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                         </div>
                         {/* Subject field */}
                         <div>
-                            <label htmlFor="subjects" className="block text-sm font-medium text-gray-700 mb-1">Subject Specialization (comma separated)</label>
+                            <label htmlFor="subjects" className="block text-sm font-medium text-gray-700 mb-1">{t('editTeacherProfileScreen.subjectSpecializationCommaSeparated')}</label>
                             <div className="relative">
                                 <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
                                     <BookOpenIcon className="w-5 h-5" />
@@ -220,18 +222,18 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                                     value={subjects.join(', ')}
                                     onChange={(e) => setSubjects(e.target.value.split(',').map(s => s.trim()).filter(s => s !== ''))}
                                     className="w-full pl-10 pr-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
-                                    placeholder="Mathematics, English, etc."
+                                    placeholder={t('editTeacherProfileScreen.mathematicsEnglishEtc')}
                                 />
                             </div>
                         </div>
 
                         {authUser?.user_metadata?.email_verified && (
                             <div className="mt-6 pt-6 border-t border-gray-200 space-y-6">
-                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider">Account Security</h3>
+                                <h3 className="text-sm font-bold text-gray-800 uppercase tracking-wider">{t('editTeacherProfileScreen.accountSecurity')}</h3>
 
                                 <div className="space-y-4">
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">Username</label>
+                                        <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 ml-1">{t('editTeacherProfileScreen.username')}</label>
                                         <div className="flex gap-2">
                                             <div className="relative flex-1">
                                                 <input
@@ -239,7 +241,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                                                     value={username}
                                                     onChange={e => setUsername(e.target.value)}
                                                     className="w-full bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block p-3 transition-all"
-                                                    placeholder="Enter new username"
+                                                    placeholder={t('editTeacherProfileScreen.enterNewUsername')}
                                                 />
                                             </div>
                                             <button
@@ -260,7 +262,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                                     >
                                         <span className="flex items-center space-x-2">
                                             <LockIcon className="w-4 h-4 text-purple-600" />
-                                            <span className="text-sm font-bold text-purple-700">Change Password</span>
+                                            <span className="text-sm font-bold text-purple-700">{t('editTeacherProfileScreen.changePassword')}</span>
                                         </span>
                                         <span className="text-purple-400">&rsaquo;</span>
                                     </button>

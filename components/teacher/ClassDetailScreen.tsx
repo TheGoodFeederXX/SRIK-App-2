@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { listStudents } from '../../src/lib/supabase/students';
 
 import { Student, ClassInfo } from '../../types';
@@ -13,6 +14,7 @@ interface ClassDetailScreenProps {
 }
 
 const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, navigateTo }) => {
+    const { t } = useTranslation();
   const { profile } = useProfile();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,7 +68,7 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
   // Auto-refresh when students table changes in real-time
   useRealtimeRefresh(['students'], fetchStudents);
 
-  if (!classInfo) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a class to view its details.</div>;
+  if (!classInfo) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('classDetailScreen.selectAClassToViewItsDetails')}</div>;
 
   const formattedClassName = classInfo.name || getFormattedClassName(classInfo.grade, classInfo.section);
 
@@ -82,11 +84,11 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
       <div className="p-4 grid grid-cols-2 gap-3 bg-white border-b border-gray-200">
         <button onClick={() => navigateTo('markAttendance', `Attendance: ${formattedClassName}`, { classInfo })} className="flex items-center justify-center space-x-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
           <TeacherAttendanceIcon className="w-5 h-5" />
-          <span>Attendance</span>
+          <span>{t('classDetailScreen.attendance')}</span>
         </button>
         <button onClick={() => navigateTo('assignmentCreator', 'New Assignment', { classInfo })} className="flex items-center justify-center space-x-2 py-3 px-4 bg-amber-500 text-white font-semibold rounded-xl shadow-md hover:bg-amber-600 transition-colors">
           <ClipboardListIcon className="w-5 h-5" />
-          <span>New Assignment</span>
+          <span>{t('classDetailScreen.newAssignment')}</span>
         </button>
       </div>
 
@@ -121,7 +123,7 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
           </div>
         ) : (
           <div className="text-center py-10 text-gray-500 bg-white rounded-xl border border-dashed border-gray-300">
-            <p>No students found in this class.</p>
+            <p>{t('classDetailScreen.noStudentsFoundInThisClass')}</p>
           </div>
         )}
       </main>

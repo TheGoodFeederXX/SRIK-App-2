@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, lazy, Suspense, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../layout/DashboardLayout';
 import { DashboardType } from '../../types';
 import { THEME_CONFIG } from '../../constants';
@@ -120,6 +121,7 @@ interface TeacherDashboardProps {
 }
 
 const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
+    const { t } = useTranslation();
    const {
      view, title, props: routeProps,
      navigateTo: pushView, replaceView, handleBack, canGoBack,
@@ -395,7 +397,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-3xl">👨‍🏫</span>
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">Teacher Profile Not Found</h2>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('teacherDashboard.teacherProfileNotFound')}</h2>
                 <p className="text-gray-600 mb-6">
                     We couldn't find a teacher record linked to your account.
                     Please contact the school administrator to set up your profile.

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { GeneratedAssessment } from '../../types';
 import { SchoolLogoIcon, DocumentTextIcon, ShareIcon } from '../../constants';
@@ -12,8 +13,9 @@ interface AssignmentViewScreenProps {
 }
 
 const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment, subject, className }) => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
-    if (!assessment) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Open an assignment to view it.</div>;
+    if (!assessment) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('assignmentViewScreen.openAnAssignmentToViewIt')}</div>;
 
     const handlePrint = () => {
         window.print();
@@ -29,14 +31,14 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
             }).catch((error) => { /* console.log('Error sharing:', error) */ });
         } else {
             // Fallback for browsers that do not support the Web Share API
-            toast.error('To share, please print/save as PDF or take a screenshot.', { duration: 4000 });
+            toast.error(t('assignmentViewScreen.toSharePleasePrintSaveAsPDFOrTakeAScreenshot'), { duration: 4000 });
         }
     };
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
             <div className="p-3 border-b border-gray-200 flex justify-between items-center flex-shrink-0 bg-white print:hidden">
-                <h2 className="text-lg font-bold text-gray-800">Assignment Preview</h2>
+                <h2 className="text-lg font-bold text-gray-800">{t('assignmentViewScreen.assignmentPreview')}</h2>
                 <div className="flex items-center space-x-2">
                     <button onClick={handleShare} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-sky-700 bg-sky-100 rounded-md hover:bg-sky-200">
                         <ShareIcon className="w-4 h-4" /><span>Share</span>
@@ -86,7 +88,7 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
                                         {[...Array(5)].map((_, i) => <div key={i} className="border-b-2 border-dotted h-6"></div>)}
                                     </div>
                                 )}
-                                {q.type === 'practical' && <div className="mt-2 p-2 border border-dashed rounded-md h-24 text-gray-400 text-sm">Space for practical work/diagram.</div>}
+                                {q.type === 'practical' && <div className="mt-2 p-2 border border-dashed rounded-md h-24 text-gray-400 text-sm">{t('assignmentViewScreen.spaceForPracticalWorkDiagram')}</div>}
                             </div>
                         ))}
                     </div>

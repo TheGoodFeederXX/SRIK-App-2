@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 
 // import { useProfile } from '../../context/ProfileContext'; // Removed profile dependency
@@ -35,6 +36,7 @@ interface RequestFormData {
 }
 
 const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const [leaveTypes, setLeaveTypes] = useState<LeaveType[]>([]);
     const [myRequests, setMyRequests] = useState<any[]>([]);
     const [showForm, setShowForm] = useState(false);
@@ -110,17 +112,17 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
         e.preventDefault();
 
         if (!teacherId) {
-            toast.error('Teacher ID not found');
+            toast.error(t('leaveRequest.teacherIDNotFound'));
             return;
         }
 
         if (!formData.start_date || !formData.end_date) {
-            toast.error('Please select start and end dates');
+            toast.error(t('leaveRequest.pleaseSelectStartAndEndDates'));
             return;
         }
 
         if (new Date(formData.end_date) < new Date(formData.start_date)) {
-            toast.error('End date must be after start date');
+            toast.error(t('leaveRequest.endDateMustBeAfterStartDate'));
             return;
         }
 
@@ -142,7 +144,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                 status: 'Pending'
             });
 
-            toast.success('Leave request submitted successfully');
+            toast.success(t('leaveRequest.leaveRequestSubmittedSuccessfully'));
             setShowForm(false);
             setFormData({
                 leave_type: leaveTypes.length > 0 ? leaveTypes[0].name : '',
@@ -162,7 +164,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
             }
         } catch (error: any) {
             console.error('Error submitting request:', error);
-            toast.error('Failed to submit leave request');
+            toast.error(t('leaveRequest.failedToSubmitLeaveRequest'));
         } finally {
             setSubmitting(false);
         }
@@ -193,7 +195,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
         return (
             <div className="p-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
-                    <p className="text-yellow-800">Teacher profile not found. Please contact HR.</p>
+                    <p className="text-yellow-800">{t('leaveRequest.teacherProfileNotFoundPleaseContactHR')}</p>
                 </div>
             </div>
         );
@@ -204,8 +206,8 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
             <div className="p-6">
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
                     <AlertTriangleIcon className="w-12 h-12 text-amber-300 mx-auto mb-3" />
-                    <p className="text-amber-800 font-semibold">Couldn't load your leave requests</p>
-                    <p className="text-amber-700 text-sm mt-1 mb-4">There was a problem reaching the server. Please try again.</p>
+                    <p className="text-amber-800 font-semibold">{t('leaveRequest.couldnTLoadYourLeaveRequests')}</p>
+                    <p className="text-amber-700 text-sm mt-1 mb-4">{t('leaveRequest.thereWasAProblemReachingTheServerPleaseTryAgai')}</p>
                     <button
                         onClick={initialize}
                         className="px-5 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
@@ -222,15 +224,15 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-900">Leave Requests</h2>
-                    <p className="text-sm text-gray-600 mt-1">Submit and track your leave applications</p>
+                    <h2 className="text-2xl font-bold text-gray-900">{t('leaveRequest.leaveRequests')}</h2>
+                    <p className="text-sm text-gray-600 mt-1">{t('leaveRequest.submitAndTrackYourLeaveApplications')}</p>
                 </div>
                 <button
                     onClick={() => setShowForm(true)}
                     className="flex items-center space-x-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
                 >
                     <PlusIcon className="w-5 h-5" />
-                    <span>New Request</span>
+                    <span>{t('leaveRequest.newRequest')}</span>
                 </button>
             </div>
 
@@ -242,7 +244,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="p-6">
-                            <h3 className="text-xl font-bold text-gray-900 mb-4">Submit Leave Request</h3>
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">{t('leaveRequest.submitLeaveRequest')}</h3>
 
                             <form onSubmit={handleSubmit} className="space-y-4">
                                 <div>
@@ -303,7 +305,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                 {formData.start_date && formData.end_date && (
                                     <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3">
                                         <p className="text-sm text-indigo-800">
-                                            <strong>Duration:</strong> {calculateDays(formData.start_date, formData.end_date)} day(s)
+                                            <strong>{t('leaveRequest.duration')}</strong> {calculateDays(formData.start_date, formData.end_date)} day(s)
                                         </p>
                                     </div>
                                 )}
@@ -318,7 +320,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                         rows={3}
                                         required
-                                        placeholder="Brief reason for leave request"
+                                        placeholder={t('leaveRequest.briefReasonForLeaveRequest')}
                                     />
                                 </div>
 
@@ -331,7 +333,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                                         rows={2}
-                                        placeholder="Any additional information"
+                                        placeholder={t('leaveRequest.anyAdditionalInformation')}
                                     />
                                 </div>
 
@@ -360,7 +362,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
             {/* My Requests */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100">
                 <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-900">My Leave Requests</h3>
+                    <h3 className="text-lg font-bold text-gray-900">{t('leaveRequest.myLeaveRequests')}</h3>
                 </div>
                 <div className="divide-y divide-gray-200">
                     {myRequests.length === 0 ? (
@@ -387,7 +389,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         </div>
                                         {request.admin_comments && (
                                             <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
-                                                <strong>Admin Comment:</strong> {request.admin_comments}
+                                                <strong>{t('leaveRequest.adminComment')}</strong> {request.admin_comments}
                                             </div>
                                         )}
                                     </div>

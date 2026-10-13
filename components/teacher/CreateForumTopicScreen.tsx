@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeft } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { api } from '../../lib/api';
@@ -17,6 +18,7 @@ interface CreateForumTopicScreenProps {
 }
 
 const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleBack, onTopicCreated, currentUser }) => {
+    const { t } = useTranslation();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('general');
@@ -25,7 +27,7 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim() || !content.trim()) {
-            toast.error('Please fill in both the title and content.');
+            toast.error(t('createForumTopicScreen.pleaseFillInBothTheTitleAndContent'));
             return;
         }
 
@@ -43,14 +45,14 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                 post_count: 0
             });
 
-            toast.success('Topic posted successfully!');
+            toast.success(t('createForumTopicScreen.topicPostedSuccessfully'));
             setTitle('');
             setContent('');
             onTopicCreated?.();
             handleBack?.();
         } catch (error) {
             console.error('Error submitting topic:', error);
-            toast.error('Failed to create topic. Please try again.');
+            toast.error(t('createForumTopicScreen.failedToCreateTopicPleaseTryAgain'));
         } finally {
             setIsSubmitting(false);
         }
@@ -75,8 +77,8 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                         <ArrowLeft className="w-5 h-5 text-gray-600" />
                     </button>
                     <div>
-                        <h1 className="text-lg font-bold text-gray-900">Create New Topic</h1>
-                        <p className="text-xs text-gray-500">Share your thoughts with the teacher community</p>
+                        <h1 className="text-lg font-bold text-gray-900">{t('createForumTopicScreen.createNewTopic')}</h1>
+                        <p className="text-xs text-gray-500">{t('createForumTopicScreen.shareYourThoughtsWithTheTeacherCommunity')}</p>
                     </div>
                 </div>
             </div>
@@ -93,14 +95,14 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                     )}
                     <div>
                         <p className="font-semibold text-gray-800 text-sm">{currentUser.name || 'Teacher'}</p>
-                        <p className="text-xs text-gray-400">Posting as yourself</p>
+                        <p className="text-xs text-gray-400">{t('createForumTopicScreen.postingAsYourself')}</p>
                     </div>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Category Selection */}
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-3">Category</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-3">{t('createForumTopicScreen.category')}</label>
                         <div className="grid grid-cols-2 gap-2">
                             {categories.map(cat => (
                                 <button
@@ -146,7 +148,7 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 focus:ring-2 focus:ring-purple-500 focus:border-purple-400 outline-none transition-all placeholder-gray-400 resize-none"
-                            placeholder="Share your ideas, questions, or start a discussion..."
+                            placeholder={t('createForumTopicScreen.shareYourIdeasQuestionsOrStartADiscussion')}
                             required
                             rows={8}
                         />

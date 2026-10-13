@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { LockIcon, EyeIcon, EyeOffIcon } from '../../constants';
 import { changePassword, describePasswordProblem } from '../../src/lib/supabase/auth';
@@ -33,6 +34,7 @@ const PasswordInput = ({ id, label, value, onChange }: { id: string, label: stri
 };
 
 const TeacherChangePasswordScreen: React.FC = () => {
+    const { t } = useTranslation();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -41,7 +43,7 @@ const TeacherChangePasswordScreen: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (newPassword !== confirmPassword) {
-            toast.error("New passwords do not match.");
+            toast.error(t('teacherChangePasswordScreen.newPasswordsDoNotMatch'));
             return;
         }
 
@@ -65,7 +67,7 @@ const TeacherChangePasswordScreen: React.FC = () => {
                 throw new Error(result.error || 'Could not change the password.');
             }
 
-            toast.success("Password updated successfully!", { id: loadingToast });
+            toast.success(t('teacherChangePasswordScreen.passwordUpdatedSuccessfully'), { id: loadingToast });
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -82,9 +84,9 @@ const TeacherChangePasswordScreen: React.FC = () => {
             <form onSubmit={handleSubmit} className="flex-grow flex flex-col">
                 <main className="flex-grow p-4 overflow-y-auto">
                     <div className="bg-white p-4 rounded-xl shadow-sm space-y-4">
-                        <PasswordInput id="currentPassword" label="Current Password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
-                        <PasswordInput id="newPassword" label="New Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                        <PasswordInput id="confirmPassword" label="Confirm New Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                        <PasswordInput id="currentPassword" label={t('teacherChangePasswordScreen.currentPassword')} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                        <PasswordInput id="newPassword" label={t('teacherChangePasswordScreen.newPassword')} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                        <PasswordInput id="confirmPassword" label={t('teacherChangePasswordScreen.confirmNewPassword')} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                     </div>
                 </main>
                 <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">

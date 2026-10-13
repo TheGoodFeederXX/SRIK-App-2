@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const MyAtRiskStudents: React.FC<any> = ({ navigateTo }) => (
+const MyAtRiskStudents: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="My At-Risk Students"
+        title={t('myAtRiskStudents.myAtRiskStudents')}
         explanation="This school does not keep an at-risk flag on a child. Attendance and marks are in the register and the gradebook, which are the honest sources."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default MyAtRiskStudents;

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 // import { useProfile } from '../../context/ProfileContext';
 import { formatCurrency } from '../../lib/payroll';
@@ -16,6 +17,7 @@ interface TeacherSalaryProfileProps {
 }
 
 const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, navigateTo }) => {
+    const { t } = useTranslation();
     const [salaryData, setSalaryData] = useState<any>(null);
     const [payslips, setPayslips] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -93,8 +95,8 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
             <div className="p-6">
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-8 text-center">
                     <DollarSignIcon className="w-16 h-16 text-amber-300 mx-auto mb-4" />
-                    <h3 className="text-xl font-bold text-amber-900 mb-2">Couldn't load your salary profile</h3>
-                    <p className="text-amber-700 max-w-md mx-auto mb-4">There was a problem reaching the finance service. Please try again.</p>
+                    <h3 className="text-xl font-bold text-amber-900 mb-2">{t('teacherSalaryProfile.couldnTLoadYourSalaryProfile')}</h3>
+                    <p className="text-amber-700 max-w-md mx-auto mb-4">{t('teacherSalaryProfile.thereWasAProblemReachingTheFinanceServicePleas')}</p>
                     <button
                         onClick={() => { setErrorOccurred(false); setLoading(true); fetchSalaryData(); fetchPayslips(); }}
                         className="px-5 py-2.5 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium"
@@ -110,7 +112,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
         return (
             <div className="p-6">
                 <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-center">
-                    <p className="text-yellow-800">No salary configuration found. Please contact HR.</p>
+                    <p className="text-yellow-800">{t('teacherSalaryProfile.noSalaryConfigurationFoundPleaseContactHR')}</p>
                 </div>
             </div>
         );
@@ -120,15 +122,15 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
         <div className="p-6 space-y-6">
             {/* Header */}
             <div>
-                <h2 className="text-2xl font-bold text-gray-900">My Salary</h2>
-                <p className="text-sm text-gray-600 mt-1">View your salary details and payslips</p>
+                <h2 className="text-2xl font-bold text-gray-900">{t('teacherSalaryProfile.mySalary')}</h2>
+                <p className="text-sm text-gray-600 mt-1">{t('teacherSalaryProfile.viewYourSalaryDetailsAndPayslips')}</p>
             </div>
 
             {/* Salary Overview */}
             <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 rounded-xl p-6 text-white">
                 <div className="flex items-start justify-between">
                     <div>
-                        <p className="text-indigo-100 text-sm">Monthly Salary</p>
+                        <p className="text-indigo-100 text-sm">{t('teacherSalaryProfile.monthlySalary')}</p>
                         <h3 className="text-4xl font-bold mt-2">
                             {formatCurrency(salaryData.base_salary, salaryData.currency)}
                         </h3>
@@ -142,20 +144,20 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
 
             {/* Salary Details */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Salary Details</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">{t('teacherSalaryProfile.salaryDetails')}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <p className="text-sm text-gray-600">Base Salary</p>
+                        <p className="text-sm text-gray-600">{t('teacherSalaryProfile.baseSalary')}</p>
                         <p className="text-lg font-semibold text-gray-900">
                             {formatCurrency(salaryData.base_salary, salaryData.currency)}
                         </p>
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Payment Frequency</p>
+                        <p className="text-sm text-gray-600">{t('teacherSalaryProfile.paymentFrequency')}</p>
                         <p className="text-lg font-semibold text-gray-900">{salaryData.payment_frequency}</p>
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Currency</p>
+                        <p className="text-sm text-gray-600">{t('teacherSalaryProfile.currency')}</p>
                         <p className="text-lg font-semibold text-gray-900">{salaryData.currency}</p>
                     </div>
                     <div>
@@ -168,15 +170,15 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
 
                 {salaryData.bank_name && (
                     <div className="mt-4 pt-4 border-t border-gray-200">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-2">Payment Details</h4>
+                        <h4 className="text-sm font-semibold text-gray-900 mb-2">{t('teacherSalaryProfile.paymentDetails')}</h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <p className="text-sm text-gray-600">Bank Name</p>
+                                <p className="text-sm text-gray-600">{t('teacherSalaryProfile.bankName')}</p>
                                 <p className="text-base font-medium text-gray-900">{salaryData.bank_name}</p>
                             </div>
                             {salaryData.account_number && (
                                 <div>
-                                    <p className="text-sm text-gray-600">Account Number</p>
+                                    <p className="text-sm text-gray-600">{t('teacherSalaryProfile.accountNumber')}</p>
                                     <p className="text-base font-medium text-gray-900">{salaryData.account_number}</p>
                                 </div>
                             )}
@@ -188,7 +190,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
             {/* Recent Payslips */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100">
                 <div className="px-6 py-4 border-b border-gray-200">
-                    <h3 className="text-lg font-bold text-gray-900">Recent Payslips</h3>
+                    <h3 className="text-lg font-bold text-gray-900">{t('teacherSalaryProfile.recentPayslips')}</h3>
                 </div>
                 <div className="divide-y divide-gray-200">
                     {payslips.length === 0 ? (

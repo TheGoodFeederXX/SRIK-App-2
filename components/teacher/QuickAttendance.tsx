@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Clock, Users, Send } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -8,6 +9,7 @@ import { useAutoSync } from '../../hooks/useAutoSync';
 import { useCallback } from 'react';
 
 export const QuickAttendance: React.FC<{ classId: string }> = ({ classId }) => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId } = useAuth();
     const [students, setStudents] = useState<any[]>([]);
     const [attendance, setAttendance] = useState<Record<string, AttendanceStatus>>({});
@@ -39,7 +41,7 @@ export const QuickAttendance: React.FC<{ classId: string }> = ({ classId }) => {
     const handleSubmit = async () => {
         if (!currentSchool) return;
         if (!classId) {
-            toast.error('No class selected. Please go back and pick a class first.');
+            toast.error(t('quickAttendance.noClassSelectedPleaseGoBackAndPickAClassFirst'));
             return;
         }
 
@@ -81,7 +83,7 @@ export const QuickAttendance: React.FC<{ classId: string }> = ({ classId }) => {
 
             <div className="p-4 flex justify-between items-center bg-white border-b sticky top-0 z-10">
                 <div>
-                    <h2 className="font-bold text-lg">Class Attendance</h2>
+                    <h2 className="font-bold text-lg">{t('quickAttendance.classAttendance')}</h2>
                     <p className="text-xs text-gray-500">{students.length} Students • Default: Present</p>
                 </div>
                 <motion.button

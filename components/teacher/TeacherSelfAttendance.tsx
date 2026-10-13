@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     listMyAttendance,
@@ -22,6 +23,7 @@ interface TeacherSelfAttendanceProps {
 }
 
 const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateTo, teacherId: propTeacherId }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const { user } = useAuth();
     const [todayStatus, setTodayStatus] = useState<TeacherAttendance | null>(null);
@@ -76,7 +78,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
             // a leave approval, a medical certificate. That must be said out loud
             // rather than reported as a successful check-in.
             if (result.recorded) {
-                toast.success('Attendance marked successfully!');
+                toast.success(t('teacherSelfAttendance.attendanceMarkedSuccessfully'));
             } else {
                 toast.error(result.reason || 'Attendance could not be recorded.');
             }
@@ -108,7 +110,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
         return (
             <div className="flex flex-col items-center justify-center p-10">
                 <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-                <p className="mt-4 text-gray-500 font-medium">Loading attendance records...</p>
+                <p className="mt-4 text-gray-500 font-medium">{t('teacherSelfAttendance.loadingAttendanceRecords')}</p>
             </div>
         );
     }
@@ -117,8 +119,8 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
         return (
             <div className="flex flex-col items-center justify-center p-10 text-center">
                 <AlertTriangleIcon className="w-12 h-12 text-amber-300 mb-4" />
-                <p className="font-bold text-gray-800">Couldn't load your attendance</p>
-                <p className="text-gray-500 mt-1 mb-4">There was a problem reaching the server. Please try again.</p>
+                <p className="font-bold text-gray-800">{t('teacherSelfAttendance.couldnTLoadYourAttendance')}</p>
+                <p className="text-gray-500 mt-1 mb-4">{t('teacherSelfAttendance.thereWasAProblemReachingTheServerPleaseTryAgai')}</p>
                 <button
                     onClick={loadAttendanceData}
                     className="px-5 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
@@ -135,7 +137,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h2 className="text-xl font-bold text-gray-800">Today's Attendance</h2>
+                        <h2 className="text-xl font-bold text-gray-800">{t('teacherSelfAttendance.todaySAttendance')}</h2>
                         <p className="text-sm text-gray-500 font-medium">
                             {currentTime.toLocaleDateString('ms-MY', { weekday: 'long', month: 'long', day: 'numeric' })}
                         </p>
@@ -145,7 +147,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                         whileTap={{ scale: 0.95 }}
                         onClick={() => navigateTo('attendanceHistory', 'Attendance History', {})}
                         className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center hover:bg-purple-200 transition-colors"
-                        title="View Attendance History"
+                        title={t('teacherSelfAttendance.viewAttendanceHistory')}
                     >
                         <CalendarIcon className="h-6 w-6 text-purple-600" />
                     </motion.button>
@@ -159,7 +161,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                                     <CheckCircleIcon className="h-5 w-5 text-green-600" />
                                 </div>
                                 <div>
-                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Check-in Time</p>
+                                    <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('teacherSelfAttendance.checkInTime')}</p>
                                     <p className="text-lg font-bold text-gray-800">{todayStatus.check_in}</p>
                                 </div>
                             </div>
@@ -175,12 +177,12 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                                         <CheckCircleIcon className="h-5 w-5 text-blue-600" />
                                     </div>
                                     <div>
-                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Check-out Time</p>
+                                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('teacherSelfAttendance.checkOutTime')}</p>
                                         <p className="text-lg font-bold text-gray-800">{todayStatus.check_out}</p>
                                     </div>
                                 </div>
                                 <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">
-                                    Completed
+                                    {t('teacherSelfAttendance.completed')}
                                 </span>
                             </div>
                         ) : (
@@ -220,12 +222,12 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
 
             {/* Attendance History */}
             <div className="space-y-4">
-                <h3 className="text-lg font-bold text-gray-800 px-1">Attendance History</h3>
+                <h3 className="text-lg font-bold text-gray-800 px-1">{t('teacherSelfAttendance.attendanceHistory')}</h3>
 
                 <div className="space-y-3">
                     {attendanceHistory.length === 0 ? (
                         <div className="text-center py-10">
-                            <p className="text-gray-500">No attendance records yet.</p>
+                            <p className="text-gray-500">{t('teacherSelfAttendance.noAttendanceRecordsYet')}</p>
                         </div>
                     ) : (
                         attendanceHistory.map((record, i) => (

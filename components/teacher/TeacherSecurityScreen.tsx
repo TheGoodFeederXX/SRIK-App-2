@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { ShieldCheckIcon, ChevronRightIcon, LockIcon } from '../../constants';
 import { api } from '../../lib/api';
@@ -10,6 +11,7 @@ interface TeacherSecurityScreenProps {
 }
 
 const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const [twoFactor, setTwoFactor] = useState(false);
     const [loading, setLoading] = useState(true);
     const [busy, setBusy] = useState(false);
@@ -52,7 +54,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
 
     const confirmEnable = async () => {
         if (!enableCode.trim()) {
-            toast.error('Enter the 6-digit code from your authenticator app.');
+            toast.error(t('teacherSecurityScreen.enterThe6DigitCodeFromYourAuthenticatorApp'));
             return;
         }
         setBusy(true);
@@ -63,7 +65,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
             setEnableCode('');
             setQrCodeUrl('');
             setSecret('');
-            toast.success('Two-factor authentication enabled.');
+            toast.success(t('teacherSecurityScreen.twoFactorAuthenticationEnabled'));
         } catch (err: any) {
             toast.error(err?.message || 'Invalid code — please try again.');
         } finally {
@@ -73,7 +75,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
 
     const confirmDisable = async () => {
         if (!disableCode.trim()) {
-            toast.error('Enter your current 6-digit authenticator code to confirm.');
+            toast.error(t('teacherSecurityScreen.enterYourCurrent6DigitAuthenticatorCodeToConfi'));
             return;
         }
         setBusy(true);
@@ -82,7 +84,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
             setTwoFactor(false);
             setDisabling(false);
             setDisableCode('');
-            toast.success('Two-factor authentication disabled.');
+            toast.success(t('teacherSecurityScreen.twoFactorAuthenticationDisabled'));
         } catch (err: any) {
             toast.error(err?.message || 'Invalid code — please try again.');
         } finally {
@@ -90,7 +92,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
         }
     };
 
-    if (loading) return <div className="p-8 text-center text-gray-400">Checking security protocols...</div>;
+    if (loading) return <div className="p-8 text-center text-gray-400">{t('teacherSecurityScreen.checkingSecurityProtocols')}</div>;
 
     return (
         <div className="p-4 space-y-5 bg-gray-50 h-full overflow-y-auto">
@@ -103,7 +105,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                         <div className="p-2 rounded-lg bg-red-100 text-red-500">
                             <LockIcon className="h-5 w-5" />
                         </div>
-                        <span className="font-semibold text-gray-700">Change Password</span>
+                        <span className="font-semibold text-gray-700">{t('teacherSecurityScreen.changePassword')}</span>
                     </div>
                     <ChevronRightIcon className="h-5 w-5 text-gray-400" />
                 </button>
@@ -114,7 +116,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                     <div className="flex items-center space-x-3">
                         <ShieldCheckIcon className={`h-6 w-6 ${twoFactor ? 'text-green-500' : 'text-gray-400'}`} />
                         <div>
-                            <h3 className="font-bold text-gray-800">Two-Factor Authentication</h3>
+                            <h3 className="font-bold text-gray-800">{t('teacherSecurityScreen.twoFactorAuthentication')}</h3>
                             <p className="text-sm text-gray-500">{twoFactor ? 'Enabled — your account is protected.' : 'Add an extra layer of security.'}</p>
                         </div>
                     </div>
@@ -175,7 +177,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
 
                 {disabling && (
                     <div className="border-t border-gray-100 pt-4 space-y-3">
-                        <p className="text-sm text-gray-600">Enter your current authenticator code to confirm disabling 2FA.</p>
+                        <p className="text-sm text-gray-600">{t('teacherSecurityScreen.enterYourCurrentAuthenticatorCodeToConfirmDisa')}</p>
                         <input
                             type="text"
                             inputMode="numeric"

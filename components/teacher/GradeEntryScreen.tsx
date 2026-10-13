@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { getMarkRegister, saveMarks, type ResultStatus } from '../../src/lib/supabase/assessments';
 import { Exam, Student } from '../../types';
@@ -17,15 +18,16 @@ const getScoreIndicatorStyle = (scoreStr: string): string => {
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 const SaveStatusIndicator: React.FC<{ status: SaveStatus }> = ({ status }) => {
+    const { t } = useTranslation();
     switch (status) {
         case 'saving':
-            return <span className="text-sm text-gray-500 animate-pulse">Saving...</span>;
+            return <span className="text-sm text-gray-500 animate-pulse">{t('gradeEntryScreen.saving')}</span>;
         case 'saved':
-            return <span className="text-sm text-green-600 flex items-center"><CheckCircleIcon className="w-4 h-4 mr-1" /> All changes saved</span>;
+            return <span className="text-sm text-green-600 flex items-center"><CheckCircleIcon className="w-4 h-4 mr-1" /> {t('gradeEntryScreen.allChangesSaved')}</span>;
         case 'error':
-            return <span className="text-sm text-red-600">Some grades could not be saved — re-enter them to retry.</span>;
+            return <span className="text-sm text-red-600">{t('gradeEntryScreen.someGradesCouldNotBeSavedReEnterThemToRetry')}</span>;
         default:
-            return <span className="text-sm text-gray-400">Grades will auto-save.</span>;
+            return <span className="text-sm text-gray-400">{t('gradeEntryScreen.gradesWillAutoSave')}</span>;
     }
 };
 
@@ -35,6 +37,7 @@ interface GradeEntryScreenProps {
 }
 
 const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack }) => {
+    const { t } = useTranslation();
     const [scores, setScores] = useState<{ [studentId: string | number]: string }>({});
     const [students, setStudents] = useState<Student[]>([]);
     const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
@@ -173,7 +176,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
     };
 
 
-    if (!exam) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select an exam to enter grades.</div>;
+    if (!exam) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('gradeEntryScreen.selectAnExamToEnterGrades')}</div>;
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
@@ -189,7 +192,7 @@ const GradeEntryScreen: React.FC<GradeEntryScreenProps> = ({ exam, handleBack })
             {/* Student List */}
             <main className="flex-grow overflow-y-auto">
                 {loading ? (
-                    <div className="p-10 text-center text-gray-500">Loading student list...</div>
+                    <div className="p-10 text-center text-gray-500">{t('gradeEntryScreen.loadingStudentList')}</div>
                 ) : (
                     <ul className="divide-y divide-gray-200">
                         {students.map(student => (

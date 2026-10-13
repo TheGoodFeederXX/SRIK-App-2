@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { toast } from 'react-hot-toast';
 
@@ -19,6 +20,7 @@ interface ForumTopicScreenProps {
 }
 
 const ForumTopicScreen: React.FC<ForumTopicScreenProps> = ({ topicId, currentUserId, teacherProfile, topic }) => {
+    const { t } = useTranslation();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [newReply, setNewReply] = useState('');
@@ -33,7 +35,7 @@ const ForumTopicScreen: React.FC<ForumTopicScreenProps> = ({ topicId, currentUse
       setPosts(data);
     } catch (error) {
       console.error('Error loading forum posts:', error);
-      toast.error('Failed to load conversation.');
+      toast.error(t('forumTopicScreen.failedToLoadConversation'));
     } finally {
       setLoading(false);
     }
@@ -59,10 +61,10 @@ const ForumTopicScreen: React.FC<ForumTopicScreenProps> = ({ topicId, currentUse
       
       setNewReply('');
       loadData(); // Refresh posts
-      toast.success('Reply posted');
+      toast.success(t('forumTopicScreen.replyPosted'));
     } catch (err) {
       console.error('Error posting reply:', err);
-      toast.error('Failed to send reply');
+      toast.error(t('forumTopicScreen.failedToSendReply'));
     }
   };
 
@@ -95,7 +97,7 @@ const ForumTopicScreen: React.FC<ForumTopicScreenProps> = ({ topicId, currentUse
             </div>
           </div>
         ))}
-        {posts.length === 0 && <p className="text-center text-gray-500 py-10">No replies yet. Be the first to respond!</p>}
+        {posts.length === 0 && <p className="text-center text-gray-500 py-10">{t('forumTopicScreen.noRepliesYetBeTheFirstToRespond')}</p>}
       </main>
       <div className="p-4 bg-white border-t border-gray-200">
         <form onSubmit={handlePostReply} className="flex items-center space-x-2">
@@ -103,7 +105,7 @@ const ForumTopicScreen: React.FC<ForumTopicScreenProps> = ({ topicId, currentUse
             type="text"
             value={newReply}
             onChange={(e) => setNewReply(e.target.value)}
-            placeholder="Write a reply..."
+            placeholder={t('forumTopicScreen.writeAReply')}
             className="flex-grow px-4 py-2 bg-gray-100 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-purple-400"
           />
           <button type="submit" disabled={!newReply.trim()} className="px-4 py-2 rounded-full font-semibold text-white bg-purple-600 disabled:bg-purple-300 transition-colors">

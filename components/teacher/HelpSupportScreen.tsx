@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const HelpSupportScreen: React.FC<any> = ({ navigateTo }) => (
+const HelpSupportScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Help and Support"
+        title={t('helpSupportScreen.helpAndSupport')}
         explanation="In-app support tickets are not switched on yet. Please contact the office directly and they will help you."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default HelpSupportScreen;

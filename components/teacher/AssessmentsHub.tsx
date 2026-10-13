@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ClipboardListIcon, EditIcon, ChevronRightIcon, SparklesIcon, BookOpenIcon } from '../../constants';
 
 interface AssessmentsHubProps {
@@ -9,11 +10,12 @@ interface AssessmentsHubProps {
 }
 
 const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, currentBranchId, schoolId }) => {
+    const { t } = useTranslation();
   const categories = [
     {
       id: 'assignments',
-      title: 'Manage Assignments',
-      description: 'Create, edit and grade student assignments',
+      title: t('assessmentsHub.manageAssignments'),
+      description: t('assessmentsHub.createEditAndGradeStudentAssignments'),
       icon: <ClipboardListIcon className="w-8 h-8" />,
       color: 'bg-indigo-500',
       lightColor: 'bg-indigo-50',
@@ -22,8 +24,8 @@ const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, 
     },
     {
       id: 'quizzes',
-      title: 'Quiz Builder',
-      description: 'Create manual assessments and practice quizzes',
+      title: t('assessmentsHub.quizBuilder'),
+      description: t('assessmentsHub.createManualAssessmentsAndPracticeQuizzes'),
       icon: <EditIcon className="w-8 h-8" />,
       color: 'bg-orange-500',
       lightColor: 'bg-orange-50',
@@ -36,8 +38,8 @@ const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, 
     <div className="p-6 bg-gray-50 min-h-full">
       <div className="max-w-4xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Assessments & Quizzes</h1>
-          <p className="mt-2 text-lg text-gray-500">Manage all your classroom assessments and practice materials in one place.</p>
+          <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">{t('assessmentsHub.assessmentsQuizzes')}</h1>
+          <p className="mt-2 text-lg text-gray-500">{t('assessmentsHub.manageAllYourClassroomAssessmentsAndPracticeMa')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -74,7 +76,7 @@ const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, 
               <BookOpenIcon className="w-10 h-10" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-2">Teaching Tip</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">{t('assessmentsHub.teachingTip')}</h2>
               <p className="text-gray-600">
                 Did you know? Regular low-stakes quizzes can improve long-term retention by up to 50%. 
                 Use the Quiz Builder for quick knowledge checks!

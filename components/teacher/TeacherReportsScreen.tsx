@@ -1,5 +1,6 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Student, ClassInfo } from '../../types';
 import { ChevronLeftIcon, AIIcon, getFormattedClassName } from '../../constants';
 import { listStudents } from '../../src/lib/supabase/students';
@@ -20,6 +21,7 @@ interface TeacherReportsScreenProps {
 }
 
 const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo, teacherId, teacherProfile }) => {
+    const { t } = useTranslation();
     const [selectedClass, setSelectedClass] = useState<ClassInfo | null>(null);
     const [students, setStudents] = useState<Student[]>([]);
 
@@ -151,12 +153,12 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
 
     }, [selectedClass]);
 
-    if (loading && !selectedClass && classes.length === 0) return <div className="p-10 text-center">Loading classes...</div>;
+    if (loading && !selectedClass && classes.length === 0) return <div className="p-10 text-center">{t('teacherReportsScreen.loadingClasses')}</div>;
 
     if (!selectedClass) {
         return (
             <div className="p-4 space-y-4">
-                <h3 className="text-xl font-bold text-gray-800">Select a Class to View Reports</h3>
+                <h3 className="text-xl font-bold text-gray-800">{t('teacherReportsScreen.selectAClassToViewReports')}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {classes.map(cls => (
                         <button key={cls.id} onClick={() => setSelectedClass(cls)} className="p-6 bg-white rounded-xl shadow-sm text-center hover:bg-purple-50 transition-colors flex flex-col items-center justify-center space-y-2">
@@ -175,7 +177,7 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
             <header className="p-4 bg-white border-b border-gray-200">
                 <button onClick={() => setSelectedClass(null)} className="flex items-center space-x-1 text-sm font-semibold text-purple-600 hover:text-purple-800">
                     <ChevronLeftIcon className="w-5 h-5" />
-                    <span>All Classes</span>
+                    <span>{t('teacherReportsScreen.allClasses')}</span>
                 </button>
                 <div className="mt-2">
                     <h2 className="text-xl font-bold text-gray-800">Reports: {getFormattedClassName(selectedClass.grade, selectedClass.section)}</h2>
@@ -184,11 +186,11 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
                     onClick={() => navigateTo('aiPerformanceSummary', 'AI Class Summary', { students: students })}
                     className="mt-3 w-full flex items-center justify-center space-x-2 py-2 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
                     <AIIcon className="w-5 h-5" />
-                    <span>Generate AI Class Summary</span>
+                    <span>{t('teacherReportsScreen.generateAIClassSummary')}</span>
                 </button>
             </header>
             <main className="flex-grow p-4 space-y-3 overflow-y-auto">
-                {loading ? <div className="text-center py-4">Loading student data...</div> : (
+                {loading ? <div className="text-center py-4">{t('teacherReportsScreen.loadingStudentData')}</div> : (
                     students.length > 0 ? students.map((student: any) => (
                         <div key={student.id} className="bg-white rounded-xl shadow-sm p-3 flex items-center space-x-3">
                             {student.avatarUrl ? (
@@ -205,12 +207,12 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
                                         "0%". A teacher seeing 0% would act on it: chase a
                                         child for failing when no mark exists yet, or for
                                         absence on days no register was taken. */}
-                                    <span>Avg Score: <span className="font-semibold text-purple-700">{student.gradeAverage === null ? '—' : `${student.gradeAverage}%`}</span></span>
-                                    <span>Attendance: <span className="font-semibold text-purple-700">{student.attendancePercentage === null ? '—' : `${student.attendancePercentage}%`}</span></span>
+                                    <span>{t('teacherReportsScreen.avgScore')} <span className="font-semibold text-purple-700">{student.gradeAverage === null ? '—' : `${student.gradeAverage}%`}</span></span>
+                                    <span>{t('teacherReportsScreen.attendance')} <span className="font-semibold text-purple-700">{student.attendancePercentage === null ? '—' : `${student.attendancePercentage}%`}</span></span>
                                 </div>
                             </div>
                         </div>
-                    )) : <div className="text-center py-10 text-gray-500">No students in this class.</div>
+                    )) : <div className="text-center py-10 text-gray-500">{t('teacherReportsScreen.noStudentsInThisClass')}</div>
                 )}
             </main>
         </div>

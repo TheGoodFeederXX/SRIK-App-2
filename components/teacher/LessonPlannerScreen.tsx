@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,12 +16,15 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  *
  * When this feature is built, this file is replaced by the real screen.
  */
-const LessonPlannerScreen: React.FC<any> = ({ navigateTo }) => (
+const LessonPlannerScreen: React.FC<any> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Lesson Planner"
+        title={t('lessonPlannerScreen.lessonPlanner')}
         explanation="Lesson plans are not stored here yet. Teachers keep their own, and nothing entered here would be saved."
         handleBack={() => navigateTo('dashboard', 'Dashboard')}
     />
-);
+    );
+};
 
 export default LessonPlannerScreen;

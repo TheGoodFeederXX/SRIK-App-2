@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface ReportCardInputScreenProps {
@@ -36,9 +37,11 @@ interface ReportCardInputScreenProps {
  *
  * So: say what is true and send the teacher to the place marks are actually entered.
  */
-const ReportCardInputScreen: React.FC<ReportCardInputScreenProps> = ({ handleBack }) => (
+const ReportCardInputScreen: React.FC<ReportCardInputScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Kemasukan Markah"
+        title={t('reportCardInputScreen.kemasukanMarkah')}
         explanation={
             'Markah tidak lagi ditaip terus ke dalam kad laporan. Markah dimasukkan melalui ' +
             'Penilaian: guru mencipta satu penilaian untuk kelas dan subjek, memasukkan markah ' +
@@ -49,6 +52,7 @@ const ReportCardInputScreen: React.FC<ReportCardInputScreenProps> = ({ handleBac
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default ReportCardInputScreen;
