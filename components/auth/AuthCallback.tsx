@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '../../src/lib/supabase/client';
 
@@ -31,6 +32,7 @@ import { supabase, isSupabaseConfigured } from '../../src/lib/supabase/client';
  * login.
  */
 const AuthCallback: React.FC = () => {
+    const { t } = useTranslation();
     const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
     const [message, setMessage] = useState('Verifying your link…');
     const [errorDetails, setErrorDetails] = useState<string | null>(null);
@@ -112,7 +114,7 @@ const AuthCallback: React.FC = () => {
                             </div>
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900">{message}</h2>
-                        <p className="text-gray-500">This will only take a moment.</p>
+                        <p className="text-gray-500">{t('authCallback.thisWillOnlyTakeAMoment')}</p>
                     </div>
                 )}
 

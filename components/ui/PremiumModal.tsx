@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { XCircleIcon, StarIcon, CheckCircleIcon } from '../../constants';
 
 interface PremiumModalProps {
@@ -8,6 +9,7 @@ interface PremiumModalProps {
 }
 
 const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, featureName = 'This feature' }) => {
+    const { t } = useTranslation();
     if (!isOpen) return null;
 
     return (
@@ -28,7 +30,7 @@ const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose, featureNam
                 </div>
                 
                 <div className="p-8 text-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Upgrade to Premium</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('premiumModal.upgradeToPremium')}</h3>
                     <p className="text-gray-600 mb-6">
                         {featureName} is a premium feature. Unlock full access to take your school experience to the next level.
                     </p>

@@ -1884,5 +1884,95 @@
     "red": "Red",
     "pink": "Pink",
     "cyan": "Cyan"
+  },
+  "authCallback": {
+    "thisWillOnlyTakeAMoment": "This will only take a moment."
+  },
+  "inviteAcceptScreen": {
+    "thisWillOnlyTakeAMoment": "This will only take a moment.",
+    "yourSchoolID": "Your School ID"
+  },
+  "login": {
+    "forgotPassword": "Forgot Password",
+    "enterYourEmailAddressAndWeLlSendYouACodeToRese": "Enter your email address and we'll send you a code to reset your password.",
+    "backToSignIn": "Back to Sign In",
+    "checkYourEmail": "Check Your Email",
+    "yourEmailAddress": "Your Email Address"
+  },
+  "verifiedAdminRoute": {
+    "verifyingCredentials": "Verifying credentials..."
+  },
+  "gamificationContext": {
+    "playedAGameBefore8AM": "Played a game before 8 AM"
+  },
+  "credentialsModal": {
+    "accountCreatedFor": "Account Created For:",
+    "loginCredentials": "Login Credentials:",
+    "youCanLoginUsingEitherYour": "You can login using either your",
+    "username": "Username",
+    "password": "Password",
+    "success": "Success!",
+    "studentID": "Student ID",
+    "anEmailWillBeSentToConfirmTheAccount": "An email will be sent to confirm the account",
+    "userMustClickTheConfirmationLink": "User must click the confirmation link",
+    "accountBecomesActiveAfterConfirmation": "Account becomes active after confirmation",
+    "userCanThenLoginWithUsernamePassword": "User can then login with username & password",
+    "downloadTXT": "Download TXT",
+    "downloadPDF": "Download PDF",
+    "copyUsername": "Copy username",
+    "copyPassword": "Copy password",
+    "copyStudentID": "Copy Student ID"
+  },
+  "dashboardBottomNav": {
+    "analytics": "Analytics",
+    "messages": "Messages",
+    "settings": "Settings",
+    "reports": "Reports",
+    "quizzes": "Quizzes",
+    "profile": "Profile",
+    "overview": "Overview",
+    "finance": "Finance",
+    "academic": "Academic"
+  },
+  "dashboardSidebar": {
+    "students": "Students",
+    "teachers": "Teachers",
+    "timetable": "Timetable",
+    "results": "Results",
+    "compliance": "Compliance",
+    "approvals": "Approvals",
+    "feeManagement": "Fee Management",
+    "messages": "Messages",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "quizzes": "Quizzes",
+    "profile": "Profile",
+    "lessonNotes": "Lesson Notes",
+    "reports": "Reports",
+    "feeStatus": "Fee Status"
+  },
+  "header": {
+    "openMenu": "Open menu",
+    "goBack": "Go back",
+    "openUserMenu": "Open user menu",
+    "userMenu": "User menu"
+  },
+  "lowDataImage": {
+    "lowDataModeTapToLoadPhoto": "Low data mode — tap to load photo"
+  },
+  "premiumErrorPage": {
+    "secureEnvironment": "Secure Environment",
+    "errorTechnicalDetails": "Error Technical Details",
+    "tryAgainNow": "Try Again Now",
+    "support": "Support",
+    "contactOurTechnicalTeam": "Contact our technical team",
+    "errorIllustration": "Error Illustration"
+  },
+  "premiumModal": {
+    "upgradeToPremium": "Upgrade to Premium"
+  },
+  "motion-ui": {
+    "closeModal": "Close modal",
+    "closeDrawer": "Close drawer"
   }
 }

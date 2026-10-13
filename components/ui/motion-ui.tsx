@@ -1,4 +1,5 @@
 import React, { forwardRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { 
   buttonTap, 
@@ -527,6 +528,7 @@ export const MotionModal = ({
   className?: string;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
 }) => {
+    const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
   const sizeClasses = {
     sm: 'max-w-md',
@@ -569,7 +571,7 @@ export const MotionModal = ({
                 className="p-1 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
                 whileHover={reducedMotion ? {} : { scale: 1.1 }}
                 whileTap={reducedMotion ? {} : { scale: 0.95 }}
-                aria-label="Close modal"
+                aria-label={t('motion-ui.closeModal')}
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -597,6 +599,7 @@ export const MotionDrawer = ({
   position?: 'left' | 'right';
   className?: string;
 }) => {
+    const { t } = useTranslation();
   const reducedMotion = useReducedMotion();
 
   const variants = {
@@ -631,7 +634,7 @@ export const MotionDrawer = ({
             className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 lg:hidden"
             whileHover={reducedMotion ? {} : { scale: 1.1 }}
             whileTap={reducedMotion ? {} : { scale: 0.95 }}
-            aria-label="Close drawer"
+            aria-label={t('motion-ui.closeDrawer')}
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

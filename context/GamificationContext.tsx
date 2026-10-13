@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import api from '../lib/api';
 
@@ -21,10 +22,11 @@ interface GamificationState {
 const GamificationContext = createContext<GamificationState | undefined>(undefined);
 
 export const GamificationProvider: React.FC<{ children: React.ReactNode; studentId?: string | number }> = ({ children, studentId }) => {
+    const { t } = useTranslation();
     const [xp, setXp] = useState(0);
     const [level, setLevel] = useState(1);
     const [badges, setBadges] = useState<Badge[]>([
-        { id: 'early-bird', name: 'Early Bird', description: 'Played a game before 8 AM', icon: '🌅' },
+        { id: 'early-bird', name: 'Early Bird', description: t('gamificationContext.playedAGameBefore8AM'), icon: '🌅' },
     ]);
     const [isLoading, setIsLoading] = useState(true);
 

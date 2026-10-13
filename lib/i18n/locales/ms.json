@@ -1884,5 +1884,95 @@
     "red": "Merah",
     "pink": "Merah Jambu",
     "cyan": "Sian"
+  },
+  "authCallback": {
+    "thisWillOnlyTakeAMoment": "Ini hanya mengambil masa sebentar."
+  },
+  "inviteAcceptScreen": {
+    "thisWillOnlyTakeAMoment": "Ini hanya mengambil masa sebentar.",
+    "yourSchoolID": "ID Sekolah Anda"
+  },
+  "login": {
+    "forgotPassword": "Lupa Kata Laluan",
+    "enterYourEmailAddressAndWeLlSendYouACodeToRese": "Masukkan alamat e-mel anda dan kami akan menghantar kod untuk menetapkan semula kata laluan anda.",
+    "backToSignIn": "Kembali ke Log Masuk",
+    "checkYourEmail": "Semak E-mel Anda",
+    "yourEmailAddress": "Alamat E-mel Anda"
+  },
+  "verifiedAdminRoute": {
+    "verifyingCredentials": "Mengesahkan bukti kelayakan..."
+  },
+  "gamificationContext": {
+    "playedAGameBefore8AM": "Bermain permainan sebelum 8 pagi"
+  },
+  "credentialsModal": {
+    "accountCreatedFor": "Akaun Dicipta Untuk:",
+    "loginCredentials": "Bukti Kelayakan Log Masuk:",
+    "youCanLoginUsingEitherYour": "Anda boleh log masuk menggunakan sama ada",
+    "username": "Nama Pengguna",
+    "password": "Kata Laluan",
+    "success": "Berjaya!",
+    "studentID": "ID Murid",
+    "anEmailWillBeSentToConfirmTheAccount": "E-mel akan dihantar untuk mengesahkan akaun",
+    "userMustClickTheConfirmationLink": "Pengguna mesti klik pautan pengesahan",
+    "accountBecomesActiveAfterConfirmation": "Akaun menjadi aktif selepas pengesahan",
+    "userCanThenLoginWithUsernamePassword": "Pengguna kemudian boleh log masuk dengan nama pengguna & kata laluan",
+    "downloadTXT": "Muat Turun TXT",
+    "downloadPDF": "Muat Turun PDF",
+    "copyUsername": "Salin nama pengguna",
+    "copyPassword": "Salin kata laluan",
+    "copyStudentID": "Salin ID Murid"
+  },
+  "dashboardBottomNav": {
+    "analytics": "Analitik",
+    "messages": "Mesej",
+    "settings": "Tetapan",
+    "reports": "Laporan",
+    "quizzes": "Kuiz",
+    "profile": "Profil",
+    "overview": "Gambaran Keseluruhan",
+    "finance": "Kewangan",
+    "academic": "Akademik"
+  },
+  "dashboardSidebar": {
+    "students": "Murid",
+    "teachers": "Guru",
+    "timetable": "Jadual Waktu",
+    "results": "Keputusan",
+    "compliance": "Pematuhan",
+    "approvals": "Kelulusan",
+    "feeManagement": "Pengurusan Yuran",
+    "messages": "Mesej",
+    "analytics": "Analitik",
+    "settings": "Tetapan",
+    "quizzes": "Kuiz",
+    "profile": "Profil",
+    "lessonNotes": "Nota Pelajaran",
+    "reports": "Laporan",
+    "feeStatus": "Status Yuran"
+  },
+  "header": {
+    "openMenu": "Buka menu",
+    "goBack": "Kembali",
+    "openUserMenu": "Buka menu pengguna",
+    "userMenu": "Menu pengguna"
+  },
+  "lowDataImage": {
+    "lowDataModeTapToLoadPhoto": "Mod data rendah — ketik untuk memuatkan foto"
+  },
+  "premiumErrorPage": {
+    "secureEnvironment": "Persekitaran Selamat",
+    "errorTechnicalDetails": "Butiran Teknikal Ralat",
+    "tryAgainNow": "Cuba Lagi Sekarang",
+    "support": "Sokongan",
+    "contactOurTechnicalTeam": "Hubungi pasukan teknikal kami",
+    "errorIllustration": "Ilustrasi Ralat"
+  },
+  "premiumModal": {
+    "upgradeToPremium": "Naik Taraf ke Premium"
+  },
+  "motion-ui": {
+    "closeModal": "Tutup tetingkap",
+    "closeDrawer": "Tutup laci"
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLowDataMode } from '../../lib/lowDataMode';
 
 /**
@@ -23,6 +24,7 @@ const initialsOf = (text?: string) =>
     .join('') || '·';
 
 const LowDataImage: React.FC<Props> = (props) => {
+    const { t } = useTranslation();
   const lowData = useLowDataMode();
   const [revealed, setRevealed] = useState(false);
 
@@ -41,7 +43,7 @@ const LowDataImage: React.FC<Props> = (props) => {
       role="button"
       tabIndex={0}
       aria-label={alt ? `Load photo of ${alt}` : 'Load photo'}
-      title="Low data mode — tap to load photo"
+      title={t('lowDataImage.lowDataModeTapToLoadPhoto')}
       onClick={reveal}
       onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') reveal(e); }}
       className={`${className || ''} inline-flex items-center justify-center bg-gray-100 text-gray-500 text-xs font-bold select-none cursor-pointer`}

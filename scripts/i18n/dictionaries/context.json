@@ -1,0 +1,21 @@
+{
+  "Auth initialization failed:": "Permulaan pengesahan gagal:",
+  "Demo Database Login failed:": "Log masuk Pangkalan Data Demo gagal:",
+  "Demo School": "Sekolah Demo",
+  "Early Bird": "Awal Burung",
+  "Error fetching gamification data:": "Ralat mengambil data gamifikasi:",
+  "Error fetching memberships:": "Ralat mengambil keahlian:",
+  "Error fetching school scope:": "Ralat mengambil skop sekolah:",
+  "Error refreshing school:": "Ralat menyegarkan sekolah:",
+  "Error switching school:": "Ralat menukar sekolah:",
+  "Failed to parse cached user": "Gagal menghuraikan pengguna cache",
+  "Failed to send reset link": "Gagal menghantar pautan set semula",
+  "Global Demo School": "Sekolah Demo Global",
+  "Invalid credentials": "Bukti kelayakan tidak sah",
+  "No profile loaded": "Tiada profil dimuatkan",
+  "No token provided": "Tiada token diberikan",
+  "Played a game before 8 AM": "Bermain permainan sebelum 8 pagi",
+  "Student": "Murid",
+  "Teacher": "Guru",
+  "Use the link sent to your email to set a new password.": "Gunakan pautan yang dihantar ke e-mel anda untuk menetapkan kata laluan baharu."
+}

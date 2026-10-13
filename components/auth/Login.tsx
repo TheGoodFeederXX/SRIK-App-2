@@ -49,8 +49,8 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 mb-6 self-center">
             <SchoolLogoIcon className="w-7 h-7 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Forgot Password</h2>
-          <p className="text-xs text-slate-500 text-center mb-8">Enter your email address and we'll send you a code to reset your password.</p>
+          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">{t('login.forgotPassword')}</h2>
+          <p className="text-xs text-slate-500 text-center mb-8">{t('login.enterYourEmailAddressAndWeLlSendYouACodeToRese')}</p>
           
           <form className="space-y-4" onSubmit={async (e) => {
             e.preventDefault();
@@ -70,7 +70,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Your Email Address"
+              placeholder={t('login.yourEmailAddress')}
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all outline-none"
               required
             />
@@ -86,7 +86,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               onClick={() => setView('login')}
               className="w-full py-2 text-slate-400 text-xs font-semibold hover:text-slate-600 transition-colors"
             >
-              Back to Sign In
+              {t('login.backToSignIn')}
             </button>
           </form>
           {error && <div className="mt-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg border border-red-100">{error}</div>}
@@ -111,7 +111,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
           <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 mb-6 self-center">
             <SchoolLogoIcon className="w-7 h-7 text-white" />
           </div>
-          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">Check Your Email</h2>
+          <h2 className="text-xl font-bold text-slate-800 text-center mb-2">{t('login.checkYourEmail')}</h2>
           <p className="text-xs text-slate-500 text-center mb-6">
             We have sent a password reset link to <span className="font-semibold text-slate-700">{email}</span>.
             Open it to choose a new password.
@@ -153,7 +153,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               onClick={() => { setView('login'); setError(''); }}
               className="w-full py-2 text-slate-400 text-xs font-semibold hover:text-slate-600 transition-colors"
             >
-              Back to Sign In
+              {t('login.backToSignIn')}
             </button>
           </div>
         </div>

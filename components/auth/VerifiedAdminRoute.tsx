@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 
@@ -8,6 +9,7 @@ interface VerifiedAdminRouteProps {
 }
 
 const VerifiedAdminRoute: React.FC<VerifiedAdminRouteProps> = ({ children }) => {
+    const { t } = useTranslation();
     const { user, role, loading, isDemo } = useAuth();
     const [isVerified, setIsVerified] = useState<boolean | null>(null);
 
@@ -43,7 +45,7 @@ const VerifiedAdminRoute: React.FC<VerifiedAdminRouteProps> = ({ children }) => 
             <div className="flex h-screen items-center justify-center bg-gray-50">
                 <div className="text-center">
                     <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-500 font-medium">Verifying credentials...</p>
+                    <p className="text-gray-500 font-medium">{t('verifiedAdminRoute.verifyingCredentials')}</p>
                 </div>
             </div>
         );

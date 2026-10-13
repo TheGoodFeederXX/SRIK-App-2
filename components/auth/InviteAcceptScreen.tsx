@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CheckCircle, XCircle, Loader2, School } from 'lucide-react';
 import { acceptInviteSession } from '../../src/lib/supabase/auth';
 
@@ -33,6 +34,7 @@ const ROLE_DASHBOARD: Record<string, string> = {
 };
 
 const InviteAcceptScreen: React.FC = () => {
+    const { t } = useTranslation();
     const [status, setStatus] = useState<Status>('processing');
     const [message, setMessage] = useState('Setting up your account...');
     const [schoolGeneratedId, setSchoolGeneratedId] = useState<string | null>(null);
@@ -139,7 +141,7 @@ const InviteAcceptScreen: React.FC = () => {
                             </div>
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900">{message}</h2>
-                        <p className="text-sm text-gray-500">This will only take a moment.</p>
+                        <p className="text-sm text-gray-500">{t('inviteAcceptScreen.thisWillOnlyTakeAMoment')}</p>
                     </div>
                 )}
 
@@ -153,7 +155,7 @@ const InviteAcceptScreen: React.FC = () => {
                         <h2 className="text-2xl font-bold text-gray-900">{message}</h2>
                         {schoolGeneratedId && (
                             <div className="bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3">
-                                <p className="text-xs text-indigo-500 font-medium uppercase tracking-wide mb-1">Your School ID</p>
+                                <p className="text-xs text-indigo-500 font-medium uppercase tracking-wide mb-1">{t('inviteAcceptScreen.yourSchoolID')}</p>
                                 <p className="text-lg font-bold text-indigo-700 font-mono">{schoolGeneratedId}</p>
                             </div>
                         )}

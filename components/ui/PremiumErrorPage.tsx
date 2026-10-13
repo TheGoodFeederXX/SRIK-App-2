@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { AlertCircle, RefreshCcw, Home, MessageCircle, Shield } from 'lucide-react';
 
 interface PremiumErrorPageProps {
@@ -16,6 +17,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
     resetErrorBoundary,
     illustration = "/error-illustration.png" // Fallback to a default if not provided
 }) => {
+    const { t } = useTranslation();
     const [imageError, setImageError] = React.useState(false);
 
     const handleGoHome = () => {
@@ -36,7 +38,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                         {!imageError ? (
                             <img
                                 src={illustration}
-                                alt="Error Illustration"
+                                alt={t('premiumErrorPage.errorIllustration')}
                                 className="w-full h-full object-contain drop-shadow-2xl animate-float"
                                 onError={() => setImageError(true)}
                             />
@@ -50,7 +52,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                     <div className="mt-8 space-y-2">
                         <div className="inline-flex px-3 py-1 bg-white/20 rounded-full backdrop-blur-md border border-white/30 items-center space-x-2">
                             <Shield className="w-4 h-4 text-indigo-100" />
-                            <span className="text-indigo-100 text-xs font-bold tracking-wider uppercase">Secure Environment</span>
+                            <span className="text-indigo-100 text-xs font-bold tracking-wider uppercase">{t('premiumErrorPage.secureEnvironment')}</span>
                         </div>
                         <p className="text-white/60 text-xs italic">Error ID: {Math.random().toString(36).substr(2, 9).toUpperCase()}</p>
                     </div>
@@ -72,7 +74,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
 
                     {error && (
                         <div className="mb-8 p-4 bg-gray-50 rounded-xl border border-gray-100">
-                            <p className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-2 font-bold">Error Technical Details</p>
+                            <p className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-2 font-bold">{t('premiumErrorPage.errorTechnicalDetails')}</p>
                             <p className="text-sm font-mono text-gray-500 break-words line-clamp-3">
                                 {error.message}
                             </p>
@@ -86,7 +88,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                                 className="w-full py-4 bg-indigo-600 text-white font-bold rounded-2xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center space-x-2"
                             >
                                 <RefreshCcw className="w-5 h-5 shrink-0" />
-                                <span className="min-w-0">Try Again Now</span>
+                                <span className="min-w-0">{t('premiumErrorPage.tryAgainNow')}</span>
                             </button>
                         )}
 
@@ -103,13 +105,13 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                                 className="py-3 bg-white border-2 border-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-200 transition-all flex items-center justify-center space-x-2"
                             >
                                 <MessageCircle className="w-5 h-5 shrink-0" />
-                                <span className="min-w-0">Support</span>
+                                <span className="min-w-0">{t('premiumErrorPage.support')}</span>
                             </button>
                         </div>
                     </div>
 
                     <p className="mt-8 text-sm text-gray-400 text-center">
-                        Need help? <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">Contact our technical team</a>
+                        Need help? <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">{t('premiumErrorPage.contactOurTechnicalTeam')}</a>
                     </p>
                 </div>
             </div>

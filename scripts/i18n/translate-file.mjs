@@ -102,7 +102,13 @@ src = src.replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.split('\n').map((l) 
 // A trailing `// comment` used to be protected as a token at the END of its line, so a component
 // head stopped ending in `=> {` and no hook was inserted — leaving a file that did not compile.
 // Moving the comment's own text onto a line of its own keeps every CODE line exactly as it was.
-src = src.replace(/(^|\n)([ \t]*)\/\/[^\n]*/g, (m, lead) => lead + protect(m.slice(lead.length)));
+// A line comment that FOLLOWS code on the same line (`illustration = "x.png" // why`) also has to
+// be protected, and it must not leave the code line altered. It is protected from the `//` to the
+// end of the line, with the code before it untouched, so the line still ends in whatever it ended
+// in — which is what lets a component head be recognised. The `//` must not be inside a string,
+// so the match requires a non-quote character (or start of line) before it.
+src = src.replace(/(^|\n)([ \t]*)(\/\/[^\n]*)/g, (_m, lead, indent, c) => `${lead}${indent}${protect(c)}`);
+src = src.replace(/([^:\/])([ \t]*)(\/\/[^\n]*)$/gm, (_m, before, gap, c) => `${before}${gap}${protect(c)}`);
 
 // 1. JSX text nodes.
 src = src.replace(/>(\s*)([A-Z][^<>{}]{1,90}?)(\s*)</g, (full, pre, text, post) => {
@@ -228,7 +234,12 @@ function addHooks(fileSource) {
                     || /^\uE000\d+\uE001$/.test(prev.trim())
                     || prev === ''
                     || /[\w$]\s*=\s*(?:'[^']*'|"[^"]*"|`[^`]*`|\d+|true|false|null)\s*$/.test(prev)
-                    || /^[\w$]+\s*:\s*.+$/.test(prev);
+                    || /^[\w$]+\s*:\s*.+$/.test(prev)
+                    // A bare destructured prop: `studentId`, `isOpen`. A single identifier with
+                    // no assignment, punctuation or keyword is a prop, not a statement.
+                    || /^[\w$]+$/.test(prev)
+                    // A default value followed by an inline `// comment` (already protected).
+                    || /^[\w$]+\s*=\s*.*\uE000\d+\uE001$/.test(prev);
                 if (!isContinuation) break;
             }
         }

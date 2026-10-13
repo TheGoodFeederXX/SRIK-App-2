@@ -1,4 +1,5 @@
 import React, { cloneElement } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { HomeIcon, BellIcon, UserIcon as ProfileIcon, DocumentTextIcon, PhoneIcon, PlayIcon, AnalyticsIcon, MegaphoneIcon, SettingsIcon, MessagesIcon, ElearningIcon, SparklesIcon, UserGroupIcon, GameControllerIcon, ChartBarIcon, ClockIcon, LogoutIcon, ReportIcon, CheckCircleIcon, BuildingLibraryIcon, StudentsIcon, ClipboardListIcon, ExamIcon, EnterResultsIcon, ShieldCheckIcon, SUBJECT_COLORS, getFormattedClassName } from '../../constants';
 import { useTeacherClasses } from '../../hooks/useTeacherClasses';
@@ -40,12 +41,13 @@ const SidebarItem = ({ icon, label, isActive, onClick, activeColor }: SidebarIte
 );
 
 export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
+    const { t } = useTranslation();
     const navItems = [
         { id: 'home', icon: <HomeIcon />, label: 'Home' },
-        { id: 'quizzes', icon: <ClockIcon />, label: 'Quizzes' },
+        { id: 'quizzes', icon: <ClockIcon />, label: t('dashboardSidebar.quizzes') },
         { id: 'games', icon: <GameControllerIcon />, label: 'Games' },
-        { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
-        { id: 'profile', icon: <ProfileIcon />, label: 'Profile' },
+        { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
+        { id: 'profile', icon: <ProfileIcon />, label: t('dashboardSidebar.profile') },
     ];
 
     return (
@@ -94,6 +96,7 @@ export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, school
 };
 
 export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
+    const { t } = useTranslation();
     // navItems definition removed in favor of explicit groups below
 
     return (
@@ -112,17 +115,17 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
             <nav className="flex-1 py-6 overflow-y-auto">
                 <div className="space-y-1">
                     <SidebarItem id="home" icon={<HomeIcon />} label="Home" isActive={activeScreen === 'home'} onClick={() => setActiveScreen('home')} activeColor="text-indigo-600" />
-                    <SidebarItem id="studentList" icon={<StudentsIcon />} label="Students" isActive={activeScreen === 'studentList'} onClick={() => setActiveScreen('studentList')} activeColor="text-indigo-600" />
-                    <SidebarItem id="teacherList" icon={<UserGroupIcon />} label="Teachers" isActive={activeScreen === 'teacherList'} onClick={() => setActiveScreen('teacherList')} activeColor="text-indigo-600" />
-                    <SidebarItem id="timetable" icon={<ClipboardListIcon />} label="Timetable" isActive={activeScreen === 'timetable'} onClick={() => setActiveScreen('timetable')} activeColor="text-indigo-600" />
+                    <SidebarItem id="studentList" icon={<StudentsIcon />} label={t('dashboardSidebar.students')} isActive={activeScreen === 'studentList'} onClick={() => setActiveScreen('studentList')} activeColor="text-indigo-600" />
+                    <SidebarItem id="teacherList" icon={<UserGroupIcon />} label={t('dashboardSidebar.teachers')} isActive={activeScreen === 'teacherList'} onClick={() => setActiveScreen('teacherList')} activeColor="text-indigo-600" />
+                    <SidebarItem id="timetable" icon={<ClipboardListIcon />} label={t('dashboardSidebar.timetable')} isActive={activeScreen === 'timetable'} onClick={() => setActiveScreen('timetable')} activeColor="text-indigo-600" />
                     <SidebarItem id="examManagement" icon={<ExamIcon />} label="Exams" isActive={activeScreen === 'examManagement'} onClick={() => setActiveScreen('examManagement')} activeColor="text-indigo-600" />
-                    <SidebarItem id="results" icon={<EnterResultsIcon />} label="Results" isActive={activeScreen === 'results'} onClick={() => setActiveScreen('results')} activeColor="text-indigo-600" />
-                    <SidebarItem id="compliance" icon={<ShieldCheckIcon />} label="Compliance" isActive={activeScreen === 'compliance'} onClick={() => setActiveScreen('compliance')} activeColor="text-indigo-600" />
-                    <SidebarItem id="studentApprovals" icon={<CheckCircleIcon />} label="Approvals" isActive={activeScreen === 'studentApprovals'} onClick={() => setActiveScreen('studentApprovals')} activeColor="text-indigo-600" />
-                    <SidebarItem id="feeManagement" icon={<DocumentTextIcon />} label="Fee Management" isActive={activeScreen === 'feeManagement'} onClick={() => setActiveScreen('feeManagement')} activeColor="text-indigo-600" />
-                    <SidebarItem id="messages" icon={<MessagesIcon />} label="Messages" isActive={activeScreen === 'messages'} onClick={() => setActiveScreen('messages')} activeColor="text-indigo-600" />
-                    <SidebarItem id="analytics" icon={<AnalyticsIcon />} label="Analytics" isActive={activeScreen === 'analytics'} onClick={() => setActiveScreen('analytics')} activeColor="text-indigo-600" />
-                    <SidebarItem id="settings" icon={<SettingsIcon />} label="Settings" isActive={activeScreen === 'settings'} onClick={() => setActiveScreen('settings')} activeColor="text-indigo-600" />
+                    <SidebarItem id="results" icon={<EnterResultsIcon />} label={t('dashboardSidebar.results')} isActive={activeScreen === 'results'} onClick={() => setActiveScreen('results')} activeColor="text-indigo-600" />
+                    <SidebarItem id="compliance" icon={<ShieldCheckIcon />} label={t('dashboardSidebar.compliance')} isActive={activeScreen === 'compliance'} onClick={() => setActiveScreen('compliance')} activeColor="text-indigo-600" />
+                    <SidebarItem id="studentApprovals" icon={<CheckCircleIcon />} label={t('dashboardSidebar.approvals')} isActive={activeScreen === 'studentApprovals'} onClick={() => setActiveScreen('studentApprovals')} activeColor="text-indigo-600" />
+                    <SidebarItem id="feeManagement" icon={<DocumentTextIcon />} label={t('dashboardSidebar.feeManagement')} isActive={activeScreen === 'feeManagement'} onClick={() => setActiveScreen('feeManagement')} activeColor="text-indigo-600" />
+                    <SidebarItem id="messages" icon={<MessagesIcon />} label={t('dashboardSidebar.messages')} isActive={activeScreen === 'messages'} onClick={() => setActiveScreen('messages')} activeColor="text-indigo-600" />
+                    <SidebarItem id="analytics" icon={<AnalyticsIcon />} label={t('dashboardSidebar.analytics')} isActive={activeScreen === 'analytics'} onClick={() => setActiveScreen('analytics')} activeColor="text-indigo-600" />
+                    <SidebarItem id="settings" icon={<SettingsIcon />} label={t('dashboardSidebar.settings')} isActive={activeScreen === 'settings'} onClick={() => setActiveScreen('settings')} activeColor="text-indigo-600" />
                 </div>
             </nav>
 
@@ -144,14 +147,15 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
 };
 
 export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
+    const { t } = useTranslation();
     const { classes: teacherClasses } = useTeacherClasses();
     const navItems = [
         { id: 'home', icon: <HomeIcon />, label: 'Home' },
-        { id: 'lessonNotes', icon: <DocumentTextIcon />, label: 'Lesson Notes' },
-        { id: 'reports', icon: <ReportIcon />, label: 'Reports' },
+        { id: 'lessonNotes', icon: <DocumentTextIcon />, label: t('dashboardSidebar.lessonNotes') },
+        { id: 'reports', icon: <ReportIcon />, label: t('dashboardSidebar.reports') },
         { id: 'forum', icon: <UserGroupIcon />, label: 'Forum' },
-        { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
-        { id: 'settings', icon: <SettingsIcon />, label: 'Settings' },
+        { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
+        { id: 'settings', icon: <SettingsIcon />, label: t('dashboardSidebar.settings') },
     ];
 
     return (
@@ -200,11 +204,12 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
 };
 
 export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
+    const { t } = useTranslation();
     const navItems = [
         { id: 'home', icon: <HomeIcon />, label: 'Home' },
-        { id: 'fees', icon: <DocumentTextIcon />, label: 'Fee Status' },
-        { id: 'reports', icon: <ReportIcon />, label: 'Reports' },
-        { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
+        { id: 'fees', icon: <DocumentTextIcon />, label: t('dashboardSidebar.feeStatus') },
+        { id: 'reports', icon: <ReportIcon />, label: t('dashboardSidebar.reports') },
+        { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
         { id: 'more', icon: <SettingsIcon />, label: 'More' },
     ];
 

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 // Add html2pdf.js for PDF export
 // Install with: npm install html2pdf.js
 import { toast } from 'react-hot-toast';
@@ -35,6 +36,7 @@ const CredentialsModal: React.FC<CredentialsModalProps> = ({
   fullscreen = false,
   studentId
 }) => {
+    const { t } = useTranslation();
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -102,7 +104,7 @@ Visit: https://your-school-app.com/login
     <div className="space-y-4 pt-4 first:pt-0">
       {/* User Info */}
       <div className="bg-green-50 rounded-lg p-3 sm:p-4 border border-green-200">
-        <p className="text-sm text-green-600 font-medium">Account Created For:</p>
+        <p className="text-sm text-green-600 font-medium">{t('credentialsModal.accountCreatedFor')}</p>
         <p className="text-lg font-bold text-gray-800">{name}</p>
         <p className="text-sm text-gray-600">{mail}</p>
         <p className="text-xs text-green-700 mt-2 font-semibold">Role: {role}</p>
@@ -110,12 +112,12 @@ Visit: https://your-school-app.com/login
 
       {/* Login Credentials */}
       <div className="space-y-2 sm:space-y-3">
-        <p className="text-sm sm:text-base font-semibold text-gray-700">Login Credentials:</p>
-        <p className="text-xs text-gray-500 italic">You can login using either your <strong>Email</strong> or <strong>Username</strong>.</p>
+        <p className="text-sm sm:text-base font-semibold text-gray-700">{t('credentialsModal.loginCredentials')}</p>
+        <p className="text-xs text-gray-500 italic">{t('credentialsModal.youCanLoginUsingEitherYour')} <strong>Email</strong> or <strong>{t('credentialsModal.username')}</strong>.</p>
 
         {/* Username Field */}
         <div className="relative">
-          <label className="text-xs text-gray-500 font-medium">Username</label>
+          <label className="text-xs text-gray-500 font-medium">{t('credentialsModal.username')}</label>
           <div className="flex items-center mt-1 gap-2">
             <input
               type="text"
@@ -126,7 +128,7 @@ Visit: https://your-school-app.com/login
             <button
               onClick={() => copyToClipboard(user, `${prefix}_username`)}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-              title="Copy username"
+              title={t('credentialsModal.copyUsername')}
             >
               {copiedField === `${prefix}_username` ? (
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
@@ -139,7 +141,7 @@ Visit: https://your-school-app.com/login
 
         {/* Password Field */}
         <div className="relative">
-          <label className="text-xs text-gray-500 font-medium">Password</label>
+          <label className="text-xs text-gray-500 font-medium">{t('credentialsModal.password')}</label>
           <div className="flex items-center mt-1 gap-2">
             <input
               type="text"
@@ -150,7 +152,7 @@ Visit: https://your-school-app.com/login
             <button
               onClick={() => copyToClipboard(pass, `${prefix}_password`)}
               className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
-              title="Copy password"
+              title={t('credentialsModal.copyPassword')}
             >
               {copiedField === `${prefix}_password` ? (
                 <CheckCircleIcon className="w-5 h-5 text-green-500" />
@@ -233,7 +235,7 @@ Visit: https://your-school-app.com/login
           <div className="flex items-center space-x-3">
             <CheckCircleIcon className="w-8 h-8 flex-shrink-0" />
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold break-words">Success!</h2>
+              <h2 className="text-xl sm:text-2xl font-bold break-words">{t('credentialsModal.success')}</h2>
               <p className="text-green-100 text-sm break-words">
                 {secondaryCredentials ? 'Accounts created successfully' : 'Account created successfully'}
               </p>
@@ -248,13 +250,13 @@ Visit: https://your-school-app.com/login
 
           {studentId && userType === 'Student' && (
             <div className="flex items-center justify-between bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
-              <span className="text-xs text-indigo-600 font-medium">Student ID</span>
+              <span className="text-xs text-indigo-600 font-medium">{t('credentialsModal.studentID')}</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-mono font-bold text-indigo-800">{studentId}</span>
                 <button
                   onClick={() => copyToClipboard(studentId, 'student_id')}
                   className="p-1.5 hover:bg-indigo-100 rounded transition-colors"
-                  title="Copy Student ID"
+                  title={t('credentialsModal.copyStudentID')}
                 >
                   {copiedField === 'student_id' ? (
                     <CheckCircleIcon className="w-4 h-4 text-green-500" />
@@ -302,10 +304,10 @@ Visit: https://your-school-app.com/login
           <div className="bg-blue-50 rounded-lg p-3 sm:p-4 border-l-4 border-blue-400">
             <p className="text-sm sm:text-base font-semibold text-blue-900 mb-2">📧 Next Steps:</p>
             <ol className="text-xs sm:text-sm text-blue-800 space-y-1 list-decimal list-inside">
-              <li>An email will be sent to confirm the account</li>
-              <li>User must click the confirmation link</li>
-              <li>Account becomes active after confirmation</li>
-              <li>User can then login with username & password</li>
+              <li>{t('credentialsModal.anEmailWillBeSentToConfirmTheAccount')}</li>
+              <li>{t('credentialsModal.userMustClickTheConfirmationLink')}</li>
+              <li>{t('credentialsModal.accountBecomesActiveAfterConfirmation')}</li>
+              <li>{t('credentialsModal.userCanThenLoginWithUsernamePassword')}</li>
             </ol>
           </div>
         </div>
@@ -320,14 +322,14 @@ Visit: https://your-school-app.com/login
             className="w-full sm:w-auto flex items-center justify-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
           >
             <DownloadIcon className="w-4 h-4" />
-            <span>Download TXT</span>
+            <span>{t('credentialsModal.downloadTXT')}</span>
           </button>
           <button
             onClick={downloadPDF}
             className="w-full sm:w-auto flex items-center justify-center space-x-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors font-medium text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 16v-8m0 8l-4-4m4 4l4-4" /></svg>
-            <span>Download PDF</span>
+            <span>{t('credentialsModal.downloadPDF')}</span>
           </button>
           <button
             onClick={onClose}

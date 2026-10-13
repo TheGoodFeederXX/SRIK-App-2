@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LogoutIcon, ChevronLeftIcon, NotificationIcon, SearchIcon, UserIcon } from '../../constants';
@@ -22,6 +23,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, onBack, onMenuClick, onNotificationClick, notificationCount, onSearchClick, className = '', customId, userName }) => {
+    const { t } = useTranslation();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = React.useRef<HTMLDivElement>(null);
   const buttonRef = React.useRef<HTMLButtonElement>(null);
@@ -84,12 +86,12 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
       <div className="flex justify-between items-center gap-2">
         <div className="flex items-center space-x-2 min-w-0 flex-1">
           {onMenuClick && (
-            <motion.button whileTap={{ scale: 0.9 }} onClick={onMenuClick} className={`hidden p-1.5 sm:p-2 -ml-2 mr-1 rounded-full hover:bg-current/10 flex-shrink-0 lg:hidden focus:outline-none`} aria-label="Open menu">
+            <motion.button whileTap={{ scale: 0.9 }} onClick={onMenuClick} className={`hidden p-1.5 sm:p-2 -ml-2 mr-1 rounded-full hover:bg-current/10 flex-shrink-0 lg:hidden focus:outline-none`} aria-label={t('header.openMenu')}>
               <Menu className={`h-6 w-6 sm:h-7 sm:w-7 ${bgColor.includes('bg-white') || bgColor.includes('bg-gray-50') ? 'text-gray-900' : 'text-white'}`} />
             </motion.button>
           )}
           {onBack && (
-            <motion.button whileTap={{ scale: 0.9 }} onClick={onBack} className="p-1.5 sm:p-2 -ml-2 rounded-full hover:bg-white/10 flex-shrink-0" aria-label="Go back">
+            <motion.button whileTap={{ scale: 0.9 }} onClick={onBack} className="p-1.5 sm:p-2 -ml-2 rounded-full hover:bg-white/10 flex-shrink-0" aria-label={t('header.goBack')}>
               <ChevronLeftIcon className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
             </motion.button>
           )}
@@ -145,7 +147,7 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               aria-expanded={isDropdownOpen}
               aria-haspopup="true"
-              aria-label="Open user menu"
+              aria-label={t('header.openUserMenu')}
               className="focus:outline-none"
             >
               <Avatar />
@@ -168,7 +170,7 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
           className="fixed z-[70] w-64 max-w-[calc(100vw-1rem)] origin-top-right bg-white rounded-xl shadow-xl py-1 ring-1 ring-black ring-opacity-5 print:hidden"
           role="menu"
           aria-orientation="vertical"
-          aria-label="User menu"
+          aria-label={t('header.userMenu')}
         >
           {customId && (
             <div className="px-4 py-3 border-b border-gray-100">

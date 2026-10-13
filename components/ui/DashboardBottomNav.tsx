@@ -51,13 +51,14 @@ const NavItem: React.FC<{ icon: React.ReactElement<{ className?: string }>, labe
 };
 
 export const AdminBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
+    const { t } = useTranslation();
   const navItems = [
     // Order set by the owner: Home, Fees, Analytics, Messages, Settings.
     { id: 'home', icon: <HomeIcon />, label: 'Home' },
     { id: 'feeManagement', shortId: 'feeManagementShort', icon: <DocumentTextIcon />, label: 'Fees' },
-    { id: 'analytics', icon: <AnalyticsIcon />, label: 'Analytics' },
-    { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
-    { id: 'settings', icon: <SettingsIcon />, label: 'Settings' },
+    { id: 'analytics', icon: <AnalyticsIcon />, label: t('dashboardBottomNav.analytics') },
+    { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
+    { id: 'settings', icon: <SettingsIcon />, label: t('dashboardBottomNav.settings') },
   ];
   return (
     <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">
@@ -69,12 +70,13 @@ export const AdminBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen
 };
 
 export const TeacherBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
+    const { t } = useTranslation();
   const navItems = [
     { id: 'home', icon: <HomeIcon />, label: 'Home' },
-    { id: 'reports', icon: <DocumentTextIcon />, label: 'Reports' },
+    { id: 'reports', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.reports') },
     { id: 'forum', icon: <UserGroupIcon />, label: 'Forum' },
-    { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
-    { id: 'settings', icon: <SettingsIcon />, label: 'Settings' },
+    { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
+    { id: 'settings', icon: <SettingsIcon />, label: t('dashboardBottomNav.settings') },
   ];
   return (
     <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">
@@ -86,11 +88,12 @@ export const TeacherBottomNav = ({ activeScreen, setActiveScreen }: { activeScre
 };
 
 export const ParentBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
+    const { t } = useTranslation();
   const navItems = [
     { id: 'home', icon: <HomeIcon />, label: 'Home' },
     { id: 'fees', icon: <DocumentTextIcon />, label: 'Fees' },
-    { id: 'reports', icon: <DocumentTextIcon />, label: 'Reports' },
-    { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
+    { id: 'reports', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.reports') },
+    { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
     { id: 'more', icon: <ProfileIcon />, label: 'More' },
   ];
   return (
@@ -103,12 +106,13 @@ export const ParentBottomNav = ({ activeScreen, setActiveScreen }: { activeScree
 };
 
 export const StudentBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
+    const { t } = useTranslation();
   const navItems = [
     { id: 'home', icon: <HomeIcon />, label: 'Home' },
-    { id: 'quizzes', icon: <ClockIcon />, label: 'Quizzes' },
+    { id: 'quizzes', icon: <ClockIcon />, label: t('dashboardBottomNav.quizzes') },
     { id: 'games', icon: <GameControllerIcon />, label: 'Games' },
-    { id: 'messages', icon: <MessagesIcon />, label: 'Messages' },
-    { id: 'profile', icon: <ProfileIcon />, label: 'Profile' },
+    { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
+    { id: 'profile', icon: <ProfileIcon />, label: t('dashboardBottomNav.profile') },
   ];
   return (
     <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">
@@ -120,11 +124,12 @@ export const StudentBottomNav = ({ activeScreen, setActiveScreen }: { activeScre
 };
 
 export const ProprietorBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
+    const { t } = useTranslation();
   const navItems = [
-    { id: 'overview', icon: <LayoutDashboard />, label: 'Overview' },
-    { id: 'finance', icon: <Wallet />, label: 'Finance' },
+    { id: 'overview', icon: <LayoutDashboard />, label: t('dashboardBottomNav.overview') },
+    { id: 'finance', icon: <Wallet />, label: t('dashboardBottomNav.finance') },
     { id: 'compliance', icon: <ShieldCheck />, label: 'Audit' },
-    { id: 'academic', icon: <BookOpen />, label: 'Academic' },
+    { id: 'academic', icon: <BookOpen />, label: t('dashboardBottomNav.academic') },
     { id: 'stem', icon: <Beaker />, label: 'STEM' },
     { id: 'people', icon: <Users />, label: 'People' },
   ];
