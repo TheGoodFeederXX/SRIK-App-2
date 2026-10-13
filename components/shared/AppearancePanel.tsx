@@ -166,7 +166,7 @@ const AppearancePanel: React.FC = () => {
               <span className={`text-[11px] ${a.mode === 'normal' ? 'text-white/80' : 'text-gray-400'}`}>{t('appearancePanel.solidPanelsFastestOnOlderPhones')}</span>
             </motion.button>
             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={() => update({ mode: 'glass' })} className={modeBtn(a.mode === 'glass')} aria-pressed={a.mode === 'glass'}>
-              <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Layers className="w-4 h-4" /> Liquid Glass</span>
+              <span className="flex items-center gap-2 text-xs font-black uppercase tracking-wide"><Layers className="w-4 h-4" /> {t('appearancePanel.liquidGlass')}</span>
               <span className={`text-[11px] ${a.mode === 'glass' ? 'text-white/80' : 'text-gray-400'}`}>{t('appearancePanel.frostedTranslucentPanels')}</span>
             </motion.button>
           </div>

@@ -155,7 +155,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
         <div className="p-4 sm:p-6 max-w-7xl mx-auto pb-24 lg:pb-6">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-4 sm:p-6 text-white mb-6">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-2">📊 Academic Analytics</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">{t('academicAnalytics.academicAnalytics')}</h1>
                 <p className="text-indigo-100 text-sm sm:text-base">{t('academicAnalytics.comprehensivePerformanceTrackingAndAnalysis')}</p>
             </motion.div>
 
@@ -304,7 +304,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Subject Performance */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">📚 Subject Performance</h3>
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">{t('academicAnalytics.subjectPerformance')}</h3>
                     <div className="space-y-3">
                         {subjectPerformance.length === 0 && (
                             <p className="text-center text-gray-400 py-8 text-sm">{t('academicAnalytics.belumAdaMarkahUntukPenggalAtauKelasIni')}</p>
@@ -344,7 +344,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
 
                 {/* Class Comparison */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">🏆 Class Comparison</h3>
+                    <h3 className="text-lg font-bold text-gray-900 mb-4">{t('academicAnalytics.classComparison')}</h3>
                     <div className="space-y-3">
                         {classComparison.length === 0 && (
                             <p className="text-center text-gray-400 py-8 text-sm">{t('academicAnalytics.belumAdaMarkahUntukPenggalAtauKelasIni')}</p>
@@ -394,7 +394,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 something had been measured. Nothing had.
                 What follows is only what the stored marks actually show. */}
             <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-4 sm:p-6 mt-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-3">📊 Gambaran Keseluruhan</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-3">{t('academicAnalytics.gambaranKeseluruhan')}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-lg p-4">
                         <p className="text-sm text-gray-600 mb-1">{t('academicAnalytics.purataKeseluruhan')}</p>
@@ -415,7 +415,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                         <p className="text-2xl font-bold text-orange-600">{atRiskClasses.length}</p>
                         {/* 50% is the floor of a C on THIS school's scale — the line
                             between a pass and a D, not a number I chose. */}
-                        <p className="text-xs text-gray-500 mt-1">purata bawah 50% (D atau E)</p>
+                        <p className="text-xs text-gray-500 mt-1">{t('academicAnalytics.purataBawah50DAtauE')}</p>
                     </motion.div>
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.12 }} className="bg-white rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-1">

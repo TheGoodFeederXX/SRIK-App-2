@@ -286,7 +286,7 @@ Visit: https://your-school-app.com/login
           <div className="bg-yellow-50 rounded-lg p-3 sm:p-4 border-l-4 border-yellow-400">
             <p className="text-sm text-yellow-800 font-semibold">⏰ Important:</p>
             <p className="text-xs text-yellow-700 mt-1">
-              These credentials are <strong>active immediately</strong> — the user can log in right now using the username or email above with the password shown.
+              These credentials are <strong>{t('credentialsModal.activeImmediately')}</strong> — the user can log in right now using the username or email above with the password shown.
             </p>
             <p className="text-xs text-yellow-700 mt-1">
               Ask the user to change their password after first login.
@@ -296,13 +296,13 @@ Visit: https://your-school-app.com/login
           {/* Security Warning */}
           <div className="bg-red-50 rounded-lg p-2 sm:p-3 border border-red-200">
             <p className="text-xs text-red-700">
-              <strong>🔒 Security Note:</strong> Keep these credentials safe. Change the password after first login. Do not share with anyone.
+              <strong>{t('credentialsModal.securityNote')}</strong> Keep these credentials safe. Change the password after first login. Do not share with anyone.
             </p>
           </div>
 
           {/* Instructions */}
           <div className="bg-blue-50 rounded-lg p-3 sm:p-4 border-l-4 border-blue-400">
-            <p className="text-sm sm:text-base font-semibold text-blue-900 mb-2">📧 Next Steps:</p>
+            <p className="text-sm sm:text-base font-semibold text-blue-900 mb-2">{t('credentialsModal.nextSteps')}</p>
             <ol className="text-xs sm:text-sm text-blue-800 space-y-1 list-decimal list-inside">
               <li>{t('credentialsModal.anEmailWillBeSentToConfirmTheAccount')}</li>
               <li>{t('credentialsModal.userMustClickTheConfirmationLink')}</li>

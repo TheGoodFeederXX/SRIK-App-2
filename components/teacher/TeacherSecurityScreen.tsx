@@ -143,7 +143,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
 
                 {enrolling && (
                     <div className="border-t border-gray-100 pt-4 space-y-3">
-                        <p className="text-sm text-gray-600">Scan this QR code with an authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code it shows.</p>
+                        <p className="text-sm text-gray-600">{t('teacherSecurityScreen.scanThisQRCodeWithAnAuthenticatorAppGoogleAuth')}</p>
                         {qrCodeUrl && <img src={qrCodeUrl} alt="2FA QR code" className="w-40 h-40 mx-auto border border-gray-200 rounded-lg" />}
                         {secret && <p className="text-xs text-center font-mono text-gray-400 break-all">Manual entry key: {secret}</p>}
                         <input

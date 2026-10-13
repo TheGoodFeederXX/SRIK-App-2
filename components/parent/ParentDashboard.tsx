@@ -864,7 +864,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                 <ErrorBoundary
                     key={view}
                     title={`${title} Error`}
-                    message="We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
+                    message={t('parentDashboard.weEncounteredAnIssueWhileRenderingThisScreenTh')}
                     onReset={forceUpdate}
                 >
                     <Suspense fallback={<DashboardSuspenseFallback />}>

@@ -154,7 +154,7 @@ const AuditTrailViewer: React.FC = () => {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl p-6 text-white mb-6">
                 <div className="flex justify-between items-center">
                     <div>
-                        <h1 className="text-3xl font-bold mb-2">🔒 Audit Trail Viewer</h1>
+                        <h1 className="text-3xl font-bold mb-2">{t('auditTrailViewer.auditTrailViewer')}</h1>
                         <p className="text-purple-100">{t('auditTrailViewer.comprehensiveSystemActivityAndSecurityMonitori')}</p>
                     </div>
                     <motion.button

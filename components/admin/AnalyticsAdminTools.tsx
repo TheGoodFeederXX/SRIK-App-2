@@ -18,7 +18,7 @@ const AnalyticsAdminTools: React.FC<AnalyticsAdminToolsProps> = ({ navigateTo, s
     return (
         <div className="p-4 space-y-3 bg-gray-50">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-teal-600 to-cyan-600 rounded-xl p-6 text-white mb-4">
-                <h2 className="text-2xl font-bold mb-2">📊 Analytics & Admin Tools</h2>
+                <h2 className="text-2xl font-bold mb-2">{t('analyticsAdminTools.analyticsAdminTools')}</h2>
                 <p className="text-teal-100">{t('analyticsAdminTools.advancedAnalyticsBudgetingAndSystemIntegration')}</p>
             </motion.div>
 

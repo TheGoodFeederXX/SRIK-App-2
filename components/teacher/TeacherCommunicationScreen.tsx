@@ -127,7 +127,7 @@ const TeacherCommunicationScreen: React.FC = () => {
             setMode('text');
         } catch (err: any) {
             console.error("Error sending notice:", err);
-            toast.error("Failed to send notice: " + err.message);
+            toast.error(t('teacherCommunicationScreen.failedToSendNotice') + err.message);
         }
     };
 
@@ -220,7 +220,7 @@ const TeacherCommunicationScreen: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                         <div className="lg:col-span-1 space-y-5 lg:sticky lg:top-6 lg:self-start">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800 mb-2">1. Select Classes</h3>
+                                <h3 className="text-lg font-bold text-gray-800 mb-2">{t('teacherCommunicationScreen.1SelectClasses')}</h3>
                                 <div className="grid grid-cols-2 gap-3">
                                     {classes.map(cls => {
                                         const className = cls.name;
@@ -241,7 +241,7 @@ const TeacherCommunicationScreen: React.FC = () => {
                             </div>
 
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800 mb-2">2. Announcement Type</h3>
+                                <h3 className="text-lg font-bold text-gray-800 mb-2">{t('teacherCommunicationScreen.2AnnouncementType')}</h3>
                                 <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
                                     <button type="button" onClick={() => { setMode('text'); stopStream(); }} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'text' ? 'bg-white shadow' : 'text-gray-600'}`}>Text</button>
                                     <button type="button" onClick={() => setMode('video')} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'video' ? 'bg-white shadow' : 'text-gray-600'}`}>Video</button>
@@ -267,7 +267,7 @@ const TeacherCommunicationScreen: React.FC = () => {
                         </div>
 
                         <div className="lg:col-span-2">
-                            <h3 className="text-lg font-bold text-gray-800 mb-2">3. Compose Message</h3>
+                            <h3 className="text-lg font-bold text-gray-800 mb-2">{t('teacherCommunicationScreen.3ComposeMessage')}</h3>
                             <div className="space-y-4">
                                 <div className="bg-white p-4 rounded-xl shadow-sm space-y-4">
                                     <input id="announcement-title" type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={t('teacherCommunicationScreen.announcementTitle')} required className="w-full px-4 py-2 text-gray-800 bg-gray-50 border rounded-lg font-semibold" />

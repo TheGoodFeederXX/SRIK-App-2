@@ -361,7 +361,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
         <div className="p-6 max-w-full mx-auto">
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-6">
-                <h1 className="text-3xl font-bold mb-2">📊 Attendance Heatmap</h1>
+                <h1 className="text-3xl font-bold mb-2">{t('attendanceHeatmap.attendanceHeatmap')}</h1>
                 <p className="text-indigo-100">{t('attendanceHeatmap.visualAttendancePatternsAcrossClassesAndTimePe')}</p>
             </motion.div>
 

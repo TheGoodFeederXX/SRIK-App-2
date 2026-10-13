@@ -56,7 +56,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
             <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
                 {history.length === 0 && (
                     <div className="space-y-2">
-                        <p className="text-xs text-gray-400 flex items-center gap-1"><HelpCircle className="w-3.5 h-3.5" /> Try asking:</p>
+                        <p className="text-xs text-gray-400 flex items-center gap-1"><HelpCircle className="w-3.5 h-3.5" /> {t('askAIWidget.tryAsking')}</p>
                         {suggestions.slice(0, 5).map((s, i) => (
                             <motion.button
                                 key={i}
@@ -138,7 +138,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
                     <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
                         {history.length === 0 && (
                             <div className="space-y-2">
-                                <p className="text-xs text-gray-400 flex items-center gap-1"><HelpCircle className="w-3.5 h-3.5" /> Try asking:</p>
+                                <p className="text-xs text-gray-400 flex items-center gap-1"><HelpCircle className="w-3.5 h-3.5" /> {t('askAIWidget.tryAsking')}</p>
                                 {suggestions.slice(0, 5).map((s, i) => (
                                     <motion.button
                                         key={i}

@@ -95,8 +95,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
                                     className="w-full h-24 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-500 hover:border-orange-400 hover:text-orange-500 transition-colors"
                                 >
                                     <PaperclipIcon className="w-6 h-6" />
-                                    <span className="mt-1 font-semibold text-sm">{file ? 'Change file' : 'Click to upload a file'}</span>
-                                    <span className="text-xs">Image, Video, PDF, DOCX, TXT</span>
+                                    <span className="mt-1 font-semibold text-sm">{file ? t('homeScreen.changeFile') : t('homeScreen.clickToUploadAFile')}</span>
+                                    <span className="text-xs">{t('homeScreen.imageVideoPDFDOCXTXT')}</span>
                                 </button>
                                 {file && <p className="text-center text-sm text-gray-700 mt-2 truncate">Selected: {file.name}</p>}
                             </>
@@ -107,7 +107,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
                                     type="url"
                                     value={url}
                                     onChange={(e) => setUrl(e.target.value)}
-                                    placeholder="Paste a web link here..."
+                                    placeholder={t('homeScreen.pasteAWebLinkHere')}
                                     className="w-full pl-10 pr-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400"
                                 />
                             </div>

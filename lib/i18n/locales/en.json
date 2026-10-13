@@ -406,7 +406,8 @@
     "teacher": "Teacher",
     "quickActions": "Quick Actions",
     "searchAllActions": "Search all actions…",
-    "reportsToPublish": "Reports to Publish"
+    "reportsToPublish": "Reports to Publish",
+    "reportsArePendingReview": "reports are pending review"
   },
   "academicReportScreen": {
     "loadingReport": "Loading report...",
@@ -477,7 +478,8 @@
     "searchByName": "Search by name...",
     "noStudentsOrTeachersFound": "No students or teachers found",
     "noContactsAvailable": "No contacts available",
-    "couldNotCreateGroup": "Could not create group"
+    "couldNotCreateGroup": "Could not create group",
+    "eGStudyGroup10AScienceProject": "e.g. Study Group 10A, Science Project..."
   },
   "quizPlayerScreen": {
     "quizPlayer": "Quiz Player"
@@ -610,10 +612,15 @@
     "name": "Name",
     "studentId": "Student ID",
     "class": "Class",
-    "overallAverage": "Overall Average",
+    "overallAverage": "Overall Average:",
     "score": "Score",
     "grade": "Grade",
-    "noPublishedResultsYet": "No published results yet."
+    "noPublishedResultsYet": "No published results yet.",
+    "performanceOverview": "Performance Overview",
+    "uploadFailed": "Upload failed: ",
+    "todaySLearningFocus": "🎯 Today's Learning Focus",
+    "todaysLearningFocus": "🎯 Today's Learning Focus",
+    "studentID": "Student ID:"
   },
   "studyBuddy": {
     "uploadImage": "Upload image",
@@ -646,7 +653,11 @@
     "challengeLevel": "Challenge Level",
     "youngExplorer47Years": "Young Explorer (4-7 years)",
     "braveAdventurer811Years": "Brave Adventurer (8-11 years)",
-    "masterSage1215Years": "Master Sage (12-15 years)"
+    "masterSage1215Years": "Master Sage (12-15 years)",
+    "imageVideoPDFDOCXTXT": "Image, Video, PDF, DOCX, TXT",
+    "pasteAWebLinkHere": "Paste a web link here...",
+    "changeFile": "Change file",
+    "clickToUploadAFile": "Click to upload a file"
   },
   "loadingScreen": {
     "craftingYourAdventure": "Crafting Your Adventure...",
@@ -881,7 +892,9 @@
     "topicPostedSuccessfully": "Topic posted successfully!",
     "pleaseFillInBothTheTitleAndContent": "Please fill in both the title and content.",
     "failedToCreateTopicPleaseTryAgain": "Failed to create topic. Please try again.",
-    "teacher": "Teacher"
+    "teacher": "Teacher",
+    "topicTitle": "Topic Title",
+    "eGIdeasForScienceFair2026": "e.g., Ideas for Science Fair 2026"
   },
   "editTeacherProfileScreen": {
     "profileNotFound": "Profile not found.",
@@ -1037,7 +1050,8 @@
     "netPayout": "Net Payout",
     "downloadPDF": "Download PDF",
     "pleaseAllowPopUpsToDownloadYourPayslip": "Please allow pop-ups to download your payslip.",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "payslip": "Payslip"
   },
   "photoGalleryScreen": {
     "photoGallery": "Photo Gallery"
@@ -1073,7 +1087,8 @@
     "selectAClass": "Select a Class",
     "correctAnswer": "Correct answer",
     "failedToCreateQuiz": "Failed to create quiz",
-    "removeQuestion": "Remove question"
+    "removeQuestion": "Remove question",
+    "eGWeeklyMathAssessment": "e.g. Weekly Math Assessment"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Recognition Platform"
@@ -1220,7 +1235,11 @@
     "pleaseProvideAMessageForTheTextAnnouncement": "Please provide a message for the text announcement.",
     "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Please record or provide a video for the video announcement.",
     "cameraMicrophonePermissionDeniedPleaseEnableIt": "Camera/microphone permission denied. Please enable it in your browser settings.",
-    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk"
+    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk",
+    "failedToSendNotice": "Failed to send notice: ",
+    "1SelectClasses": "1. Select Classes",
+    "2AnnouncementType": "2. Announcement Type",
+    "3ComposeMessage": "3. Compose Message"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Loading your classes...",
@@ -1236,7 +1255,8 @@
     "studentReports": "Student Reports",
     "collaborationForum": "Collaboration Forum",
     "messages": "Messages",
-    "settings": "Settings"
+    "settings": "Settings",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
   },
   "teacherExamManagement": {
     "published": "Published",
@@ -1398,7 +1418,8 @@
     "enabledYourAccountIsProtected": "Enabled — your account is protected.",
     "addAnExtraLayerOfSecurity": "Add an extra layer of security.",
     "failedToStart2FASetup": "Failed to start 2FA setup.",
-    "invalidCodePleaseTryAgain": "Invalid code — please try again."
+    "invalidCodePleaseTryAgain": "Invalid code — please try again.",
+    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Scan this QR code with an authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code it shows."
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Loading attendance records...",
@@ -1523,7 +1544,8 @@
     "selectReportCard": "Select Report Card",
     "messages": "Messages",
     "moreOptions": "More Options",
-    "pending": "Pending"
+    "pending": "Pending",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
   },
   "parentNewChatScreen": {
     "parentNewChat": "Parent New Chat"
@@ -1736,7 +1758,17 @@
     "voiceInputNeedsChromeOrEdgePleaseTypeYourQuest": "Voice input needs Chrome or Edge. Please type your question instead.",
     "couldNotHearYouTryAgain": "Could not hear you — try again.",
     "couldNotAccessMicrophone": "Could not access microphone.",
-    "readAloudIsNotSupportedInThisBrowser": "Read-aloud is not supported in this browser."
+    "readAloudIsNotSupportedInThisBrowser": "Read-aloud is not supported in this browser.",
+    "deepThinker": "Deep Thinker",
+    "webSearch": "Web Search",
+    "smartChat": "Smart Chat",
+    "mySchool": "My School",
+    "liveVoice": "Live Voice",
+    "creativeStudio": "Creative Studio",
+    "aiAssistant": "AI Assistant",
+    "askAnything": "Ask anything...",
+    "upload": "Upload",
+    "noResponseGenerated": "No response generated."
   },
   "aIChatWidget": {
     "openAIAssistant": "Open AI Assistant"
@@ -1785,12 +1817,14 @@
     "glassVivid": "Vivid",
     "glassVividHint": "Deeper blur, more shine",
     "defaultLookInUse": "Default look in use",
-    "resetToDefault": "Reset to default"
+    "resetToDefault": "Reset to default",
+    "liquidGlass": "Liquid Glass"
   },
   "askAIWidget": {
     "askAI": "Ask AI",
     "askAQuestion": "Ask a question...",
-    "failedToGetAnAnswer": "Failed to get an answer"
+    "failedToGetAnAnswer": "Failed to get an answer",
+    "tryAsking": "Try asking:"
   },
   "busRouteScreen": {
     "busRoute": "Bus Route"
@@ -1811,7 +1845,8 @@
     "eligibility": "Eligibility",
     "searchByNameLocationOrService": "Search by name, location, or service...",
     "failedToLoadResources": "Failed to load resources",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "communityResourceDirectory": "🗺️ Community Resource Directory"
   },
   "conferenceScheduling": {
     "penjadualanPerjumpaan": "Penjadualan Perjumpaan"
@@ -1855,7 +1890,9 @@
     "editProfile": "Edit Profile",
     "saving": "Saving...",
     "saveChanges": "Save Changes",
-    "uploadingImage": "Uploading image..."
+    "uploadingImage": "Uploading image...",
+    "errorUploadingImage": "Error uploading image: ",
+    "errorUpdatingProfile": "Error updating profile: "
   },
   "examSchedule": {
     "examSchedule": "Exam Schedule"
@@ -1966,14 +2003,17 @@
   },
   "offlineIndicator": {
     "slowConnectionSyncMayBeDelayed": "Slow Connection - Sync may be delayed",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "backOnlineSyncingYourData": "✓ Back Online - Syncing your data..."
   },
   "panicButton": {
     "alertSentHelpIsOnTheWay": "Alert Sent — Help Is On The Way",
     "emergencyPanicButton": "Emergency Panic Button",
     "failedToSendAlertPleaseCallEmergencyServicesDi": "Failed to send alert. Please call emergency services directly.",
     "sending": "Sending...",
-    "holdTOSEND": "HOLD TO SEND 🚨"
+    "holdTOSEND": "HOLD TO SEND 🚨",
+    "pressAndHoldTheRedButtonToConfirmThisPreventsS": "Press and hold the red button to confirm — this prevents sending an alert by accident.",
+    "emergencyALERTSENTHelpIsOnTheWay": "🚨 EMERGENCY ALERT SENT! Help is on the way."
   },
   "permissionSlips": {
     "slipKebenaran": "Slip Kebenaran"
@@ -1981,7 +2021,7 @@
   "personnelFileView": {
     "loadingPersonnelFile": "Loading personnel file...",
     "personnelFileUnavailable": "Personnel file unavailable.",
-    "addRecord": "Add Record",
+    "addRecord": "+ Add Record",
     "issueQueryLetter": "Issue Query Letter",
     "personalInformation": "Personal Information",
     "employmentDetails": "Employment Details",
@@ -2062,7 +2102,8 @@
     "failedToIssueQueryLetter": "Failed to issue query letter",
     "failedToCloseQueryLetter": "Failed to close query letter",
     "failedToSubmitResponse": "Failed to submit response",
-    "classTeacher": "Class Teacher —"
+    "classTeacher": "Class Teacher —",
+    "eGUnauthorizedAbsenceOn10July": "e.g. Unauthorized absence on 10 July"
   },
   "projectBoardScreen": {
     "projectBoard": "Project Board"
@@ -2090,7 +2131,8 @@
     "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Please describe the situation and what support is needed...",
     "referralSubmittedSuccessfullyASocialWorkerWill": "Referral submitted successfully! A social worker will review it soon.",
     "pleaseSelectAStudentAndDescribeTheNeed": "Please select a student and describe the need",
-    "failedToSubmitReferral": "Failed to submit referral"
+    "failedToSubmitReferral": "Failed to submit referral",
+    "familyReferralSystem": "🤝 Family Referral System"
   },
   "reportIncidentScreen": {
     "laporInsiden": "Lapor Insiden"
@@ -2105,14 +2147,14 @@
     "noDecisionsRecordedYet": "No decisions recorded yet.",
     "letters": "Letters",
     "noLettersGeneratedYet": "No letters generated yet.",
-    "recordDecision": "Record Decision",
+    "recordDecision": "+ Record Decision",
     "outcome": "Outcome",
     "noAction": "No Action",
     "warning": "Warning",
     "suspension": "Suspension",
     "expulsion": "Expulsion",
     "decisionDetails": "Decision Details",
-    "generateLetter": "Generate Letter",
+    "generateLetter": "+ Generate Letter",
     "recipientType": "Recipient Type",
     "student": "Student",
     "teacher": "Teacher",
@@ -2137,7 +2179,9 @@
     "failedToAdvanceTheCase": "Failed to advance the case",
     "failedToRecordDecision": "Failed to record decision",
     "failedToDraftLetter": "Failed to draft letter",
-    "failedToSendLetter": "Failed to send letter"
+    "failedToSendLetter": "Failed to send letter",
+    "needsEvidence": "(needs evidence)",
+    "needsDecision": "(needs decision)"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Select a student first.",
@@ -2182,7 +2226,8 @@
     "synchronizationRequired": "Synchronization Required",
     "updateNow": "Update Now",
     "updatePending": "Update Pending",
-    "upToDate": "Up to Date"
+    "upToDate": "Up to Date",
+    "yourLocalApplicationVersionDoesnTMatchTheSchoo": "Your local application version doesn't match the school's platform lock. Update now to ensure full feature compatibility."
   },
   "voiceSearchWidget": {
     "voiceSearchNotAvailablePleaseTypeYourQuery": "Voice search not available. Please type your query.",
@@ -2246,7 +2291,10 @@
     "copyPassword": "Copy password",
     "copyStudentID": "Copy Student ID",
     "accountsCreatedSuccessfully": "Accounts created successfully",
-    "accountCreatedSuccessfully": "Account created successfully"
+    "accountCreatedSuccessfully": "Account created successfully",
+    "securityNote": "🔒 Security Note:",
+    "nextSteps": "📧 Next Steps:",
+    "activeImmediately": "active immediately"
   },
   "dashboardBottomNav": {
     "analytics": "Analytics",
@@ -2292,7 +2340,8 @@
     "tryAgainNow": "Try Again Now",
     "support": "Support",
     "contactOurTechnicalTeam": "Contact our technical team",
-    "errorIllustration": "Error Illustration"
+    "errorIllustration": "Error Illustration",
+    "needHelp": "Need help?"
   },
   "premiumModal": {
     "upgradeToPremium": "Upgrade to Premium",
@@ -2319,7 +2368,12 @@
     "failedToLoadAnalytics": "Failed to load analytics",
     "penggal1": "Penggal 1",
     "penggal2": "Penggal 2",
-    "penggal3": "Penggal 3"
+    "penggal3": "Penggal 3",
+    "academicAnalytics": "📊 Academic Analytics",
+    "subjectPerformance": "📚 Subject Performance",
+    "classComparison": "🏆 Class Comparison",
+    "gambaranKeseluruhan": "📊 Gambaran Keseluruhan",
+    "purataBawah50DAtauE": "purata bawah 50% (D atau E)"
   },
   "academicSettingsScreen": {
     "academicConfiguration": "Academic Configuration",
@@ -2475,7 +2529,8 @@
     "communicationHub": "Communication Hub",
     "schoolAnalytics": "School Analytics",
     "profileSettings": "Profile Settings",
-    "manageTeachers": "Manage Teachers"
+    "manageTeachers": "Manage Teachers",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
   },
   "adminLessonNotesScreen": {
     "notaPelajaran": "Nota Pelajaran"
@@ -2589,7 +2644,8 @@
     "scanAQRTagToViewDetails": "Scan a QR tag to view details",
     "dataProtectionConsent": "Data protection & consent",
     "automatedRegulatoryHealth": "Automated regulatory health",
-    "repairsIssueTracking": "Repairs & issue tracking"
+    "repairsIssueTracking": "Repairs & issue tracking",
+    "analyticsAdminTools": "📊 Analytics & Admin Tools"
   },
   "analyticsScreen": {
     "noAttendanceTaken": "No attendance taken",
@@ -2656,7 +2712,8 @@
     "reportExportedSuccessfully": "Report exported successfully!",
     "failedToLoadAttendanceData": "Failed to load attendance data",
     "unknown": "Unknown",
-    "wkOf": "Wk of"
+    "wkOf": "Wk of",
+    "attendanceHeatmap": "📊 Attendance Heatmap"
   },
   "attendanceOverviewScreen": {
     "attendance": "Attendance",
@@ -2708,7 +2765,8 @@
     "viewDetails": "View Details",
     "searchUserActionOrResource": "Search user, action, or resource...",
     "auditLogExported": "Audit log exported!",
-    "failedToLoadAuditLogs": "Failed to load audit logs"
+    "failedToLoadAuditLogs": "Failed to load audit logs",
+    "auditTrailViewer": "🔒 Audit Trail Viewer"
   },
   "awardPoints": {
     "awardPoints": "Award Points"
@@ -2794,7 +2852,8 @@
     "parentPortalSettings": "Parent Portal Settings",
     "communicationSettingsSavedSuccessfully": "Communication settings saved successfully",
     "saving": "Saving...",
-    "saveCommunicationSettings": "Save Communication Settings"
+    "saveCommunicationSettings": "Save Communication Settings",
+    "controlWhatParentsCanSeeAndDoInTheirPortalEGVi": "Control what parents can see and do in their portal (e.g., view grades, chat with teachers)."
   },
   "complianceChecklist": {
     "complianceChecklist": "Compliance Checklist"
@@ -2860,7 +2919,8 @@
     "staffOnly": "Staff Only",
     "channels": "Channels",
     "broadcasting": "Broadcasting...",
-    "detailedInstructions": "Detailed instructions..."
+    "detailedInstructions": "Detailed instructions...",
+    "eGSCHOOLCLOSEDTODAY": "e.g. SCHOOL CLOSED TODAY"
   },
   "enhancedEnrollmentPage": {
     "enhancedEnrollmentPage": "Enhanced Enrollment Page"
@@ -2947,7 +3007,8 @@
     "invoicePaymentMethods": "Invoice & Payment Methods",
     "financialSettingsSaved": "Financial settings saved",
     "saving": "Saving...",
-    "saveFinancialSettings": "Save Financial Settings"
+    "saveFinancialSettings": "Save Financial Settings",
+    "customizeInvoiceTemplatesAndEnablePaymentMetho": "Customize invoice templates and enable payment methods like Bank Transfer, Card, etc."
   },
   "gatePassApprovals": {
     "gatePassApprovals": "Gate Pass Approvals"
@@ -2976,7 +3037,8 @@
     "ciptaAkaun": "Cipta akaun",
     "menyimpan": "Menyimpan…",
     "simpanPenjaga": "Simpan penjaga",
-    "nyahpaut": "Nyahpaut"
+    "nyahpaut": "Nyahpaut",
+    "pilihAnakUntukDipautkan": "— Pilih anak untuk dipautkan —"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -2994,7 +3056,8 @@
     "ivrPhoneProviderNotConnected": "IVR Phone Provider Not Connected",
     "supportedProvidersAnyOneRequired": "Supported providers (any one required):",
     "africaSTalking": "Africa's Talking",
-    "infobip": "Infobip"
+    "infobip": "Infobip",
+    "globalIVRPlatform": "— global IVR platform"
   },
   "integrationHub": {
     "integration": "Integration"
@@ -3052,7 +3115,8 @@
     "simpanMarkah": "Simpan markah",
     "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
     "gagalMenerbitkan": "Gagal menerbitkan.",
-    "catatan": "Catatan"
+    "catatan": "Catatan",
+    "sudahDiisi": "sudah diisi"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Mark Student Exit"
@@ -3192,7 +3256,8 @@
     "supportedSMSProvidersAnyOneRequired": "Supported SMS providers (any one required):",
     "infobip": "Infobip",
     "africaSTalking": "Africa's Talking",
-    "localMalaysianGateway": "Local Malaysian gateway"
+    "localMalaysianGateway": "Local Malaysian gateway",
+    "globalReliableHigherCost": "— global, reliable, higher cost"
   },
   "sOPCaseManagementScreen": {
     "sopcaseManagement": "SOPCase Management"
@@ -3266,7 +3331,8 @@
   },
   "studentDetailReport": {
     "studentDetailReport": "Student Detail Report",
-    "reportDataVisualizationWillAppearHere": "Report data visualization will appear here."
+    "reportDataVisualizationWillAppearHere": "Report data visualization will appear here.",
+    "thisReportProvidesDetailedInformationAboutAStu": "This report provides detailed information about a student's academic performance, attendance, and behavior."
   },
   "studentEnrollmentPage": {
     "registerStudentAssignCurriculumAndUploadDocs": "Register student, assign curriculum, and upload docs.",
@@ -3305,7 +3371,8 @@
     "cajDikecualikan": "Caj dikecualikan.",
     "diskaunMestiNomborYangSah": "Diskaun mesti nombor yang sah.",
     "silaNyatakanSebabDiskaun": "Sila nyatakan sebab diskaun.",
-    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian."
+    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian.",
+    "pilihPelajar": "— Pilih pelajar —"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Kad Pengenalan Murid"
@@ -3373,7 +3440,8 @@
     "couldNotSaveTheSubject": "Could not save the subject.",
     "couldNotRemoveTheSubject": "Could not remove the subject.",
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
-    "taughtIn": "Taught in"
+    "taughtIn": "Taught in",
+    "eGBahasaMelayu": "e.g., Bahasa Melayu"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3466,7 +3534,8 @@
     "anErrorOccurredWhileRejectingAttendance": "An error occurred while rejecting attendance.",
     "unknownTeacher": "Unknown Teacher",
     "failedToApprove": "Failed to approve",
-    "failedToReject": "Failed to reject"
+    "failedToReject": "Failed to reject",
+    "thereAreNoPendingAttendanceRequestsMatchingYou": "There are no pending attendance requests matching your search. Great job keeping up with approvals."
   },
   "teacherAttendanceDetail": {
     "noTeacherSelectedOpenThisViewFromATeacherRow": "No teacher selected. Open this view from a teacher row.",
@@ -3492,7 +3561,8 @@
     "confirm": "Confirm",
     "unknownError": "Unknown error",
     "general": "General",
-    "statusChangedTo": "Status changed to"
+    "statusChangedTo": "Status changed to",
+    "failedToUpdateStatus": "Failed to update status: "
   },
   "teacherListScreen": {
     "teacherManagement": "Teacher Management",
@@ -3611,7 +3681,8 @@
   },
   "liveSession": {
     "saySomethingIAmListening": "Say something — I'm listening!",
-    "microphonePermissionDenied": "Microphone permission was denied."
+    "microphonePermissionDenied": "Microphone permission was denied.",
+    "liveVoice": "Live Voice"
   },
   "updatePrompt": {
     "systemUpdateRequired": "System Update Required",
@@ -3644,5 +3715,13 @@
     "tapInstallAppAddToHomeScreen": "Tap 'Install app' / 'Add to Home screen'.",
     "clickTheInstallIconInTheAddressBar": "Click the install icon in the address bar,",
     "orBrowserMenuInstallSchoolApp": "or browser menu → 'Install School App'."
+  },
+  "sopCaseDetail": {
+    "needsEvidence": "(needs evidence)",
+    "needsDecision": "(needs decision)"
+  },
+  "aiChatScreen": {
+    "deepThinker": "Deep Thinker",
+    "webSearch": "Web Search"
   }
 }

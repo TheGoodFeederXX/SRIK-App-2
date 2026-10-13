@@ -267,7 +267,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                 fetchProfileData(student.id); // Refresh documents
             }
         } catch (error: any) {
-            toast.error('Upload failed: ' + error.message, { id: toastId });
+            toast.error(t('studentProfileEnhanced.uploadFailed') + error.message, { id: toastId });
         }
     };
 
@@ -329,20 +329,20 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             const el = document.createElement('div');
             el.innerHTML = `
                 <div style="font-family:Arial,sans-serif;padding:24px;color:#1f2937">
-                    <h2 style="margin:0 0 12px">Academic Transcript</h2>
+                    <h2 style="margin:0 0 12px">${t('studentProfileEnhanced.academicTranscript')}</h2>
                     <p style="margin:0 0 16px;line-height:1.6">
                         <b>Name:</b> ${student.name || ''}<br/>
-                        <b>Student ID:</b> ${student.admission_number || ''}<br/>
+                        <b>${t('studentProfileEnhanced.studentID')}</b> ${student.admission_number || ''}<br/>
                         <b>Class:</b> ${student.class_name || ('Grade ' + (student.grade ?? ''))}<br/>
-                        <b>Overall Average:</b> ${stats.averageScore}%
+                        <b>${t('studentProfileEnhanced.overallAverage')}</b> ${stats.averageScore}%
                     </p>
                     <table style="border-collapse:collapse;width:100%;font-size:13px">
                         <thead><tr style="background:#fff7ed">
-                            <th style="border:1px solid #ddd;padding:6px;text-align:left">Subject</th>
+                            <th style="border:1px solid #ddd;padding:6px;text-align:left">${t('studentProfileEnhanced.subject')}</th>
                             <th style="border:1px solid #ddd;padding:6px">Score</th>
                             <th style="border:1px solid #ddd;padding:6px">Grade</th>
                         </tr></thead>
-                        <tbody>${rows || '<tr><td colspan="3" style="border:1px solid #ddd;padding:10px;text-align:center;color:#6b7280">No published results yet.</td></tr>'}</tbody>
+                        <tbody>${rows || `<tr><td colspan="3" style="border:1px solid #ddd;padding:10px;text-align:center;color:#6b7280">${t('studentProfileEnhanced.noPublishedResultsYet')}</td></tr>`}</tbody>
                     </table>
                 </div>`;
             await html2pdf().set({
@@ -663,7 +663,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         <Target className="w-6 h-6" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <h3 className="text-lg font-bold text-white mb-1">🎯 Today's Learning Focus</h3>
+                                                        <h3 className="text-lg font-bold text-white mb-1">{t('studentProfileEnhanced.todaySLearningFocus')}</h3>
                                                         <p className="text-orange-100 text-sm mb-3">{t('studentProfileEnhanced.basedOnYourRecentPerformanceWeRecommendFocusin')}</p>
                                                         <div className="space-y-2">
                                                             {learningFocus.map((item: any, idx: number) => {
@@ -695,7 +695,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                 <div className="p-2 bg-purple-100 rounded-lg">
                                                     <TrendingUp className="w-5 h-5 text-purple-600" />
                                                 </div>
-                                                Performance Overview
+                                                {t('studentProfileEnhanced.performanceOverview')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent className="p-6">

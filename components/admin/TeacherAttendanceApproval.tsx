@@ -158,7 +158,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                             <CheckCircleIcon className="h-12 w-12 text-green-500" />
                         </div>
                         <h3 className="text-xl font-bold text-gray-800">{t('teacherAttendanceApproval.allCaughtUp')}</h3>
-                        <p className="text-gray-500 mt-2 max-w-md">There are no pending attendance requests matching your search. Great job keeping up with approvals.</p>
+                        <p className="text-gray-500 mt-2 max-w-md">{t('teacherAttendanceApproval.thereAreNoPendingAttendanceRequestsMatchingYou')}</p>
                     </motion.div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">

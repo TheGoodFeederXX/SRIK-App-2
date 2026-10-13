@@ -485,7 +485,7 @@ function GuardianPanel({
                                 className="flex-1 px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                            focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             >
-                                <option value="">— Pilih anak untuk dipautkan —</option>
+                                <option value="">{t('guardianAccountsScreen.pilihAnakUntukDipautkan')}</option>
                                 {unlinked.map(s => (
                                     <option key={s.id} value={s.id}>
                                         {s.full_name}

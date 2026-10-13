@@ -123,7 +123,7 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                     {/* Topic Title */}
                     <div>
                         <label htmlFor="topic-title" className="block text-sm font-semibold text-gray-700 mb-2">
-                            Topic Title <span className="text-red-400">*</span>
+                            {t('createForumTopicScreen.topicTitle')} <span className="text-red-400">*</span>
                         </label>
                         <input
                             type="text"
@@ -131,7 +131,7 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                             className="w-full px-4 py-3 bg-white border-2 border-gray-200 rounded-xl text-gray-800 font-medium focus:ring-2 focus:ring-purple-500 focus:border-purple-400 outline-none transition-all placeholder-gray-400"
-                            placeholder="e.g., Ideas for Science Fair 2026"
+                            placeholder={t('createForumTopicScreen.eGIdeasForScienceFair2026')}
                             required
                             maxLength={120}
                         />

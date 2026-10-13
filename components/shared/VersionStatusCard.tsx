@@ -54,7 +54,7 @@ export default function VersionStatusCard() {
                 <div className="mt-6 p-4 rounded-xl bg-amber-50 border border-amber-100 flex flex-col sm:flex-row items-center gap-4">
                     <div className="flex-1">
                         <p className="text-sm font-bold text-amber-900">{t('versionStatusCard.synchronizationRequired')}</p>
-                        <p className="text-xs text-amber-700 mt-0.5">Your local application version doesn't match the school's platform lock. Update now to ensure full feature compatibility.</p>
+                        <p className="text-xs text-amber-700 mt-0.5">{t('versionStatusCard.yourLocalApplicationVersionDoesnTMatchTheSchoo')}</p>
                     </div>
                     <button 
                         onClick={() => window.location.reload()}

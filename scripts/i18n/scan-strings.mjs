@@ -56,8 +56,15 @@ for (const file of files) {
         if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
 
         // JSX text: >Some Words<
-        for (const m of line.matchAll(/>([A-Z][^<>{}]{2,80})</g)) {
-            if (looksLikeProse(m[1])) found.push({ line: i + 1, text: m[1].trim(), kind: 'jsx' });
+        // The run may begin with punctuation, an emoji or a bullet — `/> Try asking:` follows a
+        // self-closing icon. Requiring a capital letter immediately after `>` missed every one of
+        // those, so the scanner never reported them and the tool never saw them.
+        for (const m of line.matchAll(/>([^<>{}]{2,400}?)</g)) {
+            const t = m[1].trim().replace(/^[^\p{L}\p{N}"]*["']?\s*/u, '');
+            const body = t.replace(/^[^\p{L}\p{N}]*/u, '');
+            if ((/^[A-Z0-9]/.test(body) || /\s/.test(body)) && looksLikeProse(t)) {
+                found.push({ line: i + 1, text: t, kind: 'jsx' });
+            }
         }
         // Quoted strings that look like sentences.
         for (const m of line.matchAll(/(['"])([A-Z][a-zA-Z][^'"]{4,90})\1/g)) {

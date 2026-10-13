@@ -264,7 +264,7 @@ export const SubjectListScreen: React.FC = () => {
                                         type="text"
                                         value={form.name}
                                         onChange={e => setForm({ ...form, name: e.target.value })}
-                                        placeholder="e.g., Bahasa Melayu"
+                                        placeholder={t('subjectListScreen.eGBahasaMelayu')}
                                         className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                         required
                                     />

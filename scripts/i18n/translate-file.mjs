@@ -106,7 +106,63 @@ src = src.replace(/`([^`$]{2,120}?)(:?)\s*(\$\{[^`]*\})`/g, (full, lead, colon, 
     changes.push(['template label', key]);
     return '`' + `\${t('${keyFor(key)}')}${colon ? ':' : ''} ${expr}` + '`';
 });
-src = src.replace(/`(?:[^`\\]|\\.)*`/gs, protect);           // template literals
+/**
+ * Replace every TEMPLATE LITERAL with an inert placeholder, tracking `${...}` nesting.
+ *
+ * WHY NOT A REGEX. A regex that pairs backticks simple-mindedly (`/`(?:[^`\\]|\\.)*`/`) reads a
+ * template that CONTAINS a template — `\`outer ${a ? \`inner ${b}\` : c}\`` — as ending at the
+ * inner backtick. It then starts a new "template" at the inner closing backtick and swallows
+ * hundreds of following lines as one region. `LiveSession` does exactly this, and the effect was
+ * that a screen's whole body was invisible to every replacement rule: its headings and buttons
+ * silently stayed English while the tool reported the file as needing no changes.
+ *
+ * This walks the text and counts depth, so nesting is handled the way JavaScript actually reads it.
+ */
+const protectTemplates = (text) => {
+    let out = '';
+    let i = 0;
+    while (i < text.length) {
+        // A REGEX LITERAL may contain a backtick: `/[`*_#\\[\\]]/g`. Protect it first, or the
+        // tokenizer reads that backtick as the start of a template and mis-pairs everything after.
+        // A `/` starts a regex only where a value may begin, which is what the lookbehind checks.
+        if (text[i] === '/' && /(?:^|[=(,:;!&|?{}\[]|\breturn\s|\btypeof\s)\s*$/.test(text.slice(0, i))) {
+            let j = i + 1, buf = '/', inClass = false;
+            while (j < text.length) {
+                const c = text[j];
+                if (c === '\\') { buf += text.slice(j, j + 2); j += 2; continue; }
+                if (c === '[') inClass = true;
+                else if (c === ']') inClass = false;
+                else if (c === '/' && !inClass) { buf += '/'; j++; break; }
+                else if (c === '\n') { buf = null; break; }
+                buf += c; j++;
+            }
+            if (buf !== null) {
+                // Skip flags (`/g`, `/gi`).
+                while (j < text.length && /[a-z]/.test(text[j])) buf += text[j++];
+                out += protect(buf);
+                i = j;
+                continue;
+            }
+        }
+        if (text[i] !== '`') { out += text[i++]; continue; }
+        // Find the matching closing backtick, honouring nested `${ ... }` and inner templates.
+        let j = i + 1, depth = 0, buf = '`';
+        while (j < text.length) {
+            const c = text[j];
+            if (c === '\\') { buf += text.slice(j, j + 2); j += 2; continue; }
+            if (c === '$' && text[j + 1] === '{') { depth++; buf += '${'; j += 2; continue; }
+            if (c === '}' && depth > 0) { depth--; buf += '}'; j++; continue; }
+            // A backtick ends the template only when it is NOT closing... at depth 0.
+            if (c === '`' && depth === 0) { buf += '`'; j++; break; }
+            // A nested template inside `${...}` is consumed by the loop above via depth.
+            buf += c; j++;
+        }
+        out += protect(buf);
+        i = j;
+    }
+    return out;
+};
+src = protectTemplates(src);
 // Block and JSX comments: protect each physical line on its own, so every newline stays exactly
 // where it was. Collapsing a multi-line comment removed newlines, which merged a component
 // signature onto a code line and stopped the hook from being inserted.
@@ -128,9 +184,34 @@ src = src.replace(/(^|\n)([ \t]*)(\/\/[^\n]*)/g, (_m, lead, indent, c) => `${lea
 src = src.replace(/([^:\/])([ \t]*)(\/\/[^\n]*)$/gm, (_m, before, gap, c) => `${before}${gap}${protect(c)}`);
 
 // 1. JSX text nodes.
-src = src.replace(/>(\s*)([A-Z][^<>{}]{1,90}?)(\s*)</g, (full, pre, text, post) => {
+// The text may LEAD WITH A SYMBOL OR EMOJI (`🎯 Today's Focus`, `📊 Attendance Heatmap`). Requiring
+// a capital letter first silently skipped every one of those, which is why headings like these
+// stayed English in every language setting.
+// The run may be a full SENTENCE (a settings paragraph), so the cap is generous. The dictionary
+// still decides: only a known sentence is replaced.
+src = src.replace(/>(\s*)([^<>{}]{2,400}?)(\s*)</g, (full, pre, text, post) => {
+    // Decide IN CODE whether this is display prose. A character class cannot express "an emoji,
+    // then a capital": an emoji is a surrogate PAIR, so a class matches only half of it and the
+    // whole match fails. Checking the string is both simpler and correct.
+    // The text may be wrapped in brackets or punctuation: `(needs evidence)`, `• Attendance...`.
+    // Strip those first, then require a capital, so a bracketed label is treated like any other.
+    // The text may be wrapped in brackets or punctuation: `(needs evidence)`, `• Attendance...` is
+    // handled by the symbol strip below. Brackets are stripped by TRIMMING them, not by dropping
+    // everything up to the first letter, so `(needs evidence)` is still judged on `needs`.
+    // Drop anything that is NOT a letter or a digit from the front: a bullet, a bracket, a tick
+    // (`✓ Back Online`), an emoji with its variation selector (`🗺️ …`), a dash. What remains must
+    // start a sentence. A leading DIGIT is kept, because `1. Select Classes` is a numbered step and
+    // its dictionary key includes the number.
+    const body = text.trim().replace(/^[^\p{L}\p{N}]*/u, '');
+    // A bracketed label keeps its bracket in the dictionary key, so test BOTH forms.
+    const bracketed = /^[(\[]/.test(text.trim());
+    // A numbered step (`1. Select Classes`) is display text, so a leading digit counts too.
+    // A dictionary entry is the real test. The capital check is only a cheap filter to avoid
+    // matching things like `className` or a bare identifier; a phrase that is IN the dictionary is
+    // display text whatever its first letter is (`reports are pending review`, `(needs evidence)`).
     const t = text.trim();
     if (!MAP[t]) return full;
+    if (!/^[A-Z0-9]/.test(body) && !/\s/.test(body)) return full;
     used.add(t); missed.delete(t);
     changes.push(['jsx', t]);
     return `>${pre}{t('${keyFor(t)}')}${post}<`;
@@ -139,7 +220,11 @@ src = src.replace(/>(\s*)([A-Z][^<>{}]{1,90}?)(\s*)</g, (full, pre, text, post) 
 // 2. Display props.
 const PROPS = ['label', 'title', 'placeholder', 'message', 'description', 'header', 'subtitle', 'alt', 'confirmText', 'emptyMessage', 'helperText'];
 for (const prop of PROPS) {
-    const re = new RegExp(`\\b${prop}=(["'])([^"']{1,90})\\1`, 'g');
+    // Allow a longer run and let the DICTIONARY decide. `[^"']` stops at the first apostrophe, so
+    // a sentence like "We couldn't load this" was cut short and never matched. Quoted attribute
+    // values cannot contain an unescaped matching quote, so a non-greedy run to the closing quote
+    // is safe.
+    const re = new RegExp(`\\b${prop}=(["'])(.{1,400}?)\\1`, 'g');
     src = src.replace(re, (full, q, text) => {
         if (!MAP[text]) return full;
         used.add(text); missed.delete(text);
@@ -290,6 +375,34 @@ src = src.replace(/\b(?:navigateTo|replaceView|useDashboardRouting)\s*\(\s*(['"]
         changes.push(['navigateTo title', title]);
         return full.replace(`${q2}${title}${q2}`, `t('${keyFor(title)}')`);
     });
+
+// Text INSIDE a protected TEMPLATE — `<td>Gross Salary</td>` in a payslip built as a string.
+// The JSX rules never see this because the template is protected. It must run BEFORE the early
+// exit below: a file whose only display text lives inside a template produces no changes from the
+// other rules, and the early exit would then skip this pass and report "no change" for a screen
+// that is entirely untranslated — which is exactly what happened to the payslip.
+// Text INSIDE a protected template's HTML — `<td>Gross Salary</td>` in a payslip built as a
+// string. The text rules never see this because the template is protected, so the inner text of
+// the common text-bearing tags is translated here, on the stored text itself.
+for (let i = 0; i < protected_.length; i++) {
+    if (!protected_[i].includes('<')) continue;
+    protected_[i] = protected_[i].replace(/>([^<>{}]{2,120})</g, (full, text) => {
+        const t = text.trim();
+        if (!MAP[t]) return full;
+        if (!/[A-Za-z]{3,}/.test(t)) return full;
+        // SKIP text that sits inside a NESTED JavaScript string: `${rows || '<td>No results</td>'}`.
+        // The tag is written as part of a string VALUE, so a `t(...)` call spliced into it would be
+        // text inside that string, not code — which produced a syntax error that the guard caught.
+        // The literal fallback still needs translating, but by the JS-string rules, not here.
+        const before = protected_[i].slice(0, full.indexOf(text) + protected_[i].indexOf(full));
+        const quoteCount = (before.match(/['"]/g) || []).length;
+        if (quoteCount % 2 === 1) return full;
+        used.add(t); missed.delete(t);
+        changes.push(['html', t]);
+        return `>${text.replace(t, `\${t('${keyFor(t)}')}`)}<`;
+    });
+}
+
 
 if (changes.length === 0) {
     console.log(`  tiada perubahan: ${file}`);

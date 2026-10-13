@@ -272,7 +272,7 @@ const PublishReportsWidget = ({ onClick, count }: { onClick: () => void; count: 
             </div>
             <div className="flex-grow flex flex-col items-center justify-center text-center">
                 <p className="text-5xl font-bold text-purple-600">{count}</p>
-                <p className="text-sm text-gray-600">reports are pending review</p>
+                <p className="text-sm text-gray-600">{t('dashboardOverview.reportsArePendingReview')}</p>
             </div>
             <button onClick={onClick} className="w-full mt-2 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700">{t('dashboardOverview.viewReports')}</button>
         </div>

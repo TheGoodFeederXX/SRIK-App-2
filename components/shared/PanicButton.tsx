@@ -57,7 +57,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                 }
             });
 
-            toast.success('🚨 EMERGENCY ALERT SENT! Help is on the way.');
+            toast.success(t('panicButton.emergencyALERTSENTHelpIsOnTheWay'));
             setShowConfirm(false);
             setLocation('');
             setSentAlert({ id: result?.data?.id, time: new Date().toLocaleTimeString("ms-MY") });
@@ -149,7 +149,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                                 />
                             </div>
 
-                            <p className="text-xs text-gray-400 mb-3">Press and hold the red button to confirm — this prevents sending an alert by accident.</p>
+                            <p className="text-xs text-gray-400 mb-3">{t('panicButton.pressAndHoldTheRedButtonToConfirmThisPreventsS')}</p>
 
                             <div className="flex space-x-3">
                                 <motion.button

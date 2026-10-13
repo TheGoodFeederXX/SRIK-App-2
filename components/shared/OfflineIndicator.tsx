@@ -92,7 +92,7 @@ export function OfflineIndicator({ className = '' }: OfflineIndicatorProps) {
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                         </svg>
-                        <span>✓ Back Online - Syncing your data...</span>
+                        <span>{t('offlineIndicator.backOnlineSyncingYourData')}</span>
                         {isSyncing && (
                             <svg className="w-4 h-4 animate-spin ml-2" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

@@ -420,7 +420,7 @@ export default function MarkEntryScreen() {
                                 <p className="text-2xl font-bold text-gray-800">
                                     {decidedCount}<span className="text-gray-400 text-lg">/{rows.length}</span>
                                 </p>
-                                <p className="text-xs text-gray-500">sudah diisi</p>
+                                <p className="text-xs text-gray-500">{t('markEntryScreen.sudahDiisi')}</p>
                             </div>
                         </div>
 

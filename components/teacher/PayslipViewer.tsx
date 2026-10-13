@@ -123,14 +123,14 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                 .net p{margin:0} .net .big{font-size:28px;font-weight:700;margin-top:4px}
                 .tot{border-top:1px solid #e5e7eb;margin-top:8px;padding-top:8px;font-weight:600}
             </style></head><body>
-            <h1>Payslip</h1>
+            <h1>${t('payslipViewer.payslip')}</h1>
             <p class="muted">Pay period: ${period} (${new Date(p.period_start).toLocaleDateString("ms-MY")} – ${new Date(p.period_end).toLocaleDateString("ms-MY")})</p>
             <p class="muted">Employee ID: ${teacherId} · Status: ${p.status}</p>
             <table><tbody>${rows}
-                <tr class="tot"><td style="padding-top:10px">Gross Salary</td><td style="padding-top:10px;text-align:right">${money(p.gross_salary)}</td></tr>
-                <tr><td style="color:#dc2626">Total Deductions</td><td style="text-align:right;color:#dc2626">-${money(p.total_deductions)}</td></tr>
+                <tr class="tot"><td style="padding-top:10px">${t('payslipViewer.grossSalary')}</td><td style="padding-top:10px;text-align:right">${money(p.gross_salary)}</td></tr>
+                <tr><td style="color:#dc2626">${t('payslipViewer.totalDeductions')}</td><td style="text-align:right;color:#dc2626">-${money(p.total_deductions)}</td></tr>
             </tbody></table>
-            <div class="net"><p>Net Payout</p><p class="big">${money(p.net_salary)}</p></div>
+            <div class="net"><p>${t('payslipViewer.netPayout')}</p><p class="big">${money(p.net_salary)}</p></div>
             <p class="muted" style="margin-top:24px">Generated ${new Date().toLocaleString('ms-MY')}</p>
             <script>window.onload=function(){window.print();}</script>
             </body></html>`);

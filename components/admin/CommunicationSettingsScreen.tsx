@@ -62,7 +62,7 @@ const CommunicationSettingsScreen: React.FC = () => {
         </div>
       </Accordion>
       <Accordion title={t('communicationSettingsScreen.parentPortalSettings')}>
-        <p className="text-gray-600 text-sm">Control what parents can see and do in their portal (e.g., view grades, chat with teachers).</p>
+        <p className="text-gray-600 text-sm">{t('communicationSettingsScreen.controlWhatParentsCanSeeAndDoInTheirPortalEGVi')}</p>
       </Accordion>
       <motion.button
         whileHover={!isLoading ? { scale: 1.01 } : {}} whileTap={!isLoading ? { scale: 0.98 } : {}}

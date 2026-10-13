@@ -157,7 +157,7 @@ const ReferralSystem: React.FC = () => {
         <div className="p-6 max-w-4xl mx-auto">
             {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-6">
-                <h1 className="text-3xl font-bold mb-2">🤝 Family Referral System</h1>
+                <h1 className="text-3xl font-bold mb-2">{t('referralSystem.familyReferralSystem')}</h1>
                 <p className="text-indigo-100">{t('referralSystem.getConnectedToCommunitySupportServices')}</p>
             </div>
 

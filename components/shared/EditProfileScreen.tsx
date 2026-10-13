@@ -182,7 +182,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                 setAvatarStorageKey(uploaded.storageKey);
                 toast.success(t('editProfileScreen.imageUploadedReadyToSave'), { id: toastId });
             } catch (error: any) {
-                toast.error('Error uploading image: ' + error.message, { id: toastId });
+                toast.error(t('editProfileScreen.errorUploadingImage') + error.message, { id: toastId });
                 console.error('Upload error:', error);
             }
         }
@@ -210,7 +210,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
             onBack?.(); // Go back after successful save
         } catch (err: any) {
             console.error(err);
-            toast.error('Error updating profile: ' + err.message);
+            toast.error(t('editProfileScreen.errorUpdatingProfile') + err.message);
         } finally {
             setSaving(false);
         }

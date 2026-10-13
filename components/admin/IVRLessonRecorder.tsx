@@ -40,7 +40,7 @@ const IVRLessonRecorder: React.FC = () => {
                                 Malaysia. */}
                             <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
                                 <li><span className="font-medium">{t('iVRLessonRecorder.africaSTalking')}</span> — covers parts of Africa; check Malaysia coverage before use</li>
-                                <li><span className="font-medium">Twilio</span> — global IVR platform</li>
+                                <li><span className="font-medium">Twilio</span> {t('iVRLessonRecorder.globalIVRPlatform')}</li>
                                 <li><span className="font-medium">{t('iVRLessonRecorder.infobip')}</span> — enterprise voice messaging</li>
                             </ul>
                         </div>

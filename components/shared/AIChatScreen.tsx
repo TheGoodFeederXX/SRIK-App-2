@@ -162,7 +162,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
                 systemInstruction: { parts: [{ text: sysLines.join('\n') }] },
             });
 
-            const responseText = response.text || "No response generated.";
+            const responseText = response.text || t('aIChatScreen.noResponseGenerated');
             setMessages(prev => [...prev, { role: 'model', text: responseText }]);
 
         } catch (error: any) {
@@ -186,7 +186,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
     return (
         <div className="flex flex-col h-screen bg-gray-100">
             <Header
-                title="AI Assistant"
+                title={t('aIChatScreen.aiAssistant')}
                 avatarUrl={`https://i.pravatar.cc/150?u=${dashboardType.toLowerCase()}`}
                 bgColor={theme.mainBg}
                 onBack={onBack}
@@ -195,13 +195,13 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
             {/* Mode Tabs */}
             <div className="flex bg-white shadow-sm z-10">
                 {[
-                    { id: 'chat', label: 'Smart Chat', icon: AIIcon },
+                    { id: 'chat', label: t('aIChatScreen.smartChat'), icon: AIIcon },
                     // Ask AI used to be a second floating button competing with this
                     // screen's own. It is the same assistant, so it belongs here:
                     // this tab answers from the signed-in user's own school records.
-                    { id: 'school', label: 'My School', icon: SearchIcon },
-                    { id: 'live', label: 'Live Voice', icon: MicrophoneIcon },
-                    { id: 'create', label: 'Creative Studio', icon: SparklesIcon },
+                    { id: 'school', label: t('aIChatScreen.mySchool'), icon: SearchIcon },
+                    { id: 'live', label: t('aIChatScreen.liveVoice'), icon: MicrophoneIcon },
+                    { id: 'create', label: t('aIChatScreen.creativeStudio'), icon: SparklesIcon },
                 ].map(tab => (
                     <button
                         key={tab.id}
@@ -229,7 +229,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
                             {messages.map((msg, index) => (
                                 <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                     <div className={`max-w-[85%] rounded-2xl p-3 shadow-sm relative ${msg.role === 'user' ? 'bg-blue-600 text-white rounded-br-none' : 'bg-white text-gray-800 rounded-bl-none'}`}>
-                                        {msg.imageUrl && <img src={msg.imageUrl} alt="Upload" className="rounded-lg mb-2 max-h-48 object-cover" />}
+                                        {msg.imageUrl && <img src={msg.imageUrl} alt={t('aIChatScreen.upload')} className="rounded-lg mb-2 max-h-48 object-cover" />}
                                         <div className={`prose prose-sm max-w-none ${msg.role === 'user' ? 'prose-invert' : ''}`}>
                                             <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
                                         </div>
@@ -251,10 +251,10 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
                             {/* Tool Toggles */}
                             <div className="flex space-x-2 overflow-x-auto pb-2 mb-1 no-scrollbar">
                                 <button onClick={() => setThinkingMode(!thinkingMode)} className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${thinkingMode ? 'bg-purple-100 text-purple-700 border-purple-300' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
-                                    <SparklesIcon className="w-3 h-3" /> <span>Deep Thinker</span>
+                                    <SparklesIcon className="w-3 h-3" /> <span>{t('aIChatScreen.deepThinker')}</span>
                                 </button>
                                 <button onClick={() => setUseGrounding(useGrounding === 'search' ? 'none' : 'search')} className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${useGrounding === 'search' ? 'bg-blue-100 text-blue-700 border-blue-300' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
-                                    <SearchIcon className="w-3 h-3" /> <span>Web Search</span>
+                                    <SearchIcon className="w-3 h-3" /> <span>{t('aIChatScreen.webSearch')}</span>
                                 </button>
                                 <button onClick={() => setUseGrounding(useGrounding === 'maps' ? 'none' : 'maps')} className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-bold border transition-colors ${useGrounding === 'maps' ? 'bg-green-100 text-green-700 border-green-300' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
                                     <MapIcon className="w-3 h-3" /> <span>Maps</span>
@@ -270,7 +270,7 @@ const AIChatScreen: React.FC<AIChatScreenProps> = ({ onBack, dashboardType }) =>
                                     <textarea
                                         value={inputText}
                                         onChange={e => setInputText(e.target.value)}
-                                        placeholder="Ask anything..."
+                                        placeholder={t('aIChatScreen.askAnything')}
                                         className="bg-transparent w-full outline-none resize-none text-sm max-h-24"
                                         rows={1}
                                         onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(inputText); } }}

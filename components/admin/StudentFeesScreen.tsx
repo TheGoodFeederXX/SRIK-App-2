@@ -103,7 +103,7 @@ export default function StudentFeesScreen() {
                         className="sm:w-72 px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                    focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        <option value="">— Pilih pelajar —</option>
+                        <option value="">{t('studentFeesScreen.pilihPelajar')}</option>
                         {filtered.map(s => (
                             <option key={s.id} value={s.id}>
                                 {s.full_name}

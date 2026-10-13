@@ -432,7 +432,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                     <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
                         <h3 className="font-bold text-gray-900">{t('personnelFileView.permanentRecords')}</h3>
                         {mode === 'admin' && (
-                            <button onClick={() => setShowAddRecord(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Add Record</button>
+                            <button onClick={() => setShowAddRecord(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">{t('personnelFileView.addRecord')}</button>
                         )}
                     </div>
                     {records.length === 0
@@ -664,7 +664,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">{t('personnelFileView.subject')}</label>
-                                <input type="text" placeholder="e.g. Unauthorized absence on 10 July"
+                                <input type="text" placeholder={t('personnelFileView.eGUnauthorizedAbsenceOn10July')}
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={queryForm.subject}
                                     onChange={e => setQueryForm({ ...queryForm, subject: e.target.value })} />

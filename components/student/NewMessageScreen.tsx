@@ -138,7 +138,7 @@ const GroupNameSheet: React.FC<{
                     <input
                         autoFocus
                         type="text"
-                        placeholder="e.g. Study Group 10A, Science Project..."
+                        placeholder={t('newMessageScreen.eGStudyGroup10AScienceProject')}
                         value={name}
                         onChange={e => setName(e.target.value)}
                         maxLength={60}

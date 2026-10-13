@@ -66,7 +66,7 @@ const FinancialSettingsScreen: React.FC = () => {
         </div>
       </Accordion>
       <Accordion title={t('financialSettingsScreen.invoicePaymentMethods')}>
-        <p className="text-gray-600 text-sm">Customize invoice templates and enable payment methods like Bank Transfer, Card, etc.</p>
+        <p className="text-gray-600 text-sm">{t('financialSettingsScreen.customizeInvoiceTemplatesAndEnablePaymentMetho')}</p>
       </Accordion>
       <motion.button
         whileHover={!isLoading ? { scale: 1.01 } : {}} whileTap={!isLoading ? { scale: 0.98 } : {}}

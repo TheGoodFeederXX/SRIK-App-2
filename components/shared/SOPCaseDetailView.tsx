@@ -184,8 +184,8 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                                 <div className="flex-1 min-w-0">
                                     <p className={`font-semibold text-sm ${isCurrent ? 'text-indigo-900' : 'text-gray-800'}`}>
                                         {stage.order}. {stage.name}
-                                        {stage.requires_evidence && <span className="ml-2 text-xs font-normal text-amber-600">(needs evidence)</span>}
-                                        {stage.requires_decision && <span className="ml-2 text-xs font-normal text-amber-600">(needs decision)</span>}
+                                        {stage.requires_evidence && <span className="ml-2 text-xs font-normal text-amber-600">{t('sOPCaseDetailView.needsEvidence')}</span>}
+                                        {stage.requires_decision && <span className="ml-2 text-xs font-normal text-amber-600">{t('sOPCaseDetailView.needsDecision')}</span>}
                                     </p>
                                     {log?.notes && <p className="text-sm text-gray-500 mt-0.5">{log.notes}</p>}
                                     {isCompleted && <p className="text-xs text-gray-400 mt-0.5">Completed {fmtDateTime(log.completed_at)}</p>}
@@ -236,7 +236,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                 <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
                     <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.decisions')}</h3>
                     {canAct && (
-                        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowDecision(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Record Decision</motion.button>
+                        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowDecision(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">{t('sOPCaseDetailView.recordDecision')}</motion.button>
                     )}
                 </div>
                 {caseData.decisions.length === 0
@@ -257,7 +257,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                 <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
                     <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.letters')}</h3>
                     {canAct && (
-                        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowLetter(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">+ Generate Letter</motion.button>
+                        <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => setShowLetter(true)} className="text-sm font-semibold text-indigo-600 hover:text-indigo-800">{t('sOPCaseDetailView.generateLetter')}</motion.button>
                     )}
                 </div>
                 {caseData.letters.length === 0

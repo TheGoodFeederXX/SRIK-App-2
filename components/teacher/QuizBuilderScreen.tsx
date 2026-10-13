@@ -269,7 +269,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                 value={title}
                                 onChange={e => setTitle(e.target.value)}
                                 className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                placeholder="e.g. Weekly Math Assessment"
+                                placeholder={t('quizBuilderScreen.eGWeeklyMathAssessment')}
                             />
                         </div>
                         <div>

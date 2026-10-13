@@ -406,7 +406,8 @@
     "teacher": "Guru",
     "quickActions": "Tindakan Pantas",
     "searchAllActions": "Cari semua tindakan…",
-    "reportsToPublish": "Laporan untuk Diterbitkan"
+    "reportsToPublish": "Laporan untuk Diterbitkan",
+    "reportsArePendingReview": "laporan menunggu semakan"
   },
   "academicReportScreen": {
     "loadingReport": "Memuatkan laporan...",
@@ -477,7 +478,8 @@
     "searchByName": "Cari mengikut nama...",
     "noStudentsOrTeachersFound": "Tiada murid atau guru dijumpai",
     "noContactsAvailable": "Tiada kenalan tersedia",
-    "couldNotCreateGroup": "Tidak dapat mencipta kumpulan"
+    "couldNotCreateGroup": "Tidak dapat mencipta kumpulan",
+    "eGStudyGroup10AScienceProject": "cth. Kumpulan Belajar 10A, Projek Sains..."
   },
   "quizPlayerScreen": {
     "quizPlayer": "Pemain Kuiz"
@@ -610,10 +612,15 @@
     "name": "Nama",
     "studentId": "ID Murid",
     "class": "Kelas",
-    "overallAverage": "Purata Keseluruhan",
+    "overallAverage": "Purata Keseluruhan:",
     "score": "Markah",
     "grade": "Gred",
-    "noPublishedResultsYet": "Belum ada keputusan yang diterbitkan."
+    "noPublishedResultsYet": "Tiada keputusan diterbitkan lagi.",
+    "performanceOverview": "Gambaran Keseluruhan Prestasi",
+    "uploadFailed": "Muat naik gagal: ",
+    "todaySLearningFocus": "🎯 Fokus Pembelajaran Hari Ini",
+    "todaysLearningFocus": "🎯 Fokus Pembelajaran Hari Ini",
+    "studentID": "ID Murid:"
   },
   "studyBuddy": {
     "uploadImage": "Muat naik imej",
@@ -646,7 +653,11 @@
     "challengeLevel": "Tahap Cabaran",
     "youngExplorer47Years": "Penjelajah Muda (4-7 tahun)",
     "braveAdventurer811Years": "Pengembara Berani (8-11 tahun)",
-    "masterSage1215Years": "Ahli Bijak (12-15 tahun)"
+    "masterSage1215Years": "Ahli Bijak (12-15 tahun)",
+    "imageVideoPDFDOCXTXT": "Imej, Video, PDF, DOCX, TXT",
+    "pasteAWebLinkHere": "Tampal pautan web di sini...",
+    "changeFile": "Tukar fail",
+    "clickToUploadAFile": "Klik untuk memuat naik fail"
   },
   "loadingScreen": {
     "craftingYourAdventure": "Menyediakan Pengembaraan Anda...",
@@ -881,7 +892,9 @@
     "topicPostedSuccessfully": "Topik berjaya dihantar!",
     "pleaseFillInBothTheTitleAndContent": "Sila isi kedua-dua tajuk dan kandungan.",
     "failedToCreateTopicPleaseTryAgain": "Gagal mencipta topik. Sila cuba lagi.",
-    "teacher": "Guru"
+    "teacher": "Guru",
+    "topicTitle": "Tajuk Topik",
+    "eGIdeasForScienceFair2026": "cth., Idea untuk Pesta Sains 2026"
   },
   "editTeacherProfileScreen": {
     "profileNotFound": "Profil tidak dijumpai.",
@@ -1037,7 +1050,8 @@
     "netPayout": "Bayaran Bersih",
     "downloadPDF": "Muat Turun PDF",
     "pleaseAllowPopUpsToDownloadYourPayslip": "Sila benarkan tetingkap timbul untuk memuat turun slip gaji anda.",
-    "viewDetails": "Lihat Butiran"
+    "viewDetails": "Lihat Butiran",
+    "payslip": "Slip Gaji"
   },
   "photoGalleryScreen": {
     "photoGallery": "Galeri Foto"
@@ -1073,7 +1087,8 @@
     "selectAClass": "Pilih Kelas",
     "correctAnswer": "Jawapan betul",
     "failedToCreateQuiz": "Gagal mencipta kuiz",
-    "removeQuestion": "Buang soalan"
+    "removeQuestion": "Buang soalan",
+    "eGWeeklyMathAssessment": "cth. Penilaian Matematik Mingguan"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Platform Pengiktirafan"
@@ -1220,7 +1235,11 @@
     "pleaseProvideAMessageForTheTextAnnouncement": "Sila berikan mesej untuk pengumuman teks.",
     "pleaseRecordOrProvideAVideoForTheVideoAnnounce": "Sila rakam atau berikan video untuk pengumuman video.",
     "cameraMicrophonePermissionDeniedPleaseEnableIt": "Kebenaran kamera/mikrofon ditolak. Sila hidupkannya dalam tetapan pelayar anda.",
-    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk"
+    "pengumumanDisimpanSebagaiDrafUntuk": "Pengumuman disimpan sebagai draf untuk",
+    "failedToSendNotice": "Gagal menghantar notis: ",
+    "1SelectClasses": "1. Pilih Kelas",
+    "2AnnouncementType": "2. Jenis Pengumuman",
+    "3ComposeMessage": "3. Karang Mesej"
   },
   "teacherCurriculumSelectionScreen": {
     "loadingYourClasses": "Memuatkan kelas anda...",
@@ -1236,7 +1255,8 @@
     "studentReports": "Laporan Murid",
     "collaborationForum": "Forum Kerjasama",
     "messages": "Mesej",
-    "settings": "Tetapan"
+    "settings": "Tetapan",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara."
   },
   "teacherExamManagement": {
     "published": "Diterbitkan",
@@ -1398,7 +1418,8 @@
     "enabledYourAccountIsProtected": "Dihidupkan — akaun anda dilindungi.",
     "addAnExtraLayerOfSecurity": "Tambah satu lapisan keselamatan lagi.",
     "failedToStart2FASetup": "Gagal memulakan persediaan 2FA.",
-    "invalidCodePleaseTryAgain": "Kod tidak sah — sila cuba lagi."
+    "invalidCodePleaseTryAgain": "Kod tidak sah — sila cuba lagi.",
+    "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Imbas kod QR ini dengan aplikasi pengesah (Google Authenticator, Authy, dll.), kemudian masukkan kod 6 digit yang dipaparkan."
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Memuatkan rekod kehadiran...",
@@ -1523,7 +1544,8 @@
     "selectReportCard": "Pilih Kad Laporan",
     "messages": "Mesej",
     "moreOptions": "Pilihan Lain",
-    "pending": "Menunggu"
+    "pending": "Menunggu",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara."
   },
   "parentNewChatScreen": {
     "parentNewChat": "Sembang Baharu Ibu Bapa"
@@ -1736,7 +1758,17 @@
     "voiceInputNeedsChromeOrEdgePleaseTypeYourQuest": "Input suara memerlukan Chrome atau Edge. Sila taip soalan anda.",
     "couldNotHearYouTryAgain": "Tidak dapat mendengar anda — cuba lagi.",
     "couldNotAccessMicrophone": "Tidak dapat mengakses mikrofon.",
-    "readAloudIsNotSupportedInThisBrowser": "Bacaan kuat tidak disokong pada pelayar ini."
+    "readAloudIsNotSupportedInThisBrowser": "Bacaan kuat tidak disokong pada pelayar ini.",
+    "deepThinker": "Pemikir Mendalam",
+    "webSearch": "Carian Web",
+    "smartChat": "Smart Chat",
+    "mySchool": "Sekolah Saya",
+    "liveVoice": "Suara Langsung",
+    "creativeStudio": "Studio Kreatif",
+    "aiAssistant": "Pembantu AI",
+    "askAnything": "Tanya apa sahaja...",
+    "upload": "Muat Naik",
+    "noResponseGenerated": "Tiada balasan dijana."
   },
   "aIChatWidget": {
     "openAIAssistant": "Buka Pembantu AI"
@@ -1785,12 +1817,14 @@
     "glassVivid": "Terang",
     "glassVividHint": "Kabur lebih dalam, lebih berkilau",
     "defaultLookInUse": "Rupa lalai sedang digunakan",
-    "resetToDefault": "Set semula ke lalai"
+    "resetToDefault": "Set semula ke lalai",
+    "liquidGlass": "Liquid Glass"
   },
   "askAIWidget": {
     "askAI": "Tanya AI",
     "askAQuestion": "Tanya soalan...",
-    "failedToGetAnAnswer": "Gagal mendapatkan jawapan"
+    "failedToGetAnAnswer": "Gagal mendapatkan jawapan",
+    "tryAsking": "Cuba tanya:"
   },
   "busRouteScreen": {
     "busRoute": "Laluan Bas"
@@ -1811,7 +1845,8 @@
     "eligibility": "Kelayakan",
     "searchByNameLocationOrService": "Cari mengikut nama, lokasi, atau perkhidmatan...",
     "failedToLoadResources": "Gagal memuatkan sumber",
-    "viewDetails": "Lihat Butiran"
+    "viewDetails": "Lihat Butiran",
+    "communityResourceDirectory": "🗺️ Direktori Sumber Komuniti"
   },
   "conferenceScheduling": {
     "penjadualanPerjumpaan": "Penjadualan Perjumpaan"
@@ -1855,7 +1890,9 @@
     "editProfile": "Sunting Profil",
     "saving": "Menyimpan...",
     "saveChanges": "Simpan Perubahan",
-    "uploadingImage": "Memuat naik imej..."
+    "uploadingImage": "Memuat naik imej...",
+    "errorUploadingImage": "Ralat memuat naik imej: ",
+    "errorUpdatingProfile": "Ralat mengemas kini profil: "
   },
   "examSchedule": {
     "examSchedule": "Jadual Peperiksaan"
@@ -1966,14 +2003,17 @@
   },
   "offlineIndicator": {
     "slowConnectionSyncMayBeDelayed": "Sambungan Perlahan - Penyegerakan mungkin lewat",
-    "dismiss": "Tutup"
+    "dismiss": "Tutup",
+    "backOnlineSyncingYourData": "✓ Kembali Dalam Talian - Menyegerakkan data anda..."
   },
   "panicButton": {
     "alertSentHelpIsOnTheWay": "Makluman Dihantar — Bantuan Sedang Tiba",
     "emergencyPanicButton": "Butang Panik Kecemasan",
     "failedToSendAlertPleaseCallEmergencyServicesDi": "Gagal menghantar makluman. Sila hubungi perkhidmatan kecemasan terus.",
     "sending": "Menghantar...",
-    "holdTOSEND": "TAHAN UNTUK HANTAR 🚨"
+    "holdTOSEND": "TAHAN UNTUK HANTAR 🚨",
+    "pressAndHoldTheRedButtonToConfirmThisPreventsS": "Tekan dan tahan butang merah untuk mengesahkan — ini menghalang amaran dihantar secara tidak sengaja.",
+    "emergencyALERTSENTHelpIsOnTheWay": "🚨 AMARAN KECEMASAN DIHANTAR! Bantuan sedang dalam perjalanan."
   },
   "permissionSlips": {
     "slipKebenaran": "Slip Kebenaran"
@@ -1981,7 +2021,7 @@
   "personnelFileView": {
     "loadingPersonnelFile": "Memuatkan fail peribadi...",
     "personnelFileUnavailable": "Fail peribadi tidak tersedia.",
-    "addRecord": "Tambah Rekod",
+    "addRecord": "+ Tambah Rekod",
     "issueQueryLetter": "Keluarkan Surat Pertanyaan",
     "personalInformation": "Maklumat Peribadi",
     "employmentDetails": "Butiran Pekerjaan",
@@ -2062,7 +2102,8 @@
     "failedToIssueQueryLetter": "Gagal mengeluarkan surat pertanyaan",
     "failedToCloseQueryLetter": "Gagal menutup surat pertanyaan",
     "failedToSubmitResponse": "Gagal menghantar balasan",
-    "classTeacher": "Guru Kelas —"
+    "classTeacher": "Guru Kelas —",
+    "eGUnauthorizedAbsenceOn10July": "cth. Ketidakhadiran tanpa kebenaran pada 10 Julai"
   },
   "projectBoardScreen": {
     "projectBoard": "Papan Projek"
@@ -2090,7 +2131,8 @@
     "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Sila terangkan keadaan dan sokongan yang diperlukan...",
     "referralSubmittedSuccessfullyASocialWorkerWill": "Rujukan berjaya dihantar! Pekerja sosial akan menyemaknya tidak lama lagi.",
     "pleaseSelectAStudentAndDescribeTheNeed": "Sila pilih murid dan terangkan keperluan",
-    "failedToSubmitReferral": "Gagal menghantar rujukan"
+    "failedToSubmitReferral": "Gagal menghantar rujukan",
+    "familyReferralSystem": "🤝 Sistem Rujukan Keluarga"
   },
   "reportIncidentScreen": {
     "laporInsiden": "Lapor Insiden"
@@ -2105,14 +2147,14 @@
     "noDecisionsRecordedYet": "Belum ada keputusan direkodkan.",
     "letters": "Surat",
     "noLettersGeneratedYet": "Belum ada surat dijana.",
-    "recordDecision": "Rekod Keputusan",
+    "recordDecision": "+ Rekod Keputusan",
     "outcome": "Hasil",
     "noAction": "Tiada Tindakan",
     "warning": "Amaran",
     "suspension": "Penggantungan",
     "expulsion": "Buang Sekolah",
     "decisionDetails": "Butiran Keputusan",
-    "generateLetter": "Jana Surat",
+    "generateLetter": "+ Jana Surat",
     "recipientType": "Jenis Penerima",
     "student": "Murid",
     "teacher": "Guru",
@@ -2137,7 +2179,9 @@
     "failedToAdvanceTheCase": "Gagal memajukan kes ini",
     "failedToRecordDecision": "Gagal merekod keputusan",
     "failedToDraftLetter": "Gagal mendraf surat",
-    "failedToSendLetter": "Gagal menghantar surat"
+    "failedToSendLetter": "Gagal menghantar surat",
+    "needsEvidence": "(perlu bukti)",
+    "needsDecision": "(perlu keputusan)"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Pilih murid dahulu.",
@@ -2182,7 +2226,8 @@
     "synchronizationRequired": "Penyegerakan Diperlukan",
     "updateNow": "Kemas Kini Sekarang",
     "updatePending": "Kemas Kini Menunggu",
-    "upToDate": "Terkini"
+    "upToDate": "Terkini",
+    "yourLocalApplicationVersionDoesnTMatchTheSchoo": "Versi aplikasi tempatan anda tidak sepadan dengan kunci platform sekolah. Kemas kini sekarang untuk memastikan keserasian penuh ciri."
   },
   "voiceSearchWidget": {
     "voiceSearchNotAvailablePleaseTypeYourQuery": "Carian suara tidak tersedia. Sila taip pertanyaan anda.",
@@ -2246,7 +2291,10 @@
     "copyPassword": "Salin kata laluan",
     "copyStudentID": "Salin ID Murid",
     "accountsCreatedSuccessfully": "Akaun berjaya dicipta",
-    "accountCreatedSuccessfully": "Akaun berjaya dicipta"
+    "accountCreatedSuccessfully": "Akaun berjaya dicipta",
+    "securityNote": "🔒 Nota Keselamatan:",
+    "nextSteps": "📧 Langkah Seterusnya:",
+    "activeImmediately": "aktif serta-merta"
   },
   "dashboardBottomNav": {
     "analytics": "Analitik",
@@ -2292,7 +2340,8 @@
     "tryAgainNow": "Cuba Lagi Sekarang",
     "support": "Sokongan",
     "contactOurTechnicalTeam": "Hubungi pasukan teknikal kami",
-    "errorIllustration": "Ilustrasi Ralat"
+    "errorIllustration": "Ilustrasi Ralat",
+    "needHelp": "Perlukan bantuan?"
   },
   "premiumModal": {
     "upgradeToPremium": "Naik Taraf ke Premium",
@@ -2319,7 +2368,12 @@
     "failedToLoadAnalytics": "Gagal memuatkan analitik",
     "penggal1": "Penggal 1",
     "penggal2": "Penggal 2",
-    "penggal3": "Penggal 3"
+    "penggal3": "Penggal 3",
+    "academicAnalytics": "📊 Analitik Akademik",
+    "subjectPerformance": "📚 Prestasi Subjek",
+    "classComparison": "🏆 Perbandingan Kelas",
+    "gambaranKeseluruhan": "📊 Gambaran Keseluruhan",
+    "purataBawah50DAtauE": "purata bawah 50% (D atau E)"
   },
   "academicSettingsScreen": {
     "academicConfiguration": "Konfigurasi Akademik",
@@ -2475,7 +2529,8 @@
     "communicationHub": "Hab Komunikasi",
     "schoolAnalytics": "Analitik Sekolah",
     "profileSettings": "Tetapan Profil",
-    "manageTeachers": "Urus Guru"
+    "manageTeachers": "Urus Guru",
+    "weEncounteredAnIssueWhileRenderingThisScreenTh": "Kami menghadapi masalah semasa memaparkan skrin ini. Ini mungkin berpunca daripada data yang tidak sepadan atau masalah sambungan sementara."
   },
   "adminLessonNotesScreen": {
     "notaPelajaran": "Nota Pelajaran"
@@ -2589,7 +2644,8 @@
     "scanAQRTagToViewDetails": "Imbas tag QR untuk melihat butiran",
     "dataProtectionConsent": "Perlindungan data & persetujuan",
     "automatedRegulatoryHealth": "Kesihatan kawal selia automatik",
-    "repairsIssueTracking": "Pembaikan & penjejakan isu"
+    "repairsIssueTracking": "Pembaikan & penjejakan isu",
+    "analyticsAdminTools": "📊 Alat Analitik & Pentadbir"
   },
   "analyticsScreen": {
     "noAttendanceTaken": "Tiada kehadiran diambil",
@@ -2656,7 +2712,8 @@
     "reportExportedSuccessfully": "Laporan berjaya dieksport!",
     "failedToLoadAttendanceData": "Gagal memuatkan data kehadiran",
     "unknown": "Tidak Diketahui",
-    "wkOf": "Mg"
+    "wkOf": "Mg",
+    "attendanceHeatmap": "📊 Peta Haba Kehadiran"
   },
   "attendanceOverviewScreen": {
     "attendance": "Kehadiran",
@@ -2708,7 +2765,8 @@
     "viewDetails": "Lihat Butiran",
     "searchUserActionOrResource": "Cari pengguna, tindakan, atau sumber...",
     "auditLogExported": "Log audit dieksport!",
-    "failedToLoadAuditLogs": "Gagal memuatkan log audit"
+    "failedToLoadAuditLogs": "Gagal memuatkan log audit",
+    "auditTrailViewer": "🔒 Paparan Jejak Audit"
   },
   "awardPoints": {
     "awardPoints": "Berikan Mata"
@@ -2794,7 +2852,8 @@
     "parentPortalSettings": "Tetapan Portal Ibu Bapa",
     "communicationSettingsSavedSuccessfully": "Tetapan komunikasi berjaya disimpan",
     "saving": "Menyimpan...",
-    "saveCommunicationSettings": "Simpan Tetapan Komunikasi"
+    "saveCommunicationSettings": "Simpan Tetapan Komunikasi",
+    "controlWhatParentsCanSeeAndDoInTheirPortalEGVi": "Kawal apa yang ibu bapa boleh lihat dan lakukan dalam portal mereka (cth., lihat gred, sembang dengan guru)."
   },
   "complianceChecklist": {
     "complianceChecklist": "Senarai Semak Pematuhan"
@@ -2860,7 +2919,8 @@
     "staffOnly": "Kakitangan Sahaja",
     "channels": "Saluran",
     "broadcasting": "Menyiarkan...",
-    "detailedInstructions": "Arahan terperinci..."
+    "detailedInstructions": "Arahan terperinci...",
+    "eGSCHOOLCLOSEDTODAY": "cth. SEKOLAH DITUTUP HARI INI"
   },
   "enhancedEnrollmentPage": {
     "enhancedEnrollmentPage": "Halaman Pendaftaran Dipertingkat"
@@ -2947,7 +3007,8 @@
     "invoicePaymentMethods": "Invois & Kaedah Bayaran",
     "financialSettingsSaved": "Tetapan kewangan disimpan",
     "saving": "Menyimpan...",
-    "saveFinancialSettings": "Simpan Tetapan Kewangan"
+    "saveFinancialSettings": "Simpan Tetapan Kewangan",
+    "customizeInvoiceTemplatesAndEnablePaymentMetho": "Sesuaikan templat invois dan aktifkan kaedah pembayaran seperti Pindahan Bank, Kad, dll."
   },
   "gatePassApprovals": {
     "gatePassApprovals": "Kelulusan Pas Pintu"
@@ -2976,7 +3037,8 @@
     "ciptaAkaun": "Cipta akaun",
     "menyimpan": "Menyimpan…",
     "simpanPenjaga": "Simpan penjaga",
-    "nyahpaut": "Nyahpaut"
+    "nyahpaut": "Nyahpaut",
+    "pilihAnakUntukDipautkan": "— Pilih anak untuk dipautkan —"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -2994,7 +3056,8 @@
     "ivrPhoneProviderNotConnected": "Penyedia Telefon IVR Tidak Disambung",
     "supportedProvidersAnyOneRequired": "Penyedia disokong (mana-mana satu diperlukan):",
     "africaSTalking": "Africa's Talking",
-    "infobip": "Infobip"
+    "infobip": "Infobip",
+    "globalIVRPlatform": "— platform IVR global"
   },
   "integrationHub": {
     "integration": "Integrasi"
@@ -3052,7 +3115,8 @@
     "simpanMarkah": "Simpan markah",
     "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
     "gagalMenerbitkan": "Gagal menerbitkan.",
-    "catatan": "Catatan"
+    "catatan": "Catatan",
+    "sudahDiisi": "sudah diisi"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Tanda Keluar Murid"
@@ -3192,7 +3256,8 @@
     "supportedSMSProvidersAnyOneRequired": "Penyedia SMS disokong (mana-mana satu diperlukan):",
     "infobip": "Infobip",
     "africaSTalking": "Africa's Talking",
-    "localMalaysianGateway": "Gerbang Malaysia Tempatan"
+    "localMalaysianGateway": "Gerbang Malaysia Tempatan",
+    "globalReliableHigherCost": "— global, boleh dipercayai, kos lebih tinggi"
   },
   "sOPCaseManagementScreen": {
     "sopcaseManagement": "Pengurusan Kes SOP"
@@ -3266,7 +3331,8 @@
   },
   "studentDetailReport": {
     "studentDetailReport": "Laporan Butiran Murid",
-    "reportDataVisualizationWillAppearHere": "Visualisasi data laporan akan muncul di sini."
+    "reportDataVisualizationWillAppearHere": "Visualisasi data laporan akan muncul di sini.",
+    "thisReportProvidesDetailedInformationAboutAStu": "Laporan ini memberikan maklumat terperinci tentang prestasi akademik, kehadiran, dan tingkah laku seorang murid."
   },
   "studentEnrollmentPage": {
     "registerStudentAssignCurriculumAndUploadDocs": "Daftar murid, tetapkan kurikulum, dan muat naik dokumen.",
@@ -3305,7 +3371,8 @@
     "cajDikecualikan": "Caj dikecualikan.",
     "diskaunMestiNomborYangSah": "Diskaun mesti nombor yang sah.",
     "silaNyatakanSebabDiskaun": "Sila nyatakan sebab diskaun.",
-    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian."
+    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian.",
+    "pilihPelajar": "— Pilih pelajar —"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Kad Pengenalan Murid"
@@ -3373,7 +3440,8 @@
     "couldNotSaveTheSubject": "Tidak dapat menyimpan subjek.",
     "couldNotRemoveTheSubject": "Tidak dapat membuang subjek.",
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
-    "taughtIn": "Diajar dalam"
+    "taughtIn": "Diajar dalam",
+    "eGBahasaMelayu": "cth., Bahasa Melayu"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Liputan Ganti"
@@ -3466,7 +3534,8 @@
     "anErrorOccurredWhileRejectingAttendance": "Ralat berlaku semasa menolak kehadiran.",
     "unknownTeacher": "Guru Tidak Diketahui",
     "failedToApprove": "Gagal meluluskan",
-    "failedToReject": "Gagal menolak"
+    "failedToReject": "Gagal menolak",
+    "thereAreNoPendingAttendanceRequestsMatchingYou": "Tiada permohonan kehadiran yang menunggu padan dengan carian anda. Syabas kerana sentiasa mengikuti kelulusan."
   },
   "teacherAttendanceDetail": {
     "noTeacherSelectedOpenThisViewFromATeacherRow": "Tiada guru dipilih. Buka paparan ini dari baris guru.",
@@ -3492,7 +3561,8 @@
     "confirm": "Sahkan",
     "unknownError": "Ralat tidak diketahui",
     "general": "Umum",
-    "statusChangedTo": "Status ditukar kepada"
+    "statusChangedTo": "Status ditukar kepada",
+    "failedToUpdateStatus": "Gagal mengemas kini status: "
   },
   "teacherListScreen": {
     "teacherManagement": "Pengurusan Guru",
@@ -3611,7 +3681,8 @@
   },
   "liveSession": {
     "saySomethingIAmListening": "Cakap sesuatu — saya mendengar!",
-    "microphonePermissionDenied": "Kebenaran mikrofon ditolak."
+    "microphonePermissionDenied": "Kebenaran mikrofon ditolak.",
+    "liveVoice": "Suara Langsung"
   },
   "updatePrompt": {
     "systemUpdateRequired": "Kemas Kini Sistem Diperlukan",
@@ -3644,5 +3715,13 @@
     "tapInstallAppAddToHomeScreen": "Ketik 'Pasang aplikasi' / 'Tambah ke skrin Utama'.",
     "clickTheInstallIconInTheAddressBar": "Klik ikon pasang di bar alamat,",
     "orBrowserMenuInstallSchoolApp": "atau menu pelayar → 'Pasang Aplikasi Sekolah'."
+  },
+  "sopCaseDetail": {
+    "needsEvidence": "(perlu bukti)",
+    "needsDecision": "(perlu keputusan)"
+  },
+  "aiChatScreen": {
+    "deepThinker": "Pemikir Mendalam",
+    "webSearch": "Carian Web"
   }
 }

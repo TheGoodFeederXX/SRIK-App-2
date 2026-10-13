@@ -114,7 +114,7 @@ const CommunityResourceDirectory: React.FC = () => {
         <div className="p-6 max-w-7xl mx-auto">
             {/* Header */}
             <div className="bg-gradient-to-r from-teal-600 to-green-600 rounded-xl p-6 text-white mb-6">
-                <h1 className="text-3xl font-bold mb-2">🗺️ Community Resource Directory</h1>
+                <h1 className="text-3xl font-bold mb-2">{t('communityResourceDirectory.communityResourceDirectory')}</h1>
                 <p className="text-teal-100">{t('communityResourceDirectory.findSupportServicesNearYouHealthFoodTrainingMo')}</p>
             </div>
 

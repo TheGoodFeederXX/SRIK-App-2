@@ -111,7 +111,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                     </div>
 
                     <p className="mt-8 text-sm text-gray-400 text-center">
-                        Need help? <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">{t('premiumErrorPage.contactOurTechnicalTeam')}</a>
+                        {t('premiumErrorPage.needHelp')} <a href="mailto:srialkhairiah@gmail.com" className="text-indigo-600 font-bold hover:underline">{t('premiumErrorPage.contactOurTechnicalTeam')}</a>
                     </p>
                 </div>
             </div>

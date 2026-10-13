@@ -235,7 +235,7 @@ const LiveSession: React.FC<LiveSessionProps> = ({ onClose }) => {
                     </div>
 
                     <div className="text-center px-4">
-                        <h2 className="text-2xl font-bold">Live Voice</h2>
+                        <h2 className="text-2xl font-bold">{t('liveSession.liveVoice')}</h2>
                         <p className="text-gray-300 text-sm">{statusLabel}</p>
                         {caption && (
                             <p className="mt-3 text-sm text-gray-100 bg-black/50 rounded-xl px-3 py-2 max-w-xs mx-auto line-clamp-4">{caption}</p>
