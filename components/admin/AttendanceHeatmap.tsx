@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listClasses } from '../../src/lib/supabase/academics';
 import { getClassAttendanceSummary } from '../../src/lib/supabase/attendance';
@@ -31,6 +32,7 @@ interface AttendanceHeatmapProps {
 }
 
 const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
+    const { t } = useTranslation();
     const { currentBranchId } = useAuth();
     const [heatmapData, setHeatmapData] = useState<HeatmapData[]>([]);
     const [classes, setClasses] = useState<Class[]>([]);
@@ -113,7 +115,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
 
         } catch (error: any) {
             console.error('Error fetching heatmap data:', error);
-            toast.error('Failed to load attendance data');
+            toast.error(t('attendanceHeatmap.failedToLoadAttendanceData'));
         } finally {
             setLoading(false);
         }
@@ -241,7 +243,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
         a.href = url;
         a.download = `attendance-heatmap-${dateRange.start}-to-${dateRange.end}.csv`;
         a.click();
-        toast.success('Report exported successfully!');
+        toast.success(t('attendanceHeatmap.reportExportedSuccessfully'));
     };
 
     // Buckets a day into the column it belongs to for the current view mode —
@@ -294,7 +296,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
         }
 
         if (heatmapData.length === 0) {
-            return <div className="text-center py-12 text-gray-500">No attendance data for selected period</div>;
+            return <div className="text-center py-12 text-gray-500">{t('attendanceHeatmap.noAttendanceDataForSelectedPeriod')}</div>;
         }
 
         const visibleClasses = selectedClass === 'all' ? classes : classes.filter(c => c.id === selectedClass);
@@ -360,7 +362,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-6 text-white mb-6">
                 <h1 className="text-3xl font-bold mb-2">📊 Attendance Heatmap</h1>
-                <p className="text-indigo-100">Visual attendance patterns across classes and time periods</p>
+                <p className="text-indigo-100">{t('attendanceHeatmap.visualAttendancePatternsAcrossClassesAndTimePe')}</p>
             </motion.div>
 
             {/* Stats Cards */}
@@ -368,7 +370,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-600">Average Attendance</p>
+                            <p className="text-sm text-gray-600">{t('attendanceHeatmap.averageAttendance')}</p>
                             <p className="text-3xl font-bold text-gray-900">{stats.averageAttendance}%</p>
                         </div>
                         <div className="p-3 bg-green-100 rounded-lg">
@@ -401,7 +403,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-600">Critical Days</p>
+                            <p className="text-sm text-gray-600">{t('attendanceHeatmap.criticalDays')}</p>
                             <p className="text-3xl font-bold text-red-600">{stats.criticalDays}</p>
                         </div>
                         <div className="p-3 bg-red-100 rounded-lg">
@@ -421,7 +423,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                             onChange={(e) => setSelectedClass(e.target.value === 'all' ? 'all' : e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                         >
-                            <option value="all">All Classes</option>
+                            <option value="all">{t('attendanceHeatmap.allClasses')}</option>
                             {classes.map(cls => (
                                 <option key={cls.id} value={cls.id}>{cls.class_name}</option>
                             ))}
@@ -429,7 +431,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Start Date</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('attendanceHeatmap.startDate')}</label>
                         <input
                             type="date"
                             value={dateRange.start}
@@ -440,7 +442,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">End Date</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('attendanceHeatmap.endDate')}</label>
                         <input
                             type="date"
                             value={dateRange.end}
@@ -460,7 +462,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                             className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             <Download className="h-5 w-5" />
-                            <span>Export CSV</span>
+                            <span>{t('attendanceHeatmap.exportCSV')}</span>
                         </motion.button>
                     </div>
                 </div>
@@ -493,7 +495,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
 
             {/* Legend */}
             <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-                <h3 className="font-semibold text-gray-900 mb-3">Attendance Rate Legend:</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">{t('attendanceHeatmap.attendanceRateLegend')}</h3>
                 <div className="flex flex-wrap gap-3">
                     <div className="flex items-center space-x-2">
                         <div className="w-6 h-6 bg-green-600 rounded"></div>
@@ -521,7 +523,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                     </div>
                     <div className="flex items-center space-x-2">
                         <div className="w-6 h-6 bg-red-500 rounded"></div>
-                        <span className="text-sm text-gray-700">Below 70%</span>
+                        <span className="text-sm text-gray-700">{t('attendanceHeatmap.below70')}</span>
                     </div>
                 </div>
             </div>

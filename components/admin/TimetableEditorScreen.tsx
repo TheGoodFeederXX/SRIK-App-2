@@ -23,6 +23,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -58,6 +59,7 @@ interface EditingSlot {
 }
 
 const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedClassId }) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { user } = useAuth();
 
@@ -135,7 +137,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
             toast.error(result.error ?? 'Could not clear that lesson.');
             return;
         }
-        toast.success('Lesson removed.');
+        toast.success(t('timetableEditorScreen.lessonRemoved'));
         await queryClient.invalidateQueries({ queryKey: timetableQueryKey });
     };
 
@@ -154,7 +156,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
                 toast.error(result.error ?? 'Could not publish.');
                 return;
             }
-            toast.success('Timetable published.');
+            toast.success(t('timetableEditorScreen.timetablePublished'));
             await queryClient.invalidateQueries({ queryKey: ['activeTimetable'] });
         } finally {
             setIsPublishing(false);
@@ -162,14 +164,14 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
     };
 
     if (timetableQuery.isLoading) {
-        return <CenteredLoader fullScreen={false} message="Loading..." className="h-64" />;
+        return <CenteredLoader fullScreen={false} message={t('timetableEditorScreen.loading')} className="h-64" />;
     }
 
     if (!timetable) {
         return (
             <div className="text-center py-20 m-4 bg-white rounded-3xl border border-dashed border-gray-300">
                 <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-bold text-gray-800">No Timetable Yet</h3>
+                <h3 className="text-lg font-bold text-gray-800">{t('timetableEditorScreen.noTimetableYet')}</h3>
                 <p className="text-gray-500 max-w-sm mx-auto mt-2">
                     There is nothing to edit until a timetable has been set up.
                 </p>
@@ -224,7 +226,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
                         onChange={e => { setClassId(e.target.value); setSlot(null); }}
                         className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                     >
-                        {classes.length === 0 && <option value="">No classes in this timetable</option>}
+                        {classes.length === 0 && <option value="">{t('timetableEditorScreen.noClassesInThisTimetable')}</option>}
                         {classes.map(c => (
                             <option key={c.id} value={c.id}>{c.label}</option>
                         ))}
@@ -232,15 +234,15 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
                 </div>
 
                 {weekQuery.isLoading ? (
-                    <CenteredLoader fullScreen={false} message="Loading the week..." className="h-48" />
+                    <CenteredLoader fullScreen={false} message={t('timetableEditorScreen.loadingTheWeek')} className="h-48" />
                 ) : weekQuery.isError ? (
                     <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                        <p className="font-bold text-gray-900 mb-1">Could not load the week</p>
+                        <p className="font-bold text-gray-900 mb-1">{t('timetableEditorScreen.couldNotLoadTheWeek')}</p>
                         <p className="text-sm text-gray-500">{String(weekQuery.error)}</p>
                     </div>
                 ) : teachingSlots.length === 0 ? (
                     <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-300">
-                        <p className="font-bold text-gray-800">No Teaching Periods</p>
+                        <p className="font-bold text-gray-800">{t('timetableEditorScreen.noTeachingPeriods')}</p>
                         <p className="text-gray-500 text-sm mt-1">
                             This timetable has no lessons to fill in.
                         </p>
@@ -275,7 +277,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
                                                         </p>
                                                     </div>
                                                 ) : (
-                                                    <p className="text-sm text-gray-400 italic">Not timetabled</p>
+                                                    <p className="text-sm text-gray-400 italic">{t('timetableEditorScreen.notTimetabled')}</p>
                                                 )}
                                             </button>
                                         ))}
@@ -326,6 +328,7 @@ const SlotEditor: React.FC<{
     onSaved: () => void;
     onCleared: () => void;
 }> = ({ slot, classId, className, timetableId, subjects, onClose, onSaved, onCleared }) => {
+    const { t } = useTranslation();
     const [chosenSubjectId, setChosenSubjectId] = useState(slot.existing?.subjectId ?? '');
     const [isSaving, setIsSaving] = useState(false);
     const [clash, setClash] = useState<{ className: string; subjectCode: string | null } | null>(null);
@@ -349,7 +352,7 @@ const SlotEditor: React.FC<{
 
     const handleSave = async () => {
         if (!chosen) {
-            toast.error('Choose a subject first.');
+            toast.error(t('timetableEditorScreen.chooseASubjectFirst'));
             return;
         }
 
@@ -431,7 +434,7 @@ const SlotEditor: React.FC<{
                         <>
                             <div>
                                 <label htmlFor="slotSubject" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                                    Subject
+                                    {t('timetableEditorScreen.subject')}
                                 </label>
                                 <select
                                     id="slotSubject"
@@ -439,7 +442,7 @@ const SlotEditor: React.FC<{
                                     onChange={e => setChosenSubjectId(e.target.value)}
                                     className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                                 >
-                                    <option value="">Choose a subject...</option>
+                                    <option value="">{t('timetableEditorScreen.chooseASubject')}</option>
                                     {grouped.map(g => (
                                         <option key={g.subId} value={g.subId}>{g.code} — {g.name}</option>
                                     ))}
@@ -451,7 +454,7 @@ const SlotEditor: React.FC<{
                             {chosen && (
                                 <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
                                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                                        Teacher
+                                        {t('timetableEditorScreen.teacher')}
                                     </p>
                                     <p className="text-sm font-bold text-gray-800">{chosen.teacherName}</p>
                                 </div>

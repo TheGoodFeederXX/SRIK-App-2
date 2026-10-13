@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { listAuditLog } from '../../src/lib/supabase/auditTrail';
 import { toast } from 'react-hot-toast';
@@ -43,6 +44,7 @@ const formatDistanceToNow = (isoDate: string): string => {
 };
 
 const AuditLogScreen: React.FC = () => {
+    const { t } = useTranslation();
   const { currentSchool } = useAuth();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,7 +86,7 @@ const AuditLogScreen: React.FC = () => {
       } as unknown as typeof logs[number])));
     } catch (err) {
       console.error("Failed to load audit logs:", err);
-      toast.error('Failed to load audit logs');
+      toast.error(t('auditLogScreen.failedToLoadAuditLogs'));
     } finally {
       setLoading(false);
     }
@@ -102,7 +104,7 @@ const AuditLogScreen: React.FC = () => {
     return 'update';
   };
 
-  if (loading) return <CenteredLoader message="Loading audit trail..." className="p-8" />;
+  if (loading) return <CenteredLoader message={t('auditLogScreen.loadingAuditTrail')} className="p-8" />;
 
   return (
     <div className="flex flex-col h-full bg-gray-100">
@@ -112,7 +114,7 @@ const AuditLogScreen: React.FC = () => {
           <div className="absolute left-7 top-0 h-full w-0.5 bg-gray-200"></div>
 
           <ul className="space-y-6">
-            {logs.length === 0 && <p className="text-center py-12 text-gray-400">No logs found. Audit system active.</p>}
+            {logs.length === 0 && <p className="text-center py-12 text-gray-400">{t('auditLogScreen.noLogsFoundAuditSystemActive')}</p>}
             {logs.map((log, li) => (
               <motion.li key={log.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2, delay: Math.min(li, 15) * 0.03 }} className="relative flex items-start space-x-4">
                 {/* Icon Circle */}

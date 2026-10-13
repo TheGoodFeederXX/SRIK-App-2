@@ -14,6 +14,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -50,6 +51,7 @@ interface ClassStudentRow {
 }
 
 const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const queryKey = ['classes'];
     const queryClient = useQueryClient();
     const { user } = useAuth();
@@ -137,7 +139,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
     const totalStudents = classes.reduce((n, c) => n + c.studentCount, 0);
 
     if (isLoading && classes.length === 0) {
-        return <CenteredLoader fullScreen={false} message="Loading classes..." className="h-screen" />;
+        return <CenteredLoader fullScreen={false} message={t('classListScreen.loadingClasses')} className="h-screen" />;
     }
 
     return (
@@ -300,7 +302,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                 {classes.length === 0 && !isLoading && (
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
                         <BookOpenIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <h3 className="text-lg font-bold text-gray-800">No Classes Yet</h3>
+                        <h3 className="text-lg font-bold text-gray-800">{t('classListScreen.noClassesYet')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
                             Add the school's first class to begin placing students.
                         </p>

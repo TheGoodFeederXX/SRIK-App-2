@@ -1059,7 +1059,14 @@
     "markAllPresent": "Tanda Semua Hadir",
     "markAllAbsent": "Tanda Semua Tidak Hadir",
     "loadingAttendanceData": "Memuatkan data kehadiran...",
-    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis)."
+    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis).",
+    "present": "Hadir",
+    "noTeachersFound": "Tiada guru dijumpai.",
+    "searchForATeacher": "Cari guru",
+    "searchByTeacherName": "Cari mengikut nama guru...",
+    "attendanceRecorded": "Kehadiran direkodkan.",
+    "failedToLoadTeacherAttendanceData": "Gagal memuatkan data kehadiran guru",
+    "thatStatusCannotBeRecorded": "Status itu tidak boleh direkodkan."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Kata Laluan Semasa",
@@ -1400,7 +1407,24 @@
     "attendanceRecord": "Rekod Kehadiran",
     "comments": "Ulasan",
     "fetchingReportDetails": "Mengambil butiran laporan...",
-    "schoolLogo": "Logo Sekolah"
+    "schoolLogo": "Logo Sekolah",
+    "noDaftar": "No. Daftar",
+    "mataPelajaran": "Mata Pelajaran",
+    "penilaian": "Penilaian",
+    "kehadiran": "Kehadiran",
+    "hariDirekodkan": "Hari direkodkan",
+    "hariHadir": "Hari hadir",
+    "peratus": "Peratus",
+    "catatanGuru": "Catatan Guru",
+    "guruBesar": "Guru Besar",
+    "tandatanganPenjaga": "Tandatangan Penjaga",
+    "tiadaPenggal": "Tiada penggal",
+    "tiadaKelas": "Tiada kelas",
+    "tiadaPelajar": "Tiada pelajar",
+    "kadDiterbitkan": "Kad diterbitkan",
+    "pratontonDraf": "Pratonton draf",
+    "tiadaPelajarAktifDalamKelasIni": "Tiada pelajar aktif dalam kelas ini",
+    "sebabPilihan": "Sebab (pilihan)"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "Dasar Sekolah"
@@ -1591,7 +1615,8 @@
     "imageUploadedReadyToSave": "Imej dimuat naik sedia untuk disimpan",
     "profileUpdatedSuccessfully": "Profil berjaya dikemas kini!",
     "pleaseEnterYourFullNameBeforeSaving": "Sila masukkan nama penuh anda sebelum menyimpan.",
-    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah."
+    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah.",
+    "editProfile": "Sunting Profil"
   },
   "examSchedule": {
     "examSchedule": "Jadual Peperiksaan"
@@ -1974,5 +1999,1094 @@
   "motion-ui": {
     "closeModal": "Tutup tetingkap",
     "closeDrawer": "Tutup laci"
+  },
+  "academicAnalytics": {
+    "comprehensivePerformanceTrackingAndAnalysis": "Penjejakan dan analisis prestasi menyeluruh",
+    "allClasses": "Semua Kelas",
+    "purataMarkah": "Purata Markah",
+    "kadarLulus": "Kadar Lulus",
+    "topPerformer": "Pencapaian Terbaik",
+    "bilanganMarkah": "Bilangan Markah",
+    "gradeDistribution": "Taburan Gred",
+    "belumAdaMarkahUntukPenggalAtauKelasIni": "Belum ada markah untuk penggal atau kelas ini.",
+    "purataKeseluruhan": "Purata Keseluruhan",
+    "kelasPerluPerhatian": "Kelas Perlu Perhatian",
+    "kelasTerbaik": "Kelas Terbaik",
+    "failedToLoadAnalytics": "Gagal memuatkan analitik"
+  },
+  "academicSettingsScreen": {
+    "academicConfiguration": "Konfigurasi Akademik",
+    "academicYearStart": "Mula Tahun Akademik",
+    "academicYearEnd": "Akhir Tahun Akademik",
+    "defaultGradingScale": "Skala Gred Lalai",
+    "percentage0100": "Peratusan (0-100)",
+    "letterGradesAF": "Gred Huruf (A-F)",
+    "standardsBased": "Berasaskan Standard",
+    "enableWeightedAssignments": "Dayakan Tugasan Berwajaran",
+    "configureAdmissionFormsRequiredDocumentsAndApp": "Konfigurasikan borang kemasukan, dokumen diperlukan, dan status permohonan di sini.",
+    "primaryCurriculumType": "Jenis Kurikulum Utama",
+    "kurikulumKSSR": "Kurikulum KSSR",
+    "britishCurriculum": "Kurikulum British",
+    "bothDualCurriculum": "Kedua-dua (Kurikulum Dwibahasa)",
+    "schoolCalendar": "Kalendar Sekolah",
+    "gradingScales": "Skala Gred",
+    "enrollmentSettings": "Tetapan Pendaftaran",
+    "curriculumContent": "Kurikulum & Kandungan",
+    "loadingSettings": "Memuatkan tetapan...",
+    "settingsSavedSuccessfully": "Tetapan berjaya disimpan!",
+    "errorLoadingAcademicSettings": "Ralat memuatkan tetapan akademik.",
+    "schoolContextMissing": "Konteks sekolah hilang."
+  },
+  "addExamScreen": {
+    "examType": "Jenis Peperiksaan",
+    "selectType": "Pilih jenis...",
+    "selectClass": "Pilih kelas...",
+    "noClassesFoundInDatabase": "Tiada kelas dijumpai dalam pangkalan data",
+    "subject": "Subjek",
+    "selectSubject": "Pilih subjek...",
+    "loadingFormData": "Memuatkan data borang...",
+    "failedToLoadFormData": "Gagal memuatkan data borang",
+    "pleaseFillAllFields": "Sila isi semua ruangan."
+  },
+  "addParentScreen": {
+    "addParent": "Tambah Ibu Bapa"
+  },
+  "addStudentScreen": {
+    "notStated": "Tidak dinyatakan",
+    "notAssignedYet": "Belum ditugaskan",
+    "guardian": "Penjaga",
+    "admissionNumber": "Nombor pendaftaran",
+    "dateOfBirth": "Tarikh lahir",
+    "placeOfBirth": "Tempat lahir",
+    "nationality": "Kewarganegaraan",
+    "identityCardNumber": "Nombor kad pengenalan",
+    "homeAddress": "Alamat rumah",
+    "previousSchool": "Sekolah terdahulu",
+    "dateJoined": "Tarikh menyertai",
+    "phoneNumber": "Nombor telefon",
+    "emailIfAny": "E-mel (jika ada)",
+    "occupation": "Pekerjaan",
+    "studentDetails": "Butiran murid",
+    "schoolBackground": "Latar belakang sekolah",
+    "parentOrGuardian": "Ibu bapa atau penjaga",
+    "studentDetailsSaved": "Butiran murid disimpan."
+  },
+  "addTeacherScreen": {
+    "notStated": "Tidak dinyatakan",
+    "employmentStart": "Mula Bekerja",
+    "status": "Status",
+    "inactive": "Tidak Aktif",
+    "archived": "Diarkibkan",
+    "staffCode": "Kod Kakitangan",
+    "fullName": "Nama Penuh",
+    "classesTaught": "Kelas Diajar",
+    "subjectsTaught": "Subjek Diajar",
+    "teacherUpdated": "Guru dikemas kini",
+    "teacherSaved": "Guru disimpan",
+    "loginAccountCreated": "Akaun log masuk dicipta",
+    "couldNotLoadTheSubjectAndClassLists": "Tidak dapat memuatkan senarai subjek dan kelas",
+    "couldNotLoadThisTeacher": "Tidak dapat memuatkan guru ini",
+    "staffCodeAndFullNameAreRequired": "Kod kakitangan dan nama penuh diperlukan",
+    "anEmailAddressIsNeededToCreateALoginAccount": "Alamat e-mel diperlukan untuk mencipta akaun log masuk",
+    "anEmailAddressIsRequired": "Alamat e-mel diperlukan"
+  },
+  "adminActionsScreen": {
+    "quickActions": "Tindakan Pantas",
+    "manageYourSchoolEfficiently": "Urus sekolah anda dengan cekap.",
+    "addStudent": "Tambah Murid",
+    "studentList": "Senarai Murid",
+    "idCards": "Kad Pengenalan",
+    "addTeacher": "Tambah Guru",
+    "teacherList": "Senarai Guru",
+    "attendance": "Kehadiran",
+    "classes": "Kelas",
+    "subjects": "Subjek",
+    "reportCards": "Kad Laporan",
+    "timetable": "Jadual Waktu",
+    "teacherAssignments": "Tugasan Guru",
+    "feeCollection": "Kutipan Yuran",
+    "studentFees": "Yuran Murid",
+    "feeSetup": "Tetapan Yuran",
+    "parentAccounts": "Akaun Ibu Bapa",
+    "emergencyAlert": "Makluman Kecemasan",
+    "safetyLogs": "Log Keselamatan",
+    "announcements": "Pengumuman",
+    "auditTrail": "Jejak Audit",
+    "settings": "Tetapan",
+    "manageStudents": "Urus Murid",
+    "manageStaff": "Urus Kakitangan",
+    "academic": "Akademik",
+    "finance": "Kewangan",
+    "safetyWellbeing": "Keselamatan & Kesejahteraan",
+    "communication": "Komunikasi"
+  },
+  "adminDashboard": {
+    "databaseConnectionError": "Ralat Sambungan Pangkalan Data",
+    "thisScreen": "Skrin ini",
+    "loadingAnalytics": "Memuatkan analitik...",
+    "searchingSchoolDatabase": "Mencari dalam pangkalan data sekolah..."
+  },
+  "adminLessonNotesScreen": {
+    "notaPelajaran": "Nota Pelajaran"
+  },
+  "adminNewChatScreen": {
+    "adminNewChat": "Sembang Baharu Pentadbir"
+  },
+  "adminResultsEntrySelector": {
+    "resultsEntrySelection": "Pemilihan Kemasukan Keputusan",
+    "chooseAClassToEnterStudentAcademicResults": "Pilih kelas untuk memasukkan keputusan akademik murid.",
+    "noClassesFound": "Tiada kelas dijumpai.",
+    "loadingClasses": "Memuatkan kelas..."
+  },
+  "adminSelectClassForReport": {
+    "selectAClass": "Pilih Kelas",
+    "chooseAClassToViewStudentReportCards": "Pilih kelas untuk melihat kad laporan murid.",
+    "noClassesFound": "Tiada kelas dijumpai.",
+    "loadingLiveData": "Memuatkan data langsung..."
+  },
+  "adminSelectTermForReport": {
+    "noStudentSelected": "Tiada murid dipilih.",
+    "chooseTheAcademicTermYouWantToViewOrEdit": "Pilih penggal akademik yang anda mahu lihat atau sunting."
+  },
+  "adminStudentListForReport": {
+    "noClassSelectedOpenThisViewByPickingAClassFrom": "Tiada kelas dipilih. Buka paparan ini dengan memilih kelas daripada Laporan.",
+    "noStudentsFound": "Tiada Murid Dijumpai",
+    "loadingClassRoster": "Memuatkan senarai kelas...",
+    "failedToLoadClassRoster": "Gagal memuatkan senarai kelas"
+  },
+  "adminStudentReportCardScreen": {
+    "endOfTermReportCard": "Kad Laporan Akhir Penggal",
+    "subject": "Subjek",
+    "ca40": "CA (40)",
+    "exam60": "Peperiksaan (60)",
+    "total100": "Jumlah (100)",
+    "totalDays": "Jumlah Hari",
+    "present": "Hadir",
+    "teacherSComment": "Ulasan Guru",
+    "principalSComment": "Ulasan Pengetua",
+    "noStudentSelectedOpenThisViewFromAStudentRow": "Tiada murid dipilih. Buka paparan ini dari baris murid.",
+    "noReportCardData": "Tiada Data Kad Laporan",
+    "noReportCardDataHasBeenEnteredForThisStudentYe": "Belum ada data kad laporan dimasukkan untuk murid ini.",
+    "selectATermToViewTheReport": "Pilih penggal untuk melihat laporan.",
+    "fullName": "Nama Penuh",
+    "classGrade": "Kelas/Gred",
+    "session": "Sesi",
+    "admissionNo": "No. Pendaftaran",
+    "dateOfBirth": "Tarikh Lahir",
+    "positionInClass": "Kedudukan dalam Kelas",
+    "studentInformation": "Maklumat Murid",
+    "academicPerformance": "Prestasi Akademik",
+    "skillsBehaviour": "Kemahiran & Tingkah Laku",
+    "psychomotorSkills": "Kemahiran Psikomotor",
+    "attendanceRecord": "Rekod Kehadiran",
+    "comments": "Ulasan",
+    "schoolLogo": "Logo Sekolah"
+  },
+  "alumniHistoryScreen": {
+    "alumniHistory": "Sejarah Alumni"
+  },
+  "analyticsAdminTools": {
+    "advancedAnalyticsBudgetingAndSystemIntegration": "Analitik lanjutan, belanjawan, dan integrasi sistem",
+    "attendanceHeatmap": "Peta Haba Kehadiran",
+    "financeDashboard": "Papan Pemuka Kewangan",
+    "academicAnalytics": "Analitik Akademik",
+    "budgetPlanner": "Perancang Belanjawan",
+    "auditTrail": "Jejak Audit",
+    "integrationHub": "Hab Integrasi",
+    "vendorManagement": "Pengurusan Vendor",
+    "assetInventory": "Inventori Aset",
+    "scanAsset": "Imbas Aset",
+    "privacyPDPA": "Privasi (PDPA)",
+    "complianceChecks": "Semakan Pematuhan",
+    "maintenanceTickets": "Tiket Penyelenggaraan",
+    "visualAttendanceTrackingWithTrends": "Penjejakan kehadiran visual dengan trend",
+    "revenueExpensesAndForecasting": "Hasil, perbelanjaan, dan ramalan",
+    "gradeDistributionAndPerformance": "Taburan gred dan prestasi",
+    "annualBudgetsAndAllocations": "Belanjawan tahunan dan peruntukan",
+    "securityMonitoringAndCompliance": "Pemantauan keselamatan dan pematuhan",
+    "governmentSystemsThirdPartyApps": "Sistem kerajaan & aplikasi pihak ketiga",
+    "suppliersAndPurchaseOrders": "Pembekal dan pesanan belian",
+    "equipmentTrackingQRCodes": "Penjejakan peralatan & kod QR",
+    "scanAQRTagToViewDetails": "Imbas tag QR untuk melihat butiran",
+    "dataProtectionConsent": "Perlindungan data & persetujuan",
+    "automatedRegulatoryHealth": "Kesihatan kawal selia automatik",
+    "repairsIssueTracking": "Pembaikan & penjejakan isu"
+  },
+  "analyticsScreen": {
+    "noAttendanceTaken": "Tiada kehadiran diambil",
+    "blankDaysHadNoAttendanceTakenWeekendsHolidaysO": "Hari kosong tiada kehadiran diambil (hujung minggu, cuti atau belum ditanda).",
+    "studentPerformance": "Prestasi Murid",
+    "feeCompliance": "Pematuhan Yuran",
+    "teacherWorkloadWeeklyHours": "Beban Guru (Jam Mingguan)",
+    "attendanceTrendLast7Days": "Trend Kehadiran (7 Hari Lepas)",
+    "enrollmentTrends": "Trend Pendaftaran",
+    "refreshAnalytics": "Segarkan analitik",
+    "refreshData": "Segarkan Data",
+    "noResultsRecordedYet": "Belum ada keputusan direkodkan",
+    "noFeesSetUpYet": "Belum ada yuran disediakan",
+    "noTeachersYet": "Belum ada guru",
+    "noLessonsScheduledYet": "Belum ada pelajaran dijadualkan",
+    "noAttendanceTakenThisWeek": "Tiada kehadiran diambil minggu ini",
+    "noStudentsEnrolledYet": "Belum ada murid mendaftar",
+    "checkYourConnectionAndTryAgain": "Semak sambungan anda dan cuba lagi.",
+    "subjectAveragesAppearHereOnceScoresAreEntered": "Purata subjek muncul di sini sebaik markah dimasukkan.",
+    "feesYouAssignToStudentsWillShowHere": "Yuran yang anda tetapkan kepada murid akan muncul di sini.",
+    "teachersYouAddWillShowHereWithTheirWeeklyTeach": "Guru yang anda tambah akan muncul di sini dengan jam pengajaran mingguan mereka.",
+    "weeklyHoursAppearOnceTeachersHaveLessonsOnATim": "Jam mingguan muncul sebaik guru mempunyai pelajaran dalam jadual waktu.",
+    "dailyAttendanceAppearsHereOnceRegistersAreMark": "Kehadiran harian muncul di sini sebaik sahaja daftar ditanda.",
+    "newEnrolmentsPerMonthAppearHere": "Pendaftaran baharu sebulan muncul di sini."
+  },
+  "announcementsScreen": {
+    "pengumuman": "Pengumuman",
+    "tulisPengumuman": "Tulis pengumuman",
+    "belumAdaPengumuman": "Belum ada pengumuman",
+    "terbitkan": "Terbitkan",
+    "kandungan": "Kandungan",
+    "untukSiapa": "Untuk siapa",
+    "tarikhTamatPilihan": "Tarikh tamat (pilihan)",
+    "contohCutiHariRaya": "Contoh: Cuti hari raya",
+    "tulisMesejKepadaIbuBapa": "Tulis mesej kepada ibu bapa…",
+    "drafDipadam": "Draf dipadam."
+  },
+  "arrearsTracker": {
+    "arrears": "Tunggakan"
+  },
+  "assetDetailScreen": {
+    "assetDetail": "Butiran Aset"
+  },
+  "assetInventory": {
+    "assetInventory": "Inventori Aset"
+  },
+  "atRiskStudentsScreen": {
+    "atRiskStudents": "Murid Berisiko"
+  },
+  "attendanceHeatmap": {
+    "noAttendanceDataForSelectedPeriod": "Tiada data kehadiran untuk tempoh dipilih",
+    "visualAttendancePatternsAcrossClassesAndTimePe": "Corak kehadiran visual merentas kelas dan tempoh masa",
+    "averageAttendance": "Purata Kehadiran",
+    "criticalDays": "Hari Kritikal",
+    "allClasses": "Semua Kelas",
+    "startDate": "Tarikh Mula",
+    "endDate": "Tarikh Tamat",
+    "exportCSV": "Eksport CSV",
+    "attendanceRateLegend": "Petunjuk Kadar Kehadiran:",
+    "below70": "Bawah 70%",
+    "reportExportedSuccessfully": "Laporan berjaya dieksport!",
+    "failedToLoadAttendanceData": "Gagal memuatkan data kehadiran"
+  },
+  "attendanceOverviewScreen": {
+    "attendance": "Kehadiran",
+    "whichClassesHaveHandedInTheirRegister": "Kelas mana yang telah menyerahkan daftar mereka.",
+    "couldNotLoadAttendance": "Tidak dapat memuatkan kehadiran",
+    "noClassesWithStudents": "Tiada Kelas Dengan Murid",
+    "classes": "Kelas",
+    "recorded": "Direkodkan",
+    "loadingAttendance": "Memuatkan kehadiran..."
+  },
+  "auditLogScreen": {
+    "noLogsFoundAuditSystemActive": "Tiada log dijumpai. Sistem audit aktif.",
+    "loadingAuditTrail": "Memuatkan jejak audit...",
+    "failedToLoadAuditLogs": "Gagal memuatkan log audit"
+  },
+  "auditTrailScreen": {
+    "rekodAudit": "Rekod Audit",
+    "semuaJenisRekod": "Semua jenis rekod",
+    "tiadaRekod": "Tiada rekod",
+    "rekodBaharuDicipta": "Rekod baharu dicipta",
+    "tiadaPerubahanBidangDirekodkan": "Tiada perubahan bidang direkodkan.",
+    "cariNamaPenggunaAtauNoRujukan": "Cari nama pengguna atau no. rujukan"
+  },
+  "auditTrailViewer": {
+    "comprehensiveSystemActivityAndSecurityMonitori": "Pemantauan aktiviti sistem dan keselamatan menyeluruh",
+    "exportCSV": "Eksport CSV",
+    "totalEvents": "Jumlah Acara",
+    "highRisk": "Risiko Tinggi",
+    "failedActions": "Tindakan Gagal",
+    "sensitiveData": "Data Sensitif",
+    "search": "Cari",
+    "actionType": "Jenis Tindakan",
+    "allActions": "Semua Tindakan",
+    "riskLevel": "Tahap Risiko",
+    "allLevels": "Semua Peringkat",
+    "dateRange": "Julat Tarikh",
+    "dateTime": "Tarikh/Masa",
+    "resource": "Sumber",
+    "description": "Penerangan",
+    "status": "Status",
+    "actions": "Tindakan",
+    "noAuditLogsFoundForTheSelectedFilters": "Tiada log audit dijumpai untuk penapis yang dipilih",
+    "auditLogDetails": "Butiran Log Audit",
+    "ipAddress": "Alamat IP",
+    "previousValues": "Nilai Terdahulu",
+    "newValues": "Nilai Baharu",
+    "viewDetails": "Lihat Butiran",
+    "searchUserActionOrResource": "Cari pengguna, tindakan, atau sumber...",
+    "auditLogExported": "Log audit dieksport!",
+    "failedToLoadAuditLogs": "Gagal memuatkan log audit"
+  },
+  "awardPoints": {
+    "awardPoints": "Berikan Mata"
+  },
+  "backupRestoreScreen": {
+    "backupRestore": "Pemulihan Sandaran"
+  },
+  "behaviorLogScreen": {
+    "logTingkahLaku": "Log Tingkah Laku"
+  },
+  "brandingSettingsScreen": {
+    "schoolLogo": "Logo Sekolah",
+    "uploadLogo": "Muat Naik Logo",
+    "primaryColorTheme": "Tema Warna Utama",
+    "brandingSettingsSavedSuccessfully": "Tetapan jenama berjaya disimpan",
+    "logoUploadedPressSaveToApplyIt": "Logo dimuat naik — tekan Simpan untuk menggunakannya",
+    "pleaseWaitForTheLogoToFinishUploading": "Sila tunggu logo selesai dimuat naik."
+  },
+  "budgetPlanner": {
+    "budgetPlanner": "Perancang Belanjawan"
+  },
+  "busDutyRosterScreen": {
+    "busDutyRoster": "Senarai Tugas Bas"
+  },
+  "changePasswordScreen": {
+    "currentPassword": "Kata Laluan Semasa",
+    "newPassword": "Kata Laluan Baharu",
+    "confirmNewPassword": "Sahkan Kata Laluan Baharu",
+    "passwordChangedSuccessfully": "Kata laluan berjaya ditukar!",
+    "newPasswordsDoNotMatch": "Kata laluan baharu tidak sepadan."
+  },
+  "classAttendanceDetailScreen": {
+    "noStudentsFoundForThisClass": "Tiada murid dijumpai untuk kelas ini.",
+    "syncingDatabase": "Menyegerakkan pangkalan data...",
+    "failedToLoadAttendanceRecords": "Gagal memuatkan rekod kehadiran"
+  },
+  "classFormScreen": {
+    "chooseAYear": "Pilih tahun",
+    "subjectsTaught": "Subjek diajar",
+    "loadingSubjects": "Memuatkan subjek...",
+    "pleaseChooseAYearLevelFrom1To6": "Sila pilih peringkat tahun dari 1 hingga 6.",
+    "pleaseEnterAClassName": "Sila masukkan nama kelas."
+  },
+  "classListScreen": {
+    "noClassesYet": "Belum Ada Kelas",
+    "loadingClasses": "Memuatkan kelas..."
+  },
+  "classVerificationScreen": {
+    "classVerification": "Pengesahan Kelas"
+  },
+  "classroomManagementScreen": {
+    "classroomManagement": "Pengurusan Bilik Darjah"
+  },
+  "classroomObservationScreen": {
+    "pemerhatianBilikDarjah": "Pemerhatian Bilik Darjah"
+  },
+  "clubManagementScreen": {
+    "pengurusanKelab": "Pengurusan Kelab"
+  },
+  "communicationHub": {
+    "habKomunikasi": "Hab Komunikasi"
+  },
+  "communicationSettingsScreen": {
+    "enableEmailNotifications": "Dayakan Pemberitahuan E-mel",
+    "enableSMSNotifications": "Dayakan Pemberitahuan SMS",
+    "enableInAppNotifications": "Dayakan Pemberitahuan Dalam Aplikasi",
+    "notificationChannels": "Saluran Pemberitahuan",
+    "parentPortalSettings": "Tetapan Portal Ibu Bapa",
+    "communicationSettingsSavedSuccessfully": "Tetapan komunikasi berjaya disimpan"
+  },
+  "complianceChecklist": {
+    "complianceChecklist": "Senarai Semak Pematuhan"
+  },
+  "complianceDashboard": {
+    "compliance": "Pematuhan"
+  },
+  "complianceOnboardingPage": {
+    "pendaftaranPematuhan": "Pendaftaran Pematuhan"
+  },
+  "consentFormScreen": {
+    "consentForm": "Borang Persetujuan"
+  },
+  "curriculumManagementScreen": {
+    "schoolCurricula": "Kurikulum Sekolah",
+    "whichCurriculaThisSchoolIsAccreditedToOfferOve": "Kurikulum mana yang sekolah ini diakreditasi untuk menawarkan secara keseluruhan.",
+    "studentCurriculumTracks": "Trek Kurikulum Murid",
+    "noStudentsFound": "Tiada murid dijumpai.",
+    "britishUKNC": "British (UK NC)",
+    "americanCommonCore": "Amerika (Common Core)",
+    "dualCurriculum": "Kurikulum Dwibahasa",
+    "searchStudentsByNameOrAdmissionNumber": "Cari murid mengikut nama atau nombor pendaftaran...",
+    "loadingCurriculumSettings": "Memuatkan tetapan kurikulum...",
+    "loadingStudents": "Memuatkan murid...",
+    "schoolCurriculaUpdated": "Kurikulum sekolah dikemas kini.",
+    "failedToLoadStudents": "Gagal memuatkan murid.",
+    "failedToSaveSchoolCurricula": "Gagal menyimpan kurikulum sekolah.",
+    "perStudentCurriculumIsNotRecordedForThisSchool": "Kurikulum per-murid belum direkodkan untuk sekolah ini."
+  },
+  "curriculumSettingsScreen": {
+    "curriculumSettings": "Tetapan Kurikulum"
+  },
+  "customGamesListScreen": {
+    "permainanPembelajaran": "Permainan Pembelajaran"
+  },
+  "customReportBuilder": {
+    "pembinaLaporanTersuai": "Pembina Laporan Tersuai"
+  },
+  "dataExportScreen": {
+    "dataExport": "Eksport Data"
+  },
+  "departmentManagementScreen": {
+    "pengurusanJabatan": "Pengurusan Jabatan"
+  },
+  "digitalTwinScreen": {
+    "digitalTwin": "Kembar Digital"
+  },
+  "emergencyAlert": {
+    "emergencyAlert": "Makluman Kecemasan"
+  },
+  "emergencyBroadcastModal": {
+    "emergencyBroadcastHub": "Hab Siaran Kecemasan",
+    "broadcastSent": "Siaran Dihantar",
+    "yourEmergencyAlertHasBeenQueuedForDelivery": "Makluman kecemasan anda telah dibariskan untuk dihantar.",
+    "alertTitle": "Tajuk Makluman",
+    "message": "Mesej",
+    "audience": "Audiens",
+    "everyone": "Semua orang",
+    "parentsOnly": "Ibu Bapa Sahaja",
+    "teachersOnly": "Guru Sahaja",
+    "staffOnly": "Kakitangan Sahaja",
+    "channels": "Saluran",
+    "broadcasting": "Menyiarkan...",
+    "detailedInstructions": "Arahan terperinci..."
+  },
+  "enhancedEnrollmentPage": {
+    "enhancedEnrollmentPage": "Halaman Pendaftaran Dipertingkat"
+  },
+  "enrollmentTrendsWidget": {
+    "enrollmentTrends": "Trend Pendaftaran"
+  },
+  "equipmentInventoryScreen": {
+    "equipmentInventory": "Inventori Peralatan"
+  },
+  "examCandidateRegistration": {
+    "pendaftaranCalonPeperiksaan": "Pendaftaran Calon Peperiksaan"
+  },
+  "examManagement": {
+    "teacher": "Guru",
+    "allTeachers": "Semua Guru",
+    "curriculumTrack": "Trek Kurikulum",
+    "allTracks": "Semua Trek",
+    "britishCambridgeIGCSE": "British (Cambridge/IGCSE)",
+    "published": "Diterbitkan",
+    "pending": "Menunggu",
+    "publish": "Terbitkan",
+    "noExamsFoundForThisFilter": "Tiada peperiksaan dijumpai untuk penapis ini.",
+    "externalExamsPage": "Halaman Peperiksaan Luar",
+    "deleteExam": "Padam Peperiksaan",
+    "loadingExams": "Memuatkan peperiksaan...",
+    "areYouSureYouWantToDeleteThisExamThisActionCan": "Adakah anda pasti mahu memadam peperiksaan ini? Tindakan ini tidak boleh dibatalkan.",
+    "examUpdatedSuccessfully": "Peperiksaan berjaya dikemas kini",
+    "examDeletedSuccessfully": "Peperiksaan berjaya dipadam",
+    "examPublishedSuccessfully": "Peperiksaan berjaya diterbitkan",
+    "examCreatedSuccessfully": "Peperiksaan berjaya dicipta",
+    "failedToLoadExams": "Gagal memuatkan peperiksaan",
+    "failedToUpdateExam": "Gagal mengemas kini peperiksaan",
+    "failedToDeleteExam": "Gagal memadam peperiksaan",
+    "failedToPublishExam": "Gagal menerbitkan peperiksaan",
+    "pleaseChooseAClass": "Sila pilih kelas.",
+    "noSchoolTermIsSetUpYetAskAnAdministratorToAddO": "Belum ada penggal sekolah disediakan. Minta pentadbir menambahnya.",
+    "pleaseChooseASubject": "Sila pilih subjek.",
+    "failedToCreateExam": "Gagal mencipta peperiksaan"
+  },
+  "externalExamsPage": {
+    "exportCSV": "Eksport CSV"
+  },
+  "facilityRegisterScreen": {
+    "facilityRegister": "Daftar Kemudahan"
+  },
+  "feeCollectionScreen": {
+    "bayaranYuran": "Bayaran Yuran",
+    "kutipBayaran": "Kutip bayaran",
+    "catatanPilihan": "Catatan (pilihan)",
+    "tiadaTunggakan": "Tiada tunggakan",
+    "tiadaPelajarSepadan": "Tiada pelajar sepadan",
+    "tiadaCajTertunggak": "Tiada caj tertunggak",
+    "tiadaResitLagi": "Tiada resit lagi",
+    "cariNamaPelajarAtauNomborPendaftaran": "Cari nama pelajar atau nombor pendaftaran",
+    "contohDibayarOlehNenek": "Contoh: dibayar oleh nenek",
+    "sebabPembatalanWajib": "Sebab pembatalan (wajib)",
+    "silaNyatakanSebabPembatalan": "Sila nyatakan sebab pembatalan."
+  },
+  "feeManagementScreen": {
+    "tetapanYuran": "Tetapan Yuran",
+    "tambahJenisYuran": "Tambah jenis yuran",
+    "belumAdaJenisYuran": "Belum ada jenis yuran",
+    "janaBilBulanan": "Jana bil bulanan",
+    "contohYuranBulanan": "Contoh: Yuran Bulanan",
+    "contohBULANAN": "Contoh: BULANAN",
+    "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
+    "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan."
+  },
+  "financialSettingsScreen": {
+    "defaultCurrency": "Mata Wang Lalai",
+    "ringgitMalaysiaRM": "Ringgit Malaysia (RM)",
+    "usd": "USD ($)",
+    "gbp": "GBP (£)",
+    "tuitionFeeStructure": "Struktur Yuran & Tuition",
+    "invoicePaymentMethods": "Invois & Kaedah Bayaran",
+    "financialSettingsSaved": "Tetapan kewangan disimpan"
+  },
+  "gatePassApprovals": {
+    "gatePassApprovals": "Kelulusan Pas Pintu"
+  },
+  "guardianAccountsScreen": {
+    "akaunIbuBapa": "Akaun Ibu Bapa",
+    "tambahPenjaga": "Tambah penjaga",
+    "akaunLogMasuk": "Akaun log masuk",
+    "kataLaluanSementara": "Kata laluan sementara",
+    "sebabWajib": "Sebab (wajib)",
+    "sebabPerubahanWajib": "Sebab perubahan (wajib)",
+    "namaPenuh": "Nama penuh",
+    "telefon": "Telefon",
+    "emelPilihan": "Emel (pilihan)",
+    "belumAdaPenjaga": "Belum ada penjaga",
+    "tiadaPenjagaSepadan": "Tiada penjaga sepadan",
+    "cariNamaTelefonAtauEmelPenjaga": "Cari nama, telefon atau emel penjaga",
+    "dijanaAutomatikApabilaAkaunDicipta": "Dijana automatik apabila akaun dicipta",
+    "contohIbuBapaBaharuMendaftar": "Contoh: ibu bapa baharu mendaftar",
+    "contohSahkanBapaKandung": "Contoh: sahkan bapa kandung",
+    "contohAhmadBinAli": "Contoh: Ahmad bin Ali",
+    "contoh0123456789": "Contoh: 0123456789",
+    "penjagaDitambahSeterusnyaCiptaAkaunDanPautkanA": "Penjaga ditambah. Seterusnya, cipta akaun dan pautkan anak mereka.",
+    "silaNyatakanSebabPerubahanIni": "Sila nyatakan sebab perubahan ini."
+  },
+  "healthLogScreen": {
+    "logKesihatan": "Log Kesihatan"
+  },
+  "hostelManagementScreen": {
+    "pengurusanAsrama": "Pengurusan Asrama"
+  },
+  "iDVerificationPanel": {
+    "idverification": "IDVerification"
+  },
+  "iVRLessonRecorder": {
+    "ivrLessonRecorder": "Perakam Pelajaran IVR",
+    "deliverAudioLessonsViaInteractivePhoneCalls": "Sampaikan pelajaran audio melalui panggilan telefon interaktif",
+    "comingSoon": "Akan Datang",
+    "ivrPhoneProviderNotConnected": "Penyedia Telefon IVR Tidak Disambung",
+    "supportedProvidersAnyOneRequired": "Penyedia disokong (mana-mana satu diperlukan):",
+    "africaSTalking": "Africa's Talking",
+    "infobip": "Infobip"
+  },
+  "integrationHub": {
+    "integration": "Integrasi"
+  },
+  "inviteStaffScreen": {
+    "inviteStaff": "Jemput Kakitangan"
+  },
+  "lateArrivalConfig": {
+    "lateArrival": "Ketibaan Lewat"
+  },
+  "learningHubManagementScreen": {
+    "learningHubManagement": "Pengurusan Hab Pembelajaran"
+  },
+  "leaveApproval": {
+    "leaveApproval": "Kelulusan Cuti"
+  },
+  "leaveBalance": {
+    "leaveBalance": "Baki Cuti"
+  },
+  "maintenanceTickets": {
+    "maintenanceTickets": "Tiket Penyelenggaraan"
+  },
+  "manageLearningResourcesScreen": {
+    "manageLearningResources": "Urus Sumber Pembelajaran"
+  },
+  "managePTAMeetingsScreen": {
+    "managePTAMeetings": "Urus Mesyuarat PIBG"
+  },
+  "managePermissionSlipsScreen": {
+    "urusSlipKebenaran": "Urus Slip Kebenaran"
+  },
+  "managePoliciesScreen": {
+    "managePolicies": "Urus Dasar"
+  },
+  "manageVolunteeringScreen": {
+    "manageVolunteering": "Urus Kerelawanan"
+  },
+  "markEntryScreen": {
+    "tiadaPenggal": "Tiada penggal",
+    "tiadaKelas": "Tiada kelas",
+    "penilaian": "Penilaian",
+    "tiadaPenilaianUntukKelasIni": "Tiada penilaian untuk kelas ini",
+    "tiadaPenilaianDipilih": "Tiada penilaian dipilih",
+    "diterbitkan": "Diterbitkan",
+    "tp": "TP —",
+    "tiadaPelajarAktifDalamKelasIni": "Tiada pelajar aktif dalam kelas ini",
+    "terbitkan": "Terbitkan",
+    "belumDiisi": "Belum diisi",
+    "adaMarkah": "Ada markah",
+    "tidakHadir": "Tidak hadir",
+    "dikecualikan": "Dikecualikan",
+    "catatanPilihan": "Catatan (pilihan)",
+    "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit"
+  },
+  "markStudentExitScreen": {
+    "markStudentExit": "Tanda Keluar Murid"
+  },
+  "masterReportingHub": {
+    "masterReporting": "Laporan Induk"
+  },
+  "notificationsSettingsScreen": {
+    "notificationPreferences": "Keutamaan Pemberitahuan",
+    "emailAlerts": "Makluman E-mel",
+    "pushNotifications": "Pemberitahuan Tolak",
+    "weeklySummary": "Ringkasan Mingguan",
+    "receiveImportantAlertsViaEmail": "Terima makluman penting melalui e-mel.",
+    "getRealTimeUpdatesOnYourDevice": "Dapatkan kemas kini masa nyata pada peranti anda.",
+    "getASummaryReportEveryThursday": "Dapatkan laporan ringkasan setiap Khamis.",
+    "notificationPreferenceUpdated": "Keutamaan pemberitahuan dikemas kini",
+    "failedToSaveNotificationSettings": "Gagal menyimpan tetapan pemberitahuan"
+  },
+  "onlineStoreScreen": {
+    "onlineStore": "Kedai Dalam Talian"
+  },
+  "parentChatAccessScreen": {
+    "parentChatAccess": "Akses Sembang Ibu Bapa"
+  },
+  "parentDetailAdminView": {
+    "parentDetailAdmin": "Butiran Ibu Bapa Pentadbir"
+  },
+  "parentListScreen": {
+    "couldNotLoadGuardians": "Tidak dapat memuatkan penjaga",
+    "occupation": "Pekerjaan",
+    "address": "Alamat",
+    "searchGuardians": "Cari penjaga",
+    "loadingGuardians": "Memuatkan penjaga...",
+    "pleaseEnterANameAndAPhoneNumber": "Sila masukkan nama dan nombor telefon."
+  },
+  "pastStudentsScreen": {
+    "pastStudents": "Murid Lepas"
+  },
+  "payrollDashboard": {
+    "payroll": "Gaji"
+  },
+  "payslipGenerator": {
+    "payslip": "Slip Gaji"
+  },
+  "personalSecuritySettingsScreen": {
+    "personalSecuritySettings": "Tetapan Keselamatan Peribadi"
+  },
+  "privacyDashboard": {
+    "privacy": "Privasi"
+  },
+  "profileSettings": {
+    "profile": "Profil"
+  },
+  "radioContentScheduler": {
+    "radioContentScheduler": "Penjadual Kandungan Radio",
+    "scheduleLessonsForBroadcastOverCommunityRadio": "Jadualkan pelajaran untuk siaran radio komuniti",
+    "comingSoon": "Akan Datang",
+    "radioBroadcastingIntegrationNotConfigured": "Integrasi Penyiaran Radio Tidak Dikonfigurasi",
+    "whatSNeededToActivateThisFeature": "Apa yang diperlukan untuk mengaktifkan ciri ini:",
+    "aPartnershipWithACommunityFMRadioStation": "Kerjasama dengan stesen radio FM komuniti",
+    "radioStationAPICredentialsOrSchedulingContact": "Bukti kelayakan API stesen radio atau kenalan penjadualan",
+    "audioUploadAndStreamingStorageEGCloudinary": "Storan muat naik dan penstriman audio (cth. Cloudinary)"
+  },
+  "reportCardPreview": {
+    "reportCardPreview": "Pratonton Kad Laporan"
+  },
+  "reportCardPublishing": {
+    "refresh": "Segarkan",
+    "publishAll": "Terbitkan Semua",
+    "academicYear": "Tahun Akademik",
+    "noReportsSubmittedYetForThisClass": "Belum ada laporan dihantar untuk kelas ini.",
+    "awaiting": "Menunggu",
+    "noClassesFound": "Tiada Kelas Dijumpai",
+    "noStudentsMatchingTheCurrentBranchAndFiltersWe": "Tiada murid sepadan dengan cawangan dan penapis semasa dijumpai.",
+    "noReportsYet": "Belum Ada Laporan",
+    "unknownStatus": "Status Tidak Diketahui",
+    "session": "Sesi",
+    "publish": "Terbitkan",
+    "showAllStudents": "Tunjuk Semua Murid",
+    "reportCardHistory": "Sejarah kad laporan",
+    "loading": "Memuatkan…",
+    "noChangesHaveBeenRecordedForThisReportCardYet": "Belum ada perubahan direkodkan untuk kad laporan ini.",
+    "backToClasses": "Kembali ke kelas",
+    "whoEnteredChangedSubmittedAndPublishedThisRepo": "Siapa yang memasukkan, mengubah, menghantar dan menerbitkan kad laporan ini",
+    "accessingNeuralRecords": "Mengakses Rekod Neural...",
+    "allReportsPublished": "Semua laporan diterbitkan",
+    "failedToLoadReportCardData": "Gagal memuatkan data kad laporan",
+    "noReportCardRecordFoundForUpdate": "Tiada rekod kad laporan dijumpai untuk dikemas kini",
+    "failedToUpdateStatus": "Gagal mengemas kini status",
+    "bulkPublishFailed": "Terbitan pukal gagal",
+    "noCurrentTermIsSet": "Tiada penggal semasa ditetapkan."
+  },
+  "reportsScreen": {
+    "purataMarkah": "Purata markah",
+    "average": "Purata",
+    "generatingReports": "Menjana laporan...",
+    "averageGradesBySubject": "Purata Gred mengikut Subjek",
+    "noAcademicDataAvailable": "Tiada data akademik tersedia",
+    "topPerformingStudents": "Murid Berprestasi Terbaik",
+    "noStudentDataAvailable": "Tiada data murid tersedia"
+  },
+  "resourceUploadModal": {
+    "resourceUploadModal": "Tetingkap Muat Naik Sumber"
+  },
+  "sMSLessonManager": {
+    "smsLessonManager": "Pengurus Pelajaran SMS",
+    "sendLessonSummariesAndSchoolUpdatesViaSMS": "Hantar ringkasan pelajaran dan kemas kini sekolah melalui SMS",
+    "comingSoon": "Akan Datang",
+    "smsProviderNotConfigured": "Penyedia SMS Tidak Dikonfigurasi",
+    "supportedSMSProvidersAnyOneRequired": "Penyedia SMS disokong (mana-mana satu diperlukan):",
+    "infobip": "Infobip",
+    "africaSTalking": "Africa's Talking",
+    "localMalaysianGateway": "Gerbang Malaysia Tempatan"
+  },
+  "sOPCaseManagementScreen": {
+    "sopcaseManagement": "Pengurusan Kes SOP"
+  },
+  "sOPSettingsScreen": {
+    "sopsettings": "Tetapan SOP"
+  },
+  "safetyHealthLogs": {
+    "logKeselamatanKesihatan": "Log Keselamatan & Kesihatan"
+  },
+  "salaryConfiguration": {
+    "konfigurasiGaji": "Konfigurasi Gaji"
+  },
+  "scanAssetScreen": {
+    "scanAsset": "Imbas Aset"
+  },
+  "scholarshipManagement": {
+    "scholarship": "Biasiswa"
+  },
+  "schoolInfoScreen": {
+    "schoolInformation": "Maklumat Sekolah",
+    "manageSchoolAnthemPledgeAndBrandingAssets": "Urus lagu sekolah, ikrar, dan aset jenama.",
+    "schoolName": "Nama Sekolah",
+    "logoURL": "URL Logo",
+    "heroImageURL": "URL Imej Hero",
+    "displayedOnTheLoginAndLandingPages": "Dipaparkan pada halaman log masuk dan pendaratan.",
+    "schoolAnthem": "Lagu Sekolah",
+    "schoolPledge": "Ikrar Sekolah",
+    "saveChanges": "Simpan Perubahan",
+    "enterSchoolAnthemText": "Masukkan teks lagu sekolah...",
+    "enterSchoolPledgeText": "Masukkan teks ikrar sekolah...",
+    "schoolInformationUpdated": "Maklumat sekolah dikemas kini!",
+    "failedToSaveSchoolInformation": "Gagal menyimpan maklumat sekolah."
+  },
+  "schoolOnboardingScreen": {
+    "pendaftaranSekolah": "Pendaftaran Sekolah"
+  },
+  "securitySettingsScreen": {
+    "passwordPolicy": "Dasar Kata Laluan",
+    "requireUppercaseLetter": "Perlukan Huruf Besar",
+    "requireNumber": "Perlukan Nombor",
+    "forceSpecialCharacters": "Paksa Aksara Khas",
+    "recentSystemLogins": "Log Masuk Sistem Terkini",
+    "activeNow": "Aktif sekarang",
+    "securitySettingsSaved": "Tetapan keselamatan disimpan",
+    "noSchoolSelectedToSavePolicy": "Tiada sekolah dipilih untuk menyimpan dasar."
+  },
+  "selectUserTypeToAddScreen": {
+    "whatTypeOfUserDoYouWantToAdd": "Jenis pengguna apa yang anda mahu tambah?"
+  },
+  "sessionManagementScreen": {
+    "sessionManagement": "Pengurusan Sesi"
+  },
+  "sessionPromotionScreen": {
+    "naikKelas": "Naik Kelas"
+  },
+  "sponsorshipMatching": {
+    "sponsorship": "Penajaan"
+  },
+  "studentApprovalScreen": {
+    "studentApproval": "Kelulusan Murid"
+  },
+  "studentApprovalsScreen": {
+    "studentApprovals": "Kelulusan Murid"
+  },
+  "studentDetailReport": {
+    "studentDetailReport": "Laporan Butiran Murid",
+    "reportDataVisualizationWillAppearHere": "Visualisasi data laporan akan muncul di sini."
+  },
+  "studentEnrollmentPage": {
+    "registerStudentAssignCurriculumAndUploadDocs": "Daftar murid, tetapkan kurikulum, dan muat naik dokumen.",
+    "studentInformation": "Maklumat Murid",
+    "firstName": "Nama Pertama",
+    "lastName": "Nama Akhir",
+    "dateOfBirth": "Tarikh Lahir",
+    "assignedClassAcademicLevel": "Kelas Ditugaskan (Peringkat Akademik)",
+    "selectAClass": "Pilih kelas...",
+    "fullName": "Nama Penuh",
+    "emailAddress": "Alamat E-mel",
+    "phoneNumber": "Nombor Telefon",
+    "homeAddress": "Alamat Rumah",
+    "uploadRecords": "Muat Naik Rekod",
+    "birthCertPreviousResults": "Sijil Lahir, Keputusan Terdahulu",
+    "british": "British",
+    "parentGuardianName": "Nama Ibu Bapa/Penjaga",
+    "streetAddress": "Alamat Jalan...",
+    "enrollmentSubmittedSuccessfully": "Pendaftaran berjaya dihantar!",
+    "pleaseFillInAllRequiredFields": "Sila isi semua ruangan yang diperlukan.",
+    "theStudentWasSavedButSomeDocumentsDidNotUpload": "Murid disimpan, tetapi sebahagian dokumen tidak dimuat naik."
+  },
+  "studentFeesScreen": {
+    "penyataYuranPelajar": "Penyata Yuran Pelajar",
+    "dibayar": "Dibayar",
+    "tiadaPelajarAktif": "Tiada pelajar aktif",
+    "pilihSeorangPelajar": "Pilih seorang pelajar",
+    "tiadaCaj": "Tiada caj",
+    "cariNamaPelajar": "Cari nama pelajar",
+    "diskaunRM": "Diskaun (RM)",
+    "sebabWajib": "Sebab (wajib)",
+    "diskaunDisimpan": "Diskaun disimpan.",
+    "cajDikecualikan": "Caj dikecualikan.",
+    "diskaunMestiNomborYangSah": "Diskaun mesti nombor yang sah.",
+    "silaNyatakanSebabDiskaun": "Sila nyatakan sebab diskaun.",
+    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian."
+  },
+  "studentIDCardDashboard": {
+    "kadPengenalanMurid": "Kad Pengenalan Murid"
+  },
+  "studentListScreen": {
+    "changeStatus": "Tukar status",
+    "failedToLoadStudents": "Gagal Memuatkan Murid",
+    "noStudentsFoundMatchingYourSearch": "Tiada murid sepadan dengan carian anda.",
+    "withdrawStudent": "Tarik Diri Murid",
+    "changeStudentStatus": "Tukar status murid",
+    "searchForAStudent": "Cari murid",
+    "addNewStudent": "Tambah murid baharu",
+    "year13": "Tahun 1 - 3",
+    "year46": "Tahun 4 - 6",
+    "unassigned": "Belum Ditugaskan",
+    "searchByName": "Cari mengikut nama...",
+    "reasonForWithdrawalEGRelocatedTransferredFinan": "Sebab pengeluaran (cth. berpindah, ditukar, kewangan)...",
+    "failedToUpdateStatusPleaseTryAgain": "Gagal mengemas kini status. Sila cuba lagi."
+  },
+  "studentProfileDashboard": {
+    "noStudentSelected": "Tiada murid dipilih.",
+    "noStudentSelectedOpenThisViewFromAStudentRowIn": "Tiada murid dipilih. Buka paparan ini dari baris murid dalam Senarai Murid.",
+    "academicPerformance": "Prestasi Akademik",
+    "overallAverage": "Purata Keseluruhan",
+    "aiGeneratedSummary": "Ringkasan Dijana AI",
+    "generateSummary": "Jana Ringkasan",
+    "personalProfile": "Profil Peribadi",
+    "dateOfBirth": "Tarikh Lahir",
+    "admission": "No. Kemasukan",
+    "address": "Alamat",
+    "guardianContact": "Hubungan Penjaga",
+    "attendanceSummary": "Ringkasan Kehadiran",
+    "present": "Hadir",
+    "onLeave": "Sedang Bercuti",
+    "behavioralNotes": "Nota Tingkah Laku",
+    "noBehavioralNotesRecorded": "Tiada nota tingkah laku direkodkan.",
+    "adminActions": "Tindakan Pentadbir",
+    "reports": "Laporan",
+    "idCard": "Kad Pengenalan",
+    "deleteStudent": "Padam Murid",
+    "yesDelete": "Ya, Padam",
+    "studentArchived": "Murid diarkibkan",
+    "unableToLoadStudentDataPleaseTryAgain": "Tidak dapat memuatkan data murid. Sila cuba lagi.",
+    "archiveStudent": "Arkibkan Murid",
+    "archiveConfirm": "Adakah anda pasti mahu mengarkibkan {{name}}? Rekod kehadiran dan keputusan mereka akan kekal, dan murid ini tidak lagi muncul dalam senarai aktif.",
+    "failedToArchive": "Gagal mengarkib: "
+  },
+  "subjectListScreen": {
+    "couldNotLoadSubjects": "Tidak dapat memuatkan subjek",
+    "noSubjectsYet": "Belum Ada Subjek",
+    "optional": "Pilihan",
+    "loadingSubjects": "Memuatkan subjek...",
+    "pleaseEnterBothASubjectCodeAndAName": "Sila masukkan kedua-dua kod dan nama subjek."
+  },
+  "substituteCoverageScreen": {
+    "substituteCoverage": "Liputan Ganti"
+  },
+  "suspendStudentScreen": {
+    "suspendStudent": "Gantung Murid"
+  },
+  "systemSettingsScreen": {
+    "billingPlan": "Bil & Pelan",
+    "appearanceTheme": "Penampilan & Tema",
+    "studentManagement": "Pengurusan Murid",
+    "manageTeachers": "Urus Guru",
+    "parentManagement": "Pengurusan Ibu Bapa",
+    "inviteStaffMember": "Jemput Ahli Kakitangan",
+    "classManagement": "Pengurusan Kelas",
+    "timetableManagement": "Pengurusan Jadual Waktu",
+    "examManagement": "Pengurusan Peperiksaan",
+    "communicationHub": "Hab Komunikasi",
+    "userRolesPermissions": "Peranan & Kebenaran Pengguna",
+    "academicConfiguration": "Konfigurasi Akademik",
+    "learningHub": "Hab Pembelajaran",
+    "termsGrading": "Penggal & Penggredan",
+    "financialSettings": "Tetapan Kewangan",
+    "securityCompliance": "Keselamatan & Pematuhan",
+    "personalProfileSettings": "Tetapan Profil Peribadi",
+    "brandingCustomization": "Jenama & Penyesuaian",
+    "analyticsAdminTools": "Analitik & Alat Pentadbir",
+    "addNewUser": "Tambah Pengguna Baharu",
+    "platformVersionManagement": "Pengurusan Versi Platform",
+    "viewYourCurrentTermManageYourPlanAndUpgrade": "Lihat penggal semasa anda, urus pelan anda, dan naik taraf.",
+    "manageStudentRecordsAndEnrollment": "Urus rekod murid dan pendaftaran.",
+    "manageTeacherProfilesAndAssignments": "Urus profil guru dan tugasan.",
+    "manageParentInformationAndLinks": "Urus maklumat dan pautan ibu bapa.",
+    "sendInvitationsToNewStaffMembers": "Hantar jemputan kepada ahli kakitangan baharu.",
+    "manageSchoolClassesAndSections": "Urus kelas dan bahagian sekolah.",
+    "viewAndEditSchoolSchedules": "Lihat dan sunting jadual sekolah.",
+    "manageExamsAndResults": "Urus peperiksaan dan keputusan.",
+    "broadcastMessagesAndAnnouncements": "Mesej siaran dan pengumuman.",
+    "defineRolesAndControlAccess": "Tentukan peranan dan kawal akses.",
+    "setCalendarGradingAndCourses": "Tetapkan kalendar, penggredan, dan kursus.",
+    "curateFreeStudyResourcesByLevelAndSubject": "Susun sumber pembelajaran percuma mengikut peringkat dan subjek.",
+    "setAcademicTermsAndTheGradingScalePerSchoolOrB": "Tetapkan penggal akademik dan skala gred (setiap sekolah atau cawangan).",
+    "manageFeesAndPaymentMethods": "Urus yuran dan kaedah bayaran.",
+    "passwordPolicies2FAAuditLogs": "Dasar kata laluan, 2FA, log audit.",
+    "updateYourAccountAndProfileInformation": "Kemas kini maklumat akaun dan profil anda.",
+    "customizeTheLookAndFeel": "Sesuaikan rupa dan rasa.",
+    "advancedAnalyticsBudgetsIntegrations": "Analitik lanjutan, belanjawan, integrasi.",
+    "quicklyAddANewStudentTeacherOrParent": "Tambah murid, guru, atau ibu bapa baharu dengan pantas.",
+    "selectAndLockYourPreferredPlatformVersion": "Pilih dan kunci versi platform pilihan anda."
+  },
+  "teacherAssignmentsScreen": {
+    "assignDuties": "Tetapkan tugas",
+    "teacher": "Guru",
+    "chooseATeacher": "Pilih guru",
+    "classes": "Kelas",
+    "subjectsTaught": "Subjek diajar",
+    "classTeachers": "Guru Kelas",
+    "subjectTeachers": "Guru Subjek",
+    "workload": "Beban Kerja",
+    "loadingTeacherDuties": "Memuatkan tugas guru...",
+    "dutiesSaved": "Tugas disimpan.",
+    "pleaseChooseATeacher": "Sila pilih guru.",
+    "chooseAtLeastOneClassOrSubject": "Pilih sekurang-kurangnya satu kelas atau subjek.",
+    "noAcademicYearIsSetAsCurrent": "Tiada tahun akademik ditetapkan semasa."
+  },
+  "teacherAttendanceApproval": {
+    "attendanceApprovals": "Kelulusan Kehadiran",
+    "reviewAndManageDailyTeacherCheckIns": "Semak dan urus daftar masuk guru harian.",
+    "loadingApprovalRequests": "Memuatkan permintaan kelulusan...",
+    "allCaughtUp": "Semua Selesai!",
+    "checkIn": "Daftar Masuk",
+    "reject": "Tolak",
+    "approve": "Luluskan",
+    "pending": "Menunggu",
+    "searchByTeacherName": "Cari mengikut nama guru...",
+    "attendanceApprovedSuccessfully": "Kehadiran berjaya diluluskan!",
+    "attendanceRejected": "Kehadiran ditolak.",
+    "failedToLoadPendingAttendanceRequests": "Gagal memuatkan permintaan kehadiran menunggu",
+    "anErrorOccurredWhileApprovingAttendance": "Ralat berlaku semasa meluluskan kehadiran.",
+    "anErrorOccurredWhileRejectingAttendance": "Ralat berlaku semasa menolak kehadiran."
+  },
+  "teacherAttendanceDetail": {
+    "noTeacherSelectedOpenThisViewFromATeacherRow": "Tiada guru dipilih. Buka paparan ini dari baris guru.",
+    "present": "Hadir",
+    "pending": "Menunggu",
+    "onLeave": "Sedang Bercuti",
+    "resetChanges": "Set semula perubahan",
+    "failedToSaveAttendanceChanges": "Gagal menyimpan perubahan kehadiran"
+  },
+  "teacherDetailAdminView": {
+    "noTeacherSelectedOpenThisViewFromATeacherRowIn": "Tiada guru dipilih. Buka paparan ini dari baris guru dalam Senarai Guru.",
+    "attendance": "Kehadiran",
+    "avgStudentScore": "Purata Markah Murid",
+    "noClassesAssigned": "Tiada kelas ditugaskan.",
+    "performanceEvaluation": "Penilaian Prestasi",
+    "fullAttendanceRecord": "Rekod Kehadiran Penuh",
+    "personnelFile": "Fail Peribadi",
+    "adminActions": "Tindakan Pentadbir",
+    "editProfile": "Sunting Profil",
+    "deleteAccount": "Padam Akaun",
+    "deleteTeacherAccount": "Padam Akaun Guru",
+    "changeTeacherStatus": "Tukar Status Guru",
+    "confirm": "Sahkan"
+  },
+  "teacherListScreen": {
+    "teacherManagement": "Pengurusan Guru",
+    "manageAndOverseeSchoolFaculty": "Urus dan awasi fakulti sekolah.",
+    "addTeacher": "Tambah Guru",
+    "totalTeachers": "Jumlah Guru",
+    "activeFaculty": "Fakulti Aktif",
+    "departments": "Jabatan",
+    "allStatus": "Semua Status",
+    "onLeave": "Sedang Bercuti",
+    "inactive": "Tidak Aktif",
+    "loadingFacultyRecords": "Memuatkan rekod fakulti...",
+    "noTeachersFound": "Tiada Guru Dijumpai",
+    "tryAdjustingYourSearchOrFiltersToFindWhatYouRe": "Cuba laraskan carian atau penapis anda untuk mencari apa yang anda mahukan.",
+    "searchByNameOrEmail": "Cari mengikut nama atau e-mel...",
+    "failedToLoadTeachers": "Gagal memuatkan guru"
+  },
+  "teacherPerformanceScreen": {
+    "teacherPerformance": "Prestasi Guru"
+  },
+  "teacherPersonnelFileScreen": {
+    "noTeacherSelected": "Tiada guru dipilih."
+  },
+  "timetableEditorScreen": {
+    "noTimetableYet": "Belum Ada Jadual Waktu",
+    "noClassesInThisTimetable": "Tiada kelas dalam jadual waktu ini",
+    "couldNotLoadTheWeek": "Tidak dapat memuatkan minggu",
+    "noTeachingPeriods": "Tiada Waktu Pengajaran",
+    "notTimetabled": "Belum dalam jadual waktu",
+    "subject": "Subjek",
+    "chooseASubject": "Pilih subjek...",
+    "teacher": "Guru",
+    "loading": "Memuatkan...",
+    "loadingTheWeek": "Memuatkan minggu...",
+    "lessonRemoved": "Pelajaran dibuang.",
+    "timetablePublished": "Jadual waktu diterbitkan.",
+    "chooseASubjectFirst": "Pilih subjek dahulu."
+  },
+  "timetableScreen": {
+    "jadualTidakDapatDimuatkan": "Jadual tidak dapat dimuatkan",
+    "belumAdaJadual": "Belum Ada Jadual",
+    "pelajaranSeminggu": "Pelajaran seminggu",
+    "waktuSehari": "Waktu sehari",
+    "belumAdaGuru": "Belum ada guru",
+    "tiadaApaUntukDipaparkan": "Tiada apa untuk dipaparkan",
+    "couldNotLoadTheWeek": "Tidak dapat memuatkan minggu",
+    "nothingTimetabled": "Tiada Dalam Jadual",
+    "memuatkanJadual": "Memuatkan jadual...",
+    "memuatkanMinggu": "Memuatkan minggu..."
+  },
+  "transportManagementScreen": {
+    "pengurusanPengangkutan": "Pengurusan Pengangkutan"
+  },
+  "uSSDWorkflow": {
+    "ussdWorkflowBuilder": "Pembina Aliran Kerja USSD",
+    "allowParentsStudentsToAccessSchoolInfoViaUSSDC": "Benarkan ibu bapa & murid mengakses maklumat sekolah melalui kod USSD",
+    "comingSoon": "Akan Datang",
+    "ussdGatewayNotConnected": "Gerbang USSD Tidak Disambung",
+    "whatSRequiredToActivateUSSD": "Apa yang diperlukan untuk mengaktifkan USSD:",
+    "aUSSDShortcodeFromMTNAirtelGloOr9mobile": "Kod pendek USSD daripada MTN, Airtel, Glo, atau 9mobile",
+    "aUSSDGatewayProviderAfricaSTalkingRecommended": "Penyedia gerbang USSD (Africa's Talking disyorkan)",
+    "apiCredentialsConfiguredInYourSchoolSettings": "Bukti kelayakan API dikonfigurasi dalam tetapan sekolah anda"
+  },
+  "unifiedGovernanceHub": {
+    "unifiedGovernance": "Tadbir Urus Bersepadu"
+  },
+  "userAccountsScreen": {
+    "userAccounts": "Akaun Pengguna"
+  },
+  "userRolesScreen": {
+    "loadingPermissions": "Memuatkan kebenaran...",
+    "theOfficeFullAccessAndTheOnlyRoleThatCannotBeR": "Pejabat. Akses penuh, dan satu-satunya peranan yang tidak boleh dikurangkan.",
+    "seesTheirOwnClassesAndRecordsAttendanceAndMark": "Melihat kelas mereka sendiri, dan merekod kehadiran serta markah untuknya.",
+    "permissionsSavedSuccessfully": "Kebenaran berjaya disimpan!",
+    "schoolContextMissing": "Konteks sekolah hilang."
+  },
+  "userSeeder": {
+    "userSeeder": "Penyemai Pengguna"
+  },
+  "validationConsole": {
+    "validation": "Pengesahan"
+  },
+  "versionSettings": {
+    "version": "Versi"
+  },
+  "visitorLog": {
+    "visitor": "Pelawat"
   }
 }

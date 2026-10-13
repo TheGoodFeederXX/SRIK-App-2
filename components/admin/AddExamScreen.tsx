@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { Exam } from '../../types';
@@ -13,6 +14,7 @@ interface AddExamScreenProps {
 }
 
 const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => {
+    const { t } = useTranslation();
   const { currentSchool, currentBranchId } = useAuth();
   const [examType, setExamType] = useState('');
   const [date, setDate] = useState('');
@@ -56,7 +58,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
         }
       } catch (err) {
         console.error('Error fetching exam form data:', err);
-        toast.error('Failed to load form data');
+        toast.error(t('addExamScreen.failedToLoadFormData'));
       } finally {
         setLoading(false);
       }
@@ -86,7 +88,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
     if (examType && date && cls && sub) {
       onSave({ type: examType, date, className: cls.name, classId: cls.id, subject: sub.name });
     } else {
-      toast.error('Please fill all fields.');
+      toast.error(t('addExamScreen.pleaseFillAllFields'));
     }
   };
 
@@ -95,7 +97,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
   const examTypes = ['Mid-term', 'Final', 'Quiz', 'Test', 'Assessment', 'Ujian', 'IGCSE', 'CHECKPOINT'];
 
   if (loading && availableClasses.length === 0) {
-    return <CenteredLoader message="Loading form data..." className="p-8" />;
+    return <CenteredLoader message={t('addExamScreen.loadingFormData')} className="p-8" />;
   }
 
   return (
@@ -104,9 +106,9 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
         <main className="flex-grow p-4 space-y-4 overflow-y-auto">
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="space-y-4 bg-white p-4 rounded-xl shadow-sm">
             <div>
-              <label htmlFor="examType" className="block text-sm font-medium text-gray-700 mb-1">Exam Type</label>
+              <label htmlFor="examType" className="block text-sm font-medium text-gray-700 mb-1">{t('addExamScreen.examType')}</label>
               <select id="examType" value={examType} onChange={e => setExamType(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
-                <option value="" disabled>Select type...</option>
+                <option value="" disabled>{t('addExamScreen.selectType')}</option>
                 {examTypes.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </div>
@@ -117,17 +119,17 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
             <div>
               <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">Class</label>
               <select id="className" value={className} onChange={e => setClassName(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
-                <option value="" disabled>Select class...</option>
+                <option value="" disabled>{t('addExamScreen.selectClass')}</option>
                 {/* The ID is the value. Two classes can share a label across years,
                     and the label is something the school renames. */}
                 {availableClasses.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                {availableClasses.length === 0 && <option value="" disabled>No classes found in database</option>}
+                {availableClasses.length === 0 && <option value="" disabled>{t('addExamScreen.noClassesFoundInDatabase')}</option>}
               </select>
             </div>
             <div>
-              <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+              <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">{t('addExamScreen.subject')}</label>
               <select id="subject" value={subject} onChange={e => setSubject(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
-                <option value="" disabled>Select subject...</option>
+                <option value="" disabled>{t('addExamScreen.selectSubject')}</option>
                 {Array.from(new Map(availableSubjects.map(sub => [sub.name, sub])).values()).map(sub => <option key={sub.id} value={sub.id}>{sub.name}</option>)}
               </select>
             </div>

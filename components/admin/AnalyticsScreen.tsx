@@ -1,5 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../lib/i18n';
 import { motion } from 'framer-motion';
 import { ChartBarIcon, ReceiptIcon, BriefcaseIcon, TrendingUpIcon, UsersIcon, RefreshIcon, ChevronDownIcon, AlertTriangleIcon } from '../../constants';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
@@ -208,15 +210,18 @@ const DayTick = ({ x, y, payload }: any) => {
 type AttendanceDay = { date: string; rate: number | null; present: number; late: number; total: number };
 
 const attendanceTip = (r: any) => (
+    // Module-scope helper: hooks do not exist here, so the i18n instance is used.
+
     <>
         <p className="font-semibold text-gray-900">{r.long}</p>
         {r.rate === null
-            ? <p className="text-gray-600">No attendance taken</p>
+            ? <p className="text-gray-600">{i18n.t('analyticsScreen.noAttendanceTaken')}</p>
             : <p className="text-gray-600">{r.rate}% attended · {r.present + r.late} of {r.total} students{r.late ? ` (${r.late} late)` : ''}</p>}
     </>
 );
 
 const AttendanceTrendChart = ({ data, color }: { data: AttendanceDay[]; color: string }) => {
+    const { t } = useTranslation();
     const rows = data.map(d => ({ ...d, ...dayLabels(d.date) }));
     const gaps = rows.some(r => r.rate === null);
     const tap = useTapDetails(rows.length);
@@ -236,7 +241,7 @@ const AttendanceTrendChart = ({ data, color }: { data: AttendanceDay[]; color: s
                 </ResponsiveContainer>
                 <TapDetails tap={tap}>{tap.sel && rows[tap.sel.index] ? attendanceTip(rows[tap.sel.index]) : null}</TapDetails>
             </div>
-            {gaps && <p className="text-sm text-gray-500 mt-2">Blank days had no attendance taken (weekends, holidays or not marked yet).</p>}
+            {gaps && <p className="text-sm text-gray-500 mt-2">{i18n.t('analyticsScreen.blankDaysHadNoAttendanceTakenWeekendsHolidaysO')}</p>}
         </div>
     );
 };
@@ -273,6 +278,7 @@ interface AnalyticsScreenProps {
 }
 
 const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [metrics, setMetrics] = useState<any>({
@@ -314,7 +320,7 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
     // A failed load with nothing loaded before: cards show an error state
     // instead of empty charts / "0%" that would look like real data.
     const failed = !!error && !loaded;
-    const errorState = <CardState icon={<AlertTriangleIcon className="w-10 h-10" />} title="Couldn't load this data" message="Check your connection and try again." onRetry={loadData} />;
+    const errorState = <CardState icon={<AlertTriangleIcon className="w-10 h-10" />} title="Couldn't load this data" message={i18n.t('analyticsScreen.checkYourConnectionAndTryAgain')} onRetry={loadData} />;
     const fees = metrics.fees || { paid: 0, overdue: 0, unpaid: 0, total: 0 };
     const performance: any[] = Array.isArray(metrics.performance) ? metrics.performance : [];
     const workload: any[] = Array.isArray(metrics.workload) ? metrics.workload : [];
@@ -331,7 +337,7 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
             <main className="flex-grow p-4 overflow-y-auto">
                 {/* Page header row: refresh sits in normal flow so it never covers a card or the error banner. */}
                 <div className="flex justify-end mb-3">
-                    <motion.button whileHover={{ rotate: 90 }} whileTap={{ scale: 0.9 }} onClick={loadData} disabled={loading} className="w-11 h-11 flex items-center justify-center bg-white rounded-full shadow-sm hover:bg-gray-100 text-gray-500 disabled:cursor-wait" title="Refresh Data" aria-label="Refresh analytics">
+                    <motion.button whileHover={{ rotate: 90 }} whileTap={{ scale: 0.9 }} onClick={loadData} disabled={loading} className="w-11 h-11 flex items-center justify-center bg-white rounded-full shadow-sm hover:bg-gray-100 text-gray-500 disabled:cursor-wait" title={i18n.t('analyticsScreen.refreshData')} aria-label={i18n.t('analyticsScreen.refreshAnalytics')}>
                         <RefreshIcon className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
                     </motion.button>
                 </div>
@@ -345,11 +351,11 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-2xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-4">
                             <div className="bg-blue-100 text-blue-600 p-2 rounded-lg"><ChartBarIcon /></div>
-                            <h3 className="font-bold text-gray-800">Student Performance</h3>
+                            <h3 className="font-bold text-gray-800">{i18n.t('analyticsScreen.studentPerformance')}</h3>
                         </div>
                         {loading ? <div className="h-40 animate-pulse bg-gray-100 rounded-lg"></div> :
                             failed ? errorState :
-                            performance.length === 0 ? <CardState icon={<ChartBarIcon className="w-10 h-10" />} title="No results recorded yet" message="Subject averages appear here once scores are entered." /> :
+                            performance.length === 0 ? <CardState icon={<ChartBarIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noResultsRecordedYet')} message={i18n.t('analyticsScreen.subjectAveragesAppearHereOnceScoresAreEntered')} /> :
                             <>
                                 <SimpleBarChart listId="analytics-subjects" data={visibleItems(performance, PERFORMANCE_LIMIT, showAllSubjects)} colors={['bg-green-500', 'bg-blue-600', 'bg-amber-500', 'bg-red-500']} />
                                 {hiddenCount(performance, PERFORMANCE_LIMIT) > 0 && (
@@ -363,11 +369,11 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-2xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-4">
                             <div className="bg-green-100 text-green-500 p-2 rounded-lg"><ReceiptIcon /></div>
-                            <h3 className="font-bold text-gray-800">Fee Compliance</h3>
+                            <h3 className="font-bold text-gray-800">{i18n.t('analyticsScreen.feeCompliance')}</h3>
                         </div>
                         {loading ? <div className="h-40 animate-pulse bg-gray-100 rounded-lg"></div> :
                             failed ? errorState :
-                            !fees.total ? <CardState icon={<ReceiptIcon className="w-10 h-10" />} title="No fees set up yet" message="Fees you assign to students will show here." /> :
+                            !fees.total ? <CardState icon={<ReceiptIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noFeesSetUpYet')} message={i18n.t('analyticsScreen.feesYouAssignToStudentsWillShowHere')} /> :
                             <div className="flex flex-wrap items-center justify-around gap-4">
                                 <div className="relative">
                                     <DonutChart percentage={fees.paid || 0} color="#22c55e" size={120} strokeWidth={12} />
@@ -389,12 +395,12 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-2xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-4">
                             <div className="bg-amber-100 text-amber-500 p-2 rounded-lg"><BriefcaseIcon /></div>
-                            <h3 className="font-bold text-gray-800">Teacher Workload (Weekly Hours)</h3>
+                            <h3 className="font-bold text-gray-800">{i18n.t('analyticsScreen.teacherWorkloadWeeklyHours')}</h3>
                         </div>
                         {loading ? <div className="h-40 animate-pulse bg-gray-100 rounded-lg"></div> :
                             failed ? errorState :
-                            workload.length === 0 ? <CardState icon={<BriefcaseIcon className="w-10 h-10" />} title="No teachers yet" message="Teachers you add will show here with their weekly teaching hours." /> :
-                            workload.every((w: any) => !w.value) ? <CardState icon={<BriefcaseIcon className="w-10 h-10" />} title="No lessons scheduled yet" message="Weekly hours appear once teachers have lessons on a timetable." /> :
+                            workload.length === 0 ? <CardState icon={<BriefcaseIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noTeachersYet')} message={i18n.t('analyticsScreen.teachersYouAddWillShowHereWithTheirWeeklyTeach')} /> :
+                            workload.every((w: any) => !w.value) ? <CardState icon={<BriefcaseIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noLessonsScheduledYet')} message={i18n.t('analyticsScreen.weeklyHoursAppearOnceTeachersHaveLessonsOnATim')} /> :
                             <>
                                 <WorkloadChart listId="analytics-teachers" data={visibleItems(workload, WORKLOAD_LIMIT, showAllTeachers)} />
                                 {hiddenCount(workload, WORKLOAD_LIMIT) > 0 && (
@@ -408,11 +414,11 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white rounded-2xl shadow-sm p-4">
                         <div className="flex items-center space-x-3 mb-2">
                             <div className="bg-indigo-100 text-indigo-500 p-2 rounded-lg"><TrendingUpIcon /></div>
-                            <h3 className="font-bold text-gray-800">Attendance Trend (Last 7 Days)</h3>
+                            <h3 className="font-bold text-gray-800">{i18n.t('analyticsScreen.attendanceTrendLast7Days')}</h3>
                         </div>
                         {loading ? <div className="h-40 animate-pulse bg-gray-100 rounded-lg"></div> :
                             failed ? errorState :
-                            !attendanceDays.some((d: any) => d.rate !== null) ? <CardState icon={<TrendingUpIcon className="w-10 h-10" />} title="No attendance taken this week" message="Daily attendance appears here once registers are marked." /> :
+                            !attendanceDays.some((d: any) => d.rate !== null) ? <CardState icon={<TrendingUpIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noAttendanceTakenThisWeek')} message={i18n.t('analyticsScreen.dailyAttendanceAppearsHereOnceRegistersAreMark')} /> :
                             <AttendanceTrendChart data={attendanceDays} color="#6366f1" />
                         }
                     </motion.div>
@@ -421,11 +427,11 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.2 }} className="bg-white rounded-2xl shadow-sm p-4 md:col-span-2">
                         <div className="flex items-center space-x-3 mb-2">
                             <div className="bg-purple-100 text-purple-500 p-2 rounded-lg"><UsersIcon /></div>
-                            <h3 className="font-bold text-gray-800">Enrollment Trends</h3>
+                            <h3 className="font-bold text-gray-800">{i18n.t('analyticsScreen.enrollmentTrends')}</h3>
                         </div>
                         {loading ? <div className="h-40 animate-pulse bg-gray-100 rounded-lg"></div> :
                             failed ? errorState :
-                            enrollment.length === 0 ? <CardState icon={<UsersIcon className="w-10 h-10" />} title="No students enrolled yet" message="New enrolments per month appear here." /> :
+                            enrollment.length === 0 ? <CardState icon={<UsersIcon className="w-10 h-10" />} title={i18n.t('analyticsScreen.noStudentsEnrolledYet')} message={i18n.t('analyticsScreen.newEnrolmentsPerMonthAppearHere')} /> :
                             <EnrollmentChart data={enrollment} color="#8b5cf6" />
                         }
                     </motion.div>

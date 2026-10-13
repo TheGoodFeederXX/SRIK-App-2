@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
     Edit,
@@ -26,63 +27,64 @@ interface AdminActionsScreenProps {
 }
 
 const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
 
     const actions = [
         {
-            title: "Manage Students",
+            title: t('adminActionsScreen.manageStudents'),
             items: [
-                { label: "Add Student", icon: <UserPlus className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('addStudent', 'Add Student'), bg: "bg-indigo-50" },
-                { label: "Student List", icon: <Users className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('studentList', 'Students'), bg: "bg-indigo-50" },
-                { label: "ID Cards", icon: <CreditCard className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('idCardManagement', 'ID Cards'), bg: "bg-indigo-50" },
+                { label: t('adminActionsScreen.addStudent'), icon: <UserPlus className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('addStudent', 'Add Student'), bg: "bg-indigo-50" },
+                { label: t('adminActionsScreen.studentList'), icon: <Users className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('studentList', 'Students'), bg: "bg-indigo-50" },
+                { label: t('adminActionsScreen.idCards'), icon: <CreditCard className="w-5 h-5 text-indigo-600" />, onClick: () => navigateTo('idCardManagement', 'ID Cards'), bg: "bg-indigo-50" },
             ]
         },
         {
-            title: "Manage Staff",
+            title: t('adminActionsScreen.manageStaff'),
             items: [
-                { label: "Add Teacher", icon: <UserPlus className="w-5 h-5 text-purple-600" />, onClick: () => navigateTo('addTeacher', 'Add Teacher'), bg: "bg-purple-50" },
-                { label: "Teacher List", icon: <Users className="w-5 h-5 text-purple-600" />, onClick: () => navigateTo('teacherList', 'Teachers'), bg: "bg-purple-50" },
+                { label: t('adminActionsScreen.addTeacher'), icon: <UserPlus className="w-5 h-5 text-purple-600" />, onClick: () => navigateTo('addTeacher', 'Add Teacher'), bg: "bg-purple-50" },
+                { label: t('adminActionsScreen.teacherList'), icon: <Users className="w-5 h-5 text-purple-600" />, onClick: () => navigateTo('teacherList', 'Teachers'), bg: "bg-purple-50" },
             ]
         },
         {
-            title: "Academic",
+            title: t('adminActionsScreen.academic'),
             items: [
-                { label: "Attendance", icon: <CalendarCheck className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('attendanceOverview', 'Attendance'), bg: "bg-blue-50" },
-                { label: "Classes", icon: <GraduationCapIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classList', 'Classes'), bg: "bg-blue-50" },
-                { label: "Subjects", icon: <BookOpen className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('subjectList', 'Subjects'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.attendance'), icon: <CalendarCheck className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('attendanceOverview', 'Attendance'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.classes'), icon: <GraduationCapIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classList', 'Classes'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.subjects'), icon: <BookOpen className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('subjectList', 'Subjects'), bg: "bg-blue-50" },
                 { label: "Marks", icon: <ClipboardList className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('markEntry', 'Marks'), bg: "bg-blue-50" },
-                { label: "Report Cards", icon: <FileText className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('reportCard', 'Report Cards'), bg: "bg-blue-50" },
-                { label: "Timetable", icon: <Calendar className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('timetable', 'Timetable'), bg: "bg-blue-50" },
-                { label: "Teacher Assignments", icon: <UsersCogIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('teacherAssignments', 'Teacher Assignments'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.reportCards'), icon: <FileText className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('reportCard', 'Report Cards'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.timetable'), icon: <Calendar className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('timetable', 'Timetable'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.teacherAssignments'), icon: <UsersCogIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('teacherAssignments', 'Teacher Assignments'), bg: "bg-blue-50" },
             ]
         },
         {
-            title: "Finance",
+            title: t('adminActionsScreen.finance'),
             items: [
-                { label: "Fee Collection", icon: <CreditCard className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeCollection', 'Fee Collection'), bg: "bg-teal-50" },
-                { label: "Student Fees", icon: <FileText className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('studentFees', 'Student Fees'), bg: "bg-teal-50" },
-                { label: "Fee Setup", icon: <Settings className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeSetup', 'Fee Setup'), bg: "bg-teal-50" },
-                { label: "Parent Accounts", icon: <Users className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('guardianAccounts', 'Parent Accounts'), bg: "bg-teal-50" },
+                { label: t('adminActionsScreen.feeCollection'), icon: <CreditCard className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeCollection', 'Fee Collection'), bg: "bg-teal-50" },
+                { label: t('adminActionsScreen.studentFees'), icon: <FileText className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('studentFees', 'Student Fees'), bg: "bg-teal-50" },
+                { label: t('adminActionsScreen.feeSetup'), icon: <Settings className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('feeSetup', 'Fee Setup'), bg: "bg-teal-50" },
+                { label: t('adminActionsScreen.parentAccounts'), icon: <Users className="w-5 h-5 text-teal-600" />, onClick: () => navigateTo('guardianAccounts', 'Parent Accounts'), bg: "bg-teal-50" },
             ]
         },
         {
-            title: "Safety & Wellbeing",
+            title: t('adminActionsScreen.safetyWellbeing'),
             items: [
-                { label: "Emergency Alert", icon: <Bell className="w-5 h-5 text-red-600" />, onClick: () => navigateTo('emergencyAlert', 'Emergency Alert'), bg: "bg-red-50" },
-                { label: "Safety Logs", icon: <Shield className="w-5 h-5 text-rose-600" />, onClick: () => navigateTo('safetyHealthLogs', 'Safety & Health'), bg: "bg-rose-50" },
+                { label: t('adminActionsScreen.emergencyAlert'), icon: <Bell className="w-5 h-5 text-red-600" />, onClick: () => navigateTo('emergencyAlert', 'Emergency Alert'), bg: "bg-red-50" },
+                { label: t('adminActionsScreen.safetyLogs'), icon: <Shield className="w-5 h-5 text-rose-600" />, onClick: () => navigateTo('safetyHealthLogs', 'Safety & Health'), bg: "bg-rose-50" },
             ]
         },
         {
-            title: "Communication",
+            title: t('adminActionsScreen.communication'),
             items: [
-                { label: "Announcements", icon: <Megaphone className="w-5 h-5 text-amber-600" />, onClick: () => navigateTo('announcements', 'Announcements'), bg: "bg-amber-50" },
+                { label: t('adminActionsScreen.announcements'), icon: <Megaphone className="w-5 h-5 text-amber-600" />, onClick: () => navigateTo('announcements', 'Announcements'), bg: "bg-amber-50" },
             ]
         },
         {
             title: "System",
             items: [
-                { label: "Audit Trail", icon: <ShieldCheck className="w-5 h-5 text-slate-600" />, onClick: () => navigateTo('auditTrail', 'Audit Trail'), bg: "bg-slate-50" },
+                { label: t('adminActionsScreen.auditTrail'), icon: <ShieldCheck className="w-5 h-5 text-slate-600" />, onClick: () => navigateTo('auditTrail', 'Audit Trail'), bg: "bg-slate-50" },
                 { label: "Roles", icon: <Shield className="w-5 h-5 text-emerald-600" />, onClick: () => navigateTo('userRoles', 'User Roles'), bg: "bg-emerald-50" },
-                { label: "Settings", icon: <Settings className="w-5 h-5 text-gray-600" />, onClick: () => navigateTo('systemSettings', 'Settings'), bg: "bg-gray-50" },
+                { label: t('adminActionsScreen.settings'), icon: <Settings className="w-5 h-5 text-gray-600" />, onClick: () => navigateTo('systemSettings', 'Settings'), bg: "bg-gray-50" },
             ]
         }
     ];
@@ -90,8 +92,8 @@ const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) =
     return (
         <div className="p-4 space-y-6 pb-24">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-                <h1 className="text-2xl font-bold mb-2">Quick Actions</h1>
-                <p className="opacity-90">Manage your school efficiently.</p>
+                <h1 className="text-2xl font-bold mb-2">{t('adminActionsScreen.quickActions')}</h1>
+                <p className="opacity-90">{t('adminActionsScreen.manageYourSchoolEfficiently')}</p>
             </div>
 
             <div className="space-y-6">

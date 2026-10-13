@@ -12,6 +12,7 @@
  */
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { UsersIcon, CalendarIcon, CheckIcon } from '../../constants';
@@ -28,6 +29,7 @@ interface AttendanceOverviewScreenProps {
 }
 
 const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [date, setDate] = useState(() => todayInKualaLumpur());
 
@@ -47,8 +49,8 @@ const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ nav
             <main className="flex-grow p-4 space-y-4 overflow-y-auto pb-32 lg:pb-4">
                 <div className="flex items-center justify-between gap-3 px-1">
                     <div>
-                        <h1 className="text-lg font-bold text-gray-800">Attendance</h1>
-                        <p className="text-xs text-gray-500">Which classes have handed in their register.</p>
+                        <h1 className="text-lg font-bold text-gray-800">{t('attendanceOverviewScreen.attendance')}</h1>
+                        <p className="text-xs text-gray-500">{t('attendanceOverviewScreen.whichClassesHaveHandedInTheirRegister')}</p>
                     </div>
                     <div className="shrink-0">
                         <label htmlFor="overviewDate" className="sr-only">Date</label>
@@ -73,8 +75,8 @@ const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ nav
                 {rows.length > 0 && (
                     <div className="grid grid-cols-3 gap-3">
                         {[
-                            { label: 'Classes', value: `${rows.length - outstanding.length}/${rows.length}`, tone: outstanding.length === 0 ? 'text-green-600' : 'text-amber-600' },
-                            { label: 'Recorded', value: `${totalRecorded}/${totalExpected}`, tone: 'text-indigo-600' },
+                            { label: t('attendanceOverviewScreen.classes'), value: `${rows.length - outstanding.length}/${rows.length}`, tone: outstanding.length === 0 ? 'text-green-600' : 'text-amber-600' },
+                            { label: t('attendanceOverviewScreen.recorded'), value: `${totalRecorded}/${totalExpected}`, tone: 'text-indigo-600' },
                             { label: 'Absent', value: String(totalAbsent), tone: 'text-red-600' },
                         ].map(card => (
                             <div key={card.label} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 text-center">
@@ -86,16 +88,16 @@ const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ nav
                 )}
 
                 {isLoading ? (
-                    <CenteredLoader fullScreen={false} message="Loading attendance..." className="h-40" />
+                    <CenteredLoader fullScreen={false} message={t('attendanceOverviewScreen.loadingAttendance')} className="h-40" />
                 ) : isError ? (
                     <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                        <p className="font-bold text-gray-900 mb-1">Could not load attendance</p>
+                        <p className="font-bold text-gray-900 mb-1">{t('attendanceOverviewScreen.couldNotLoadAttendance')}</p>
                         <p className="text-sm text-gray-500">{String(error)}</p>
                     </div>
                 ) : rows.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
                         <UsersIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <h3 className="text-lg font-bold text-gray-800">No Classes With Students</h3>
+                        <h3 className="text-lg font-bold text-gray-800">{t('attendanceOverviewScreen.noClassesWithStudents')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
                             Once students are placed in classes, their registers appear here.
                         </p>

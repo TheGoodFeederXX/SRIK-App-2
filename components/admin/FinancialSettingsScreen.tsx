@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRightIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
@@ -25,6 +26,7 @@ const Accordion: React.FC<{ title: string; children: React.ReactNode; defaultOpe
 };
 
 const FinancialSettingsScreen: React.FC = () => {
+    const { t } = useTranslation();
   const { currentSchool } = useAuth();
   const [currency, setCurrency] = useState('MYR');
   const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +45,7 @@ const FinancialSettingsScreen: React.FC = () => {
       // another screen while it was open. It used to write the whole object back.
       await updateSchoolSettings({ financial: { currency } });
 
-      toast.success('Financial settings saved');
+      toast.success(t('financialSettingsScreen.financialSettingsSaved'));
     } catch (error: any) {
       toast.error(`Error: ${error.message}`);
     } finally {
@@ -53,17 +55,17 @@ const FinancialSettingsScreen: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4 bg-gray-50">
-      <Accordion title="Tuition & Fee Structure" defaultOpen>
+      <Accordion title={t('financialSettingsScreen.tuitionFeeStructure')} defaultOpen>
         <div className="flex items-center justify-between p-2">
-          <label className="text-sm font-medium">Default Currency</label>
+          <label className="text-sm font-medium">{t('financialSettingsScreen.defaultCurrency')}</label>
           <select value={currency} onChange={e => setCurrency(e.target.value)} className="border rounded-md p-1">
-            <option value="MYR">Ringgit Malaysia (RM)</option>
-            <option value="USD">USD ($)</option>
-            <option value="GBP">GBP (£)</option>
+            <option value="MYR">{t('financialSettingsScreen.ringgitMalaysiaRM')}</option>
+            <option value="USD">{t('financialSettingsScreen.usd')}</option>
+            <option value="GBP">{t('financialSettingsScreen.gbp')}</option>
           </select>
         </div>
       </Accordion>
-      <Accordion title="Invoice & Payment Methods">
+      <Accordion title={t('financialSettingsScreen.invoicePaymentMethods')}>
         <p className="text-gray-600 text-sm">Customize invoice templates and enable payment methods like Bank Transfer, Card, etc.</p>
       </Accordion>
       <motion.button

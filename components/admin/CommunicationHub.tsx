@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface CommunicationHubProps {
     handleBack?: () => void;
 }
 
-const CommunicationHub: React.FC<CommunicationHubProps> = ({ handleBack }) => (
+const CommunicationHub: React.FC<CommunicationHubProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Hab Komunikasi"
+        title={t('communicationHub.habKomunikasi')}
         explanation={
             'Pengumuman kepada ibu bapa disediakan melalui menu Pengumuman, bukan di ' +
             'sini. Ini kerana menghantar pengumuman kepada keluarga adalah tindakan ' +
@@ -19,6 +22,7 @@ const CommunicationHub: React.FC<CommunicationHubProps> = ({ handleBack }) => (
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default CommunicationHub;

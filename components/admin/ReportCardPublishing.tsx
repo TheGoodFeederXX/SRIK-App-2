@@ -1,5 +1,6 @@
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { SearchIcon, CheckCircleIcon, ClockIcon, PublishIcon, FilterIcon, RefreshIcon, ChevronDownIcon, EyeIcon, XCircleIcon, ChevronRightIcon, ChevronLeftIcon, BuildingLibraryIcon, BookOpenIcon, UserIcon } from '../../constants';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -37,6 +38,7 @@ interface TermStudent extends StudentReportInfo {
 }
 
 const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: propSchoolId, currentBranchId, currentBranchName }) => {
+    const { t } = useTranslation();
   const { currentSchool, user } = useAuth();
   const activeSchoolId = propSchoolId || currentSchool?.id || user?.user_metadata?.school_id;
 
@@ -57,7 +59,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
   // Audit history modal: every save/submit/publish for one report card.
   const [history, setHistory] = useState<{ student: TermStudent; entries: any[] | null } | null>(null);
   const openHistory = async (student: TermStudent) => {
-    if (!currentTermId) { toast('No current term is set.'); return; }
+    if (!currentTermId) { toast(t('reportCardPublishing.noCurrentTermIsSet')); return; }
     setHistory({ student, entries: null });
     try {
       // History here is the child's report card VERSIONS for this term. Each publish
@@ -151,7 +153,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
       setStudentsWithReports(studentsWithReportStatus as unknown as StudentReportInfo[]);
     } catch (err) {
       console.error('Error fetching students with reports:', err);
-      toast.error('Failed to load report card data');
+      toast.error(t('reportCardPublishing.failedToLoadReportCardData'));
     } finally {
       setIsLoading(false);
     }
@@ -159,7 +161,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
 
   const updateStudentStatus = async (studentId: string | number, reportCardId: string | number, newStatus: ReportCard['status']) => {
     if (!reportCardId) {
-      toast.error("No report card record found for update");
+      toast.error(t('reportCardPublishing.noReportCardRecordFoundForUpdate'));
       return;
     }
 
@@ -171,7 +173,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
       fetchStudentsWithReports(); // Refresh data
     } catch (err) {
       console.error('Error updating report status:', err);
-      toast.error("Failed to update status");
+      toast.error(t('reportCardPublishing.failedToUpdateStatus'));
     }
   };
 
@@ -293,10 +295,10 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
           await publishReportCard(student.id as string, currentTermId as string, 'Bulk publish by the office');
         }
 
-        toast.success('All reports published', { id: 'bulk-publish' });
+        toast.success(t('reportCardPublishing.allReportsPublished'), { id: 'bulk-publish' });
         await fetchStudentsWithReports();
       } catch (e) {
-        toast.error('Bulk publish failed', { id: 'bulk-publish' });
+        toast.error(t('reportCardPublishing.bulkPublishFailed'), { id: 'bulk-publish' });
       }
     }
   };
@@ -313,7 +315,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
             <button
               onClick={backToClasses}
               className="p-2 md:p-2.5 rounded-xl bg-white border border-gray-200 shadow-sm text-gray-600 hover:text-indigo-600 hover:border-indigo-100 transition-all active:scale-95 flex-shrink-0"
-              aria-label="Back to classes"
+              aria-label={t('reportCardPublishing.backToClasses')}
             >
               <ChevronLeftIcon className="w-4 h-4 md:w-5 md:h-5" />
             </button>
@@ -340,7 +342,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
             className="flex-1 md:flex-none p-2 md:px-4 md:py-2 bg-white border border-gray-200 rounded-xl shadow-sm text-gray-600 hover:text-indigo-600 hover:border-indigo-100 transition-all flex items-center justify-center space-x-2 active:scale-95"
           >
             <RefreshIcon className={`w-4 h-4 ${isLoading ? 'animate-spin text-indigo-500' : ''} shrink-0`} />
-            <span className="text-xs md:text-sm font-bold min-w-0">Refresh</span>
+            <span className="text-xs md:text-sm font-bold min-w-0">{t('reportCardPublishing.refresh')}</span>
           </button>
           {selectedClass && (
             <button
@@ -349,7 +351,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
               className="flex-[2] md:flex-none px-4 md:px-6 py-2 bg-indigo-600 text-white rounded-xl shadow-lg shadow-indigo-100 font-bold hover:bg-indigo-700 transition-all disabled:opacity-50 disabled:shadow-none flex items-center justify-center space-x-2 active:scale-95 text-xs md:text-sm"
             >
               <PublishIcon className="w-4 h-4 shrink-0" />
-              <span className="min-w-0">Publish All</span>
+              <span className="min-w-0">{t('reportCardPublishing.publishAll')}</span>
             </button>
           )}
         </div>
@@ -372,7 +374,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                separate from the status tabs/search below. */
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
               <div className="flex-1">
-                <label className="block text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Academic Year</label>
+                <label className="block text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('reportCardPublishing.academicYear')}</label>
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                   {availableYears.length > 0 ? availableYears.map(year => (
                     <button
@@ -383,7 +385,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                       {year}
                     </button>
                   )) : (
-                    <span className="text-xs text-gray-400 font-medium py-2">No reports submitted yet for this class.</span>
+                    <span className="text-xs text-gray-400 font-medium py-2">{t('reportCardPublishing.noReportsSubmittedYetForThisClass')}</span>
                   )}
                 </div>
               </div>
@@ -463,7 +465,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
       {/* Main View */}
       <main className="flex-grow p-4 md:px-8 md:py-8 overflow-y-auto w-full max-w-7xl mx-auto custom-scrollbar">
         {isLoading && studentsWithReports.length === 0 ? (
-          <CenteredLoader message="Accessing Neural Records..." className="py-32" />
+          <CenteredLoader message={t('reportCardPublishing.accessingNeuralRecords')} className="py-32" />
         ) : !selectedClass ? (
           /* ---- Class picker (landing page) ---- */
           classSummaries.length > 0 ? (
@@ -493,7 +495,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                   <div className="flex gap-2">
                     <div className="flex-1 p-2 rounded-xl bg-indigo-50 border border-indigo-100 text-center">
                       <div className="text-sm font-black text-indigo-700">{group.submittedCount}</div>
-                      <div className="text-[8px] font-black text-indigo-400 uppercase tracking-widest">Awaiting</div>
+                      <div className="text-[8px] font-black text-indigo-400 uppercase tracking-widest">{t('reportCardPublishing.awaiting')}</div>
                     </div>
                     <div className="flex-1 p-2 rounded-xl bg-emerald-50 border border-emerald-100 text-center">
                       <div className="text-sm font-black text-emerald-700">{group.publishedCount}</div>
@@ -505,15 +507,15 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-40 text-center animate-fade-in">
-              <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-wide">No Classes Found</h3>
-              <p className="text-gray-500 max-w-sm font-medium leading-relaxed px-4">No students matching the current branch and filters were found.</p>
+              <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-wide">{t('reportCardPublishing.noClassesFound')}</h3>
+              <p className="text-gray-500 max-w-sm font-medium leading-relaxed px-4">{t('reportCardPublishing.noStudentsMatchingTheCurrentBranchAndFiltersWe')}</p>
             </div>
           )
         ) : (
           /* ---- Class detail: roster for the selected year + term ---- */
           !selectedYear ? (
             <div className="flex flex-col items-center justify-center py-40 text-center animate-fade-in">
-              <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-wide">No Reports Yet</h3>
+              <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-wide">{t('reportCardPublishing.noReportsYet')}</h3>
               <p className="text-gray-500 max-w-sm font-medium leading-relaxed px-4">
                 No report cards have been submitted for this class in any year yet.
               </p>
@@ -577,14 +579,14 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                     </div>
                   ) : (
                     <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-gray-100 border border-gray-200 mb-4 opacity-50">
-                      <span className="text-xs font-bold text-gray-500 uppercase">Unknown Status</span>
+                      <span className="text-xs font-bold text-gray-500 uppercase">{t('reportCardPublishing.unknownStatus')}</span>
                     </div>
                   )}
 
                   {/* Stats Grid */}
                   <div className="grid grid-cols-2 gap-2 md:gap-3 mb-6 md:mb-8">
                     <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-gray-50 border border-gray-100 text-center group-hover:bg-gray-100 transition-colors">
-                      <div className="text-[8px] md:text-[9px] text-gray-500 uppercase font-black tracking-[0.15em] mb-1">Session</div>
+                      <div className="text-[8px] md:text-[9px] text-gray-500 uppercase font-black tracking-[0.15em] mb-1">{t('reportCardPublishing.session')}</div>
                       <div className="text-xs md:text-xs font-black text-gray-700">{selectedYear}</div>
                     </div>
                     <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-gray-50 border border-gray-100 text-center group-hover:bg-gray-100 transition-colors">
@@ -607,7 +609,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                     {student.hasReport && (
                       <button
                         onClick={() => openHistory(student)}
-                        title="Who entered, changed, submitted and published this report card"
+                        title={t('reportCardPublishing.whoEnteredChangedSubmittedAndPublishedThisRepo')}
                         className="p-2.5 md:p-3 text-[9px] md:text-xs font-black uppercase tracking-widest text-gray-500 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all flex items-center justify-center gap-2 active:scale-95"
                       >
                         <ClockIcon className="w-3 md:w-4 h-3 md:h-4" />
@@ -620,7 +622,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                         className="flex-1 p-2.5 md:p-3 text-[9px] md:text-xs font-black uppercase tracking-widest text-white bg-indigo-600 rounded-xl hover:bg-indigo-500 shadow-lg shadow-indigo-900/40 transition-all flex items-center justify-center gap-2 active:scale-95"
                       >
                         <PublishIcon className="w-3 md:w-4 h-3 md:h-4" />
-                        Publish
+                        {t('reportCardPublishing.publish')}
                       </button>
                     )}
                     {student.status === 'Published' && (
@@ -662,7 +664,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                     onClick={() => setActiveTab('All')}
                     className="px-8 py-3 bg-white border border-gray-200 text-indigo-600 font-black uppercase tracking-widest text-xs rounded-2xl hover:bg-indigo-50 transition-all shadow-sm flex items-center gap-2 group"
                   >
-                    <span>Show All Students</span>
+                    <span>{t('reportCardPublishing.showAllStudents')}</span>
                     <ChevronRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform shrink-0" />
                   </button>
                 )}
@@ -684,15 +686,15 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
           <div className="bg-white w-full md:max-w-2xl max-h-[85vh] rounded-t-3xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
             <div className="p-5 border-b border-gray-100 flex items-start justify-between gap-3">
               <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Report card history</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">{t('reportCardPublishing.reportCardHistory')}</p>
                 <h3 className="text-lg font-black text-gray-900">{history.student.name}</h3>
                 <p className="text-xs text-gray-500">{selectedClassKey || ''} · {selectedTerm || ''} {selectedYear || ''}</p>
               </div>
               <button onClick={() => setHistory(null)} className="p-2 rounded-full hover:bg-gray-100" aria-label="Close"><XCircleIcon className="w-5 h-5 text-gray-400" /></button>
             </div>
             <div className="overflow-y-auto p-5 space-y-3">
-              {history.entries === null && <p className="text-sm text-gray-500">Loading…</p>}
-              {history.entries && history.entries.length === 0 && <p className="text-sm text-gray-500">No changes have been recorded for this report card yet.</p>}
+              {history.entries === null && <p className="text-sm text-gray-500">{t('reportCardPublishing.loading')}</p>}
+              {history.entries && history.entries.length === 0 && <p className="text-sm text-gray-500">{t('reportCardPublishing.noChangesHaveBeenRecordedForThisReportCardYet')}</p>}
               {history.entries && history.entries.map((h: any) => {
                 const grades = (h.new_values && h.new_values.grades) || {};
                 const before = (h.old_values && h.old_values.grades) || {};

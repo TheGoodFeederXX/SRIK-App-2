@@ -21,6 +21,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import {
@@ -130,6 +131,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
     forceUpdate,
     handleBack,
 }) => {
+    const { t } = useTranslation();
     const isEditing = Boolean(teacherToEdit?.id);
 
     const [staffCode, setStaffCode] = useState('');
@@ -169,7 +171,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                 setAcademicYearId(yearId);
             } catch (error) {
                 console.error('Could not load the subject/class lists:', error);
-                if (!cancelled) toast.error('Could not load the subject and class lists');
+                if (!cancelled) toast.error(t('addTeacherScreen.couldNotLoadTheSubjectAndClassLists'));
             }
         })();
         return () => { cancelled = true; };
@@ -203,7 +205,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                 setSelectedClasses(classIds);
             } catch (error) {
                 console.error('Could not load the teacher:', error);
-                toast.error('Could not load this teacher');
+                toast.error(t('addTeacherScreen.couldNotLoadThisTeacher'));
             }
         })();
         return () => { cancelled = true; };
@@ -220,11 +222,11 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
         e.preventDefault();
 
         if (!staffCode.trim() || !name.trim()) {
-            toast.error('Staff code and full name are required');
+            toast.error(t('addTeacherScreen.staffCodeAndFullNameAreRequired'));
             return;
         }
         if (!isEditing && createAccount && !email.trim()) {
-            toast.error('An email address is needed to create a login account');
+            toast.error(t('addTeacherScreen.anEmailAddressIsNeededToCreateALoginAccount'));
             return;
         }
 
@@ -260,7 +262,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                         return;
                     }
                 }
-                toast.success('Teacher updated');
+                toast.success(t('addTeacherScreen.teacherUpdated'));
                 forceUpdate();
                 handleBack();
                 return;
@@ -288,7 +290,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                 return;
             }
 
-            toast.success('Teacher saved');
+            toast.success(t('addTeacherScreen.teacherSaved'));
 
             // The temporary password exists only in the reply from the account
             // step. Showing it here is the one chance to pass it on, so the
@@ -311,14 +313,14 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
     /** Creates a login account for a teacher who has none yet (edit mode). */
     const handleCreateAccount = async () => {
         if (!teacherToEdit?.id || !email.trim()) {
-            toast.error('An email address is required');
+            toast.error(t('addTeacherScreen.anEmailAddressIsRequired'));
             return;
         }
         setIsLoading(true);
         try {
             const result = await provisionTeacherAccount(teacherToEdit.id, email, name);
             if (result.success) {
-                toast.success('Login account created');
+                toast.success(t('addTeacherScreen.loginAccountCreated'));
                 forceUpdate();
             } else {
                 toast.error(result.accountWarning || 'Could not create the login account');
@@ -335,9 +337,9 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
 
                     {/* Identity */}
                     <div className="bg-white p-4 rounded-lg shadow-sm space-y-4">
-                        <InputField id="staffCode" label="Staff Code" value={staffCode}
+                        <InputField id="staffCode" label={t('addTeacherScreen.staffCode')} value={staffCode}
                             onChange={setStaffCode} icon={<UserIcon className="w-5 h-5" />} />
-                        <InputField id="name" label="Full Name" value={name}
+                        <InputField id="name" label={t('addTeacherScreen.fullName')} value={name}
                             onChange={setName} icon={<UserIcon className="w-5 h-5" />} />
                         <InputField id="email" label="Email" value={email}
                             onChange={setEmail} icon={<MailIcon className="w-5 h-5" />} type="email"
@@ -351,14 +353,14 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                             <select id="gender" value={gender}
                                 onChange={e => setGender(e.target.value as '' | 'MALE' | 'FEMALE')}
                                 className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700">
-                                <option value="">Not stated</option>
+                                <option value="">{t('addTeacherScreen.notStated')}</option>
                                 <option value="MALE">Male</option>
                                 <option value="FEMALE">Female</option>
                             </select>
                         </div>
 
                         <div>
-                            <label htmlFor="employmentStart" className="block text-sm font-medium text-gray-700 mb-1">Employment Start</label>
+                            <label htmlFor="employmentStart" className="block text-sm font-medium text-gray-700 mb-1">{t('addTeacherScreen.employmentStart')}</label>
                             <input id="employmentStart" type="date" value={employmentStart}
                                 onChange={e => setEmploymentStart(e.target.value)}
                                 className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700" />
@@ -366,13 +368,13 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
 
                         {isEditing && (
                             <div>
-                                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">{t('addTeacherScreen.status')}</label>
                                 <select id="status" value={status}
                                     onChange={e => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE' | 'ARCHIVED')}
                                     className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700">
                                     <option value="ACTIVE">Active</option>
-                                    <option value="INACTIVE">Inactive</option>
-                                    <option value="ARCHIVED">Archived</option>
+                                    <option value="INACTIVE">{t('addTeacherScreen.inactive')}</option>
+                                    <option value="ARCHIVED">{t('addTeacherScreen.archived')}</option>
                                 </select>
                             </div>
                         )}
@@ -381,7 +383,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                     {/* Duties */}
                     <div className="bg-white p-4 rounded-lg shadow-sm space-y-6">
                         <CheckList
-                            label="Classes Taught"
+                            label={t('addTeacherScreen.classesTaught')}
                             options={classOptions}
                             selected={selectedClasses}
                             onToggle={id => toggle(selectedClasses, setSelectedClasses, id)}
@@ -389,7 +391,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                             icon={<UsersIcon className="w-5 h-5" />}
                         />
                         <CheckList
-                            label="Subjects Taught"
+                            label={t('addTeacherScreen.subjectsTaught')}
                             options={subjectOptions}
                             selected={selectedSubjects}
                             onToggle={id => toggle(selectedSubjects, setSelectedSubjects, id)}

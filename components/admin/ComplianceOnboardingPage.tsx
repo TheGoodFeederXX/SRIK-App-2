@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -15,9 +16,11 @@ interface ComplianceOnboardingPageProps {
     handleBack?: () => void;
 }
 
-const ComplianceOnboardingPage: React.FC<ComplianceOnboardingPageProps> = ({ onComplete, schoolId, handleBack }) => (
+const ComplianceOnboardingPage: React.FC<ComplianceOnboardingPageProps> = ({ onComplete, schoolId, handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pendaftaran Pematuhan"
+        title={t('complianceOnboardingPage.pendaftaranPematuhan')}
         explanation={
             'Proses pendaftaran pematuhan tidak diperlukan kerana sekolah ini sudah ' +
             'berdaftar dan beroperasi. Maklumat dan dokumen sekolah boleh dikemas ' +
@@ -26,6 +29,7 @@ const ComplianceOnboardingPage: React.FC<ComplianceOnboardingPageProps> = ({ onC
         }
         handleBack={handleBack || onComplete}
     />
-);
+    );
+};
 
 export default ComplianceOnboardingPage;

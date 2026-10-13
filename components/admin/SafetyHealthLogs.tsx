@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface SafetyHealthLogsProps {
@@ -25,9 +26,11 @@ interface SafetyHealthLogsProps {
  * set, not mine to invent — and a register that quietly gets one of them wrong is worse
  * than a register that admits it does not exist yet.
  */
-const SafetyHealthLogs: React.FC<SafetyHealthLogsProps> = ({ handleBack, onBack }) => (
+const SafetyHealthLogs: React.FC<SafetyHealthLogsProps> = ({ handleBack, onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Log Keselamatan & Kesihatan"
+        title={t('safetyHealthLogs.logKeselamatanKesihatan')}
         explanation={
             'Sekolah belum menyimpan daftar kes insiden, latihan kecemasan atau penandaan ' +
             'murid di dalam sistem ini. Buat masa ini rekod-rekod itu disimpan secara ' +
@@ -38,6 +41,7 @@ const SafetyHealthLogs: React.FC<SafetyHealthLogsProps> = ({ handleBack, onBack 
         }
         handleBack={handleBack || onBack}
     />
-);
+    );
+};
 
 export default SafetyHealthLogs;

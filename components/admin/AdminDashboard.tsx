@@ -1,4 +1,5 @@
 import React, { useState, useEffect, lazy, Suspense, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import DashboardLayout from '../layout/DashboardLayout';
 import ErrorBoundary from '../ui/ErrorBoundary';
 import { MainAdminOnly } from '../shared/MainAdminOnly';
@@ -198,6 +199,7 @@ interface AdminDashboardProps {
 }
 
 const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
+    const { t } = useTranslation();
     const [activeBottomNav, setActiveBottomNav] = useState(() => {
         return sessionStorage.getItem('admin_activeBottomNav') || 'home';
     });
@@ -307,14 +309,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         }
     }, [user, currentSchool?.id]);
 
-    const AnalyticsWrapper = (props: any) => (
+    const AnalyticsWrapper = (props: any) => {
+    const { t } = useTranslation();
+    return (
         <div className="space-y-6">
-            <Suspense fallback={<PremiumLoader message="Loading analytics..." fullScreen={false} />}>
+            <Suspense fallback={<PremiumLoader message={t('adminDashboard.loadingAnalytics')} fullScreen={false} />}>
                 <AnalyticsScreen {...props} />
                 <AnalyticsAdminTools {...props} />
             </Suspense>
         </div>
     );
+};
 
     const viewComponents: { [key: string]: React.ComponentType<any> } = {
         overview: DashboardOverview,
@@ -582,6 +587,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
     };
 
     const renderContent = () => {
+    const { t } = useTranslation();
         if (isInitializing) return <DashboardSkeletonLoader type="overview" />;
         if (!ComponentToRender) return <div className="p-8 text-center">View Not Found: {view}</div>;
 
@@ -653,7 +659,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         return (
             <Suspense fallback={<DashboardSkeletonLoader type="overview" />}>
                 {MAIN_ADMIN_ONLY_VIEWS.includes(view)
-                    ? <MainAdminOnly title="This screen" onBack={handleBack}>{renderedView}</MainAdminOnly>
+                    ? <MainAdminOnly title={t('adminDashboard.thisScreen')} onBack={handleBack}>{renderedView}</MainAdminOnly>
                     : renderedView}
             </Suspense>
         );
@@ -702,7 +708,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
             hideBottomNav={hideBottomNav}
         >
             {/* Database Connection Error */}
-            {dbStatus === 'error' && <div className="bg-red-600 text-white text-xs py-1 px-4 mb-4 rounded-lg text-center font-medium">Database Connection Error</div>}
+            {dbStatus === 'error' && <div className="bg-red-600 text-white text-xs py-1 px-4 mb-4 rounded-lg text-center font-medium">{t('adminDashboard.databaseConnectionError')}</div>}
 
             {/* Plan / Trial Banner */}
 
@@ -719,7 +725,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
                 </ErrorBoundary>
             </div>
 
-            <Suspense fallback={<PremiumLoader message="Searching school database..." fullScreen={false} />}>
+            <Suspense fallback={<PremiumLoader message={t('adminDashboard.searchingSchoolDatabase')} fullScreen={false} />}>
                 {isSearchOpen && <GlobalSearchScreen dashboardType={DashboardType.Admin} navigateTo={navigateTo} onClose={() => setIsSearchOpen(false)} />}
             </Suspense>
 

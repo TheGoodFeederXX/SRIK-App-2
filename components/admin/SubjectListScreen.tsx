@@ -11,6 +11,7 @@
  */
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -30,6 +31,7 @@ import {
 const COMMON_CATEGORIES = ['Teras', 'Agama', 'Tambahan'];
 
 export const SubjectListScreen: React.FC = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { user } = useAuth();
     const queryKey = ['subjects'];
@@ -74,7 +76,7 @@ export const SubjectListScreen: React.FC = () => {
     const handleSave = async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!form.code.trim() || !form.name.trim()) {
-            toast.error('Please enter both a subject code and a name.');
+            toast.error(t('subjectListScreen.pleaseEnterBothASubjectCodeAndAName'));
             return;
         }
 
@@ -117,13 +119,13 @@ export const SubjectListScreen: React.FC = () => {
     };
 
     if (isLoading && subjects.length === 0) {
-        return <CenteredLoader fullScreen={false} message="Loading subjects..." className="h-screen" />;
+        return <CenteredLoader fullScreen={false} message={t('subjectListScreen.loadingSubjects')} className="h-screen" />;
     }
 
     if (isError) {
         return (
             <div className="flex flex-col items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-red-100 text-center m-2">
-                <h3 className="font-bold text-gray-900 mb-1">Could not load subjects</h3>
+                <h3 className="font-bold text-gray-900 mb-1">{t('subjectListScreen.couldNotLoadSubjects')}</h3>
                 <p className="text-sm text-gray-500 mb-4">{String(error)}</p>
                 <button
                     onClick={() => refetch()}
@@ -208,7 +210,7 @@ export const SubjectListScreen: React.FC = () => {
                 ) : (
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
                         <BookOpenIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                        <h3 className="text-lg font-bold text-gray-800">No Subjects Yet</h3>
+                        <h3 className="text-lg font-bold text-gray-800">{t('subjectListScreen.noSubjectsYet')}</h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
                             Add the subjects the school teaches, then choose them per class.
                         </p>
@@ -292,7 +294,7 @@ export const SubjectListScreen: React.FC = () => {
                                             type="text"
                                             value={form.shortName}
                                             onChange={e => setForm({ ...form, shortName: e.target.value })}
-                                            placeholder="Optional"
+                                            placeholder={t('subjectListScreen.optional')}
                                             className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                         />
                                     </div>

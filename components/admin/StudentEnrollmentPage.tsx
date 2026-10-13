@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -17,6 +18,7 @@ interface EnrollmentPageProps {
 }
 
 const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, handleBack, schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const [loading, setLoading] = useState(false);
 
@@ -77,7 +79,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
         const missing = required.filter(field => !formData[field as keyof typeof formData]);
 
         if (missing.length > 0) {
-            toast.error("Please fill in all required fields.");
+            toast.error(t('studentEnrollmentPage.pleaseFillInAllRequiredFields'));
             return;
         }
 
@@ -131,7 +133,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                     // would be worse than carrying on and letting the office re-attach
                     // the paperwork.
                     console.error('Document upload error:', uploadErr);
-                    toast.error('The student was saved, but some documents did not upload.');
+                    toast.error(t('studentEnrollmentPage.theStudentWasSavedButSomeDocumentsDidNotUpload'));
                 }
             }
 
@@ -156,7 +158,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                 });
             }
 
-            toast.success('Enrollment submitted successfully!');
+            toast.success(t('studentEnrollmentPage.enrollmentSubmittedSuccessfully'));
             if (onComplete) onComplete(); else handleBack();
         } catch (error: any) {
             console.error(error);
@@ -190,7 +192,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                         <UserIcon className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-600 shrink-0" />
                         New Student Enrollment
                     </h2>
-                    <p className="text-xs sm:text-sm text-gray-500 truncate sm:whitespace-normal">Register student, assign curriculum, and upload docs.</p>
+                    <p className="text-xs sm:text-sm text-gray-500 truncate sm:whitespace-normal">{t('studentEnrollmentPage.registerStudentAssignCurriculumAndUploadDocs')}</p>
                 </div>
                 <button onClick={handleBack} className="p-1 sm:p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-indigo-600 transition-colors shrink-0 flex items-center gap-1 font-medium text-sm">
                     <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
@@ -210,11 +212,11 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                             {/* 1. STUDENT INFO */}
                             <section className="bg-white p-4 sm:p-6 rounded-2xl border border-gray-100 shadow-sm">
                                 <h3 className="text-xs sm:text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 sm:mb-6 flex items-center gap-2 border-b border-gray-100 pb-2">
-                                    <IdentificationIcon className="w-4 h-4" /> Student Information
+                                    <IdentificationIcon className="w-4 h-4" /> {t('studentEnrollmentPage.studentInformation')}
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                     <div>
-                                        <label className="label text-xs sm:text-sm">First Name</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.firstName')}</label>
                                         <input
                                             className="input-field"
                                             placeholder="e.g. David"
@@ -223,7 +225,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         />
                                     </div>
                                     <div>
-                                        <label className="label text-xs sm:text-sm">Last Name</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.lastName')}</label>
                                         <input
                                             className="input-field"
                                             placeholder="e.g. Okonkwo"
@@ -232,7 +234,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         />
                                     </div>
                                     <div>
-                                        <label className="label text-xs sm:text-sm">Date of Birth</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.dateOfBirth')}</label>
                                         <input
                                             type="date"
                                             className="input-field"
@@ -252,7 +254,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         </select>
                                     </div>
                                     <div className="sm:col-span-2">
-                                        <label className="label text-xs sm:text-sm">Assigned Class (Academic Level)</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.assignedClassAcademicLevel')}</label>
                                         <select
                                             className="input-field"
                                             value={formData.classId}
@@ -266,7 +268,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                                 }));
                                             }}
                                         >
-                                            <option value="">Select a class...</option>
+                                            <option value="">{t('studentEnrollmentPage.selectAClass')}</option>
                                             {availableClasses.map(cls => (
                                                 <option key={cls.id} value={cls.id}>
                                                     {cls.name} {cls.section ? `(${cls.section})` : ''} 
@@ -285,19 +287,19 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                     <div className="sm:col-span-2">
-                                        <label className="label text-xs sm:text-sm">Full Name</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.fullName')}</label>
                                         <div className="relative">
                                             <UserIcon className="absolute left-3.5 top-3 w-5 h-5 text-gray-400" />
                                             <input
                                                 className="input-field pl-11"
-                                                placeholder="Parent/Guardian Name"
+                                                placeholder={t('studentEnrollmentPage.parentGuardianName')}
                                                 value={formData.parentName}
                                                 onChange={e => handleChange('parentName', e.target.value)}
                                             />
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="label text-xs sm:text-sm">Email Address</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.emailAddress')}</label>
                                         <div className="relative">
                                             <MailIcon className="absolute left-3.5 top-3 w-5 h-5 text-gray-400" />
                                             <input
@@ -310,7 +312,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         </div>
                                     </div>
                                     <div>
-                                        <label className="label text-xs sm:text-sm">Phone Number</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.phoneNumber')}</label>
                                         <div className="relative">
                                             <PhoneIcon className="absolute left-3.5 top-3 w-5 h-5 text-gray-400" />
                                             <input
@@ -323,10 +325,10 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         </div>
                                     </div>
                                     <div className="sm:col-span-2">
-                                        <label className="label text-xs sm:text-sm">Home Address</label>
+                                        <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.homeAddress')}</label>
                                         <textarea
                                             className="input-field resize-none h-20"
-                                            placeholder="Street Address..."
+                                            placeholder={t('studentEnrollmentPage.streetAddress')}
                                             value={formData.parentAddress}
                                             onChange={e => handleChange('parentAddress', e.target.value)}
                                         />
@@ -345,7 +347,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 overflow-x-auto pb-1 hide-scrollbar">
                                     <SelectCard value="KSSR" title="KSSR" desc="Kurikulum Standard Sekolah Rendah." icon={BookOpenIcon} />
-                                    <SelectCard value="BRITISH" title="British" desc="Cambridge/Edexcel. IGCSE." icon={BookOpenIcon} />
+                                    <SelectCard value="BRITISH" title={t('studentEnrollmentPage.british')} desc="Cambridge/Edexcel. IGCSE." icon={BookOpenIcon} />
                                     <SelectCard value="DUAL" title="Dual" desc="Hybrid Intensive Program." icon={AcademicCapIcon} />
                                 </div>
                                 {formData.curriculum === 'DUAL' && (
@@ -373,8 +375,8 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                     <div className="w-12 h-12 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                                         <UploadIcon className="w-6 h-6 text-indigo-600" />
                                     </div>
-                                    <p className="text-sm font-bold text-gray-700">Upload Records</p>
-                                    <p className="text-xs text-gray-400 mt-1">Birth Cert, Previous Results</p>
+                                    <p className="text-sm font-bold text-gray-700">{t('studentEnrollmentPage.uploadRecords')}</p>
+                                    <p className="text-xs text-gray-400 mt-1">{t('studentEnrollmentPage.birthCertPreviousResults')}</p>
                                 </div>
 
                                 {uploadedDocs.length > 0 && (

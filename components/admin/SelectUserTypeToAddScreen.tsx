@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { StudentsIcon, StaffIcon, UsersIcon, ChevronRightIcon } from '../../constants';
 
@@ -8,6 +9,7 @@ interface SelectUserTypeToAddScreenProps {
 }
 
 const SelectUserTypeToAddScreen: React.FC<SelectUserTypeToAddScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
   const userTypes = [
     { type: 'Student', icon: <StudentsIcon className="h-8 w-8 text-blue-700" />, action: () => navigateTo('addStudent', 'Add New Student', {}) },
     { type: 'Teacher', icon: <StaffIcon className="h-8 w-8 text-purple-500" />, action: () => navigateTo('addTeacher', 'Add New Teacher', {}) },
@@ -17,7 +19,7 @@ const SelectUserTypeToAddScreen: React.FC<SelectUserTypeToAddScreenProps> = ({ n
   return (
     <div className="p-4 space-y-4 bg-gray-50 h-full">
       <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-white p-4 rounded-xl text-center shadow-sm">
-        <h3 className="font-bold text-lg text-gray-800">What type of user do you want to add?</h3>
+        <h3 className="font-bold text-lg text-gray-800">{t('selectUserTypeToAddScreen.whatTypeOfUserDoYouWantToAdd')}</h3>
       </motion.div>
       {userTypes.map((userType, i) => (
         <motion.button

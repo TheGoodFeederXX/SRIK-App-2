@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface HostelManagementScreenProps {
     handleBack?: () => void;
 }
 
-const HostelManagementScreen: React.FC<HostelManagementScreenProps> = ({ handleBack }) => (
+const HostelManagementScreen: React.FC<HostelManagementScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pengurusan Asrama"
+        title={t('hostelManagementScreen.pengurusanAsrama')}
         explanation={
             'Sekolah ini tidak mempunyai asrama, jadi tiada pengurusan asrama di ' +
             'sini. Buat masa ini semua murid adalah murid harian yang pulang ke rumah ' +
@@ -18,6 +21,7 @@ const HostelManagementScreen: React.FC<HostelManagementScreenProps> = ({ handleB
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default HostelManagementScreen;

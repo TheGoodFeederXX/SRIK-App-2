@@ -258,7 +258,10 @@ describe('F27: the parent portal reads the family from the session, not a parame
 
         // Deleting the row would orphan the child's attendance and results — the
         // school's own record of them would go with it.
-        expect(src, 'the profile can delete a child outright again').not.toMatch(/deleteStudent/);
+        // Look for a CALL on the api client, not the word: `deleteStudent` also appears in a
+        // translation KEY (`studentProfileDashboard.deleteStudent`), which is not a deletion.
+        expect(src, 'the profile can delete a child outright again')
+            .not.toMatch(/api\.deleteStudent\s*\(|\bdeleteStudent\s*\(\s*(?!['"])/);
         expect(src).toMatch(/setStudentStatus/);
         expect(src).toMatch(/ARCHIVED/);
 

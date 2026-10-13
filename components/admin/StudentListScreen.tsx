@@ -1,6 +1,7 @@
 ﻿
 
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -36,6 +37,7 @@ const StudentRow: React.FC<{
   onSelect: (student: Student) => void;
   onStatusChange: (student: any, newStatus: StudentStatus) => void;
 }> = ({ student, onSelect, onStatusChange }) => {
+    const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuPos, setMenuPos] = useState<{ top?: number; bottom?: number; right: number; openUpward: boolean } | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -131,7 +133,7 @@ const StudentRow: React.FC<{
             whileTap={{ scale: 0.9 }}
             whileHover={{ scale: 1.1 }}
             className="w-7 h-7 rounded-lg flex items-center justify-center hover:bg-gray-200 text-gray-400 transition-colors"
-            aria-label="Change student status"
+            aria-label={t('studentListScreen.changeStudentStatus')}
           >
             <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-150 ${menuOpen ? 'rotate-180' : ''}`} />
           </motion.button>
@@ -154,7 +156,7 @@ const StudentRow: React.FC<{
                 style={{ position: 'fixed', top: menuPos.top, bottom: menuPos.bottom, right: menuPos.right }}
                 className="z-50 bg-white rounded-xl shadow-lg border border-gray-100 py-1.5 min-w-[150px] max-w-full"
               >
-                <p className="text-[9px] text-gray-400 px-3 pb-1.5 font-semibold uppercase tracking-widest">Change status</p>
+                <p className="text-[9px] text-gray-400 px-3 pb-1.5 font-semibold uppercase tracking-widest">{t('studentListScreen.changeStatus')}</p>
                 {otherStatuses.map(s => (
                   <motion.button
                     key={s}
@@ -444,6 +446,7 @@ const ClassStudents: React.FC<{
 };
 
 const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateTo, currentBranchId, schoolId: propSchoolId }) => {
+    const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<'stage' | 'class'>('stage');
   const [statusFilter, setStatusFilter] = useState<'All' | StudentStatus>('All');
@@ -527,7 +530,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
       setPendingStatusChange(null);
       setWithdrawalReason('');
     } catch {
-      toast.error('Failed to update status. Please try again.');
+      toast.error(t('studentListScreen.failedToUpdateStatusPleaseTryAgain'));
     } finally {
       setIsChangingStatus(false);
     }
@@ -595,7 +598,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
           <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mb-4">
             <CircleAlert className="w-6 h-6 text-red-500" />
           </div>
-          <h3 className="font-bold text-gray-900 mb-1">Failed to Load Students</h3>
+          <h3 className="font-bold text-gray-900 mb-1">{t('studentListScreen.failedToLoadStudents')}</h3>
           <p className="text-sm text-gray-500 mb-4">{String(fetchError || 'Could not load students')}</p>
           <button
             onClick={() => (isSearching ? queryClient.invalidateQueries({ queryKey }) : refetch())}
@@ -610,7 +613,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
     if (totalCount === 0) {
       return (
         <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-dashed border-gray-200 m-2">
-          <p className="text-gray-500 font-medium">No students found matching your search.</p>
+          <p className="text-gray-500 font-medium">{t('studentListScreen.noStudentsFoundMatchingYourSearch')}</p>
         </div>
       );
     }
@@ -642,9 +645,9 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
     // navigable. Bands with no students are omitted entirely rather than shown
     // empty, which is what the old fixed tree did for stages SRIK does not have.
     const bands: Array<{ title: string; groups: ClassGroup[] }> = [
-      { title: 'Year 1 - 3', groups: groups.filter(g => g.yearLevel !== null && g.yearLevel <= 3) },
-      { title: 'Year 4 - 6', groups: groups.filter(g => g.yearLevel !== null && g.yearLevel > 3) },
-      { title: 'Unassigned', groups: groups.filter(g => g.yearLevel === null) },
+      { title: t('studentListScreen.year13'), groups: groups.filter(g => g.yearLevel !== null && g.yearLevel <= 3) },
+      { title: t('studentListScreen.year46'), groups: groups.filter(g => g.yearLevel !== null && g.yearLevel > 3) },
+      { title: t('studentListScreen.unassigned'), groups: groups.filter(g => g.yearLevel === null) },
     ].filter(b => b.groups.length > 0);
 
     return (
@@ -674,7 +677,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
           <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <SearchIcon className="text-gray-600" />
           </span>
-          <input type="text" placeholder="Search by name..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" aria-label="Search for a student" />
+          <input type="text" placeholder={t('studentListScreen.searchByName')} value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full pl-10 pr-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" aria-label={t('studentListScreen.searchForAStudent')} />
         </div>
 
         {!filter && (
@@ -723,7 +726,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
       </main>
 
       <div className="fixed bottom-24 right-6 lg:bottom-12 lg:right-12 z-40">
-        <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={() => navigateTo('addStudent', 'Add New Student', {})} className="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" aria-label="Add new student"><Plus className="h-6 w-6" /></motion.button>
+        <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={() => navigateTo('addStudent', 'Add New Student', {})} className="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" aria-label={t('studentListScreen.addNewStudent')}><Plus className="h-6 w-6" /></motion.button>
       </div>
 
       {/* Withdrawal reason modal */}
@@ -743,14 +746,14 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm"
             >
-              <h3 className="font-bold text-gray-900 text-lg mb-1">Withdraw Student</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">{t('studentListScreen.withdrawStudent')}</h3>
               <p className="text-sm text-gray-500 mb-4">
                 Please provide a reason for withdrawing <strong className="text-gray-700">{pendingStatusChange.student.name}</strong>.
               </p>
               <textarea
                 value={withdrawalReason}
                 onChange={e => setWithdrawalReason(e.target.value)}
-                placeholder="Reason for withdrawal (e.g. relocated, transferred, financial)..."
+                placeholder={t('studentListScreen.reasonForWithdrawalEGRelocatedTransferredFinan')}
                 className="w-full border border-gray-200 rounded-xl p-3 text-sm resize-none h-24 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                 autoFocus
               />

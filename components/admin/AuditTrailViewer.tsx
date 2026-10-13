@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listAuditLog } from '../../src/lib/supabase/auditTrail';
 import { toast } from 'react-hot-toast';
@@ -24,6 +25,7 @@ interface AuditLog {
 }
 
 const AuditTrailViewer: React.FC = () => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
     const [filteredLogs, setFilteredLogs] = useState<AuditLog[]>([]);
@@ -70,7 +72,7 @@ const AuditTrailViewer: React.FC = () => {
             })) as any);
         } catch (error: any) {
             console.error('Error fetching audit logs:', error);
-            toast.error('Failed to load audit logs');
+            toast.error(t('auditTrailViewer.failedToLoadAuditLogs'));
         } finally {
             setLoading(false);
         }
@@ -135,7 +137,7 @@ const AuditTrailViewer: React.FC = () => {
         a.href = url;
         a.download = `audit-log-${dateRange.start}-to-${dateRange.end}.csv`;
         a.click();
-        toast.success('Audit log exported!');
+        toast.success(t('auditTrailViewer.auditLogExported'));
     };
 
     const viewDetails = (log: AuditLog) => {
@@ -153,7 +155,7 @@ const AuditTrailViewer: React.FC = () => {
                 <div className="flex justify-between items-center">
                     <div>
                         <h1 className="text-3xl font-bold mb-2">🔒 Audit Trail Viewer</h1>
-                        <p className="text-purple-100">Comprehensive system activity and security monitoring</p>
+                        <p className="text-purple-100">{t('auditTrailViewer.comprehensiveSystemActivityAndSecurityMonitori')}</p>
                     </div>
                     <motion.button
                         whileHover={{ scale: 1.02 }}
@@ -162,7 +164,7 @@ const AuditTrailViewer: React.FC = () => {
                         className="px-4 py-2 bg-white text-purple-600 rounded-lg hover:bg-purple-50 font-semibold flex items-center space-x-2"
                     >
                         <Download className="h-5 w-5" />
-                        <span>Export CSV</span>
+                        <span>{t('auditTrailViewer.exportCSV')}</span>
                     </motion.button>
                 </div>
             </motion.div>
@@ -170,23 +172,23 @@ const AuditTrailViewer: React.FC = () => {
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-xl shadow-sm p-4">
-                    <p className="text-sm text-gray-600">Total Events</p>
+                    <p className="text-sm text-gray-600">{t('auditTrailViewer.totalEvents')}</p>
                     <p className="text-2xl font-bold text-gray-900">{filteredLogs.length}</p>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-xl shadow-sm p-4">
-                    <p className="text-sm text-gray-600">High Risk</p>
+                    <p className="text-sm text-gray-600">{t('auditTrailViewer.highRisk')}</p>
                     <p className="text-2xl font-bold text-orange-600">
                         {filteredLogs.filter(l => l.risk_level === 'High' || l.risk_level === 'Critical').length}
                     </p>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-xl shadow-sm p-4">
-                    <p className="text-sm text-gray-600">Failed Actions</p>
+                    <p className="text-sm text-gray-600">{t('auditTrailViewer.failedActions')}</p>
                     <p className="text-2xl font-bold text-red-600">
                         {filteredLogs.filter(l => l.status !== 'Success').length}
                     </p>
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white rounded-xl shadow-sm p-4">
-                    <p className="text-sm text-gray-600">Sensitive Data</p>
+                    <p className="text-sm text-gray-600">{t('auditTrailViewer.sensitiveData')}</p>
                     <p className="text-2xl font-bold text-purple-600">
                         {filteredLogs.filter(l => l.is_sensitive).length}
                     </p>
@@ -197,27 +199,27 @@ const AuditTrailViewer: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     <div className="md:col-span-2">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Search</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.search')}</label>
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                             <input
                                 type="text"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
-                                placeholder="Search user, action, or resource..."
+                                placeholder={t('auditTrailViewer.searchUserActionOrResource')}
                                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Action Type</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.actionType')}</label>
                         <select
                             value={actionFilter}
                             onChange={(e) => setActionFilter(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                         >
-                            <option value="all">All Actions</option>
+                            <option value="all">{t('auditTrailViewer.allActions')}</option>
                             {actionTypes.map(type => (
                                 <option key={type} value={type}>{type}</option>
                             ))}
@@ -225,13 +227,13 @@ const AuditTrailViewer: React.FC = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Risk Level</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.riskLevel')}</label>
                         <select
                             value={riskFilter}
                             onChange={(e) => setRiskFilter(e.target.value)}
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500"
                         >
-                            <option value="all">All Levels</option>
+                            <option value="all">{t('auditTrailViewer.allLevels')}</option>
                             {riskLevels.map(level => (
                                 <option key={level} value={level}>{level}</option>
                             ))}
@@ -239,7 +241,7 @@ const AuditTrailViewer: React.FC = () => {
                     </div>
 
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Date Range</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.dateRange')}</label>
                         <div className="flex space-x-2">
                             <input
                                 type="date"
@@ -267,14 +269,14 @@ const AuditTrailViewer: React.FC = () => {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Date/Time</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.dateTime')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">User</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Action</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Resource</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Description</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.resource')}</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.description')}</th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Risk</th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Status</th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Actions</th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.status')}</th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.actions')}</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
@@ -312,7 +314,7 @@ const AuditTrailViewer: React.FC = () => {
                                             <button
                                                 onClick={() => viewDetails(log)}
                                                 className="text-purple-600 hover:text-purple-800"
-                                                title="View Details"
+                                                title={t('auditTrailViewer.viewDetails')}
                                             >
                                                 <Eye className="h-5 w-5" />
                                             </button>
@@ -325,7 +327,7 @@ const AuditTrailViewer: React.FC = () => {
                 ) : (
                     <div className="text-center py-12 text-gray-500">
                         <Shield className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                        <p>No audit logs found for the selected filters</p>
+                        <p>{t('auditTrailViewer.noAuditLogsFoundForTheSelectedFilters')}</p>
                     </div>
                 )}
             </div>
@@ -337,7 +339,7 @@ const AuditTrailViewer: React.FC = () => {
                     <motion.div initial={{ opacity: 0, scale: 0.95, y: 10 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 10 }} transition={{ type: 'spring', stiffness: 400, damping: 32 }} className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
                         <div className="p-6">
                             <div className="flex justify-between items-center mb-4">
-                                <h2 className="text-2xl font-bold text-gray-900">Audit Log Details</h2>
+                                <h2 className="text-2xl font-bold text-gray-900">{t('auditTrailViewer.auditLogDetails')}</h2>
                                 <motion.button
                                     whileTap={{ scale: 0.9 }}
                                     onClick={() => setShowDetailsModal(false)}
@@ -350,7 +352,7 @@ const AuditTrailViewer: React.FC = () => {
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Date/Time</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.dateTime')}</p>
                                         <p className="text-gray-900">{new Date(selectedLog.performed_at).toLocaleString('ms-MY')}</p>
                                     </div>
                                     <div>
@@ -358,41 +360,41 @@ const AuditTrailViewer: React.FC = () => {
                                         <p className="text-gray-900">{selectedLog.user_email || 'System'}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Action Type</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.actionType')}</p>
                                         <p className="text-gray-900">{selectedLog.action_type}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Resource</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.resource')}</p>
                                         <p className="text-gray-900">{selectedLog.resource_type} #{selectedLog.resource_id}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Risk Level</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.riskLevel')}</p>
                                         <span className={`px-2 py-1 rounded text-xs font-semibold ${getRiskColor(selectedLog.risk_level)}`}>
                                             {selectedLog.risk_level}
                                         </span>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Status</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.status')}</p>
                                         <p className="text-gray-900">{selectedLog.status}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">IP Address</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.ipAddress')}</p>
                                         <p className="text-gray-900">{selectedLog.ip_address}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">Sensitive Data</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.sensitiveData')}</p>
                                         <p className="text-gray-900">{selectedLog.is_sensitive ? 'Yes' : 'No'}</p>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <p className="text-sm font-semibold text-gray-700 mb-2">Description</p>
+                                    <p className="text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.description')}</p>
                                     <p className="text-gray-900 bg-gray-50 p-3 rounded">{selectedLog.action_description}</p>
                                 </div>
 
                                 {selectedLog.old_values && (
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-2">Previous Values</p>
+                                        <p className="text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.previousValues')}</p>
                                         <pre className="bg-gray-50 p-3 rounded text-xs overflow-x-auto">
                                             {JSON.stringify(selectedLog.old_values, null, 2)}
                                         </pre>
@@ -401,7 +403,7 @@ const AuditTrailViewer: React.FC = () => {
 
                                 {selectedLog.new_values && (
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700 mb-2">New Values</p>
+                                        <p className="text-sm font-semibold text-gray-700 mb-2">{t('auditTrailViewer.newValues')}</p>
                                         <pre className="bg-gray-50 p-3 rounded text-xs overflow-x-auto">
                                             {JSON.stringify(selectedLog.new_values, null, 2)}
                                         </pre>

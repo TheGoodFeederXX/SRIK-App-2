@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -20,6 +21,7 @@ const BroadcastSchema = Yup.object().shape({
 });
 
 export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = ({ isOpen, onClose }) => {
+    const { t } = useTranslation();
     const [isSending, setIsSending] = useState(false);
     const [success, setSuccess] = useState(false);
 
@@ -36,7 +38,7 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                             <AlertTriangle className="w-8 h-8" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">Emergency Broadcast Hub</h2>
+                            <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">{t('emergencyBroadcastModal.emergencyBroadcastHub')}</h2>
                             <p className="text-sm text-red-600 font-bold flex items-center gap-1.5">
                                 <span className="relative flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -62,8 +64,8 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                             <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <Send className="w-8 h-8" />
                             </div>
-                            <h3 className="text-xl font-bold text-gray-900 mb-2">Broadcast Sent</h3>
-                            <p className="text-gray-500 mb-6">Your emergency alert has been queued for delivery.</p>
+                            <h3 className="text-xl font-bold text-gray-900 mb-2">{t('emergencyBroadcastModal.broadcastSent')}</h3>
+                            <p className="text-gray-500 mb-6">{t('emergencyBroadcastModal.yourEmergencyAlertHasBeenQueuedForDelivery')}</p>
                             <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={onClose} className="px-6 py-2 bg-gray-900 text-white rounded-xl text-sm font-medium hover:bg-black">
                                 Close
                             </motion.button>
@@ -87,28 +89,28 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                             {({ values, setFieldValue }) => (
                                 <Form className="space-y-5">
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Alert Title</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('emergencyBroadcastModal.alertTitle')}</label>
                                         <Field name="title" className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none" placeholder="e.g. SCHOOL CLOSED TODAY" />
                                     </div>
 
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
-                                        <Field as="textarea" name="message" rows={4} className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none" placeholder="Detailed instructions..." />
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">{t('emergencyBroadcastModal.message')}</label>
+                                        <Field as="textarea" name="message" rows={4} className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none" placeholder={t('emergencyBroadcastModal.detailedInstructions')} />
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Audience</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{t('emergencyBroadcastModal.audience')}</label>
                                             <Field as="select" name="audience" className="w-full px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-red-500 outline-none">
-                                                <option value="all">Everyone</option>
-                                                <option value="parents">Parents Only</option>
-                                                <option value="teachers">Teachers Only</option>
-                                                <option value="staff">Staff Only</option>
+                                                <option value="all">{t('emergencyBroadcastModal.everyone')}</option>
+                                                <option value="parents">{t('emergencyBroadcastModal.parentsOnly')}</option>
+                                                <option value="teachers">{t('emergencyBroadcastModal.teachersOnly')}</option>
+                                                <option value="staff">{t('emergencyBroadcastModal.staffOnly')}</option>
                                             </Field>
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Channels</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">{t('emergencyBroadcastModal.channels')}</label>
                                             <div className="flex space-x-3">
                                                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
                                                     <input type="checkbox"
@@ -145,7 +147,7 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                                             className="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition-colors shadow-lg shadow-red-200 disabled:opacity-50"
                                         >
                                             {isSending ? (
-                                                <span className="animate-pulse">Broadcasting...</span>
+                                                <span className="animate-pulse">{t('emergencyBroadcastModal.broadcasting')}</span>
                                             ) : (
                                                 <>
                                                     <AlertTriangle className="w-5 h-5 mr-2" />

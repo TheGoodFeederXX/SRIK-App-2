@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { MegaphoneIcon, PlusIcon, TrashIcon, EyeIcon, EyeOffIcon } from '../../constants';
@@ -31,6 +32,7 @@ import {
 } from '../../src/lib/supabase/announcements';
 
 export default function AnnouncementsScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [editing, setEditing] = useState<Announcement | null>(null);
@@ -70,7 +72,7 @@ export default function AnnouncementsScreen() {
         setBusyId(item.id);
         try {
             await deleteAnnouncement(item.id);
-            toast.success('Draf dipadam.');
+            toast.success(t('announcementsScreen.drafDipadam'));
             refresh();
         } catch (err) {
             toast.error(friendlyAnnouncementError(err));
@@ -82,7 +84,7 @@ export default function AnnouncementsScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-3xl mx-auto">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
-                <h1 className="text-2xl font-bold text-slate-800">Pengumuman</h1>
+                <h1 className="text-2xl font-bold text-slate-800">{t('announcementsScreen.pengumuman')}</h1>
                 <button
                     type="button"
                     onClick={() => setComposing(true)}
@@ -90,7 +92,7 @@ export default function AnnouncementsScreen() {
                                text-sm font-bold hover:bg-indigo-700"
                 >
                     <PlusIcon className="w-4 h-4" />
-                    Tulis pengumuman
+                    {t('announcementsScreen.tulisPengumuman')}
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
@@ -106,7 +108,7 @@ export default function AnnouncementsScreen() {
                     <div className="flex justify-center mb-3">
                         <MegaphoneIcon className="w-8 h-8 text-slate-400" />
                     </div>
-                    <p className="font-semibold text-slate-700">Belum ada pengumuman</p>
+                    <p className="font-semibold text-slate-700">{t('announcementsScreen.belumAdaPengumuman')}</p>
                     <p className="text-sm text-slate-500 mt-1">
                         Tulis notis pertama untuk ibu bapa atau guru.
                     </p>
@@ -145,7 +147,7 @@ export default function AnnouncementsScreen() {
                                                    hover:bg-emerald-700 disabled:bg-slate-300"
                                     >
                                         <EyeIcon className="w-3.5 h-3.5" />
-                                        Terbitkan
+                                        {t('announcementsScreen.terbitkan')}
                                     </button>
                                 ) : (
                                     <button
@@ -219,6 +221,7 @@ function Composer({
     onClose: () => void;
     onSaved: () => void;
 }) {
+    const { t } = useTranslation();
     const [title, setTitle] = useState(announcement?.title ?? '');
     const [body, setBody] = useState(announcement?.body ?? '');
     const [audience, setAudience] = useState<AnnouncementAudience>(
@@ -267,24 +270,24 @@ function Composer({
                             type="text"
                             value={title}
                             onChange={e => setTitle(e.target.value)}
-                            placeholder="Contoh: Cuti hari raya"
+                            placeholder={t('announcementsScreen.contohCutiHariRaya')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </Field>
 
-                    <Field label="Kandungan">
+                    <Field label={t('announcementsScreen.kandungan')}>
                         <textarea
                             value={body}
                             onChange={e => setBody(e.target.value)}
                             rows={5}
-                            placeholder="Tulis mesej kepada ibu bapa…"
+                            placeholder={t('announcementsScreen.tulisMesejKepadaIbuBapa')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
                         />
                     </Field>
 
-                    <Field label="Untuk siapa">
+                    <Field label={t('announcementsScreen.untukSiapa')}>
                         <select
                             value={audience}
                             onChange={e => setAudience(e.target.value as AnnouncementAudience)}
@@ -302,7 +305,7 @@ function Composer({
                         </p>
                     )}
 
-                    <Field label="Tarikh tamat (pilihan)">
+                    <Field label={t('announcementsScreen.tarikhTamatPilihan')}>
                         <input
                             type="date"
                             value={expiresAt}

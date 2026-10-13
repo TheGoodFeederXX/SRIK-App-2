@@ -24,6 +24,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { ClipboardListIcon, SearchIcon, ShieldIcon } from '../../constants';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -35,6 +36,7 @@ import {
 } from '../../src/lib/supabase/auditTrail';
 
 export default function AuditTrailScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [entityType, setEntityType] = useState<string>('');
     const [search, setSearch] = useState('');
@@ -61,7 +63,7 @@ export default function AuditTrailScreen() {
 
     return (
         <div className="p-4 sm:p-6 max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-slate-800 mb-1">Rekod Audit</h1>
+            <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('auditTrailScreen.rekodAudit')}</h1>
             <p className="text-sm text-slate-500 mb-4">
                 Setiap perubahan pada rekod pelajar, kehadiran, markah dan bayaran direkodkan di
                 sini. Rekod ini tidak boleh dipadam atau diubah.
@@ -84,7 +86,7 @@ export default function AuditTrailScreen() {
                         type="text"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
-                        placeholder="Cari nama pengguna atau no. rujukan"
+                        placeholder={t('auditTrailScreen.cariNamaPenggunaAtauNoRujukan')}
                         className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                    focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
@@ -95,7 +97,7 @@ export default function AuditTrailScreen() {
                     className="px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
-                    <option value="">Semua jenis rekod</option>
+                    <option value="">{t('auditTrailScreen.semuaJenisRekod')}</option>
                     {Object.entries(ENTITY_LABELS).map(([key, label]) => (
                         <option key={key} value={key}>{label}</option>
                     ))}
@@ -114,7 +116,7 @@ export default function AuditTrailScreen() {
                     <div className="flex justify-center mb-3">
                         <ClipboardListIcon className="w-8 h-8 text-slate-400" />
                     </div>
-                    <p className="font-semibold text-slate-700">Tiada rekod</p>
+                    <p className="font-semibold text-slate-700">{t('auditTrailScreen.tiadaRekod')}</p>
                     <p className="text-sm text-slate-500 mt-1">
                         {entries.length
                             ? 'Tiada rekod sepadan dengan carian anda.'
@@ -173,10 +175,11 @@ export default function AuditTrailScreen() {
 
 /** The fields that moved, with what they were and what they became. */
 function Changes({ entry }: { entry: AuditEntry }) {
+    const { t } = useTranslation();
     if (entry.action === 'INSERT') {
         return (
             <div className="text-sm text-slate-600">
-                <p className="text-xs font-semibold text-slate-500 mb-1.5">Rekod baharu dicipta</p>
+                <p className="text-xs font-semibold text-slate-500 mb-1.5">{t('auditTrailScreen.rekodBaharuDicipta')}</p>
                 {entry.after_data && (
                     <ul className="space-y-1">
                         {summarise(entry.after_data).map(([key, value]) => (
@@ -213,7 +216,7 @@ function Changes({ entry }: { entry: AuditEntry }) {
 
     const changes = diff(entry.before_data, entry.after_data);
     if (!changes.length) {
-        return <p className="text-xs text-slate-400">Tiada perubahan bidang direkodkan.</p>;
+        return <p className="text-xs text-slate-400">{t('auditTrailScreen.tiadaPerubahanBidangDirekodkan')}</p>;
     }
 
     return (

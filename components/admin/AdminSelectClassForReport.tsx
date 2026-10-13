@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { StudentsIcon, ChevronRightIcon, gradeColors, getFormattedClassName } from '../../constants';
 import { ClassInfo } from '../../types';
@@ -15,6 +16,7 @@ interface AdminSelectClassForReportProps {
 }
 
 const AdminSelectClassForReport: React.FC<AdminSelectClassForReportProps> = ({ navigateTo, schoolId: propSchoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const schoolId = propSchoolId || currentSchool?.id;
 
@@ -72,20 +74,20 @@ const AdminSelectClassForReport: React.FC<AdminSelectClassForReportProps> = ({ n
     }, [classes]);
 
     if (isLoading && classes.length === 0) {
-        return <CenteredLoader message="Loading live data..." className="h-full" />;
+        return <CenteredLoader message={t('adminSelectClassForReport.loadingLiveData')} className="h-full" />;
     }
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
             <main className="flex-grow p-4 space-y-4 overflow-y-auto">
                 <div className="bg-indigo-50 p-4 rounded-xl text-center border border-indigo-200">
-                    <h3 className="font-bold text-lg text-indigo-800">Select a Class</h3>
-                    <p className="text-sm text-indigo-700">Choose a class to view student report cards.</p>
+                    <h3 className="font-bold text-lg text-indigo-800">{t('adminSelectClassForReport.selectAClass')}</h3>
+                    <p className="text-sm text-indigo-700">{t('adminSelectClassForReport.chooseAClassToViewStudentReportCards')}</p>
                 </div>
 
                 {Object.keys(groupedClasses).length === 0 && (
                     <div className="text-center py-10">
-                        <p className="text-gray-500">No classes found.</p>
+                        <p className="text-gray-500">{t('adminSelectClassForReport.noClassesFound')}</p>
                     </div>
                 )}
 

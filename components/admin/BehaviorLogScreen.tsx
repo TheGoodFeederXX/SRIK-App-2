@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface BehaviorLogScreenProps {
     handleBack?: () => void;
 }
 
-const BehaviorLogScreen: React.FC<BehaviorLogScreenProps> = ({ handleBack }) => (
+const BehaviorLogScreen: React.FC<BehaviorLogScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Log Tingkah Laku"
+        title={t('behaviorLogScreen.logTingkahLaku')}
         explanation={
             'Sekolah belum menyimpan rekod tingkah laku murid di dalam sistem ini. ' +
             'Buat masa ini catatan tingkah laku murid dibuat dan disimpan secara ' +
@@ -20,6 +23,7 @@ const BehaviorLogScreen: React.FC<BehaviorLogScreenProps> = ({ handleBack }) => 
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default BehaviorLogScreen;

@@ -24,6 +24,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -39,6 +40,7 @@ import {
 } from '../../src/lib/supabase/finance';
 
 export default function FeeManagementScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [editing, setEditing] = useState<Partial<FeeType> | null>(null);
@@ -55,7 +57,7 @@ export default function FeeManagementScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-4xl mx-auto">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
-                <h1 className="text-2xl font-bold text-slate-800">Tetapan Yuran</h1>
+                <h1 className="text-2xl font-bold text-slate-800">{t('feeManagementScreen.tetapanYuran')}</h1>
                 <button
                     type="button"
                     onClick={() =>
@@ -72,7 +74,7 @@ export default function FeeManagementScreen() {
                                text-sm font-bold hover:bg-indigo-700"
                 >
                     <PlusIcon className="w-4 h-4" />
-                    Tambah jenis yuran
+                    {t('feeManagementScreen.tambahJenisYuran')}
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
@@ -85,7 +87,7 @@ export default function FeeManagementScreen() {
                 <Notice tone="error">{friendlyFinanceError(feesQuery.error)}</Notice>
             ) : !fees.length ? (
                 <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
-                    <p className="font-semibold text-slate-700">Belum ada jenis yuran</p>
+                    <p className="font-semibold text-slate-700">{t('feeManagementScreen.belumAdaJenisYuran')}</p>
                     <p className="text-sm text-slate-500 mt-1">
                         Tambah jenis yuran dahulu, kemudian jana bil bulanan.
                     </p>
@@ -165,6 +167,7 @@ function GeneratePanel({
     monthlyFees: FeeType[];
     onGenerated: () => void;
 }) {
+    const { t } = useTranslation();
     const now = new Date();
     const [month, setMonth] = useState(now.getMonth() + 1);
     const [year, setYear] = useState(now.getFullYear());
@@ -179,7 +182,7 @@ function GeneratePanel({
 
     async function handleGenerate() {
         if (!yearQuery.data) {
-            toast.error('Tiada tahun akademik semasa ditetapkan.');
+            toast.error(t('feeManagementScreen.tiadaTahunAkademikSemasaDitetapkan'));
             return;
         }
         setBusy(true);
@@ -209,7 +212,7 @@ function GeneratePanel({
         <div className="bg-white rounded-2xl border border-slate-200 p-5">
             <div className="flex items-center gap-2 mb-1">
                 <CalculatorIcon className="w-5 h-5 text-indigo-600" />
-                <h2 className="font-bold text-slate-800">Jana bil bulanan</h2>
+                <h2 className="font-bold text-slate-800">{t('feeManagementScreen.janaBilBulanan')}</h2>
             </div>
             <p className="text-sm text-slate-500 mb-4">
                 Cipta caj bulan ini untuk semua pelajar aktif. Selamat ditekan dua kali — sistem
@@ -313,6 +316,7 @@ function FeeForm({
     onClose: () => void;
     onSaved: () => void;
 }) {
+    const { t } = useTranslation();
     const [name, setName] = useState(fee.name ?? '');
     const [code, setCode] = useState(fee.code ?? '');
     // Held as a string so a blank box stays blank, rather than becoming 0.
@@ -371,7 +375,7 @@ function FeeForm({
                             type="text"
                             value={name}
                             onChange={e => setName(e.target.value)}
-                            placeholder="Contoh: Yuran Bulanan"
+                            placeholder={t('feeManagementScreen.contohYuranBulanan')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
@@ -384,7 +388,7 @@ function FeeForm({
                             type="text"
                             value={code}
                             onChange={e => setCode(e.target.value)}
-                            placeholder="Contoh: BULANAN"
+                            placeholder={t('feeManagementScreen.contohBULANAN')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm uppercase
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
@@ -400,7 +404,7 @@ function FeeForm({
                             min="0"
                             value={amount}
                             onChange={e => setAmount(e.target.value)}
-                            placeholder="Biarkan kosong jika belum ditetapkan"
+                            placeholder={t('feeManagementScreen.biarkanKosongJikaBelumDitetapkan')}
                             className={`w-full px-3 py-2.5 rounded-xl border text-sm focus:outline-none
                                         focus:ring-2 focus:ring-indigo-500 ${
                                             amountInvalid ? 'border-rose-300' : 'border-slate-200'

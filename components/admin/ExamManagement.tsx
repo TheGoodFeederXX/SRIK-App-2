@@ -1,6 +1,7 @@
 
 import { toast } from 'react-hot-toast';
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { PlusIcon, EditIcon, TrashIcon, PublishIcon, EXAM_TYPE_COLORS } from '../../constants';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -30,6 +31,7 @@ interface ExamManagementProps {
 }
 
 const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate, handleBack }) => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const { currentSchool } = useAuth();
     const [exams, setExams] = useState<Exam[]>([]);
@@ -66,7 +68,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
             setTeachers([]);
         } catch (err) {
             console.error('Error loading exam management data:', err);
-            toast.error('Failed to load exams');
+            toast.error(t('examManagement.failedToLoadExams'));
         } finally {
             setLoading(false);
         }
@@ -106,12 +108,12 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                         classId: examData.classId ?? undefined,
                         assessmentDate: examData.date || null,
                     });
-                    toast.success('Exam updated successfully');
+                    toast.success(t('examManagement.examUpdatedSuccessfully'));
                     loadData();
                     handleBack();
                 } catch (err) {
                     console.error('Error updating exam:', err);
-                    toast.error('Failed to update exam');
+                    toast.error(t('examManagement.failedToUpdateExam'));
                 }
             }
         });
@@ -127,11 +129,11 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
 
         try {
             await deleteAssessment(examToDelete);
-            toast.success('Exam deleted successfully');
+            toast.success(t('examManagement.examDeletedSuccessfully'));
             loadData();
         } catch (err) {
             console.error('Error deleting exam:', err);
-            toast.error('Failed to delete exam');
+            toast.error(t('examManagement.failedToDeleteExam'));
         }
         setShowDeleteModal(false);
         setExamToDelete(null);
@@ -142,11 +144,11 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
             // Publishing is its own operation, not a flag on an edit: the database
             // moves the assessment to PUBLISHED and records who did it and when.
             await publishAssessment(examId);
-            toast.success('Exam published successfully');
+            toast.success(t('examManagement.examPublishedSuccessfully'));
             loadData();
         } catch (err) {
             console.error('Error publishing exam:', err);
-            toast.error('Failed to publish exam');
+            toast.error(t('examManagement.failedToPublishExam'));
         }
     };
 
@@ -156,12 +158,12 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                 try {
                     // The database requires a class, a subject and a term by ID.
                     if (!examData.classId) {
-                        toast.error('Please choose a class.');
+                        toast.error(t('examManagement.pleaseChooseAClass'));
                         return;
                     }
                     const term = await getCurrentTerm();
                     if (!term) {
-                        toast.error('No school term is set up yet. Ask an administrator to add one.');
+                        toast.error(t('examManagement.noSchoolTermIsSetUpYetAskAnAdministratorToAddO'));
                         return;
                     }
                     const subjects = await listSubjectOptions();
@@ -169,7 +171,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                         o => o.label === examData.subject || o.label.split(' — ')[0] === examData.subject,
                     );
                     if (!subject) {
-                        toast.error('Please choose a subject.');
+                        toast.error(t('examManagement.pleaseChooseASubject'));
                         return;
                     }
                     await createAssessment({
@@ -181,49 +183,49 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                         maxScore: 100,
                         assessmentDate: examData.date || null,
                     });
-                    toast.success('Exam created successfully');
+                    toast.success(t('examManagement.examCreatedSuccessfully'));
                     loadData();
                     handleBack();
                 } catch (err) {
                     console.error('Error creating exam:', err);
-                    toast.error('Failed to create exam');
+                    toast.error(t('examManagement.failedToCreateExam'));
                 }
             }
         });
     };
 
     if (loading && exams.length === 0) {
-        return <CenteredLoader message="Loading exams..." className="p-8" />;
+        return <CenteredLoader message={t('examManagement.loadingExams')} className="p-8" />;
     }
 
     return (
         <div className="flex flex-col h-full bg-gray-100 relative">
             <div className="p-4 bg-gray-100/80 backdrop-blur-sm sticky top-0 z-10 border-b border-gray-200 grid grid-cols-2 gap-4">
                 <div>
-                    <label htmlFor="teacher-filter" className="block text-sm font-medium text-gray-700 mb-1">Teacher</label>
+                    <label htmlFor="teacher-filter" className="block text-sm font-medium text-gray-700 mb-1">{t('examManagement.teacher')}</label>
                     <select
                         id="teacher-filter"
                         value={selectedTeacherId}
                         onChange={e => setSelectedTeacherId(e.target.value)}
                         className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
                     >
-                        <option value="all">All Teachers</option>
+                        <option value="all">{t('examManagement.allTeachers')}</option>
                         {teachers.map(teacher => (
                             <option key={teacher.id} value={teacher.id.toString()}>{(teacher as any).full_name || teacher.name}</option>
                         ))}
                     </select>
                 </div>
                 <div>
-                    <label htmlFor="curriculum-filter" className="block text-sm font-medium text-gray-700 mb-1">Curriculum Track</label>
+                    <label htmlFor="curriculum-filter" className="block text-sm font-medium text-gray-700 mb-1">{t('examManagement.curriculumTrack')}</label>
                     <select
                         id="curriculum-filter"
                         value={selectedCurriculum}
                         onChange={e => setSelectedCurriculum(e.target.value)}
                         className="w-full px-3 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500"
                     >
-                        <option value="all">All Tracks</option>
+                        <option value="all">{t('examManagement.allTracks')}</option>
                         <option value="KSSR">KSSR</option>
-                        <option value="British">British (Cambridge/IGCSE)</option>
+                        <option value="British">{t('examManagement.britishCambridgeIGCSE')}</option>
                     </select>
                 </div>
             </div>
@@ -244,14 +246,14 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                             <div className="flex justify-between items-center">
                                 <p className="text-sm font-medium">Status:
                                     {exam.isPublished
-                                        ? <span className="text-green-600 ml-1">Published</span>
-                                        : <span className="text-amber-600 ml-1">Pending</span>
+                                        ? <span className="text-green-600 ml-1">{t('examManagement.published')}</span>
+                                        : <span className="text-amber-600 ml-1">{t('examManagement.pending')}</span>
                                     }
                                 </p>
                                 <p className="text-sm text-gray-600 font-medium">{exam.date ? new Date(exam.date).toLocaleDateString('ms-MY', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Not scheduled'}</p>
                             </div>
                             <div className="flex justify-end items-center border-t border-gray-100 pt-3 space-x-3">
-                                {!exam.isPublished && <button onClick={() => handlePublish(exam.id)} className="flex items-center space-x-1 text-sm font-semibold text-sky-600 p-1"><PublishIcon className="w-4 h-4" /><span>Publish</span></button>}
+                                {!exam.isPublished && <button onClick={() => handlePublish(exam.id)} className="flex items-center space-x-1 text-sm font-semibold text-sky-600 p-1"><PublishIcon className="w-4 h-4" /><span>{t('examManagement.publish')}</span></button>}
                                 <button onClick={() => handleEdit(exam)} className="text-indigo-600 p-1"><EditIcon className="w-5 h-5" /></button>
                                 <button onClick={() => confirmDelete(exam.id)} className="text-red-600 p-1"><TrashIcon className="w-5 h-5" /></button>
                             </div>
@@ -259,7 +261,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                     ))}
                 </div>
 
-                {filteredExams.length === 0 && !loading && <p className="text-center text-gray-500 py-8">No exams found for this filter.</p>}
+                {filteredExams.length === 0 && !loading && <p className="text-center text-gray-500 py-8">{t('examManagement.noExamsFoundForThisFilter')}</p>}
             </main>
 
             <div className="fixed bottom-24 right-6 lg:bottom-12 lg:right-12 z-40 space-y-4 flex flex-col items-end">
@@ -270,7 +272,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                     className="flex items-center gap-2 px-4 py-3 bg-indigo-600 text-white rounded-2xl shadow-xl hover:bg-indigo-700 transition-all"
                 >
                     <PlusIcon className="h-5 w-5" />
-                    <span className="text-sm font-bold">External Exams Page</span>
+                    <span className="text-sm font-bold">{t('examManagement.externalExamsPage')}</span>
                 </motion.button>
             </div>
 
@@ -278,8 +280,8 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={handleDelete}
-                title="Delete Exam"
-                message="Are you sure you want to delete this exam? This action cannot be undone."
+                title={t('examManagement.deleteExam')}
+                message={t('examManagement.areYouSureYouWantToDeleteThisExamThisActionCan')}
                 confirmText="Delete"
                 isDanger
             />

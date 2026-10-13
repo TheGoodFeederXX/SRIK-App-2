@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface TransportManagementScreenProps {
     handleBack?: () => void;
 }
 
-const TransportManagementScreen: React.FC<TransportManagementScreenProps> = ({ handleBack }) => (
+const TransportManagementScreen: React.FC<TransportManagementScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pengurusan Pengangkutan"
+        title={t('transportManagementScreen.pengurusanPengangkutan')}
         explanation={
             'Perkhidmatan pengangkutan sekolah belum diuruskan melalui sistem ini. ' +
             'Buat masa ini urusan pengangkutan diuruskan secara berasingan oleh pihak ' +
@@ -19,6 +22,7 @@ const TransportManagementScreen: React.FC<TransportManagementScreenProps> = ({ h
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default TransportManagementScreen;

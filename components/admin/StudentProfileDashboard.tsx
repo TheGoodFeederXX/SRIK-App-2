@@ -1,5 +1,6 @@
 ﻿
 import React, { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
     Sparkles,
@@ -41,11 +42,12 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
     forceUpdate,
     handleBack
 }) => {
+    const { t } = useTranslation();
     // Publishes this bar's height so the floating install button sits above it.
     const dockRef = useDockedBar();
 
     if (!student) {
-        return <div className="p-6 text-center text-sm text-gray-500">No student selected.</div>;
+        return <div className="p-6 text-center text-sm text-gray-500">{t('studentProfileDashboard.noStudentSelected')}</div>;
     }
     
     const [summary, setSummary] = useState('');
@@ -149,7 +151,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
 
         } catch (err) {
             console.error('Error fetching student details:', err);
-            toast.error('Unable to load student data. Please try again.');
+            toast.error(t('studentProfileDashboard.unableToLoadStudentDataPleaseTryAgain'));
         } finally {
             setLoading(false);
         }
@@ -200,11 +202,11 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
             // attendance and results — the school's own record of them would go too.
             const result = await setStudentStatus(student.id, 'ARCHIVED');
             if (!result.success) throw new Error(result.error || 'Could not archive the student.');
-            toast.success('Student archived');
+            toast.success(t('studentProfileDashboard.studentArchived'));
             forceUpdate();
             handleBack();
         } catch (error: any) {
-            toast.error('Failed to delete: ' + error.message);
+            toast.error(t('studentProfileDashboard.failedToArchive') + error.message);
         }
     };
 
@@ -214,7 +216,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
         : 0;
 
     if (!student) {
-        return <div className="p-6 text-center text-sm text-gray-500">No student selected. Open this view from a student row in the Student List.</div>;
+        return <div className="p-6 text-center text-sm text-gray-500">{t('studentProfileDashboard.noStudentSelectedOpenThisViewFromAStudentRowIn')}</div>;
     }
 
     return (
@@ -269,7 +271,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center gap-2 mb-4">
                                 <BookOpen className="w-5 h-5 text-[#5D5CDE]" />
-                                <h3 className="font-bold text-gray-800">Academic Performance</h3>
+                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.academicPerformance')}</h3>
                             </div>
 
                             {loading ? (
@@ -288,7 +290,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                             ) : (
                                 <>
                                     <div className="bg-[#F8F9FF] rounded-xl p-6 flex justify-between items-center">
-                                        <span className="font-semibold text-gray-700">Overall Average</span>
+                                        <span className="font-semibold text-gray-700">{t('studentProfileDashboard.overallAverage')}</span>
                                         <span className="text-3xl font-bold text-[#5D5CDE]">{averageScore}%</span>
                                     </div>
 
@@ -333,7 +335,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center gap-2 mb-4">
                                 <Sparkles className="w-5 h-5 text-[#5956E9]" />
-                                <h3 className="font-bold text-gray-800">AI-Generated Summary</h3>
+                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.aiGeneratedSummary')}</h3>
                             </div>
 
                             <AnimatePresence mode="wait">
@@ -363,7 +365,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         ) : (
                                             <>
                                                 <Sparkles className="w-4 h-4" />
-                                                <span>Generate Summary</span>
+                                                <span>{t('studentProfileDashboard.generateSummary')}</span>
                                             </>
                                         )}
                                     </motion.button>
@@ -377,7 +379,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                 <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center">
                                     <Edit className="w-3 h-3 text-indigo-600" />
                                 </div>
-                                <h3 className="font-bold text-gray-800">Personal Profile</h3>
+                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.personalProfile')}</h3>
                             </div>
                             
                             <div className="space-y-4">
@@ -386,7 +388,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                     <span className="text-sm font-bold text-gray-800">{s?.gender || s?.Gender || 'Not Specified'}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase">Date of Birth</span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase">{t('studentProfileDashboard.dateOfBirth')}</span>
                                     <span className="text-sm font-bold text-gray-800">
                                         {s?.dob || s?.birthday || s?.date_of_birth || s?.dateOfBirth
                                             ? new Date(s?.dob || s?.birthday || s?.date_of_birth || s?.dateOfBirth || '').toLocaleDateString("ms-MY")
@@ -394,18 +396,18 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                     </span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase">Admission #</span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase">{t('studentProfileDashboard.admission')}</span>
                                     <span className="text-sm font-bold text-gray-800">{s?.admission_number || s?.admissionNumber || s?.school_generated_id || 'N/A'}</span>
                                 </div>
                                 <div className="py-2">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">Address</span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase block mb-1">{t('studentProfileDashboard.address')}</span>
                                     <p className="text-sm text-gray-700 leading-relaxed italic">
                                         {s?.address || s?.Address || s?.studentAddress || 'No address provided'}
                                     </p>
                                 </div>
                                 {student.parentName && (
                                     <div className="mt-4 pt-4 border-t border-gray-100">
-                                        <span className="text-xs font-bold text-indigo-600 uppercase block mb-2">Guardian Contact</span>
+                                        <span className="text-xs font-bold text-indigo-600 uppercase block mb-2">{t('studentProfileDashboard.guardianContact')}</span>
                                         <p className="text-sm font-bold text-gray-800 mb-1">{student.parentName}</p>
                                         <p className="text-xs text-gray-500">{student.parentPhone || student.parentEmail || ''}</p>
                                     </div>
@@ -417,7 +419,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center gap-2 mb-6">
                                 <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                                <h3 className="font-bold text-gray-800">Attendance Summary</h3>
+                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.attendanceSummary')}</h3>
                             </div>
 
                             {loading ? (
@@ -440,14 +442,14 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         />
                                         <div className="absolute inset-0 flex flex-col items-center justify-center">
                                             <span className="text-3xl font-bold text-gray-800">{attendancePercentage}%</span>
-                                            <span className="text-xs text-gray-500 font-medium">Present</span>
+                                            <span className="text-xs text-gray-500 font-medium">{t('studentProfileDashboard.present')}</span>
                                         </div>
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-x-8 gap-y-3 mt-8 w-full border-t border-gray-50 pt-6">
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-[#5D5CDE]"></div>
-                                            <span className="text-xs font-semibold text-gray-500">Present</span>
+                                            <span className="text-xs font-semibold text-gray-500">{t('studentProfileDashboard.present')}</span>
                                             <span className="text-xs font-bold text-gray-800 ml-auto">{attendanceData.present}</span>
                                         </div>
                                         <div className="flex items-center gap-2">
@@ -462,7 +464,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-[#8E8DFF]"></div>
-                                            <span className="text-xs font-semibold text-gray-500">On Leave</span>
+                                            <span className="text-xs font-semibold text-gray-500">{t('studentProfileDashboard.onLeave')}</span>
                                             <span className="text-xs font-bold text-gray-800 ml-auto">{attendanceData.leave}</span>
                                         </div>
                                     </div>
@@ -474,7 +476,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center gap-2 mb-4">
                                 <ClipboardList className="w-5 h-5 text-purple-500" />
-                                <h3 className="font-bold text-gray-800">Behavioral Notes</h3>
+                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.behavioralNotes')}</h3>
                             </div>
 
                             <div className="space-y-4">
@@ -497,7 +499,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         </motion.div>
                                     ))
                                 ) : (
-                                    <p className="text-sm text-gray-400 text-center py-6 font-medium">No behavioral notes recorded.</p>
+                                    <p className="text-sm text-gray-400 text-center py-6 font-medium">{t('studentProfileDashboard.noBehavioralNotesRecorded')}</p>
                                 )}
                             </div>
                         </motion.section>
@@ -526,7 +528,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
              * button stop reserving space for a bar that is now part of the page.
              */}
             <div ref={dockRef} className="bg-white border-t border-gray-100 p-4 mt-auto">
-                <p className="text-xs font-bold text-gray-400 text-center uppercase tracking-widest mb-3">Admin Actions</p>
+                <p className="text-xs font-bold text-gray-400 text-center uppercase tracking-widest mb-3">{t('studentProfileDashboard.adminActions')}</p>
                 <div className="grid grid-cols-4 gap-3">
                     <motion.button
                         whileHover={{ y: -2, boxShadow: '0 8px 16px -4px rgba(93, 92, 222, 0.25)' }}
@@ -546,7 +548,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         className="flex flex-col items-center justify-center gap-1.5 py-4 bg-[#EEF2FF] text-[#5D5CDE] rounded-2xl hover:bg-[#E0E7FF] transition-colors"
                     >
                         <FileText className="w-5 h-5" />
-                        <span className="text-xs font-bold">Reports</span>
+                        <span className="text-xs font-bold">{t('studentProfileDashboard.reports')}</span>
                     </motion.button>
                     <motion.button
                         whileHover={{ y: -2, boxShadow: '0 8px 16px -4px rgba(93, 92, 222, 0.25)' }}
@@ -556,7 +558,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         className="flex flex-col items-center justify-center gap-1.5 py-4 bg-[#EEF2FF] text-[#5D5CDE] rounded-2xl hover:bg-[#E0E7FF] transition-colors"
                     >
                         <CreditCard className="w-5 h-5" />
-                        <span className="text-xs font-bold">ID Card</span>
+                        <span className="text-xs font-bold">{t('studentProfileDashboard.idCard')}</span>
                     </motion.button>
                     <motion.button
                         whileHover={{ y: -2, boxShadow: '0 8px 16px -4px rgba(220, 38, 38, 0.25)' }}
@@ -575,9 +577,9 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={handleDelete}
-                title="Delete Student"
-                message={`Are you sure you want to delete ${student.name}? This cannot be undone.`}
-                confirmText="Yes, Delete"
+                title={t('studentProfileDashboard.archiveStudent')}
+                message={t('studentProfileDashboard.archiveConfirm', { name: student.name })}
+                confirmText={t('studentProfileDashboard.yesDelete')}
                 isDanger
             />
         </div>

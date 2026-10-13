@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { updateSchoolDetails, updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { toast } from 'react-hot-toast';
@@ -22,6 +23,7 @@ const MusicalNoteIcon = ({ className }: { className?: string }) => (
 );
 
 const SchoolInfoScreen: React.FC = () => {
+    const { t } = useTranslation();
     const { currentSchool, refreshCurrentSchool } = useAuth();
     const [info, setInfo] = useState({
         name: currentSchool?.name || 'Excellence Academy',
@@ -79,10 +81,10 @@ const SchoolInfoScreen: React.FC = () => {
             });
 
             await refreshCurrentSchool();
-            toast.success('School information updated!');
+            toast.success(t('schoolInfoScreen.schoolInformationUpdated'));
         } catch (err) {
             console.error('Error saving:', err);
-            toast.error('Failed to save school information.');
+            toast.error(t('schoolInfoScreen.failedToSaveSchoolInformation'));
         } finally {
             setIsSaving(false);
         }
@@ -93,8 +95,8 @@ const SchoolInfoScreen: React.FC = () => {
 
             {/* Header */}
             <div className="flex flex-col space-y-2">
-                <h1 className="text-2xl font-bold text-gray-800">School Information</h1>
-                <p className="text-gray-500 text-sm">Manage school anthem, pledge, and branding assets.</p>
+                <h1 className="text-2xl font-bold text-gray-800">{t('schoolInfoScreen.schoolInformation')}</h1>
+                <p className="text-gray-500 text-sm">{t('schoolInfoScreen.manageSchoolAnthemPledgeAndBrandingAssets')}</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -109,7 +111,7 @@ const SchoolInfoScreen: React.FC = () => {
 
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">School Name</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t('schoolInfoScreen.schoolName')}</label>
                                 <input
                                     type="text"
                                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
@@ -119,7 +121,7 @@ const SchoolInfoScreen: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Logo URL</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t('schoolInfoScreen.logoURL')}</label>
                                 <div className="flex gap-4 items-start">
                                     <input
                                         type="text"
@@ -135,8 +137,8 @@ const SchoolInfoScreen: React.FC = () => {
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Hero Image URL</label>
-                                <p className="text-xs text-gray-500 mb-2">Displayed on the login and landing pages.</p>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t('schoolInfoScreen.heroImageURL')}</label>
+                                <p className="text-xs text-gray-500 mb-2">{t('schoolInfoScreen.displayedOnTheLoginAndLandingPages')}</p>
                                 <div className="flex flex-col gap-4">
                                     <input
                                         type="text"
@@ -168,20 +170,20 @@ const SchoolInfoScreen: React.FC = () => {
 
                         <div className="space-y-4 flex-grow">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">School Anthem</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t('schoolInfoScreen.schoolAnthem')}</label>
                                 <textarea
                                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none h-40 resize-none font-medium text-gray-600"
-                                    placeholder="Enter school anthem text..."
+                                    placeholder={t('schoolInfoScreen.enterSchoolAnthemText')}
                                     value={info.anthem}
                                     onChange={e => setInfo({ ...info, anthem: e.target.value })}
                                 />
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">School Pledge</label>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">{t('schoolInfoScreen.schoolPledge')}</label>
                                 <textarea
                                     className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-pink-500 outline-none h-40 resize-none font-medium text-gray-600"
-                                    placeholder="Enter school pledge text..."
+                                    placeholder={t('schoolInfoScreen.enterSchoolPledgeText')}
                                     value={info.pledge}
                                     onChange={e => setInfo({ ...info, pledge: e.target.value })}
                                 />
@@ -198,7 +200,7 @@ const SchoolInfoScreen: React.FC = () => {
                                 {isSaving ? 'Saving...' : (
                                     <>
                                         <SaveIcon className="w-5 h-5 mr-2" />
-                                        Save Changes
+                                        {t('schoolInfoScreen.saveChanges')}
                                     </>
                                 )}
                             </motion.button>

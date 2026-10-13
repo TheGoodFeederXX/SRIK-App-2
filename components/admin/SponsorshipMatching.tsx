@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -14,9 +15,11 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  * school does not record sponsorship in this system at all. Someone could look at
  * the blank screen and conclude nothing had been donated.
  */
-const SponsorshipMatching: React.FC<any> = ({ handleBack }) => (
+const SponsorshipMatching: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Sponsorship"
+        title={t('sponsorshipMatching.sponsorship')}
         explanation={
             'Sponsorship is not recorded in this system yet, so there is nothing to match. '
             + 'When it is, you will be able to record sponsors, log requests, and link a sponsor '
@@ -24,6 +27,7 @@ const SponsorshipMatching: React.FC<any> = ({ handleBack }) => (
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default SponsorshipMatching;

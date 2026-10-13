@@ -27,6 +27,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -104,6 +105,7 @@ interface ReportSheetProps {
  * What the parent gets on paper should look like what they see on screen.
  */
 function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: ReportSheetProps) {
+    const { t } = useTranslation();
     // Marks are grouped by subject so a subject examined three times reads as
     // one block rather than three unrelated lines.
     const bySubject = useMemo(() => {
@@ -163,7 +165,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     <tr>
                         <td className="py-1 pr-3 text-gray-600 w-32">Nama</td>
                         <td className="py-1 font-semibold">: {snapshot.student.fullName}</td>
-                        <td className="py-1 pr-3 text-gray-600 w-28">No. Daftar</td>
+                        <td className="py-1 pr-3 text-gray-600 w-28">{t('reportCardScreen.noDaftar')}</td>
                         <td className="py-1 font-semibold">: {snapshot.student.admissionNo || '—'}</td>
                     </tr>
                     <tr>
@@ -181,8 +183,8 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             <table className="w-full mt-5 text-sm border-collapse">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="border border-gray-400 px-2 py-1 text-left">Mata Pelajaran</th>
-                        <th className="border border-gray-400 px-2 py-1 text-left">Penilaian</th>
+                        <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.mataPelajaran')}</th>
+                        <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.penilaian')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-16">Markah</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">%</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">Gred</th>
@@ -262,7 +264,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
 
             {/* --- attendance --- */}
             <div className="mt-5 border border-gray-400 p-3">
-                <h3 className="text-sm font-bold mb-2">Kehadiran</h3>
+                <h3 className="text-sm font-bold mb-2">{t('reportCardScreen.kehadiran')}</h3>
                 {snapshot.attendance.daysRecorded === 0 ? (
                     <p className="text-sm text-gray-500">
                         Tiada rekod kehadiran untuk penggal ini.
@@ -271,11 +273,11 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     <table className="w-full text-sm">
                         <tbody>
                             <tr>
-                                <td className="py-0.5 text-gray-600 w-40">Hari direkodkan</td>
+                                <td className="py-0.5 text-gray-600 w-40">{t('reportCardScreen.hariDirekodkan')}</td>
                                 <td className="py-0.5 font-semibold">{snapshot.attendance.daysRecorded}</td>
-                                <td className="py-0.5 text-gray-600 w-40">Hari hadir</td>
+                                <td className="py-0.5 text-gray-600 w-40">{t('reportCardScreen.hariHadir')}</td>
                                 <td className="py-0.5 font-semibold">{snapshot.attendance.daysPresent}</td>
-                                <td className="py-0.5 text-gray-600 w-24">Peratus</td>
+                                <td className="py-0.5 text-gray-600 w-24">{t('reportCardScreen.peratus')}</td>
                                 <td className="py-0.5 font-semibold">
                                     {snapshot.attendance.rate === null
                                         ? '—'
@@ -290,7 +292,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             {/* --- what the school says --- */}
             {snapshot.assessments.some(a => a.comment) && (
                 <div className="mt-4">
-                    <h3 className="text-sm font-bold mb-1">Catatan Guru</h3>
+                    <h3 className="text-sm font-bold mb-1">{t('reportCardScreen.catatanGuru')}</h3>
                     <ul className="text-sm list-disc pl-5 space-y-0.5">
                         {snapshot.assessments
                             .filter(a => a.comment)
@@ -310,11 +312,11 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     <div className="border-t border-gray-500 pt-1">
                         {school?.principalName || '\u00A0'}
                     </div>
-                    <p className="text-xs text-gray-600">Guru Besar</p>
+                    <p className="text-xs text-gray-600">{t('reportCardScreen.guruBesar')}</p>
                 </div>
                 <div>
                     <div className="border-t border-gray-500 pt-1">&nbsp;</div>
-                    <p className="text-xs text-gray-600">Tandatangan Penjaga</p>
+                    <p className="text-xs text-gray-600">{t('reportCardScreen.tandatanganPenjaga')}</p>
                 </div>
             </div>
 
@@ -332,6 +334,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
  * ---------------------------------------------------------------------- */
 
 export default function ReportCardScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
@@ -493,7 +496,7 @@ export default function ReportCardScreen() {
                             onChange={e => setTermId(e.target.value)}
                             className="w-full p-2.5 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {terms.length === 0 && <option value="">Tiada penggal</option>}
+                            {terms.length === 0 && <option value="">{t('reportCardScreen.tiadaPenggal')}</option>}
                             {terms.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}{t.status === 'CURRENT' ? ' (semasa)' : ''}
@@ -511,7 +514,7 @@ export default function ReportCardScreen() {
                             onChange={e => setClassId(e.target.value)}
                             className="w-full p-2.5 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {classes.length === 0 && <option value="">Tiada kelas</option>}
+                            {classes.length === 0 && <option value="">{t('reportCardScreen.tiadaKelas')}</option>}
                             {classes.map(c => (
                                 <option key={c.id} value={c.id}>{c.displayName}</option>
                             ))}
@@ -527,7 +530,7 @@ export default function ReportCardScreen() {
                             onChange={e => setStudentId(e.target.value)}
                             className="w-full p-2.5 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {students.length === 0 && <option value="">Tiada pelajar</option>}
+                            {students.length === 0 && <option value="">{t('reportCardScreen.tiadaPelajar')}</option>}
                             {students.map(s => (
                                 <option key={s.studentId} value={s.studentId}>
                                     {s.fullName}{currentByStudent.get(s.studentId) ? ' ✓' : ''}
@@ -547,7 +550,7 @@ export default function ReportCardScreen() {
                                 !isPreview ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                         >
-                            Kad diterbitkan
+                            {t('reportCardScreen.kadDiterbitkan')}
                         </button>
                         <button
                             type="button"
@@ -556,7 +559,7 @@ export default function ReportCardScreen() {
                                 isPreview ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'
                             }`}
                         >
-                            Pratonton draf
+                            {t('reportCardScreen.pratontonDraf')}
                         </button>
                     </div>
 
@@ -564,7 +567,7 @@ export default function ReportCardScreen() {
                         type="text"
                         value={reason}
                         onChange={e => setReason(e.target.value)}
-                        placeholder="Sebab (pilihan)"
+                        placeholder={t('reportCardScreen.sebabPilihan')}
                         aria-label="Sebab"
                         className="flex-1 min-w-[10rem] text-sm p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                     />
@@ -643,7 +646,7 @@ export default function ReportCardScreen() {
                 {!isLoading && !studentsQuery.isLoading && students.length === 0 && (
                     <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                        <p className="font-semibold text-gray-700">Tiada pelajar aktif dalam kelas ini</p>
+                        <p className="font-semibold text-gray-700">{t('reportCardScreen.tiadaPelajarAktifDalamKelasIni')}</p>
                         <p className="text-sm text-gray-500 mt-1">
                             Daftarkan pelajar ke kelas ini dahulu.
                         </p>

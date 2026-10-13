@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ShieldCheckIcon, ClockIcon as HistoryIcon, LockIcon, LoginIcon } from '../../constants';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +8,7 @@ import { updateSchoolSettings } from '../../src/lib/supabase/schoolProfile';
 import { toast } from 'react-hot-toast';
 
 const SecuritySettingsScreen: React.FC = () => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId } = useAuth();
     const [passwordPolicy, setPasswordPolicy] = useState({
         minLength: 8,
@@ -63,7 +65,7 @@ const SecuritySettingsScreen: React.FC = () => {
 
     const handleSavePolicy = async () => {
         if (!currentSchool?.id) {
-            toast.error("No school selected to save policy.");
+            toast.error(t('securitySettingsScreen.noSchoolSelectedToSavePolicy'));
             return;
         }
         setIsLoading(true);
@@ -77,7 +79,7 @@ const SecuritySettingsScreen: React.FC = () => {
             await updateSchoolSettings({
                 security: { ...((currentSchool.settings as any)?.security || {}), passwordPolicy },
             });
-            toast.success('Security settings saved');
+            toast.success(t('securitySettingsScreen.securitySettingsSaved'));
         } catch (error: any) {
             toast.error(`Error: ${error.message} `);
         } finally {
@@ -88,22 +90,22 @@ const SecuritySettingsScreen: React.FC = () => {
     return (
         <div className="p-4 space-y-5 bg-gray-50">
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-white p-4 rounded-xl shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-3">Password Policy</h3>
+                <h3 className="font-bold text-gray-800 mb-3">{t('securitySettingsScreen.passwordPolicy')}</h3>
                 <div className="space-y-3 text-sm text-gray-700">
                     <div className="flex justify-between items-center">
                         <label>Minimum Length: {passwordPolicy.minLength}</label>
                         <input type="range" min="6" max="16" value={passwordPolicy.minLength} onChange={e => setPasswordPolicy(p => ({ ...p, minLength: parseInt(e.target.value) }))} className="w-24" />
                     </div>
                     <div className="flex justify-between items-center">
-                        <label>Require Uppercase Letter</label>
+                        <label>{t('securitySettingsScreen.requireUppercaseLetter')}</label>
                         <input type="checkbox" checked={passwordPolicy.requireUppercase} onChange={e => setPasswordPolicy(p => ({ ...p, requireUppercase: e.target.checked }))} className="h-4 w-4 rounded text-indigo-600" />
                     </div>
                     <div className="flex justify-between items-center">
-                        <label>Require Number</label>
+                        <label>{t('securitySettingsScreen.requireNumber')}</label>
                         <input type="checkbox" checked={passwordPolicy.requireNumber} onChange={e => setPasswordPolicy(p => ({ ...p, requireNumber: e.target.checked }))} className="h-4 w-4 rounded text-indigo-600" />
                     </div>
                     <div className="flex justify-between items-center">
-                        <label className="text-gray-700 text-sm">Force Special Characters</label>
+                        <label className="text-gray-700 text-sm">{t('securitySettingsScreen.forceSpecialCharacters')}</label>
                         <input type="checkbox" checked={passwordPolicy.requireSpecial} onChange={e => setPasswordPolicy({ ...passwordPolicy, requireSpecial: e.target.checked })} />
                     </div>
                 </div>
@@ -119,7 +121,7 @@ const SecuritySettingsScreen: React.FC = () => {
             </motion.div>
 
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm">
-                <h3 className="font-bold text-gray-800 mb-3">Recent System Logins</h3>
+                <h3 className="font-bold text-gray-800 mb-3">{t('securitySettingsScreen.recentSystemLogins')}</h3>
                 <ul className="space-y-3">
                     {loginHistory.map((item, index) => (
                         <motion.li key={index} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15, delay: index * 0.03 }} className="flex items-center space-x-4">
@@ -128,7 +130,7 @@ const SecuritySettingsScreen: React.FC = () => {
                                 <p className="font-semibold text-gray-700">{item.device}</p>
                                 <p className="text-sm text-gray-500">{item.location} - {item.time}</p>
                             </div>
-                            {item.isCurrent && <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded-full">Active now</span>}
+                            {item.isCurrent && <span className="text-xs font-semibold text-green-700 bg-green-100 px-2 py-1 rounded-full">{t('securitySettingsScreen.activeNow')}</span>}
                         </motion.li>
                     ))}
                 </ul>

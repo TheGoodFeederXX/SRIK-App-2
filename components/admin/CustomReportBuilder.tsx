@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -18,9 +19,11 @@ interface CustomReportBuilderProps {
     handleBack?: () => void;
 }
 
-const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({ handleBack }) => (
+const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pembina Laporan Tersuai"
+        title={t('customReportBuilder.pembinaLaporanTersuai')}
         explanation={
             'Pembinaan laporan sendiri belum tersedia di dalam sistem ini. Buat masa ' +
             'ini laporan sekolah disediakan melalui menu Laporan yang sedia ada, dan ' +
@@ -31,6 +34,7 @@ const CustomReportBuilder: React.FC<CustomReportBuilderProps> = ({ handleBack })
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default CustomReportBuilder;

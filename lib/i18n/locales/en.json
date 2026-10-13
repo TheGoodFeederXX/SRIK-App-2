@@ -1059,7 +1059,14 @@
     "markAllPresent": "Mark All Present",
     "markAllAbsent": "Mark All Absent",
     "loadingAttendanceData": "Loading attendance data...",
-    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis)."
+    "tiadaSekolahPadaJumaatDanSabtuSilaPilihHariPer": "Tiada sekolah pada Jumaat dan Sabtu. Sila pilih hari persekolahan (Ahad–Khamis).",
+    "present": "Present",
+    "noTeachersFound": "No teachers found.",
+    "searchForATeacher": "Search for a teacher",
+    "searchByTeacherName": "Search by teacher name...",
+    "attendanceRecorded": "Attendance recorded.",
+    "failedToLoadTeacherAttendanceData": "Failed to load teacher attendance data",
+    "thatStatusCannotBeRecorded": "That status cannot be recorded."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Current Password",
@@ -1400,7 +1407,24 @@
     "attendanceRecord": "Attendance Record",
     "comments": "Comments",
     "fetchingReportDetails": "Fetching report details...",
-    "schoolLogo": "School Logo"
+    "schoolLogo": "School Logo",
+    "noDaftar": "No. Daftar",
+    "mataPelajaran": "Mata Pelajaran",
+    "penilaian": "Penilaian",
+    "kehadiran": "Kehadiran",
+    "hariDirekodkan": "Hari direkodkan",
+    "hariHadir": "Hari hadir",
+    "peratus": "Peratus",
+    "catatanGuru": "Catatan Guru",
+    "guruBesar": "Guru Besar",
+    "tandatanganPenjaga": "Tandatangan Penjaga",
+    "tiadaPenggal": "Tiada penggal",
+    "tiadaKelas": "Tiada kelas",
+    "tiadaPelajar": "Tiada pelajar",
+    "kadDiterbitkan": "Kad diterbitkan",
+    "pratontonDraf": "Pratonton draf",
+    "tiadaPelajarAktifDalamKelasIni": "Tiada pelajar aktif dalam kelas ini",
+    "sebabPilihan": "Sebab (pilihan)"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "School Policies"
@@ -1591,7 +1615,8 @@
     "imageUploadedReadyToSave": "Image uploaded ready to save",
     "profileUpdatedSuccessfully": "Profile updated successfully!",
     "pleaseEnterYourFullNameBeforeSaving": "Please enter your full name before saving.",
-    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah."
+    "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah.",
+    "editProfile": "Edit Profile"
   },
   "examSchedule": {
     "examSchedule": "Exam Schedule"
@@ -1974,5 +1999,1094 @@
   "motion-ui": {
     "closeModal": "Close modal",
     "closeDrawer": "Close drawer"
+  },
+  "academicAnalytics": {
+    "comprehensivePerformanceTrackingAndAnalysis": "Comprehensive performance tracking and analysis",
+    "allClasses": "All Classes",
+    "purataMarkah": "Purata Markah",
+    "kadarLulus": "Kadar Lulus",
+    "topPerformer": "Top Performer",
+    "bilanganMarkah": "Bilangan Markah",
+    "gradeDistribution": "Grade Distribution",
+    "belumAdaMarkahUntukPenggalAtauKelasIni": "Belum ada markah untuk penggal atau kelas ini.",
+    "purataKeseluruhan": "Purata Keseluruhan",
+    "kelasPerluPerhatian": "Kelas Perlu Perhatian",
+    "kelasTerbaik": "Kelas Terbaik",
+    "failedToLoadAnalytics": "Failed to load analytics"
+  },
+  "academicSettingsScreen": {
+    "academicConfiguration": "Academic Configuration",
+    "academicYearStart": "Academic Year Start",
+    "academicYearEnd": "Academic Year End",
+    "defaultGradingScale": "Default Grading Scale",
+    "percentage0100": "Percentage (0-100)",
+    "letterGradesAF": "Letter Grades (A-F)",
+    "standardsBased": "Standards-Based",
+    "enableWeightedAssignments": "Enable Weighted Assignments",
+    "configureAdmissionFormsRequiredDocumentsAndApp": "Configure admission forms, required documents, and application statuses here.",
+    "primaryCurriculumType": "Primary Curriculum Type",
+    "kurikulumKSSR": "Kurikulum KSSR",
+    "britishCurriculum": "British Curriculum",
+    "bothDualCurriculum": "Both (Dual Curriculum)",
+    "schoolCalendar": "School Calendar",
+    "gradingScales": "Grading Scales",
+    "enrollmentSettings": "Enrollment Settings",
+    "curriculumContent": "Curriculum & Content",
+    "loadingSettings": "Loading settings...",
+    "settingsSavedSuccessfully": "Settings saved successfully!",
+    "errorLoadingAcademicSettings": "Error loading academic settings.",
+    "schoolContextMissing": "School context missing."
+  },
+  "addExamScreen": {
+    "examType": "Exam Type",
+    "selectType": "Select type...",
+    "selectClass": "Select class...",
+    "noClassesFoundInDatabase": "No classes found in database",
+    "subject": "Subject",
+    "selectSubject": "Select subject...",
+    "loadingFormData": "Loading form data...",
+    "failedToLoadFormData": "Failed to load form data",
+    "pleaseFillAllFields": "Please fill all fields."
+  },
+  "addParentScreen": {
+    "addParent": "Add Parent"
+  },
+  "addStudentScreen": {
+    "notStated": "Not stated",
+    "notAssignedYet": "Not assigned yet",
+    "guardian": "Guardian",
+    "admissionNumber": "Admission number",
+    "dateOfBirth": "Date of birth",
+    "placeOfBirth": "Place of birth",
+    "nationality": "Nationality",
+    "identityCardNumber": "Identity card number",
+    "homeAddress": "Home address",
+    "previousSchool": "Previous school",
+    "dateJoined": "Date joined",
+    "phoneNumber": "Phone number",
+    "emailIfAny": "Email (if any)",
+    "occupation": "Occupation",
+    "studentDetails": "Student details",
+    "schoolBackground": "School background",
+    "parentOrGuardian": "Parent or guardian",
+    "studentDetailsSaved": "Student details saved."
+  },
+  "addTeacherScreen": {
+    "notStated": "Not stated",
+    "employmentStart": "Employment Start",
+    "status": "Status",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "staffCode": "Staff Code",
+    "fullName": "Full Name",
+    "classesTaught": "Classes Taught",
+    "subjectsTaught": "Subjects Taught",
+    "teacherUpdated": "Teacher updated",
+    "teacherSaved": "Teacher saved",
+    "loginAccountCreated": "Login account created",
+    "couldNotLoadTheSubjectAndClassLists": "Could not load the subject and class lists",
+    "couldNotLoadThisTeacher": "Could not load this teacher",
+    "staffCodeAndFullNameAreRequired": "Staff code and full name are required",
+    "anEmailAddressIsNeededToCreateALoginAccount": "An email address is needed to create a login account",
+    "anEmailAddressIsRequired": "An email address is required"
+  },
+  "adminActionsScreen": {
+    "quickActions": "Quick Actions",
+    "manageYourSchoolEfficiently": "Manage your school efficiently.",
+    "addStudent": "Add Student",
+    "studentList": "Student List",
+    "idCards": "ID Cards",
+    "addTeacher": "Add Teacher",
+    "teacherList": "Teacher List",
+    "attendance": "Attendance",
+    "classes": "Classes",
+    "subjects": "Subjects",
+    "reportCards": "Report Cards",
+    "timetable": "Timetable",
+    "teacherAssignments": "Teacher Assignments",
+    "feeCollection": "Fee Collection",
+    "studentFees": "Student Fees",
+    "feeSetup": "Fee Setup",
+    "parentAccounts": "Parent Accounts",
+    "emergencyAlert": "Emergency Alert",
+    "safetyLogs": "Safety Logs",
+    "announcements": "Announcements",
+    "auditTrail": "Audit Trail",
+    "settings": "Settings",
+    "manageStudents": "Manage Students",
+    "manageStaff": "Manage Staff",
+    "academic": "Academic",
+    "finance": "Finance",
+    "safetyWellbeing": "Safety & Wellbeing",
+    "communication": "Communication"
+  },
+  "adminDashboard": {
+    "databaseConnectionError": "Database Connection Error",
+    "thisScreen": "This screen",
+    "loadingAnalytics": "Loading analytics...",
+    "searchingSchoolDatabase": "Searching school database..."
+  },
+  "adminLessonNotesScreen": {
+    "notaPelajaran": "Nota Pelajaran"
+  },
+  "adminNewChatScreen": {
+    "adminNewChat": "Admin New Chat"
+  },
+  "adminResultsEntrySelector": {
+    "resultsEntrySelection": "Results Entry Selection",
+    "chooseAClassToEnterStudentAcademicResults": "Choose a class to enter student academic results.",
+    "noClassesFound": "No classes found.",
+    "loadingClasses": "Loading classes..."
+  },
+  "adminSelectClassForReport": {
+    "selectAClass": "Select a Class",
+    "chooseAClassToViewStudentReportCards": "Choose a class to view student report cards.",
+    "noClassesFound": "No classes found.",
+    "loadingLiveData": "Loading live data..."
+  },
+  "adminSelectTermForReport": {
+    "noStudentSelected": "No student selected.",
+    "chooseTheAcademicTermYouWantToViewOrEdit": "Choose the academic term you want to view or edit."
+  },
+  "adminStudentListForReport": {
+    "noClassSelectedOpenThisViewByPickingAClassFrom": "No class selected. Open this view by picking a class from Reports.",
+    "noStudentsFound": "No Students Found",
+    "loadingClassRoster": "Loading class roster...",
+    "failedToLoadClassRoster": "Failed to load class roster"
+  },
+  "adminStudentReportCardScreen": {
+    "endOfTermReportCard": "End of Term Report Card",
+    "subject": "Subject",
+    "ca40": "CA (40)",
+    "exam60": "Exam (60)",
+    "total100": "Total (100)",
+    "totalDays": "Total Days",
+    "present": "Present",
+    "teacherSComment": "Teacher's Comment",
+    "principalSComment": "Principal's Comment",
+    "noStudentSelectedOpenThisViewFromAStudentRow": "No student selected. Open this view from a student row.",
+    "noReportCardData": "No Report Card Data",
+    "noReportCardDataHasBeenEnteredForThisStudentYe": "No report card data has been entered for this student yet.",
+    "selectATermToViewTheReport": "Select a term to view the report.",
+    "fullName": "Full Name",
+    "classGrade": "Class/Grade",
+    "session": "Session",
+    "admissionNo": "Admission No.",
+    "dateOfBirth": "Date of Birth",
+    "positionInClass": "Position in Class",
+    "studentInformation": "Student Information",
+    "academicPerformance": "Academic Performance",
+    "skillsBehaviour": "Skills & Behaviour",
+    "psychomotorSkills": "Psychomotor Skills",
+    "attendanceRecord": "Attendance Record",
+    "comments": "Comments",
+    "schoolLogo": "School Logo"
+  },
+  "alumniHistoryScreen": {
+    "alumniHistory": "Alumni History"
+  },
+  "analyticsAdminTools": {
+    "advancedAnalyticsBudgetingAndSystemIntegration": "Advanced analytics, budgeting, and system integrations",
+    "attendanceHeatmap": "Attendance Heatmap",
+    "financeDashboard": "Finance Dashboard",
+    "academicAnalytics": "Academic Analytics",
+    "budgetPlanner": "Budget Planner",
+    "auditTrail": "Audit Trail",
+    "integrationHub": "Integration Hub",
+    "vendorManagement": "Vendor Management",
+    "assetInventory": "Asset Inventory",
+    "scanAsset": "Scan Asset",
+    "privacyPDPA": "Privacy (PDPA)",
+    "complianceChecks": "Compliance Checks",
+    "maintenanceTickets": "Maintenance Tickets",
+    "visualAttendanceTrackingWithTrends": "Visual attendance tracking with trends",
+    "revenueExpensesAndForecasting": "Revenue, expenses, and forecasting",
+    "gradeDistributionAndPerformance": "Grade distribution and performance",
+    "annualBudgetsAndAllocations": "Annual budgets and allocations",
+    "securityMonitoringAndCompliance": "Security monitoring and compliance",
+    "governmentSystemsThirdPartyApps": "Government systems & third-party apps",
+    "suppliersAndPurchaseOrders": "Suppliers and purchase orders",
+    "equipmentTrackingQRCodes": "Equipment tracking & QR codes",
+    "scanAQRTagToViewDetails": "Scan a QR tag to view details",
+    "dataProtectionConsent": "Data protection & consent",
+    "automatedRegulatoryHealth": "Automated regulatory health",
+    "repairsIssueTracking": "Repairs & issue tracking"
+  },
+  "analyticsScreen": {
+    "noAttendanceTaken": "No attendance taken",
+    "blankDaysHadNoAttendanceTakenWeekendsHolidaysO": "Blank days had no attendance taken (weekends, holidays or not marked yet).",
+    "studentPerformance": "Student Performance",
+    "feeCompliance": "Fee Compliance",
+    "teacherWorkloadWeeklyHours": "Teacher Workload (Weekly Hours)",
+    "attendanceTrendLast7Days": "Attendance Trend (Last 7 Days)",
+    "enrollmentTrends": "Enrollment Trends",
+    "refreshAnalytics": "Refresh analytics",
+    "refreshData": "Refresh Data",
+    "noResultsRecordedYet": "No results recorded yet",
+    "noFeesSetUpYet": "No fees set up yet",
+    "noTeachersYet": "No teachers yet",
+    "noLessonsScheduledYet": "No lessons scheduled yet",
+    "noAttendanceTakenThisWeek": "No attendance taken this week",
+    "noStudentsEnrolledYet": "No students enrolled yet",
+    "checkYourConnectionAndTryAgain": "Check your connection and try again.",
+    "subjectAveragesAppearHereOnceScoresAreEntered": "Subject averages appear here once scores are entered.",
+    "feesYouAssignToStudentsWillShowHere": "Fees you assign to students will show here.",
+    "teachersYouAddWillShowHereWithTheirWeeklyTeach": "Teachers you add will show here with their weekly teaching hours.",
+    "weeklyHoursAppearOnceTeachersHaveLessonsOnATim": "Weekly hours appear once teachers have lessons on a timetable.",
+    "dailyAttendanceAppearsHereOnceRegistersAreMark": "Daily attendance appears here once registers are marked.",
+    "newEnrolmentsPerMonthAppearHere": "New enrolments per month appear here."
+  },
+  "announcementsScreen": {
+    "pengumuman": "Pengumuman",
+    "tulisPengumuman": "Tulis pengumuman",
+    "belumAdaPengumuman": "Belum ada pengumuman",
+    "terbitkan": "Terbitkan",
+    "kandungan": "Kandungan",
+    "untukSiapa": "Untuk siapa",
+    "tarikhTamatPilihan": "Tarikh tamat (pilihan)",
+    "contohCutiHariRaya": "Contoh: Cuti hari raya",
+    "tulisMesejKepadaIbuBapa": "Tulis mesej kepada ibu bapa…",
+    "drafDipadam": "Draf dipadam."
+  },
+  "arrearsTracker": {
+    "arrears": "Arrears"
+  },
+  "assetDetailScreen": {
+    "assetDetail": "Asset Detail"
+  },
+  "assetInventory": {
+    "assetInventory": "Asset Inventory"
+  },
+  "atRiskStudentsScreen": {
+    "atRiskStudents": "At Risk Students"
+  },
+  "attendanceHeatmap": {
+    "noAttendanceDataForSelectedPeriod": "No attendance data for selected period",
+    "visualAttendancePatternsAcrossClassesAndTimePe": "Visual attendance patterns across classes and time periods",
+    "averageAttendance": "Average Attendance",
+    "criticalDays": "Critical Days",
+    "allClasses": "All Classes",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "exportCSV": "Export CSV",
+    "attendanceRateLegend": "Attendance Rate Legend:",
+    "below70": "Below 70%",
+    "reportExportedSuccessfully": "Report exported successfully!",
+    "failedToLoadAttendanceData": "Failed to load attendance data"
+  },
+  "attendanceOverviewScreen": {
+    "attendance": "Attendance",
+    "whichClassesHaveHandedInTheirRegister": "Which classes have handed in their register.",
+    "couldNotLoadAttendance": "Could not load attendance",
+    "noClassesWithStudents": "No Classes With Students",
+    "classes": "Classes",
+    "recorded": "Recorded",
+    "loadingAttendance": "Loading attendance..."
+  },
+  "auditLogScreen": {
+    "noLogsFoundAuditSystemActive": "No logs found. Audit system active.",
+    "loadingAuditTrail": "Loading audit trail...",
+    "failedToLoadAuditLogs": "Failed to load audit logs"
+  },
+  "auditTrailScreen": {
+    "rekodAudit": "Rekod Audit",
+    "semuaJenisRekod": "Semua jenis rekod",
+    "tiadaRekod": "Tiada rekod",
+    "rekodBaharuDicipta": "Rekod baharu dicipta",
+    "tiadaPerubahanBidangDirekodkan": "Tiada perubahan bidang direkodkan.",
+    "cariNamaPenggunaAtauNoRujukan": "Cari nama pengguna atau no. rujukan"
+  },
+  "auditTrailViewer": {
+    "comprehensiveSystemActivityAndSecurityMonitori": "Comprehensive system activity and security monitoring",
+    "exportCSV": "Export CSV",
+    "totalEvents": "Total Events",
+    "highRisk": "High Risk",
+    "failedActions": "Failed Actions",
+    "sensitiveData": "Sensitive Data",
+    "search": "Search",
+    "actionType": "Action Type",
+    "allActions": "All Actions",
+    "riskLevel": "Risk Level",
+    "allLevels": "All Levels",
+    "dateRange": "Date Range",
+    "dateTime": "Date/Time",
+    "resource": "Resource",
+    "description": "Description",
+    "status": "Status",
+    "actions": "Actions",
+    "noAuditLogsFoundForTheSelectedFilters": "No audit logs found for the selected filters",
+    "auditLogDetails": "Audit Log Details",
+    "ipAddress": "IP Address",
+    "previousValues": "Previous Values",
+    "newValues": "New Values",
+    "viewDetails": "View Details",
+    "searchUserActionOrResource": "Search user, action, or resource...",
+    "auditLogExported": "Audit log exported!",
+    "failedToLoadAuditLogs": "Failed to load audit logs"
+  },
+  "awardPoints": {
+    "awardPoints": "Award Points"
+  },
+  "backupRestoreScreen": {
+    "backupRestore": "Backup Restore"
+  },
+  "behaviorLogScreen": {
+    "logTingkahLaku": "Log Tingkah Laku"
+  },
+  "brandingSettingsScreen": {
+    "schoolLogo": "School Logo",
+    "uploadLogo": "Upload Logo",
+    "primaryColorTheme": "Primary Color Theme",
+    "brandingSettingsSavedSuccessfully": "Branding settings saved successfully",
+    "logoUploadedPressSaveToApplyIt": "Logo uploaded — press Save to apply it",
+    "pleaseWaitForTheLogoToFinishUploading": "Please wait for the logo to finish uploading."
+  },
+  "budgetPlanner": {
+    "budgetPlanner": "Budget Planner"
+  },
+  "busDutyRosterScreen": {
+    "busDutyRoster": "Bus Duty Roster"
+  },
+  "changePasswordScreen": {
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordChangedSuccessfully": "Password changed successfully!",
+    "newPasswordsDoNotMatch": "New passwords do not match."
+  },
+  "classAttendanceDetailScreen": {
+    "noStudentsFoundForThisClass": "No students found for this class.",
+    "syncingDatabase": "Syncing database...",
+    "failedToLoadAttendanceRecords": "Failed to load attendance records"
+  },
+  "classFormScreen": {
+    "chooseAYear": "Choose a year",
+    "subjectsTaught": "Subjects taught",
+    "loadingSubjects": "Loading subjects...",
+    "pleaseChooseAYearLevelFrom1To6": "Please choose a year level from 1 to 6.",
+    "pleaseEnterAClassName": "Please enter a class name."
+  },
+  "classListScreen": {
+    "noClassesYet": "No Classes Yet",
+    "loadingClasses": "Loading classes..."
+  },
+  "classVerificationScreen": {
+    "classVerification": "Class Verification"
+  },
+  "classroomManagementScreen": {
+    "classroomManagement": "Classroom Management"
+  },
+  "classroomObservationScreen": {
+    "pemerhatianBilikDarjah": "Pemerhatian Bilik Darjah"
+  },
+  "clubManagementScreen": {
+    "pengurusanKelab": "Pengurusan Kelab"
+  },
+  "communicationHub": {
+    "habKomunikasi": "Hab Komunikasi"
+  },
+  "communicationSettingsScreen": {
+    "enableEmailNotifications": "Enable Email Notifications",
+    "enableSMSNotifications": "Enable SMS Notifications",
+    "enableInAppNotifications": "Enable In-App Notifications",
+    "notificationChannels": "Notification Channels",
+    "parentPortalSettings": "Parent Portal Settings",
+    "communicationSettingsSavedSuccessfully": "Communication settings saved successfully"
+  },
+  "complianceChecklist": {
+    "complianceChecklist": "Compliance Checklist"
+  },
+  "complianceDashboard": {
+    "compliance": "Compliance"
+  },
+  "complianceOnboardingPage": {
+    "pendaftaranPematuhan": "Pendaftaran Pematuhan"
+  },
+  "consentFormScreen": {
+    "consentForm": "Consent Form"
+  },
+  "curriculumManagementScreen": {
+    "schoolCurricula": "School Curricula",
+    "whichCurriculaThisSchoolIsAccreditedToOfferOve": "Which curricula this school is accredited to offer overall.",
+    "studentCurriculumTracks": "Student Curriculum Tracks",
+    "noStudentsFound": "No students found.",
+    "britishUKNC": "British (UK NC)",
+    "americanCommonCore": "American (Common Core)",
+    "dualCurriculum": "Dual Curriculum",
+    "searchStudentsByNameOrAdmissionNumber": "Search students by name or admission number...",
+    "loadingCurriculumSettings": "Loading curriculum settings...",
+    "loadingStudents": "Loading students...",
+    "schoolCurriculaUpdated": "School curricula updated.",
+    "failedToLoadStudents": "Failed to load students.",
+    "failedToSaveSchoolCurricula": "Failed to save school curricula.",
+    "perStudentCurriculumIsNotRecordedForThisSchool": "Per-student curriculum is not recorded for this school yet."
+  },
+  "curriculumSettingsScreen": {
+    "curriculumSettings": "Curriculum Settings"
+  },
+  "customGamesListScreen": {
+    "permainanPembelajaran": "Permainan Pembelajaran"
+  },
+  "customReportBuilder": {
+    "pembinaLaporanTersuai": "Pembina Laporan Tersuai"
+  },
+  "dataExportScreen": {
+    "dataExport": "Data Export"
+  },
+  "departmentManagementScreen": {
+    "pengurusanJabatan": "Pengurusan Jabatan"
+  },
+  "digitalTwinScreen": {
+    "digitalTwin": "Digital Twin"
+  },
+  "emergencyAlert": {
+    "emergencyAlert": "Emergency Alert"
+  },
+  "emergencyBroadcastModal": {
+    "emergencyBroadcastHub": "Emergency Broadcast Hub",
+    "broadcastSent": "Broadcast Sent",
+    "yourEmergencyAlertHasBeenQueuedForDelivery": "Your emergency alert has been queued for delivery.",
+    "alertTitle": "Alert Title",
+    "message": "Message",
+    "audience": "Audience",
+    "everyone": "Everyone",
+    "parentsOnly": "Parents Only",
+    "teachersOnly": "Teachers Only",
+    "staffOnly": "Staff Only",
+    "channels": "Channels",
+    "broadcasting": "Broadcasting...",
+    "detailedInstructions": "Detailed instructions..."
+  },
+  "enhancedEnrollmentPage": {
+    "enhancedEnrollmentPage": "Enhanced Enrollment Page"
+  },
+  "enrollmentTrendsWidget": {
+    "enrollmentTrends": "Enrollment Trends"
+  },
+  "equipmentInventoryScreen": {
+    "equipmentInventory": "Equipment Inventory"
+  },
+  "examCandidateRegistration": {
+    "pendaftaranCalonPeperiksaan": "Pendaftaran Calon Peperiksaan"
+  },
+  "examManagement": {
+    "teacher": "Teacher",
+    "allTeachers": "All Teachers",
+    "curriculumTrack": "Curriculum Track",
+    "allTracks": "All Tracks",
+    "britishCambridgeIGCSE": "British (Cambridge/IGCSE)",
+    "published": "Published",
+    "pending": "Pending",
+    "publish": "Publish",
+    "noExamsFoundForThisFilter": "No exams found for this filter.",
+    "externalExamsPage": "External Exams Page",
+    "deleteExam": "Delete Exam",
+    "loadingExams": "Loading exams...",
+    "areYouSureYouWantToDeleteThisExamThisActionCan": "Are you sure you want to delete this exam? This action cannot be undone.",
+    "examUpdatedSuccessfully": "Exam updated successfully",
+    "examDeletedSuccessfully": "Exam deleted successfully",
+    "examPublishedSuccessfully": "Exam published successfully",
+    "examCreatedSuccessfully": "Exam created successfully",
+    "failedToLoadExams": "Failed to load exams",
+    "failedToUpdateExam": "Failed to update exam",
+    "failedToDeleteExam": "Failed to delete exam",
+    "failedToPublishExam": "Failed to publish exam",
+    "pleaseChooseAClass": "Please choose a class.",
+    "noSchoolTermIsSetUpYetAskAnAdministratorToAddO": "No school term is set up yet. Ask an administrator to add one.",
+    "pleaseChooseASubject": "Please choose a subject.",
+    "failedToCreateExam": "Failed to create exam"
+  },
+  "externalExamsPage": {
+    "exportCSV": "Export CSV"
+  },
+  "facilityRegisterScreen": {
+    "facilityRegister": "Facility Register"
+  },
+  "feeCollectionScreen": {
+    "bayaranYuran": "Bayaran Yuran",
+    "kutipBayaran": "Kutip bayaran",
+    "catatanPilihan": "Catatan (pilihan)",
+    "tiadaTunggakan": "Tiada tunggakan",
+    "tiadaPelajarSepadan": "Tiada pelajar sepadan",
+    "tiadaCajTertunggak": "Tiada caj tertunggak",
+    "tiadaResitLagi": "Tiada resit lagi",
+    "cariNamaPelajarAtauNomborPendaftaran": "Cari nama pelajar atau nombor pendaftaran",
+    "contohDibayarOlehNenek": "Contoh: dibayar oleh nenek",
+    "sebabPembatalanWajib": "Sebab pembatalan (wajib)",
+    "silaNyatakanSebabPembatalan": "Sila nyatakan sebab pembatalan."
+  },
+  "feeManagementScreen": {
+    "tetapanYuran": "Tetapan Yuran",
+    "tambahJenisYuran": "Tambah jenis yuran",
+    "belumAdaJenisYuran": "Belum ada jenis yuran",
+    "janaBilBulanan": "Jana bil bulanan",
+    "contohYuranBulanan": "Contoh: Yuran Bulanan",
+    "contohBULANAN": "Contoh: BULANAN",
+    "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
+    "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan."
+  },
+  "financialSettingsScreen": {
+    "defaultCurrency": "Default Currency",
+    "ringgitMalaysiaRM": "Ringgit Malaysia (RM)",
+    "usd": "USD ($)",
+    "gbp": "GBP (£)",
+    "tuitionFeeStructure": "Tuition & Fee Structure",
+    "invoicePaymentMethods": "Invoice & Payment Methods",
+    "financialSettingsSaved": "Financial settings saved"
+  },
+  "gatePassApprovals": {
+    "gatePassApprovals": "Gate Pass Approvals"
+  },
+  "guardianAccountsScreen": {
+    "akaunIbuBapa": "Akaun Ibu Bapa",
+    "tambahPenjaga": "Tambah penjaga",
+    "akaunLogMasuk": "Akaun log masuk",
+    "kataLaluanSementara": "Kata laluan sementara",
+    "sebabWajib": "Sebab (wajib)",
+    "sebabPerubahanWajib": "Sebab perubahan (wajib)",
+    "namaPenuh": "Nama penuh",
+    "telefon": "Telefon",
+    "emelPilihan": "Emel (pilihan)",
+    "belumAdaPenjaga": "Belum ada penjaga",
+    "tiadaPenjagaSepadan": "Tiada penjaga sepadan",
+    "cariNamaTelefonAtauEmelPenjaga": "Cari nama, telefon atau emel penjaga",
+    "dijanaAutomatikApabilaAkaunDicipta": "Dijana automatik apabila akaun dicipta",
+    "contohIbuBapaBaharuMendaftar": "Contoh: ibu bapa baharu mendaftar",
+    "contohSahkanBapaKandung": "Contoh: sahkan bapa kandung",
+    "contohAhmadBinAli": "Contoh: Ahmad bin Ali",
+    "contoh0123456789": "Contoh: 0123456789",
+    "penjagaDitambahSeterusnyaCiptaAkaunDanPautkanA": "Penjaga ditambah. Seterusnya, cipta akaun dan pautkan anak mereka.",
+    "silaNyatakanSebabPerubahanIni": "Sila nyatakan sebab perubahan ini."
+  },
+  "healthLogScreen": {
+    "logKesihatan": "Log Kesihatan"
+  },
+  "hostelManagementScreen": {
+    "pengurusanAsrama": "Pengurusan Asrama"
+  },
+  "iDVerificationPanel": {
+    "idverification": "IDVerification"
+  },
+  "iVRLessonRecorder": {
+    "ivrLessonRecorder": "IVR Lesson Recorder",
+    "deliverAudioLessonsViaInteractivePhoneCalls": "Deliver audio lessons via interactive phone calls",
+    "comingSoon": "Coming Soon",
+    "ivrPhoneProviderNotConnected": "IVR Phone Provider Not Connected",
+    "supportedProvidersAnyOneRequired": "Supported providers (any one required):",
+    "africaSTalking": "Africa's Talking",
+    "infobip": "Infobip"
+  },
+  "integrationHub": {
+    "integration": "Integration"
+  },
+  "inviteStaffScreen": {
+    "inviteStaff": "Invite Staff"
+  },
+  "lateArrivalConfig": {
+    "lateArrival": "Late Arrival"
+  },
+  "learningHubManagementScreen": {
+    "learningHubManagement": "Learning Hub Management"
+  },
+  "leaveApproval": {
+    "leaveApproval": "Leave Approval"
+  },
+  "leaveBalance": {
+    "leaveBalance": "Leave Balance"
+  },
+  "maintenanceTickets": {
+    "maintenanceTickets": "Maintenance Tickets"
+  },
+  "manageLearningResourcesScreen": {
+    "manageLearningResources": "Manage Learning Resources"
+  },
+  "managePTAMeetingsScreen": {
+    "managePTAMeetings": "Manage PTAMeetings"
+  },
+  "managePermissionSlipsScreen": {
+    "urusSlipKebenaran": "Urus Slip Kebenaran"
+  },
+  "managePoliciesScreen": {
+    "managePolicies": "Manage Policies"
+  },
+  "manageVolunteeringScreen": {
+    "manageVolunteering": "Manage Volunteering"
+  },
+  "markEntryScreen": {
+    "tiadaPenggal": "Tiada penggal",
+    "tiadaKelas": "Tiada kelas",
+    "penilaian": "Penilaian",
+    "tiadaPenilaianUntukKelasIni": "Tiada penilaian untuk kelas ini",
+    "tiadaPenilaianDipilih": "Tiada penilaian dipilih",
+    "diterbitkan": "Diterbitkan",
+    "tp": "TP —",
+    "tiadaPelajarAktifDalamKelasIni": "Tiada pelajar aktif dalam kelas ini",
+    "terbitkan": "Terbitkan",
+    "belumDiisi": "Belum diisi",
+    "adaMarkah": "Ada markah",
+    "tidakHadir": "Tidak hadir",
+    "dikecualikan": "Dikecualikan",
+    "catatanPilihan": "Catatan (pilihan)",
+    "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit"
+  },
+  "markStudentExitScreen": {
+    "markStudentExit": "Mark Student Exit"
+  },
+  "masterReportingHub": {
+    "masterReporting": "Master Reporting"
+  },
+  "notificationsSettingsScreen": {
+    "notificationPreferences": "Notification Preferences",
+    "emailAlerts": "Email Alerts",
+    "pushNotifications": "Push Notifications",
+    "weeklySummary": "Weekly Summary",
+    "receiveImportantAlertsViaEmail": "Receive important alerts via email.",
+    "getRealTimeUpdatesOnYourDevice": "Get real-time updates on your device.",
+    "getASummaryReportEveryThursday": "Get a summary report every Thursday.",
+    "notificationPreferenceUpdated": "Notification preference updated",
+    "failedToSaveNotificationSettings": "Failed to save notification settings"
+  },
+  "onlineStoreScreen": {
+    "onlineStore": "Online Store"
+  },
+  "parentChatAccessScreen": {
+    "parentChatAccess": "Parent Chat Access"
+  },
+  "parentDetailAdminView": {
+    "parentDetailAdmin": "Parent Detail Admin"
+  },
+  "parentListScreen": {
+    "couldNotLoadGuardians": "Could not load guardians",
+    "occupation": "Occupation",
+    "address": "Address",
+    "searchGuardians": "Search guardians",
+    "loadingGuardians": "Loading guardians...",
+    "pleaseEnterANameAndAPhoneNumber": "Please enter a name and a phone number."
+  },
+  "pastStudentsScreen": {
+    "pastStudents": "Past Students"
+  },
+  "payrollDashboard": {
+    "payroll": "Payroll"
+  },
+  "payslipGenerator": {
+    "payslip": "Payslip"
+  },
+  "personalSecuritySettingsScreen": {
+    "personalSecuritySettings": "Personal Security Settings"
+  },
+  "privacyDashboard": {
+    "privacy": "Privacy"
+  },
+  "profileSettings": {
+    "profile": "Profile"
+  },
+  "radioContentScheduler": {
+    "radioContentScheduler": "Radio Content Scheduler",
+    "scheduleLessonsForBroadcastOverCommunityRadio": "Schedule lessons for broadcast over community radio",
+    "comingSoon": "Coming Soon",
+    "radioBroadcastingIntegrationNotConfigured": "Radio Broadcasting Integration Not Configured",
+    "whatSNeededToActivateThisFeature": "What's needed to activate this feature:",
+    "aPartnershipWithACommunityFMRadioStation": "A partnership with a community FM radio station",
+    "radioStationAPICredentialsOrSchedulingContact": "Radio station API credentials or scheduling contact",
+    "audioUploadAndStreamingStorageEGCloudinary": "Audio upload and streaming storage (e.g. Cloudinary)"
+  },
+  "reportCardPreview": {
+    "reportCardPreview": "Report Card Preview"
+  },
+  "reportCardPublishing": {
+    "refresh": "Refresh",
+    "publishAll": "Publish All",
+    "academicYear": "Academic Year",
+    "noReportsSubmittedYetForThisClass": "No reports submitted yet for this class.",
+    "awaiting": "Awaiting",
+    "noClassesFound": "No Classes Found",
+    "noStudentsMatchingTheCurrentBranchAndFiltersWe": "No students matching the current branch and filters were found.",
+    "noReportsYet": "No Reports Yet",
+    "unknownStatus": "Unknown Status",
+    "session": "Session",
+    "publish": "Publish",
+    "showAllStudents": "Show All Students",
+    "reportCardHistory": "Report card history",
+    "loading": "Loading…",
+    "noChangesHaveBeenRecordedForThisReportCardYet": "No changes have been recorded for this report card yet.",
+    "backToClasses": "Back to classes",
+    "whoEnteredChangedSubmittedAndPublishedThisRepo": "Who entered, changed, submitted and published this report card",
+    "accessingNeuralRecords": "Accessing Neural Records...",
+    "allReportsPublished": "All reports published",
+    "failedToLoadReportCardData": "Failed to load report card data",
+    "noReportCardRecordFoundForUpdate": "No report card record found for update",
+    "failedToUpdateStatus": "Failed to update status",
+    "bulkPublishFailed": "Bulk publish failed",
+    "noCurrentTermIsSet": "No current term is set."
+  },
+  "reportsScreen": {
+    "purataMarkah": "Purata markah",
+    "average": "Average",
+    "generatingReports": "Generating reports...",
+    "averageGradesBySubject": "Average Grades by Subject",
+    "noAcademicDataAvailable": "No academic data available",
+    "topPerformingStudents": "Top Performing Students",
+    "noStudentDataAvailable": "No student data available"
+  },
+  "resourceUploadModal": {
+    "resourceUploadModal": "Resource Upload Modal"
+  },
+  "sMSLessonManager": {
+    "smsLessonManager": "SMS Lesson Manager",
+    "sendLessonSummariesAndSchoolUpdatesViaSMS": "Send lesson summaries and school updates via SMS",
+    "comingSoon": "Coming Soon",
+    "smsProviderNotConfigured": "SMS Provider Not Configured",
+    "supportedSMSProvidersAnyOneRequired": "Supported SMS providers (any one required):",
+    "infobip": "Infobip",
+    "africaSTalking": "Africa's Talking",
+    "localMalaysianGateway": "Local Malaysian gateway"
+  },
+  "sOPCaseManagementScreen": {
+    "sopcaseManagement": "SOPCase Management"
+  },
+  "sOPSettingsScreen": {
+    "sopsettings": "SOPSettings"
+  },
+  "safetyHealthLogs": {
+    "logKeselamatanKesihatan": "Log Keselamatan & Kesihatan"
+  },
+  "salaryConfiguration": {
+    "konfigurasiGaji": "Konfigurasi Gaji"
+  },
+  "scanAssetScreen": {
+    "scanAsset": "Scan Asset"
+  },
+  "scholarshipManagement": {
+    "scholarship": "Scholarship"
+  },
+  "schoolInfoScreen": {
+    "schoolInformation": "School Information",
+    "manageSchoolAnthemPledgeAndBrandingAssets": "Manage school anthem, pledge, and branding assets.",
+    "schoolName": "School Name",
+    "logoURL": "Logo URL",
+    "heroImageURL": "Hero Image URL",
+    "displayedOnTheLoginAndLandingPages": "Displayed on the login and landing pages.",
+    "schoolAnthem": "School Anthem",
+    "schoolPledge": "School Pledge",
+    "saveChanges": "Save Changes",
+    "enterSchoolAnthemText": "Enter school anthem text...",
+    "enterSchoolPledgeText": "Enter school pledge text...",
+    "schoolInformationUpdated": "School information updated!",
+    "failedToSaveSchoolInformation": "Failed to save school information."
+  },
+  "schoolOnboardingScreen": {
+    "pendaftaranSekolah": "Pendaftaran Sekolah"
+  },
+  "securitySettingsScreen": {
+    "passwordPolicy": "Password Policy",
+    "requireUppercaseLetter": "Require Uppercase Letter",
+    "requireNumber": "Require Number",
+    "forceSpecialCharacters": "Force Special Characters",
+    "recentSystemLogins": "Recent System Logins",
+    "activeNow": "Active now",
+    "securitySettingsSaved": "Security settings saved",
+    "noSchoolSelectedToSavePolicy": "No school selected to save policy."
+  },
+  "selectUserTypeToAddScreen": {
+    "whatTypeOfUserDoYouWantToAdd": "What type of user do you want to add?"
+  },
+  "sessionManagementScreen": {
+    "sessionManagement": "Session Management"
+  },
+  "sessionPromotionScreen": {
+    "naikKelas": "Naik Kelas"
+  },
+  "sponsorshipMatching": {
+    "sponsorship": "Sponsorship"
+  },
+  "studentApprovalScreen": {
+    "studentApproval": "Student Approval"
+  },
+  "studentApprovalsScreen": {
+    "studentApprovals": "Student Approvals"
+  },
+  "studentDetailReport": {
+    "studentDetailReport": "Student Detail Report",
+    "reportDataVisualizationWillAppearHere": "Report data visualization will appear here."
+  },
+  "studentEnrollmentPage": {
+    "registerStudentAssignCurriculumAndUploadDocs": "Register student, assign curriculum, and upload docs.",
+    "studentInformation": "Student Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "dateOfBirth": "Date of Birth",
+    "assignedClassAcademicLevel": "Assigned Class (Academic Level)",
+    "selectAClass": "Select a class...",
+    "fullName": "Full Name",
+    "emailAddress": "Email Address",
+    "phoneNumber": "Phone Number",
+    "homeAddress": "Home Address",
+    "uploadRecords": "Upload Records",
+    "birthCertPreviousResults": "Birth Cert, Previous Results",
+    "british": "British",
+    "parentGuardianName": "Parent/Guardian Name",
+    "streetAddress": "Street Address...",
+    "enrollmentSubmittedSuccessfully": "Enrollment submitted successfully!",
+    "pleaseFillInAllRequiredFields": "Please fill in all required fields.",
+    "theStudentWasSavedButSomeDocumentsDidNotUpload": "The student was saved, but some documents did not upload."
+  },
+  "studentFeesScreen": {
+    "penyataYuranPelajar": "Penyata Yuran Pelajar",
+    "dibayar": "Dibayar",
+    "tiadaPelajarAktif": "Tiada pelajar aktif",
+    "pilihSeorangPelajar": "Pilih seorang pelajar",
+    "tiadaCaj": "Tiada caj",
+    "cariNamaPelajar": "Cari nama pelajar",
+    "diskaunRM": "Diskaun (RM)",
+    "sebabWajib": "Sebab (wajib)",
+    "diskaunDisimpan": "Diskaun disimpan.",
+    "cajDikecualikan": "Caj dikecualikan.",
+    "diskaunMestiNomborYangSah": "Diskaun mesti nombor yang sah.",
+    "silaNyatakanSebabDiskaun": "Sila nyatakan sebab diskaun.",
+    "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian."
+  },
+  "studentIDCardDashboard": {
+    "kadPengenalanMurid": "Kad Pengenalan Murid"
+  },
+  "studentListScreen": {
+    "changeStatus": "Change status",
+    "failedToLoadStudents": "Failed to Load Students",
+    "noStudentsFoundMatchingYourSearch": "No students found matching your search.",
+    "withdrawStudent": "Withdraw Student",
+    "changeStudentStatus": "Change student status",
+    "searchForAStudent": "Search for a student",
+    "addNewStudent": "Add new student",
+    "year13": "Year 1 - 3",
+    "year46": "Year 4 - 6",
+    "unassigned": "Unassigned",
+    "searchByName": "Search by name...",
+    "reasonForWithdrawalEGRelocatedTransferredFinan": "Reason for withdrawal (e.g. relocated, transferred, financial)...",
+    "failedToUpdateStatusPleaseTryAgain": "Failed to update status. Please try again."
+  },
+  "studentProfileDashboard": {
+    "noStudentSelected": "No student selected.",
+    "noStudentSelectedOpenThisViewFromAStudentRowIn": "No student selected. Open this view from a student row in the Student List.",
+    "academicPerformance": "Academic Performance",
+    "overallAverage": "Overall Average",
+    "aiGeneratedSummary": "AI-Generated Summary",
+    "generateSummary": "Generate Summary",
+    "personalProfile": "Personal Profile",
+    "dateOfBirth": "Date of Birth",
+    "admission": "Admission #",
+    "address": "Address",
+    "guardianContact": "Guardian Contact",
+    "attendanceSummary": "Attendance Summary",
+    "present": "Present",
+    "onLeave": "On Leave",
+    "behavioralNotes": "Behavioral Notes",
+    "noBehavioralNotesRecorded": "No behavioral notes recorded.",
+    "adminActions": "Admin Actions",
+    "reports": "Reports",
+    "idCard": "ID Card",
+    "deleteStudent": "Delete Student",
+    "yesDelete": "Yes, Delete",
+    "studentArchived": "Student archived",
+    "unableToLoadStudentDataPleaseTryAgain": "Unable to load student data. Please try again.",
+    "archiveStudent": "Archive Student",
+    "archiveConfirm": "Are you sure you want to archive {{name}}? Their attendance and results stay on record, and they stop appearing in the active list.",
+    "failedToArchive": "Failed to archive: "
+  },
+  "subjectListScreen": {
+    "couldNotLoadSubjects": "Could not load subjects",
+    "noSubjectsYet": "No Subjects Yet",
+    "optional": "Optional",
+    "loadingSubjects": "Loading subjects...",
+    "pleaseEnterBothASubjectCodeAndAName": "Please enter both a subject code and a name."
+  },
+  "substituteCoverageScreen": {
+    "substituteCoverage": "Substitute Coverage"
+  },
+  "suspendStudentScreen": {
+    "suspendStudent": "Suspend Student"
+  },
+  "systemSettingsScreen": {
+    "billingPlan": "Billing & Plan",
+    "appearanceTheme": "Appearance & Theme",
+    "studentManagement": "Student Management",
+    "manageTeachers": "Manage Teachers",
+    "parentManagement": "Parent Management",
+    "inviteStaffMember": "Invite Staff Member",
+    "classManagement": "Class Management",
+    "timetableManagement": "Timetable Management",
+    "examManagement": "Exam Management",
+    "communicationHub": "Communication Hub",
+    "userRolesPermissions": "User Roles & Permissions",
+    "academicConfiguration": "Academic Configuration",
+    "learningHub": "Learning Hub",
+    "termsGrading": "Terms & Grading",
+    "financialSettings": "Financial Settings",
+    "securityCompliance": "Security & Compliance",
+    "personalProfileSettings": "Personal Profile Settings",
+    "brandingCustomization": "Branding & Customization",
+    "analyticsAdminTools": "Analytics & Admin Tools",
+    "addNewUser": "Add New User",
+    "platformVersionManagement": "Platform Version Management",
+    "viewYourCurrentTermManageYourPlanAndUpgrade": "View your current term, manage your plan, and upgrade.",
+    "manageStudentRecordsAndEnrollment": "Manage student records and enrollment.",
+    "manageTeacherProfilesAndAssignments": "Manage teacher profiles and assignments.",
+    "manageParentInformationAndLinks": "Manage parent information and links.",
+    "sendInvitationsToNewStaffMembers": "Send invitations to new staff members.",
+    "manageSchoolClassesAndSections": "Manage school classes and sections.",
+    "viewAndEditSchoolSchedules": "View and edit school schedules.",
+    "manageExamsAndResults": "Manage exams and results.",
+    "broadcastMessagesAndAnnouncements": "Broadcast messages and announcements.",
+    "defineRolesAndControlAccess": "Define roles and control access.",
+    "setCalendarGradingAndCourses": "Set calendar, grading, and courses.",
+    "curateFreeStudyResourcesByLevelAndSubject": "Curate free study resources by level and subject.",
+    "setAcademicTermsAndTheGradingScalePerSchoolOrB": "Set academic terms and the grading scale (per school or branch).",
+    "manageFeesAndPaymentMethods": "Manage fees and payment methods.",
+    "passwordPolicies2FAAuditLogs": "Password policies, 2FA, audit logs.",
+    "updateYourAccountAndProfileInformation": "Update your account and profile information.",
+    "customizeTheLookAndFeel": "Customize the look and feel.",
+    "advancedAnalyticsBudgetsIntegrations": "Advanced analytics, budgets, integrations.",
+    "quicklyAddANewStudentTeacherOrParent": "Quickly add a new student, teacher, or parent.",
+    "selectAndLockYourPreferredPlatformVersion": "Select and lock your preferred platform version."
+  },
+  "teacherAssignmentsScreen": {
+    "assignDuties": "Assign duties",
+    "teacher": "Teacher",
+    "chooseATeacher": "Choose a teacher",
+    "classes": "Classes",
+    "subjectsTaught": "Subjects taught",
+    "classTeachers": "Class Teachers",
+    "subjectTeachers": "Subject Teachers",
+    "workload": "Workload",
+    "loadingTeacherDuties": "Loading teacher duties...",
+    "dutiesSaved": "Duties saved.",
+    "pleaseChooseATeacher": "Please choose a teacher.",
+    "chooseAtLeastOneClassOrSubject": "Choose at least one class or subject.",
+    "noAcademicYearIsSetAsCurrent": "No academic year is set as current."
+  },
+  "teacherAttendanceApproval": {
+    "attendanceApprovals": "Attendance Approvals",
+    "reviewAndManageDailyTeacherCheckIns": "Review and manage daily teacher check-ins.",
+    "loadingApprovalRequests": "Loading approval requests...",
+    "allCaughtUp": "All Caught Up!",
+    "checkIn": "Check-in",
+    "reject": "Reject",
+    "approve": "Approve",
+    "pending": "Pending",
+    "searchByTeacherName": "Search by teacher name...",
+    "attendanceApprovedSuccessfully": "Attendance approved successfully!",
+    "attendanceRejected": "Attendance rejected.",
+    "failedToLoadPendingAttendanceRequests": "Failed to load pending attendance requests",
+    "anErrorOccurredWhileApprovingAttendance": "An error occurred while approving attendance.",
+    "anErrorOccurredWhileRejectingAttendance": "An error occurred while rejecting attendance."
+  },
+  "teacherAttendanceDetail": {
+    "noTeacherSelectedOpenThisViewFromATeacherRow": "No teacher selected. Open this view from a teacher row.",
+    "present": "Present",
+    "pending": "Pending",
+    "onLeave": "On Leave",
+    "resetChanges": "Reset changes",
+    "failedToSaveAttendanceChanges": "Failed to save attendance changes"
+  },
+  "teacherDetailAdminView": {
+    "noTeacherSelectedOpenThisViewFromATeacherRowIn": "No teacher selected. Open this view from a teacher row in the Teacher List.",
+    "attendance": "Attendance",
+    "avgStudentScore": "Avg. Student Score",
+    "noClassesAssigned": "No classes assigned.",
+    "performanceEvaluation": "Performance Evaluation",
+    "fullAttendanceRecord": "Full Attendance Record",
+    "personnelFile": "Personnel File",
+    "adminActions": "Admin Actions",
+    "editProfile": "Edit Profile",
+    "deleteAccount": "Delete Account",
+    "deleteTeacherAccount": "Delete Teacher Account",
+    "changeTeacherStatus": "Change Teacher Status",
+    "confirm": "Confirm"
+  },
+  "teacherListScreen": {
+    "teacherManagement": "Teacher Management",
+    "manageAndOverseeSchoolFaculty": "Manage and oversee school faculty.",
+    "addTeacher": "Add Teacher",
+    "totalTeachers": "Total Teachers",
+    "activeFaculty": "Active Faculty",
+    "departments": "Departments",
+    "allStatus": "All Status",
+    "onLeave": "On Leave",
+    "inactive": "Inactive",
+    "loadingFacultyRecords": "Loading faculty records...",
+    "noTeachersFound": "No Teachers Found",
+    "tryAdjustingYourSearchOrFiltersToFindWhatYouRe": "Try adjusting your search or filters to find what you're looking for.",
+    "searchByNameOrEmail": "Search by name or email...",
+    "failedToLoadTeachers": "Failed to load teachers"
+  },
+  "teacherPerformanceScreen": {
+    "teacherPerformance": "Teacher Performance"
+  },
+  "teacherPersonnelFileScreen": {
+    "noTeacherSelected": "No teacher selected."
+  },
+  "timetableEditorScreen": {
+    "noTimetableYet": "No Timetable Yet",
+    "noClassesInThisTimetable": "No classes in this timetable",
+    "couldNotLoadTheWeek": "Could not load the week",
+    "noTeachingPeriods": "No Teaching Periods",
+    "notTimetabled": "Not timetabled",
+    "subject": "Subject",
+    "chooseASubject": "Choose a subject...",
+    "teacher": "Teacher",
+    "loading": "Loading...",
+    "loadingTheWeek": "Loading the week...",
+    "lessonRemoved": "Lesson removed.",
+    "timetablePublished": "Timetable published.",
+    "chooseASubjectFirst": "Choose a subject first."
+  },
+  "timetableScreen": {
+    "jadualTidakDapatDimuatkan": "Jadual tidak dapat dimuatkan",
+    "belumAdaJadual": "Belum Ada Jadual",
+    "pelajaranSeminggu": "Pelajaran seminggu",
+    "waktuSehari": "Waktu sehari",
+    "belumAdaGuru": "Belum ada guru",
+    "tiadaApaUntukDipaparkan": "Tiada apa untuk dipaparkan",
+    "couldNotLoadTheWeek": "Could not load the week",
+    "nothingTimetabled": "Nothing Timetabled",
+    "memuatkanJadual": "Memuatkan jadual...",
+    "memuatkanMinggu": "Memuatkan minggu..."
+  },
+  "transportManagementScreen": {
+    "pengurusanPengangkutan": "Pengurusan Pengangkutan"
+  },
+  "uSSDWorkflow": {
+    "ussdWorkflowBuilder": "USSD Workflow Builder",
+    "allowParentsStudentsToAccessSchoolInfoViaUSSDC": "Allow parents & students to access school info via USSD codes",
+    "comingSoon": "Coming Soon",
+    "ussdGatewayNotConnected": "USSD Gateway Not Connected",
+    "whatSRequiredToActivateUSSD": "What's required to activate USSD:",
+    "aUSSDShortcodeFromMTNAirtelGloOr9mobile": "A USSD shortcode from MTN, Airtel, Glo, or 9mobile",
+    "aUSSDGatewayProviderAfricaSTalkingRecommended": "A USSD gateway provider (Africa's Talking recommended)",
+    "apiCredentialsConfiguredInYourSchoolSettings": "API credentials configured in your school settings"
+  },
+  "unifiedGovernanceHub": {
+    "unifiedGovernance": "Unified Governance"
+  },
+  "userAccountsScreen": {
+    "userAccounts": "User Accounts"
+  },
+  "userRolesScreen": {
+    "loadingPermissions": "Loading permissions...",
+    "theOfficeFullAccessAndTheOnlyRoleThatCannotBeR": "The office. Full access, and the only role that cannot be reduced.",
+    "seesTheirOwnClassesAndRecordsAttendanceAndMark": "Sees their own classes, and records attendance and marks for them.",
+    "permissionsSavedSuccessfully": "Permissions saved successfully!",
+    "schoolContextMissing": "School context missing."
+  },
+  "userSeeder": {
+    "userSeeder": "User Seeder"
+  },
+  "validationConsole": {
+    "validation": "Validation"
+  },
+  "versionSettings": {
+    "version": "Version"
+  },
+  "visitorLog": {
+    "visitor": "Visitor"
   }
 }

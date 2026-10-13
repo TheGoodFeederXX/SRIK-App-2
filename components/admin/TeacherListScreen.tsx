@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { SearchIcon, PlusIcon, FilterIcon, UsersIcon, AcademicCapIcon, ClipboardListIcon } from '../../constants';
@@ -76,6 +77,7 @@ const TeacherCard: React.FC<{ teacher: Teacher; onSelect: (teacher: Teacher) => 
 TeacherCard.displayName = 'TeacherCard';
 
 const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, currentBranchId, schoolId: propSchoolId }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const { profile } = useProfile();
     const [searchTerm, setSearchTerm] = useState('');
@@ -117,7 +119,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
             setTeachers(mappedData);
         } catch (error) {
             console.error('Error loading teachers:', error);
-            toast.error('Failed to load teachers');
+            toast.error(t('teacherListScreen.failedToLoadTeachers'));
         } finally {
             setLoading(false);
         }
@@ -159,8 +161,8 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                 className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
             >
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Teacher Management</h1>
-                    <p className="text-sm text-gray-500">Manage and oversee school faculty.</p>
+                    <h1 className="text-2xl font-bold text-gray-900">{t('teacherListScreen.teacherManagement')}</h1>
+                    <p className="text-sm text-gray-500">{t('teacherListScreen.manageAndOverseeSchoolFaculty')}</p>
                 </div>
                 <motion.button
                     whileHover={{ scale: 1.02 }}
@@ -169,7 +171,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                     className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 gap-2"
                 >
                     <PlusIcon className="h-5 w-5" />
-                    <span>Add Teacher</span>
+                    <span>{t('teacherListScreen.addTeacher')}</span>
                 </motion.button>
             </motion.div>
 
@@ -186,7 +188,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                         <UsersIcon className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Total Teachers</p>
+                        <p className="text-sm text-gray-500">{t('teacherListScreen.totalTeachers')}</p>
                         <p className="text-xl font-bold text-gray-900">{teachers.length}</p>
                     </div>
                 </motion.div>
@@ -201,7 +203,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                         <AcademicCapIcon className="h-6 w-6 text-green-600" />
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Active Faculty</p>
+                        <p className="text-sm text-gray-500">{t('teacherListScreen.activeFaculty')}</p>
                         <p className="text-xl font-bold text-gray-900">{activeTeacherCount}</p>
                     </div>
                 </motion.div>
@@ -216,7 +218,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                         <ClipboardListIcon className="h-6 w-6 text-purple-600" />
                     </div>
                     <div>
-                        <p className="text-sm text-gray-500">Departments</p>
+                        <p className="text-sm text-gray-500">{t('teacherListScreen.departments')}</p>
                         <p className="text-xl font-bold text-gray-900">{departmentCount || '0'}</p>
                     </div>
                 </motion.div>
@@ -233,7 +235,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                     <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                     <input
                         type="text"
-                        placeholder="Search by name or email..."
+                        placeholder={t('teacherListScreen.searchByNameOrEmail')}
                         className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-blue-500 transition-all text-sm"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
@@ -255,10 +257,10 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                         value={filterStatus}
                         onChange={(e) => setFilterStatus(e.target.value)}
                     >
-                        <option value="All">All Status</option>
+                        <option value="All">{t('teacherListScreen.allStatus')}</option>
                         <option value="Active">Active</option>
-                        <option value="On Leave">On Leave</option>
-                        <option value="Inactive">Inactive</option>
+                        <option value="On Leave">{t('teacherListScreen.onLeave')}</option>
+                        <option value="Inactive">{t('teacherListScreen.inactive')}</option>
                     </select>
                 </div>
             </motion.div>
@@ -267,7 +269,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
             {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                     <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-gray-500 animate-pulse">Loading faculty records...</p>
+                    <p className="text-gray-500 animate-pulse">{t('teacherListScreen.loadingFacultyRecords')}</p>
                 </div>
             ) : filteredTeachers.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -283,8 +285,8 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
             ) : (
                 <motion.div initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.25 }} className="bg-white rounded-3xl p-12 text-center border border-dashed border-gray-200">
                     <UsersIcon className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-gray-900 mb-1">No Teachers Found</h3>
-                    <p className="text-gray-500">Try adjusting your search or filters to find what you're looking for.</p>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1">{t('teacherListScreen.noTeachersFound')}</h3>
+                    <p className="text-gray-500">{t('teacherListScreen.tryAdjustingYourSearchOrFiltersToFindWhatYouRe')}</p>
                 </motion.div>
             )}
         </div>

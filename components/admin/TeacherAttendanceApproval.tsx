@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -15,6 +16,7 @@ interface TeacherAttendanceApprovalProps {
 }
 
 const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const { user, currentSchool } = useAuth();
     const [pendingRequests, setPendingRequests] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -39,7 +41,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
             }
         } catch (error) {
             console.error('Error loading pending requests:', error);
-            toast.error('Failed to load pending attendance requests');
+            toast.error(t('teacherAttendanceApproval.failedToLoadPendingAttendanceRequests'));
         } finally {
             setLoading(false);
         }
@@ -52,14 +54,14 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
         try {
             const result = await approveAttendance(attendanceId, user.id as any);
             if (result.success) {
-                toast.success('Attendance approved successfully!');
+                toast.success(t('teacherAttendanceApproval.attendanceApprovedSuccessfully'));
                 loadPendingRequests();
             } else {
                 toast.error(`Failed to approve: ${result.error}`);
             }
         } catch (error) {
             console.error('Error approving attendance:', error);
-            toast.error('An error occurred while approving attendance.');
+            toast.error(t('teacherAttendanceApproval.anErrorOccurredWhileApprovingAttendance'));
         } finally {
             setProcessingId(null);
         }
@@ -74,14 +76,14 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
         try {
             const result = await rejectAttendance(attendanceId, user.id as any, reason || undefined);
             if (result.success) {
-                toast.success('Attendance rejected.');
+                toast.success(t('teacherAttendanceApproval.attendanceRejected'));
                 loadPendingRequests();
             } else {
                 toast.error(`Failed to reject: ${result.error}`);
             }
         } catch (error) {
             console.error('Error rejecting attendance:', error);
-            toast.error('An error occurred while rejecting attendance.');
+            toast.error(t('teacherAttendanceApproval.anErrorOccurredWhileRejectingAttendance'));
         } finally {
             setProcessingId(null);
         }
@@ -113,8 +115,8 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
             {/* Rich Header */}
             <div className="bg-white px-8 py-6 border-b border-gray-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800 tracking-tight">Attendance Approvals</h1>
-                    <p className="text-gray-500 mt-1">Review and manage daily teacher check-ins.</p>
+                    <h1 className="text-2xl font-bold text-gray-800 tracking-tight">{t('teacherAttendanceApproval.attendanceApprovals')}</h1>
+                    <p className="text-gray-500 mt-1">{t('teacherAttendanceApproval.reviewAndManageDailyTeacherCheckIns')}</p>
                 </div>
 
                 <div className="flex items-center space-x-4">
@@ -136,7 +138,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                         </span>
                         <input
                             type="text"
-                            placeholder="Search by teacher name..."
+                            placeholder={t('teacherAttendanceApproval.searchByTeacherName')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-11 pr-4 py-3 bg-white border border-gray-200 text-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all shadow-sm outline-none"
@@ -148,14 +150,14 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-20 gap-4">
                         <div className="h-10 w-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                        <p className="text-gray-500 animate-pulse">Loading approval requests...</p>
+                        <p className="text-gray-500 animate-pulse">{t('teacherAttendanceApproval.loadingApprovalRequests')}</p>
                     </div>
                 ) : filteredRequests.length === 0 ? (
                     <motion.div initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.25 }} className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="bg-green-50 p-6 rounded-full mb-4">
                             <CheckCircleIcon className="h-12 w-12 text-green-500" />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-800">All Caught Up!</h3>
+                        <h3 className="text-xl font-bold text-gray-800">{t('teacherAttendanceApproval.allCaughtUp')}</h3>
                         <p className="text-gray-500 mt-2 max-w-md">There are no pending attendance requests matching your search. Great job keeping up with approvals.</p>
                     </motion.div>
                 ) : (
@@ -186,7 +188,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                                                 <UserIcon className="h-8 w-8" />
                                             </div>
                                         )}
-                                        <div className="absolute -bottom-1 -right-1 bg-amber-400 p-1 rounded-full border-2 border-white" title="Pending">
+                                        <div className="absolute -bottom-1 -right-1 bg-amber-400 p-1 rounded-full border-2 border-white" title={t('teacherAttendanceApproval.pending')}>
                                             <ClockIcon className="h-3 w-3 text-white" />
                                         </div>
                                     </div>
@@ -202,7 +204,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                                         <span className="text-gray-900 font-semibold">{formatDate(request.date)}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">
-                                        <span className="text-gray-500 font-medium">Check-in</span>
+                                        <span className="text-gray-500 font-medium">{t('teacherAttendanceApproval.checkIn')}</span>
                                         <span className="text-gray-900 font-semibold font-mono bg-white px-2 py-0.5 rounded border border-gray-200">{formatTime(request.check_in)}</span>
                                     </div>
                                 </div>
@@ -220,7 +222,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                                         ) : (
                                             <XCircleIcon className="h-5 w-5" />
                                         )}
-                                        <span>Reject</span>
+                                        <span>{t('teacherAttendanceApproval.reject')}</span>
                                     </motion.button>
                                     <motion.button
                                         whileHover={{ y: -2 }}
@@ -234,7 +236,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                                         ) : (
                                             <CheckCircleIcon className="h-5 w-5 text-white" />
                                         )}
-                                        <span>Approve</span>
+                                        <span>{t('teacherAttendanceApproval.approve')}</span>
                                     </motion.button>
                                 </div>
                             </motion.div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface SchoolOnboardingScreenProps {
     handleBack?: () => void;
 }
 
-const SchoolOnboardingScreen: React.FC<SchoolOnboardingScreenProps> = ({ handleBack }) => (
+const SchoolOnboardingScreen: React.FC<SchoolOnboardingScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pendaftaran Sekolah"
+        title={t('schoolOnboardingScreen.pendaftaranSekolah')}
         explanation={
             'Sekolah ini sudah didaftarkan dan digunakan, jadi proses pendaftaran ' +
             'awal tidak lagi diperlukan. Maklumat sekolah boleh dikemas kini melalui ' +
@@ -19,6 +22,7 @@ const SchoolOnboardingScreen: React.FC<SchoolOnboardingScreenProps> = ({ handleB
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default SchoolOnboardingScreen;

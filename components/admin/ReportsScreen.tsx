@@ -1,6 +1,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { ChartBarIcon, TrophyIcon, TrendingUpIcon, SUBJECT_COLORS, gradeColors } from '../../constants';
 // import { mockSubjectAverages, mockTopStudents, mockAttendanceCorrelation } from '../../data';
@@ -50,6 +51,7 @@ const SubjectGradesChart: React.FC<{ data: SubjectAverage[] }> = ({ data }) => {
 };
 
 const TopStudentsList: React.FC<{ students: TopStudent[] }> = ({ students }) => {
+    const { t } = useTranslation();
   return (
     <div className="space-y-3">
       {students.map((student, si) => (
@@ -62,11 +64,11 @@ const TopStudentsList: React.FC<{ students: TopStudent[] }> = ({ students }) => 
           </div>
           <div className="flex-grow">
             <p className="font-bold text-gray-800">{student.name}</p>
-            <p className="text-sm text-gray-500">Purata markah</p>
+            <p className="text-sm text-gray-500">{t('reportsScreen.purataMarkah')}</p>
           </div>
           <div className="text-right">
             <p className="font-bold text-lg text-green-600">{student.averageScore}%</p>
-            <p className="text-xs text-gray-500">Average</p>
+            <p className="text-xs text-gray-500">{t('reportsScreen.average')}</p>
           </div>
         </motion.div>
       ))}
@@ -80,6 +82,7 @@ interface ReportsScreenProps {
 }
 
 const ReportsScreen: React.FC<ReportsScreenProps> = ({ schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
   const [subjectAverages, setSubjectAverages] = useState<SubjectAverage[]>([]);
   const [topStudents, setTopStudents] = useState<TopStudent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -165,24 +168,24 @@ const ReportsScreen: React.FC<ReportsScreenProps> = ({ schoolId, currentBranchId
           {error}
         </div>
       )}
-      {loading && <div className="p-8 text-center text-blue-500 font-semibold animate-pulse">Generating reports...</div>}
+      {loading && <div className="p-8 text-center text-blue-500 font-semibold animate-pulse">{t('reportsScreen.generatingReports')}</div>}
 
       {!loading && !error && (
         <>
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-2xl shadow-sm p-4">
             <div className="flex items-center space-x-3 mb-4">
               <div className="bg-blue-100 text-blue-500 p-2 rounded-lg"><ChartBarIcon /></div>
-              <h3 className="font-bold text-gray-800">Average Grades by Subject</h3>
+              <h3 className="font-bold text-gray-800">{t('reportsScreen.averageGradesBySubject')}</h3>
             </div>
-            {subjectAverages.length > 0 ? <SubjectGradesChart data={subjectAverages} /> : <p className="text-gray-400 text-sm">No academic data available</p>}
+            {subjectAverages.length > 0 ? <SubjectGradesChart data={subjectAverages} /> : <p className="text-gray-400 text-sm">{t('reportsScreen.noAcademicDataAvailable')}</p>}
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-2xl shadow-sm p-4">
             <div className="flex items-center space-x-3 mb-4">
               <div className="bg-green-100 text-green-500 p-2 rounded-lg"><TrophyIcon /></div>
-              <h3 className="font-bold text-gray-800">Top Performing Students</h3>
+              <h3 className="font-bold text-gray-800">{t('reportsScreen.topPerformingStudents')}</h3>
             </div>
-            {topStudents.length > 0 ? <TopStudentsList students={topStudents} /> : <p className="text-gray-400 text-sm">No student data available</p>}
+            {topStudents.length > 0 ? <TopStudentsList students={topStudents} /> : <p className="text-gray-400 text-sm">{t('reportsScreen.noStudentDataAvailable')}</p>}
           </motion.div>
 
         </>

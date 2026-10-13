@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import {
@@ -50,23 +51,23 @@ const PermissionToggle = ({ enabled, onToggle, disabled = false }: { enabled: bo
  * saving it could never have worked even with a live server: there was nothing to
  * save it TO. The permission codes shown now are the ones `has_permission` reads.
  */
-const ROLE_LABELS: { code: RoleCode; name: string; description: string; icon: React.FC<any> }[] = [
+const ROLE_LABELS: { code: RoleCode; name: string; descriptionKey: string; icon: React.FC<any> }[] = [
     {
         code: 'ADMIN',
         name: 'Administrator',
-        description: 'The office. Full access, and the only role that cannot be reduced.',
+        descriptionKey: 'userRolesScreen.theOfficeFullAccessAndTheOnlyRoleThatCannotBeR',
         icon: UsersIcon,
     },
     {
         code: 'TEACHER',
         name: 'Teacher',
-        description: 'Sees their own classes, and records attendance and marks for them.',
+        descriptionKey: 'userRolesScreen.seesTheirOwnClassesAndRecordsAttendanceAndMark',
         icon: BookOpenIcon,
     },
     {
         code: 'GUARDIAN',
         name: 'Guardian',
-        description: 'A parent or guardian. Sees only their own children.',
+        descriptionKey: 'A parent or guardian. Sees only their own children.',
         icon: UsersIcon,
     },
 ];
@@ -87,6 +88,7 @@ function permissionLabel(code: string): string {
 }
 
 const UserRolesScreen: React.FC = () => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
     // Every permission, from the database, and which role holds it.
@@ -157,7 +159,7 @@ const UserRolesScreen: React.FC = () => {
 
     const handleSave = async () => {
         if (!currentSchool?.id) {
-            toast.error("School context missing.");
+            toast.error(t('userRolesScreen.schoolContextMissing'));
             return;
         }
         setIsLoading(true);
@@ -183,7 +185,7 @@ const UserRolesScreen: React.FC = () => {
             }
 
             await setRolePermissions(changes);
-            toast.success('Permissions saved successfully!');
+            toast.success(t('userRolesScreen.permissionsSavedSuccessfully'));
             // Read back, so the screen shows what is stored rather than the guess.
             await fetchPermissions();
         } catch (error: any) {
@@ -198,7 +200,7 @@ const UserRolesScreen: React.FC = () => {
         <div className="flex flex-col h-full bg-gray-100">
             <main className="flex-grow p-4 space-y-4 overflow-y-auto pb-20">
                 {allPermissions.length === 0 && (
-                    <p className="text-center py-10 text-gray-500">Loading permissions...</p>
+                    <p className="text-center py-10 text-gray-500">{t('userRolesScreen.loadingPermissions')}</p>
                 )}
                 {ROLE_LABELS.map((role, ri) => {
                     const IconComponent = role.icon;
@@ -210,7 +212,7 @@ const UserRolesScreen: React.FC = () => {
                                 </div>
                                 <div>
                                     <h3 className="font-bold text-lg text-gray-800">{role.name}</h3>
-                                    <p className="text-sm text-gray-500">{role.description}</p>
+                                    <p className="text-sm text-gray-500">{t(role.descriptionKey)}</p>
                                 </div>
                             </div>
                             <ul className="divide-y divide-gray-100 p-2">

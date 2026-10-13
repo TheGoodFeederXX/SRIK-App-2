@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -34,6 +35,7 @@ const ExamCandidateRegistration = React.forwardRef<
     ExamCandidateRegistrationHandle,
     ExamCandidateRegistrationProps
 >(({ handleBack, onSelectionChange }, ref) => {
+    const { t } = useTranslation();
     React.useImperativeHandle(ref, () => ({
         register: async () => {
             // Nothing is submitted. The examining body receives registrations under its own
@@ -52,7 +54,7 @@ const ExamCandidateRegistration = React.forwardRef<
 
     return (
     <ComingSoonScreen
-        title="Pendaftaran Calon Peperiksaan"
+        title={t('examCandidateRegistration.pendaftaranCalonPeperiksaan')}
         explanation={
             'Sekolah belum mendaftarkan calon peperiksaan luar melalui sistem ini. ' +
             'Buat masa ini pendaftaran calon dibuat terus dengan badan peperiksaan ' +

@@ -15,6 +15,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { BookOpenIcon } from '../../constants';
@@ -44,6 +45,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
     handleBack,
     forceUpdate,
 }) => {
+    const { t } = useTranslation();
     const isEditing = Boolean(classToEdit?.id);
 
     const [yearLevel, setYearLevel] = useState<string>(
@@ -85,11 +87,11 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
 
         const level = Number(yearLevel);
         if (!Number.isInteger(level) || level < 1 || level > 6) {
-            toast.error('Please choose a year level from 1 to 6.');
+            toast.error(t('classFormScreen.pleaseChooseAYearLevelFrom1To6'));
             return;
         }
         if (!name.trim()) {
-            toast.error('Please enter a class name.');
+            toast.error(t('classFormScreen.pleaseEnterAClassName'));
             return;
         }
 
@@ -148,7 +150,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
                                 className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             >
-                                <option value="">Choose a year</option>
+                                <option value="">{t('classFormScreen.chooseAYear')}</option>
                                 {YEAR_LEVELS.map(y => (
                                     <option key={y} value={y}>Year {y}</option>
                                 ))}
@@ -208,11 +210,11 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
                     >
                         <h3 className="flex items-center gap-2 font-bold text-gray-800 mb-3">
                             <span className="text-gray-400"><BookOpenIcon className="w-4 h-4" /></span>
-                            Subjects taught
+                            {t('classFormScreen.subjectsTaught')}
                         </h3>
 
                         {isLoadingSubjects ? (
-                            <p className="text-sm text-gray-400">Loading subjects...</p>
+                            <p className="text-sm text-gray-400">{t('classFormScreen.loadingSubjects')}</p>
                         ) : subjectOptions.length === 0 ? (
                             <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg p-3">
                                 No subjects have been set up yet. You can add them under Subjects, then come back.

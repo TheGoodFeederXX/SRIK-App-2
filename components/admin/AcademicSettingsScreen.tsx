@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { BookOpenIcon, SaveIcon, ChevronRightIcon } from '../../constants';
@@ -29,6 +30,7 @@ const Accordion: React.FC<{ title: string; children: React.ReactNode; defaultOpe
 };
 
 const AcademicSettingsScreen: React.FC = () => {
+    const { t } = useTranslation();
   const auth = useAuth() as any;
   const { currentSchool, user } = auth;
   const schoolId = currentSchool?.id || user?.user_metadata?.school_id;
@@ -63,7 +65,7 @@ const AcademicSettingsScreen: React.FC = () => {
       if (stored.curriculum_type) setCurriculumType(stored.curriculum_type);
     } catch (err) {
       console.error('Failed to load settings:', err);
-      toast.error('Error loading academic settings.');
+      toast.error(t('academicSettingsScreen.errorLoadingAcademicSettings'));
     } finally {
       setLoading(false);
     }
@@ -75,7 +77,7 @@ const AcademicSettingsScreen: React.FC = () => {
 
   const saveSettings = async () => {
     if (!schoolId) {
-      toast.error("School context missing.");
+      toast.error(t('academicSettingsScreen.schoolContextMissing'));
       return;
     }
     setSaving(true);
@@ -88,7 +90,7 @@ const AcademicSettingsScreen: React.FC = () => {
         curriculum_type: curriculumType,
       });
 
-      toast.success('Settings saved successfully!');
+      toast.success(t('academicSettingsScreen.settingsSavedSuccessfully'));
     } catch (err: any) {
       console.error('Error saving settings:', err);
       toast.error(`Failed to save settings: ${err.message}`);
@@ -100,7 +102,7 @@ const AcademicSettingsScreen: React.FC = () => {
   return (
     <div className="p-4 space-y-4 bg-gray-50 h-full flex flex-col">
       <div className="flex justify-between items-center mb-2">
-        <h2 className="text-xl font-bold text-gray-800">Academic Configuration</h2>
+        <h2 className="text-xl font-bold text-gray-800">{t('academicSettingsScreen.academicConfiguration')}</h2>
         <motion.button
           whileHover={!(saving || loading) ? { scale: 1.02 } : {}}
           whileTap={!(saving || loading) ? { scale: 0.98 } : {}}
@@ -112,49 +114,49 @@ const AcademicSettingsScreen: React.FC = () => {
         </motion.button>
       </div>
 
-      {loading ? <CenteredLoader message="Loading settings..." className="py-8" /> : (
+      {loading ? <CenteredLoader message={t('academicSettingsScreen.loadingSettings')} className="py-8" /> : (
         <>
-          <Accordion title="School Calendar" defaultOpen>
+          <Accordion title={t('academicSettingsScreen.schoolCalendar')} defaultOpen>
             <div className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-gray-700">Academic Year Start</label>
+                <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.academicYearStart')}</label>
                 <input type="date" value={calendar.start} onChange={e => setCalendar(c => ({ ...c, start: e.target.value }))} className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-gray-50" />
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Academic Year End</label>
+                <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.academicYearEnd')}</label>
                 <input type="date" value={calendar.end} onChange={e => setCalendar(c => ({ ...c, end: e.target.value }))} className="w-full mt-1 p-2 border border-gray-300 rounded-md bg-gray-50" />
               </div>
             </div>
           </Accordion>
-          <Accordion title="Grading Scales">
+          <Accordion title={t('academicSettingsScreen.gradingScales')}>
             <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700">Default Grading Scale</label>
+              <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.defaultGradingScale')}</label>
               <select value={grading.scale} onChange={e => setGrading(g => ({ ...g, scale: e.target.value }))} className="w-full p-2 border border-gray-300 rounded-md bg-gray-50">
-                <option value="percentage">Percentage (0-100)</option>
-                <option value="letter">Letter Grades (A-F)</option>
-                <option value="standards">Standards-Based</option>
+                <option value="percentage">{t('academicSettingsScreen.percentage0100')}</option>
+                <option value="letter">{t('academicSettingsScreen.letterGradesAF')}</option>
+                <option value="standards">{t('academicSettingsScreen.standardsBased')}</option>
               </select>
               <div className="flex items-center justify-between pt-2">
-                <label className="text-sm font-medium text-gray-700">Enable Weighted Assignments</label>
+                <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.enableWeightedAssignments')}</label>
                 <input type="checkbox" checked={grading.weighted} onChange={e => setGrading(g => ({ ...g, weighted: e.target.checked }))} className="h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500" />
               </div>
             </div>
           </Accordion>
-          <Accordion title="Enrollment Settings">
-            <p className="text-gray-600 text-sm">Configure admission forms, required documents, and application statuses here.</p>
+          <Accordion title={t('academicSettingsScreen.enrollmentSettings')}>
+            <p className="text-gray-600 text-sm">{t('academicSettingsScreen.configureAdmissionFormsRequiredDocumentsAndApp')}</p>
           </Accordion>
 
-          <Accordion title="Curriculum & Content">
+          <Accordion title={t('academicSettingsScreen.curriculumContent')}>
             <div className="space-y-3">
-              <label className="text-sm font-medium text-gray-700">Primary Curriculum Type</label>
+              <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.primaryCurriculumType')}</label>
               <select 
                 value={curriculumType} 
                 onChange={e => setCurriculumType(e.target.value as any)} 
                 className="w-full p-2 border border-gray-300 rounded-md bg-gray-50"
               >
-                <option value="KSSR">Kurikulum KSSR</option>
-                <option value="British">British Curriculum</option>
-                <option value="Both">Both (Dual Curriculum)</option>
+                <option value="KSSR">{t('academicSettingsScreen.kurikulumKSSR')}</option>
+                <option value="British">{t('academicSettingsScreen.britishCurriculum')}</option>
+                <option value="Both">{t('academicSettingsScreen.bothDualCurriculum')}</option>
               </select>
               <p className="text-xs text-gray-500 italic mt-1">
                 This setting determines the default subject lists and term structures used throughout the system.

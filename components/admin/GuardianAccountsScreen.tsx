@@ -30,6 +30,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -49,6 +50,7 @@ import {
 } from '../../src/lib/supabase/guardianAccounts';
 
 export default function GuardianAccountsScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [search, setSearch] = useState('');
@@ -81,7 +83,7 @@ export default function GuardianAccountsScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-4xl mx-auto">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
-                <h1 className="text-2xl font-bold text-slate-800">Akaun Ibu Bapa</h1>
+                <h1 className="text-2xl font-bold text-slate-800">{t('guardianAccountsScreen.akaunIbuBapa')}</h1>
                 <button
                     type="button"
                     onClick={() => setAdding(true)}
@@ -89,7 +91,7 @@ export default function GuardianAccountsScreen() {
                                text-sm font-bold hover:bg-indigo-700"
                 >
                     <PlusIcon className="w-4 h-4" />
-                    Tambah penjaga
+                    {t('guardianAccountsScreen.tambahPenjaga')}
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
@@ -102,7 +104,7 @@ export default function GuardianAccountsScreen() {
                     type="text"
                     value={search}
                     onChange={e => setSearch(e.target.value)}
-                    placeholder="Cari nama, telefon atau emel penjaga"
+                    placeholder={t('guardianAccountsScreen.cariNamaTelefonAtauEmelPenjaga')}
                     className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -115,13 +117,13 @@ export default function GuardianAccountsScreen() {
             ) : !guardians.length ? (
                 <EmptyState
                     icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
-                    title="Belum ada penjaga"
+                    title={t('guardianAccountsScreen.belumAdaPenjaga')}
                     body="Tambah penjaga dahulu, kemudian pautkan mereka kepada anak mereka."
                 />
             ) : !filtered.length ? (
                 <EmptyState
                     icon={<SearchIcon className="w-8 h-8 text-slate-400" />}
-                    title="Tiada penjaga sepadan"
+                    title={t('guardianAccountsScreen.tiadaPenjagaSepadan')}
                     body="Cuba nama, telefon atau emel yang lain."
                 />
             ) : (
@@ -200,6 +202,7 @@ function GuardianPanel({
     onClose: () => void;
     onChanged: () => void;
 }) {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [email, setEmail] = useState(guardian.email ?? '');
     const [password, setPassword] = useState('');
@@ -285,7 +288,7 @@ function GuardianPanel({
 
     async function handleLink(link: boolean, studentId: string, studentName: string) {
         if (!linkReason.trim()) {
-            toast.error('Sila nyatakan sebab perubahan ini.');
+            toast.error(t('guardianAccountsScreen.silaNyatakanSebabPerubahanIni'));
             return;
         }
         setLinkBusy(true);
@@ -336,7 +339,7 @@ function GuardianPanel({
                 <div className="p-5 space-y-6">
                     {/* --- Akaun --- */}
                     <section>
-                        <h3 className="font-semibold text-slate-800 mb-1">Akaun log masuk</h3>
+                        <h3 className="font-semibold text-slate-800 mb-1">{t('guardianAccountsScreen.akaunLogMasuk')}</h3>
                         {current.has_login ? (
                             <div className="bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3
                                             text-sm text-emerald-800 space-y-1">
@@ -366,23 +369,23 @@ function GuardianPanel({
                                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         />
                                     </Field>
-                                    <Field label="Kata laluan sementara">
+                                    <Field label={t('guardianAccountsScreen.kataLaluanSementara')}>
                                         <input
                                             type="text"
                                             value={password}
                                             readOnly
-                                            placeholder="Dijana automatik apabila akaun dicipta"
+                                            placeholder={t('guardianAccountsScreen.dijanaAutomatikApabilaAkaunDicipta')}
                                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                                        bg-slate-50 text-slate-700 font-mono
                                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         />
                                     </Field>
-                                    <Field label="Sebab (wajib)">
+                                    <Field label={t('guardianAccountsScreen.sebabWajib')}>
                                         <input
                                             type="text"
                                             value={reason}
                                             onChange={e => setReason(e.target.value)}
-                                            placeholder="Contoh: ibu bapa baharu mendaftar"
+                                            placeholder={t('guardianAccountsScreen.contohIbuBapaBaharuMendaftar')}
                                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         />
@@ -464,12 +467,12 @@ function GuardianPanel({
                             </p>
                         )}
 
-                        <Field label="Sebab perubahan (wajib)">
+                        <Field label={t('guardianAccountsScreen.sebabPerubahanWajib')}>
                             <input
                                 type="text"
                                 value={linkReason}
                                 onChange={e => setLinkReason(e.target.value)}
-                                placeholder="Contoh: sahkan bapa kandung"
+                                placeholder={t('guardianAccountsScreen.contohSahkanBapaKandung')}
                                 className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                            focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             />
@@ -526,6 +529,7 @@ function AddGuardianModal({
     onClose: () => void;
     onAdded: () => void;
 }) {
+    const { t } = useTranslation();
     const [fullName, setFullName] = useState('');
     const [phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
@@ -540,7 +544,7 @@ function AddGuardianModal({
         setError(null);
         try {
             await createGuardian({ fullName, phone, email: email || null });
-            toast.success('Penjaga ditambah. Seterusnya, cipta akaun dan pautkan anak mereka.');
+            toast.success(t('guardianAccountsScreen.penjagaDitambahSeterusnyaCiptaAkaunDanPautkanA'));
             onAdded();
         } catch (err) {
             setError(friendlyGuardianError(err));
@@ -552,33 +556,33 @@ function AddGuardianModal({
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} aria-hidden="true" />
             <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-5">
-                <h2 className="font-bold text-slate-800 mb-1">Tambah penjaga</h2>
+                <h2 className="font-bold text-slate-800 mb-1">{t('guardianAccountsScreen.tambahPenjaga')}</h2>
                 <p className="text-sm text-slate-500 mb-4">
                     Rekod penjaga dahulu. Akaun log masuk dicipta selepas ini.
                 </p>
 
                 <div className="space-y-4">
-                    <Field label="Nama penuh">
+                    <Field label={t('guardianAccountsScreen.namaPenuh')}>
                         <input
                             type="text"
                             value={fullName}
                             onChange={e => setFullName(e.target.value)}
-                            placeholder="Contoh: Ahmad bin Ali"
+                            placeholder={t('guardianAccountsScreen.contohAhmadBinAli')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </Field>
-                    <Field label="Telefon">
+                    <Field label={t('guardianAccountsScreen.telefon')}>
                         <input
                             type="text"
                             value={phone}
                             onChange={e => setPhone(e.target.value)}
-                            placeholder="Contoh: 0123456789"
+                            placeholder={t('guardianAccountsScreen.contoh0123456789')}
                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
                     </Field>
-                    <Field label="Emel (pilihan)">
+                    <Field label={t('guardianAccountsScreen.emelPilihan')}>
                         <input
                             type="email"
                             value={email}

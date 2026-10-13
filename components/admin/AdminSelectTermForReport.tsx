@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getCurrentTerm } from '../../src/lib/supabase/assessments';
 import { motion } from 'framer-motion';
 import { Student } from '../../types';
@@ -11,6 +12,7 @@ interface AdminSelectTermForReportProps {
 }
 
 const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ student, navigateTo }) => {
+    const { t } = useTranslation();
   const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
 
   // The editor keys everything (load, save, local draft) by term + SESSION. This
@@ -36,7 +38,7 @@ const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ stu
   };
 
   if (!student) {
-      return <div className="p-6 text-center text-sm text-gray-500">No student selected.</div>;
+      return <div className="p-6 text-center text-sm text-gray-500">{t('adminSelectTermForReport.noStudentSelected')}</div>;
   }
 
   return (
@@ -44,7 +46,7 @@ const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ stu
       <div className="bg-indigo-50 p-4 rounded-xl text-center border border-indigo-200">
         <DocumentTextIcon className="h-10 w-10 mx-auto text-indigo-400 mb-2" />
         <h3 className="font-bold text-lg text-indigo-800">Select Term for {student?.name || 'Student'}</h3>
-        <p className="text-sm text-indigo-700">Choose the academic term you want to view or edit.</p>
+        <p className="text-sm text-indigo-700">{t('adminSelectTermForReport.chooseTheAcademicTermYouWantToViewOrEdit')}</p>
       </div>
       <div className="space-y-3">
         {terms.map((term, ti) => (

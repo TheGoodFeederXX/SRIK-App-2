@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface StudentIDCardDashboardProps {
     handleBack?: () => void;
 }
 
-const StudentIDCardDashboard: React.FC<StudentIDCardDashboardProps> = ({ handleBack }) => (
+const StudentIDCardDashboard: React.FC<StudentIDCardDashboardProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Kad Pengenalan Murid"
+        title={t('studentIDCardDashboard.kadPengenalanMurid')}
         explanation={
             'Sekolah belum mencetak kad pengenalan murid melalui sistem ini. Buat ' +
             'masa ini kad pengenalan murid disediakan secara berasingan oleh pejabat. ' +
@@ -19,6 +22,7 @@ const StudentIDCardDashboard: React.FC<StudentIDCardDashboardProps> = ({ handleB
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default StudentIDCardDashboard;

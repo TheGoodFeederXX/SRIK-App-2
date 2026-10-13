@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -18,9 +19,11 @@ interface SessionPromotionScreenProps {
     handleBack?: () => void;
 }
 
-const SessionPromotionScreen: React.FC<SessionPromotionScreenProps> = ({ handleBack }) => (
+const SessionPromotionScreen: React.FC<SessionPromotionScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Naik Kelas"
+        title={t('sessionPromotionScreen.naikKelas')}
         explanation={
             'Penaikan kelas secara pukal belum tersedia di dalam sistem ini. Buat ' +
             'masa ini naik kelas murid diuruskan melalui rekod murid masing-masing, ' +
@@ -30,6 +33,7 @@ const SessionPromotionScreen: React.FC<SessionPromotionScreenProps> = ({ handleB
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default SessionPromotionScreen;

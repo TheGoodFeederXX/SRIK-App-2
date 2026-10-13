@@ -28,6 +28,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -57,17 +58,18 @@ import {
  * common state during the school day and it is the one that must never be
  * confused with a zero.
  */
-const STATUSES: { status: ResultStatus; label: string; short: string; active: string }[] = [
-    { status: 'NOT_ENTERED', label: 'Belum diisi', short: '—', active: 'bg-gray-500 text-white border-gray-500' },
-    { status: 'GRADED', label: 'Ada markah', short: 'M', active: 'bg-green-600 text-white border-green-600' },
-    { status: 'ABSENT', label: 'Tidak hadir', short: 'TH', active: 'bg-rose-600 text-white border-rose-600' },
-    { status: 'EXEMPT', label: 'Dikecualikan', short: 'K', active: 'bg-sky-600 text-white border-sky-600' },
+const STATUSES: { status: ResultStatus; labelKey: string; short: string; active: string }[] = [
+    { status: 'NOT_ENTERED', labelKey: 'markEntryScreen.belumDiisi', short: '—', active: 'bg-gray-500 text-white border-gray-500' },
+    { status: 'GRADED', labelKey: 'markEntryScreen.adaMarkah', short: 'M', active: 'bg-green-600 text-white border-green-600' },
+    { status: 'ABSENT', labelKey: 'markEntryScreen.tidakHadir', short: 'TH', active: 'bg-rose-600 text-white border-rose-600' },
+    { status: 'EXEMPT', labelKey: 'markEntryScreen.dikecualikan', short: 'K', active: 'bg-sky-600 text-white border-sky-600' },
 ];
 
 /** A draft row while the teacher is typing, before it is saved. */
 type Draft = { status: ResultStatus; score: string; tp: string; comment: string };
 
 export default function MarkEntryScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
@@ -328,7 +330,7 @@ export default function MarkEntryScreen() {
                             onChange={e => setTermId(e.target.value)}
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {terms.length === 0 && <option value="">Tiada penggal</option>}
+                            {terms.length === 0 && <option value="">{t('markEntryScreen.tiadaPenggal')}</option>}
                             {terms.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}{t.status === 'CURRENT' ? ' (semasa)' : ''}
@@ -347,7 +349,7 @@ export default function MarkEntryScreen() {
                             onChange={e => setClassId(e.target.value)}
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {classes.length === 0 && <option value="">Tiada kelas</option>}
+                            {classes.length === 0 && <option value="">{t('markEntryScreen.tiadaKelas')}</option>}
                             {classes.map(c => (
                                 <option key={c.id} value={c.id}>{c.displayName}</option>
                             ))}
@@ -356,7 +358,7 @@ export default function MarkEntryScreen() {
 
                     <div>
                         <label htmlFor="mkAssessment" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Penilaian
+                            {t('markEntryScreen.penilaian')}
                         </label>
                         <select
                             id="mkAssessment"
@@ -365,7 +367,7 @@ export default function MarkEntryScreen() {
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
                             {assessments.length === 0 && (
-                                <option value="">Tiada penilaian untuk kelas ini</option>
+                                <option value="">{t('markEntryScreen.tiadaPenilaianUntukKelasIni')}</option>
                             )}
                             {assessments.map(a => (
                                 <option key={a.id} value={a.id}>
@@ -382,7 +384,7 @@ export default function MarkEntryScreen() {
                 {!isLoading && !assessment && (
                     <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                        <p className="font-semibold text-gray-700">Tiada penilaian dipilih</p>
+                        <p className="font-semibold text-gray-700">{t('markEntryScreen.tiadaPenilaianDipilih')}</p>
                         <p className="text-sm text-gray-500 mt-1">
                             Pilih penggal dan kelas yang sudah ada penilaian. Untuk menambah
                             penilaian baharu, buka skrin Penilaian.
@@ -404,7 +406,7 @@ export default function MarkEntryScreen() {
                                     </span>
                                     {isPublished && (
                                         <span className="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1">
-                                            <LockIcon className="w-3 h-3" /> Diterbitkan
+                                            <LockIcon className="w-3 h-3" /> {t('markEntryScreen.diterbitkan')}
                                         </span>
                                     )}
                                 </div>
@@ -474,7 +476,7 @@ export default function MarkEntryScreen() {
                                                         type="button"
                                                         disabled={isPublished}
                                                         onClick={() => chooseStatus(r.studentId, s.status)}
-                                                        aria-label={s.label}
+                                                        aria-label={t(s.labelKey)}
                                                         aria-pressed={status === s.status}
                                                         className={`px-2.5 py-1.5 text-xs font-bold rounded-lg border transition-colors disabled:opacity-60 ${
                                                             status === s.status
@@ -517,7 +519,7 @@ export default function MarkEntryScreen() {
                                                 aria-label={`TP ${r.studentName}`}
                                                 className="w-20 p-2 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100"
                                             >
-                                                <option value="">TP —</option>
+                                                <option value="">{t('markEntryScreen.tp')}</option>
                                                 {[1, 2, 3, 4, 5, 6].map(n => (
                                                     <option key={n} value={n}>TP {n}</option>
                                                 ))}
@@ -546,7 +548,7 @@ export default function MarkEntryScreen() {
                                                 type="text"
                                                 value={d?.comment ?? ''}
                                                 onChange={e => setRow(r.studentId, { comment: e.target.value })}
-                                                placeholder="Catatan (pilihan)"
+                                                placeholder={t('markEntryScreen.catatanPilihan')}
                                                 aria-label={`Catatan ${r.studentName}`}
                                                 className="mt-2 w-full text-sm p-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                                             />
@@ -565,7 +567,7 @@ export default function MarkEntryScreen() {
                 {assessment && rows.length === 0 && (
                     <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                        <p className="font-semibold text-gray-700">Tiada pelajar aktif dalam kelas ini</p>
+                        <p className="font-semibold text-gray-700">{t('markEntryScreen.tiadaPelajarAktifDalamKelasIni')}</p>
                         <p className="text-sm text-gray-500 mt-1">
                             Daftarkan pelajar ke kelas ini dahulu sebelum mengisi markah.
                         </p>
@@ -580,7 +582,7 @@ export default function MarkEntryScreen() {
                         type="text"
                         value={reason}
                         onChange={e => setReason(e.target.value)}
-                        placeholder="Sebab (pilihan) — disimpan dalam rekod audit"
+                        placeholder={t('markEntryScreen.sebabPilihanDisimpanDalamRekodAudit')}
                         aria-label="Sebab"
                         className="w-full text-sm p-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-indigo-500"
                     />
@@ -608,7 +610,7 @@ export default function MarkEntryScreen() {
                             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                         >
                             <CheckIcon className="w-4 h-4" />
-                            Terbitkan
+                            {t('markEntryScreen.terbitkan')}
                         </button>
                     </div>
                 </div>

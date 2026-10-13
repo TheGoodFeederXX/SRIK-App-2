@@ -14,6 +14,7 @@
  */
 
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     User,
     Calendar,
@@ -96,6 +97,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
     forceUpdate,
     handleBack,
 }) => {
+    const { t } = useTranslation();
     const isEditing = Boolean(studentToEdit?.id);
     const queryClient = useQueryClient();
 
@@ -247,7 +249,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                         return;
                     }
                 }
-                toast.success('Student details saved.');
+                toast.success(t('addStudentScreen.studentDetailsSaved'));
                 await queryClient.invalidateQueries({ queryKey: ['students'] });
                 forceUpdate?.();
                 handleBack();
@@ -296,10 +298,10 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
     return (
         <div className="flex flex-col h-full bg-gray-100">
             <form id="student-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-4 space-y-3 pb-24">
-                <Section title="Student details" icon={<User size={18} />}>
+                <Section title={t('addStudentScreen.studentDetails')} icon={<User size={18} />}>
                     <InputField
                         id="admissionNo"
-                        label="Admission number"
+                        label={t('addStudentScreen.admissionNumber')}
                         value={admissionNo}
                         onChange={setAdmissionNo}
                         icon={<History size={18} />}
@@ -323,7 +325,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                             onChange={e => setGender(e.target.value as '' | 'MALE' | 'FEMALE')}
                             className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                         >
-                            <option value="">Not stated</option>
+                            <option value="">{t('addStudentScreen.notStated')}</option>
                             <option value="MALE">Male</option>
                             <option value="FEMALE">Female</option>
                         </select>
@@ -331,7 +333,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
 
                     <InputField
                         id="birthDate"
-                        label="Date of birth"
+                        label={t('addStudentScreen.dateOfBirth')}
                         value={birthDate}
                         onChange={setBirthDate}
                         icon={<Calendar size={18} />}
@@ -340,7 +342,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="birthPlace"
-                        label="Place of birth"
+                        label={t('addStudentScreen.placeOfBirth')}
                         value={birthPlace}
                         onChange={setBirthPlace}
                         icon={<MapPin size={18} />}
@@ -348,7 +350,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="nationality"
-                        label="Nationality"
+                        label={t('addStudentScreen.nationality')}
                         value={nationality}
                         onChange={setNationality}
                         icon={<MapPin size={18} />}
@@ -356,7 +358,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="identityNo"
-                        label="Identity card number"
+                        label={t('addStudentScreen.identityCardNumber')}
                         value={identityNo}
                         onChange={setIdentityNo}
                         icon={<User size={18} />}
@@ -365,7 +367,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="address"
-                        label="Home address"
+                        label={t('addStudentScreen.homeAddress')}
                         value={address}
                         onChange={setAddress}
                         icon={<MapPin size={18} />}
@@ -373,10 +375,10 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                 </Section>
 
-                <Section title="School background" icon={<GraduationCap size={18} />}>
+                <Section title={t('addStudentScreen.schoolBackground')} icon={<GraduationCap size={18} />}>
                     <InputField
                         id="previousSchool"
-                        label="Previous school"
+                        label={t('addStudentScreen.previousSchool')}
                         value={previousSchool}
                         onChange={setPreviousSchool}
                         icon={<History size={18} />}
@@ -385,7 +387,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="admissionDate"
-                        label="Date joined"
+                        label={t('addStudentScreen.dateJoined')}
                         value={admissionDate}
                         onChange={setAdmissionDate}
                         icon={<Calendar size={18} />}
@@ -403,7 +405,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                             onChange={e => setClassId(e.target.value)}
                             className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                         >
-                            <option value="">Not assigned yet</option>
+                            <option value="">{t('addStudentScreen.notAssignedYet')}</option>
                             {classOptions.map(c => (
                                 <option key={c.id} value={c.id}>{c.label}</option>
                             ))}
@@ -416,7 +418,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     </div>
                 </Section>
 
-                <Section title="Parent or guardian" icon={<Users size={18} />}>
+                <Section title={t('addStudentScreen.parentOrGuardian')} icon={<Users size={18} />}>
                     <p className="text-sm text-gray-500">
                         At least a name and a phone number, so the school can reach the family.
                     </p>
@@ -440,12 +442,12 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                         >
                             <option value="Bapa">Father</option>
                             <option value="Ibu">Mother</option>
-                            <option value="Penjaga">Guardian</option>
+                            <option value="Penjaga">{t('addStudentScreen.guardian')}</option>
                         </select>
                     </div>
                     <InputField
                         id="guardianPhone"
-                        label="Phone number"
+                        label={t('addStudentScreen.phoneNumber')}
                         value={guardianPhone}
                         onChange={setGuardianPhone}
                         icon={<Phone size={18} />}
@@ -454,7 +456,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="guardianEmail"
-                        label="Email (if any)"
+                        label={t('addStudentScreen.emailIfAny')}
                         value={guardianEmail}
                         onChange={setGuardianEmail}
                         icon={<Mail size={18} />}
@@ -463,7 +465,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="guardianOccupation"
-                        label="Occupation"
+                        label={t('addStudentScreen.occupation')}
                         value={guardianOccupation}
                         onChange={setGuardianOccupation}
                         icon={<User size={18} />}

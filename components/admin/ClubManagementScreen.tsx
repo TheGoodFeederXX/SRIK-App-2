@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface ClubManagementScreenProps {
     handleBack?: () => void;
 }
 
-const ClubManagementScreen: React.FC<ClubManagementScreenProps> = ({ handleBack }) => (
+const ClubManagementScreen: React.FC<ClubManagementScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pengurusan Kelab"
+        title={t('clubManagementScreen.pengurusanKelab')}
         explanation={
             'Pendaftaran dan kehadiran kelab belum tersedia di dalam sistem ini. Buat ' +
             'masa ini pendaftaran kelab dan rekod kehadiran aktiviti kokurikulum ' +
@@ -19,6 +22,7 @@ const ClubManagementScreen: React.FC<ClubManagementScreenProps> = ({ handleBack 
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default ClubManagementScreen;

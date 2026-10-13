@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { SearchIcon } from '../../constants';
 // import { mockTeachers } from '../../data'; // usage removed
@@ -58,6 +59,7 @@ interface TeacherAttendanceScreenProps {
 }
 
 const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const theme = THEME_CONFIG[DashboardType.Admin];
@@ -104,7 +106,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
 
         } catch (err) {
             console.error("Error fetching teacher attendance:", err);
-            toast.error('Failed to load teacher attendance data');
+            toast.error(t('teacherAttendanceScreen.failedToLoadTeacherAttendanceData'));
         } finally {
             setLoading(false);
         }
@@ -136,7 +138,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
     const handleStatusChange = useCallback(async (teacherId: string, status: AttendanceStatus) => {
         const dbStatus = UI_TO_DB_STATUS[status];
         if (!dbStatus) {
-            toast.error('That status cannot be recorded.');
+            toast.error(t('teacherAttendanceScreen.thatStatusCannotBeRecorded'));
             return;
         }
 
@@ -146,7 +148,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
 
         try {
             await recordStaffAttendance(teacherId, todayInKualaLumpur(), dbStatus);
-            toast.success('Attendance recorded.');
+            toast.success(t('teacherAttendanceScreen.attendanceRecorded'));
             // Read back, so the screen shows what was stored rather than the guess.
             await fetchTeacherData();
         } catch (err) {
@@ -192,7 +194,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
                             <DonutChart percentage={attendanceSummary.presentPercentage} color={theme.chartColor} size={80} strokeWidth={9} />
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
                                 <span className="text-xl font-bold text-gray-800">{attendanceSummary.presentPercentage}%</span>
-                                <span className="text-xs text-gray-500">Present</span>
+                                <span className="text-xs text-gray-500">{t('teacherAttendanceScreen.present')}</span>
                             </div>
                         </div>
                         <div className="text-right space-y-1">
@@ -225,11 +227,11 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
                         </span>
                         <input
                             type="text"
-                            placeholder="Search by teacher name..."
+                            placeholder={t('teacherAttendanceScreen.searchByTeacherName')}
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="w-full pl-10 pr-4 py-2.5 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-                            aria-label="Search for a teacher"
+                            aria-label={t('teacherAttendanceScreen.searchForATeacher')}
                         />
                     </div>
                 </div>
@@ -275,7 +277,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
                         ))
                     ) : (
                         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-10">
-                            <p className="text-gray-500">No teachers found.</p>
+                            <p className="text-gray-500">{t('teacherAttendanceScreen.noTeachersFound')}</p>
                         </motion.div>
                     )}
                 </div>

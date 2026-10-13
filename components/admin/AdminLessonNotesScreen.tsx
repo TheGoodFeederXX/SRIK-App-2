@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -9,9 +10,11 @@ interface AdminLessonNotesScreenProps {
     currentBranchId?: string;
 }
 
-const AdminLessonNotesScreen: React.FC<AdminLessonNotesScreenProps> = ({ schoolId: _schoolId, currentBranchId: _currentBranchId }) => (
+const AdminLessonNotesScreen: React.FC<AdminLessonNotesScreenProps> = ({ schoolId: _schoolId, currentBranchId: _currentBranchId }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Nota Pelajaran"
+        title={t('adminLessonNotesScreen.notaPelajaran')}
         explanation={
             'Sekolah belum menyimpan nota pelajaran guru di dalam sistem ini. Buat ' +
             'masa ini nota pelajaran disediakan dan disimpan oleh guru masing-masing ' +
@@ -20,6 +23,7 @@ const AdminLessonNotesScreen: React.FC<AdminLessonNotesScreenProps> = ({ schoolI
         }
         handleBack={undefined}
     />
-);
+    );
+};
 
 export default AdminLessonNotesScreen;

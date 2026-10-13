@@ -19,6 +19,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -40,6 +41,7 @@ interface StudentOption {
 }
 
 export default function StudentFeesScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [studentId, setStudentId] = useState('');
     const [search, setSearch] = useState('');
@@ -78,7 +80,7 @@ export default function StudentFeesScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-5xl mx-auto">
             <div className="no-print">
-                <h1 className="text-2xl font-bold text-slate-800 mb-1">Penyata Yuran Pelajar</h1>
+                <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('studentFeesScreen.penyataYuranPelajar')}</h1>
                 <p className="text-sm text-slate-500 mb-5">
                     Lihat caj, bayaran dan baki seorang pelajar. Boleh dicetak untuk ibu bapa.
                 </p>
@@ -90,7 +92,7 @@ export default function StudentFeesScreen() {
                             type="text"
                             value={search}
                             onChange={e => setSearch(e.target.value)}
-                            placeholder="Cari nama pelajar"
+                            placeholder={t('studentFeesScreen.cariNamaPelajar')}
                             className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         />
@@ -118,13 +120,13 @@ export default function StudentFeesScreen() {
                 <Notice tone="error">{friendlyFinanceError(studentsQuery.error)}</Notice>
             ) : !students.length ? (
                 <EmptyState
-                    title="Tiada pelajar aktif"
+                    title={t('studentFeesScreen.tiadaPelajarAktif')}
                     body="Daftarkan pelajar dahulu sebelum melihat penyata yuran."
                 />
             ) : !studentId ? (
                 <EmptyState
                     icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
-                    title="Pilih seorang pelajar"
+                    title={t('studentFeesScreen.pilihSeorangPelajar')}
                     body="Pilih pelajar di atas untuk melihat caj dan baki mereka."
                 />
             ) : (
@@ -135,6 +137,7 @@ export default function StudentFeesScreen() {
 }
 
 function Statement({ studentId, studentName }: { studentId: string; studentName: string }) {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
 
@@ -178,7 +181,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
             <div className="no-print flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div className="flex flex-wrap gap-3">
                     <Stat label="Dicaj" value={formatMoney(totals.charged)} />
-                    <Stat label="Dibayar" value={formatMoney(totals.paid)} />
+                    <Stat label={t('studentFeesScreen.dibayar')} value={formatMoney(totals.paid)} />
                     <Stat
                         label="Baki"
                         value={formatMoney(totals.owed)}
@@ -210,7 +213,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
 
                 {!charges.length ? (
                     <EmptyState
-                        title="Tiada caj"
+                        title={t('studentFeesScreen.tiadaCaj')}
                         body="Pelajar ini belum mempunyai sebarang caj yuran. Jana bil bulanan dahulu."
                     />
                 ) : (
@@ -230,6 +233,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
 }
 
 function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => void }) {
+    const { t } = useTranslation();
     const [busy, setBusy] = useState<'discount' | 'waive' | null>(null);
     const [discount, setDiscount] = useState(String(charge.discount_amount || ''));
     const [reason, setReason] = useState('');
@@ -239,17 +243,17 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
     async function handleDiscount() {
         const value = Number(discount);
         if (!Number.isFinite(value) || value < 0) {
-            toast.error('Diskaun mesti nombor yang sah.');
+            toast.error(t('studentFeesScreen.diskaunMestiNomborYangSah'));
             return;
         }
         if (value > 0 && !reason.trim()) {
-            toast.error('Sila nyatakan sebab diskaun.');
+            toast.error(t('studentFeesScreen.silaNyatakanSebabDiskaun'));
             return;
         }
         setBusy('discount');
         try {
             await setChargeDiscount(charge.id, value, reason.trim());
-            toast.success('Diskaun disimpan.');
+            toast.success(t('studentFeesScreen.diskaunDisimpan'));
             setBusy(null);
             setReason('');
             onChanged();
@@ -261,13 +265,13 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
 
     async function handleWaive() {
         if (!reason.trim()) {
-            toast.error('Sila nyatakan sebab pengecualian.');
+            toast.error(t('studentFeesScreen.silaNyatakanSebabPengecualian'));
             return;
         }
         setBusy('waive');
         try {
             await setChargeStatus(charge.id, 'WAIVED', reason.trim());
-            toast.success('Caj dikecualikan.');
+            toast.success(t('studentFeesScreen.cajDikecualikan'));
             setBusy(null);
             setReason('');
             onChanged();
@@ -331,7 +335,7 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
                         min="0"
                         value={discount}
                         onChange={e => setDiscount(e.target.value)}
-                        placeholder="Diskaun (RM)"
+                        placeholder={t('studentFeesScreen.diskaunRM')}
                         className="px-3 py-2 rounded-lg border border-slate-200 text-sm
                                    focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />
@@ -339,7 +343,7 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
                         type="text"
                         value={reason}
                         onChange={e => setReason(e.target.value)}
-                        placeholder="Sebab (wajib)"
+                        placeholder={t('studentFeesScreen.sebabWajib')}
                         className="px-3 py-2 rounded-lg border border-slate-200 text-sm
                                    focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface ClassroomObservationScreenProps {
     handleBack?: () => void;
 }
 
-const ClassroomObservationScreen: React.FC<ClassroomObservationScreenProps> = ({ handleBack }) => (
+const ClassroomObservationScreen: React.FC<ClassroomObservationScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pemerhatian Bilik Darjah"
+        title={t('classroomObservationScreen.pemerhatianBilikDarjah')}
         explanation={
             'Sekolah belum menyimpan borang pemerhatian pengajaran di dalam sistem ' +
             'ini. Buat masa ini pemerhatian pengajaran dijalankan dan direkodkan ' +
@@ -19,6 +22,7 @@ const ClassroomObservationScreen: React.FC<ClassroomObservationScreenProps> = ({
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default ClassroomObservationScreen;

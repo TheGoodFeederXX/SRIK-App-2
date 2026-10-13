@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router';
 import { ChevronLeftIcon } from '../../constants';
@@ -9,6 +10,7 @@ import { ExamCandidateRegistration, ExamCandidateRegistrationHandle } from './Ex
  * Matches the layout and premium design requested in the user's screenshot.
  */
 const ExternalExamsPage: React.FC = () => {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const registrationRef = useRef<ExamCandidateRegistrationHandle>(null);
     const [selectedCount, setSelectedCount] = useState(0);
@@ -50,7 +52,7 @@ const ExternalExamsPage: React.FC = () => {
                             <svg className="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                             </svg>
-                            Export CSV
+                            {t('externalExamsPage.exportCSV')}
                         </motion.button>
                         <motion.button
                             whileHover={selectedCount > 0 && !isRegistering ? { scale: 1.02 } : {}}

@@ -41,6 +41,7 @@
  */
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -60,6 +61,7 @@ import {
 type Tab = 'outstanding' | 'receipts';
 
 export default function FeeCollectionScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const queryClient = useQueryClient();
     const [tab, setTab] = useState<Tab>('outstanding');
@@ -102,7 +104,7 @@ export default function FeeCollectionScreen() {
         <div className="p-4 sm:p-6 max-w-6xl mx-auto">
             <div className="no-print">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-1">
-                    <h1 className="text-2xl font-bold text-slate-800">Bayaran Yuran</h1>
+                    <h1 className="text-2xl font-bold text-slate-800">{t('feeCollectionScreen.bayaranYuran')}</h1>
                     <div className="flex rounded-xl overflow-hidden border border-slate-200">
                         <button
                             type="button"
@@ -159,7 +161,7 @@ export default function FeeCollectionScreen() {
                                 type="text"
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
-                                placeholder="Cari nama pelajar atau nombor pendaftaran"
+                                placeholder={t('feeCollectionScreen.cariNamaPelajarAtauNomborPendaftaran')}
                                 className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                            focus:outline-none focus:ring-2 focus:ring-indigo-500"
                             />
@@ -174,13 +176,13 @@ export default function FeeCollectionScreen() {
                         ) : !outstanding.length ? (
                             <EmptyState
                                 icon={<CheckIcon className="w-8 h-8 text-emerald-500" />}
-                                title="Tiada tunggakan"
+                                title={t('feeCollectionScreen.tiadaTunggakan')}
                                 body="Semua pelajar sudah menyelesaikan bayaran mereka, atau yuran bulan ini belum dijana."
                             />
                         ) : !visible.length ? (
                             <EmptyState
                                 icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
-                                title="Tiada pelajar sepadan"
+                                title={t('feeCollectionScreen.tiadaPelajarSepadan')}
                                 body="Cuba nama atau nombor pendaftaran yang lain."
                             />
                         ) : (
@@ -253,6 +255,7 @@ function CollectPanel({
     onClose: () => void;
     onRecorded: () => void;
 }) {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [amount, setAmount] = useState('');
     const [method, setMethod] = useState<PaymentMethod>('CASH');
@@ -376,7 +379,7 @@ function CollectPanel({
             <div className="relative w-full max-w-lg bg-white h-full overflow-y-auto shadow-xl">
                 <div className="sticky top-0 bg-white border-b border-slate-200 px-5 py-4 flex items-start justify-between gap-3">
                     <div>
-                        <h2 className="font-bold text-slate-800">Kutip bayaran</h2>
+                        <h2 className="font-bold text-slate-800">{t('feeCollectionScreen.kutipBayaran')}</h2>
                         <p className="text-sm text-slate-500">{student.student_name}</p>
                     </div>
                     <button
@@ -397,7 +400,7 @@ function CollectPanel({
                     ) : !charges.length ? (
                         <EmptyState
                             icon={<CheckIcon className="w-8 h-8 text-emerald-500" />}
-                            title="Tiada caj tertunggak"
+                            title={t('feeCollectionScreen.tiadaCajTertunggak')}
                             body="Pelajar ini tidak mempunyai caj yang belum dibayar."
                         />
                     ) : (
@@ -503,13 +506,13 @@ function CollectPanel({
 
                             <div>
                                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                                    Catatan (pilihan)
+                                    {t('feeCollectionScreen.catatanPilihan')}
                                 </label>
                                 <input
                                     type="text"
                                     value={notes}
                                     onChange={e => setNotes(e.target.value)}
-                                    placeholder="Contoh: dibayar oleh nenek"
+                                    placeholder={t('feeCollectionScreen.contohDibayarOlehNenek')}
                                     className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                                focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                 />
@@ -596,6 +599,7 @@ function ReceiptsTab({
     query: { data?: Payment[]; isLoading: boolean; isError: boolean; error: unknown };
     onReversed: () => void;
 }) {
+    const { t } = useTranslation();
     const payments = useMemo(() => query.data ?? [], [query.data]);
 
     if (query.isLoading) return <CenteredLoader />;
@@ -604,7 +608,7 @@ function ReceiptsTab({
         return (
             <EmptyState
                 icon={<ReceiptIcon className="w-8 h-8 text-slate-400" />}
-                title="Tiada resit lagi"
+                title={t('feeCollectionScreen.tiadaResitLagi')}
                 body="Resit akan muncul di sini sebaik bayaran pertama direkodkan."
             />
         );
@@ -620,6 +624,7 @@ function ReceiptsTab({
 }
 
 function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: () => void }) {
+    const { t } = useTranslation();
     const [reversing, setReversing] = useState(false);
     const [reason, setReason] = useState('');
     const [busy, setBusy] = useState(false);
@@ -627,7 +632,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
 
     async function handleReverse() {
         if (!reason.trim()) {
-            toast.error('Sila nyatakan sebab pembatalan.');
+            toast.error(t('feeCollectionScreen.silaNyatakanSebabPembatalan'));
             return;
         }
         setBusy(true);
@@ -716,7 +721,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                                 type="text"
                                 value={reason}
                                 onChange={e => setReason(e.target.value)}
-                                placeholder="Sebab pembatalan (wajib)"
+                                placeholder={t('feeCollectionScreen.sebabPembatalanWajib')}
                                 className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm
                                            focus:outline-none focus:ring-2 focus:ring-rose-500"
                             />

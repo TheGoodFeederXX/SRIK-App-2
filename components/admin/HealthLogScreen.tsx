@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface HealthLogScreenProps {
@@ -26,9 +27,11 @@ interface HealthLogScreenProps {
  * medical history behind exactly the wrong door. The paper log and the office remain the
  * correct place until the school decides otherwise.
  */
-const HealthLogScreen: React.FC<HealthLogScreenProps> = ({ handleBack, onBack }) => (
+const HealthLogScreen: React.FC<HealthLogScreenProps> = ({ handleBack, onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Log Kesihatan"
+        title={t('healthLogScreen.logKesihatan')}
         explanation={
             'Sekolah belum menyimpan rekod kesihatan murid di dalam sistem ini. Buat masa ini ' +
             'rekod rawatan di sekolah disimpan secara bertulis di pejabat. Rekod kesihatan ' +
@@ -38,6 +41,7 @@ const HealthLogScreen: React.FC<HealthLogScreenProps> = ({ handleBack, onBack })
         }
         handleBack={handleBack || onBack}
     />
-);
+    );
+};
 
 export default HealthLogScreen;

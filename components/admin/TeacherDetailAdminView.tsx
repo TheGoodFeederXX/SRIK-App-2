@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-hot-toast';
@@ -21,6 +22,7 @@ import { useTeacherStats } from '../../hooks/useTeacherStats';
 import { useDockedBar } from '../shared/useDockedBar';
 
 const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher: initialTeacher, navigateTo, forceUpdate, handleBack }) => {
+    const { t } = useTranslation();
     // Publishes this bar's height so the floating install button sits above it.
     const dockRef = useDockedBar();
 
@@ -117,7 +119,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
     };
 
     if (!teacher) {
-        return <div className="p-6 text-center text-sm text-gray-500">No teacher selected. Open this view from a teacher row in the Teacher List.</div>;
+        return <div className="p-6 text-center text-sm text-gray-500">{t('teacherDetailAdminView.noTeacherSelectedOpenThisViewFromATeacherRowIn')}</div>;
     }
 
     return (
@@ -224,7 +226,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                                 whileHover={{ y: -2 }}
                                 className="bg-white p-3 sm:p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center"
                             >
-                                <p className="text-xs sm:text-sm text-gray-500">Attendance</p>
+                                <p className="text-xs sm:text-sm text-gray-500">{t('teacherDetailAdminView.attendance')}</p>
                                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mt-1">
                                     <DonutChart percentage={statsLoading ? 0 : stats.attendanceRate} color="#4f46e5" size={80} strokeWidth={9} />
                                     <div className="absolute inset-0 flex items-center justify-center text-lg sm:text-xl font-bold text-gray-800">
@@ -239,7 +241,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                                 whileHover={{ y: -2 }}
                                 className="bg-white p-3 sm:p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow text-center"
                             >
-                                <p className="text-xs sm:text-sm text-gray-500">Avg. Student Score</p>
+                                <p className="text-xs sm:text-sm text-gray-500">{t('teacherDetailAdminView.avgStudentScore')}</p>
                                 <p className="text-3xl sm:text-5xl font-bold text-indigo-600 mt-2 truncate">
                                     {statsLoading ? '...' : `${stats.avgStudentScore}%`}
                                 </p>
@@ -266,7 +268,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                                         <p className="font-semibold text-gray-700 text-sm sm:text-base truncate mr-2">{c.displayName} - {c.subject}</p>
                                         <span className={`text-xs sm:text-xs font-semibold px-2 py-1 rounded-full bg-gray-200 flex-shrink-0 whitespace-nowrap`}>{c.studentCount > 0 ? `${c.studentCount} students` : 'Class Info'}</span>
                                     </motion.div>
-                                )) : <p className="text-gray-500 text-sm italic">No classes assigned.</p>}
+                                )) : <p className="text-gray-500 text-sm italic">{t('teacherDetailAdminView.noClassesAssigned')}</p>}
                             </div>
                         </motion.div>
                     </div>
@@ -282,15 +284,15 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                         >
                             <motion.button whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo('teacherPerformance', 'Performance Evaluation', { teacher })} className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
                                 <ChartBarIcon className="w-6 h-6 text-indigo-500 flex-shrink-0" />
-                                <span className="font-semibold text-gray-700 text-sm sm:text-base">Performance Evaluation</span>
+                                <span className="font-semibold text-gray-700 text-sm sm:text-base">{t('teacherDetailAdminView.performanceEvaluation')}</span>
                             </motion.button>
                             <motion.button whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo('teacherAttendanceDetail', `${teacher.full_name || teacher.name}'s Attendance`, { teacher })} className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
                                 <CalendarIcon className="w-6 h-6 text-indigo-500 flex-shrink-0" />
-                                <span className="font-semibold text-gray-700 text-sm sm:text-base">Full Attendance Record</span>
+                                <span className="font-semibold text-gray-700 text-sm sm:text-base">{t('teacherDetailAdminView.fullAttendanceRecord')}</span>
                             </motion.button>
                             <motion.button whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo('teacherPersonnelFile', `${teacher.full_name || teacher.name}'s Personnel File`, { teacher })} className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
                                 <BriefcaseIcon className="w-6 h-6 text-indigo-500 flex-shrink-0" />
-                                <span className="font-semibold text-gray-700 text-sm sm:text-base">Personnel File</span>
+                                <span className="font-semibold text-gray-700 text-sm sm:text-base">{t('teacherDetailAdminView.personnelFile')}</span>
                             </motion.button>
                         </motion.div>
 
@@ -327,7 +329,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
              * button stop reserving space for a bar that is now part of the page.
              */}
             <div ref={dockRef} className="px-4 pt-3 pb-3 bg-white border-t border-gray-100 space-y-2 mt-auto">
-                <h3 className="text-xs font-bold text-gray-400 text-center uppercase tracking-widest">Admin Actions</h3>
+                <h3 className="text-xs font-bold text-gray-400 text-center uppercase tracking-widest">{t('teacherDetailAdminView.adminActions')}</h3>
                 <div className="grid grid-cols-2 gap-3">
                     <motion.button
                         whileHover={{ y: -2 }}
@@ -336,7 +338,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                         onClick={() => navigateTo('addTeacher', `Edit ${teacher.full_name || teacher.name}`, { teacherToEdit: teacher })}
                         className="flex items-center justify-center space-x-2 py-3 bg-indigo-100 text-indigo-700 rounded-xl font-semibold hover:bg-indigo-200 transition-colors text-sm sm:text-base"
                     >
-                        <EditIcon className="w-4 h-4 sm:w-5 sm:h-5" /><span>Edit Profile</span>
+                        <EditIcon className="w-4 h-4 sm:w-5 sm:h-5" /><span>{t('teacherDetailAdminView.editProfile')}</span>
                     </motion.button>
                     <motion.button
                         whileHover={{ y: -2 }}
@@ -345,7 +347,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                         onClick={() => setShowDeleteModal(true)}
                         className="flex items-center justify-center space-x-2 py-3 bg-red-100 text-red-700 rounded-xl font-semibold hover:bg-red-200 transition-colors text-sm sm:text-base"
                     >
-                        <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" /><span>Delete Account</span>
+                        <TrashIcon className="w-4 h-4 sm:w-5 sm:h-5" /><span>{t('teacherDetailAdminView.deleteAccount')}</span>
                     </motion.button>
                 </div>
             </div>
@@ -354,7 +356,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                 isOpen={showDeleteModal}
                 onClose={() => setShowDeleteModal(false)}
                 onConfirm={handleDelete}
-                title="Delete Teacher Account"
+                title={t('teacherDetailAdminView.deleteTeacherAccount')}
                 message={`Are you sure you want to delete ${teacher.full_name || teacher.name}? This action cannot be undone.`}
                 confirmText="Delete"
                 isDanger
@@ -379,9 +381,9 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                         setPendingStatus(null);
                     }
                 }}
-                title="Change Teacher Status"
+                title={t('teacherDetailAdminView.changeTeacherStatus')}
                 message={`Change ${teacher.full_name || teacher.name}'s status to "${pendingStatus}"?`}
-                confirmText="Confirm"
+                confirmText={t('teacherDetailAdminView.confirm')}
             />
         </div>
     );

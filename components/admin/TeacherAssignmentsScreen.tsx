@@ -15,6 +15,8 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../lib/i18n';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -42,9 +44,9 @@ interface TeacherAssignmentsScreenProps {
 }
 
 const TABS = [
-    { key: 'class', label: 'Class Teachers', icon: <UserCheck className="w-4 h-4" /> },
-    { key: 'subject', label: 'Subject Teachers', icon: <BookOpen className="w-4 h-4" /> },
-    { key: 'workload', label: 'Workload', icon: <BarChart3 className="w-4 h-4" /> },
+    { key: 'class', labelKey: 'teacherAssignmentsScreen.classTeachers', icon: <UserCheck className="w-4 h-4" /> },
+    { key: 'subject', labelKey: 'teacherAssignmentsScreen.subjectTeachers', icon: <BookOpen className="w-4 h-4" /> },
+    { key: 'workload', labelKey: 'teacherAssignmentsScreen.workload', icon: <BarChart3 className="w-4 h-4" /> },
 ] as const;
 
 type TabKey = typeof TABS[number]['key'];
@@ -67,6 +69,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
     teacherName,
     handleBack,
 }) => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { user } = useAuth();
 
@@ -185,11 +188,11 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
     const handleSave = async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!form.teacherId) {
-            toast.error('Please choose a teacher.');
+            toast.error(t('teacherAssignmentsScreen.pleaseChooseATeacher'));
             return;
         }
         if (form.classIds.length === 0 && form.subjectIds.length === 0) {
-            toast.error('Choose at least one class or subject.');
+            toast.error(t('teacherAssignmentsScreen.chooseAtLeastOneClassOrSubject'));
             return;
         }
 
@@ -197,7 +200,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
         try {
             const yearId = await getCurrentAcademicYearId();
             if (!yearId) {
-                toast.error('No academic year is set as current.');
+                toast.error(t('teacherAssignmentsScreen.noAcademicYearIsSetAsCurrent'));
                 return;
             }
 
@@ -213,7 +216,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                 return;
             }
 
-            toast.success('Duties saved.');
+            toast.success(t('teacherAssignmentsScreen.dutiesSaved'));
             await refreshAll();
             setShowAssign(false);
         } catch (err) {
@@ -224,26 +227,26 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
     };
 
     /** Clears every duty for a teacher, keeping the old set as history. */
-    const handleClear = async (t: TeacherRecord) => {
-        if (!window.confirm(`Remove all duties for ${t.fullName}? The previous duties are kept on record.`)) return;
+    const handleClear = async (teacher: TeacherRecord) => {
+        if (!window.confirm(`Remove all duties for ${teacher.fullName}? The previous duties are kept on record.`)) return;
 
         const yearId = await getCurrentAcademicYearId();
         if (!yearId) {
-            toast.error('No academic year is set as current.');
+            toast.error(t('teacherAssignmentsScreen.noAcademicYearIsSetAsCurrent'));
             return;
         }
 
-        const result = await setTeacherAssignments(t.id, yearId, [], []);
+        const result = await setTeacherAssignments(teacher.id, yearId, [], []);
         if (!result.success) {
             toast.error(result.error ?? 'Could not clear the duties.');
             return;
         }
-        toast.success(`${t.fullName}'s duties were cleared.`);
+        toast.success(`${teacher.fullName}'s duties were cleared.`);
         await refreshAll();
     };
 
     if (isLoading) {
-        return <CenteredLoader fullScreen={false} message="Loading teacher duties..." className="h-screen" />;
+        return <CenteredLoader fullScreen={false} message={t('teacherAssignmentsScreen.loadingTeacherDuties')} className="h-screen" />;
     }
 
     const selectedTeacher = teacherById.get(form.teacherId);
@@ -288,7 +291,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                             }`}
                         >
                             {t.icon}
-                            {t.label}
+                            {i18n.t(t.labelKey)}
                         </button>
                     ))}
                 </div>
@@ -384,7 +387,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                             className="bg-white rounded-t-3xl sm:rounded-3xl p-6 w-full max-w-lg space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto"
                         >
                             <div className="flex items-start justify-between">
-                                <h2 className="text-lg font-bold text-gray-900">Assign duties</h2>
+                                <h2 className="text-lg font-bold text-gray-900">{t('teacherAssignmentsScreen.assignDuties')}</h2>
                                 <button
                                     onClick={() => setShowAssign(false)}
                                     aria-label="Close"
@@ -397,7 +400,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                             <form onSubmit={handleSave} className="space-y-4">
                                 <div>
                                     <label htmlFor="dutyTeacher" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Teacher
+                                        {t('teacherAssignmentsScreen.teacher')}
                                     </label>
                                     <select
                                         id="dutyTeacher"
@@ -407,7 +410,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                         className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-60"
                                         required
                                     >
-                                        <option value="">Choose a teacher</option>
+                                        <option value="">{t('teacherAssignmentsScreen.chooseATeacher')}</option>
                                         {teachers.filter(t => t.status === 'ACTIVE').map(t => (
                                             <option key={t.id} value={t.id}>{t.fullName}</option>
                                         ))}
@@ -427,7 +430,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                 </label>
 
                                 <div>
-                                    <p className="text-sm font-medium text-gray-700 mb-2">Classes</p>
+                                    <p className="text-sm font-medium text-gray-700 mb-2">{t('teacherAssignmentsScreen.classes')}</p>
                                     {classes.length === 0 ? (
                                         <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg p-3">
                                             No classes are set up for the current year.
@@ -469,7 +472,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
 
                                 {!form.isClassTeacher && (
                                     <div>
-                                        <p className="text-sm font-medium text-gray-700 mb-2">Subjects taught</p>
+                                        <p className="text-sm font-medium text-gray-700 mb-2">{t('teacherAssignmentsScreen.subjectsTaught')}</p>
                                         {subjects.length === 0 ? (
                                             <p className="text-sm text-gray-400 bg-gray-50 border border-gray-200 rounded-lg p-3">
                                                 No subjects have been set up yet.

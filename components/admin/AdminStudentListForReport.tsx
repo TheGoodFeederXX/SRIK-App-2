@@ -1,5 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Student } from '../../types';
 import { fetchStudentsByClass } from '../../lib/database';
@@ -13,6 +14,7 @@ interface AdminStudentListForReportProps {
 }
 
 const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ classInfo, navigateTo }) => {
+    const { t } = useTranslation();
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,7 +27,7 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
         setStudents(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error loading students for report:', err);
-        toast.error('Failed to load class roster');
+        toast.error(t('adminStudentListForReport.failedToLoadClassRoster'));
         setStudents([]);
       } finally {
         setLoading(false);
@@ -36,11 +38,11 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
   }, [classInfo?.grade, classInfo?.section]);
 
   if (!classInfo) {
-    return <div className="p-6 text-center text-sm text-gray-500">No class selected. Open this view by picking a class from Reports.</div>;
+    return <div className="p-6 text-center text-sm text-gray-500">{t('adminStudentListForReport.noClassSelectedOpenThisViewByPickingAClassFrom')}</div>;
   }
 
   if (loading) {
-    return <CenteredLoader message="Loading class roster..." className="h-64" />;
+    return <CenteredLoader message={t('adminStudentListForReport.loadingClassRoster')} className="h-64" />;
   }
 
   return (
@@ -98,7 +100,7 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
             <div className="bg-gray-100 p-4 rounded-full mb-4">
               <UserIcon className="w-8 h-8 text-gray-400" />
             </div>
-            <h3 className="text-lg font-bold text-gray-800 mb-1">No Students Found</h3>
+            <h3 className="text-lg font-bold text-gray-800 mb-1">{t('adminStudentListForReport.noStudentsFound')}</h3>
             <p className="text-gray-500 text-sm max-w-xs mx-auto">
               There are no students assigned to this class section yet.
             </p>

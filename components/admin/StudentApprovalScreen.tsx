@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from './../ui/ComingSoonScreen';
 
 /**
@@ -17,12 +18,15 @@ import ComingSoonScreen from './../ui/ComingSoonScreen';
  * This shows no data and accepts no input. It is not a placeholder that pretends to
  * work — it is a statement that this part does not exist yet.
  */
-const StudentApprovalScreen: React.FC<any> = ({ handleBack }) => (
+const StudentApprovalScreen: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Student Approval"
+        title={t('studentApprovalScreen.studentApproval')}
         explanation="Student Approval is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default StudentApprovalScreen;

@@ -21,6 +21,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon, UsersIcon, AlertTriangleIcon, EditIcon } from '../../constants';
@@ -56,6 +57,7 @@ interface TimetableScreenProps {
 }
 
 const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedClassId }) => {
+    const { t } = useTranslation();
     const { user, role: authRole } = useAuth();
     const [mode, setMode] = useState<ViewMode>('CLASS');
     const [selectedId, setSelectedId] = useState<string>('');
@@ -152,13 +154,13 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
     );
 
     if (timetableQuery.isLoading) {
-        return <CenteredLoader fullScreen={false} message="Memuatkan jadual..." className="h-64" />;
+        return <CenteredLoader fullScreen={false} message={t('timetableScreen.memuatkanJadual')} className="h-64" />;
     }
 
     if (timetableQuery.isError) {
         return (
             <div className="p-8 text-center">
-                <p className="font-bold text-gray-900 mb-1">Jadual tidak dapat dimuatkan</p>
+                <p className="font-bold text-gray-900 mb-1">{t('timetableScreen.jadualTidakDapatDimuatkan')}</p>
                 <p className="text-sm text-gray-500">{String(timetableQuery.error)}</p>
             </div>
         );
@@ -168,7 +170,7 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
         return (
             <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300 m-4">
                 <CalendarIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <h3 className="text-lg font-bold text-gray-800">Belum Ada Jadual</h3>
+                <h3 className="text-lg font-bold text-gray-800">{t('timetableScreen.belumAdaJadual')}</h3>
                 <p className="text-gray-500 max-w-sm mx-auto mt-2">
                     Sebaik sahaja jadual disediakan, minggu persekolahan akan dipaparkan di sini.
                 </p>
@@ -237,17 +239,17 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                     <div className="grid grid-cols-3 gap-3 mt-3">
                         <div className="text-center">
                             <p className="text-lg font-bold text-indigo-600">{teachingCount}</p>
-                            <p className="text-xs text-gray-400 font-medium">Pelajaran seminggu</p>
+                            <p className="text-xs text-gray-400 font-medium">{t('timetableScreen.pelajaranSeminggu')}</p>
                         </div>
                         <div className="text-center">
                             <p className="text-lg font-bold text-gray-700">{grid.length}</p>
-                            <p className="text-xs text-gray-400 font-medium">Waktu sehari</p>
+                            <p className="text-xs text-gray-400 font-medium">{t('timetableScreen.waktuSehari')}</p>
                         </div>
                         <div className="text-center">
                             <p className={`text-lg font-bold ${(gapsQuery.data?.missingTeacher ?? 0) > 0 ? 'text-red-600' : 'text-green-600'}`}>
                                 {gapsQuery.data?.missingTeacher ?? 0}
                             </p>
-                            <p className="text-xs text-gray-400 font-medium">Belum ada guru</p>
+                            <p className="text-xs text-gray-400 font-medium">{t('timetableScreen.belumAdaGuru')}</p>
                         </div>
                     </div>
                 </div>
@@ -263,7 +265,7 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                             onChange={e => setSelectedId(e.target.value)}
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {options.length === 0 && <option value="">Tiada apa untuk dipaparkan</option>}
+                            {options.length === 0 && <option value="">{t('timetableScreen.tiadaApaUntukDipaparkan')}</option>}
                             {options.map(o => (
                                 <option key={o.id} value={o.id}>
                                     {o.label} ({o.periodsPerWeek} seminggu)
@@ -284,16 +286,16 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                 )}
 
                 {gridQuery.isLoading ? (
-                    <CenteredLoader fullScreen={false} message="Memuatkan minggu..." className="h-48" />
+                    <CenteredLoader fullScreen={false} message={t('timetableScreen.memuatkanMinggu')} className="h-48" />
                 ) : gridQuery.isError ? (
                     <div className="text-center py-12 bg-white rounded-2xl border border-red-100">
-                        <p className="font-bold text-gray-900 mb-1">Could not load the week</p>
+                        <p className="font-bold text-gray-900 mb-1">{t('timetableScreen.couldNotLoadTheWeek')}</p>
                         <p className="text-sm text-gray-500">{String(gridQuery.error)}</p>
                     </div>
                 ) : grid.length === 0 ? (
                     <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-gray-300">
                         <CalendarIcon className="w-14 h-14 mx-auto mb-3 text-gray-300" />
-                        <p className="font-bold text-gray-800">Nothing Timetabled</p>
+                        <p className="font-bold text-gray-800">{t('timetableScreen.nothingTimetabled')}</p>
                         <p className="text-gray-500 text-sm mt-1">
                             {selected?.label ?? 'This'} has no lessons in this timetable.
                         </p>

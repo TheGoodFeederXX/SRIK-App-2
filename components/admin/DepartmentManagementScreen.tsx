@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface DepartmentManagementScreenProps {
     handleBack?: () => void;
 }
 
-const DepartmentManagementScreen: React.FC<DepartmentManagementScreenProps> = ({ handleBack }) => (
+const DepartmentManagementScreen: React.FC<DepartmentManagementScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Pengurusan Jabatan"
+        title={t('departmentManagementScreen.pengurusanJabatan')}
         explanation={
             'Sekolah ini tidak mempunyai jabatan berasingan, jadi tiada senarai ' +
             'jabatan di sini. Buat masa ini urusan pentadbiran dijalankan terus ' +
@@ -19,6 +22,7 @@ const DepartmentManagementScreen: React.FC<DepartmentManagementScreenProps> = ({
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default DepartmentManagementScreen;

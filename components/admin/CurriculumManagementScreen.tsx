@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { Globe, CheckCircle2, Search } from 'lucide-react';
@@ -18,14 +19,14 @@ import CenteredLoader from '../ui/CenteredLoader';
 // as offering a curriculum it does not teach.
 const SCHOOL_CURRICULA = [
     { code: 'KSSR', label: 'KSSR' },
-    { code: 'BRITISH', label: 'British (UK NC)' },
+    { code: 'BRITISH', labelKey: 'curriculumManagementScreen.britishUKNC' },
 ];
 
 const BRANCH_FOCUS_OPTIONS = [
     { value: 'kssr', label: 'KSSR' },
-    { value: 'british', label: 'British (UK NC)' },
-    { value: 'american', label: 'American (Common Core)' },
-    { value: 'dual', label: 'Dual Curriculum' },
+    { value: 'british', labelKey: 'curriculumManagementScreen.britishUKNC' },
+    { value: 'american', labelKey: 'curriculumManagementScreen.americanCommonCore' },
+    { value: 'dual', labelKey: 'curriculumManagementScreen.dualCurriculum' },
 ];
 
 const STUDENT_TRACK_OPTIONS = ['KSSR', 'British', 'Both'];
@@ -35,6 +36,7 @@ interface CurriculumManagementScreenProps {
 }
 
 const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = () => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId } = useAuth();
 
     const [schoolCurricula, setSchoolCurricula] = useState<string[]>([]);
@@ -70,7 +72,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             setStudents(data.map(s => ({ id: s.id, name: s.fullName, admissionNo: s.admissionNo })) as any);
         } catch (err) {
             console.error('Error loading students for curriculum management:', err);
-            toast.error('Failed to load students.');
+            toast.error(t('curriculumManagementScreen.failedToLoadStudents'));
         } finally {
             setStudentsLoading(false);
         }
@@ -97,10 +99,10 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             // Merged in the database, so it cannot revert a setting changed on
             // another screen while this one was open.
             await updateSchoolSettings({ curricula_config: schoolCurricula });
-            toast.success('School curricula updated.');
+            toast.success(t('curriculumManagementScreen.schoolCurriculaUpdated'));
         } catch (err) {
             console.error('Error saving school curricula:', err);
-            toast.error('Failed to save school curricula.');
+            toast.error(t('curriculumManagementScreen.failedToSaveSchoolCurricula'));
         } finally {
             setSavingSchool(false);
         }
@@ -117,7 +119,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             // Putting the row back is the honest behaviour: the screen must not
             // show a value the school does not store.
             setStudents(prev);
-            toast.error('Per-student curriculum is not recorded for this school yet.');
+            toast.error(t('curriculumManagementScreen.perStudentCurriculumIsNotRecordedForThisSchool'));
         } finally {
             setSavingStudentId(null);
         }
@@ -128,7 +130,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         (s.admission_number || '').toLowerCase().includes(studentSearch.toLowerCase())
     );
 
-    if (loading) return <CenteredLoader message="Loading curriculum settings..." className="py-12" />;
+    if (loading) return <CenteredLoader message={t('curriculumManagementScreen.loadingCurriculumSettings')} className="py-12" />;
 
     return (
         <div className="p-4 space-y-6 bg-gray-100 min-h-full">
@@ -136,9 +138,9 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             <div className="bg-white rounded-xl shadow-sm p-5">
                 <div className="flex items-center gap-2 mb-1">
                     <Globe className="w-5 h-5 text-indigo-600" />
-                    <h2 className="font-bold text-lg text-gray-800">School Curricula</h2>
+                    <h2 className="font-bold text-lg text-gray-800">{t('curriculumManagementScreen.schoolCurricula')}</h2>
                 </div>
-                <p className="text-sm text-gray-500 mb-4">Which curricula this school is accredited to offer overall.</p>
+                <p className="text-sm text-gray-500 mb-4">{t('curriculumManagementScreen.whichCurriculaThisSchoolIsAccreditedToOfferOve')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {SCHOOL_CURRICULA.map(c => (
                         <button
@@ -165,7 +167,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
 
             {/* 3. Per-student curriculum track */}
             <div className="bg-white rounded-xl shadow-sm p-5">
-                <h2 className="font-bold text-lg text-gray-800 mb-1">Student Curriculum Tracks</h2>
+                <h2 className="font-bold text-lg text-gray-800 mb-1">{t('curriculumManagementScreen.studentCurriculumTracks')}</h2>
                 <p className="text-sm text-gray-500 mb-4">
                     Which curriculum each student is enrolled in — this is what teachers and parents see.
                 </p>
@@ -175,12 +177,12 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                         type="text"
                         value={studentSearch}
                         onChange={(e) => setStudentSearch(e.target.value)}
-                        placeholder="Search students by name or admission number..."
+                        placeholder={t('curriculumManagementScreen.searchStudentsByNameOrAdmissionNumber')}
                         className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm"
                     />
                 </div>
                 {studentsLoading ? (
-                    <CenteredLoader message="Loading students..." className="py-8" />
+                    <CenteredLoader message={t('curriculumManagementScreen.loadingStudents')} className="py-8" />
                 ) : (
                     <div className="max-h-[420px] overflow-y-auto divide-y divide-gray-100">
                         {filteredStudents.map(s => (
@@ -204,7 +206,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                             </div>
                         ))}
                         {filteredStudents.length === 0 && (
-                            <p className="text-sm text-gray-500 text-center py-8">No students found.</p>
+                            <p className="text-sm text-gray-500 text-center py-8">{t('curriculumManagementScreen.noStudentsFound')}</p>
                         )}
                     </div>
                 )}

@@ -13,6 +13,7 @@
  */
 
 import React, { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
@@ -29,6 +30,7 @@ interface GuardianListScreenProps {
 const emptyForm = { id: '', fullName: '', phone: '', email: '', identityNo: '', address: '', occupation: '' };
 
 const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
+    const { t } = useTranslation();
     const queryClient = useQueryClient();
     const { user } = useAuth();
     const queryKey = ['guardians'];
@@ -84,7 +86,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
     const handleSave = async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!form.fullName.trim() || !form.phone.trim()) {
-            toast.error('Please enter a name and a phone number.');
+            toast.error(t('parentListScreen.pleaseEnterANameAndAPhoneNumber'));
             return;
         }
 
@@ -128,13 +130,13 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
     };
 
     if (isLoading && guardians.length === 0) {
-        return <CenteredLoader fullScreen={false} message="Loading guardians..." className="h-screen" />;
+        return <CenteredLoader fullScreen={false} message={t('parentListScreen.loadingGuardians')} className="h-screen" />;
     }
 
     if (isError) {
         return (
             <div className="flex flex-col items-center justify-center p-8 bg-white rounded-2xl shadow-sm border border-red-100 text-center m-2">
-                <h3 className="font-bold text-gray-900 mb-1">Could not load guardians</h3>
+                <h3 className="font-bold text-gray-900 mb-1">{t('parentListScreen.couldNotLoadGuardians')}</h3>
                 <p className="text-sm text-gray-500 mb-4">{String(error)}</p>
                 <button
                     onClick={() => refetch()}
@@ -176,7 +178,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                         placeholder="Search by guardian or child's name, phone, or email"
-                        aria-label="Search guardians"
+                        aria-label={t('parentListScreen.searchGuardians')}
                         className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                     />
                 </div>
@@ -365,7 +367,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                                     </div>
                                     <div>
                                         <label htmlFor="guardianJob" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Occupation
+                                            {t('parentListScreen.occupation')}
                                         </label>
                                         <input
                                             id="guardianJob"
@@ -379,7 +381,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
 
                                 <div>
                                     <label htmlFor="guardianAddress" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Address
+                                        {t('parentListScreen.address')}
                                     </label>
                                     <textarea
                                         id="guardianAddress"

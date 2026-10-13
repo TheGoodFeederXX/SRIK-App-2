@@ -214,7 +214,12 @@ function addHooks(fileSource) {
             && (/\|\||&&|\?\./.test(afterAssign)
                 || /\.(?:map|filter|forEach|reduce|sort)\s*\(/.test(afterAssign)
                 || /^\s*\(\s*\)\s*=>/.test(afterAssign));
-        const looksLikeValue = assignsExpression;
+        // A callback opened with `(` and closed with `)` — `.map(...)`, `.filter(...)`,
+        // `(() => ...)` — is a value wherever it appears, including inside JSX braces.
+        const opensCallback = /\.(?:map|filter|forEach|reduce|sort|flatMap)\s*\(/.test(head)
+            || /^\(\s*\)\s*=>/.test(head)
+            || /\|\|\s*\(/.test(head);
+        const looksLikeValue = assignsExpression || opensCallback;
         if (looksLikeValue) name = null;
         if (!name && !looksLikeValue) {
             for (let k = i - 1; k >= 0 && k > i - 40; k--) {

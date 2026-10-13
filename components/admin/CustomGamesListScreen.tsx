@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -8,9 +9,11 @@ interface CustomGamesListScreenProps {
     handleBack?: () => void;
 }
 
-const CustomGamesListScreen: React.FC<CustomGamesListScreenProps> = ({ handleBack }) => (
+const CustomGamesListScreen: React.FC<CustomGamesListScreenProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Permainan Pembelajaran"
+        title={t('customGamesListScreen.permainanPembelajaran')}
         explanation={
             'Permainan pembelajaran dalam talian belum tersedia di dalam sistem ini. ' +
             'Buat masa ini pembelajaran dijalankan melalui pengajaran guru dan bahan ' +
@@ -19,6 +22,7 @@ const CustomGamesListScreen: React.FC<CustomGamesListScreenProps> = ({ handleBac
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default CustomGamesListScreen;

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { LockIcon } from '../../constants';
 import { changePassword, describePasswordProblem } from '../../src/lib/supabase/auth';
@@ -16,6 +17,7 @@ const PasswordInput = ({ id, label, value, onChange }: { id: string, label: stri
 );
 
 const ChangePasswordScreen: React.FC = () => {
+    const { t } = useTranslation();
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -25,7 +27,7 @@ const ChangePasswordScreen: React.FC = () => {
         e.preventDefault();
 
         if (newPassword !== confirmPassword) {
-            toast.error('New passwords do not match.');
+            toast.error(t('changePasswordScreen.newPasswordsDoNotMatch'));
             return;
         }
 
@@ -50,7 +52,7 @@ const ChangePasswordScreen: React.FC = () => {
             if (!result.success) {
                 throw new Error(result.error || 'Could not change the password.');
             }
-            toast.success('Password changed successfully!');
+            toast.success(t('changePasswordScreen.passwordChangedSuccessfully'));
             setCurrentPassword('');
             setNewPassword('');
             setConfirmPassword('');
@@ -67,9 +69,9 @@ const ChangePasswordScreen: React.FC = () => {
             <form onSubmit={handleSubmit} className="flex-grow flex flex-col">
                 <main className="flex-grow p-4 overflow-y-auto">
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white p-4 rounded-xl shadow-sm space-y-4">
-                        <PasswordInput id="currentPassword" label="Current Password" value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
-                        <PasswordInput id="newPassword" label="New Password" value={newPassword} onChange={e => setNewPassword(e.target.value)} />
-                        <PasswordInput id="confirmPassword" label="Confirm New Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
+                        <PasswordInput id="currentPassword" label={t('changePasswordScreen.currentPassword')} value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} />
+                        <PasswordInput id="newPassword" label={t('changePasswordScreen.newPassword')} value={newPassword} onChange={e => setNewPassword(e.target.value)} />
+                        <PasswordInput id="confirmPassword" label={t('changePasswordScreen.confirmNewPassword')} value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} />
                     </motion.div>
                 </main>
                 <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">

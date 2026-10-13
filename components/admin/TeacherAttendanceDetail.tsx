@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Teacher } from '../../types';
 import { ChevronLeftIcon, ChevronRightIcon, CheckCircleIcon } from '../../constants';
@@ -17,6 +18,7 @@ import { Save, RotateCcw } from 'lucide-react';
 type AttendanceStatus = 'Present' | 'Absent' | 'Leave' | 'Medical' | 'Duty' | 'Pending';
 
 const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) => {
+    const { t } = useTranslation();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [attendanceMap, setAttendanceMap] = useState<Map<string, AttendanceStatus>>(new Map());
     const [pendingChanges, setPendingChanges] = useState<Map<string, AttendanceStatus>>(new Map());
@@ -123,7 +125,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
             await fetchAttendance();
         } catch (err) {
             console.error('Error saving attendance:', err);
-            toast.error('Failed to save attendance changes');
+            toast.error(t('teacherAttendanceDetail.failedToSaveAttendanceChanges'));
         } finally {
             setIsSaving(false);
         }
@@ -156,7 +158,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
     }, [attendanceMap, pendingChanges]);
 
     if (!teacher) {
-        return <div className="p-6 text-center text-sm text-gray-500">No teacher selected. Open this view from a teacher row.</div>;
+        return <div className="p-6 text-center text-sm text-gray-500">{t('teacherAttendanceDetail.noTeacherSelectedOpenThisViewFromATeacherRow')}</div>;
     }
 
     return (
@@ -212,8 +214,8 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                     </div>
                 )}
                 <div className="flex justify-center space-x-3 mt-4 text-xs">
-                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>Present</span>
-                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-yellow-400 mr-1.5"></div>Pending</span>
+                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>{t('teacherAttendanceDetail.present')}</span>
+                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-yellow-400 mr-1.5"></div>{t('teacherAttendanceDetail.pending')}</span>
                     <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>Absent</span>
                     <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-amber-400 mr-1.5"></div>Leave</span>
                 </div>
@@ -221,7 +223,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
                 <motion.div layout className="bg-white p-3 rounded-xl shadow-sm border border-transparent hover:border-green-100 transition-colors">
                     <motion.p key={stats.present} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-lg text-green-600">{stats.present}</motion.p>
-                    <p className="text-xs text-gray-500">Present</p>
+                    <p className="text-xs text-gray-500">{t('teacherAttendanceDetail.present')}</p>
                 </motion.div>
                 <motion.div layout className="bg-white p-3 rounded-xl shadow-sm border border-transparent hover:border-red-100 transition-colors">
                     <motion.p key={stats.absent} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-lg text-red-600">{stats.absent}</motion.p>
@@ -229,7 +231,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                 </motion.div>
                 <motion.div layout className="bg-white p-3 rounded-xl shadow-sm border border-transparent hover:border-amber-100 transition-colors">
                     <motion.p key={stats.leave} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-lg text-amber-600">{stats.leave}</motion.p>
-                    <p className="text-xs text-gray-500">On Leave</p>
+                    <p className="text-xs text-gray-500">{t('teacherAttendanceDetail.onLeave')}</p>
                 </motion.div>
             </div>
 
@@ -262,7 +264,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                         onClick={() => setPendingChanges(new Map())}
                         disabled={isSaving}
                         className="p-3 bg-gray-200 text-gray-600 rounded-xl hover:bg-gray-300 transition-colors disabled:opacity-50"
-                        title="Reset changes"
+                        title={t('teacherAttendanceDetail.resetChanges')}
                     >
                         <RotateCcw className="w-5 h-5" />
                     </motion.button>

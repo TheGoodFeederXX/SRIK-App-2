@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface ManagePermissionSlipsScreenProps {
@@ -25,9 +26,11 @@ interface ManagePermissionSlipsScreenProps {
  * be recorded, and how long the record is kept. The paper slips in the class file remain the
  * safer record for now, because they are certainly real.
  */
-const ManagePermissionSlipsScreen: React.FC<ManagePermissionSlipsScreenProps> = ({ handleBack, onBack }) => (
+const ManagePermissionSlipsScreen: React.FC<ManagePermissionSlipsScreenProps> = ({ handleBack, onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Urus Slip Kebenaran"
+        title={t('managePermissionSlipsScreen.urusSlipKebenaran')}
         explanation={
             'Sekolah belum menggunakan slip kebenaran dalam talian, jadi tiada senarai untuk ' +
             'diuruskan di sini. Buat masa ini slip diedarkan dan dikumpul secara bertulis ' +
@@ -37,6 +40,7 @@ const ManagePermissionSlipsScreen: React.FC<ManagePermissionSlipsScreenProps> = 
         }
         handleBack={handleBack || onBack}
     />
-);
+    );
+};
 
 export default ManagePermissionSlipsScreen;

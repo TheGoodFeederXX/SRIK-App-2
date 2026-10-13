@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { listClasses } from '../../src/lib/supabase/academics';
@@ -37,6 +38,7 @@ interface AcademicAnalyticsProps {
 }
 
 const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const [gradeDistribution, setGradeDistribution] = useState<GradeDistribution[]>([]);
     const [subjectPerformance, setSubjectPerformance] = useState<SubjectPerformance[]>([]);
     const [classComparison, setClassComparison] = useState<ClassComparison[]>([]);
@@ -113,7 +115,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
             setMetrics(data.metrics);
         } catch (error: any) {
             console.error('Error fetching analytics:', error);
-            toast.error('Failed to load analytics');
+            toast.error(t('academicAnalytics.failedToLoadAnalytics'));
         } finally {
             setLoading(false);
         }
@@ -154,7 +156,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
             {/* Header */}
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-4 sm:p-6 text-white mb-6">
                 <h1 className="text-2xl sm:text-3xl font-bold mb-2">📊 Academic Analytics</h1>
-                <p className="text-indigo-100 text-sm sm:text-base">Comprehensive performance tracking and analysis</p>
+                <p className="text-indigo-100 text-sm sm:text-base">{t('academicAnalytics.comprehensivePerformanceTrackingAndAnalysis')}</p>
             </motion.div>
 
             {/* Filters */}
@@ -183,7 +185,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                             onChange={(e) => setSelectedClass(e.target.value === 'all' ? null : e.target.value)}
                             className="w-full sm:w-56 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
                         >
-                            <option value="all">All Classes</option>
+                            <option value="all">{t('academicAnalytics.allClasses')}</option>
                             {classOptions.map(c => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
                             ))}
@@ -202,7 +204,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Purata Markah</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{t('academicAnalytics.purataMarkah')}</p>
                             <p className="text-2xl sm:text-3xl font-bold text-indigo-600">
                                 {metrics.overallAverage === null ? '—' : metrics.overallAverage}
                             </p>
@@ -223,7 +225,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Kadar Lulus</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{t('academicAnalytics.kadarLulus')}</p>
                             <p className="text-2xl sm:text-3xl font-bold text-green-600">
                                 {metrics.passRate === null ? '—' : `${metrics.passRate}%`}
                             </p>
@@ -243,7 +245,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Top Performer</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{t('academicAnalytics.topPerformer')}</p>
                             <p className="text-base sm:text-lg font-bold text-gray-900 truncate max-w-[120px] sm:max-w-none">{metrics.topPerformer ?? '—'}</p>
                             <p className="text-xs sm:text-xs text-gray-500 mt-1">Purata: {metrics.topPerformerAverage ?? '—'}</p>
                         </div>
@@ -256,7 +258,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-xs sm:text-sm text-gray-600">Bilangan Markah</p>
+                            <p className="text-xs sm:text-sm text-gray-600">{t('academicAnalytics.bilanganMarkah')}</p>
                             <p className="text-2xl sm:text-3xl font-bold text-gray-900">{metrics.marksCounted}</p>
                             <p className="text-xs sm:text-xs text-gray-500 mt-1">dalam {classComparison.length} kelas</p>
                         </div>
@@ -269,7 +271,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
 
             {/* Grade Distribution */}
             <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Grade Distribution</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-4">{t('academicAnalytics.gradeDistribution')}</h3>
                 <div className="space-y-3">
                     {gradeDistribution.map((item, gi) => (
                         <div key={item.grade}>
@@ -305,7 +307,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <h3 className="text-lg font-bold text-gray-900 mb-4">📚 Subject Performance</h3>
                     <div className="space-y-3">
                         {subjectPerformance.length === 0 && (
-                            <p className="text-center text-gray-400 py-8 text-sm">Belum ada markah untuk penggal atau kelas ini.</p>
+                            <p className="text-center text-gray-400 py-8 text-sm">{t('academicAnalytics.belumAdaMarkahUntukPenggalAtauKelasIni')}</p>
                         )}
                         {subjectPerformance.slice(0, 6).map((subject, si) => (
                             <motion.div
@@ -327,7 +329,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
-                                        <p className="text-gray-600">Purata Markah</p>
+                                        <p className="text-gray-600">{t('academicAnalytics.purataMarkah')}</p>
                                         <p className="text-lg font-bold text-indigo-600">{subject.average}</p>
                                     </div>
                                     <div>
@@ -345,7 +347,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <h3 className="text-lg font-bold text-gray-900 mb-4">🏆 Class Comparison</h3>
                     <div className="space-y-3">
                         {classComparison.length === 0 && (
-                            <p className="text-center text-gray-400 py-8 text-sm">Belum ada markah untuk penggal atau kelas ini.</p>
+                            <p className="text-center text-gray-400 py-8 text-sm">{t('academicAnalytics.belumAdaMarkahUntukPenggalAtauKelasIni')}</p>
                         )}
                         {classComparison.map((classData, index) => (
                             <motion.div
@@ -370,7 +372,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                 </div>
                                 <div className="grid grid-cols-2 gap-4 text-sm mt-3">
                                     <div className="bg-gray-50 rounded p-2">
-                                        <p className="text-xs text-gray-600">Purata Markah</p>
+                                        <p className="text-xs text-gray-600">{t('academicAnalytics.purataMarkah')}</p>
                                         <p className="text-lg font-bold text-indigo-600">{classData.average}</p>
                                     </div>
                                     <div className="bg-gray-50 rounded p-2">
@@ -395,7 +397,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                 <h3 className="text-lg font-bold text-gray-900 mb-3">📊 Gambaran Keseluruhan</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className="bg-white rounded-lg p-4">
-                        <p className="text-sm text-gray-600 mb-1">Purata Keseluruhan</p>
+                        <p className="text-sm text-gray-600 mb-1">{t('academicAnalytics.purataKeseluruhan')}</p>
                         <p className="text-2xl font-bold text-indigo-600">
                             {metrics.overallAverage === null ? '—' : metrics.overallAverage}
                         </p>
@@ -408,7 +410,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.06 }} className="bg-white rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-1">
                             <AlertTriangle className="h-4 w-4 text-orange-500" />
-                            <p className="text-sm text-gray-600">Kelas Perlu Perhatian</p>
+                            <p className="text-sm text-gray-600">{t('academicAnalytics.kelasPerluPerhatian')}</p>
                         </div>
                         <p className="text-2xl font-bold text-orange-600">{atRiskClasses.length}</p>
                         {/* 50% is the floor of a C on THIS school's scale — the line
@@ -418,7 +420,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.12 }} className="bg-white rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-1">
                             <Star className="h-4 w-4 text-green-500" />
-                            <p className="text-sm text-gray-600">Kelas Terbaik</p>
+                            <p className="text-sm text-gray-600">{t('academicAnalytics.kelasTerbaik')}</p>
                         </div>
                         <p className="text-2xl font-bold text-green-600">
                             {topClasses[0]?.className ?? '—'}

@@ -1,4 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { Student, ClassInfo, AttendanceStatus } from '../../types';
 import { useAuth } from '../../context/AuthContext';
@@ -37,6 +38,7 @@ const AttendanceStatusIndicator: React.FC<{ status: AttendanceStatus }> = ({ sta
 };
 
 const ClassAttendanceDetailScreen: React.FC<ClassAttendanceDetailScreenProps> = ({ classInfo, date, currentBranchId }) => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
 
     // The database's statuses, in the screen's words.
@@ -88,7 +90,7 @@ const ClassAttendanceDetailScreen: React.FC<ClassAttendanceDetailScreenProps> = 
             })));
         } catch (err) {
             console.error("Error loading class attendance detail:", err);
-            toast.error('Failed to load attendance records');
+            toast.error(t('classAttendanceDetailScreen.failedToLoadAttendanceRecords'));
         } finally {
             setLoading(false);
         }
@@ -153,7 +155,7 @@ const ClassAttendanceDetailScreen: React.FC<ClassAttendanceDetailScreenProps> = 
 
             <main className="flex-grow overflow-y-auto">
                 {loading ? (
-                    <CenteredLoader message="Syncing database..." className="h-full" />
+                    <CenteredLoader message={t('classAttendanceDetailScreen.syncingDatabase')} className="h-full" />
                 ) : (
                     <ul className="divide-y divide-gray-200 shadow-sm rounded-xl mx-4 my-2 overflow-hidden border border-gray-100">
                         {studentsInClass.map((student, si) => (
@@ -176,7 +178,7 @@ const ClassAttendanceDetailScreen: React.FC<ClassAttendanceDetailScreenProps> = 
                         ))}
                         {studentsInClass.length === 0 && (
                             <div className="text-center py-20 bg-white">
-                                <p className="text-gray-400 font-medium italic">No students found for this class.</p>
+                                <p className="text-gray-400 font-medium italic">{t('classAttendanceDetailScreen.noStudentsFoundForThisClass')}</p>
                             </div>
                         )}
                     </ul>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -10,9 +11,11 @@ interface SalaryConfigurationProps {
     handleBack: () => void;
 }
 
-const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ handleBack }) => (
+const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Konfigurasi Gaji"
+        title={t('salaryConfiguration.konfigurasiGaji')}
         explanation={
             'Pengurusan gaji guru belum tersedia di dalam sistem ini. Buat masa ini ' +
             'urusan gaji dikendalikan oleh pihak pengurusan sekolah di luar sistem, ' +
@@ -21,6 +24,7 @@ const SalaryConfiguration: React.FC<SalaryConfigurationProps> = ({ handleBack })
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default SalaryConfiguration;

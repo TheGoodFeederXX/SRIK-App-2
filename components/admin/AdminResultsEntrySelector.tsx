@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React, { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { StudentsIcon, ChevronRightIcon, gradeColors, getFormattedClassName } from '../../constants';
@@ -14,6 +15,7 @@ interface AdminResultsEntrySelectorProps {
 }
 
 const AdminResultsEntrySelector: React.FC<AdminResultsEntrySelectorProps> = ({ navigateTo, schoolId, currentBranchId }) => {
+    const { t } = useTranslation();
     const { data: rawClasses = [], isLoading } = useQuery({
         queryKey: ['classes', schoolId, currentBranchId],
         // `api.getClasses(schoolId, branchId)` — an Express endpoint with no server.
@@ -69,20 +71,20 @@ const AdminResultsEntrySelector: React.FC<AdminResultsEntrySelectorProps> = ({ n
     }, [classes]);
 
     if (isLoading && classes.length === 0) {
-        return <CenteredLoader message="Loading classes..." className="h-full" />;
+        return <CenteredLoader message={t('adminResultsEntrySelector.loadingClasses')} className="h-full" />;
     }
 
     return (
         <div className="flex flex-col h-full bg-gray-100">
             <main className="flex-grow p-4 space-y-4 overflow-y-auto">
                 <div className="bg-cyan-50 p-4 rounded-xl text-center border border-cyan-200">
-                    <h3 className="font-bold text-lg text-cyan-800">Results Entry Selection</h3>
-                    <p className="text-sm text-cyan-700">Choose a class to enter student academic results.</p>
+                    <h3 className="font-bold text-lg text-cyan-800">{t('adminResultsEntrySelector.resultsEntrySelection')}</h3>
+                    <p className="text-sm text-cyan-700">{t('adminResultsEntrySelector.chooseAClassToEnterStudentAcademicResults')}</p>
                 </div>
 
                 {Object.keys(groupedClasses).length === 0 && (
                     <div className="text-center py-10">
-                        <p className="text-gray-500">No classes found.</p>
+                        <p className="text-gray-500">{t('adminResultsEntrySelector.noClassesFound')}</p>
                     </div>
                 )}
 

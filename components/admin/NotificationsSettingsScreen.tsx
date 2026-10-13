@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { MailIcon, BellIcon, NotificationIcon } from '../../constants';
 import { getMyPreferences, saveMyPreferences } from '../../src/lib/supabase/preferences';
@@ -26,6 +27,7 @@ const SettingToggle = ({ icon, label, description, enabled, onToggle, index = 0 
 );
 
 const NotificationsSettingsScreen: React.FC = () => {
+    const { t } = useTranslation();
     const [settings, setSettings] = useState({
         emailAlerts: true,
         pushNotifications: true,
@@ -58,10 +60,10 @@ const NotificationsSettingsScreen: React.FC = () => {
             // Only the key that changed is sent, and the database merges it, so a
             // save here cannot revert a preference changed on another screen.
             await saveMyPreferences({ [key]: newSettings[key] });
-            toast.success('Notification preference updated');
+            toast.success(t('notificationsSettingsScreen.notificationPreferenceUpdated'));
         } catch (err: any) {
             console.error('Error saving notification settings:', err);
-            toast.error('Failed to save notification settings');
+            toast.error(t('notificationsSettingsScreen.failedToSaveNotificationSettings'));
             // Revert on error
             setSettings(settings);
         }
@@ -69,28 +71,28 @@ const NotificationsSettingsScreen: React.FC = () => {
 
     return (
         <div className="p-4 space-y-4 bg-gray-50 h-full">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 px-2">Notification Preferences</h2>
+            <h2 className="text-xl font-bold text-gray-800 mb-4 px-2">{t('notificationsSettingsScreen.notificationPreferences')}</h2>
             <SettingToggle
                 index={0}
                 icon={<MailIcon className="text-sky-500 w-6 h-6" />}
-                label="Email Alerts"
-                description="Receive important alerts via email."
+                label={t('notificationsSettingsScreen.emailAlerts')}
+                description={t('notificationsSettingsScreen.receiveImportantAlertsViaEmail')}
                 enabled={settings.emailAlerts}
                 onToggle={() => toggleSetting('emailAlerts')}
             />
             <SettingToggle
                 index={1}
                 icon={<BellIcon className="text-green-500 w-6 h-6" />}
-                label="Push Notifications"
-                description="Get real-time updates on your device."
+                label={t('notificationsSettingsScreen.pushNotifications')}
+                description={t('notificationsSettingsScreen.getRealTimeUpdatesOnYourDevice')}
                 enabled={settings.pushNotifications}
                 onToggle={() => toggleSetting('pushNotifications')}
             />
             <SettingToggle
                 index={2}
                 icon={<NotificationIcon className="text-purple-500 w-6 h-6" />}
-                label="Weekly Summary"
-                description="Get a summary report every Thursday."
+                label={t('notificationsSettingsScreen.weeklySummary')}
+                description={t('notificationsSettingsScreen.getASummaryReportEveryThursday')}
                 enabled={settings.weeklySummary}
                 onToggle={() => toggleSetting('weeklySummary')}
             />
