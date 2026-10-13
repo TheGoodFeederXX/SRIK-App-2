@@ -1236,5 +1236,246 @@
   },
   "workloadCalculator": {
     "workloadCalculator": "Workload Calculator"
+  },
+  "aIParentingTips": {
+    "aiparentingTips": "AIParenting Tips"
+  },
+  "appointmentScreen": {
+    "janjiTemuGuru": "Janji Temu Guru"
+  },
+  "editParentProfileScreen": {
+    "editParentProfile": "Edit Parent Profile"
+  },
+  "feedbackScreen": {
+    "feedback": "Feedback"
+  },
+  "learningHubProgressScreen": {
+    "progressPembelajaran": "Progress Pembelajaran"
+  },
+  "learningResourcesScreen": {
+    "learningResources": "Learning Resources"
+  },
+  "linkChildScreen": {
+    "manageChildAccounts": "Manage Child Accounts",
+    "linkANewChild": "Link a New Child",
+    "enterTheUniqueSchoolIDToLinkTheirAccount": "Enter the unique School ID to link their account.",
+    "guardian": "Guardian",
+    "myLinkedChildren": "My Linked Children",
+    "loadingChildRecords": "Loading child records...",
+    "noChildrenLinked": "No Children Linked",
+    "removeLink": "Remove Link",
+    "removeChildLink": "Remove Child Link",
+    "failedToUnlinkStudent": "Failed to unlink student."
+  },
+  "myAnnouncementsScreen": {
+    "pengumuman": "Pengumuman",
+    "tiadaPengumuman": "Tiada pengumuman"
+  },
+  "myChildrenFeesScreen": {
+    "yuranAnakSaya": "Yuran Anak Saya",
+    "bayaranYuranUntukAnakAnda": "Bayaran yuran untuk anak anda.",
+    "tiadaRekodAnak": "Tiada rekod anak",
+    "tertunggak": "Tertunggak",
+    "jumlahDicaj": "Jumlah dicaj",
+    "telahDibayar": "Telah dibayar"
+  },
+  "pTAMeetingScreen": {
+    "ptameeting": "PTAMeeting"
+  },
+  "parentChangePasswordScreen": {
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordUpdatedSuccessfully": "Password updated successfully!",
+    "newPasswordsDoNotMatch": "New passwords do not match."
+  },
+  "parentDashboard": {
+    "personalizedAdvice": "Personalized Advice",
+    "getAIPoweredTipsForYourChild": "Get AI-powered tips for your child.",
+    "getTips": "Get Tips",
+    "termPerformance": "Term Performance",
+    "currentTerm": "Current Term",
+    "overallAverage": "Overall Average",
+    "noGradesRecordedYet": "No grades recorded yet.",
+    "upcomingHomework": "Upcoming Homework",
+    "noUpcomingHomework": "No upcoming homework.",
+    "suggestionsForHome": "Suggestions for Home:",
+    "noBehavioralNotesRecorded": "No behavioral notes recorded.",
+    "present": "Present",
+    "schoolDays": "School days",
+    "featureComingSoon": "Feature Coming Soon",
+    "parentProfileNotFound": "Parent Profile Not Found",
+    "attendance": "Attendance",
+    "feesDue": "Fees Due",
+    "homework": "Homework",
+    "reportCard": "Report Card",
+    "academics": "Academics",
+    "behavior": "Behavior"
+  },
+  "parentNewChatScreen": {
+    "parentNewChat": "Parent New Chat"
+  },
+  "parentNotificationSettingsScreen": {
+    "emailAlerts": "Email Alerts",
+    "pushNotifications": "Push Notifications",
+    "weeklySummary": "Weekly Summary",
+    "receiveImportantAlertsViaEmail": "Receive important alerts via email.",
+    "getRealTimeUpdatesOnYourDevice": "Get real-time updates on your device.",
+    "getASummaryReportEveryThursday": "Get a summary report every Thursday.",
+    "settingsUpdated": "Settings updated",
+    "failedToUpdateSettings": "Failed to update settings"
+  },
+  "parentPhotoGalleryScreen": {
+    "parentPhotoGallery": "Parent Photo Gallery"
+  },
+  "parentProfileScreen": {
+    "moreOptions": "More Options",
+    "profileNotFound": "Profile not found.",
+    "yourSchools": "Your Schools",
+    "pengumumanSekolah": "Pengumuman Sekolah",
+    "linkChildAccount": "Link Child Account",
+    "editProfile": "Edit Profile",
+    "learningResources": "Learning Resources",
+    "schoolPolicies": "School Policies",
+    "ptaMeetings": "PTA Meetings",
+    "photoGallery": "Photo Gallery",
+    "volunteer": "Volunteer",
+    "permissionSlips": "Permission Slips",
+    "feedbackSupport": "Feedback & Support",
+    "notificationSettings": "Notification Settings",
+    "securityPassword": "Security & Password",
+    "dataUsage": "Data Usage",
+    "appearanceTheme": "Appearance & Theme",
+    "helpCenter": "Help Center",
+    "switchedSchoolSuccessfully": "Switched school successfully",
+    "failedToSwitchSchool": "Failed to switch school",
+    "idIsStillPendingGeneration": "ID is still pending generation.",
+    "helpCenterComingSoon": "Help Center coming soon!"
+  },
+  "parentSecurityScreen": {
+    "parentSecurity": "Parent Security"
+  },
+  "parentTodayWidget": {
+    "pleaseTryAgainLater": "Please try again later.",
+    "noChildrenDataAvailablePleaseContactSupportIfT": "No children data available. Please contact support if this persists.",
+    "hereSEverythingHappeningToday": "Here's everything happening today",
+    "viewReportCard": "View Report Card",
+    "schoolCalendar": "School Calendar",
+    "todaySActivityFeed": "Today's Activity Feed",
+    "attendanceToday": "Attendance Today"
+  },
+  "permissionSlipScreen": {
+    "permissionSlip": "Permission Slip"
+  },
+  "pickupAuthorizationScreen": {
+    "pickupAuthorization": "Pickup Authorization"
+  },
+  "reportCardScreen": {
+    "endOfTermReportCard": "End of Term Report Card",
+    "subject": "Subject",
+    "ca40": "CA (40)",
+    "exam60": "Exam (60)",
+    "total100": "Total (100)",
+    "noAcademicRecordsAvailable": "No academic records available.",
+    "totalDays": "Total Days",
+    "present": "Present",
+    "teacherSComment": "Teacher's Comment",
+    "principalSComment": "Principal's Comment",
+    "selectAChildToViewTheirReportCard": "Select a child to view their report card.",
+    "noPublishedReports": "No Published Reports",
+    "reportCardsForThisSessionHaveNotBeenPublishedY": "Report cards for this session have not been published yet.",
+    "notPublishedYet": "Not Published Yet",
+    "selectATermToViewTheReport": "Select a term to view the report.",
+    "fullName": "Full Name",
+    "classGrade": "Class/Grade",
+    "session": "Session",
+    "admissionNo": "Admission No.",
+    "curriculum": "Curriculum",
+    "dateOfBirth": "Date of Birth",
+    "positionInClass": "Position in Class",
+    "studentInformation": "Student Information",
+    "academicPerformance": "Academic Performance",
+    "skillsBehaviour": "Skills & Behaviour",
+    "psychomotorSkills": "Psychomotor Skills",
+    "attendanceRecord": "Attendance Record",
+    "comments": "Comments",
+    "fetchingReportDetails": "Fetching report details...",
+    "schoolLogo": "School Logo"
+  },
+  "schoolPoliciesScreen": {
+    "schoolPolicies": "School Policies"
+  },
+  "schoolUtilitiesScreen": {
+    "schoolUtilities": "School Utilities",
+    "accessAllSchoolToolsAndResourcesInOnePlace": "Access all school tools and resources in one place.",
+    "transportBusRoute": "Transport & Bus Route",
+    "schoolCalendar": "School Calendar",
+    "noticeboard": "Noticeboard",
+    "bookAppointment": "Book Appointment",
+    "digitalLibrary": "Digital Library",
+    "learningResources": "Learning Resources",
+    "learningHub": "Learning Hub",
+    "schoolPolicies": "School Policies",
+    "ptaMeetings": "PTA Meetings",
+    "photoGallery": "Photo Gallery",
+    "volunteering": "Volunteering",
+    "permissionSlips": "Permission Slips",
+    "pickupAuthorization": "Pickup Authorization",
+    "myTimetable": "My Timetable",
+    "examSchedule": "Exam Schedule",
+    "trackSchoolBusLocationAndViewRoutes": "Track school bus location and view routes",
+    "viewAcademicSessionsHolidaysAndEvents": "View academic sessions, holidays, and events",
+    "importantAnnouncementsAndNews": "Important announcements and news",
+    "scheduleMeetingsWithTeachersOrAdmin": "Schedule meetings with teachers or admin",
+    "accessBooksJournalsAndResources": "Access books, journals, and resources",
+    "studyMaterialsAndEducationalContent": "Study materials and educational content",
+    "trackProgressOnFreeStudyResources": "Track progress on free study resources",
+    "rulesRegulationsAndGuidelines": "Rules, regulations, and guidelines",
+    "minutesSchedulesAndPTAInfo": "Minutes, schedules, and PTA info",
+    "photosFromSchoolEventsAndActivities": "Photos from school events and activities",
+    "signUpForSchoolEventsAndHelpOut": "Sign up for school events and help out",
+    "approveTripsAndActivitiesDigitally": "Approve trips and activities digitally",
+    "manageWhoIsAllowedToCollectYourChild": "Manage who is allowed to collect your child",
+    "viewYourWeeklyClassSchedule": "View your weekly class schedule",
+    "upcomingExamsAndTestDates": "Upcoming exams and test dates"
+  },
+  "selectChildForReportScreen": {
+    "loadingChildren": "Loading children...",
+    "selectAChild": "Select a Child",
+    "chooseAChildToViewTheirLatestAcademicReportCar": "Choose a child to view their latest academic report card."
+  },
+  "smartCalendar": {
+    "loadingCalendar": "Loading calendar...",
+    "schoolCalendar": "School Calendar",
+    "noEventsScheduled": "No Events Scheduled",
+    "checkBackLaterForUpcomingSchoolEvents": "Check back later for upcoming school events.",
+    "yourRSVP": "Your RSVP"
+  },
+  "unifiedParentHome": {
+    "couldnTLoadYourChildren": "Couldn't Load Your Children",
+    "somethingWentWrongLoadingYourChildrenSDetails": "Something went wrong loading your children's details.",
+    "pleaseTryAgain": "Please try again.",
+    "noChildrenLinked": "No Children Linked",
+    "weCouldnTFindAnyStudentsLinkedToYourParentAcco": "We couldn't find any students linked to your parent account.",
+    "ifThisIsAMistakePleaseContactTheSchoolAdminist": "If this is a mistake, please contact the school administration.",
+    "schoolUtilities": "School Utilities",
+    "viewAll": "View All",
+    "dailyReport": "Daily Report",
+    "attendance": "Attendance",
+    "academics": "Academics",
+    "latestPerformance": "Latest Performance",
+    "newAnnouncement": "New Announcement",
+    "calendar": "Calendar",
+    "notices": "Notices",
+    "busRoute": "Bus Route",
+    "schoolCalendar": "School Calendar",
+    "noticeboard": "Noticeboard",
+    "bookAppointment": "Book Appointment"
+  },
+  "volunteerSignup": {
+    "volunteerSignup": "Volunteer Signup"
+  },
+  "volunteeringScreen": {
+    "volunteering": "Volunteering"
   }
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -50,6 +51,7 @@ const ATTENDANCE_LABEL: Record<string, string> = {
 };
 
 export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, schoolId, navigateTo, loading: studentsLoading }) => {
+    const { t } = useTranslation();
     const { user, currentSchool } = useAuth();
     const [children, setChildren] = useState<ChildOverview[]>([]);
     // True once a load has completed, so background refreshes never flash a skeleton.
@@ -136,8 +138,8 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
             className="flex flex-col items-center justify-center h-[60vh] p-6 text-center"
         >
             <CircleUser className="w-20 h-20 text-gray-300 mb-4" />
-            <h2 className="text-xl font-bold text-gray-700">Couldn't Load Your Children</h2>
-            <p className="text-gray-500 mt-2">Something went wrong loading your children's details.<br/>Please try again.</p>
+            <h2 className="text-xl font-bold text-gray-700">{t('unifiedParentHome.couldnTLoadYourChildren')}</h2>
+            <p className="text-gray-500 mt-2">{t('unifiedParentHome.somethingWentWrongLoadingYourChildrenSDetails')}<br/>{t('unifiedParentHome.pleaseTryAgain')}</p>
             <button
                 onClick={() => load()}
                 className="mt-4 min-h-11 px-4 py-2 rounded-xl bg-indigo-600 text-white font-semibold"
@@ -154,8 +156,8 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
             className="flex flex-col items-center justify-center h-[60vh] p-6 text-center"
         >
             <CircleUser className="w-20 h-20 text-gray-300 mb-4" />
-            <h2 className="text-xl font-bold text-gray-700">No Children Linked</h2>
-            <p className="text-gray-500 mt-2">We couldn't find any students linked to your parent account.<br/>If this is a mistake, please contact the school administration.</p>
+            <h2 className="text-xl font-bold text-gray-700">{t('unifiedParentHome.noChildrenLinked')}</h2>
+            <p className="text-gray-500 mt-2">{t('unifiedParentHome.weCouldnTFindAnyStudentsLinkedToYourParentAcco')}<br/>{t('unifiedParentHome.ifThisIsAMistakePleaseContactTheSchoolAdminist')}</p>
         </motion.div>
     );
 
@@ -243,15 +245,15 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
             <div className="px-4 pt-4">
                 <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider underline">School Utilities</h3>
-                        <button onClick={() => navigateTo('schoolUtilities', 'School Utilities')} className="inline-flex items-center min-h-11 px-3 -my-3 -mr-3 rounded-lg text-xs text-indigo-600 font-bold hover:underline">View All</button>
+                        <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider underline">{t('unifiedParentHome.schoolUtilities')}</h3>
+                        <button onClick={() => navigateTo('schoolUtilities', 'School Utilities')} className="inline-flex items-center min-h-11 px-3 -my-3 -mr-3 rounded-lg text-xs text-indigo-600 font-bold hover:underline">{t('unifiedParentHome.viewAll')}</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                         {[
-                            { label: 'Bus', icon: Bus, color: 'text-amber-600', bg: 'bg-amber-50', view: 'busRoute', title: 'Bus Route' },
-                            { label: 'Calendar', icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50', view: 'calendar', title: 'School Calendar' },
-                            { label: 'Notices', icon: Megaphone, color: 'text-purple-600', bg: 'bg-purple-50', view: 'noticeboard', title: 'Noticeboard' },
-                            { label: 'Meet', icon: CalendarPlus, color: 'text-pink-600', bg: 'bg-pink-50', view: 'appointments', title: 'Book Appointment' }
+                            { label: 'Bus', icon: Bus, color: 'text-amber-600', bg: 'bg-amber-50', view: 'busRoute', title: t('unifiedParentHome.busRoute') },
+                            { label: t('unifiedParentHome.calendar'), icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50', view: 'calendar', title: t('unifiedParentHome.schoolCalendar') },
+                            { label: t('unifiedParentHome.notices'), icon: Megaphone, color: 'text-purple-600', bg: 'bg-purple-50', view: 'noticeboard', title: t('unifiedParentHome.noticeboard') },
+                            { label: 'Meet', icon: CalendarPlus, color: 'text-pink-600', bg: 'bg-pink-50', view: 'appointments', title: t('unifiedParentHome.bookAppointment') }
                         ].map((item, i) => (
                             <motion.button
                                 key={i}
@@ -272,7 +274,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
             {/* Scrollable Card Feed */}
             <div className="p-4 space-y-4">
                 <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">Daily Report</h3>
+                    <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest">{t('unifiedParentHome.dailyReport')}</h3>
                 </div>
                 {/* Attendance Card */}
                 <motion.div
@@ -292,7 +294,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                             <CircleCheck className="w-6 h-6 text-emerald-600" />
                         </div>
                         <div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Attendance</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('unifiedParentHome.attendance')}</p>
                             <p className="text-gray-900 font-bold">
                                 {ATTENDANCE_LABEL[child.attendance.status] || ATTENDANCE_LABEL.not_marked}
                             </p>
@@ -322,7 +324,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                             <BookOpen className="w-6 h-6 text-blue-600" />
                         </div>
                         <div>
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Academics</p>
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('unifiedParentHome.academics')}</p>
                             <p className="text-gray-900 font-bold">{child.assignments_due} assignments due this week</p>
                         </div>
                     </div>
@@ -348,7 +350,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                                 <BarChart3 className="w-6 h-6 text-purple-600" />
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Latest Performance</p>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">{t('unifiedParentHome.latestPerformance')}</p>
                                 <p className="text-gray-900 font-bold">
                                     {child.latest_result.subject}: {child.latest_result.score}%
                                     <span className={`ml-2 text-sm ${child.latest_result.trend === 'down' ? 'text-red-500' : 'text-emerald-600'}`}>
@@ -379,7 +381,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                                 <Bell className="w-6 h-6" />
                             </div>
                             <div>
-                                <p className="text-xs font-bold opacity-80 uppercase tracking-wider">New Announcement</p>
+                                <p className="text-xs font-bold opacity-80 uppercase tracking-wider">{t('unifiedParentHome.newAnnouncement')}</p>
                                 <p className="font-bold">{latestNotice.title}</p>
                             </div>
                         </div>

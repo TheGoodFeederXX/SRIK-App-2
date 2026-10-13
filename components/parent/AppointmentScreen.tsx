@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -22,9 +23,11 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  * So: say what is true, and point at the channel that works — the school's own phone
  * number. If the school wants online booking, the rules come first, then the table.
  */
-const AppointmentScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => (
+const AppointmentScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Janji Temu Guru"
+        title={t('appointmentScreen.janjiTemuGuru')}
         explanation={
             'Sekolah belum membuka tempahan janji temu secara dalam talian. Untuk berjumpa ' +
             'guru, sila hubungi pejabat sekolah di 010-511 9582 dan pejabat akan mengaturkan ' +
@@ -33,6 +36,7 @@ const AppointmentScreen: React.FC<{ onBack?: () => void }> = ({ onBack }) => (
         }
         handleBack={onBack}
     />
-);
+    );
+};
 
 export default AppointmentScreen;

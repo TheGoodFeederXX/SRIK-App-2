@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardLayout from '../layout/DashboardLayout';
 import { DEFAULT_AVATAR } from '../../lib/avatar';
@@ -116,6 +117,7 @@ const StatItem = ({ icon, label, value, colorClass }: { icon: React.ReactNode, l
 );
 
 const ChildStatCard: React.FC<{ data: any, navigateTo: (view: string, title: string, props?: any) => void, colorTheme: { bg: string, text: string } }> = ({ data, navigateTo, colorTheme }) => {
+    const { t } = useTranslation();
     const { student, feeInfo, nextHomework, attendancePercentage, enrollments } = data;
 
     return (
@@ -147,16 +149,17 @@ const ChildStatCard: React.FC<{ data: any, navigateTo: (view: string, title: str
             </div>
 
             <div className="px-4 py-3 grid grid-cols-2 gap-4 border-t border-gray-100">
-                <StatItem icon={<AttendanceSummaryIcon className="h-5 w-5 text-green-600" />} label="Attendance" value={`${attendancePercentage}%`} colorClass="bg-green-100" />
-                <StatItem icon={<ReceiptIcon className="h-5 w-5 text-red-600" />} label="Fees Due" value={feeInfo?.status || 'N/A'} colorClass="bg-red-100" />
-                {nextHomework && <StatItem icon={<ClipboardListIcon className="h-5 w-5 text-purple-600" />} label="Homework" value={`${nextHomework.subject}`} colorClass="bg-purple-100" />}
-                <StatItem icon={<ReportIcon className="h-5 w-5 text-sky-600" />} label="Report Card" value="View" colorClass="bg-sky-100" />
+                <StatItem icon={<AttendanceSummaryIcon className="h-5 w-5 text-green-600" />} label={t('parentDashboard.attendance')} value={`${attendancePercentage}%`} colorClass="bg-green-100" />
+                <StatItem icon={<ReceiptIcon className="h-5 w-5 text-red-600" />} label={t('parentDashboard.feesDue')} value={feeInfo?.status || 'N/A'} colorClass="bg-red-100" />
+                {nextHomework && <StatItem icon={<ClipboardListIcon className="h-5 w-5 text-purple-600" />} label={t('parentDashboard.homework')} value={`${nextHomework.subject}`} colorClass="bg-purple-100" />}
+                <StatItem icon={<ReportIcon className="h-5 w-5 text-sky-600" />} label={t('parentDashboard.reportCard')} value="View" colorClass="bg-sky-100" />
             </div>
         </div>
     );
 };
 
 const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { student: Student; navigateTo: (view: string, title: string, props?: any) => void; schoolId?: string; currentBranchId?: string | null }) => {
+    const { t } = useTranslation();
     const [assignments, setAssignments] = useState<StudentAssignment[]>([]);
     const [loading, setLoading] = useState(true);
     
@@ -224,18 +227,18 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
                 className="bg-gradient-to-r from-green-500 to-teal-500 p-4 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-3 text-white"
             >
                 <div>
-                    <h3 className="font-bold text-lg">Personalized Advice</h3>
-                    <p className="text-sm opacity-90">Get AI-powered tips for your child.</p>
+                    <h3 className="font-bold text-lg">{t('parentDashboard.personalizedAdvice')}</h3>
+                    <p className="text-sm opacity-90">{t('parentDashboard.getAIPoweredTipsForYourChild')}</p>
                 </div>
                 <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo('aiParentingTips', 'AI Parenting Tips', { student: { ...student, academicPerformance: academicRecords } })} className="bg-white/20 min-h-11 px-4 py-2 rounded-lg font-semibold whitespace-nowrap flex-shrink-0 hover:bg-white/30 transition-colors flex items-center space-x-2">
-                    <SparklesIcon className="h-5 w-5" /><span>Get Tips</span>
+                    <SparklesIcon className="h-5 w-5" /><span>{t('parentDashboard.getTips')}</span>
                 </motion.button>
             </motion.div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex justify-between items-center">
-                        <div><h4 className="font-bold text-gray-800">Term Performance</h4><p className="text-sm text-gray-700">Current Term</p></div>
-                        {averageScore > 0 && <div className="text-right"><p className="font-bold text-2xl text-green-600">{averageScore}%</p><p className="text-xs text-gray-700">Overall Average</p></div>}
+                        <div><h4 className="font-bold text-gray-800">{t('parentDashboard.termPerformance')}</h4><p className="text-sm text-gray-700">{t('parentDashboard.currentTerm')}</p></div>
+                        {averageScore > 0 && <div className="text-right"><p className="font-bold text-2xl text-green-600">{averageScore}%</p><p className="text-xs text-gray-700">{t('parentDashboard.overallAverage')}</p></div>}
                     </div>
                     {academicRecords.length > 0 ? (
                         <div className="mt-3 space-y-2">
@@ -246,10 +249,10 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
                                 </motion.div>
                             ))}
                         </div>
-                    ) : <p className="text-sm text-gray-500 mt-2">No grades recorded yet.</p>}
+                    ) : <p className="text-sm text-gray-500 mt-2">{t('parentDashboard.noGradesRecordedYet')}</p>}
                 </motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }} className="bg-white p-4 rounded-xl shadow-sm">
-                    <h4 className="font-bold text-gray-800 mb-3">Upcoming Homework</h4>
+                    <h4 className="font-bold text-gray-800 mb-3">{t('parentDashboard.upcomingHomework')}</h4>
                     <div className="space-y-3">
                         {assignments.length > 0 ? assignments.map((hw, i) => {
                             const status = getHomeworkStatus(hw);
@@ -261,7 +264,7 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
                                     </div>
                                 </motion.div>
                             );
-                        }) : <p className="text-sm text-gray-700 text-center">No upcoming homework.</p>}
+                        }) : <p className="text-sm text-gray-700 text-center">{t('parentDashboard.noUpcomingHomework')}</p>}
                     </div>
                 </motion.div>
             </div>
@@ -270,6 +273,7 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
 };
 
 const BehaviorTab = ({ student }: { student: Student }) => {
+    const { t } = useTranslation();
     const [notes, setNotes] = useState<any[]>(student.behaviorNotes || []);
     const [loading, setLoading] = useState(!student.behaviorNotes);
 
@@ -314,20 +318,21 @@ const BehaviorTab = ({ student }: { student: Student }) => {
                             <p className="text-sm text-gray-700 mt-1">{note.note}</p>
                             {note.suggestions && (
                                 <div className="mt-3 pt-3 border-t border-gray-200">
-                                    <h6 className="font-semibold text-xs text-gray-600">Suggestions for Home:</h6>
+                                    <h6 className="font-semibold text-xs text-gray-600">{t('parentDashboard.suggestionsForHome')}</h6>
                                     <ul className="list-disc list-inside text-sm text-gray-700 mt-1 space-y-1">{note.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
                                 </div>
                             )}
                             <p className="text-xs text-gray-600 text-right mt-2 italic">- {note.by}</p>
                         </motion.div>
                     );
-                }) : <p className="md:col-span-2 text-sm text-gray-700 text-center py-8">No behavioral notes recorded.</p>}
+                }) : <p className="md:col-span-2 text-sm text-gray-700 text-center py-8">{t('parentDashboard.noBehavioralNotesRecorded')}</p>}
             </div>
         </div>
     );
 };
 
 const AttendanceTab = ({ student }: { student: Student }) => {
+    const { t } = useTranslation();
     const [attendance, setAttendance] = useState<StudentAttendance[]>([]);
     const [loading, setLoading] = useState(true);
     // This term's day counts from the register (same figures as the report card).
@@ -450,14 +455,14 @@ const AttendanceTab = ({ student }: { student: Student }) => {
                 })}
             </div>
             <div className="flex justify-center space-x-3 mt-4 text-xs">
-                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>Present</span>
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>{t('parentDashboard.present')}</span>
                 <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>Absent</span>
                 <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-1.5"></div>Late</span>
             </div>
             {termDays && (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-center mt-4">
-                    <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termDays.total}</p><p className="text-xs text-gray-500">School days</p></div>
-                    <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termDays.present}</p><p className="text-xs text-gray-500">Present</p></div>
+                    <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termDays.total}</p><p className="text-xs text-gray-500">{t('parentDashboard.schoolDays')}</p></div>
+                    <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termDays.present}</p><p className="text-xs text-gray-500">{t('parentDashboard.present')}</p></div>
                     <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termDays.absent}</p><p className="text-xs text-gray-500">Absent</p></div>
                     <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termDays.late}</p><p className="text-xs text-gray-500">Late</p></div>
                 </div>
@@ -469,6 +474,7 @@ const AttendanceTab = ({ student }: { student: Student }) => {
 type ChildDetailTab = 'academics' | 'behavior' | 'attendance';
 
 const ChildDetailScreen = ({ student, initialTab, navigateTo, schoolId, currentBranchId }: { student: Student, initialTab?: ChildDetailTab, navigateTo: (view: string, title: string, props?: any) => void, schoolId?: string, currentBranchId?: string | null }) => {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState<ChildDetailTab>(initialTab || 'academics');
     const TabButton = ({ id, label }: { id: ChildDetailTab, label: string }) => (
         <motion.button whileTap={{ scale: 0.97 }} onClick={() => setActiveTab(id)} className={`relative flex-1 min-h-11 py-2 text-sm font-semibold rounded-md ${activeTab === id ? 'text-white' : 'text-gray-800'}`}>
@@ -481,7 +487,7 @@ const ChildDetailScreen = ({ student, initialTab, navigateTo, schoolId, currentB
     return (
         <div className="flex flex-col h-full bg-gray-50">
             <div className="p-4 bg-white flex items-center space-x-4"><img src={student.avatarUrl} alt={student.name} className="w-16 h-16 rounded-full object-cover border-4 border-green-100" /><div><h3 className="text-xl font-bold text-gray-800">{student.name}</h3><p className="text-gray-700 font-medium">{getFormattedClassName(student.grade, student.section)}</p></div></div>
-            <div className="px-4 py-2 bg-white"><div className="flex space-x-1 bg-gray-200 p-1 rounded-lg"><TabButton id="academics" label="Academics" /><TabButton id="behavior" label="Behavior" /><TabButton id="attendance" label="Attendance" /></div></div>
+            <div className="px-4 py-2 bg-white"><div className="flex space-x-1 bg-gray-200 p-1 rounded-lg"><TabButton id="academics" label={t('parentDashboard.academics')} /><TabButton id="behavior" label={t('parentDashboard.behavior')} /><TabButton id="attendance" label={t('parentDashboard.attendance')} /></div></div>
             <div className="flex-grow overflow-y-auto">
                 <AnimatePresence mode="wait">
                     <motion.div key={activeTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
@@ -512,6 +518,7 @@ import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
 import { listAnnouncements } from '../../src/lib/supabase/announcements';
 
 const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
+    const { t } = useTranslation();
     const { currentSchool, currentBranchId, user } = useAuth();
 
     const { view, title, props: routeProps, navigateTo, replaceView, handleBack, canGoBack } =
@@ -785,7 +792,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                 <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <ExclamationCircleIcon className="w-8 h-8 text-amber-600" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-800">Feature Coming Soon</h2>
+                <h2 className="text-xl font-bold text-gray-800">{t('parentDashboard.featureComingSoon')}</h2>
                 <p className="text-gray-500 mt-2">The requested view "{view}" is being optimized or is not available for your account yet.</p>
                 <button 
                     onClick={() => replaceView('dashboard', 'Parent Dashboard')}
@@ -818,7 +825,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span className="text-3xl">👪</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Parent Profile Not Found</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('parentDashboard.parentProfileNotFound')}</h2>
                     <p className="text-gray-600 mb-6">
                         We couldn't find a parent record linked to your account.
                         Please contact the school administrator to link your account to your children.

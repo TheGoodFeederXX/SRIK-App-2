@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
     BusVehicleIcon,
@@ -38,108 +39,109 @@ interface SchoolUtilitiesScreenProps {
 const PARENT_ONLY_UTILITY_IDS = new Set(['appointments', 'pta', 'volunteering', 'permission', 'pickup']);
 
 const SchoolUtilitiesScreen: React.FC<SchoolUtilitiesScreenProps> = ({ navigateTo, role = 'parent', students = [] }) => {
+    const { t } = useTranslation();
 
     const allUtilities: UtilityItem[] = [
         {
             id: 'bus',
-            label: 'Transport & Bus Route',
-            description: 'Track school bus location and view routes',
+            label: t('schoolUtilitiesScreen.transportBusRoute'),
+            description: t('schoolUtilitiesScreen.trackSchoolBusLocationAndViewRoutes'),
             icon: <BusVehicleIcon className="h-8 w-8 text-white" />,
             color: 'bg-orange-500',
             view: 'busRoute'
         },
         {
             id: 'calendar',
-            label: 'School Calendar',
-            description: 'View academic sessions, holidays, and events',
+            label: t('schoolUtilitiesScreen.schoolCalendar'),
+            description: t('schoolUtilitiesScreen.viewAcademicSessionsHolidaysAndEvents'),
             icon: <CalendarIcon className="h-8 w-8 text-white" />,
             color: 'bg-blue-500',
             view: 'calendar'
         },
         {
             id: 'noticeboard',
-            label: 'Noticeboard',
-            description: 'Important announcements and news',
+            label: t('schoolUtilitiesScreen.noticeboard'),
+            description: t('schoolUtilitiesScreen.importantAnnouncementsAndNews'),
             icon: <MegaphoneIcon className="h-8 w-8 text-white" />,
             color: 'bg-purple-500',
             view: 'noticeboard'
         },
         {
             id: 'appointments',
-            label: 'Book Appointment',
-            description: 'Schedule meetings with teachers or admin',
+            label: t('schoolUtilitiesScreen.bookAppointment'),
+            description: t('schoolUtilitiesScreen.scheduleMeetingsWithTeachersOrAdmin'),
             icon: <CalendarPlusIcon className="h-8 w-8 text-white" />,
             color: 'bg-pink-500',
             view: 'appointments'
         },
         {
             id: 'library',
-            label: 'Digital Library',
-            description: 'Access books, journals, and resources',
+            label: t('schoolUtilitiesScreen.digitalLibrary'),
+            description: t('schoolUtilitiesScreen.accessBooksJournalsAndResources'),
             icon: <BookOpenIcon className="h-8 w-8 text-white" />,
             color: 'bg-indigo-500',
             view: 'library'
         },
         {
             id: 'resources',
-            label: 'Learning Resources',
-            description: 'Study materials and educational content',
+            label: t('schoolUtilitiesScreen.learningResources'),
+            description: t('schoolUtilitiesScreen.studyMaterialsAndEducationalContent'),
             icon: <ElearningIcon className="h-8 w-8 text-white" />,
             color: 'bg-teal-500',
             view: 'learningResources'
         },
         {
             id: 'learningHub',
-            label: 'Learning Hub',
-            description: 'Track progress on free study resources',
+            label: t('schoolUtilitiesScreen.learningHub'),
+            description: t('schoolUtilitiesScreen.trackProgressOnFreeStudyResources'),
             icon: <ElearningIcon className="h-8 w-8 text-white" />,
             color: 'bg-green-600',
             view: 'learningHub'
         },
         {
             id: 'policies',
-            label: 'School Policies',
-            description: 'Rules, regulations, and guidelines',
+            label: t('schoolUtilitiesScreen.schoolPolicies'),
+            description: t('schoolUtilitiesScreen.rulesRegulationsAndGuidelines'),
             icon: <ShieldCheckIcon className="h-8 w-8 text-white" />,
             color: 'bg-gray-600',
             view: 'schoolPolicies'
         },
         {
             id: 'pta',
-            label: 'PTA Meetings',
-            description: 'Minutes, schedules, and PTA info',
+            label: t('schoolUtilitiesScreen.ptaMeetings'),
+            description: t('schoolUtilitiesScreen.minutesSchedulesAndPTAInfo'),
             icon: <UserGroupIcon className="h-8 w-8 text-white" />,
             color: 'bg-cyan-600',
             view: 'ptaMeetings'
         },
         {
             id: 'gallery',
-            label: 'Photo Gallery',
-            description: 'Photos from school events and activities',
+            label: t('schoolUtilitiesScreen.photoGallery'),
+            description: t('schoolUtilitiesScreen.photosFromSchoolEventsAndActivities'),
             icon: <PhotoIcon className="h-8 w-8 text-white" />,
             color: 'bg-rose-500',
             view: 'photoGallery'
         },
         {
             id: 'volunteering',
-            label: 'Volunteering',
-            description: 'Sign up for school events and help out',
+            label: t('schoolUtilitiesScreen.volunteering'),
+            description: t('schoolUtilitiesScreen.signUpForSchoolEventsAndHelpOut'),
             icon: <HelpingHandIcon className="h-8 w-8 text-white" />,
             color: 'bg-green-600',
             view: 'volunteering'
         },
         {
             id: 'permission',
-            label: 'Permission Slips',
-            description: 'Approve trips and activities digitally',
+            label: t('schoolUtilitiesScreen.permissionSlips'),
+            description: t('schoolUtilitiesScreen.approveTripsAndActivitiesDigitally'),
             icon: <FileDocIcon className="h-8 w-8 text-white" />,
             color: 'bg-amber-500',
             view: 'permissionSlips'
         },
         {
             id: 'pickup',
-            label: 'Pickup Authorization',
-            description: 'Manage who is allowed to collect your child',
+            label: t('schoolUtilitiesScreen.pickupAuthorization'),
+            description: t('schoolUtilitiesScreen.manageWhoIsAllowedToCollectYourChild'),
             icon: <UserGroupIcon className="h-8 w-8 text-white" />,
             color: 'bg-cyan-700',
             view: 'pickupAuthorization'
@@ -150,16 +152,16 @@ const SchoolUtilitiesScreen: React.FC<SchoolUtilitiesScreenProps> = ({ navigateT
     const studentUtilities: UtilityItem[] = [
         {
             id: 'timetable',
-            label: 'My Timetable',
-            description: 'View your weekly class schedule',
+            label: t('schoolUtilitiesScreen.myTimetable'),
+            description: t('schoolUtilitiesScreen.viewYourWeeklyClassSchedule'),
             icon: <ClockIcon className="h-8 w-8 text-white" />,
             color: 'bg-sky-600',
             view: 'timetable'
         },
         {
             id: 'examSchedule',
-            label: 'Exam Schedule',
-            description: 'Upcoming exams and test dates',
+            label: t('schoolUtilitiesScreen.examSchedule'),
+            description: t('schoolUtilitiesScreen.upcomingExamsAndTestDates'),
             icon: <ExamIcon className="h-8 w-8 text-white" />,
             color: 'bg-violet-600',
             view: 'examSchedule'
@@ -175,8 +177,8 @@ const SchoolUtilitiesScreen: React.FC<SchoolUtilitiesScreenProps> = ({ navigateT
             <main className="flex-grow p-4 md:p-6 overflow-y-auto">
                 <div className="max-w-7xl mx-auto">
                     <div className="mb-6">
-                        <h2 className="text-2xl font-bold text-gray-800">School Utilities</h2>
-                        <p className="text-gray-600">Access all school tools and resources in one place.</p>
+                        <h2 className="text-2xl font-bold text-gray-800">{t('schoolUtilitiesScreen.schoolUtilities')}</h2>
+                        <p className="text-gray-600">{t('schoolUtilitiesScreen.accessAllSchoolToolsAndResourcesInOnePlace')}</p>
                     </div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">

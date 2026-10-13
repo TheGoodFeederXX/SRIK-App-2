@@ -182,13 +182,39 @@ function addHooks(fileSource) {
 
         if (!opensBlock && !opensParen) { out.push(line); continue; }
 
-        // Confirm a COMPONENT is being defined, by looking back for its name past any lines
-        // that belong to a type annotation.
-        let name = null;
-        for (let k = i; k >= 0 && k > i - 30; k--) {
-            const m = lines[k].match(/^(?:export\s+(?:default\s+)?)?(?:const|function)\s+([A-Z]\w*)\b/);
-            if (m) { name = m[1]; break; }
-            if (/^(?:export\s+(?:default\s+)?)?(?:const|function)\s+[a-z]/.test(lines[k].trim())) break;
+        // Confirm a COMPONENT is being defined. The name must be on the OPENING line itself, or
+        // on a line just above that is still part of the same signature (a multi-line generic
+        // ends with `,` or `>` or `}> =`). Looking further back than that found an unrelated
+        // `const Something` and mistook an inline `.map(...)` callback for a component.
+        const nameOnLine = /^(?:export\s+(?:default\s+)?)?(?:const|function)\s+([A-Z]\w*)\b/;
+        const head = line.trim();
+        let name = (head.match(nameOnLine) || [])[1] || null;
+        // A fallback or callback value is NOT a component: `const X = y || (() => {`,
+        // `items.map((v) => {`. Both open a body but define no component.
+        // A line that assigns from an expression is a VALUE. It opens a body but defines no
+        // component, however it is named: `const X = y || (() => {`, `const X = a.map(v => {`.
+        // A COMPONENT assigns an arrow function to a name: `const X: Type = (...) => {`.
+        // A VALUE assigns an expression: `const X = y || (() => {`, `const X = a.map(v => {`.
+        // The difference is what follows the `=` — an arrow function is a component, and any
+        // other expression (a `||` fallback, a call, an array access) is not. Requiring this
+        // to be about what FOLLOWS the `=` is what stops `React.FC = () => {` being rejected.
+        const afterAssign = head.slice(head.indexOf('=') + 1);
+        const isArrowComponent = /^\s*(?:\([^)]*\)|[\w$]+)\s*(?::[^=]+)?=>/.test(afterAssign);
+        const assignsExpression = head.includes('=')
+            && !isArrowComponent
+            && (/\|\||&&|\?\./.test(afterAssign)
+                || /\.(?:map|filter|forEach|reduce|sort)\s*\(/.test(afterAssign)
+                || /^\s*\(\s*\)\s*=>/.test(afterAssign));
+        const looksLikeValue = assignsExpression;
+        if (looksLikeValue) name = null;
+        if (!name && !looksLikeValue) {
+            for (let k = i - 1; k >= 0 && k > i - 40; k--) {
+                const prev = lines[k].trim();
+                const m = prev.match(nameOnLine);
+                if (m) { name = m[1]; break; }
+                // Only a signature CONTINUATION may sit between the name and the opening brace.
+                if (!/[,>{=(]\s*$/.test(prev)) break;
+            }
         }
         if (!name) { out.push(line); continue; }
 

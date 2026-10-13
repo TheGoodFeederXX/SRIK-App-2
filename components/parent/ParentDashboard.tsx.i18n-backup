@@ -1,0 +1,890 @@
+import React, { useState, useMemo, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import DashboardLayout from '../layout/DashboardLayout';
+import { DEFAULT_AVATAR } from '../../lib/avatar';
+import { DashboardType, Student, StudentAttendance, AttendanceStatus, StudentAssignment } from '../../types';
+import {
+    THEME_CONFIG,
+    ChevronRightIcon,
+    BusVehicleIcon,
+    ReceiptIcon,
+    ReportIcon,
+    ChartBarIcon,
+    ClipboardListIcon,
+    MegaphoneIcon,
+    AttendanceSummaryIcon,
+    ClockIcon,
+    BookOpenIcon,
+    SUBJECT_COLORS,
+    ChevronLeftIcon,
+    TrendingUpIcon,
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+    StarIcon,
+    CalendarIcon,
+    CalendarPlusIcon,
+    SparklesIcon,
+    getFormattedClassName
+} from '../../constants';
+import { formatSchoolId } from '../../utils/idFormatter';
+import PremiumLoader, { BOOT_MESSAGE } from '../ui/PremiumLoader';
+import PremiumModal from '../ui/PremiumModal';
+import ErrorBoundary from '../ui/ErrorBoundary';
+import AIChatScreen from '../shared/AIChatScreen';
+import AIChatWidget from '../shared/AIChatWidget';
+
+
+import { getHomeworkStatus } from '../../utils/homeworkUtils';
+import { realtimeService } from '../../services/RealtimeService';
+import { useDashboardRouting } from '../../hooks/useDashboardRouting';
+
+const formatCurriculumLabel = (curriculumType?: string) =>
+    // A parent sees which track their child is on. The dual label used to say
+    // "Nigerian & British"; the national track here is KSSR.
+    curriculumType === 'Both' ? 'KSSR & British Curriculum' : `${curriculumType} Curriculum`;
+import { syncEngine } from '../../lib/syncEngine';
+import { useAutoSync } from '../../hooks/useAutoSync';
+
+// Import all view components
+import AttendanceScreen from '../student/AttendanceScreen';
+import SelectChildForReportScreen from './SelectChildForReportScreen';
+import ReportCardScreen from './ReportCardScreen';
+import SelectReportTermScreen from '../shared/SelectReportTermScreen';
+import TimetableScreen from '../admin/TimetableScreen';
+import PickupAuthorizationScreen from './PickupAuthorizationScreen';
+import ParentProfileScreen from './ParentProfileScreen';
+import EditParentProfileScreen from './EditParentProfileScreen';
+import AppearancePanel from '../shared/AppearancePanel';
+import FeedbackScreen from './FeedbackScreen';
+import ParentNotificationSettingsScreen from './ParentNotificationSettingsScreen';
+import ParentSecurityScreen from './ParentSecurityScreen';
+import LearningResourcesScreen from './LearningResourcesScreen';
+import LearningHubProgressScreen from './LearningHubProgressScreen';
+import SchoolPoliciesScreen from './SchoolPoliciesScreen';
+import PTAMeetingScreen from './PTAMeetingScreen';
+import ParentPhotoGalleryScreen from './ParentPhotoGalleryScreen';
+import VolunteeringScreen from './VolunteeringScreen';
+import PermissionSlipScreen from './PermissionSlipScreen';
+import AppointmentScreen from './AppointmentScreen';
+import AIParentingTipsScreen from './AIParentingTips';
+import ParentMessagesScreen from './ParentMessagesScreen';
+import ParentNewChatScreen from './ParentNewChatScreen';
+import ChatScreen from '../shared/ChatScreen';
+import SchoolUtilitiesScreen from './SchoolUtilitiesScreen';
+import LinkChildScreen from './LinkChildScreen';
+import GlobalSearchScreen from '../shared/GlobalSearchScreen';
+import ParentTodayWidget from './ParentTodayWidget';
+import ParentChangePasswordScreen from './ParentChangePasswordScreen';
+import { UnifiedParentHome } from './UnifiedParentHome';
+import { SmartCalendar } from './SmartCalendar';
+import StudentProfileEnhanced from '../student/StudentProfileEnhanced';
+import MyChildrenFeesScreen from './MyChildrenFeesScreen';
+import MyAnnouncementsScreen from './MyAnnouncementsScreen';
+
+// Shared View Components
+import ExamSchedule from '../shared/ExamSchedule';
+import NoticeboardScreen from '../shared/NoticeboardScreen';
+import NotificationsScreen from '../shared/NotificationsScreen';
+import CalendarScreen from '../shared/CalendarScreen';
+import LibraryScreen from '../shared/LibraryScreen';
+import BusRouteScreen from '../shared/BusRouteScreen';
+
+// Phase 5: Parent & Community Empowerment Components
+import VolunteerSignup from './VolunteerSignup';
+import ConferenceScheduling from '../shared/ConferenceScheduling';
+import SurveysAndPolls from '../shared/SurveysAndPolls';
+import DonationPortal from '../shared/DonationPortal';
+import CommunityResourceDirectory from '../shared/CommunityResourceDirectory';
+import ReferralSystem from '../shared/ReferralSystem';
+import PanicButton from '../shared/PanicButton';
+import MentalHealthResources from '../shared/MentalHealthResources';
+
+const DashboardSuspenseFallback = () => (
+    <PremiumLoader message={BOOT_MESSAGE} />
+);
+
+const StatItem = ({ icon, label, value, colorClass }: { icon: React.ReactNode, label: string, value: string | React.ReactNode, colorClass: string }) => (
+    <div className="flex items-center space-x-3">
+        <div className={`p-2 rounded-lg ${colorClass}`}>
+            {icon}
+        </div>
+        <div>
+            <p className="text-xs text-gray-700">{label}</p>
+            <p className="font-bold text-sm text-gray-800">{value}</p>
+        </div>
+    </div>
+);
+
+const ChildStatCard: React.FC<{ data: any, navigateTo: (view: string, title: string, props?: any) => void, colorTheme: { bg: string, text: string } }> = ({ data, navigateTo, colorTheme }) => {
+    const { student, feeInfo, nextHomework, attendancePercentage, enrollments } = data;
+
+    return (
+        <div className="bg-white rounded-2xl shadow-md overflow-hidden transition-transform hover:shadow-lg">
+            <div className="p-4" style={{ backgroundColor: `${colorTheme.bg}1A` }}>
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                        <img src={student.avatarUrl} alt={student.name} className="w-14 h-14 rounded-full object-cover border-2" style={{ borderColor: colorTheme.bg }} />
+                        <div>
+                            <h3 className="font-bold text-lg text-gray-800">{student.name}</h3>
+                            <div className="flex flex-wrap gap-1 mt-0.5">
+                                {enrollments && enrollments.length > 0 ? (
+                                    enrollments.map((cls: string, idx: number) => (
+                                        <span key={idx} className="text-xs font-bold px-2 py-0.5 rounded-full bg-white/80 border" style={{ color: colorTheme.text, borderColor: `${colorTheme.bg}40` }}>
+                                            {cls}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <p className="text-sm font-semibold" style={{ color: colorTheme.text }}>{getFormattedClassName(student.grade, student.section)}</p>
+                                )}
+                            </div>
+                            <p className="text-xs text-gray-500 mt-1">ID: {student.schoolGeneratedId || 'Pending'}</p>
+                        </div>
+                    </div>
+                    <button onClick={() => navigateTo('childDetail', student.name, { student: student })} className="bg-white p-2 rounded-full shadow-sm hover:bg-gray-100">
+                        <ChevronRightIcon className="text-gray-600" />
+                    </button>
+                </div>
+            </div>
+
+            <div className="px-4 py-3 grid grid-cols-2 gap-4 border-t border-gray-100">
+                <StatItem icon={<AttendanceSummaryIcon className="h-5 w-5 text-green-600" />} label="Attendance" value={`${attendancePercentage}%`} colorClass="bg-green-100" />
+                <StatItem icon={<ReceiptIcon className="h-5 w-5 text-red-600" />} label="Fees Due" value={feeInfo?.status || 'N/A'} colorClass="bg-red-100" />
+                {nextHomework && <StatItem icon={<ClipboardListIcon className="h-5 w-5 text-purple-600" />} label="Homework" value={`${nextHomework.subject}`} colorClass="bg-purple-100" />}
+                <StatItem icon={<ReportIcon className="h-5 w-5 text-sky-600" />} label="Report Card" value="View" colorClass="bg-sky-100" />
+            </div>
+        </div>
+    );
+};
+
+const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { student: Student; navigateTo: (view: string, title: string, props?: any) => void; schoolId?: string; currentBranchId?: string | null }) => {
+    const [assignments, setAssignments] = useState<StudentAssignment[]>([]);
+    const [loading, setLoading] = useState(true);
+    
+    const fetchAcademics = useCallback(async () => {
+        try {
+            setLoading(true);
+            // THIS SCHOOL KEEPS NO HOMEWORK RECORD. There is no `assignments` table and
+            // no `submissions` table, so this is empty by design rather than by failure —
+            // and the section below shows a plain explanation instead of an empty list
+            // that reads like "nothing is due".
+            const assignmentsData: unknown[] = [];
+
+            if (assignmentsData) {
+                const merged: StudentAssignment[] = (assignmentsData || []).map((a: any) => {
+                    const submission = a.submissions?.find((s: any) => s.student_id === student.id);
+                    return {
+                        id: a.id,
+                        title: a.title,
+                        description: a.description,
+                        className: a.class_name,
+                        subject: a.subject,
+                        dueDate: a.due_date,
+                        totalStudents: a.total_students || 0,
+                        submissionsCount: a.submissions_count || 0,
+                        submission: submission ? {
+                            id: submission.id,
+                            assignmentId: a.id,
+                            student: { id: student.id, name: student.name, avatarUrl: student.avatarUrl },
+                            submittedAt: submission.submitted_at,
+                            isLate: false,
+                            status: submission.grade ? 'Graded' : 'Ungraded',
+                            grade: submission.grade
+                        } : undefined
+                    };
+                });
+                setAssignments(merged);
+            }
+        } catch (err) {
+            console.error("Error fetching academics:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [student, schoolId]);
+
+    // Real-time synchronization
+    useAutoSync(['assignments', 'assignment_submissions'], fetchAcademics);
+
+    useEffect(() => {
+        fetchAcademics();
+    }, [fetchAcademics]);
+
+    const academicRecords = student.academicPerformance || [];
+
+    const averageScore = useMemo(() => {
+        if (!academicRecords.length) return 0;
+        return Math.round(academicRecords.reduce((acc, curr) => acc + curr.score, 0) / academicRecords.length);
+    }, [academicRecords]);
+
+    return (
+        <div className="p-4 space-y-4">
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="bg-gradient-to-r from-green-500 to-teal-500 p-4 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-3 text-white"
+            >
+                <div>
+                    <h3 className="font-bold text-lg">Personalized Advice</h3>
+                    <p className="text-sm opacity-90">Get AI-powered tips for your child.</p>
+                </div>
+                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo('aiParentingTips', 'AI Parenting Tips', { student: { ...student, academicPerformance: academicRecords } })} className="bg-white/20 min-h-11 px-4 py-2 rounded-lg font-semibold whitespace-nowrap flex-shrink-0 hover:bg-white/30 transition-colors flex items-center space-x-2">
+                    <SparklesIcon className="h-5 w-5" /><span>Get Tips</span>
+                </motion.button>
+            </motion.div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm">
+                    <div className="flex justify-between items-center">
+                        <div><h4 className="font-bold text-gray-800">Term Performance</h4><p className="text-sm text-gray-700">Current Term</p></div>
+                        {averageScore > 0 && <div className="text-right"><p className="font-bold text-2xl text-green-600">{averageScore}%</p><p className="text-xs text-gray-700">Overall Average</p></div>}
+                    </div>
+                    {academicRecords.length > 0 ? (
+                        <div className="mt-3 space-y-2">
+                            {academicRecords.map((grade, i) => (
+                                <motion.div key={i} initial={{ opacity: 0, x: -6 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.03 }} className="flex justify-between items-center bg-gray-50 p-2 rounded-lg">
+                                    <span className="font-semibold text-sm text-gray-700">{grade.subject}</span>
+                                    <span className="font-bold text-sm text-gray-800">{grade.score}%</span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    ) : <p className="text-sm text-gray-500 mt-2">No grades recorded yet.</p>}
+                </motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }} className="bg-white p-4 rounded-xl shadow-sm">
+                    <h4 className="font-bold text-gray-800 mb-3">Upcoming Homework</h4>
+                    <div className="space-y-3">
+                        {assignments.length > 0 ? assignments.map((hw, i) => {
+                            const status = getHomeworkStatus(hw);
+                            return (
+                                <motion.div key={hw.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: Math.min(i, 10) * 0.04 }} className="flex justify-between items-center border-b pb-2 last:border-b-0">
+                                    <div><p className="font-bold text-gray-800">{hw.title}</p><p className="text-sm text-gray-700">{hw.subject} &bull; Due {new Date(hw.dueDate).toLocaleDateString("ms-MY")}</p></div>
+                                    <div className={`flex items-center space-x-2 text-xs font-semibold px-2 py-1 rounded-full ${status.bg} ${status.color}`}>
+                                        {React.cloneElement(status.icon as any, { className: `h-4 w-4 ${status.isComplete ? 'animate-checkmark-pop' : ''}`.trim() })}<span>{status.text}</span>
+                                    </div>
+                                </motion.div>
+                            );
+                        }) : <p className="text-sm text-gray-700 text-center">No upcoming homework.</p>}
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+    );
+};
+
+const BehaviorTab = ({ student }: { student: Student }) => {
+    const [notes, setNotes] = useState<any[]>(student.behaviorNotes || []);
+    const [loading, setLoading] = useState(!student.behaviorNotes);
+
+    useEffect(() => {
+        const fetchNotes = async () => {
+            if (student.behaviorNotes && student.behaviorNotes.length > 0) return;
+            try {
+                setLoading(true);
+                // No behaviour-notes table exists. The children's behaviour is recorded
+                // in the report card comment, which the parent already sees — so an
+                // empty list here is the truth, not a broken fetch.
+                setNotes([]);
+            } catch (err) {
+                console.error("Error fetching behavior notes:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchNotes();
+    }, [student.id]);
+
+    if (loading) return <div className="p-8 text-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500 mx-auto"></div></div>;
+
+    return (
+        <div className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {notes.length > 0 ? [...notes].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((note, i) => {
+                    const isPositive = note.type === 'Positive';
+                    return (
+                        <motion.div
+                            key={note.id}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.25, delay: Math.min(i, 10) * 0.05 }}
+                            whileHover={{ y: -2 }}
+                            className={`p-4 rounded-xl border shadow-sm hover:shadow-md transition-shadow ${isPositive ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}`}
+                        >
+                            <div className="flex justify-between items-start">
+                                <h5 className={`font-bold ${isPositive ? 'text-green-800' : 'text-red-800'}`}>{note.title}</h5>
+                                <p className="text-xs text-gray-700 font-medium flex-shrink-0 ml-2">{new Date(note.date).toLocaleDateString('ms-MY', { month: 'short', day: 'numeric' })}</p>
+                            </div>
+                            <p className="text-sm text-gray-700 mt-1">{note.note}</p>
+                            {note.suggestions && (
+                                <div className="mt-3 pt-3 border-t border-gray-200">
+                                    <h6 className="font-semibold text-xs text-gray-600">Suggestions for Home:</h6>
+                                    <ul className="list-disc list-inside text-sm text-gray-700 mt-1 space-y-1">{note.suggestions.map((s, i) => <li key={i}>{s}</li>)}</ul>
+                                </div>
+                            )}
+                            <p className="text-xs text-gray-600 text-right mt-2 italic">- {note.by}</p>
+                        </motion.div>
+                    );
+                }) : <p className="md:col-span-2 text-sm text-gray-700 text-center py-8">No behavioral notes recorded.</p>}
+            </div>
+        </div>
+    );
+};
+
+const AttendanceTab = ({ student }: { student: Student }) => {
+    const [attendance, setAttendance] = useState<StudentAttendance[]>([]);
+    const [loading, setLoading] = useState(true);
+    // This term's day counts from the register (same figures as the report card).
+    const [termDays, setTermDays] = useState<{ term: string; total: number; present: number; absent: number; late: number } | null>(null);
+    
+    const fetchAttendance = useCallback(async () => {
+        setLoading(true);
+        try {
+            // The term's school days, from the academic year — not a made-up window.
+            const term = await getCurrentTerm();
+            const year = await getCurrentAcademicYear();
+            const from = year?.startDate ?? `${new Date().getFullYear()}-01-01`;
+            const to = year?.endDate ?? new Date().toISOString().slice(0, 10);
+
+            // ONE child's attendance, read through the guardian policy: the database
+            // returns this child's rows only, because `is_guardian_of` allows them and
+            // nothing else in this family.
+            const range = await getStudentAttendanceRange(student.id, from, to);
+
+            // The day count comes from `daysRecorded`, which is days the school actually
+            // took a register. A day with no register has no row, and counting it as an
+            // absence would tell a parent their child missed a day the school was closed.
+            setTermDays({
+                term: term?.name ?? '',
+                total: range.summary.daysRecorded,
+                present: range.summary.present,
+                absent: range.summary.absent,
+                late: range.summary.late,
+            });
+
+            // The screen's own vocabulary is Present / Absent / Late / Leave. The
+            // database's is PRESENT / ABSENT / LATE / EXCUSED / SICK. Mapped explicitly,
+            // because leaving it unmapped shows a status the screen does not render —
+            // and a child marked SICK would appear as nothing at all.
+            const MONTH_TO_SCREEN: Record<string, 'Present' | 'Absent' | 'Late' | 'Leave'> = {
+                PRESENT: 'Present',
+                ABSENT: 'Absent',
+                LATE: 'Late',
+                EXCUSED: 'Leave',
+                SICK: 'Leave',
+            };
+            setAttendance(range.days.map((d, i) => ({
+                id: i,
+                studentId: 0,
+                date: d.date,
+                status: MONTH_TO_SCREEN[d.status] ?? 'Absent',
+            })));
+        } catch (err) {
+            console.error("Error fetching attendance:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [student.id]);
+
+    // Real-time synchronization
+    useAutoSync(['student_attendance'], fetchAttendance);
+
+    useEffect(() => {
+        fetchAttendance();
+    }, [fetchAttendance]);
+
+    const [currentDate, setCurrentDate] = useState(new Date());
+    const attendanceMap = useMemo(() => {
+        const map = new Map<string, AttendanceStatus>();
+        attendance.forEach(att => map.set(att.date, att.status));
+        return map;
+    }, [attendance]);
+
+    const firstDayOfMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth(), 1), [currentDate]);
+    const daysInMonth = useMemo(() => new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate(), [currentDate]);
+    const startingDayIndex = firstDayOfMonth.getDay();
+    const goToPreviousMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+    const goToNextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+
+    const attendanceColors: { [key in AttendanceStatus]: string } = { Present: 'bg-green-400 text-white', Absent: 'bg-red-400 text-white', Late: 'bg-blue-400 text-white', Leave: 'bg-gray-200 text-gray-500' };
+
+    return (
+        <div className="p-4 bg-white rounded-xl shadow-sm">
+            {/* No curriculum badge. This school runs ONE national curriculum — there is
+                no `curriculum_type` column on a student, and the label was never
+                anything but undefined, so the badge never appeared. Removed rather than
+                left as a condition that can never be true. */}
+            <div className="flex justify-between items-center mb-4">
+                <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-3 rounded-full hover:bg-gray-100"><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
+                <AnimatePresence mode="wait">
+                    <motion.h3
+                        key={currentDate.toISOString().slice(0, 7)}
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.15 }}
+                        className="font-bold text-lg text-gray-800"
+                    >
+                        {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
+                    </motion.h3>
+                </AnimatePresence>
+                <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-3 rounded-full hover:bg-gray-100"><ChevronRightIcon className="h-5 w-5 text-gray-600" /></motion.button>
+            </div>
+            <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => <div key={`${day}-${index}`}>{day}</div>)}
+            </div>
+            <div className="grid grid-cols-7 gap-2">
+                {Array.from({ length: startingDayIndex }).map((_, index) => <div key={`empty-${index}`} />)}
+                {Array.from({ length: daysInMonth }).map((_, index) => {
+                    const day = index + 1;
+                    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                    const dateString = date.toISOString().split('T')[0];
+                    const status = attendanceMap.get(dateString);
+                    return (
+                        <motion.div
+                            key={day}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.15, delay: Math.min(index, 20) * 0.01 }}
+                            className={`w-9 h-9 flex items-center justify-center rounded-full text-sm font-semibold ${status ? attendanceColors[status] : 'bg-gray-100 text-gray-400'}`}
+                        >
+                            {day}
+                        </motion.div>
+                    );
+                })}
+            </div>
+            <div className="flex justify-center space-x-3 mt-4 text-xs">
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>Present</span>
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>Absent</span>
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-1.5"></div>Late</span>
+            </div>
+            {termDays && (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-center mt-4">
+                    <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termDays.total}</p><p className="text-xs text-gray-500">School days</p></div>
+                    <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termDays.present}</p><p className="text-xs text-gray-500">Present</p></div>
+                    <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termDays.absent}</p><p className="text-xs text-gray-500">Absent</p></div>
+                    <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termDays.late}</p><p className="text-xs text-gray-500">Late</p></div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+type ChildDetailTab = 'academics' | 'behavior' | 'attendance';
+
+const ChildDetailScreen = ({ student, initialTab, navigateTo, schoolId, currentBranchId }: { student: Student, initialTab?: ChildDetailTab, navigateTo: (view: string, title: string, props?: any) => void, schoolId?: string, currentBranchId?: string | null }) => {
+    const [activeTab, setActiveTab] = useState<ChildDetailTab>(initialTab || 'academics');
+    const TabButton = ({ id, label }: { id: ChildDetailTab, label: string }) => (
+        <motion.button whileTap={{ scale: 0.97 }} onClick={() => setActiveTab(id)} className={`relative flex-1 min-h-11 py-2 text-sm font-semibold rounded-md ${activeTab === id ? 'text-white' : 'text-gray-800'}`}>
+            {activeTab === id && (
+                <motion.div layoutId="parentChildDetailTab" transition={{ type: 'spring', stiffness: 400, damping: 30 }} className="absolute inset-0 bg-green-500 rounded-md shadow" />
+            )}
+            <span className="relative z-10">{label}</span>
+        </motion.button>
+    );
+    return (
+        <div className="flex flex-col h-full bg-gray-50">
+            <div className="p-4 bg-white flex items-center space-x-4"><img src={student.avatarUrl} alt={student.name} className="w-16 h-16 rounded-full object-cover border-4 border-green-100" /><div><h3 className="text-xl font-bold text-gray-800">{student.name}</h3><p className="text-gray-700 font-medium">{getFormattedClassName(student.grade, student.section)}</p></div></div>
+            <div className="px-4 py-2 bg-white"><div className="flex space-x-1 bg-gray-200 p-1 rounded-lg"><TabButton id="academics" label="Academics" /><TabButton id="behavior" label="Behavior" /><TabButton id="attendance" label="Attendance" /></div></div>
+            <div className="flex-grow overflow-y-auto">
+                <AnimatePresence mode="wait">
+                    <motion.div key={activeTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.15 }}>
+                        {activeTab === 'academics' && <AcademicsTab student={student} navigateTo={navigateTo} schoolId={schoolId} currentBranchId={currentBranchId} />}
+                        {activeTab === 'behavior' && <BehaviorTab student={student} />}
+                        {activeTab === 'attendance' && <div className="p-4"><AttendanceTab student={student} /></div>}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+        </div>
+    );
+};
+
+// Consolidated data fetching logic moved to ParentDashboard main component
+
+interface ParentDashboardProps {
+    onLogout?: () => void;
+    setIsHomePage?: (isHome: boolean) => void;
+    currentUser?: any;
+}
+
+import { useRealtimeNotifications } from '../../hooks/useRealtimeNotifications';
+import { useAuth } from '../../context/AuthContext';
+import { listMyChildren, getMyGuardianRecord } from '../../src/lib/supabase/family';
+import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
+import { getCurrentTerm, listReportCards } from '../../src/lib/supabase/assessments';
+import { getCurrentAcademicYear } from '../../src/lib/supabase/academics';
+import { listAnnouncements } from '../../src/lib/supabase/announcements';
+
+const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
+    const { currentSchool, currentBranchId, user } = useAuth();
+
+    const { view, title, props: routeProps, navigateTo, replaceView, handleBack, canGoBack } =
+        useDashboardRouting('dashboard', 'Parent Dashboard');
+
+    // Initialize activeBottomNav from localStorage or default. Cosmetic UI
+    // state only (which bottom-tab icon is highlighted) — the URL is now the
+    // real, persisted "which screen" state, so this no longer needs the
+    // heavy prune-and-persist viewStack machinery that used to sit here.
+    const [activeBottomNav, setActiveBottomNav] = useState(() => {
+        return localStorage.getItem(`parent_bottom_nav_${user?.id}`) || 'home';
+    });
+
+    useEffect(() => {
+        if (user?.id) {
+            try {
+                localStorage.setItem(`parent_bottom_nav_${user?.id}`, activeBottomNav);
+            } catch { /* best-effort */ }
+        }
+    }, [activeBottomNav, user?.id]);
+
+    const handleLogout = () => {
+        if (user?.id) {
+            localStorage.removeItem(`parent_view_stack_${user?.id}`); // old key, harmless if absent
+            localStorage.removeItem(`parent_bottom_nav_${user?.id}`);
+        }
+        onLogout?.();
+    };
+
+    const [version, setVersion] = useState(0);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+    const [parentId, setParentId] = useState<string | null>(null);
+
+    const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+    const [parentProfile, setParentProfile] = useState<{ name: string; avatarUrl: string; schoolGeneratedId?: string }>({ 
+        name: user?.user_metadata?.full_name || 'Parent', 
+        avatarUrl: user?.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.user_metadata?.full_name || 'Parent')}&background=random`, 
+        // No school-issued guardian number exists in this schema. It was read from the
+        // user's metadata, where nothing has ever written it, so it displayed "...".
+        schoolGeneratedId: undefined,
+    });
+    const [students, setStudents] = useState<Student[]>([]);
+    const [loadingStudents, setLoadingStudents] = useState(true);
+    const [loadingProfile, setLoadingProfile] = useState(false);
+    const [profileError, setProfileError] = useState(false);
+    const [profileFetched, setProfileFetched] = useState(false);
+    // Derive schoolId from core sources
+    const schoolId = currentSchool?.id || (user as any)?.school_id;
+    const notificationCount = useRealtimeNotifications('parent');
+    const forceUpdate = () => setVersion(v => v + 1);
+
+    // 4. Consolidated Initial Data Load
+    const initData = useCallback(async () => {
+        if (!schoolId) return;
+
+        // Start multiple parallel flows
+        const flows = [];
+
+        // Flow A: Auth User Info (from AuthContext — no extra fetch needed)
+        flows.push((async () => {
+            if (user?.id) {
+                setCurrentUserId(user.id);
+            }
+        })());
+
+        // Flow B: Parent Profile & Children
+        flows.push((async () => {
+            try {
+                setLoadingProfile(true);
+
+                // The guardian's own record, and their children. Neither is chosen by
+                // the browser: both come from the session, so there is no id a parent
+                // could change to reach another family.
+                const guardian = await getMyGuardianRecord();
+                const childrenData = await listMyChildren();
+
+                // Read the term's published report cards ONCE, not per child — the map
+                // below is synchronous and cannot await, which is what a first attempt
+                // got wrong.
+                const cardTerm = await getCurrentTerm();
+                const allCards = cardTerm ? await listReportCards(cardTerm.id) : [];
+
+                if (guardian) {
+                    setParentId(guardian.id);
+                    setParentProfile({
+                        name: guardian.fullName,
+                        avatarUrl: undefined,
+                        // There is no school-issued guardian number in this schema, so it
+                        // is left unset rather than showing the child's number.
+                        schoolGeneratedId: undefined,
+                    });
+                }
+
+                if (childrenData.length > 0) {
+                    setStudents(childrenData.map(c => ({
+                            id: c.student.id,
+                            name: c.student.fullName,
+                            email: '',
+                            avatarUrl: DEFAULT_AVATAR,
+                            grade: c.student.className || '',
+                            section: '',
+                            // The child is either in school today or the register has
+                            // not been taken. Defaulting to "Present" would tell a
+                            // parent their child was in school on a day nobody checked.
+                            attendanceStatus: 'Present',
+                            birthday: c.student.birthDate || undefined,
+                            schoolGeneratedId: c.student.admissionNo,
+                            // SRIK has ONE school and keeps no per-child curriculum:
+                            // there is no `curriculum_type` column on `students`.
+                            // Academic performance is not attached to the child here —
+                            // it is read from the report card, which is what a parent
+                            // should be shown anyway: a published, signed document
+                            // rather than a live average nothing has checked.
+                            academicPerformance: [],
+                            // No behaviour-notes table exists. Behaviour lives in the
+                            // report card comment, which the parent already sees.
+                            behaviorNotes: [],
+                            // The child's report cards for the current term, read live so
+                            // the picker has something to offer. Only PUBLISHED ones: a
+                            // draft is the office still working and has been shown to
+                            // nobody. The term id travels with each, because the report
+                            // card screen reads the frozen snapshot by id.
+                            reportCards: allCards
+                                .filter(rc => rc.studentId === c.student.id
+                                    && (rc.status === 'PUBLISHED' || rc.status === 'SUPERSEDED'))
+                                .map(rc => ({
+                                    id: rc.id,
+                                    termId: rc.academicTermId,
+                                    term: rc.termName,
+                                    session: rc.termName,
+                                    status: 'Published',
+                                })),
+                        } as any)));
+                } else {
+                    setProfileError(true);
+                }
+            } catch (err) {
+                console.error("Error in Parent Portal data load:", err);
+                setProfileError(true);
+            } finally {
+                setLoadingProfile(false);
+                setLoadingStudents(false);
+                setProfileFetched(true);
+            }
+        })());
+
+        await Promise.all(flows);
+    }, [schoolId, user?.id]);
+
+    // Real-time synchronization for core parent data
+    useAutoSync(['parents', 'students', 'parent_student_links'], initData);
+
+    useEffect(() => {
+        if (schoolId) initData();
+    }, [schoolId, initData]);
+
+    useEffect(() => {
+        setIsHomePage(view === 'dashboard' && !isSearchOpen);
+        window.__CURRENT_PARENT_VIEW__ = view;
+    }, [view, isSearchOpen, setIsHomePage]);
+
+    const handleBottomNavClick = (screen: string) => {
+        setActiveBottomNav(screen);
+        switch (screen) {
+            case 'home': replaceView('dashboard', 'Parent Dashboard'); break;
+            case 'fees': replaceView('myFees', 'Yuran Anak'); break;
+            case 'reports': replaceView('selectReport', 'Select Report Card'); break;
+            case 'messages': replaceView('messages', 'Messages'); break;
+            case 'more': replaceView('more', 'More Options'); break;
+            default: replaceView('dashboard', 'Parent Dashboard');
+        }
+    };
+
+    const viewComponents: { [key: string]: React.ComponentType<any> } = {
+        dashboard: UnifiedParentHome,
+        // The one assistant: free chat, plus the "My School" tab that answers
+        // from this parent's own children's records.
+        aiAssistant: (props: any) => <AIChatScreen {...props} dashboardType={DashboardType.Parent} />,
+        smartCalendar: SmartCalendar,
+        todaySummary: (props: any) => <ParentTodayWidget {...props} />,
+        myFees: MyChildrenFeesScreen,
+        announcements: MyAnnouncementsScreen,
+        childDetail: (props: any) => (
+            <StudentProfileEnhanced 
+                studentId={props.studentId || props.student?.id} 
+                student={props.student} 
+                navigateTo={props.navigateTo} 
+                initialTab={props.initialTab}
+            />
+        ),
+        examSchedule: ExamSchedule,
+        pickupAuthorization: PickupAuthorizationScreen,
+        noticeboard: (props: any) => <NoticeboardScreen {...props} userType="parent" />,
+        notifications: (props: any) => <NotificationsScreen {...props} userType="parent" navigateTo={navigateTo} />,
+        calendar: CalendarScreen,
+        library: LibraryScreen,
+        busRoute: BusRouteScreen,
+        selectReport: (props: any) => <SelectChildForReportScreen {...props} parentId={parentId} />,
+        selectReportTerm: (props: any) => <SelectReportTermScreen {...props} targetView="reportCard" changeChildView="selectReport" />,
+        reportCard: ReportCardScreen,
+        timetable: (props: any) => <TimetableScreen {...props} context={{ userType: 'parent', userId: parentId || '' }} students={students} />,
+        more: ParentProfileScreen,
+        editParentProfile: EditParentProfileScreen,
+        appearanceSettings: AppearancePanel,
+        feedback: FeedbackScreen,
+        notificationSettings: ParentNotificationSettingsScreen,
+        securitySettings: ParentSecurityScreen,
+        parentChangePassword: ParentChangePasswordScreen,
+        learningResources: LearningResourcesScreen,
+        learningHub: (props: any) => <LearningHubProgressScreen {...props} students={students} />,
+        schoolPolicies: SchoolPoliciesScreen,
+        ptaMeetings: PTAMeetingScreen,
+        photoGallery: ParentPhotoGalleryScreen,
+        volunteering: VolunteeringScreen,
+        permissionSlips: PermissionSlipScreen,
+        appointments: (props: any) => <AppointmentScreen {...props} parentId={user?.id} students={students} />,
+        aiParentingTips: AIParentingTipsScreen,
+        messages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', 'New Chat')} />,
+        newChat: ParentNewChatScreen,
+        chat: (props: any) => <ChatScreen {...props} currentUserId={currentUserId ?? undefined} themeColor="green" />,
+        schoolUtilities: SchoolUtilitiesScreen,
+        volunteerSignup: VolunteerSignup,
+        conferenceScheduling: ConferenceScheduling,
+        surveysAndPolls: SurveysAndPolls,
+        donationPortal: DonationPortal,
+        communityResources: CommunityResourceDirectory || (() => null),
+        referralSystem: ReferralSystem || (() => null),
+        panicButton: PanicButton || (() => null),
+        mentalHealthResources: MentalHealthResources || (() => null),
+        attendance: (props: any) => <AttendanceScreen {...props} />,
+        // Alias mappings for widget navigation
+        attendanceOverview: (props: any) => <AttendanceScreen {...props} />,
+        parentMessages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', 'New Chat')} />,
+        schoolCalendar: CalendarScreen,
+        assignments: (props: any) => {
+            const student = props.student || students[0];
+            return student ? <ChildDetailScreen {...props} student={student} initialTab="academics" /> : <UnifiedParentHome {...props} />;
+        },
+        linkChild: (props: any) => <LinkChildScreen {...props} />,
+    };
+
+    // Expose navigation for automated E2E audits. Clean up on unmount so the
+    // global reference never goes stale (consistent with the teacher/student
+    // dashboards) — a full-screen child view that unmounts this dashboard then
+    // correctly removes the hook instead of leaving a no-op behind.
+    useEffect(() => {
+        if (window.__AUDIT_MODE__ || localStorage.getItem('audit_mode') === 'true') {
+            window.PARENT_NAVIGATE = navigateTo;
+            window.PARENT_COMPONENTS = Object.keys(viewComponents);
+        }
+        return () => {
+            delete window.PARENT_NAVIGATE;
+            delete window.PARENT_COMPONENTS;
+        };
+    }, [navigateTo, viewComponents]);
+
+    // Identifies THIS exact screen (view + its data) so scroll position can be
+    // remembered per screen and restored on return, while a screen never visited
+    // this session still opens at the top. Computed unconditionally (before any
+    // early return below) to keep hook order stable across renders.
+    const scrollKey = React.useMemo(() => {
+        try { return `${view}::${JSON.stringify(routeProps)}`; }
+        catch { return view; }
+    }, [view, routeProps]);
+
+    // Safety check for Component rendering
+    const ComponentToRender = viewComponents[view] || (() => (
+        <div className="flex flex-col items-center justify-center h-[60vh] p-8 text-center bg-gray-50 rounded-3xl m-4">
+            <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full">
+                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <ExclamationCircleIcon className="w-8 h-8 text-amber-600" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-800">Feature Coming Soon</h2>
+                <p className="text-gray-500 mt-2">The requested view "{view}" is being optimized or is not available for your account yet.</p>
+                <button 
+                    onClick={() => replaceView('dashboard', 'Parent Dashboard')}
+                    className="mt-6 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors"
+                >
+                    Back to Home
+                </button>
+            </div>
+        </div>
+    ));
+
+    const hasRenderedRef = useRef(false);
+
+    const commonProps = { navigateTo, onLogout, handleBack, forceUpdate, parentId, currentUser: user, currentUserId, schoolId, currentBranchId, version, students, loading: loadingStudents };
+
+    // Only before anything has been shown. `schoolId` arrives after the first
+    // render, so this condition turned true a second time and replaced an
+    // already-painted dashboard with a full-screen loader — measured at 3803ms
+    // on the production build, a second after the dashboard appeared at 3713ms.
+    // Once the shell has been shown, the profile finishes loading behind it.
+    if (loadingProfile && !parentId && schoolId && !hasRenderedRef.current) {
+        return <PremiumLoader message={BOOT_MESSAGE} />;
+    }
+    hasRenderedRef.current = true;
+
+    if (profileError && !parentId) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen p-6 text-center bg-gray-50">
+                <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full">
+                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span className="text-3xl">👪</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Parent Profile Not Found</h2>
+                    <p className="text-gray-600 mb-6">
+                        We couldn't find a parent record linked to your account.
+                        Please contact the school administrator to link your account to your children.
+                    </p>
+                    <button
+                        onClick={() => onLogout?.()}
+                        className="w-full py-3 px-4 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 transition-colors shadow-lg shadow-green-200"
+                    >
+                        Back to Login
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // The AI Assistant brings its own header, back button and docked input bar
+    // (it was written as a standalone screen), so it is shown full-screen like
+    // the chat views. Leaving the dashboard chrome in place would put its input
+    // bar on top of the bottom nav.
+    const isFullScreen = ['messages', 'newChat', 'chat', 'aiAssistant'].includes(view);
+    const hideBottomNav = view === 'chat' || view === 'aiAssistant';
+
+    return (
+        <DashboardLayout
+            title={title}
+            onBack={canGoBack ? handleBack : undefined}
+            scrollKey={scrollKey}
+            onLogout={handleLogout}
+            activeScreen={activeBottomNav}
+            setActiveScreen={handleBottomNavClick}
+            hideHeader={hideBottomNav}
+            hidePadding={isFullScreen}
+            hideBottomNav={hideBottomNav}
+        >
+            <div key={`${view}-${version}`} className="w-full h-full flex flex-col">
+                <ErrorBoundary
+                    key={view}
+                    title={`${title} Error`}
+                    message="We encountered an issue while rendering this screen. This could be due to a data mismatch or a temporary connection issue."
+                    onReset={forceUpdate}
+                >
+                    <Suspense fallback={<DashboardSuspenseFallback />}>
+                        <ComponentToRender {...commonProps} {...routeProps} />
+                    </Suspense>
+                </ErrorBoundary>
+            </div>
+            <Suspense fallback={<DashboardSuspenseFallback />}>
+                {isSearchOpen && <GlobalSearchScreen onClose={() => setIsSearchOpen(false)} navigateTo={navigateTo} dashboardType={DashboardType.Parent} />}
+            </Suspense>
+            {/* A single AI entry point. Hidden while the assistant is open so the
+                button never floats over its own screen, and in a chat, where it
+                would sit on the message box. */}
+            {view !== 'aiAssistant' && view !== 'chat' && (
+                <AIChatWidget
+                    dashboardType={DashboardType.Parent}
+                    onClick={() => navigateTo('aiAssistant', 'AI Assistant', {})}
+                />
+            )}
+            <PremiumModal
+                isOpen={isPremiumModalOpen}
+                onClose={() => setIsPremiumModalOpen(false)}
+                featureName="Advanced Student Insights"
+            />
+        </DashboardLayout>
+
+    );
+};
+
+export default ParentDashboard;

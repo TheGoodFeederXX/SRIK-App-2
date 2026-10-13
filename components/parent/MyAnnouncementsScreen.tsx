@@ -13,6 +13,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import { MegaphoneIcon, CalendarIcon } from '../../constants';
 import CenteredLoader from '../ui/CenteredLoader';
@@ -23,6 +24,7 @@ import {
 } from '../../src/lib/supabase/announcements';
 
 export default function MyAnnouncementsScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
 
     const listQuery = useQuery({
@@ -37,7 +39,7 @@ export default function MyAnnouncementsScreen() {
 
     return (
         <div className="p-4 sm:p-6 max-w-2xl mx-auto">
-            <h1 className="text-2xl font-bold text-slate-800 mb-1">Pengumuman</h1>
+            <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myAnnouncementsScreen.pengumuman')}</h1>
             <p className="text-sm text-slate-500 mb-5">
                 Notis daripada pihak sekolah.
             </p>
@@ -52,7 +54,7 @@ export default function MyAnnouncementsScreen() {
                     <div className="flex justify-center mb-3">
                         <MegaphoneIcon className="w-8 h-8 text-slate-400" />
                     </div>
-                    <p className="font-semibold text-slate-700">Tiada pengumuman</p>
+                    <p className="font-semibold text-slate-700">{t('myAnnouncementsScreen.tiadaPengumuman')}</p>
                     <p className="text-sm text-slate-500 mt-1">
                         Belum ada notis daripada pihak sekolah buat masa ini.
                     </p>

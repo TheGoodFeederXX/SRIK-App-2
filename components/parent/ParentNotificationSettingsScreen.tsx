@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { MailIcon, BellIcon, NotificationIcon } from '../../constants';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -45,6 +46,7 @@ const SettingToggle = ({ icon, label, description, enabled, onToggle, index, una
 );
 
 const ParentNotificationSettingsScreen: React.FC = () => {
+    const { t } = useTranslation();
     // The saved preference document, kept whole. Writing back only the two
     // switches below would drop `categories` and `digest_time`, and the server
     // rebuilds anything missing from defaults — which would silently reset every
@@ -91,10 +93,10 @@ const ParentNotificationSettingsScreen: React.FC = () => {
             // Read back what was actually stored rather than trusting the guess.
             const saved = await getMyPreferences();
             if (saved) setPrefs(saved);
-            toast.success('Settings updated');
+            toast.success(t('parentNotificationSettingsScreen.settingsUpdated'));
         } catch (err) {
             setPrefs(previous);    // rollback
-            toast.error('Failed to update settings');
+            toast.error(t('parentNotificationSettingsScreen.failedToUpdateSettings'));
         } finally {
             setSaving(null);
         }
@@ -104,8 +106,8 @@ const ParentNotificationSettingsScreen: React.FC = () => {
         <div className="p-4 space-y-4 bg-gray-50">
             <SettingToggle
                 icon={<MailIcon className="text-green-500"/>}
-                label="Email Alerts"
-                description="Receive important alerts via email."
+                label={t('parentNotificationSettingsScreen.emailAlerts')}
+                description={t('parentNotificationSettingsScreen.receiveImportantAlertsViaEmail')}
                 enabled={emailAlerts}
                 onToggle={() => toggleSetting('email_alerts')}
                 index={0}
@@ -115,8 +117,8 @@ const ParentNotificationSettingsScreen: React.FC = () => {
                 working switch would quietly drop every message it promised. */}
             <SettingToggle
                 icon={<BellIcon className="text-blue-500"/>}
-                label="Push Notifications"
-                description="Get real-time updates on your device."
+                label={t('parentNotificationSettingsScreen.pushNotifications')}
+                description={t('parentNotificationSettingsScreen.getRealTimeUpdatesOnYourDevice')}
                 enabled={pushAvailable}
                 onToggle={() => {}}
                 index={1}
@@ -124,8 +126,8 @@ const ParentNotificationSettingsScreen: React.FC = () => {
             />
              <SettingToggle
                 icon={<NotificationIcon className="text-purple-500"/>}
-                label="Weekly Summary"
-                description="Get a summary report every Thursday."
+                label={t('parentNotificationSettingsScreen.weeklySummary')}
+                description={t('parentNotificationSettingsScreen.getASummaryReportEveryThursday')}
                 enabled={weeklySummary}
                 onToggle={() => toggleSetting('weekly_summary')}
                 index={2}

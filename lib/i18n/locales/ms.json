@@ -1236,5 +1236,246 @@
   },
   "workloadCalculator": {
     "workloadCalculator": "Kalkulator Beban Kerja"
+  },
+  "aIParentingTips": {
+    "aiparentingTips": "Petua Keibubapaan AI"
+  },
+  "appointmentScreen": {
+    "janjiTemuGuru": "Janji Temu Guru"
+  },
+  "editParentProfileScreen": {
+    "editParentProfile": "Sunting Profil Ibu Bapa"
+  },
+  "feedbackScreen": {
+    "feedback": "Maklum Balas"
+  },
+  "learningHubProgressScreen": {
+    "progressPembelajaran": "Kemajuan Pembelajaran"
+  },
+  "learningResourcesScreen": {
+    "learningResources": "Sumber Pembelajaran"
+  },
+  "linkChildScreen": {
+    "manageChildAccounts": "Urus Akaun Anak",
+    "linkANewChild": "Pautkan Anak Baharu",
+    "enterTheUniqueSchoolIDToLinkTheirAccount": "Masukkan ID Sekolah unik untuk memautkan akaun mereka.",
+    "guardian": "Penjaga",
+    "myLinkedChildren": "Anak Saya Yang Dipautkan",
+    "loadingChildRecords": "Memuatkan rekod anak...",
+    "noChildrenLinked": "Tiada Anak Dipautkan",
+    "removeLink": "Buang Pautan",
+    "removeChildLink": "Buang Pautan Anak",
+    "failedToUnlinkStudent": "Gagal memutuskan pautan murid."
+  },
+  "myAnnouncementsScreen": {
+    "pengumuman": "Pengumuman",
+    "tiadaPengumuman": "Tiada pengumuman"
+  },
+  "myChildrenFeesScreen": {
+    "yuranAnakSaya": "Yuran Anak Saya",
+    "bayaranYuranUntukAnakAnda": "Bayaran yuran untuk anak anda.",
+    "tiadaRekodAnak": "Tiada rekod anak",
+    "tertunggak": "Tertunggak",
+    "jumlahDicaj": "Jumlah dicaj",
+    "telahDibayar": "Telah dibayar"
+  },
+  "pTAMeetingScreen": {
+    "ptameeting": "Mesyuarat PIBG"
+  },
+  "parentChangePasswordScreen": {
+    "currentPassword": "Kata Laluan Semasa",
+    "newPassword": "Kata Laluan Baharu",
+    "confirmNewPassword": "Sahkan Kata Laluan Baharu",
+    "passwordUpdatedSuccessfully": "Kata laluan berjaya dikemas kini!",
+    "newPasswordsDoNotMatch": "Kata laluan baharu tidak sepadan."
+  },
+  "parentDashboard": {
+    "personalizedAdvice": "Nasihat Peribadi",
+    "getAIPoweredTipsForYourChild": "Dapatkan petua berkuasa AI untuk anak anda.",
+    "getTips": "Dapatkan Petua",
+    "termPerformance": "Prestasi Penggal",
+    "currentTerm": "Penggal Semasa",
+    "overallAverage": "Purata Keseluruhan",
+    "noGradesRecordedYet": "Belum ada gred direkodkan.",
+    "upcomingHomework": "Kerja Rumah Akan Datang",
+    "noUpcomingHomework": "Tiada kerja rumah akan datang.",
+    "suggestionsForHome": "Cadangan untuk Rumah:",
+    "noBehavioralNotesRecorded": "Tiada nota tingkah laku direkodkan.",
+    "present": "Hadir",
+    "schoolDays": "Hari persekolahan",
+    "featureComingSoon": "Ciri Akan Datang",
+    "parentProfileNotFound": "Profil Ibu Bapa Tidak Dijumpai",
+    "attendance": "Kehadiran",
+    "feesDue": "Yuran Perlu Dibayar",
+    "homework": "Kerja Rumah",
+    "reportCard": "Kad Laporan",
+    "academics": "Akademik",
+    "behavior": "Tingkah Laku"
+  },
+  "parentNewChatScreen": {
+    "parentNewChat": "Sembang Baharu Ibu Bapa"
+  },
+  "parentNotificationSettingsScreen": {
+    "emailAlerts": "Makluman E-mel",
+    "pushNotifications": "Pemberitahuan Tolak",
+    "weeklySummary": "Ringkasan Mingguan",
+    "receiveImportantAlertsViaEmail": "Terima makluman penting melalui e-mel.",
+    "getRealTimeUpdatesOnYourDevice": "Dapatkan kemas kini masa nyata pada peranti anda.",
+    "getASummaryReportEveryThursday": "Dapatkan laporan ringkasan setiap Khamis.",
+    "settingsUpdated": "Tetapan dikemas kini",
+    "failedToUpdateSettings": "Gagal mengemas kini tetapan"
+  },
+  "parentPhotoGalleryScreen": {
+    "parentPhotoGallery": "Galeri Foto Ibu Bapa"
+  },
+  "parentProfileScreen": {
+    "moreOptions": "Pilihan Lain",
+    "profileNotFound": "Profil tidak dijumpai.",
+    "yourSchools": "Sekolah Anda",
+    "pengumumanSekolah": "Pengumuman Sekolah",
+    "linkChildAccount": "Pautkan Akaun Anak",
+    "editProfile": "Sunting Profil",
+    "learningResources": "Sumber Pembelajaran",
+    "schoolPolicies": "Dasar Sekolah",
+    "ptaMeetings": "Mesyuarat PIBG",
+    "photoGallery": "Galeri Foto",
+    "volunteer": "Sukarelawan",
+    "permissionSlips": "Slip Kebenaran",
+    "feedbackSupport": "Maklum Balas & Sokongan",
+    "notificationSettings": "Tetapan Pemberitahuan",
+    "securityPassword": "Keselamatan & Kata Laluan",
+    "dataUsage": "Penggunaan Data",
+    "appearanceTheme": "Penampilan & Tema",
+    "helpCenter": "Pusat Bantuan",
+    "switchedSchoolSuccessfully": "Berjaya menukar sekolah",
+    "failedToSwitchSchool": "Gagal menukar sekolah",
+    "idIsStillPendingGeneration": "ID masih menunggu penjanaan.",
+    "helpCenterComingSoon": "Pusat Bantuan akan datang!"
+  },
+  "parentSecurityScreen": {
+    "parentSecurity": "Keselamatan Ibu Bapa"
+  },
+  "parentTodayWidget": {
+    "pleaseTryAgainLater": "Sila cuba lagi kemudian.",
+    "noChildrenDataAvailablePleaseContactSupportIfT": "Tiada data anak tersedia. Sila hubungi sokongan jika ini berterusan.",
+    "hereSEverythingHappeningToday": "Inilah semua yang berlaku hari ini",
+    "viewReportCard": "Lihat Kad Laporan",
+    "schoolCalendar": "Kalendar Sekolah",
+    "todaySActivityFeed": "Suapan Aktiviti Hari Ini",
+    "attendanceToday": "Kehadiran Hari Ini"
+  },
+  "permissionSlipScreen": {
+    "permissionSlip": "Slip Kebenaran"
+  },
+  "pickupAuthorizationScreen": {
+    "pickupAuthorization": "Kebenaran Pengambilan"
+  },
+  "reportCardScreen": {
+    "endOfTermReportCard": "Kad Laporan Akhir Penggal",
+    "subject": "Subjek",
+    "ca40": "CA (40)",
+    "exam60": "Peperiksaan (60)",
+    "total100": "Jumlah (100)",
+    "noAcademicRecordsAvailable": "Tiada rekod akademik tersedia.",
+    "totalDays": "Jumlah Hari",
+    "present": "Hadir",
+    "teacherSComment": "Ulasan Guru",
+    "principalSComment": "Ulasan Pengetua",
+    "selectAChildToViewTheirReportCard": "Pilih anak untuk melihat kad laporan mereka.",
+    "noPublishedReports": "Tiada Laporan Diterbitkan",
+    "reportCardsForThisSessionHaveNotBeenPublishedY": "Kad laporan untuk sesi ini belum diterbitkan lagi.",
+    "notPublishedYet": "Belum Diterbitkan",
+    "selectATermToViewTheReport": "Pilih penggal untuk melihat laporan.",
+    "fullName": "Nama Penuh",
+    "classGrade": "Kelas/Gred",
+    "session": "Sesi",
+    "admissionNo": "No. Pendaftaran",
+    "curriculum": "Kurikulum",
+    "dateOfBirth": "Tarikh Lahir",
+    "positionInClass": "Kedudukan dalam Kelas",
+    "studentInformation": "Maklumat Murid",
+    "academicPerformance": "Prestasi Akademik",
+    "skillsBehaviour": "Kemahiran & Tingkah Laku",
+    "psychomotorSkills": "Kemahiran Psikomotor",
+    "attendanceRecord": "Rekod Kehadiran",
+    "comments": "Ulasan",
+    "fetchingReportDetails": "Mengambil butiran laporan...",
+    "schoolLogo": "Logo Sekolah"
+  },
+  "schoolPoliciesScreen": {
+    "schoolPolicies": "Dasar Sekolah"
+  },
+  "schoolUtilitiesScreen": {
+    "schoolUtilities": "Kemudahan Sekolah",
+    "accessAllSchoolToolsAndResourcesInOnePlace": "Akses semua alat dan sumber sekolah di satu tempat.",
+    "transportBusRoute": "Pengangkutan & Laluan Bas",
+    "schoolCalendar": "Kalendar Sekolah",
+    "noticeboard": "Papan Notis",
+    "bookAppointment": "Tempah Temu Janji",
+    "digitalLibrary": "Perpustakaan Digital",
+    "learningResources": "Sumber Pembelajaran",
+    "learningHub": "Hab Pembelajaran",
+    "schoolPolicies": "Dasar Sekolah",
+    "ptaMeetings": "Mesyuarat PIBG",
+    "photoGallery": "Galeri Foto",
+    "volunteering": "Kerelawanan",
+    "permissionSlips": "Slip Kebenaran",
+    "pickupAuthorization": "Kebenaran Pengambilan",
+    "myTimetable": "Jadual Waktu Saya",
+    "examSchedule": "Jadual Peperiksaan",
+    "trackSchoolBusLocationAndViewRoutes": "Jejak lokasi bas sekolah dan lihat laluan",
+    "viewAcademicSessionsHolidaysAndEvents": "Lihat sesi akademik, cuti, dan acara",
+    "importantAnnouncementsAndNews": "Pengumuman dan berita penting",
+    "scheduleMeetingsWithTeachersOrAdmin": "Jadualkan mesyuarat dengan guru atau pentadbir",
+    "accessBooksJournalsAndResources": "Akses buku, jurnal, dan sumber",
+    "studyMaterialsAndEducationalContent": "Bahan pembelajaran dan kandungan pendidikan",
+    "trackProgressOnFreeStudyResources": "Jejak kemajuan pada sumber pembelajaran percuma",
+    "rulesRegulationsAndGuidelines": "Peraturan dan garis panduan",
+    "minutesSchedulesAndPTAInfo": "Minit, jadual, dan maklumat PIBG",
+    "photosFromSchoolEventsAndActivities": "Foto daripada acara dan aktiviti sekolah",
+    "signUpForSchoolEventsAndHelpOut": "Daftar untuk acara sekolah dan bantu",
+    "approveTripsAndActivitiesDigitally": "Luluskan lawatan dan aktiviti secara digital",
+    "manageWhoIsAllowedToCollectYourChild": "Urus siapa yang dibenarkan mengambil anak anda",
+    "viewYourWeeklyClassSchedule": "Lihat jadual kelas mingguan anda",
+    "upcomingExamsAndTestDates": "Peperiksaan dan tarikh ujian akan datang"
+  },
+  "selectChildForReportScreen": {
+    "loadingChildren": "Memuatkan anak...",
+    "selectAChild": "Pilih Anak",
+    "chooseAChildToViewTheirLatestAcademicReportCar": "Pilih anak untuk melihat kad laporan akademik terkini mereka."
+  },
+  "smartCalendar": {
+    "loadingCalendar": "Memuatkan kalendar...",
+    "schoolCalendar": "Kalendar Sekolah",
+    "noEventsScheduled": "Tiada Acara Dijadualkan",
+    "checkBackLaterForUpcomingSchoolEvents": "Sila semak semula kemudian untuk acara sekolah akan datang.",
+    "yourRSVP": "RSVP Anda"
+  },
+  "unifiedParentHome": {
+    "couldnTLoadYourChildren": "Tidak Dapat Memuatkan Anak Anda",
+    "somethingWentWrongLoadingYourChildrenSDetails": "Sesuatu tidak kena semasa memuatkan butiran anak anda.",
+    "pleaseTryAgain": "Sila cuba lagi.",
+    "noChildrenLinked": "Tiada Anak Dipautkan",
+    "weCouldnTFindAnyStudentsLinkedToYourParentAcco": "Kami tidak menemui murid yang dipautkan ke akaun ibu bapa anda.",
+    "ifThisIsAMistakePleaseContactTheSchoolAdminist": "Jika ini satu kesilapan, sila hubungi pentadbiran sekolah.",
+    "schoolUtilities": "Kemudahan Sekolah",
+    "viewAll": "Lihat Semua",
+    "dailyReport": "Laporan Harian",
+    "attendance": "Kehadiran",
+    "academics": "Akademik",
+    "latestPerformance": "Prestasi Terkini",
+    "newAnnouncement": "Pengumuman Baharu",
+    "calendar": "Kalendar",
+    "notices": "Notis",
+    "busRoute": "Laluan Bas",
+    "schoolCalendar": "Kalendar Sekolah",
+    "noticeboard": "Papan Notis",
+    "bookAppointment": "Tempah Temu Janji"
+  },
+  "volunteerSignup": {
+    "volunteerSignup": "Pendaftaran Sukarelawan"
+  },
+  "volunteeringScreen": {
+    "volunteering": "Kerelawanan"
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { useAuth } from '../../context/AuthContext';
@@ -46,6 +47,7 @@ interface FeedItem {
  */
 
 const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: string, props?: any) => void }) => {
+    const { t } = useTranslation();
     const { user } = useAuth();
     const [selectedChild, setSelectedChild] = useState(0);
     // True once a load has completed, so background refreshes never flash a skeleton.
@@ -153,14 +155,14 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
     if (error) {
         return <div className="p-8 text-center text-red-600 bg-red-50 rounded-xl shadow-sm border border-red-100">
             <p>Error loading data: {error}</p>
-            <p>Please try again later.</p>
+            <p>{t('parentTodayWidget.pleaseTryAgainLater')}</p>
         </div>;
     }
 
     // If no children data, display a message
     if (children.length === 0) {
         return <div className="p-8 text-center bg-white rounded-xl shadow-sm border border-slate-100">
-            <p className="text-gray-600">No children data available. Please contact support if this persists.</p>
+            <p className="text-gray-600">{t('parentTodayWidget.noChildrenDataAvailablePleaseContactSupportIfT')}</p>
         </div>;
     }
 
@@ -195,7 +197,7 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                 className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 rounded-3xl text-white"
             >
                 <h1 className="text-2xl font-bold font-outfit">{greeting}, Parent! 👋</h1>
-                <p className="text-white/70 mt-1">Here's everything happening today</p>
+                <p className="text-white/70 mt-1">{t('parentTodayWidget.hereSEverythingHappeningToday')}</p>
                 {/* Child Selector */}
                 {children.length > 1 && (
                     <div className="flex flex-wrap gap-3 mt-4">
@@ -226,7 +228,7 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                                 ? 'Not taken yet'
                                 : child.attendance_status.replace('_', ' ')}
                         </span>,
-                        label: 'Attendance Today',
+                        label: t('parentTodayWidget.attendanceToday'),
                     },
                 ].map((card, i) => (
                     <motion.button
@@ -253,16 +255,16 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                 "Message Teacher" led to screens for features this school does not run. */}
             <div className="flex space-x-3 overflow-x-auto pb-2">
                 <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('reportCard', 'Report Card')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
-                    <FileText className="w-4 h-4" /><span>View Report Card</span>
+                    <FileText className="w-4 h-4" /><span>{t('parentTodayWidget.viewReportCard')}</span>
                 </motion.button>
                 <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('schoolCalendar', 'Calendar')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
-                    <Calendar className="w-4 h-4" /><span>School Calendar</span>
+                    <Calendar className="w-4 h-4" /><span>{t('parentTodayWidget.schoolCalendar')}</span>
                 </motion.button>
             </div>
 
             {/* Activity Feed */}
             <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-6">
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Today's Activity Feed</h2>
+                <h2 className="text-lg font-bold text-gray-800 mb-4">{t('parentTodayWidget.todaySActivityFeed')}</h2>
                 <div className="space-y-4">
                     {feedItems.map((item, i) => {
                         const Icon = getFeedIcon(item.type);

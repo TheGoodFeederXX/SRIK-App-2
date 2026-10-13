@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -39,6 +40,7 @@ interface LinkChildScreenProps {
 }
 
 const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpdate }) => {
+    const { t } = useTranslation();
     const { userProfile } = useAuth();
     const [studentCode, setStudentCode] = useState('');
     // True once a load has completed, so background refreshes never flash a skeleton.
@@ -139,7 +141,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
             toast.success(UNLINK_IS_AN_OFFICE_ACTION, { duration: 6000 });
         } catch (error) {
             console.error(error);
-            toast.error("Failed to unlink student.");
+            toast.error(t('linkChildScreen.failedToUnlinkStudent'));
         } finally {
             hasLoadedOnceRef.current = true; setLoading(false);
             setShowUnlinkModal(false);
@@ -152,7 +154,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                 <motion.button whileTap={{ scale: 0.9 }} onClick={handleBack} className="p-2.5 rounded-full hover:bg-gray-100 mr-2">
                     <ChevronLeftIcon className="w-6 h-6 text-gray-600" />
                 </motion.button>
-                <h2 className="text-xl font-bold text-gray-800">Manage Child Accounts</h2>
+                <h2 className="text-xl font-bold text-gray-800">{t('linkChildScreen.manageChildAccounts')}</h2>
             </div>
 
             <main className="flex-1 px-0 py-4 min-[360px]:p-4 md:p-6 overflow-y-auto space-y-6">
@@ -161,8 +163,8 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                     <div className="bg-white rounded-2xl shadow-lg overflow-hidden h-fit">
                         <div className="bg-gradient-to-r from-blue-500 to-indigo-600 p-6 text-white text-center">
                             <UserPlus className="w-12 h-12 mx-auto mb-3 text-white/90" />
-                            <h3 className="text-xl font-bold">Link a New Child</h3>
-                            <p className="text-blue-100 text-sm mt-1">Enter the unique School ID to link their account.</p>
+                            <h3 className="text-xl font-bold">{t('linkChildScreen.linkANewChild')}</h3>
+                            <p className="text-blue-100 text-sm mt-1">{t('linkChildScreen.enterTheUniqueSchoolIDToLinkTheirAccount')}</p>
                         </div>
 
                         <form onSubmit={handleSubmit} className="p-6 space-y-4">
@@ -208,7 +210,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                 >
                                     <option value="Father">Father</option>
                                     <option value="Mother">Mother</option>
-                                    <option value="Guardian">Guardian</option>
+                                    <option value="Guardian">{t('linkChildScreen.guardian')}</option>
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
@@ -239,7 +241,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                         <div className="p-6 border-b flex flex-wrap items-center justify-between gap-3 bg-gray-50/50">
                             <div className="flex items-center space-x-2 text-gray-800">
                                 <Users className="w-5 h-5 text-blue-600" />
-                                <h3 className="text-lg font-bold">My Linked Children</h3>
+                                <h3 className="text-lg font-bold">{t('linkChildScreen.myLinkedChildren')}</h3>
                             </div>
                             <span className="flex-shrink-0 whitespace-nowrap bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-full">
                                 {linkedChildren.length} Linked
@@ -250,7 +252,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                             {fetchingChildren ? (
                                 <div className="flex flex-col items-center justify-center py-12 space-y-3">
                                     <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                                    <p className="text-sm text-gray-500 font-medium">Loading child records...</p>
+                                    <p className="text-sm text-gray-500 font-medium">{t('linkChildScreen.loadingChildRecords')}</p>
                                 </div>
                             ) : linkedChildren.length > 0 ? (
                                 <div className="space-y-4">
@@ -287,7 +289,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => handleUnlinkClick(child)}
                                                 className="p-3 ml-auto flex-shrink-0 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(hover:none)]:opacity-100"
-                                                title="Remove link"
+                                                title={t('linkChildScreen.removeLink')}
                                             >
                                                 <TrashIcon className="w-5 h-5" />
                                             </motion.button>
@@ -299,7 +301,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                     <div className="bg-gray-100 p-4 rounded-full mb-4">
                                         <Users className="w-10 h-10 text-gray-400" />
                                     </div>
-                                    <h4 className="font-bold text-gray-800">No Children Linked</h4>
+                                    <h4 className="font-bold text-gray-800">{t('linkChildScreen.noChildrenLinked')}</h4>
                                     <p className="text-sm text-gray-500 mt-1 max-w-[200px] mx-auto">
                                         Use the form on the left to link your child's account.
                                     </p>
@@ -315,9 +317,9 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                 isOpen={showUnlinkModal}
                 onClose={() => setShowUnlinkModal(false)}
                 onConfirm={confirmUnlink}
-                title="Remove Child Link"
+                title={t('linkChildScreen.removeChildLink')}
                 message={`Are you sure you want to remove the link to ${childToUnlink?.name}? You will lose access to their dashboard data.`}
-                confirmText="Remove Link"
+                confirmText={t('linkChildScreen.removeLink')}
                 isDanger={true}
             />
         </div>

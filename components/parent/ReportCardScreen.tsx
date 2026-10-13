@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { SchoolLogoIcon, DocumentTextIcon } from '../../constants';
@@ -34,6 +35,7 @@ const RatingBadge: React.FC<{ rating: Rating }> = ({ rating }) => {
 };
 
 const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: string, logoUrl?: string, motto?: string, address?: string }> = ({ report, student, schoolName, logoUrl, motto, address }) => {
+    const { t } = useTranslation();
     const SKILL_BEHAVIOUR_DOMAINS = ['Neatness', 'Punctuality', 'Politeness', 'Respect for Others', 'Participation in Class', 'Homework Completion', 'Teamwork/Cooperation', 'Attentiveness', 'Creativity', 'Honesty/Integrity'];
     const PSYCHOMOTOR_SKILLS = ['Handwriting', 'Drawing/Art Skills', 'Craft Skills', 'Music & Dance', 'Sports Participation'];
 
@@ -46,7 +48,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
             <header className="text-center border-b-2 border-green-300 pb-4 mb-4">
                 <div className="flex justify-center items-center gap-3">
                     {logoUrl ? (
-                        <img src={logoUrl} alt="School Logo" className="h-14 w-14 object-contain rounded-lg" />
+                        <img src={logoUrl} alt={t('reportCardScreen.schoolLogo')} className="h-14 w-14 object-contain rounded-lg" />
                     ) : (
                         <SchoolLogoIcon className="text-green-500 h-12 w-12" />
                     )}
@@ -54,33 +56,33 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                 </div>
                 {motto && <p className="text-gray-500 italic text-xs mt-1">"{motto}"</p>}
                 {address && <p className="text-gray-400 text-xs mt-0.5">{address}</p>}
-                <p className="text-green-600 font-sans font-bold uppercase tracking-widest text-xs mt-2">End of Term Report Card</p>
+                <p className="text-green-600 font-sans font-bold uppercase tracking-widest text-xs mt-2">{t('reportCardScreen.endOfTermReportCard')}</p>
             </header>
 
             {/* Student Information */}
-            <SectionHeader title="Student Information" />
+            <SectionHeader title={t('reportCardScreen.studentInformation')} />
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-gray-900 font-sans">
-                <InfoField label="Full Name" value={student.name} />
-                <InfoField label="Class/Grade" value={`${student.grade}${student.section}`} />
+                <InfoField label={t('reportCardScreen.fullName')} value={student.name} />
+                <InfoField label={t('reportCardScreen.classGrade')} value={`${student.grade}${student.section}`} />
                 <InfoField label="Term" value={report.term} />
-                <InfoField label="Session" value={report.session} />
-                {student.admission_number && <InfoField label="Admission No." value={student.admission_number} />}
-                {student.curriculum_type && <InfoField label="Curriculum" value={student.curriculum_type} />}
+                <InfoField label={t('reportCardScreen.session')} value={report.session} />
+                {student.admission_number && <InfoField label={t('reportCardScreen.admissionNo')} value={student.admission_number} />}
+                {student.curriculum_type && <InfoField label={t('reportCardScreen.curriculum')} value={student.curriculum_type} />}
                 {student.gender && <InfoField label="Gender" value={student.gender} />}
-                {(student.birthday || student.dateOfBirth) && <InfoField label="Date of Birth" value={student.birthday || student.dateOfBirth} />}
-                {report.position && <InfoField label="Position in Class" value={`${report.position}${report.totalStudents ? ` / ${report.totalStudents}` : ''}`} />}
+                {(student.birthday || student.dateOfBirth) && <InfoField label={t('reportCardScreen.dateOfBirth')} value={student.birthday || student.dateOfBirth} />}
+                {report.position && <InfoField label={t('reportCardScreen.positionInClass')} value={`${report.position}${report.totalStudents ? ` / ${report.totalStudents}` : ''}`} />}
             </div>
 
             {/* Academic Performance */}
-            <SectionHeader title="Academic Performance" />
+            <SectionHeader title={t('reportCardScreen.academicPerformance')} />
             <div className="overflow-x-auto text-sm">
                 <table className="min-w-full border-collapse border border-gray-300">
                     <thead className="sticky top-0 z-10 bg-green-50 text-left text-gray-700 font-sans font-bold">
                         <tr>
-                            <th className="sticky left-0 z-10 bg-green-50 p-2 border border-gray-300 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">Subject</th>
-                            <th className="p-2 border border-gray-300 w-16 text-center">CA (40)</th>
-                            <th className="p-2 border border-gray-300 w-16 text-center">Exam (60)</th>
-                            <th className="p-2 border border-gray-300 w-16 text-center bg-green-100">Total (100)</th>
+                            <th className="sticky left-0 z-10 bg-green-50 p-2 border border-gray-300 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.1)]">{t('reportCardScreen.subject')}</th>
+                            <th className="p-2 border border-gray-300 w-16 text-center">{t('reportCardScreen.ca40')}</th>
+                            <th className="p-2 border border-gray-300 w-16 text-center">{t('reportCardScreen.exam60')}</th>
+                            <th className="p-2 border border-gray-300 w-16 text-center bg-green-100">{t('reportCardScreen.total100')}</th>
                             <th className="p-2 border border-gray-300 w-16 text-center">Grade</th>
                             <th className="p-2 border border-gray-300">Remark</th>
                         </tr>
@@ -99,7 +101,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={6} className="p-4 text-center text-gray-500 italic">No academic records available.</td>
+                                <td colSpan={6} className="p-4 text-center text-gray-500 italic">{t('reportCardScreen.noAcademicRecordsAvailable')}</td>
                             </tr>
                         )}
                     </tbody>
@@ -111,7 +113,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mt-2">
                     {hasSkills && (
                         <div>
-                            <SectionHeader title="Skills & Behaviour" />
+                            <SectionHeader title={t('reportCardScreen.skillsBehaviour')} />
                             <table className="w-full text-sm font-sans">
                                 <tbody>
                                     {SKILL_BEHAVIOUR_DOMAINS.map(skill => (
@@ -128,7 +130,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                     )}
                     {hasPsychomotor && (
                         <div>
-                            <SectionHeader title="Psychomotor Skills" />
+                            <SectionHeader title={t('reportCardScreen.psychomotorSkills')} />
                             <table className="w-full text-sm font-sans">
                                 <tbody>
                                     {PSYCHOMOTOR_SKILLS.map(skill => (
@@ -149,14 +151,14 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
             {/* Attendance Record */}
             {report.attendance && (report.attendance.present > 0 || report.attendance.absent > 0) && (
                 <>
-                    <SectionHeader title="Attendance Record" />
+                    <SectionHeader title={t('reportCardScreen.attendanceRecord')} />
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm font-sans">
                         <div className="bg-gray-50 p-3 rounded-lg text-center">
-                            <p className="text-xs text-gray-500 font-medium">Total Days</p>
+                            <p className="text-xs text-gray-500 font-medium">{t('reportCardScreen.totalDays')}</p>
                             <p className="text-lg font-bold text-gray-800">{report.attendance.total}</p>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg text-center">
-                            <p className="text-xs text-green-600 font-medium">Present</p>
+                            <p className="text-xs text-green-600 font-medium">{t('reportCardScreen.present')}</p>
                             <p className="text-lg font-bold text-green-700">{report.attendance.present}</p>
                         </div>
                         <div className="bg-red-50 p-3 rounded-lg text-center">
@@ -172,14 +174,14 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
             )}
 
             {/* Comments */}
-            <SectionHeader title="Comments" />
+            <SectionHeader title={t('reportCardScreen.comments')} />
             <div className="space-y-4 font-sans">
                 <div>
-                    <h4 className="font-bold text-gray-800">Teacher's Comment</h4>
+                    <h4 className="font-bold text-gray-800">{t('reportCardScreen.teacherSComment')}</h4>
                     <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || 'No comment provided.'}"</div>
                 </div>
                 <div>
-                    <h4 className="font-bold text-gray-800">Principal's Comment</h4>
+                    <h4 className="font-bold text-gray-800">{t('reportCardScreen.principalSComment')}</h4>
                     <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || 'No comment provided.'}"</div>
                 </div>
             </div>
@@ -198,7 +200,8 @@ interface ReportCardScreenProps {
 }
 
 const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, session, navigateTo }) => {
-    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">Select a child to view their report card.</div>;
+    const { t } = useTranslation();
+    if (!student) return <div className="flex items-center justify-center min-h-[40vh] p-8 text-center text-gray-500">{t('reportCardScreen.selectAChildToViewTheirReportCard')}</div>;
     const { currentSchool } = useAuth();
     const publishedReportsSummary = useMemo(() =>
         ((student.reportCards || (student as any).report_cards || []) as ReportCard[]).filter(r => r.status === 'Published'),
@@ -367,8 +370,8 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
     if (publishedReportsSummary.length === 0) {
         return (
             <div className="p-6 text-center bg-gray-50 h-full flex flex-col justify-center">
-                <h3 className="font-bold text-lg text-gray-800">No Published Reports</h3>
-                <p className="text-gray-600 mt-2">Report cards for this session have not been published yet.</p>
+                <h3 className="font-bold text-lg text-gray-800">{t('reportCardScreen.noPublishedReports')}</h3>
+                <p className="text-gray-600 mt-2">{t('reportCardScreen.reportCardsForThisSessionHaveNotBeenPublishedY')}</p>
             </div>
         );
     }
@@ -443,7 +446,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
 
                 {loading ? (
                     <div className="py-12">
-                        <PremiumLoader message="Fetching report details..." />
+                        <PremiumLoader message={t('reportCardScreen.fetchingReportDetails')} />
                     </div>
                 ) : activeReport ? (
                     <AnimatePresence mode="wait">
@@ -460,12 +463,12 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
                     </AnimatePresence>
                 ) : activeEntry && !activeEntry.published && !activeEntry.synthetic ? (
                     <div className="p-12 text-center bg-white rounded-xl shadow-sm border border-gray-100">
-                        <h3 className="font-bold text-lg text-gray-800">Not Published Yet</h3>
+                        <h3 className="font-bold text-lg text-gray-800">{t('reportCardScreen.notPublishedYet')}</h3>
                         <p className="text-gray-500 mt-2">{activeEntry.term} results for {activeEntry.session} haven't been published by the school yet.</p>
                     </div>
                 ) : (
                     <div className="p-12 text-center bg-white rounded-xl shadow-sm border border-gray-100">
-                        <p className="text-gray-500 italic">Select a term to view the report.</p>
+                        <p className="text-gray-500 italic">{t('reportCardScreen.selectATermToViewTheReport')}</p>
                     </div>
                 )}
             </div>

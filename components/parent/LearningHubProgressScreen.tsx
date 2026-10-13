@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 interface LearningHubProgressScreenProps {
@@ -20,9 +21,11 @@ interface LearningHubProgressScreenProps {
  * to tell "your child has not started" from "this was never built". Saying so is
  * honest; a dashboard of zeros is not.
  */
-const LearningHubProgressScreen: React.FC<LearningHubProgressScreenProps> = ({ navigateTo }) => (
+const LearningHubProgressScreen: React.FC<LearningHubProgressScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Progress Pembelajaran"
+        title={t('learningHubProgressScreen.progressPembelajaran')}
         explanation={
             'Sekolah ini belum menyediakan rekod kemajuan pembelajaran dalam talian. '
             + 'Skrin ini sebelum ini memaparkan angka sifar, yang boleh disalah anggap '
@@ -31,6 +34,7 @@ const LearningHubProgressScreen: React.FC<LearningHubProgressScreenProps> = ({ n
         }
         handleBack={() => navigateTo('home', 'Utama')}
     />
-);
+    );
+};
 
 export default LearningHubProgressScreen;

@@ -31,6 +31,7 @@
  */
 
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import {
     CurrencyDollarIcon, CheckIcon, ExclamationIcon, PrinterIcon, UsersIcon,
@@ -47,6 +48,7 @@ import {
 } from '../../src/lib/supabase/parentFees';
 
 export default function MyChildrenFeesScreen() {
+    const { t } = useTranslation();
     const { user } = useAuth();
 
     const feesQuery = useQuery({
@@ -77,13 +79,13 @@ export default function MyChildrenFeesScreen() {
     if (!children.length) {
         return (
             <div className="p-4 sm:p-6 max-w-3xl mx-auto">
-                <h1 className="text-2xl font-bold text-slate-800 mb-1">Yuran Anak Saya</h1>
-                <p className="text-sm text-slate-500 mb-6">Bayaran yuran untuk anak anda.</p>
+                <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myChildrenFeesScreen.yuranAnakSaya')}</h1>
+                <p className="text-sm text-slate-500 mb-6">{t('myChildrenFeesScreen.bayaranYuranUntukAnakAnda')}</p>
                 <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
                     <div className="flex justify-center mb-3">
                         <UsersIcon className="w-8 h-8 text-slate-400" />
                     </div>
-                    <p className="font-semibold text-slate-700">Tiada rekod anak</p>
+                    <p className="font-semibold text-slate-700">{t('myChildrenFeesScreen.tiadaRekodAnak')}</p>
                     <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
                         Akaun anda belum disambungkan kepada mana-mana anak. Sila hubungi pejabat
                         sekolah untuk menyambungkannya.
@@ -96,7 +98,7 @@ export default function MyChildrenFeesScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-3xl mx-auto">
             <div className="no-print">
-                <h1 className="text-2xl font-bold text-slate-800 mb-1">Yuran Anak Saya</h1>
+                <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myChildrenFeesScreen.yuranAnakSaya')}</h1>
                 <p className="text-sm text-slate-500 mb-5">
                     Bayaran yuran untuk anak anda. Bayaran dibuat di sekolah atau melalui
                     pindahan bank.
@@ -147,6 +149,7 @@ export default function MyChildrenFeesScreen() {
 }
 
 function ChildCard({ child }: { child: ChildFeeSummary }) {
+    const { t } = useTranslation();
     return (
         <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden parent-fee-card">
             <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between gap-3">
@@ -157,7 +160,7 @@ function ChildCard({ child }: { child: ChildFeeSummary }) {
                     </p>
                 </div>
                 <div className="text-right shrink-0">
-                    <p className="text-xs text-slate-400">Tertunggak</p>
+                    <p className="text-xs text-slate-400">{t('myChildrenFeesScreen.tertunggak')}</p>
                     <p
                         className={`font-bold ${
                             child.outstanding > 0 ? 'text-rose-600' : 'text-emerald-600'
@@ -170,11 +173,11 @@ function ChildCard({ child }: { child: ChildFeeSummary }) {
 
             <div className="grid grid-cols-2 divide-x divide-slate-100 border-b border-slate-100">
                 <div className="px-5 py-3">
-                    <p className="text-xs text-slate-400">Jumlah dicaj</p>
+                    <p className="text-xs text-slate-400">{t('myChildrenFeesScreen.jumlahDicaj')}</p>
                     <p className="font-semibold text-slate-700">{formatMoney(child.charged)}</p>
                 </div>
                 <div className="px-5 py-3">
-                    <p className="text-xs text-slate-400">Telah dibayar</p>
+                    <p className="text-xs text-slate-400">{t('myChildrenFeesScreen.telahDibayar')}</p>
                     <p className="font-semibold text-emerald-700">{formatMoney(child.paid)}</p>
                 </div>
             </div>

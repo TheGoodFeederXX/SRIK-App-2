@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { listMyChildren } from '../../src/lib/supabase/family';
@@ -14,6 +15,7 @@ interface SelectChildForReportScreenProps {
 }
 
 const SelectChildForReportScreen: React.FC<SelectChildForReportScreenProps> = ({ navigateTo, parentId, currentUserId, schoolId }) => {
+    const { t } = useTranslation();
   const [children, setChildren] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -72,7 +74,7 @@ const SelectChildForReportScreen: React.FC<SelectChildForReportScreenProps> = ({
     fetchChildren();
   }, [fetchChildren]);
 
-  if (loading) return <div className="p-8 text-center">Loading children...</div>;
+  if (loading) return <div className="p-8 text-center">{t('selectChildForReportScreen.loadingChildren')}</div>;
 
   const handleSelectChild = (student: Student) => {
     navigateTo('selectReportTerm', `${student.name}'s Report`, { student });
@@ -82,8 +84,8 @@ const SelectChildForReportScreen: React.FC<SelectChildForReportScreenProps> = ({
     <div className="p-4 space-y-4 bg-gray-50 h-full">
       <div className="bg-green-50 p-4 rounded-xl text-center border border-green-200">
         <ReportIcon className="h-10 w-10 mx-auto text-green-400 mb-2" />
-        <h3 className="font-bold text-lg text-green-800">Select a Child</h3>
-        <p className="text-sm text-green-700">Choose a child to view their latest academic report card.</p>
+        <h3 className="font-bold text-lg text-green-800">{t('selectChildForReportScreen.selectAChild')}</h3>
+        <p className="text-sm text-green-700">{t('selectChildForReportScreen.chooseAChildToViewTheirLatestAcademicReportCar')}</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {children.map((child, i) => (

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useCallback } from 'react';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -13,6 +14,7 @@ const TYPE_COLORS = {
 };
 
 export const SmartCalendar: React.FC = () => {
+    const { t } = useTranslation();
     const { user, currentSchool } = useAuth();
     const [events, setEvents] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,7 +43,7 @@ export const SmartCalendar: React.FC = () => {
         return (
             <div className="flex flex-col items-center justify-center py-16">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600 mb-3" />
-                <p className="text-gray-400 text-sm font-medium">Loading calendar...</p>
+                <p className="text-gray-400 text-sm font-medium">{t('smartCalendar.loadingCalendar')}</p>
             </div>
         );
     }
@@ -49,7 +51,7 @@ export const SmartCalendar: React.FC = () => {
     return (
         <div className="p-4 space-y-6">
             <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-bold text-gray-900">School Calendar</h2>
+                <h2 className="text-2xl font-bold text-gray-900">{t('smartCalendar.schoolCalendar')}</h2>
                 <div className="bg-white p-2 rounded-xl shadow-sm border">
                     <CalendarIcon className="w-5 h-5 text-indigo-600" />
                 </div>
@@ -58,8 +60,8 @@ export const SmartCalendar: React.FC = () => {
             {events.length === 0 ? (
                 <div className="bg-white rounded-3xl p-10 text-center border border-gray-100 flex flex-col items-center">
                     <CalendarIcon className="w-10 h-10 text-gray-300 mb-3" />
-                    <h4 className="font-bold text-gray-800 mb-1">No Events Scheduled</h4>
-                    <p className="text-gray-400 text-sm">Check back later for upcoming school events.</p>
+                    <h4 className="font-bold text-gray-800 mb-1">{t('smartCalendar.noEventsScheduled')}</h4>
+                    <p className="text-gray-400 text-sm">{t('smartCalendar.checkBackLaterForUpcomingSchoolEvents')}</p>
                 </div>
             ) : (
             <div className="space-y-4">
@@ -102,7 +104,7 @@ export const SmartCalendar: React.FC = () => {
 
                             {event.rsvp_enabled && (
                                 <div className="pt-2 border-t border-gray-50">
-                                    <p className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-widest">Your RSVP</p>
+                                    <p className="text-xs font-bold text-gray-400 uppercase mb-3 tracking-widest">{t('smartCalendar.yourRSVP')}</p>
                                     <div className="flex gap-2">
                                         <motion.button
                                             whileTap={{ scale: 0.95 }}

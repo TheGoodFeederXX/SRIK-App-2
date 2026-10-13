@@ -1,5 +1,6 @@
 ﻿
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import {
   EditIcon,
@@ -52,17 +53,21 @@ interface ParentProfileScreenProps {
 
 type SettingView = 'linkChild' | 'editParentProfile' | 'learningResources' | 'schoolPolicies' | 'ptaMeetings' | 'photoGallery' | 'volunteering' | 'permissionSlips' | 'feedback' | 'notificationSettings' | 'securitySettings' | 'dataUsage' | 'appearanceSettings' | null;
 
-const SettingsPlaceholder: React.FC = () => (
+const SettingsPlaceholder: React.FC = () => {
+    const { t } = useTranslation();
+    return (
   <div className="flex-col items-center justify-center h-full text-center text-gray-500 bg-[#F0F2F5] border-l border-gray-300/80 hidden md:flex">
     <SettingsIcon className="w-24 h-24 text-gray-300" />
-    <h1 className="text-3xl font-light text-gray-600 mt-4">More Options</h1>
+    <h1 className="text-3xl font-light text-gray-600 mt-4">{t('parentProfileScreen.moreOptions')}</h1>
     <p className="mt-2 text-sm text-gray-500 max-w-sm">
       Select an item from the left to view more information and settings.
     </p>
   </div>
-);
+    );
+};
 
 const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, navigateTo, forceUpdate, parentId, schoolId, students = [] }) => {
+    const { t } = useTranslation();
   const { profile } = useProfile();
   const { memberships, switchSchool, currentSchool } = useAuth();
   const { customId, formatId, copyToClipboard, copied } = useUserIdentity();
@@ -74,32 +79,32 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
     setIsSwitching(true);
     try {
       await switchSchool(schoolId);
-      toast.success('Switched school successfully');
+      toast.success(t('parentProfileScreen.switchedSchoolSuccessfully'));
     } catch (err) {
-      toast.error('Failed to switch school');
+      toast.error(t('parentProfileScreen.failedToSwitchSchool'));
     } finally {
       setIsSwitching(false);
     }
   };
 
-  if (!profile) return <div className="p-8 text-center text-gray-500">Profile not found.</div>;
+  if (!profile) return <div className="p-8 text-center text-gray-500">{t('parentProfileScreen.profileNotFound')}</div>;
 
   const menuItems = [
-    { id: 'announcements', icon: <MegaphoneIcon />, label: 'Pengumuman Sekolah' },
-    { id: 'linkChild', icon: <UserPlus />, label: 'Link Child Account' },
-    { id: 'editParentProfile', icon: <EditIcon />, label: 'Edit Profile' },
-    { id: 'learningResources', icon: <BookOpenIcon />, label: 'Learning Resources' },
-    { id: 'schoolPolicies', icon: <ShieldCheckIcon />, label: 'School Policies' },
-    { id: 'ptaMeetings', icon: <UsersIcon />, label: 'PTA Meetings' },
-    { id: 'photoGallery', icon: <CameraIcon />, label: 'Photo Gallery' },
-    { id: 'volunteering', icon: <HelpingHandIcon />, label: 'Volunteer' },
-    { id: 'permissionSlips', icon: <ClipboardListIcon />, label: 'Permission Slips' },
-    { id: 'feedback', icon: <MegaphoneIcon />, label: 'Feedback & Support' },
-    { id: 'notificationSettings', icon: <NotificationIcon />, label: 'Notification Settings' },
-    { id: 'securitySettings', icon: <SecurityIcon />, label: 'Security & Password' },
-    { id: 'dataUsage', icon: <WifiOff className="h-5 w-5" />, label: 'Data Usage' },
-    { id: 'appearanceSettings', icon: <Sparkles className="h-5 w-5" />, label: 'Appearance & Theme' },
-    { id: 'help', icon: <HelpIcon />, label: 'Help Center' },
+    { id: 'announcements', icon: <MegaphoneIcon />, label: t('parentProfileScreen.pengumumanSekolah') },
+    { id: 'linkChild', icon: <UserPlus />, label: t('parentProfileScreen.linkChildAccount') },
+    { id: 'editParentProfile', icon: <EditIcon />, label: t('parentProfileScreen.editProfile') },
+    { id: 'learningResources', icon: <BookOpenIcon />, label: t('parentProfileScreen.learningResources') },
+    { id: 'schoolPolicies', icon: <ShieldCheckIcon />, label: t('parentProfileScreen.schoolPolicies') },
+    { id: 'ptaMeetings', icon: <UsersIcon />, label: t('parentProfileScreen.ptaMeetings') },
+    { id: 'photoGallery', icon: <CameraIcon />, label: t('parentProfileScreen.photoGallery') },
+    { id: 'volunteering', icon: <HelpingHandIcon />, label: t('parentProfileScreen.volunteer') },
+    { id: 'permissionSlips', icon: <ClipboardListIcon />, label: t('parentProfileScreen.permissionSlips') },
+    { id: 'feedback', icon: <MegaphoneIcon />, label: t('parentProfileScreen.feedbackSupport') },
+    { id: 'notificationSettings', icon: <NotificationIcon />, label: t('parentProfileScreen.notificationSettings') },
+    { id: 'securitySettings', icon: <SecurityIcon />, label: t('parentProfileScreen.securityPassword') },
+    { id: 'dataUsage', icon: <WifiOff className="h-5 w-5" />, label: t('parentProfileScreen.dataUsage') },
+    { id: 'appearanceSettings', icon: <Sparkles className="h-5 w-5" />, label: t('parentProfileScreen.appearanceTheme') },
+    { id: 'help', icon: <HelpIcon />, label: t('parentProfileScreen.helpCenter') },
   ];
 
   const theme = {
@@ -115,7 +120,7 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
     }
     // eslint-disable-next-line no-constant-condition
     if (false) {
-      toast('Help Center coming soon!', { icon: 'ℹ️' });
+      toast(t('parentProfileScreen.helpCenterComingSoon'), { icon: 'ℹ️' });
     } else {
       // If mobile, navigate to a new screen instead of just setting activeSetting
       const isMobile = window.innerWidth < 768;
@@ -164,7 +169,7 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
                 onClick={() => {
                   const idToCopy = profile.school_generated_id || formatId(customId) || 'ID: Pending';
                   if (idToCopy !== 'ID: Pending') copyToClipboard(idToCopy);
-                  else toast.error("ID is still pending generation.");
+                  else toast.error(t('parentProfileScreen.idIsStillPendingGeneration'));
                 }}
               >
                 <span className="text-xs font-mono font-medium min-w-0 break-all">
@@ -201,7 +206,7 @@ const ParentProfileScreen: React.FC<ParentProfileScreenProps> = ({ onLogout, nav
           {/* School Switcher Section */}
           {memberships.length > 1 && (
             <div className="space-y-2">
-              <h4 className="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">Your Schools</h4>
+              <h4 className="px-4 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('parentProfileScreen.yourSchools')}</h4>
               <div className="bg-white rounded-xl shadow-sm p-2 space-y-1">
                 {memberships.map((m) => (
                   <motion.button
