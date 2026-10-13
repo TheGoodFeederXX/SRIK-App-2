@@ -677,7 +677,8 @@
     "studentCBTList": "Senarai CBT Murid"
   },
   "studentCBTPlayerScreen": {
-    "ujianKomputer": "Ujian Komputer"
+    "ujianKomputer": "Ujian Komputer",
+    "explanation": "Ujian secara komputer belum tersedia di dalam sistem ini. Buat masa ini ujian murid dijalankan di dalam kelas melalui kaedah yang ditetapkan sekolah, dan markahnya direkodkan oleh guru melalui menu Penilaian. Sila hubungi guru kelas untuk urusan berkaitan ujian murid."
   },
   "alphabetFishingGame": {
     "alphabetFishingGame": "Permainan Memancing Abjad"
@@ -1208,7 +1209,8 @@
     "couldNotRecordThat": "Tidak dapat merekodkan itu.",
     "couldNotSaveAttendancePleaseTryAgain": "Tidak dapat menyimpan kehadiran. Sila cuba lagi.",
     "couldNotLoadTheRegister": "Tidak dapat memuatkan daftar.",
-    "couldNotSaveAttendance": "Tidak dapat menyimpan kehadiran."
+    "couldNotSaveAttendance": "Tidak dapat menyimpan kehadiran.",
+    "noStudentsFoundForThisClass": "Tiada murid dijumpai untuk kelas ini."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Kata Laluan Semasa",
@@ -1488,7 +1490,9 @@
   },
   "myAnnouncementsScreen": {
     "pengumuman": "Pengumuman",
-    "tiadaPengumuman": "Tiada pengumuman"
+    "tiadaPengumuman": "Tiada pengumuman",
+    "noticeFromSchool": "Notis daripada pihak sekolah.",
+    "noNoticeFromSchool": "Belum ada notis daripada pihak sekolah buat masa ini."
   },
   "myChildrenFeesScreen": {
     "yuranAnakSaya": "Yuran Anak Saya",
@@ -1496,7 +1500,16 @@
     "tiadaRekodAnak": "Tiada rekod anak",
     "tertunggak": "Tertunggak",
     "jumlahDicaj": "Jumlah dicaj",
-    "telahDibayar": "Telah dibayar"
+    "telahDibayar": "Telah dibayar",
+    "noRegistrationNumber": "Tiada nombor pendaftaran",
+    "fees": "Yuran",
+    "cannotOpenStatementNow": "Maaf, penyata yuran tidak dapat dibuka sekarang. Sila cuba sebentar lagi.",
+    "accountNotConnected": "Akaun anda belum disambungkan kepada mana-mana anak. Sila hubungi pejabat sekolah untuk menyambungkannya.",
+    "feePaymentsForChild": "Bayaran yuran untuk anak anda. Bayaran dibuat di sekolah atau melalui",
+    "allFeesSettled": "Semua yuran sudah selesai. Terima kasih.",
+    "paymentNotShownContactOffice": "Jika ada bayaran yang sudah dibuat tetapi belum dipaparkan, sila hubungi pejabat",
+    "noFeeChargesForChild": "Belum ada caj yuran untuk anak ini.",
+    "resolved": "Selesai"
   },
   "pTAMeetingScreen": {
     "ptameeting": "Mesyuarat PIBG"
@@ -1676,7 +1689,31 @@
     "craftSkills": "Kemahiran Kraf",
     "musicDance": "Muzik & Tarian",
     "sportsParticipation": "Penyertaan Sukan",
-    "gagalMenerbitkanKadLaporan": "Gagal menerbitkan kad laporan."
+    "gagalMenerbitkanKadLaporan": "Gagal menerbitkan kad laporan.",
+    "absent": "Tidak hadir",
+    "notFilledIn": "Belum diisi",
+    "alreadyHasReportCard": "Pelajar ini sudah ada kad laporan untuk penggal ini. Menerbitkan semula akan menjadi REVISI BAHARU, dan yang lama disimpan sebagai rekod. Teruskan?",
+    "publishReportCardConfirm": "Terbitkan kad laporan ini? Markah dan kehadiran akan dikunci seperti sekarang. Pembetulan selepas ini menjadi revisi baharu.",
+    "switchToPublishedToPublish": "Tukar ke \"Kad diterbitkan\" untuk menerbitkan",
+    "thisIsACorrection": " — ini pembetulan, dan revisi sebelum ini masih disimpan sebagai rekod.",
+    "thisStudent": "pelajar ini",
+    "exempt": "Dikecualikan",
+    "draftNotYetPublished": "Draf — belum diterbitkan",
+    "reportCards": "Kad Laporan",
+    "noPublishedAssessmentsForTerm": "Tiada penilaian diterbitkan untuk penggal ini.",
+    "bothNotZero": "Kedua-duanya bukan sifar.",
+    "noAttendanceRecordsForTerm": "Tiada rekod kehadiran untuk penggal ini.",
+    "term": "Penggal",
+    "student": "Pelajar",
+    "noReportCardYetSwitchTo": "Pelajar ini belum ada kad laporan untuk penggal ini. Tukar ke",
+    "schoolInfoIncomplete": "Maklumat sekolah belum lengkap, jadi kepala kad laporan akan kosong.",
+    "enrolStudentToClassFirst": "Daftarkan pelajar ke kelas ini dahulu.",
+    "switchToDraftPreview": "Tukar ke \"Pratonton draf\" untuk melihat bagaimana ia akan nampak.",
+    "publishing": "Menerbitkan…",
+    "publishNewRevision": "Terbitkan revisi baharu",
+    "publish": "Terbitkan",
+    "average": "Purata",
+    "dashMeansNotFilledIn": "Markah — bermaksud belum diisi. TH = tidak hadir, KE = dikecualikan."
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "Dasar Sekolah"
@@ -2684,7 +2721,25 @@
     "drafDipadam": "Draf dipadam.",
     "suntingPengumuman": "Sunting pengumuman",
     "menyimpan": "Menyimpan…",
-    "simpanSebagaiDraf": "Simpan sebagai draf"
+    "simpanSebagaiDraf": "Simpan sebagai draf",
+    "publishedNotice": "“{{title}}” telah diterbitkan.",
+    "withdrawnNotice": "“{{title}}” telah ditarik balik.",
+    "writeNoticeForParents": "Tulis notis untuk ibu bapa, guru atau pelajar. Notis hanya dilihat selepas diterbitkan.",
+    "announcementSaved": "Pengumuman disimpan.",
+    "draftSaved": "Draf disimpan.",
+    "writeFirstNotice": "Tulis notis pertama untuk ibu bapa atau guru.",
+    "publishedNoticeCannotBeDeleted": "Notis yang telah diterbitkan tidak boleh dipadam, hanya ditarik balik — supaya rekod kekal.",
+    "staffNoticeNotSeenByParents": "Notis untuk guru sahaja tidak akan dilihat oleh ibu bapa.",
+    "afterThisDateNotSeen": "Selepas tarikh ini, notis tidak lagi dilihat oleh ibu bapa.",
+    "savingDoesNotPublish": "Menyimpan tidak menerbitkan. Notis hanya dilihat selepas anda tekan",
+    "METHOD_LABELS": "Ditarik balik",
+    "audienceAll": "Semua",
+    "audienceStaff": "Guru dan staf",
+    "audienceGuardians": "Ibu bapa",
+    "audienceStudents": "Pelajar",
+    "statusDraft": "Draf — belum diterbitkan",
+    "statusPublished": "Diterbitkan",
+    "statusWithdrawn": "Ditarik balik"
   },
   "arrearsTracker": {
     "arrears": "Tunggakan"
@@ -2737,7 +2792,9 @@
     "tiadaPerubahanBidangDirekodkan": "Tiada perubahan bidang direkodkan.",
     "cariNamaPenggunaAtauNoRujukan": "Cari nama pengguna atau no. rujukan",
     "tiadaRekodSepadanDenganCarianAnda": "Tiada rekod sepadan dengan carian anda.",
-    "belumAdaPerubahanDirekodkan": "Belum ada perubahan direkodkan."
+    "belumAdaPerubahanDirekodkan": "Belum ada perubahan direkodkan.",
+    "everyChangeRecorded": "Setiap perubahan pada rekod pelajar, kehadiran, markah dan bayaran direkodkan di",
+    "namesTakenFromRealSession": "Nama yang dicatat diambil daripada sesi yang sebenar semasa perubahan berlaku,"
   },
   "auditTrailViewer": {
     "comprehensiveSystemActivityAndSecurityMonitori": "Pemantauan aktiviti sistem dan keselamatan menyeluruh",
@@ -2984,7 +3041,24 @@
     "menyimpan": "Menyimpan…",
     "simpanBayaran": "Simpan bayaran",
     "membatalkan": "Membatalkan…",
-    "sahkanPembatalan": "Sahkan pembatalan"
+    "sahkanPembatalan": "Sahkan pembatalan",
+    "allStudentsHavePaid": "Semua pelajar sudah menyelesaikan bayaran mereka, atau yuran bulan ini belum dijana.",
+    "tryAnotherNameOrRegistration": "Cuba nama atau nombor pendaftaran yang lain.",
+    "noRegistrationNumber": "Tiada nombor pendaftaran",
+    "paymentAlreadyRecorded": "Bayaran ini sudah direkodkan. Resit {{reference}}.",
+    "studentHasNoUnpaidCharges": "Pelajar ini tidak mempunyai caj yang belum dibayar.",
+    "unallocated": "{{amount}} belum diagihkan.",
+    "receiptWillAppearHere": "Resit akan muncul di sini sebaik bayaran pertama direkodkan.",
+    "paymentCancelled": "Bayaran {{reference}} telah dibatalkan.",
+    "fees": "Yuran",
+    "recordFeePaymentsArrearsReceipts": "Rekod bayaran yuran, tunggakan dan resit.",
+    "studentsOutstanding": "Pelajar belum selesai",
+    "allocateToThisCharge": "Agihkan kepada caj ini",
+    "enterAmountForAtLeastOneCharge": "Masukkan jumlah untuk sekurang-kurangnya satu caj.",
+    "cancelled": "Telah dibatalkan",
+    "paymentNotDeleted": "Bayaran tidak akan dipadam. Ia ditanda dibatalkan supaya rekod asal kekal.",
+    "amountMatches": "Jumlah sepadan: {{amount}}",
+    "overAllocated": "Agihan melebihi bayaran sebanyak {{amount}}."
   },
   "feeManagementScreen": {
     "tetapanYuran": "Tetapan Yuran",
@@ -2996,7 +3070,21 @@
     "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
     "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan.",
     "ubahJenisYuran": "Ubah jenis yuran",
-    "janaUntuk": "Jana untuk"
+    "janaUntuk": "Jana untuk",
+    "noNewCharges": "Tiada caj baharu untuk {{month}} {{year}}. Caj itu sudah wujud.",
+    "chargesGenerated": "{{count}} caj baharu dijana untuk {{month}} {{year}}.",
+    "feeTypeUpdated": "Jenis yuran dikemas kini.",
+    "feeTypeAdded": "Jenis yuran ditambah.",
+    "save": "Simpan",
+    "saving": "Menyimpan…",
+    "schoolFeesList": "Senarai yuran sekolah dan jumlahnya. Jumlah boleh diubah bila-bila.",
+    "addFeeTypeThenGenerate": "Tambah jenis yuran dahulu, kemudian jana bil bulanan.",
+    "inactive": "Tidak aktif",
+    "createThisMonthsCharges": "Cipta caj bulan ini untuk semua pelajar aktif. Selamat ditekan dua kali — sistem",
+    "noMonthlyFeeInList": "Tiada yuran bulanan dalam senarai. Tambah satu jenis yuran dengan kekerapan",
+    "noNewChargesMonthAlreadyGenerated": "Tiada caj baharu — bulan itu sudah dijana sebelum ini.",
+    "feeName": "Nama yuran",
+    "leaveBlankMeansUndecided": "Biarkan kosong bermaksud jumlah belum diputuskan. Yuran tanpa jumlah"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Mata Wang Lalai",
@@ -3038,7 +3126,28 @@
     "menyimpan": "Menyimpan…",
     "simpanPenjaga": "Simpan penjaga",
     "nyahpaut": "Nyahpaut",
-    "pilihAnakUntukDipautkan": "— Pilih anak untuk dipautkan —"
+    "pilihAnakUntukDipautkan": "— Pilih anak untuk dipautkan —",
+    "addGuardianFirst": "Tambah penjaga dahulu, kemudian pautkan mereka kepada anak mereka.",
+    "tryAnotherNamePhoneEmail": "Cuba nama, telefon atau emel yang lain.",
+    "noPhone": "Tiada telefon",
+    "notLinkedToAnyChild": "Belum dipautkan kepada mana-mana anak",
+    "fillEmailAndReason": "Sila isi emel dan sebab.",
+    "accountCreatedFor": "Akaun dicipta untuk {{email}}.",
+    "childLinkedTo": "{{student}} dipautkan kepada {{guardian}}.",
+    "email": "Emel",
+    "emailPlaceholder": "nama@emel.com",
+    "giveParentsAccount": "Beri ibu bapa akaun untuk melihat yuran anak mereka, dan pautkan mereka kepada anak.",
+    "noAccountYet": "Belum ada akaun",
+    "parentCanLogInNow": "Ibu bapa ini sudah boleh log masuk",
+    "parentOnlySeesLinkedChildren": "Ibu bapa hanya boleh melihat anak yang dipautkan di bawah.",
+    "createAccountForParent": "Cipta akaun untuk ibu bapa ini. Kata laluan tidak boleh dibaca",
+    "tellParentEmailAndPassword": "Beritahu ibu bapa emel ini dan kata laluan yang anda",
+    "linkedChildren": "Anak yang dipautkan",
+    "parentOnlySeesListedChildren": "Ibu bapa hanya boleh melihat anak yang disenaraikan di sini.",
+    "noChildLinkedYet": "Belum ada anak dipautkan. Ibu bapa ini tidak akan melihat apa-apa",
+    "unlinkRemovesAccessImmediately": "Nyahpaut menolak akses serta-merta — tiada kelewatan.",
+    "parentCannotChangeAnything": "Ibu bapa tidak boleh mengubah apa-apa. Mereka hanya membaca yuran anak",
+    "recordGuardianFirst": "Rekod penjaga dahulu. Akaun log masuk dicipta selepas ini."
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -3116,7 +3225,28 @@
     "gagalMenyimpanSilaCubaLagi": "Gagal menyimpan. Sila cuba lagi.",
     "gagalMenerbitkan": "Gagal menerbitkan.",
     "catatan": "Catatan",
-    "sudahDiisi": "sudah diisi"
+    "sudahDiisi": "sudah diisi",
+    "marksOverMax": "{{count}} markah melebihi markah penuh ({{max}}). Sila betulkan dahulu.",
+    "saveToo": "Simpan juga?",
+    "noChangesCount": "{{count}} tiada perubahan",
+    "publishAssessmentConfirm": "Terbitkan penilaian ini? Markah akan dikunci dan tidak boleh diubah lagi tanpa ditarik balik penerbitannya. Kad laporan akan menggunakan markah ini.",
+    "assessmentPublishedFor": "Penilaian diterbitkan untuk {{count}} pelajar.",
+    "notFilledIn": "belum diisi",
+    "marksFor": "Markah {{student}}",
+    "noGrade": "tiada gred",
+    "studentsStillUnfilled": "Masih ada pelajar belum diisi",
+    "saveMarksFirst": "Simpan markah dahulu",
+    "studentsUnfilledSaveToo": "{{count}} pelajar belum diisi. Mereka akan kekal \"belum diisi\" (bukan sifar). Simpan juga?",
+    "studentsUnfilledCount": "{{count}} pelajar belum diisi.",
+    "term": "Penggal",
+    "chooseTermAndClass": "Pilih penggal dan kelas yang sudah ada penilaian. Untuk menambah",
+    "stayNotFilledInNotZero": "Mereka kekal \"belum diisi\" — bukan sifar. Penilaian tidak boleh",
+    "marksLockedBecausePublished": "Markah sudah dikunci kerana penilaian ini diterbitkan.",
+    "reportCardUsesTheseMarks": "Kad laporan menggunakan markah ini.",
+    "enrolStudentToClassFirst": "Daftarkan pelajar ke kelas ini dahulu sebelum mengisi markah.",
+    "marksSavedCount": "{{count}} disimpan",
+    "marksClearedCount": "{{count}} dikosongkan",
+    "noChanges": "Tiada perubahan."
   },
   "markStudentExitScreen": {
     "markStudentExit": "Tanda Keluar Murid"
@@ -3372,7 +3502,16 @@
     "diskaunMestiNomborYangSah": "Diskaun mesti nombor yang sah.",
     "silaNyatakanSebabDiskaun": "Sila nyatakan sebab diskaun.",
     "silaNyatakanSebabPengecualian": "Sila nyatakan sebab pengecualian.",
-    "pilihPelajar": "— Pilih pelajar —"
+    "pilihPelajar": "— Pilih pelajar —",
+    "chargeAlreadyHasPayment": "Caj ini sudah ada bayaran. Batalkan bayaran dahulu.",
+    "enrolStudentFirst": "Daftarkan pelajar dahulu sebelum melihat penyata yuran.",
+    "selectStudentAbove": "Pilih pelajar di atas untuk melihat caj dan baki mereka.",
+    "noFeeChargesYet": "Pelajar ini belum mempunyai sebarang caj yuran. Jana bil bulanan dahulu.",
+    "fees": "Yuran",
+    "saveDiscount": "Simpan diskaun",
+    "viewChargesPaymentsBalance": "Lihat caj, bayaran dan baki seorang pelajar. Boleh dicetak untuk ibu bapa.",
+    "charged": "Dicaj",
+    "remaining": "Baki"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Kad Pengenalan Murid"
@@ -3622,7 +3761,12 @@
     "ikutKelas": "Ikut Kelas",
     "ikutGuru": "Ikut Guru",
     "jadualKelas": "Jadual kelas",
-    "jadualAnda": "Jadual anda"
+    "jadualAnda": "Jadual anda",
+    "class": "Kelas",
+    "teacher": "Guru",
+    "onceTimetableReady": "Sebaik sahaja jadual disediakan, minggu persekolahan akan dipaparkan di sini.",
+    "draftNotPublished": "Jadual ini masih draf dan belum diterbitkan, jadi guru belum sepatutnya",
+    "edit": "Sunting"
   },
   "transportManagementScreen": {
     "pengurusanPengangkutan": "Pengurusan Pengangkutan"
@@ -3666,7 +3810,8 @@
   },
   "dashboardRouter": {
     "tiadaApaApaUntukDibayarDiSini": "Tiada apa-apa untuk dibayar di sini",
-    "accessDenied": "Akses Ditolak"
+    "accessDenied": "Akses Ditolak",
+    "schoolOwnedNotice": "Sistem ini dimiliki dan diuruskan oleh sekolah. Yuran murid dijelaskan di pejabat sekolah, bukan melalui halaman ini."
   },
   "quizzesScreen": {
     "papanPemuka": "Papan Pemuka"
@@ -3723,5 +3868,68 @@
   "aiChatScreen": {
     "deepThinker": "Pemikir Mendalam",
     "webSearch": "Carian Web"
+  },
+  "teacherCurriculumBadges": {
+    "noCurriculumSet": "Belum Ada Kurikulum Ditetapkan",
+    "both": "Kedua-duanya"
+  },
+  "finance": {
+    "chargeStatusOutstanding": "Belum bayar",
+    "chargeStatusPartial": "Bayar sebahagian",
+    "chargeStatusPaid": "Sudah bayar",
+    "chargeStatusWaived": "Dikecualikan",
+    "chargeStatusCancelled": "Dibatalkan",
+    "METHOD_LABELS": "Lain-lain",
+    "freqOneTime": "Sekali sahaja",
+    "freqMonthly": "Bulanan",
+    "freqTermly": "Setiap penggal",
+    "freqYearly": "Setahun sekali",
+    "methodCash": "Tunai",
+    "methodBankTransfer": "Pindahan bank",
+    "methodCheque": "Cek",
+    "methodOnline": "Atas talian",
+    "methodOther": "Lain-lain"
+  },
+  "assessments": {
+    "METHOD_LABELS": "Dikecualikan",
+    "typeMidYearExam": "Peperiksaan Pertengahan Tahun",
+    "typeFinalExam": "Peperiksaan Akhir Tahun (UASA)",
+    "typeSpecialExam": "Peperiksaan Khas",
+    "typeTest": "Ujian",
+    "typeQuiz": "Kuiz",
+    "typePbd": "PBD (Pentaksiran Bilik Darjah)",
+    "shortMidYearExam": "Pertengahan Tahun",
+    "shortFinalExam": "Akhir Tahun (UASA)",
+    "shortSpecialExam": "Khas",
+    "shortTest": "Ujian",
+    "shortQuiz": "Kuiz",
+    "shortPbd": "PBD",
+    "resultNotEntered": "Belum diisi",
+    "resultGraded": "Ada markah",
+    "resultAbsent": "Tidak hadir",
+    "resultExempt": "Dikecualikan"
+  },
+  "auditTrail": {
+    "METHOD_LABELS": "Pengumuman",
+    "actionInsert": "Dicipta",
+    "actionUpdate": "Diubah",
+    "actionDelete": "Dipadam",
+    "actionRead": "Dibaca",
+    "actionLogin": "Log masuk",
+    "actionExport": "Dieksport",
+    "entityStudents": "Pelajar",
+    "entityStudentEnrollments": "Pendaftaran kelas",
+    "entityGuardians": "Penjaga",
+    "entityStudentGuardians": "Pautan penjaga",
+    "entityAttendanceRecords": "Kehadiran",
+    "entityAssessments": "Pentaksiran",
+    "entityAssessmentResults": "Markah",
+    "entityReportCards": "Kad laporan",
+    "entityFeeTypes": "Jenis yuran",
+    "entityStudentCharges": "Caj yuran",
+    "entityPayments": "Bayaran",
+    "entityPaymentAllocations": "Agihan bayaran",
+    "entityDocuments": "Dokumen",
+    "entityAnnouncements": "Pengumuman"
   }
 }

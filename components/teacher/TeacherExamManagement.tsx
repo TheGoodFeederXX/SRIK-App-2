@@ -101,7 +101,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                             {/* The school's own wording, not the database's
                                                 constant: "Peperiksaan Pertengahan Tahun" is
                                                 what a teacher calls it, MID_YEAR_EXAM is not. */}
-                                            {ASSESSMENT_TYPE_LABELS[exam.type as AssessmentType] ?? exam.type}
+                                            {t(ASSESSMENT_TYPE_LABELS[exam.type as AssessmentType]) ?? exam.type}
                                         </span>
                                     </div>
                                     <div className="flex justify-between items-center mt-2">

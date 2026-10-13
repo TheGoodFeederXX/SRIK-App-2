@@ -22,6 +22,7 @@
  */
 
 import { requireSupabase } from './client';
+import i18n from '../../../lib/i18n';
 
 export interface AuditEntry {
     id: number;
@@ -51,12 +52,12 @@ export interface HistoryEntry {
 }
 
 export const ACTION_LABELS: Record<AuditAction, string> = {
-    INSERT: 'Dicipta',
-    UPDATE: 'Diubah',
-    DELETE: 'Dipadam',
-    READ: 'Dibaca',
-    LOGIN: 'Log masuk',
-    EXPORT: 'Dieksport',
+    INSERT: 'auditTrail.actionInsert',
+    UPDATE: 'auditTrail.actionUpdate',
+    DELETE: 'auditTrail.actionDelete',
+    READ: 'auditTrail.actionRead',
+    LOGIN: 'auditTrail.actionLogin',
+    EXPORT: 'auditTrail.actionExport',
 };
 
 /**
@@ -67,20 +68,20 @@ export const ACTION_LABELS: Record<AuditAction, string> = {
  * new audited table is never invisible just because a label is missing.
  */
 export const ENTITY_LABELS: Record<string, string> = {
-    students: 'Pelajar',
-    student_enrollments: 'Pendaftaran kelas',
-    guardians: 'Penjaga',
-    student_guardians: 'Pautan penjaga',
-    attendance_records: 'Kehadiran',
-    assessments: 'Pentaksiran',
-    assessment_results: 'Markah',
-    report_cards: 'Kad laporan',
-    fee_types: 'Jenis yuran',
-    student_charges: 'Caj yuran',
-    payments: 'Bayaran',
-    payment_allocations: 'Agihan bayaran',
-    documents: 'Dokumen',
-    announcements: 'Pengumuman',
+    students: 'auditTrail.entityStudents',
+    student_enrollments: 'auditTrail.entityStudentEnrollments',
+    guardians: 'auditTrail.entityGuardians',
+    student_guardians: 'auditTrail.entityStudentGuardians',
+    attendance_records: 'auditTrail.entityAttendanceRecords',
+    assessments: 'auditTrail.entityAssessments',
+    assessment_results: 'auditTrail.entityAssessmentResults',
+    report_cards: 'auditTrail.entityReportCards',
+    fee_types: 'auditTrail.entityFeeTypes',
+    student_charges: 'auditTrail.entityStudentCharges',
+    payments: 'auditTrail.entityPayments',
+    payment_allocations: 'auditTrail.entityPaymentAllocations',
+    documents: 'auditTrail.entityDocuments',
+    announcements: 'auditTrail.entityAnnouncements',
 };
 
 /** Turns a database error into a sentence a clerk can act on. */
@@ -143,5 +144,8 @@ export function describeValue(value: unknown): string {
 
 /** The table a clerk sees, rather than its database name. */
 export function entityLabel(entityType: string): string {
-    return ENTITY_LABELS[entityType] ?? entityType;
+    const key = ENTITY_LABELS[entityType];
+    // The map holds KEYS, so the translation happens here, through the i18n singleton — this
+    // function is called from module scope as well as from components, where no hook exists.
+    return key ? i18n.t(key) : entityType;
 }

@@ -234,7 +234,7 @@ export default function MarkEntryScreen() {
 
         if (overMax.length) {
             toast.error(
-                `${overMax.length} markah melebihi markah penuh (${assessment.maxScore}). Sila betulkan dahulu.`
+                t('markEntryScreen.marksOverMax', { count: overMax.length, max: assessment.maxScore })
             );
             return;
         }
@@ -244,8 +244,7 @@ export default function MarkEntryScreen() {
         // stay unrecorded rather than becoming zeroes.
         if (awaitingCount > 0) {
             const proceed = window.confirm(
-                `${awaitingCount} pelajar belum diisi. Mereka akan kekal "belum diisi" (bukan sifar). ` +
-                `Simpan juga?`
+                t('markEntryScreen.studentsUnfilledSaveToo', { count: awaitingCount })
             );
             if (!proceed) return;
         }
@@ -269,10 +268,10 @@ export default function MarkEntryScreen() {
             const result = await saveMarks(assessment.id, payload, reason || undefined);
 
             const parts: string[] = [];
-            if (result.graded) parts.push(`${result.graded} disimpan`);
-            if (result.cleared) parts.push(`${result.cleared} dikosongkan`);
-            if (result.unchanged) parts.push(`${result.unchanged} tiada perubahan`);
-            toast.success(parts.length ? parts.join(', ') : 'Tiada perubahan.');
+            if (result.graded) parts.push(t('markEntryScreen.marksSavedCount', { count: result.graded }));
+            if (result.cleared) parts.push(t('markEntryScreen.marksClearedCount', { count: result.cleared }));
+            if (result.unchanged) parts.push(t('markEntryScreen.noChangesCount', { count: result.unchanged }));
+            toast.success(parts.length ? parts.join(', ') : t('markEntryScreen.noChanges'));
 
             await queryClient.invalidateQueries({ queryKey: ['markRegister', assessment.id] });
             await queryClient.invalidateQueries({ queryKey: ['assessments', termId] });
@@ -297,7 +296,7 @@ export default function MarkEntryScreen() {
         setIsSaving(true);
         try {
             const result = await publishAssessment(assessment.id, reason || undefined);
-            toast.success(`Penilaian diterbitkan untuk ${result.students} pelajar.`);
+            toast.success(t('markEntryScreen.assessmentPublishedFor', { count: result.students }));
             await queryClient.invalidateQueries({ queryKey: ['markRegister', assessment.id] });
             await queryClient.invalidateQueries({ queryKey: ['assessments', termId] });
         } catch (err) {
@@ -322,7 +321,7 @@ export default function MarkEntryScreen() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 px-1">
                     <div>
                         <label htmlFor="mkTerm" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Penggal
+                             {t('markEntryScreen.term')}
                         </label>
                         <select
                             id="mkTerm"
@@ -330,7 +329,7 @@ export default function MarkEntryScreen() {
                             onChange={e => setTermId(e.target.value)}
                             className="w-full p-3 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {terms.length === 0 && <option value="">{t('markEntryScreen.tiadaPenggal')}</option>}
+                             {t('reportCardScreen.term')}
                             {terms.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}{t.status === 'CURRENT' ? ' (semasa)' : ''}
@@ -386,7 +385,7 @@ export default function MarkEntryScreen() {
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
                         <p className="font-semibold text-gray-700">{t('markEntryScreen.tiadaPenilaianDipilih')}</p>
                         <p className="text-sm text-gray-500 mt-1">
-                            Pilih penggal dan kelas yang sudah ada penilaian. Untuk menambah
+                             {t('markEntryScreen.chooseTermAndClass')}
                             penilaian baharu, buka skrin Penilaian.
                         </p>
                     </div>
@@ -402,7 +401,7 @@ export default function MarkEntryScreen() {
                                         {assessment.subjectCode} — {assessment.title}
                                     </h2>
                                     <span className="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700">
-                                        {ASSESSMENT_TYPE_SHORT[assessment.type]}
+                                        {t(ASSESSMENT_TYPE_SHORT[assessment.type])}
                                     </span>
                                     {isPublished && (
                                         <span className="text-[11px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 flex items-center gap-1">
@@ -428,8 +427,8 @@ export default function MarkEntryScreen() {
                             <div className="mt-3 flex items-start gap-2 text-sm bg-amber-50 border border-amber-200 rounded-xl p-3">
                                 <ExclamationIcon className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                                 <p className="text-amber-800">
-                                    <span className="font-semibold">{awaitingCount} pelajar belum diisi.</span>{' '}
-                                    Mereka kekal "belum diisi" — bukan sifar. Penilaian tidak boleh
+                                    <span className="font-semibold">{t('markEntryScreen.studentsUnfilledCount', { count: awaitingCount })}</span>{' '}
+                                     {t('markEntryScreen.stayNotFilledInNotZero')}
                                     diterbitkan selagi ada yang belum diisi.
                                 </p>
                             </div>
@@ -439,8 +438,8 @@ export default function MarkEntryScreen() {
                             <div className="mt-3 flex items-start gap-2 text-sm bg-amber-50 border border-amber-200 rounded-xl p-3">
                                 <LockIcon className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                                 <p className="text-amber-800">
-                                    Markah sudah dikunci kerana penilaian ini diterbitkan.
-                                    Kad laporan menggunakan markah ini.
+                                     {t('markEntryScreen.marksLockedBecausePublished')}
+                                     {t('markEntryScreen.reportCardUsesTheseMarks')}
                                 </p>
                             </div>
                         )}
@@ -501,7 +500,7 @@ export default function MarkEntryScreen() {
                                                     disabled={isPublished || status !== 'GRADED'}
                                                     onChange={e => setRow(r.studentId, { score: e.target.value })}
                                                     placeholder="—"
-                                                    aria-label={`Markah ${r.studentName}`}
+                                                    aria-label={t('markEntryScreen.marksFor', { student: r.studentName })}
                                                     className={`w-20 p-2 text-center font-semibold rounded-lg border focus:ring-2 focus:ring-indigo-500 disabled:bg-gray-100 ${
                                                         tooHigh ? 'border-rose-400 bg-rose-50' : 'border-gray-200'
                                                     }`}
@@ -529,14 +528,14 @@ export default function MarkEntryScreen() {
                                             <div className="w-20 text-right">
                                                 {pct === null ? (
                                                     <span className="text-xs text-gray-300">
-                                                        {status === 'ABSENT' ? RESULT_STATUS_LABELS.ABSENT
-                                                            : status === 'EXEMPT' ? RESULT_STATUS_LABELS.EXEMPT
+                                                        {status === 'ABSENT' ? t(RESULT_STATUS_LABELS.ABSENT)
+                                                            : status === 'EXEMPT' ? t(RESULT_STATUS_LABELS.EXEMPT)
                                                             : '—'}
                                                     </span>
                                                 ) : (
                                                     <>
                                                         <p className="font-bold text-gray-700">{pct}%</p>
-                                                        <p className="text-xs text-gray-500">{grade ?? 'tiada gred'}</p>
+                                                        <p className="text-xs text-gray-500">{grade ?? t('markEntryScreen.noGrade')}</p>
                                                     </>
                                                 )}
                                             </div>
@@ -567,9 +566,9 @@ export default function MarkEntryScreen() {
                 {assessment && rows.length === 0 && (
                     <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
-                        <p className="font-semibold text-gray-700">{t('markEntryScreen.tiadaPelajarAktifDalamKelasIni')}</p>
+                         {t('reportCardScreen.student')}
                         <p className="text-sm text-gray-500 mt-1">
-                            Daftarkan pelajar ke kelas ini dahulu sebelum mengisi markah.
+                             {t('markEntryScreen.enrolStudentToClassFirst')}
                         </p>
                     </div>
                 )}
@@ -602,9 +601,9 @@ export default function MarkEntryScreen() {
                             disabled={isSaving || awaitingCount > 0 || isDirty}
                             title={
                                 awaitingCount > 0
-                                    ? 'Masih ada pelajar belum diisi'
+                                    ? t('markEntryScreen.studentsStillUnfilled')
                                     : isDirty
-                                        ? 'Simpan markah dahulu'
+                                        ? t('markEntryScreen.saveMarksFirst')
                                         : 'Terbitkan penilaian'
                             }
                             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition-colors"

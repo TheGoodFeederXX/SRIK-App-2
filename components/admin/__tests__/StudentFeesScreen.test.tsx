@@ -62,7 +62,7 @@ const renderScreen = () =>
 const charge = (over: Record<string, unknown> = {}) => ({
     id: 'c1', student_id: 's1', fee_type_id: 'f1', academic_year_id: 'y1',
     period_month: 3, period_year: 2026, amount: 150, discount_amount: 0,
-    discount_reason: null, due_date: null, description: 'Yuran Bulanan',
+    discount_reason: null, due_date: null, description: 'Monthly Fees',
     status: 'OUTSTANDING' as const, paid_amount: 0, balance: 150, ...over,
 });
 
@@ -86,20 +86,20 @@ async function selectStudent() {
         ).toBeGreaterThan(1)
     );
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 's1' } });
-    return screen.findByText('Yuran Bulanan');
+    return screen.findByText('Monthly Fees');
 }
 
 describe('StudentFeesScreen', () => {
     it('asks for a student before showing anything', async () => {
         renderScreen();
-        expect(await screen.findByText('Pilih seorang pelajar')).toBeTruthy();
+        expect(await screen.findByText('Select a student')).toBeTruthy();
     });
 
     it('shows the charged, paid and outstanding totals', async () => {
         await selectStudent();
-        expect(screen.getByText('Dicaj')).toBeTruthy();
-        expect(screen.getByText('Dibayar')).toBeTruthy();
-        expect(screen.getByText('Baki')).toBeTruthy();
+        expect(screen.getByText('Charged')).toBeTruthy();
+        expect(screen.getByText('Paid')).toBeTruthy();
+        expect(screen.getByText('Remaining')).toBeTruthy();
         expect(screen.getAllByText('RM150.00').length).toBeGreaterThan(0);
     });
 
@@ -115,7 +115,7 @@ describe('StudentFeesScreen', () => {
             ).toBeGreaterThan(1)
         );
         fireEvent.change(screen.getByRole('combobox'), { target: { value: 's1' } });
-        await screen.findByText('Dicaj');
+        await screen.findByText('Charged');
         // Only the live 150 counts, so the outstanding total is 150, not 180.
         const owed = screen.getAllByText('RM150.00');
         expect(owed.length).toBeGreaterThan(0);
@@ -124,21 +124,21 @@ describe('StudentFeesScreen', () => {
 
     it('THE RULE: a discount will not be saved without a reason', async () => {
         await selectStudent();
-        fireEvent.change(screen.getByPlaceholderText('Diskaun (RM)'), { target: { value: '10' } });
-        fireEvent.click(screen.getByRole('button', { name: 'Simpan diskaun' }));
+        fireEvent.change(screen.getByPlaceholderText('Discount (RM)'), { target: { value: '10' } });
+        fireEvent.click(screen.getByRole('button', { name: 'Save discount' }));
 
-        await waitFor(() => expect(toastError).toHaveBeenCalledWith('Sila nyatakan sebab diskaun.'));
+        await waitFor(() => expect(toastError).toHaveBeenCalledWith('Please state the reason for the discount.'));
         expect(setChargeDiscount).not.toHaveBeenCalled();
     });
 
     it('saves a discount with the reason the clerk typed', async () => {
         setChargeDiscount.mockResolvedValue(undefined);
         await selectStudent();
-        fireEvent.change(screen.getByPlaceholderText('Diskaun (RM)'), { target: { value: '10' } });
-        fireEvent.change(screen.getByPlaceholderText('Sebab (wajib)'), {
+        fireEvent.change(screen.getByPlaceholderText('Discount (RM)'), { target: { value: '10' } });
+        fireEvent.change(screen.getByPlaceholderText('Reason (required)'), {
             target: { value: 'Anak yatim' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Simpan diskaun' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Save discount' }));
 
         await waitFor(() => expect(setChargeDiscount).toHaveBeenCalledWith('c1', 10, 'Anak yatim'));
     });
@@ -153,14 +153,14 @@ describe('StudentFeesScreen', () => {
         // Disabled, because waiving a part-paid charge would need the payment
         // reversing first — otherwise the books would show money going nowhere.
         expect(waive.disabled).toBe(true);
-        expect(waive.title).toContain('Batalkan bayaran dahulu');
+        expect(waive.title).toContain('Cancel the payment first');
         expect(setChargeStatus).not.toHaveBeenCalled();
     });
 
     it('waives an untouched charge when a reason is given', async () => {
         setChargeStatus.mockResolvedValue(undefined);
         await selectStudent();
-        fireEvent.change(screen.getByPlaceholderText('Sebab (wajib)'), {
+        fireEvent.change(screen.getByPlaceholderText('Reason (required)'), {
             target: { value: 'Keluarga pindah' },
         });
         fireEvent.click(screen.getByRole('button', { name: 'Kecualikan' }));

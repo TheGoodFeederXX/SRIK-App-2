@@ -28,6 +28,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import i18n from '../../lib/i18n';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -78,9 +79,9 @@ function markText(a: SnapshotAssessment): string {
 }
 
 function markTitle(a: SnapshotAssessment): string {
-    if (a.status === 'ABSENT') return 'Tidak hadir';
-    if (a.status === 'EXEMPT') return 'Dikecualikan';
-    if (a.score === null) return 'Belum diisi';
+    if (a.status === 'ABSENT') return i18n.t('reportCardScreen.absent');
+    if (a.status === 'EXEMPT') return i18n.t('reportCardScreen.exempt');
+    if (a.score === null) return i18n.t('reportCardScreen.notFilledIn');
     return `${a.score} / ${a.maxScore}`;
 }
 
@@ -144,7 +145,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
 
             <div className="text-center mt-4">
                 <h2 className="text-base font-bold uppercase tracking-widest underline">
-                    Kad Laporan
+                     {t('reportCardScreen.reportCards')}
                 </h2>
                 <p className="text-sm text-gray-700 mt-1">{snapshot.term.name}</p>
                 <p className="text-xs text-gray-500">
@@ -155,7 +156,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             {/* A preview must never be mistaken for an issued document. */}
             {isDraft && (
                 <p className="mt-3 text-center text-xs font-bold uppercase tracking-widest text-amber-700 border border-amber-300 bg-amber-50 py-1 print-only">
-                    Draf — belum diterbitkan
+                    {t('reportCardScreen.draftNotYetPublished')}
                 </p>
             )}
 
@@ -183,7 +184,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             <table className="w-full mt-5 text-sm border-collapse">
                 <thead>
                     <tr className="bg-gray-100">
-                        <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.mataPelajaran')}</th>
+                         {t('reportCardScreen.student')}
                         <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.penilaian')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-16">Markah</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">%</th>
@@ -195,7 +196,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     {bySubject.length === 0 && (
                         <tr>
                             <td colSpan={6} className="border border-gray-400 px-2 py-3 text-center text-gray-500">
-                                Tiada penilaian diterbitkan untuk penggal ini.
+                                 {t('reportCardScreen.noPublishedAssessmentsForTerm')}
                             </td>
                         </tr>
                     )}
@@ -215,7 +216,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                                     </td>
                                 )}
                                 <td className="border border-gray-400 px-2 py-1">
-                                    {ASSESSMENT_TYPE_SHORT[a.type]}
+                                    {t(ASSESSMENT_TYPE_SHORT[a.type])}
                                     {a.title ? <span className="block text-xs text-gray-500">{a.title}</span> : null}
                                 </td>
                                 <td
@@ -241,7 +242,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     <tfoot>
                         <tr className="bg-gray-50 font-semibold">
                             <td colSpan={3} className="border border-gray-400 px-2 py-1 text-right">
-                                Purata
+                                {t('reportCardScreen.average')}
                             </td>
                             <td className="border border-gray-400 px-2 py-1 text-center">
                                 {average === null ? '—' : average}
@@ -258,8 +259,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             {/* A blank mark is explained on the sheet, so a parent does not read
                 "—" as a zero and conclude their child failed. */}
             <p className="mt-2 text-xs text-gray-500">
-                Markah&nbsp;— bermaksud belum diisi. TH = tidak hadir, KE = dikecualikan.
-                Kedua-duanya bukan sifar.
+                {t('reportCardScreen.dashMeansNotFilledIn')}
             </p>
 
             {/* --- attendance --- */}
@@ -267,7 +267,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                 <h3 className="text-sm font-bold mb-2">{t('reportCardScreen.kehadiran')}</h3>
                 {snapshot.attendance.daysRecorded === 0 ? (
                     <p className="text-sm text-gray-500">
-                        Tiada rekod kehadiran untuk penggal ini.
+                         {t('reportCardScreen.noAttendanceRecordsForTerm')}
                     </p>
                 ) : (
                     <table className="w-full text-sm">
@@ -488,7 +488,7 @@ export default function ReportCardScreen() {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div>
                         <label htmlFor="rcTerm" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Penggal
+                             {t('markEntryScreen.term')}
                         </label>
                         <select
                             id="rcTerm"
@@ -496,7 +496,7 @@ export default function ReportCardScreen() {
                             onChange={e => setTermId(e.target.value)}
                             className="w-full p-2.5 bg-white border border-gray-200 rounded-xl font-semibold text-gray-800 focus:ring-2 focus:ring-indigo-500"
                         >
-                            {terms.length === 0 && <option value="">{t('reportCardScreen.tiadaPenggal')}</option>}
+                             {t('reportCardScreen.term')}
                             {terms.map(t => (
                                 <option key={t.id} value={t.id}>
                                     {t.name}{t.status === 'CURRENT' ? ' (semasa)' : ''}
@@ -522,7 +522,7 @@ export default function ReportCardScreen() {
                     </div>
                     <div>
                         <label htmlFor="rcStudent" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Pelajar
+                            {t('reportCardScreen.student')}
                         </label>
                         <select
                             id="rcStudent"
@@ -586,11 +586,11 @@ export default function ReportCardScreen() {
                         type="button"
                         onClick={handlePublish}
                         disabled={isBusy || !studentId || !termId || isPreview}
-                        title={isPreview ? 'Tukar ke "Kad diterbitkan" untuk menerbitkan' : undefined}
+                        title={isPreview ? t('reportCardScreen.switchToPublishedToPublish') : undefined}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 transition-colors"
                     >
                         <LockIcon className="w-4 h-4" />
-                        {isBusy ? 'Menerbitkan…' : published?.status === 'PUBLISHED' ? 'Terbitkan revisi baharu' : 'Terbitkan'}
+                        {isBusy ? t('reportCardScreen.publishing') : published?.status === 'PUBLISHED' ? t('reportCardScreen.publishNewRevision') : t('reportCardScreen.publish')}
                     </button>
                 </div>
 
@@ -623,7 +623,7 @@ export default function ReportCardScreen() {
                     <div className="flex items-start gap-2 text-sm bg-gray-50 border border-gray-200 rounded-xl p-3">
                         <ExclamationIcon className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
                         <p className="text-gray-700">
-                            Pelajar ini belum ada kad laporan untuk penggal ini. Tukar ke
+                             {t('reportCardScreen.noReportCardYetSwitchTo')}
                             "Pratonton draf" untuk melihat bagaimana ia akan nampak, kemudian terbitkan.
                         </p>
                     </div>
@@ -633,7 +633,7 @@ export default function ReportCardScreen() {
                     <div className="flex items-start gap-2 text-sm bg-amber-50 border border-amber-200 rounded-xl p-3">
                         <ExclamationIcon className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                         <p className="text-amber-800">
-                            Maklumat sekolah belum lengkap, jadi kepala kad laporan akan kosong.
+                             {t('reportCardScreen.schoolInfoIncomplete')}
                         </p>
                     </div>
                 )}
@@ -648,7 +648,7 @@ export default function ReportCardScreen() {
                         <UsersIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
                         <p className="font-semibold text-gray-700">{t('reportCardScreen.tiadaPelajarAktifDalamKelasIni')}</p>
                         <p className="text-sm text-gray-500 mt-1">
-                            Daftarkan pelajar ke kelas ini dahulu.
+                             {t('reportCardScreen.enrolStudentToClassFirst')}
                         </p>
                     </div>
                 )}
@@ -657,10 +657,10 @@ export default function ReportCardScreen() {
                     <div className="bg-white rounded-2xl border border-gray-200 p-8 text-center">
                         <LockIcon className="w-10 h-10 mx-auto text-gray-300 mb-3" />
                         <p className="font-semibold text-gray-700">
-                            Tiada kad laporan diterbitkan untuk {selectedStudent?.fullName ?? 'pelajar ini'}
+                            Tiada kad laporan diterbitkan untuk t('reportCardScreen.thisStudent')
                         </p>
                         <p className="text-sm text-gray-500 mt-1">
-                            Tukar ke "Pratonton draf" untuk melihat bagaimana ia akan nampak.
+                             {t('reportCardScreen.switchToDraftPreview')}
                         </p>
                     </div>
                 )}
@@ -677,7 +677,7 @@ export default function ReportCardScreen() {
                         {/* On screen a draft watermark is shown too, not only in print. */}
                         {isPreview && (
                             <p className="no-print mt-3 text-center text-xs font-bold uppercase tracking-widest text-amber-700">
-                                Draf — belum diterbitkan
+                                {t('reportCardScreen.draftNotYetPublished')}
                             </p>
                         )}
                     </div>

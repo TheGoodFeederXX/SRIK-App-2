@@ -95,7 +95,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
   });
 
   // Fetch students with EVERY report card they have (not just the latest) —
-  // a student can have a First, Second AND Penggal 3 report all at once,
+   {t('markEntryScreen.term')}
   // and each needs to stay reachable, not just whichever sorts first.
   useEffect(() => {
     if (activeSchoolId) {

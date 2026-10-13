@@ -43,29 +43,29 @@ export type AssessmentStatus = 'DRAFT' | 'OPEN' | 'CLOSED' | 'PUBLISHED' | 'SUPE
 
 /** How the school names each kind of assessment, in the language it uses. */
 export const ASSESSMENT_TYPE_LABELS: Record<AssessmentType, string> = {
-    MID_YEAR_EXAM: 'Peperiksaan Pertengahan Tahun',
-    FINAL_EXAM: 'Peperiksaan Akhir Tahun (UASA)',
-    SPECIAL_EXAM: 'Peperiksaan Khas',
-    TEST: 'Ujian',
-    QUIZ: 'Kuiz',
-    PBD: 'PBD (Pentaksiran Bilik Darjah)',
+    MID_YEAR_EXAM: 'assessments.typeMidYearExam',
+    FINAL_EXAM: 'assessments.typeFinalExam',
+    SPECIAL_EXAM: 'assessments.typeSpecialExam',
+    TEST: 'assessments.typeTest',
+    QUIZ: 'assessments.typeQuiz',
+    PBD: 'assessments.typePbd',
 };
 
 /** Short labels for a table column, where the full name would not fit. */
 export const ASSESSMENT_TYPE_SHORT: Record<AssessmentType, string> = {
-    MID_YEAR_EXAM: 'Pertengahan Tahun',
-    FINAL_EXAM: 'Akhir Tahun (UASA)',
-    SPECIAL_EXAM: 'Khas',
-    TEST: 'Ujian',
-    QUIZ: 'Kuiz',
-    PBD: 'PBD',
+    MID_YEAR_EXAM: 'assessments.shortMidYearExam',
+    FINAL_EXAM: 'assessments.shortFinalExam',
+    SPECIAL_EXAM: 'assessments.shortSpecialExam',
+    TEST: 'assessments.shortTest',
+    QUIZ: 'assessments.shortQuiz',
+    PBD: 'assessments.shortPbd',
 };
 
 export const RESULT_STATUS_LABELS: Record<ResultStatus, string> = {
-    NOT_ENTERED: 'Belum diisi',
-    GRADED: 'Ada markah',
-    ABSENT: 'Tidak hadir',
-    EXEMPT: 'Dikecualikan',
+    NOT_ENTERED: 'assessments.resultNotEntered',
+    GRADED: 'assessments.resultGraded',
+    ABSENT: 'assessments.resultAbsent',
+    EXEMPT: 'assessments.resultExempt',
 };
 
 export interface Assessment {

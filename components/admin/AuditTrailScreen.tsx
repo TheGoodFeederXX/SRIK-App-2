@@ -65,7 +65,7 @@ export default function AuditTrailScreen() {
         <div className="p-4 sm:p-6 max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('auditTrailScreen.rekodAudit')}</h1>
             <p className="text-sm text-slate-500 mb-4">
-                Setiap perubahan pada rekod pelajar, kehadiran, markah dan bayaran direkodkan di
+                 {t('auditTrailScreen.everyChangeRecorded')}
                 sini. Rekod ini tidak boleh dipadam atau diubah.
             </p>
 
@@ -73,7 +73,7 @@ export default function AuditTrailScreen() {
                             flex items-start gap-2">
                 <ShieldIcon className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
                 <p className="text-xs text-slate-600">
-                    Nama yang dicatat diambil daripada sesi yang sebenar semasa perubahan berlaku,
+                     {t('auditTrailScreen.namesTakenFromRealSession')}
                     bukan daripada apa yang diminta oleh pelayar. Tiada sesiapa — termasuk
                     pentadbir — boleh mengubah atau memadam rekod ini.
                 </p>
@@ -99,7 +99,7 @@ export default function AuditTrailScreen() {
                 >
                     <option value="">{t('auditTrailScreen.semuaJenisRekod')}</option>
                     {Object.entries(ENTITY_LABELS).map(([key, label]) => (
-                        <option key={key} value={key}>{label}</option>
+                        <option key={key} value={key}>{t(label)}</option>
                     ))}
                 </select>
             </div>
@@ -136,7 +136,7 @@ export default function AuditTrailScreen() {
                                             {entityLabel(entry.entity_type)}
                                             <span className="font-normal text-slate-400"> · </span>
                                             <span className="font-normal text-slate-600">
-                                                {ACTION_LABELS[entry.action]}
+                                                {t(ACTION_LABELS[entry.action])}
                                             </span>
                                         </p>
                                         <p className="text-xs text-slate-500 mt-0.5">

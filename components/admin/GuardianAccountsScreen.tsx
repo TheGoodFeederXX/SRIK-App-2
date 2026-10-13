@@ -95,7 +95,7 @@ export default function GuardianAccountsScreen() {
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
-                Beri ibu bapa akaun untuk melihat yuran anak mereka, dan pautkan mereka kepada anak.
+                 {t('guardianAccountsScreen.giveParentsAccount')}
             </p>
 
             <div className="relative mb-4">
@@ -118,13 +118,13 @@ export default function GuardianAccountsScreen() {
                 <EmptyState
                     icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
                     title={t('guardianAccountsScreen.belumAdaPenjaga')}
-                    body="Tambah penjaga dahulu, kemudian pautkan mereka kepada anak mereka."
+                    body={t('guardianAccountsScreen.addGuardianFirst')}
                 />
             ) : !filtered.length ? (
                 <EmptyState
                     icon={<SearchIcon className="w-8 h-8 text-slate-400" />}
                     title={t('guardianAccountsScreen.tiadaPenjagaSepadan')}
-                    body="Cuba nama, telefon atau emel yang lain."
+                    body={t('guardianAccountsScreen.tryAnotherNamePhoneEmail')}
                 />
             ) : (
                 <ul className="space-y-2">
@@ -142,13 +142,13 @@ export default function GuardianAccountsScreen() {
                                             {guardian.full_name}
                                         </p>
                                         <p className="text-xs text-slate-500 mt-0.5">
-                                            {guardian.phone ?? 'Tiada telefon'}
+                                            t('guardianAccountsScreen.noPhone')
                                             {guardian.email ? ` · ${guardian.email}` : ''}
                                         </p>
                                         <p className="text-xs text-slate-400 mt-1">
                                             {guardian.child_count > 0
                                                 ? `Anak: ${guardian.child_names}`
-                                                : 'Belum dipautkan kepada mana-mana anak'}
+                                                : t('guardianAccountsScreen.notLinkedToAnyChild')}
                                         </p>
                                     </div>
                                     <div className="shrink-0">
@@ -161,7 +161,7 @@ export default function GuardianAccountsScreen() {
                                         ) : (
                                             <span className="inline-flex items-center gap-1 text-xs font-semibold
                                                              text-amber-700 bg-amber-50 px-2 py-1 rounded-full">
-                                                Belum ada akaun
+                                                 {t('guardianAccountsScreen.noAccountYet')}
                                             </span>
                                         )}
                                     </div>
@@ -258,7 +258,7 @@ function GuardianPanel({
 
     async function handleCreateAccount() {
         if (!email.trim() || !reason.trim()) {
-            setError('Sila isi emel dan sebab.');
+            setError(t('guardianAccountsScreen.fillEmailAndReason'));
             return;
         }
         setBusy(true);
@@ -276,7 +276,7 @@ function GuardianPanel({
             // Shown once so the clerk can read it out; never stored, so it cannot
             // be read back later.
             setPassword(result.temporaryPassword);
-            toast.success(`Akaun dicipta untuk ${result.email}.`);
+            toast.success(t('guardianAccountsScreen.accountCreatedFor', { email: result.email }));
             setReason('');
             onChanged();
         } catch (err) {
@@ -302,7 +302,7 @@ function GuardianPanel({
             });
             toast.success(
                 link
-                    ? `${studentName} dipautkan kepada ${current.full_name}.`
+                    ? t('guardianAccountsScreen.childLinkedTo', { student: studentName, guardian: current.full_name })
                     : `${studentName} dinyahpaut daripada ${current.full_name}.`
             );
             setLinkReason('');
@@ -324,7 +324,7 @@ function GuardianPanel({
                                 justify-between gap-3">
                     <div className="min-w-0">
                         <h2 className="font-bold text-slate-800 truncate">{current.full_name}</h2>
-                        <p className="text-sm text-slate-500">{current.phone ?? 'Tiada telefon'}</p>
+                        <p className="text-sm text-slate-500">t('guardianAccountsScreen.noPhone')</p>
                     </div>
                     <button
                         type="button"
@@ -345,26 +345,26 @@ function GuardianPanel({
                                             text-sm text-emerald-800 space-y-1">
                                 <p className="inline-flex items-center gap-1.5 font-semibold">
                                     <CheckIcon className="w-4 h-4" />
-                                    Ibu bapa ini sudah boleh log masuk
+                                     {t('guardianAccountsScreen.parentCanLogInNow')}
                                 </p>
-                                {current.email && <p>Emel: {current.email}</p>}
+                                {current.email && <p>{ t('guardianAccountsScreen.email') }: {current.email}</p>}
                                 <p className="text-xs text-emerald-700">
-                                    Ibu bapa hanya boleh melihat anak yang dipautkan di bawah.
+                                     {t('guardianAccountsScreen.parentOnlySeesLinkedChildren')}
                                 </p>
                             </div>
                         ) : (
                             <>
                                 <p className="text-sm text-slate-500 mb-3">
-                                    Cipta akaun untuk ibu bapa ini. Kata laluan tidak boleh dibaca
+                                     {t('guardianAccountsScreen.createAccountForParent')}
                                     semula selepas disimpan — sila catat dan berikan kepada mereka.
                                 </p>
                                 <div className="space-y-3">
-                                    <Field label="Emel">
+                                    <Field label={t('guardianAccountsScreen.email')}>
                                         <input
                                             type="email"
                                             value={email}
                                             onChange={e => setEmail(e.target.value)}
-                                            placeholder="nama@emel.com"
+                                            placeholder={t('guardianAccountsScreen.emailPlaceholder')}
                                             className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm
                                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                         />
@@ -398,7 +398,7 @@ function GuardianPanel({
                                                 Akaun dicipta: {createdEmail}
                                             </p>
                                             <p className="text-xs mt-1">
-                                                Beritahu ibu bapa emel ini dan kata laluan yang anda
+                                                 {t('guardianAccountsScreen.tellParentEmailAndPassword')}
                                                 tetapkan. Minta mereka tukar selepas log masuk.
                                             </p>
                                         </div>
@@ -422,16 +422,16 @@ function GuardianPanel({
                     <section className="border-t border-slate-100 pt-5">
                         <h3 className="font-semibold text-slate-800 mb-1 inline-flex items-center gap-1.5">
                             <LinkIcon className="w-4 h-4 text-slate-500" />
-                            Anak yang dipautkan
+                             {t('guardianAccountsScreen.linkedChildren')}
                         </h3>
                         <p className="text-sm text-slate-500 mb-3">
-                            Ibu bapa hanya boleh melihat anak yang disenaraikan di sini.
+                             {t('guardianAccountsScreen.parentOnlySeesListedChildren')}
                         </p>
 
                         {!linkedStudents.length ? (
                             <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm
                                             text-amber-800">
-                                Belum ada anak dipautkan. Ibu bapa ini tidak akan melihat apa-apa
+                                 {t('guardianAccountsScreen.noChildLinkedYet')}
                                 sehingga anak dipautkan.
                             </div>
                         ) : (
@@ -463,7 +463,7 @@ function GuardianPanel({
 
                         {!linkedStudents.length && (
                             <p className="text-xs text-slate-500 mb-3">
-                                Nyahpaut menolak akses serta-merta — tiada kelewatan.
+                                 {t('guardianAccountsScreen.unlinkRemovesAccessImmediately')}
                             </p>
                         )}
 
@@ -511,7 +511,7 @@ function GuardianPanel({
                     <div className="border-t border-slate-100 pt-4">
                         <p className="text-xs text-slate-400 inline-flex items-start gap-1.5">
                             <ShieldIcon className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-                            Ibu bapa tidak boleh mengubah apa-apa. Mereka hanya membaca yuran anak
+                             {t('guardianAccountsScreen.parentCannotChangeAnything')}
                             yang dipautkan, dan setiap tindakan di skrin ini direkodkan.
                         </p>
                     </div>
@@ -558,7 +558,7 @@ function AddGuardianModal({
             <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-5">
                 <h2 className="font-bold text-slate-800 mb-1">{t('guardianAccountsScreen.tambahPenjaga')}</h2>
                 <p className="text-sm text-slate-500 mb-4">
-                    Rekod penjaga dahulu. Akaun log masuk dicipta selepas ini.
+                     {t('guardianAccountsScreen.recordGuardianFirst')}
                 </p>
 
                 <div className="space-y-4">

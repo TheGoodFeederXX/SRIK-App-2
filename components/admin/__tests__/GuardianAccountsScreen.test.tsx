@@ -81,13 +81,13 @@ beforeEach(() => {
 async function openGuardian() {
     renderScreen();
     fireEvent.click(await screen.findByText('Encik Ahmad'));
-    return screen.findByText('Akaun log masuk');
+    return screen.findByText('Login account');
 }
 
 describe('GuardianAccountsScreen — the list', () => {
     it('says whether a parent can log in yet', async () => {
         renderScreen();
-        expect(await screen.findByText('Belum ada akaun')).toBeTruthy();
+        expect(await screen.findByText('No account yet')).toBeTruthy();
     });
 
     it('says when a parent already has an account', async () => {
@@ -99,7 +99,7 @@ describe('GuardianAccountsScreen — the list', () => {
     it('says plainly when nobody is registered yet', async () => {
         listGuardians.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Belum ada penjaga')).toBeTruthy();
+        expect(await screen.findByText('No guardians yet')).toBeTruthy();
     });
 
     it('explains a permission failure in words', async () => {
@@ -112,12 +112,12 @@ describe('GuardianAccountsScreen — the list', () => {
 describe('GuardianAccountsScreen — creating an account', () => {
     it('THE RULE: will not create an account without a reason', async () => {
         await openGuardian();
-        fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
+        fireEvent.change(screen.getByPlaceholderText('name@email.com'), {
             target: { value: 'bapa@srik.test' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
-        expect(await screen.findByText(/Sila isi emel dan sebab/)).toBeTruthy();
+        expect(await screen.findByText(/Please fill in the email and the reason/)).toBeTruthy();
         expect(provisionGuardianAccount).not.toHaveBeenCalled();
     });
 
@@ -129,7 +129,7 @@ describe('GuardianAccountsScreen — creating an account', () => {
         // account at all (audit F16).
         await openGuardian();
         expect(screen.queryByPlaceholderText('Berikan kepada ibu bapa')).toBeNull();
-        expect(screen.getByPlaceholderText(/Dijana automatik/)).toBeTruthy();
+        expect(screen.getByPlaceholderText(/Generated automatically/)).toBeTruthy();
     });
 
     it('creates the account and confirms the email to hand over', async () => {
@@ -139,13 +139,13 @@ describe('GuardianAccountsScreen — creating an account', () => {
             childrenLinked: 0,
         });
         await openGuardian();
-        fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
+        fireEvent.change(screen.getByPlaceholderText('name@email.com'), {
             target: { value: 'bapa@srik.test' },
         });
-        fireEvent.change(screen.getByPlaceholderText(/ibu bapa baharu mendaftar/), {
+        fireEvent.change(screen.getByPlaceholderText(/new parent enrolling/), {
             target: { value: 'Ibu bapa baharu' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
         await waitFor(() => expect(provisionGuardianAccount).toHaveBeenCalledTimes(1));
         const arg = provisionGuardianAccount.mock.calls[0][0] as {
@@ -161,26 +161,26 @@ describe('GuardianAccountsScreen — creating an account', () => {
         // And the generated password must be shown, or the clerk has nothing to
         // hand over and the parent can never sign in.
         await waitFor(() => {
-            const input = screen.getByPlaceholderText(/Dijana automatik/) as HTMLInputElement;
+            const input = screen.getByPlaceholderText(/Generated automatically/) as HTMLInputElement;
             expect(input.value).toBe('Sementara#2026Xy');
         });
     });
 
     it('warns the clerk that the password cannot be read back', async () => {
         await openGuardian();
-        expect(screen.getByText(/tidak boleh dibaca\s+semula/)).toBeTruthy();
+        expect(screen.getByText(/password cannot be read/)).toBeTruthy();
     });
 
     it('explains a duplicate email in words', async () => {
         provisionGuardianAccount.mockRejectedValue(new Error('An account with that email already exists'));
         await openGuardian();
-        fireEvent.change(screen.getByPlaceholderText('nama@emel.com'), {
+        fireEvent.change(screen.getByPlaceholderText('name@email.com'), {
             target: { value: 'bapa@srik.test' },
         });
-        fireEvent.change(screen.getByPlaceholderText(/ibu bapa baharu mendaftar/), {
+        fireEvent.change(screen.getByPlaceholderText(/new parent enrolling/), {
             target: { value: 'Cuba' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Cipta akaun' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Create account' }));
 
         expect(await screen.findByText('Emel itu sudah digunakan oleh akaun lain.')).toBeTruthy();
     });
@@ -189,7 +189,7 @@ describe('GuardianAccountsScreen — creating an account', () => {
 describe('GuardianAccountsScreen — linking children', () => {
     it('THE RULE: warns that an account with no child linked sees nothing', async () => {
         await openGuardian();
-        expect(screen.getByText(/tidak akan melihat apa-apa/)).toBeTruthy();
+        expect(screen.getByText(/will not see anything/)).toBeTruthy();
     });
 
     it('THE RULE: will not link or unlink without a reason', async () => {
@@ -205,7 +205,7 @@ describe('GuardianAccountsScreen — linking children', () => {
         fireEvent.click(screen.getByRole('button', { name: 'Pautkan' }));
 
         await waitFor(() =>
-            expect(toastError).toHaveBeenCalledWith('Sila nyatakan sebab perubahan ini.')
+            expect(toastError).toHaveBeenCalledWith('Please state the reason for this change.')
         );
         expect(setGuardianChildLink).not.toHaveBeenCalled();
     });
@@ -213,7 +213,7 @@ describe('GuardianAccountsScreen — linking children', () => {
     it('links a child with the reason typed', async () => {
         setGuardianChildLink.mockResolvedValue(undefined);
         await openGuardian();
-        fireEvent.change(screen.getByPlaceholderText(/sahkan bapa kandung/), {
+        fireEvent.change(screen.getByPlaceholderText(/confirm biological father/), {
             target: { value: 'Sahkan bapa kandung' },
         });
         fireEvent.change(screen.getByRole('combobox'), { target: { value: 's1' } });
@@ -241,7 +241,7 @@ describe('GuardianAccountsScreen — linking children', () => {
         // The linked child is listed, with a way to remove the link. The list
         // arrives from its own query, so it is waited for rather than assumed.
         expect(await screen.findByText('Ahmad Zaki')).toBeTruthy();
-        expect(await screen.findByRole('button', { name: 'Nyahpaut Ahmad Zaki' })).toBeTruthy();
+        expect(await screen.findByRole('button', { name: 'Unlink Ahmad Zaki' })).toBeTruthy();
     });
 
     it('unlinks with the reason typed', async () => {
@@ -254,12 +254,12 @@ describe('GuardianAccountsScreen — linking children', () => {
         setGuardianChildLink.mockResolvedValue(undefined);
         await openGuardian();
         // The unlink button now depends on the linked children loading.
-        await screen.findByRole('button', { name: 'Nyahpaut Ahmad Zaki' });
+        await screen.findByRole('button', { name: 'Unlink Ahmad Zaki' });
 
-        fireEvent.change(screen.getByPlaceholderText(/sahkan bapa kandung/), {
+        fireEvent.change(screen.getByPlaceholderText(/confirm biological father/), {
             target: { value: 'Keluarga berpindah' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Nyahpaut Ahmad Zaki' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Unlink Ahmad Zaki' }));
 
         await waitFor(() => expect(setGuardianChildLink).toHaveBeenCalledTimes(1));
         const arg = setGuardianChildLink.mock.calls[0][0] as { link: boolean; reason: string };

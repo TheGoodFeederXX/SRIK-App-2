@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { formatDateTime } from '../../src/lib/branding';
 import {
     listAnnouncements,
@@ -29,6 +30,7 @@ interface AlertsScreenProps {
 }
 
 const AlertsScreen: React.FC<AlertsScreenProps> = () => {
+    const { t } = useTranslation();
     const [notices, setNotices] = useState<Announcement[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -76,7 +78,7 @@ const AlertsScreen: React.FC<AlertsScreenProps> = () => {
                             </div>
                             <p className="text-sm mt-2 text-gray-800 whitespace-pre-wrap">{notice.body}</p>
                             <p className="text-xs mt-3 text-gray-500">
-                                {AUDIENCE_LABELS[notice.audience]}
+                                {t(AUDIENCE_LABELS[notice.audience])}
                             </p>
                         </motion.div>
                     ))

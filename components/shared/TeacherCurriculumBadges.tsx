@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { AlertCircle, CheckCircle, BookOpen } from 'lucide-react';
@@ -13,6 +14,7 @@ export default function TeacherCurriculumBadges({
     size = 'md',
     showWarning = false
 }: TeacherCurriculumBadgesProps) {
+    const { t } = useTranslation();
 
     const sizeClasses = {
         sm: 'text-xs px-2 py-0.5',
@@ -25,7 +27,7 @@ export default function TeacherCurriculumBadges({
             <div className="flex items-center gap-2">
                 <Badge variant="outline" className={`${sizeClasses[size]} border-red-300 text-red-700`}>
                     <AlertCircle className="h-3 w-3 mr-1" />
-                    Belum Ada Kurikulum Ditetapkan
+                     {t('teacherCurriculumBadges.noCurriculumSet')}
                 </Badge>
                 {showWarning && (
                     <span className="text-xs text-red-600">⚠️ Tidak boleh ditugaskan ke kelas</span>
@@ -63,7 +65,7 @@ export default function TeacherCurriculumBadges({
             {isBoth && (
                 <Badge className={`${sizeClasses[size]} bg-purple-600 hover:bg-purple-700 text-white`}>
                     <BookOpen className="h-3 w-3 mr-1" />
-                    Kedua-duanya
+                     {t('teacherCurriculumBadges.both')}
                 </Badge>
             )}
         </div>

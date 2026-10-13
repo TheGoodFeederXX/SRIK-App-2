@@ -24,8 +24,7 @@ const NotApplicablePage: React.FC = () => {
     <div className="flex flex-col items-center justify-center h-full px-6 py-16 text-center">
         <h2 className="text-xl font-bold text-gray-900 mb-2">{t('dashboardRouter.tiadaApaApaUntukDibayarDiSini')}</h2>
         <p className="text-sm text-gray-500 max-w-md leading-relaxed">
-            Sistem ini dimiliki dan diuruskan oleh sekolah. Yuran murid dijelaskan di pejabat
-            sekolah, bukan melalui halaman ini.
+            {t('dashboardRouter.schoolOwnedNotice')}
         </p>
     </div>
     );

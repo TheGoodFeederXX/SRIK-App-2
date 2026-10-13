@@ -36,7 +36,7 @@ describe('StudentCBTPlayerScreen — no examination can be sat here', () => {
     it('says plainly that computer-based tests are not available', () => {
         render(<StudentCBTPlayerScreen handleBack={() => {}} />);
 
-        expect(screen.getByText(/ujian komputer/i)).toBeTruthy();
+        expect(screen.getByText(/computer-based test/i)).toBeTruthy();
         // And it points at the route that DOES record a mark, so a teacher is not left
         // without a way to enter one.
         expect(screen.getByText(/menu Penilaian/i)).toBeTruthy();

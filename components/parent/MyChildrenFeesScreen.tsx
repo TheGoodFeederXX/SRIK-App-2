@@ -70,7 +70,7 @@ export default function MyChildrenFeesScreen() {
         return (
             <div className="p-4 sm:p-6 max-w-3xl mx-auto">
                 <div className="bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 text-sm text-rose-700">
-                    Maaf, penyata yuran tidak dapat dibuka sekarang. Sila cuba sebentar lagi.
+                     {t('myChildrenFeesScreen.cannotOpenStatementNow')}
                 </div>
             </div>
         );
@@ -87,8 +87,7 @@ export default function MyChildrenFeesScreen() {
                     </div>
                     <p className="font-semibold text-slate-700">{t('myChildrenFeesScreen.tiadaRekodAnak')}</p>
                     <p className="text-sm text-slate-500 mt-1 max-w-md mx-auto">
-                        Akaun anda belum disambungkan kepada mana-mana anak. Sila hubungi pejabat
-                        sekolah untuk menyambungkannya.
+                        {t('myChildrenFeesScreen.accountNotConnected')}
                     </p>
                 </div>
             </div>
@@ -100,7 +99,7 @@ export default function MyChildrenFeesScreen() {
             <div className="no-print">
                 <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myChildrenFeesScreen.yuranAnakSaya')}</h1>
                 <p className="text-sm text-slate-500 mb-5">
-                    Bayaran yuran untuk anak anda. Bayaran dibuat di sekolah atau melalui
+                     {t('myChildrenFeesScreen.feePaymentsForChild')}
                     pindahan bank.
                 </p>
 
@@ -118,7 +117,7 @@ export default function MyChildrenFeesScreen() {
                     {familyTotal <= 0 && (
                         <p className="text-sm text-emerald-700 mt-1 inline-flex items-center gap-1.5">
                             <CheckIcon className="w-4 h-4" />
-                            Semua yuran sudah selesai. Terima kasih.
+                             {t('myChildrenFeesScreen.allFeesSettled')}
                         </p>
                     )}
                 </div>
@@ -141,7 +140,7 @@ export default function MyChildrenFeesScreen() {
             </div>
 
             <p className="no-print text-xs text-slate-400 mt-6 text-center">
-                Jika ada bayaran yang sudah dibuat tetapi belum dipaparkan, sila hubungi pejabat
+                 {t('myChildrenFeesScreen.paymentNotShownContactOffice')}
                 sekolah. Rekod di sini dikemas kini apabila pejabat merekodkan bayaran.
             </p>
         </div>
@@ -156,7 +155,7 @@ function ChildCard({ child }: { child: ChildFeeSummary }) {
                 <div className="min-w-0">
                     <p className="font-bold text-slate-800 truncate">{child.student_name}</p>
                     <p className="text-xs text-slate-500 mt-0.5">
-                        {child.admission_no ?? 'Tiada nombor pendaftaran'}
+                        t('myChildrenFeesScreen.noRegistrationNumber')
                     </p>
                 </div>
                 <div className="text-right shrink-0">
@@ -184,7 +183,7 @@ function ChildCard({ child }: { child: ChildFeeSummary }) {
 
             {!child.charges.length ? (
                 <p className="px-5 py-4 text-sm text-slate-500">
-                    Belum ada caj yuran untuk anak ini.
+                     {t('myChildrenFeesScreen.noFeeChargesForChild')}
                 </p>
             ) : (
                 <ul className="divide-y divide-slate-50">
@@ -192,7 +191,7 @@ function ChildCard({ child }: { child: ChildFeeSummary }) {
                         <li key={charge.id} className="px-5 py-3 flex items-start justify-between gap-3">
                             <div className="min-w-0">
                                 <p className="text-sm font-medium text-slate-700 truncate">
-                                    {charge.description || 'Yuran'}
+                                    t('myChildrenFeesScreen.fees')
                                 </p>
                                 <p className="text-xs text-slate-400 mt-0.5">
                                     {periodLabel(charge.period_month, charge.period_year)}
@@ -222,10 +221,11 @@ function ChargeMark({
 }: {
     charge: { status: 'OUTSTANDING' | 'PARTIAL' | 'PAID' | 'WAIVED' | 'CANCELLED'; balance: number; amount: number };
 }) {
+    const { t } = useTranslation();
     if (charge.status === 'WAIVED' || charge.status === 'CANCELLED') {
         return (
             <span className="text-xs font-semibold text-slate-500">
-                {CHARGE_STATUS_LABELS[charge.status]}
+                {t(t(CHARGE_STATUS_LABELS[charge.status]))}
             </span>
         );
     }
@@ -233,7 +233,7 @@ function ChargeMark({
         return (
             <span className="text-xs font-semibold text-emerald-700 inline-flex items-center gap-1">
                 <CheckIcon className="w-3.5 h-3.5" />
-                Selesai
+                {t('myChildrenFeesScreen.resolved')}
             </span>
         );
     }

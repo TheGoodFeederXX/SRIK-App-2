@@ -132,7 +132,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         expect(screen.getByText('Sekolah Rendah Islam Al-Khairiah')).toBeDefined();
         expect(screen.getByText('Jalan Pedu, 06300 Kuala Nerang, Kedah')).toBeDefined();
         expect(screen.getByText('Mohd Fadil Hadi bin Haji Ismail')).toBeDefined();
-        expect(screen.getByText('Kad Laporan')).toBeDefined();
+        expect(screen.getByText('Report Cards')).toBeDefined();
     });
 
     it('shows the issued snapshot, not a live recomputation', async () => {
@@ -164,7 +164,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        expect(screen.getByTitle('Belum diisi')).toBeDefined();
+        expect(screen.getByTitle('Not filled in')).toBeDefined();
         expect(screen.queryByText('0')).toBeNull();
     });
 
@@ -176,7 +176,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
         expect(screen.getByText('TH')).toBeDefined();
-        expect(screen.getByTitle('Tidak hadir')).toBeDefined();
+        expect(screen.getByTitle('Absent')).toBeDefined();
     });
 
     it('explains on the sheet that a dash is not a zero', async () => {
@@ -185,7 +185,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        expect(screen.getByText(/bukan sifar/)).toBeDefined();
+        expect(screen.getByText(/means not filled in/)).toBeDefined();
     });
 
     it('shows the attendance summary the snapshot froze', async () => {
@@ -204,7 +204,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        expect(screen.getByText(/Tiada rekod kehadiran/)).toBeDefined();
+        expect(screen.getByText(/No attendance records/)).toBeDefined();
     });
 
     it('shows a preview clearly marked as a draft', async () => {
@@ -214,10 +214,10 @@ describe('ReportCardScreen — SIRK report cards', () => {
 
         // Wait until the child is known, then switch to the preview.
         await waitFor(() => expect(getReportSnapshot).toHaveBeenCalledWith('s1', 't1'));
-        fireEvent.click(screen.getByText('Pratonton draf'));
+        fireEvent.click(screen.getByText('Draft preview'));
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
 
-        expect(screen.getAllByText(/Draf — belum diterbitkan/).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/Draft — not yet published/).length).toBeGreaterThan(0);
         expect(screen.getByText(/belum diterbitkan dan tidak akan berkuat kuasa/)).toBeDefined();
     });
 
@@ -227,10 +227,10 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(getReportSnapshot).toHaveBeenCalledWith('s1', 't1'));
-        fireEvent.click(screen.getByText('Pratonton draf'));
+        fireEvent.click(screen.getByText('Draft preview'));
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
 
-        const publish = screen.getByText('Terbitkan').closest('button') as HTMLButtonElement;
+        const publish = screen.getByText('Publish').closest('button') as HTMLButtonElement;
         expect(publish.disabled).toBe(true);
     });
 
@@ -249,7 +249,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         // The controls render straight away, but the student is chosen by an
         // effect, so wait until the query has actually run for that child.
         await waitFor(() => expect(getReportSnapshot).toHaveBeenCalledWith('s1', 't1'));
-        fireEvent.click(screen.getByText('Terbitkan'));
+        fireEvent.click(screen.getByText('Publish'));
 
         await waitFor(() => expect(publishReportCard).toHaveBeenCalledWith('s1', 't1', undefined));
         await waitFor(() => expect(toastSuccess).toHaveBeenCalledWith(expect.stringContaining('revisi 1')));
@@ -266,7 +266,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        fireEvent.click(screen.getByText('Terbitkan revisi baharu'));
+        fireEvent.click(screen.getByText('Publish new revision'));
 
         await waitFor(() => expect(window.confirm).toHaveBeenCalled());
         const calls = (window.confirm as unknown as { mock: { calls: string[][] } }).mock.calls;
@@ -314,7 +314,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        expect(screen.getByText('Purata')).toBeDefined();
+        expect(screen.getByText('Average')).toBeDefined();
         // The subject row and the average row both carry a grade, and 88% falls
         // in the A band, so A appears more than once.
         expect(screen.getAllByText('A').length).toBeGreaterThan(0);
@@ -326,13 +326,13 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        expect(screen.getByText(/Maklumat sekolah belum lengkap/)).toBeDefined();
+        expect(screen.getByText(/The school information is not complete/)).toBeDefined();
     });
 
     it('tells the office when the class has nobody in it', async () => {
         listClassStudents.mockResolvedValue([]);
         renderScreen();
 
-        expect(await screen.findByText(/Tiada pelajar aktif/)).toBeDefined();
+        expect(await screen.findByText(/No active students/)).toBeDefined();
     });
 });

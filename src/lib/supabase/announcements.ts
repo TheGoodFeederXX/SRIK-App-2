@@ -23,16 +23,16 @@
 import { requireSupabase } from './client';
 
 export const AUDIENCE_LABELS: Record<AnnouncementAudience, string> = {
-    ALL: 'Semua',
-    STAFF: 'Guru dan staf',
-    GUARDIANS: 'Ibu bapa',
-    STUDENTS: 'Pelajar',
+    ALL: 'announcementsScreen.audienceAll',
+    STAFF: 'announcementsScreen.audienceStaff',
+    GUARDIANS: 'announcementsScreen.audienceGuardians',
+    STUDENTS: 'announcementsScreen.audienceStudents',
 };
 
 export const STATUS_LABELS: Record<AnnouncementStatus, string> = {
-    DRAFT: 'Draf — belum diterbitkan',
-    PUBLISHED: 'Diterbitkan',
-    WITHDRAWN: 'Ditarik balik',
+    DRAFT: 'announcementsScreen.statusDraft',
+    PUBLISHED: 'announcementsScreen.statusPublished',
+    WITHDRAWN: 'announcementsScreen.statusWithdrawn',
 };
 
 export type AnnouncementAudience = 'ALL' | 'STAFF' | 'GUARDIANS' | 'STUDENTS';

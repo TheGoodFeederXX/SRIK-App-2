@@ -90,7 +90,7 @@ describe('FeeManagementScreen', () => {
         generateMonthlyCharges.mockResolvedValue({ charges_created: 6 });
         renderScreen();
         await screen.findByText('Yuran Bulanan');
-        fireEvent.click(screen.getByRole('button', { name: /Jana untuk/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Generate for/ }));
 
         await waitFor(() => expect(generateMonthlyCharges).toHaveBeenCalledTimes(1));
         // Only the monthly fees are passed, so a one-off fee is never billed monthly.
@@ -104,10 +104,10 @@ describe('FeeManagementScreen', () => {
         generateMonthlyCharges.mockResolvedValue({ charges_created: 0 });
         renderScreen();
         await screen.findByText('Yuran Bulanan');
-        fireEvent.click(screen.getByRole('button', { name: /Jana untuk/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Generate for/ }));
 
         expect(
-            await screen.findByText('Tiada caj baharu — bulan itu sudah dijana sebelum ini.')
+            await screen.findByText('No new charges — that month has already been generated.')
         ).toBeTruthy();
     });
 
@@ -115,10 +115,10 @@ describe('FeeManagementScreen', () => {
         getCurrentAcademicYear.mockResolvedValue(null);
         renderScreen();
         await screen.findByText('Yuran Bulanan');
-        fireEvent.click(screen.getByRole('button', { name: /Jana untuk/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Generate for/ }));
 
         await waitFor(() =>
-            expect(toastError).toHaveBeenCalledWith('Tiada tahun akademik semasa ditetapkan.')
+            expect(toastError).toHaveBeenCalledWith('No current academic year is set.')
         );
         expect(generateMonthlyCharges).not.toHaveBeenCalled();
     });
@@ -135,15 +135,15 @@ describe('FeeManagementScreen', () => {
     it('will not save a fee without a name or code', async () => {
         renderScreen();
         await screen.findByText('Yuran Bulanan');
-        fireEvent.click(screen.getByRole('button', { name: /Tambah jenis yuran/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Add fee type/ }));
 
-        const save = await screen.findByRole('button', { name: 'Simpan' }) as HTMLButtonElement;
+        const save = await screen.findByRole('button', { name: 'Save' }) as HTMLButtonElement;
         expect(save.disabled).toBe(true);
 
-        fireEvent.change(screen.getByPlaceholderText('Contoh: Yuran Bulanan'), {
+        fireEvent.change(screen.getByPlaceholderText('e.g. Monthly Fees'), {
             target: { value: 'Yuran Bas' },
         });
-        fireEvent.change(screen.getByPlaceholderText('Contoh: BULANAN'), {
+        fireEvent.change(screen.getByPlaceholderText('e.g. MONTHLY'), {
             target: { value: 'BAS' },
         });
         await waitFor(() => expect(save.disabled).toBe(false));
@@ -153,15 +153,15 @@ describe('FeeManagementScreen', () => {
         saveFeeType.mockResolvedValue({ ...FEES[0], id: 'f10' });
         renderScreen();
         await screen.findByText('Yuran Bulanan');
-        fireEvent.click(screen.getByRole('button', { name: /Tambah jenis yuran/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Add fee type/ }));
 
-        fireEvent.change(screen.getByPlaceholderText('Contoh: Yuran Bulanan'), {
+        fireEvent.change(screen.getByPlaceholderText('e.g. Monthly Fees'), {
             target: { value: 'Yuran Bas' },
         });
-        fireEvent.change(screen.getByPlaceholderText('Contoh: BULANAN'), {
+        fireEvent.change(screen.getByPlaceholderText('e.g. MONTHLY'), {
             target: { value: 'BAS' },
         });
-        fireEvent.click(await screen.findByRole('button', { name: 'Simpan' }));
+        fireEvent.click(await screen.findByRole('button', { name: 'Save' }));
 
         await waitFor(() => expect(saveFeeType).toHaveBeenCalledTimes(1));
         // A zero here would bill every child nothing, which is not the same as

@@ -139,7 +139,7 @@ describe('TimetableScreen — SRIK', () => {
         renderScreen();
 
         expect(await screen.findByText('no teacher')).toBeDefined();
-        expect(await screen.findByText('Belum ada guru')).toBeDefined();
+        expect(await screen.findByText('No teachers yet')).toBeDefined();
     });
 
     it('warns that a draft is not yet in force', async () => {
@@ -147,7 +147,7 @@ describe('TimetableScreen — SRIK', () => {
         getClassTimetable.mockResolvedValue({ periods: realWeek(), entries: [], grid: [] });
         renderScreen();
 
-        expect(await screen.findByText(/masih draf/i)).toBeDefined();
+        expect(await screen.findByText(/still a draft/i)).toBeDefined();
     });
 
     it('does not warn when the timetable is published', async () => {
@@ -155,7 +155,7 @@ describe('TimetableScreen — SRIK', () => {
         renderScreen();
 
         await screen.findByText('Jadual Rasmi 2026');
-        expect(screen.queryByText(/masih draf/i)).toBeNull();
+        expect(screen.queryByText(/still a draft/i)).toBeNull();
     });
 
     it('shows the same week from the teacher side when asked', async () => {
@@ -173,7 +173,7 @@ describe('TimetableScreen — SRIK', () => {
         renderScreen();
 
         await screen.findByText('Jadual Rasmi 2026');
-        fireEvent.click(screen.getByText('Ikut Guru'));
+        fireEvent.click(screen.getByText('By Teacher'));
 
         // On a teacher's grid the useful other half is the CLASS, not their own name.
         expect(await screen.findByText('4 Al-Junaidi')).toBeDefined();
@@ -184,7 +184,7 @@ describe('TimetableScreen — SRIK', () => {
         getActiveTimetable.mockResolvedValue(null);
         renderScreen();
 
-        expect(await screen.findByText('Belum Ada Jadual')).toBeDefined();
+        expect(await screen.findByText('No timetable yet')).toBeDefined();
     });
 
     it('says when a class has no lessons, naming the class', async () => {
@@ -274,8 +274,8 @@ describe('TimetableScreen — who may look at whose week', () => {
     it('THE RULE: the office sees the class and teacher picker', async () => {
         asRole('ADMIN');
         renderScreen();
-        expect(await screen.findByText('Kelas')).toBeDefined();
-        expect(screen.getByText('Ikut Guru')).toBeDefined();
+        expect(await screen.findByText('Class')).toBeDefined();
+        expect(screen.getByText('By Teacher')).toBeDefined();
     });
 
     it('THE RULE: a student is not offered a way to browse other classes', async () => {
@@ -283,22 +283,22 @@ describe('TimetableScreen — who may look at whose week', () => {
         renderScreen();
         // The week itself still loads; only the picker is withheld.
         await screen.findByText('Jadual Rasmi 2026');
-        expect(screen.queryByText('Ikut Guru')).toBeNull();
-        expect(screen.queryByText('Kelas')).toBeNull();
+        expect(screen.queryByText('By Teacher')).toBeNull();
+        expect(screen.queryByText('Class')).toBeNull();
     });
 
     it('THE RULE: a parent is not offered a way to browse other teachers', async () => {
         asRole('PARENT');
         renderScreen();
         await screen.findByText('Jadual Rasmi 2026');
-        expect(screen.queryByText('Ikut Guru')).toBeNull();
-        expect(screen.queryByText('Guru')).toBeNull();
+        expect(screen.queryByText('By Teacher')).toBeNull();
+        expect(screen.queryByText('Teacher')).toBeNull();
     });
 
     it('THE RULE: only the office is offered the editor', async () => {
         asRole('ADMIN');
         renderScreen({ navigateTo: vi.fn() });
-        expect(await screen.findByText('Sunting')).toBeDefined();
+        expect(await screen.findByText('Edit')).toBeDefined();
     });
 
     it('THE RULE: a teacher is not offered the editor', async () => {
@@ -306,6 +306,6 @@ describe('TimetableScreen — who may look at whose week', () => {
         // A teacher's own week, which the database resolves for them.
         renderScreen({ navigateTo: vi.fn() });
         await screen.findByText('Jadual Rasmi 2026');
-        expect(screen.queryByText('Sunting')).toBeNull();
+        expect(screen.queryByText('Edit')).toBeNull();
     });
 });

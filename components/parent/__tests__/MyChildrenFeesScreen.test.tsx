@@ -45,7 +45,7 @@ const renderScreen = () =>
 const charge = (over: Record<string, unknown> = {}) => ({
     id: 'c1', student_id: 's1', fee_type_id: 'f1', academic_year_id: 'y1',
     period_month: 3, period_year: 2026, amount: 150, discount_amount: 0,
-    discount_reason: null, due_date: null, description: 'Yuran Bulanan',
+    discount_reason: null, due_date: null, description: 'Monthly Fees',
     status: 'OUTSTANDING' as const, paid_amount: 0, balance: 150, ...over,
 });
 
@@ -83,9 +83,9 @@ describe('MyChildrenFeesScreen', () => {
             }),
         ]);
         renderScreen();
-        expect(await screen.findByText('Selesai')).toBeTruthy();
+        expect(await screen.findByText('Resolved')).toBeTruthy();
         // And the family total says so in words.
-        expect(screen.getByText(/Semua yuran sudah selesai/)).toBeTruthy();
+        expect(screen.getByText(/All fees are settled/)).toBeTruthy();
     });
 
     it('THE RULE: a waived charge is not counted as owed', async () => {
@@ -97,8 +97,8 @@ describe('MyChildrenFeesScreen', () => {
         ]);
         renderScreen();
         // The waived charge reads as waived, and nothing is outstanding.
-        expect(await screen.findByText('Dikecualikan')).toBeTruthy();
-        expect(screen.getByText(/Semua yuran sudah selesai/)).toBeTruthy();
+        expect(await screen.findByText('Waived')).toBeTruthy();
+        expect(screen.getByText(/All fees are settled/)).toBeTruthy();
     });
 
     it('marks a part payment without calling it settled', async () => {
@@ -112,14 +112,14 @@ describe('MyChildrenFeesScreen', () => {
         await screen.findByText('Ahmad Zaki');
         expect(screen.getAllByText('RM100.00').length).toBeGreaterThan(0);
         // A part payment is not a settled one, and must not be marked so.
-        expect(screen.queryByText('Selesai')).toBeNull();
+        expect(screen.queryByText('Resolved')).toBeNull();
     });
 
     it('tells a parent with no child linked to contact the office', async () => {
         listMyChildrenFees.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Tiada rekod anak')).toBeTruthy();
-        expect(screen.getByText(/hubungi pejabat sekolah/)).toBeTruthy();
+        expect(await screen.findByText('No child record')).toBeTruthy();
+        expect(screen.getByText(/contact the school office/)).toBeTruthy();
     });
 
     it('adds up a family total across more than one child', async () => {
@@ -142,6 +142,6 @@ describe('MyChildrenFeesScreen', () => {
     it('says so plainly when the statement cannot be opened', async () => {
         listMyChildrenFees.mockRejectedValue(new Error('network down'));
         renderScreen();
-        expect(await screen.findByText(/penyata yuran tidak dapat dibuka/)).toBeTruthy();
+        expect(await screen.findByText(/fee statement cannot be opened/)).toBeTruthy();
     });
 });

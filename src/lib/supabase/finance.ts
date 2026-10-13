@@ -39,26 +39,32 @@ export type PaymentStatus = 'CONFIRMED' | 'REVERSED';
 
 /** Malay labels, because the office reads these on screen and on a receipt. */
 export const FREQUENCY_LABELS: Record<FeeFrequency, string> = {
-    ONE_TIME: 'Sekali sahaja',
-    MONTHLY: 'Bulanan',
-    TERMLY: 'Setiap penggal',
-    YEARLY: 'Setahun sekali',
+    ONE_TIME: 'finance.freqOneTime',
+    MONTHLY: 'finance.freqMonthly',
+    TERMLY: 'finance.freqTermly',
+    YEARLY: 'finance.freqYearly',
 };
 
+/**
+ * Keys, not text. This map is DATA (it is indexed by a status code), so it must not hold a
+ * translated string: a module-level constant is evaluated once at import, before any language is
+ * chosen, and would freeze one language for the whole session. Callers pass the value to `t()` at
+ * render time instead.
+ */
 export const CHARGE_STATUS_LABELS: Record<ChargeStatus, string> = {
-    OUTSTANDING: 'Belum bayar',
-    PARTIAL: 'Bayar sebahagian',
-    PAID: 'Sudah bayar',
-    WAIVED: 'Dikecualikan',
-    CANCELLED: 'Dibatalkan',
+    OUTSTANDING: 'finance.chargeStatusOutstanding',
+    PARTIAL: 'finance.chargeStatusPartial',
+    PAID: 'finance.chargeStatusPaid',
+    WAIVED: 'finance.chargeStatusWaived',
+    CANCELLED: 'finance.chargeStatusCancelled',
 };
 
 export const METHOD_LABELS: Record<PaymentMethod, string> = {
-    CASH: 'Tunai',
-    BANK_TRANSFER: 'Pindahan bank',
-    CHEQUE: 'Cek',
-    ONLINE: 'Atas talian',
-    OTHER: 'Lain-lain',
+    CASH: 'finance.methodCash',
+    BANK_TRANSFER: 'finance.methodBankTransfer',
+    CHEQUE: 'finance.methodCheque',
+    ONLINE: 'finance.methodOnline',
+    OTHER: 'finance.methodOther',
 };
 
 export const MONTH_NAMES = [

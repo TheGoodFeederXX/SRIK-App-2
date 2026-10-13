@@ -78,7 +78,7 @@ export default function FeeManagementScreen() {
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
-                Senarai yuran sekolah dan jumlahnya. Jumlah boleh diubah bila-bila.
+                 {t('feeManagementScreen.schoolFeesList')}
             </p>
 
             {feesQuery.isLoading ? (
@@ -89,7 +89,7 @@ export default function FeeManagementScreen() {
                 <div className="bg-white rounded-2xl border border-slate-200 p-10 text-center">
                     <p className="font-semibold text-slate-700">{t('feeManagementScreen.belumAdaJenisYuran')}</p>
                     <p className="text-sm text-slate-500 mt-1">
-                        Tambah jenis yuran dahulu, kemudian jana bil bulanan.
+                         {t('feeManagementScreen.addFeeTypeThenGenerate')}
                     </p>
                 </div>
             ) : (
@@ -105,14 +105,14 @@ export default function FeeManagementScreen() {
                                     {fee.name}
                                     {fee.status === 'INACTIVE' && (
                                         <span className="ml-2 text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
-                                            Tidak aktif
+                                             {t('feeManagementScreen.inactive')}
                                         </span>
                                     )}
                                 </p>
                                 <p className="text-xs text-slate-500 mt-0.5">
                                     {fee.code}
                                     {' · '}
-                                    {FREQUENCY_LABELS[fee.frequency]}
+                                    {t(FREQUENCY_LABELS[fee.frequency])}
                                     {fee.default_amount === null && (
                                         <span className="text-amber-700">
                                             {' · '}Jumlah belum ditetapkan
@@ -197,8 +197,8 @@ function GeneratePanel({
             setLastResult(result.charges_created);
             toast.success(
                 result.charges_created === 0
-                    ? `Tiada caj baharu untuk ${MONTH_NAMES[month - 1]} ${year}. Caj itu sudah wujud.`
-                    : `${result.charges_created} caj baharu dijana untuk ${MONTH_NAMES[month - 1]} ${year}.`
+                    ? t('feeManagementScreen.noNewCharges', { month: MONTH_NAMES[month - 1], year: year })
+                    : t('feeManagementScreen.chargesGenerated', { count: result.charges_created, month: MONTH_NAMES[month - 1], year: year })
             );
             onGenerated();
         } catch (err) {
@@ -215,13 +215,13 @@ function GeneratePanel({
                 <h2 className="font-bold text-slate-800">{t('feeManagementScreen.janaBilBulanan')}</h2>
             </div>
             <p className="text-sm text-slate-500 mb-4">
-                Cipta caj bulan ini untuk semua pelajar aktif. Selamat ditekan dua kali — sistem
+                 {t('feeManagementScreen.createThisMonthsCharges')}
                 tidak akan bil pelajar dua kali.
             </p>
 
             {!monthlyFees.length ? (
                 <Notice tone="info">
-                    Tiada yuran bulanan dalam senarai. Tambah satu jenis yuran dengan kekerapan
+                     {t('feeManagementScreen.noMonthlyFeeInList')}
                     "Bulanan" dahulu.
                 </Notice>
             ) : (
@@ -291,7 +291,7 @@ function GeneratePanel({
                             {lastResult === 0 ? (
                                 <>
                                     <CheckIcon className="w-4 h-4 text-emerald-500" />
-                                    Tiada caj baharu — bulan itu sudah dijana sebelum ini.
+                                     {t('feeManagementScreen.noNewChargesMonthAlreadyGenerated')}
                                 </>
                             ) : (
                                 <>
@@ -350,7 +350,7 @@ function FeeForm({
                 status: fee.status ?? 'ACTIVE',
                 sort_order: fee.sort_order ?? 0,
             });
-            toast.success(fee.id ? 'Jenis yuran dikemas kini.' : 'Jenis yuran ditambah.');
+            toast.success(fee.id ? t('feeManagementScreen.feeTypeUpdated') : t('feeManagementScreen.feeTypeAdded'));
             onSaved();
         } catch (err) {
             setError(friendlyFinanceError(err));
@@ -369,7 +369,7 @@ function FeeForm({
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1.5">
-                            Nama yuran
+                             {t('feeManagementScreen.feeName')}
                         </label>
                         <input
                             type="text"
@@ -411,7 +411,7 @@ function FeeForm({
                                         }`}
                         />
                         <p className="text-xs text-slate-500 mt-1">
-                            Biarkan kosong bermaksud jumlah belum diputuskan. Yuran tanpa jumlah
+                             {t('feeManagementScreen.leaveBlankMeansUndecided')}
                             tidak akan dibilkan.
                         </p>
                     </div>
@@ -427,7 +427,7 @@ function FeeForm({
                         >
                             {(Object.keys(FREQUENCY_LABELS) as FeeFrequency[]).map(f => (
                                 <option key={f} value={f}>
-                                    {FREQUENCY_LABELS[f]}
+                                    {t(FREQUENCY_LABELS[f])}
                                 </option>
                             ))}
                         </select>
@@ -455,7 +455,7 @@ function FeeForm({
                             className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm
                                        hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
                         >
-                            {busy ? 'Menyimpan…' : 'Simpan'}
+                            {busy ? t('feeManagementScreen.saving') : t('feeManagementScreen.save')}
                         </button>
                         <button
                             type="button"

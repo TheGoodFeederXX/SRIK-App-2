@@ -114,7 +114,7 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         expect(await screen.findByText('Ahmad Zaki')).toBeDefined();
-        const scoreBox = screen.getByLabelText('Markah Ahmad Zaki') as HTMLInputElement;
+        const scoreBox = screen.getByLabelText('Marks for Ahmad Zaki') as HTMLInputElement;
         expect(scoreBox.value).toBe('');
         expect(screen.getByText('Nur Aisyah')).toBeDefined();
     });
@@ -130,8 +130,8 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
 
         expect(await screen.findByText('Umar Faruq')).toBeDefined();
         // All three appear as rows, so all three can be marked.
-        expect(screen.getByLabelText('Markah Umar Faruq')).toBeDefined();
-        expect(screen.getAllByLabelText('Belum diisi').length).toBe(3);
+        expect(screen.getByLabelText('Marks for Umar Faruq')).toBeDefined();
+        expect(screen.getAllByLabelText('Not filled in').length).toBe(3);
     });
 
     it('defaults to the current term so the screen is usable immediately', async () => {
@@ -149,15 +149,15 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        fireEvent.click(screen.getAllByLabelText('Ada markah')[0]);
+        fireEvent.click(screen.getAllByLabelText('Has marks')[0]);
 
-        const scoreBox = screen.getByLabelText('Markah Ahmad Zaki') as HTMLInputElement;
+        const scoreBox = screen.getByLabelText('Marks for Ahmad Zaki') as HTMLInputElement;
         fireEvent.change(scoreBox, { target: { value: '150' } });
 
-        fireEvent.click(screen.getByText('Simpan markah'));
+        fireEvent.click(screen.getByText('Save marks'));
 
         await waitFor(() => {
-            expect(toastError).toHaveBeenCalledWith(expect.stringContaining('melebihi markah penuh'));
+            expect(toastError).toHaveBeenCalledWith(expect.stringContaining('exceed the full mark'));
         });
         expect(saveMarks).not.toHaveBeenCalled();
     });
@@ -168,14 +168,14 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        fireEvent.click(screen.getAllByLabelText('Ada markah')[0]);
-        fireEvent.change(screen.getByLabelText('Markah Ahmad Zaki'), { target: { value: '80' } });
+        fireEvent.click(screen.getAllByLabelText('Has marks')[0]);
+        fireEvent.change(screen.getByLabelText('Marks for Ahmad Zaki'), { target: { value: '80' } });
 
         // Choosing "tidak hadir" clears the typed number.
-        const absentButtons = screen.getAllByLabelText('Tidak hadir');
+        const absentButtons = screen.getAllByLabelText('Absent');
         fireEvent.click(absentButtons[0]);
 
-        const scoreBox = screen.getByLabelText('Markah Ahmad Zaki') as HTMLInputElement;
+        const scoreBox = screen.getByLabelText('Marks for Ahmad Zaki') as HTMLInputElement;
         expect(scoreBox.value).toBe('');
     });
 
@@ -185,12 +185,12 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        fireEvent.click(screen.getAllByLabelText('Ada markah')[0]);
-        fireEvent.change(screen.getByLabelText('Markah Ahmad Zaki'), { target: { value: '85' } });
-        fireEvent.click(screen.getAllByLabelText('Ada markah')[1]);
-        fireEvent.change(screen.getByLabelText('Markah Nur Aisyah'), { target: { value: '72' } });
+        fireEvent.click(screen.getAllByLabelText('Has marks')[0]);
+        fireEvent.change(screen.getByLabelText('Marks for Ahmad Zaki'), { target: { value: '85' } });
+        fireEvent.click(screen.getAllByLabelText('Has marks')[1]);
+        fireEvent.change(screen.getByLabelText('Marks for Nur Aisyah'), { target: { value: '72' } });
 
-        fireEvent.click(screen.getByText('Simpan markah'));
+        fireEvent.click(screen.getByText('Save marks'));
 
         await waitFor(() => expect(saveMarks).toHaveBeenCalledTimes(1));
         const [, payload] = saveMarks.mock.calls[0];
@@ -206,8 +206,8 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        fireEvent.click(screen.getAllByLabelText('Tidak hadir')[0]);
-        fireEvent.click(screen.getByText('Simpan markah'));
+        fireEvent.click(screen.getAllByLabelText('Absent')[0]);
+        fireEvent.click(screen.getByText('Save marks'));
 
         await waitFor(() => expect(saveMarks).toHaveBeenCalled());
         const [, payload] = saveMarks.mock.calls[0];
@@ -218,20 +218,20 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
 
     it('warns about the children still unmarked before writing', async () => {
         // Saving is allowed mid-lesson, but the teacher must know who will be
-        // left as "belum diisi" rather than quietly becoming zeroes.
+        // left as "not filled in" rather than quietly becoming zeroes.
         getMarkRegister.mockResolvedValue(register());
         saveMarks.mockResolvedValue({ graded: 1, cleared: 0, unchanged: 0 });
         window.confirm = vi.fn(() => true);
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        fireEvent.click(screen.getAllByLabelText('Ada markah')[0]);
-        fireEvent.change(screen.getByLabelText('Markah Ahmad Zaki'), { target: { value: '85' } });
-        fireEvent.click(screen.getByText('Simpan markah'));
+        fireEvent.click(screen.getAllByLabelText('Has marks')[0]);
+        fireEvent.change(screen.getByLabelText('Marks for Ahmad Zaki'), { target: { value: '85' } });
+        fireEvent.click(screen.getByText('Save marks'));
 
         await waitFor(() => expect(window.confirm).toHaveBeenCalled());
         expect((window.confirm as unknown as { mock: { calls: string[][] } }).mock.calls[0][0])
-            .toContain('belum diisi');
+            .toContain('not filled in');
     });
 
     it('blocks publishing while any child is still unmarked', async () => {
@@ -241,7 +241,7 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         renderScreen();
 
         await screen.findByText('Ahmad Zaki');
-        const publish = screen.getByText('Terbitkan').closest('button') as HTMLButtonElement;
+        const publish = screen.getByText('Publish').closest('button') as HTMLButtonElement;
         expect(publish.disabled).toBe(true);
     });
 
@@ -255,9 +255,9 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         }));
         renderScreen();
 
-        expect(await screen.findByText('Diterbitkan')).toBeDefined();
-        expect(screen.queryByText('Simpan markah')).toBeNull();
-        const scoreBox = screen.getByLabelText('Markah Ahmad Zaki') as HTMLInputElement;
+        expect(await screen.findByText('Published')).toBeDefined();
+        expect(screen.queryByText('Save marks')).toBeNull();
+        const scoreBox = screen.getByLabelText('Marks for Ahmad Zaki') as HTMLInputElement;
         expect(scoreBox.disabled).toBe(true);
     });
 
@@ -277,6 +277,6 @@ describe('MarkEntryScreen — SRIK mark entry', () => {
         getMarkRegister.mockResolvedValue(register());
         renderScreen();
 
-        expect(await screen.findByText('Tiada penilaian untuk kelas ini')).toBeDefined();
+        expect(await screen.findByText('No assessment for this class')).toBeDefined();
     });
 });

@@ -41,7 +41,7 @@ export default function MyAnnouncementsScreen() {
         <div className="p-4 sm:p-6 max-w-2xl mx-auto">
             <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('myAnnouncementsScreen.pengumuman')}</h1>
             <p className="text-sm text-slate-500 mb-5">
-                Notis daripada pihak sekolah.
+                 {t('myAnnouncementsScreen.noticeFromSchool')}
             </p>
 
             {listQuery.isError ? (
@@ -56,7 +56,7 @@ export default function MyAnnouncementsScreen() {
                     </div>
                     <p className="font-semibold text-slate-700">{t('myAnnouncementsScreen.tiadaPengumuman')}</p>
                     <p className="text-sm text-slate-500 mt-1">
-                        Belum ada notis daripada pihak sekolah buat masa ini.
+                         {t('myAnnouncementsScreen.noNoticeFromSchool')}
                     </p>
                 </div>
             ) : (
@@ -75,7 +75,7 @@ export default function MyAnnouncementsScreen() {
                                 </span>
                                 {item.audience !== 'ALL' && (
                                     <span className="bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
-                                        {AUDIENCE_LABELS[item.audience]}
+                                        {t(AUDIENCE_LABELS[item.audience])}
                                     </span>
                                 )}
                             </div>

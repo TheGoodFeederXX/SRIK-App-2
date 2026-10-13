@@ -57,8 +57,8 @@ export default function AnnouncementsScreen() {
             await setAnnouncementStatus(item.id, status);
             toast.success(
                 status === 'PUBLISHED'
-                    ? `“${item.title}” telah diterbitkan.`
-                    : `“${item.title}” telah ditarik balik.`
+                    ? t('announcementsScreen.publishedNotice', { title: item.title })
+                    : t('announcementsScreen.withdrawnNotice', { title: item.title })
             );
             refresh();
         } catch (err) {
@@ -96,7 +96,7 @@ export default function AnnouncementsScreen() {
                 </button>
             </div>
             <p className="text-sm text-slate-500 mb-5">
-                Tulis notis untuk ibu bapa, guru atau pelajar. Notis hanya dilihat selepas diterbitkan.
+                { t('announcementsScreen.writeNoticeForParents') }
             </p>
 
             {listQuery.isLoading ? (
@@ -110,7 +110,7 @@ export default function AnnouncementsScreen() {
                     </div>
                     <p className="font-semibold text-slate-700">{t('announcementsScreen.belumAdaPengumuman')}</p>
                     <p className="text-sm text-slate-500 mt-1">
-                        Tulis notis pertama untuk ibu bapa atau guru.
+                         {t('announcementsScreen.writeFirstNotice')}
                     </p>
                 </div>
             ) : (
@@ -127,7 +127,7 @@ export default function AnnouncementsScreen() {
                                         {item.body}
                                     </p>
                                     <p className="text-xs text-slate-400 mt-2">
-                                        {AUDIENCE_LABELS[item.audience]}
+                                        {t(AUDIENCE_LABELS[item.audience])}
                                         {item.status === 'PUBLISHED' && item.publish_at
                                             ? ` · Diterbitkan ${formatDate(item.publish_at)}`
                                             : ''}
@@ -187,8 +187,7 @@ export default function AnnouncementsScreen() {
 
                             {item.status === 'PUBLISHED' && (
                                 <p className="text-xs text-slate-400 mt-2">
-                                    Notis yang telah diterbitkan tidak boleh dipadam, hanya ditarik
-                                    balik — supaya rekod kekal.
+                                    {t('announcementsScreen.publishedNoticeCannotBeDeleted')}
                                 </p>
                             )}
                         </li>
@@ -247,7 +246,7 @@ function Composer({
                 audience,
                 expiresAt: expiresAt || null,
             });
-            toast.success(announcement ? 'Pengumuman disimpan.' : 'Draf disimpan.');
+            toast.success(announcement ? t('announcementsScreen.announcementSaved') : t('announcementsScreen.draftSaved'));
             onSaved();
         } catch (err) {
             setError(friendlyAnnouncementError(err));
@@ -295,13 +294,13 @@ function Composer({
                                        focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
                             {(Object.keys(AUDIENCE_LABELS) as AnnouncementAudience[]).map(a => (
-                                <option key={a} value={a}>{AUDIENCE_LABELS[a]}</option>
+                                <option key={a} value={a}>{t(AUDIENCE_LABELS[a])}</option>
                             ))}
                         </select>
                     </Field>
                     {audience === 'STAFF' && (
                         <p className="text-xs text-amber-700 bg-amber-50 rounded-lg px-3 py-2">
-                            Notis untuk guru sahaja tidak akan dilihat oleh ibu bapa.
+                             {t('announcementsScreen.staffNoticeNotSeenByParents')}
                         </p>
                     )}
 
@@ -316,7 +315,7 @@ function Composer({
                     </Field>
                     {expiresAt && (
                         <p className="text-xs text-slate-500">
-                            Selepas tarikh ini, notis tidak lagi dilihat oleh ibu bapa.
+                             {t('announcementsScreen.afterThisDateNotSeen')}
                         </p>
                     )}
 
@@ -342,7 +341,7 @@ function Composer({
                         </button>
                     </div>
                     <p className="text-xs text-slate-400">
-                        Menyimpan tidak menerbitkan. Notis hanya dilihat selepas anda tekan
+                         {t('announcementsScreen.savingDoesNotPublish')}
                         “Terbitkan”.
                     </p>
                 </div>
@@ -352,6 +351,7 @@ function Composer({
 }
 
 function StatusBadge({ status }: { status: Announcement['status'] }) {
+    const { t } = useTranslation();
     const cls =
         status === 'PUBLISHED'
             ? 'bg-emerald-50 text-emerald-700'
@@ -360,7 +360,7 @@ function StatusBadge({ status }: { status: Announcement['status'] }) {
               : 'bg-amber-50 text-amber-700';
     return (
         <span className={`shrink-0 text-xs font-semibold px-2 py-1 rounded-full ${cls}`}>
-            {STATUS_LABELS[status]}
+            {t(STATUS_LABELS[status])}
         </span>
     );
 }

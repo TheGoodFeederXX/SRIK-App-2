@@ -131,7 +131,7 @@ export default function FeeCollectionScreen() {
                     </div>
                 </div>
                 <p className="text-sm text-slate-500 mb-5">
-                    Rekod bayaran yuran, tunggakan dan resit.
+                     {t('feeCollectionScreen.recordFeePaymentsArrearsReceipts')}
                 </p>
 
                 {tab === 'outstanding' && (
@@ -147,7 +147,7 @@ export default function FeeCollectionScreen() {
                             </div>
                             <div className="bg-white rounded-2xl border border-slate-200 p-4">
                                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
-                                    Pelajar belum selesai
+                                     {t('feeCollectionScreen.studentsOutstanding')}
                                 </p>
                                 <p className="text-2xl font-bold text-slate-800 mt-1">
                                     {outstandingQuery.isLoading ? '—' : `${outstanding.length} orang`}
@@ -427,7 +427,7 @@ function CollectPanel({
 
                             <div>
                                 <p className="text-sm font-semibold text-slate-700 mb-2">
-                                    Agihkan kepada caj ini
+                                     {t('feeCollectionScreen.allocateToThisCharge')}
                                 </p>
                                 <ul className="space-y-2">
                                     {charges.map(charge => (
@@ -454,19 +454,19 @@ function CollectPanel({
                                 {addsUp && allocatedTotal > 0 ? (
                                     <>
                                         <CheckIcon className="w-4 h-4" />
-                                        Jumlah sepadan: {formatMoney(allocatedTotal)}
+                                        {t('feeCollectionScreen.amountMatches', { amount: formatMoney(allocatedTotal) })}
                                     </>
                                 ) : allocatedTotal === 0 ? (
                                     <>
                                         <ExclamationIcon className="w-4 h-4" />
-                                        Masukkan jumlah untuk sekurang-kurangnya satu caj.
+                                         {t('feeCollectionScreen.enterAmountForAtLeastOneCharge')}
                                     </>
                                 ) : (
                                     <>
                                         <ExclamationIcon className="w-4 h-4" />
                                         {difference > 0
-                                            ? `${formatMoney(difference)} belum diagihkan.`
-                                            : `Agihan melebihi bayaran sebanyak ${formatMoney(-difference)}.`}
+                                            ? t('feeCollectionScreen.unallocated', { amount: formatMoney(difference) })
+                                            : t('feeCollectionScreen.overAllocated', { amount: formatMoney(-difference) })}
                                     </>
                                 )}
                             </div>
@@ -484,7 +484,7 @@ function CollectPanel({
                                     >
                                         {(Object.keys(METHOD_LABELS) as PaymentMethod[]).map(m => (
                                             <option key={m} value={m}>
-                                                {METHOD_LABELS[m]}
+                                                {t(METHOD_LABELS[m])}
                                             </option>
                                         ))}
                                     </select>
@@ -546,6 +546,7 @@ function ChargeRow({
     onChange: (v: string) => void;
     over: boolean;
 }) {
+    const { t } = useTranslation();
     return (
         <li
             className={`rounded-xl border p-3 ${
@@ -560,7 +561,7 @@ function ChargeRow({
                     <p className="text-xs text-slate-500 mt-0.5">
                         {periodLabel(charge.period_month, charge.period_year)}
                         {' · '}
-                        {CHARGE_STATUS_LABELS[charge.status]}
+                        {t(t(CHARGE_STATUS_LABELS[charge.status]))}
                     </p>
                 </div>
                 <div className="text-right shrink-0">
@@ -659,14 +660,14 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                         )}
                         {reversed && (
                             <span className="ml-2 text-xs font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full">
-                                Telah dibatalkan
+                                 {t('feeCollectionScreen.cancelled')}
                             </span>
                         )}
                     </p>
                     <p className="text-xs text-slate-500 mt-0.5">
                         {new Date(payment.paid_at).toLocaleString('ms-MY')}
                         {' · '}
-                        {METHOD_LABELS[payment.method]}
+                        {t(METHOD_LABELS[payment.method])}
                         {payment.payer_name ? ` · ${payment.payer_name}` : ''}
                     </p>
                 </div>
@@ -715,7 +716,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                     ) : (
                         <div className="space-y-2">
                             <p className="text-xs text-slate-500">
-                                Bayaran tidak akan dipadam. Ia ditanda dibatalkan supaya rekod asal kekal.
+                                 {t('feeCollectionScreen.paymentNotDeleted')}
                             </p>
                             <input
                                 type="text"

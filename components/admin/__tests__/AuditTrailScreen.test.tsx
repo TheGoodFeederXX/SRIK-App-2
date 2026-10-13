@@ -49,12 +49,12 @@ const entry = (over: Record<string, unknown> = {}) => ({
     ...over,
 });
 
-/** Opens the first entry. The filter dropdown also offers a "Markah" option, so
+/** Opens the first entry. The filter dropdown also offers a "Score" option, so
  *  the row is found by its button rather than by that text. */
 async function openEntry() {
     const buttons = await screen.findAllByRole('button');
     // The first button is the "Tulis" action; the row buttons follow it.
-    const row = buttons.find(b => b.textContent?.includes('Markah'));
+    const row = buttons.find(b => b.textContent?.includes('Score'));
     if (!row) throw new Error('no audit row found');
     fireEvent.click(row);
 }
@@ -74,7 +74,7 @@ describe('AuditTrailScreen', () => {
 
     it('names the table in words a clerk understands', async () => {
         renderScreen();
-        expect(await screen.findByText(/Markah/)).toBeTruthy();
+        expect(await screen.findByText(/Score/)).toBeTruthy();
     });
 
     it('shows what a value was and what it became', async () => {
@@ -95,8 +95,8 @@ describe('AuditTrailScreen', () => {
     it('says plainly when nothing has been recorded', async () => {
         listAuditLog.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Tiada rekod')).toBeTruthy();
-        expect(screen.getByText('Belum ada perubahan direkodkan.')).toBeTruthy();
+        expect(await screen.findByText('No records')).toBeTruthy();
+        expect(screen.getByText('No changes recorded yet.')).toBeTruthy();
     });
 
     it('filters by a search term', async () => {
@@ -107,7 +107,7 @@ describe('AuditTrailScreen', () => {
         renderScreen();
         await screen.findByText(/admin001@srialkhairiah\.my/);
 
-        fireEvent.change(screen.getByPlaceholderText(/Cari nama pengguna/), {
+        fireEvent.change(screen.getByPlaceholderText(/Search username/), {
             target: { value: 'guru@srik.test' },
         });
         // The teacher's entry stays; the admin's is filtered out.
@@ -121,9 +121,9 @@ describe('AuditTrailScreen', () => {
 
         // The log is evidence. A screen that could tidy it up would make it
         // worthless, so no such control exists — the absence is the control.
-        expect(screen.queryByRole('button', { name: /Padam/ })).toBeNull();
-        expect(screen.queryByRole('button', { name: /Sunting/ })).toBeNull();
-        expect(screen.queryByRole('button', { name: /Simpan/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Delete/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Edit/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Save/ })).toBeNull();
     });
 
     it('says that nobody, not even an administrator, can change the record', async () => {

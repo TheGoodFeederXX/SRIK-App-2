@@ -362,7 +362,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
     // card); until then it reads "No result yet". Where a subject has been
     // published across more than one term (First/Second/Third), the score
     // shown is the average across those terms — the same combined annual
-    // result as the Academic Performance Dashboard's Penggal 3 view —
+     {t('markEntryScreen.term')}
     // rather than whichever term happened to be processed last.
     const overviewRows = useMemo(() => {
         const scoresBySubject = new Map<string, number[]>();

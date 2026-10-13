@@ -77,7 +77,7 @@ const charge = (over: Record<string, unknown> = {}) => ({
     discount_amount: 0,
     discount_reason: null,
     due_date: null,
-    description: 'Yuran Bulanan',
+    description: 'Monthly Fees',
     status: 'OUTSTANDING' as const,
     paid_amount: 0,
     balance: 150,
@@ -105,10 +105,10 @@ function amountBox(): HTMLInputElement {
 async function openPanel() {
     renderScreen();
     fireEvent.click(await screen.findByText('Ahmad Zaki'));
-    await screen.findByText('Kutip bayaran');
+    await screen.findByText('Collect payments');
     // The drawer loads the child's charges before it can show the amount box.
     // Waiting for the charge row keeps every test below from racing that fetch.
-    await screen.findByText('Yuran Bulanan');
+    await screen.findByText('Monthly Fees');
 }
 
 describe('FeeCollectionScreen — outstanding list', () => {
@@ -122,7 +122,7 @@ describe('FeeCollectionScreen — outstanding list', () => {
     it('says so plainly when nobody owes anything', async () => {
         listOutstanding.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Tiada tunggakan')).toBeTruthy();
+        expect(await screen.findByText('No arrears')).toBeTruthy();
     });
 
     it('explains a permission failure in words rather than a code', async () => {
@@ -135,7 +135,7 @@ describe('FeeCollectionScreen — outstanding list', () => {
 describe('FeeCollectionScreen — the save button and the money', () => {
     it('keeps save disabled until an amount is entered', async () => {
         await openPanel();
-        const save = screen.getByRole('button', { name: 'Simpan bayaran' }) as HTMLButtonElement;
+        const save = screen.getByRole('button', { name: 'Save payment' }) as HTMLButtonElement;
         expect(save.disabled).toBe(true);
     });
 
@@ -143,11 +143,11 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         await openPanel();
         fireEvent.change(amountBox(), { target: { value: '150' } });
         await waitFor(() => {
-            const save = screen.getByRole('button', { name: 'Simpan bayaran' }) as HTMLButtonElement;
+            const save = screen.getByRole('button', { name: 'Save payment' }) as HTMLButtonElement;
             expect(save.disabled).toBe(false);
         });
         // The allocation box took the whole 150, so nothing is left over.
-        expect(screen.getByText(/Jumlah sepadan/)).toBeTruthy();
+        expect(screen.getByText(/Total matches/)).toBeTruthy();
     });
 
     it('THE RULE: refuses to save when the allocations do not add up', async () => {
@@ -155,9 +155,9 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         // 200 received against a single 150 charge: 50 would be unallocated.
         fireEvent.change(amountBox(), { target: { value: '200' } });
         await waitFor(() => {
-            expect(screen.getByText(/belum diagihkan/)).toBeTruthy();
+            expect(screen.getByText(/not yet allocated/)).toBeTruthy();
         });
-        const save = screen.getByRole('button', { name: 'Simpan bayaran' }) as HTMLButtonElement;
+        const save = screen.getByRole('button', { name: 'Save payment' }) as HTMLButtonElement;
         expect(save.disabled).toBe(true);
     });
 
@@ -170,7 +170,7 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         await waitFor(() => {
             expect(screen.getByText('Melebihi baki')).toBeTruthy();
         });
-        const save = screen.getByRole('button', { name: 'Simpan bayaran' }) as HTMLButtonElement;
+        const save = screen.getByRole('button', { name: 'Save payment' }) as HTMLButtonElement;
         expect(save.disabled).toBe(true);
     });
 
@@ -184,8 +184,8 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         listOutstanding.mockResolvedValue([]);
         listPayments.mockResolvedValue([]);
         fireEvent.change(amountBox(), { target: { value: '150' } });
-        await waitFor(() => expect(screen.getByText(/Jumlah sepadan/)).toBeTruthy());
-        fireEvent.click(screen.getByRole('button', { name: 'Simpan bayaran' }));
+        await waitFor(() => expect(screen.getByText(/Total matches/)).toBeTruthy());
+        fireEvent.click(screen.getByRole('button', { name: 'Save payment' }));
 
         await waitFor(() => expect(recordPayment).toHaveBeenCalledTimes(1));
         const arg = recordPayment.mock.calls[0][0] as {
@@ -206,8 +206,8 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         listOutstanding.mockResolvedValue([]);
         listPayments.mockResolvedValue([]);
         fireEvent.change(amountBox(), { target: { value: '150' } });
-        await waitFor(() => expect(screen.getByText(/Jumlah sepadan/)).toBeTruthy());
-        fireEvent.click(screen.getByRole('button', { name: 'Simpan bayaran' }));
+        await waitFor(() => expect(screen.getByText(/Total matches/)).toBeTruthy());
+        fireEvent.click(screen.getByRole('button', { name: 'Save payment' }));
 
         await waitFor(() =>
             expect(toastSuccess).toHaveBeenCalledWith(expect.stringContaining('sudah direkodkan'))
@@ -220,8 +220,8 @@ describe('FeeCollectionScreen — the save button and the money', () => {
         );
         await openPanel();
         fireEvent.change(amountBox(), { target: { value: '150' } });
-        await waitFor(() => expect(screen.getByText(/Jumlah sepadan/)).toBeTruthy());
-        fireEvent.click(screen.getByRole('button', { name: 'Simpan bayaran' }));
+        await waitFor(() => expect(screen.getByText(/Total matches/)).toBeTruthy());
+        fireEvent.click(screen.getByRole('button', { name: 'Save payment' }));
 
         expect(
             await screen.findByText('Jumlah itu melebihi baki yang masih tertunggak. Sila semak jumlahnya.')
@@ -242,7 +242,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         is_reversal: false,
         reversal_reason: null,
         allocations: [
-            { charge_id: 'c1', amount: 150, fee_type_name: 'Yuran Bulanan', student_name: 'Ahmad Zaki', period_month: 3, period_year: 2026 },
+            { charge_id: 'c1', amount: 150, fee_type_name: 'Monthly Fees', student_name: 'Ahmad Zaki', period_month: 3, period_year: 2026 },
         ],
         ...over,
     });
@@ -258,12 +258,12 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         await openReceipts();
 
         // There must be no way to delete a payment: the books are append-only.
-        expect(screen.queryByText(/Padam/i)).toBeNull();
+        expect(screen.queryByText(/Delete/i)).toBeNull();
 
         fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
-        fireEvent.click(await screen.findByRole('button', { name: 'Sahkan pembatalan' }));
+        fireEvent.click(await screen.findByRole('button', { name: 'Confirm cancellation' }));
 
-        await waitFor(() => expect(toastError).toHaveBeenCalledWith('Sila nyatakan sebab pembatalan.'));
+        await waitFor(() => expect(toastError).toHaveBeenCalledWith('Please state the reason for cancellation.'));
         expect(reversePayment).not.toHaveBeenCalled();
     });
 
@@ -273,10 +273,10 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         await openReceipts();
 
         fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
-        fireEvent.change(await screen.findByPlaceholderText('Sebab pembatalan (wajib)'), {
+        fireEvent.change(await screen.findByPlaceholderText('Reason for cancellation (required)'), {
             target: { value: 'Duit masuk akaun salah' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Sahkan pembatalan' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Confirm cancellation' }));
 
         await waitFor(() =>
             expect(reversePayment).toHaveBeenCalledWith('p1', 'Duit masuk akaun salah')
@@ -290,7 +290,7 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         await openReceipts();
 
         // The receipt is still listed, and says why it was cancelled.
-        expect(screen.getByText('Telah dibatalkan')).toBeTruthy();
+        expect(screen.getByText('Cancelled')).toBeTruthy();
         expect(screen.getByText(/Duit masuk akaun salah/)).toBeTruthy();
         // And it cannot be reversed a second time.
         expect(screen.queryByRole('button', { name: /Batalkan bayaran ini/ })).toBeNull();
@@ -302,10 +302,10 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
         await openReceipts();
 
         fireEvent.click(screen.getByRole('button', { name: /Batalkan bayaran ini/ }));
-        fireEvent.change(await screen.findByPlaceholderText('Sebab pembatalan (wajib)'), {
+        fireEvent.change(await screen.findByPlaceholderText('Reason for cancellation (required)'), {
             target: { value: 'sekali lagi' },
         });
-        fireEvent.click(screen.getByRole('button', { name: 'Sahkan pembatalan' }));
+        fireEvent.click(screen.getByRole('button', { name: 'Confirm cancellation' }));
 
         await waitFor(() =>
             expect(toastError).toHaveBeenCalledWith('Bayaran ini sudah dibatalkan sebelum ini.')
@@ -315,6 +315,6 @@ describe('FeeCollectionScreen — receipts and reversals', () => {
     it('shows what each receipt actually settled', async () => {
         listPayments.mockResolvedValue([receipt()]);
         await openReceipts();
-        expect(screen.getByText(/Yuran Bulanan/)).toBeTruthy();
+        expect(screen.getByText(/Monthly Fees/)).toBeTruthy();
     });
 });

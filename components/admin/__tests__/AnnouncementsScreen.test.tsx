@@ -67,18 +67,18 @@ describe('AnnouncementsScreen — the list', () => {
     it('shows a notice with its audience', async () => {
         renderScreen();
         expect(await screen.findByText('Cuti Sekolah')).toBeTruthy();
-        expect(screen.getByText(/Ibu bapa/)).toBeTruthy();
+        expect(screen.getByText(/Parents/)).toBeTruthy();
     });
 
     it('marks a draft as not yet published', async () => {
         renderScreen();
-        expect(await screen.findByText('Draf — belum diterbitkan')).toBeTruthy();
+        expect(await screen.findByText('Draft — not yet published')).toBeTruthy();
     });
 
     it('says plainly when there is nothing written yet', async () => {
         listAnnouncements.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Belum ada pengumuman')).toBeTruthy();
+        expect(await screen.findByText('No announcements yet')).toBeTruthy();
     });
 });
 
@@ -87,14 +87,14 @@ describe('AnnouncementsScreen — publishing', () => {
         renderScreen();
         await screen.findByText('Cuti Sekolah');
         // The draft sits there with a publish button and no send on save.
-        expect(screen.getByRole('button', { name: /Terbitkan/ })).toBeTruthy();
+        expect(screen.getByRole('button', { name: /Publish/ })).toBeTruthy();
         expect(setAnnouncementStatus).not.toHaveBeenCalled();
     });
 
     it('publishes only when the clerk asks', async () => {
         setAnnouncementStatus.mockResolvedValue(undefined);
         renderScreen();
-        fireEvent.click(await screen.findByRole('button', { name: /Terbitkan/ }));
+        fireEvent.click(await screen.findByRole('button', { name: /Publish/ }));
 
         await waitFor(() => expect(setAnnouncementStatus).toHaveBeenCalledTimes(1));
         expect(setAnnouncementStatus).toHaveBeenCalledWith('a1', 'PUBLISHED');
@@ -102,8 +102,8 @@ describe('AnnouncementsScreen — publishing', () => {
 
     it('says what publishing will do before it happens', async () => {
         renderScreen();
-        fireEvent.click(await screen.findByRole('button', { name: /Tulis pengumuman/ }));
-        expect(screen.getByText(/Menyimpan tidak menerbitkan/)).toBeTruthy();
+        fireEvent.click(await screen.findByRole('button', { name: /Write announcement/ }));
+        expect(screen.getByText(/Saving does not publish/)).toBeTruthy();
     });
 });
 
@@ -119,7 +119,7 @@ describe('AnnouncementsScreen — withdrawing', () => {
         // No delete button on a published notice: the record that families were
         // told must survive.
         expect(screen.queryByRole('button', { name: /Padam draf/ })).toBeNull();
-        expect(screen.getByText(/tidak boleh dipadam, hanya ditarik balik/)).toBeTruthy();
+        expect(screen.getByText(/cannot be deleted, only withdrawn/)).toBeTruthy();
     });
 
     it('withdraws when the clerk asks', async () => {
@@ -143,11 +143,11 @@ describe('AnnouncementsScreen — withdrawing', () => {
 describe('AnnouncementsScreen — writing', () => {
     it('will not save a notice with no title or no body', async () => {
         renderScreen();
-        fireEvent.click(await screen.findByRole('button', { name: /Tulis pengumuman/ }));
-        fireEvent.change(screen.getByPlaceholderText(/Cuti hari raya/), {
+        fireEvent.click(await screen.findByRole('button', { name: /Write announcement/ }));
+        fireEvent.change(screen.getByPlaceholderText(/Hari Raya holiday/), {
             target: { value: 'Ada tajuk' },
         });
-        fireEvent.click(screen.getByRole('button', { name: /Simpan sebagai draf/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Save as draft/ }));
 
         expect(saveAnnouncement).not.toHaveBeenCalled();
     });
@@ -155,26 +155,26 @@ describe('AnnouncementsScreen — writing', () => {
     it('saves a new notice as a draft', async () => {
         saveAnnouncement.mockResolvedValue(notice());
         renderScreen();
-        fireEvent.click(await screen.findByRole('button', { name: /Tulis pengumuman/ }));
-        fireEvent.change(screen.getByPlaceholderText(/Cuti hari raya/), {
-            target: { value: 'Mesyuarat PIBG' },
+        fireEvent.click(await screen.findByRole('button', { name: /Write announcement/ }));
+        fireEvent.change(screen.getByPlaceholderText(/Hari Raya holiday/), {
+            target: { value: 'PTA Meetings' },
         });
-        fireEvent.change(screen.getByPlaceholderText(/Tulis mesej kepada ibu bapa/), {
+        fireEvent.change(screen.getByPlaceholderText(/Write a message to parents/), {
             target: { value: 'Mesyuarat pada 10 haribulan.' },
         });
-        fireEvent.click(screen.getByRole('button', { name: /Simpan sebagai draf/ }));
+        fireEvent.click(screen.getByRole('button', { name: /Save as draft/ }));
 
         await waitFor(() => expect(saveAnnouncement).toHaveBeenCalledTimes(1));
         const arg = saveAnnouncement.mock.calls[0][0] as { title: string; id?: string };
-        expect(arg.title).toBe('Mesyuarat PIBG');
+        expect(arg.title).toBe('PTA Meetings');
         expect(arg.id).toBeUndefined();
     });
 
     it('warns that a staff notice will not reach parents', async () => {
         renderScreen();
-        fireEvent.click(await screen.findByRole('button', { name: /Tulis pengumuman/ }));
+        fireEvent.click(await screen.findByRole('button', { name: /Write announcement/ }));
         fireEvent.change(screen.getByRole('combobox'), { target: { value: 'STAFF' } });
-        expect(screen.getByText(/tidak akan dilihat oleh ibu bapa/)).toBeTruthy();
+        expect(screen.getByText(/will not be seen by parents/)).toBeTruthy();
     });
 
     it('explains a permission failure in words', async () => {

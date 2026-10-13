@@ -66,17 +66,17 @@ describe('MyAnnouncementsScreen', () => {
     it('says plainly when the school has posted nothing', async () => {
         listPublishedAnnouncements.mockResolvedValue([]);
         renderScreen();
-        expect(await screen.findByText('Tiada pengumuman')).toBeTruthy();
-        expect(screen.getByText(/Belum ada notis daripada pihak sekolah/)).toBeTruthy();
+        expect(await screen.findByText('No announcements')).toBeTruthy();
+        expect(screen.getByText(/There is no notice from the school/)).toBeTruthy();
     });
 
     it('offers no way to write or publish anything', async () => {
         renderScreen();
         await screen.findByText('Cuti Sekolah');
         // A parent reads notices and changes nothing.
-        expect(screen.queryByRole('button', { name: /Terbitkan/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Publish/ })).toBeNull();
         expect(screen.queryByRole('button', { name: /Tulis/ })).toBeNull();
-        expect(screen.queryByRole('button', { name: /Padam/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Delete/ })).toBeNull();
     });
 
     it('explains a failure rather than showing an empty screen', async () => {

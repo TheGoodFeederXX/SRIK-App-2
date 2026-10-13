@@ -80,9 +80,9 @@ export default function StudentFeesScreen() {
     return (
         <div className="p-4 sm:p-6 max-w-5xl mx-auto">
             <div className="no-print">
-                <h1 className="text-2xl font-bold text-slate-800 mb-1">{t('studentFeesScreen.penyataYuranPelajar')}</h1>
+                 {t('reportCardScreen.student')}
                 <p className="text-sm text-slate-500 mb-5">
-                    Lihat caj, bayaran dan baki seorang pelajar. Boleh dicetak untuk ibu bapa.
+                     {t('studentFeesScreen.viewChargesPaymentsBalance')}
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 mb-6">
@@ -121,13 +121,13 @@ export default function StudentFeesScreen() {
             ) : !students.length ? (
                 <EmptyState
                     title={t('studentFeesScreen.tiadaPelajarAktif')}
-                    body="Daftarkan pelajar dahulu sebelum melihat penyata yuran."
+                    body={t('studentFeesScreen.enrolStudentFirst')}
                 />
             ) : !studentId ? (
                 <EmptyState
                     icon={<UsersIcon className="w-8 h-8 text-slate-400" />}
                     title={t('studentFeesScreen.pilihSeorangPelajar')}
-                    body="Pilih pelajar di atas untuk melihat caj dan baki mereka."
+                    body={t('studentFeesScreen.selectStudentAbove')}
                 />
             ) : (
                 <Statement studentId={studentId} studentName={selected?.full_name ?? ''} />
@@ -180,10 +180,10 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
         <div>
             <div className="no-print flex flex-wrap items-center justify-between gap-3 mb-4">
                 <div className="flex flex-wrap gap-3">
-                    <Stat label="Dicaj" value={formatMoney(totals.charged)} />
+                    <Stat label={t('studentFeesScreen.charged')} value={formatMoney(totals.charged)} />
                     <Stat label={t('studentFeesScreen.dibayar')} value={formatMoney(totals.paid)} />
                     <Stat
-                        label="Baki"
+                        label={t('studentFeesScreen.remaining')}
                         value={formatMoney(totals.owed)}
                         tone={totals.owed > 0 ? 'owed' : 'settled'}
                     />
@@ -214,7 +214,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
                 {!charges.length ? (
                     <EmptyState
                         title={t('studentFeesScreen.tiadaCaj')}
-                        body="Pelajar ini belum mempunyai sebarang caj yuran. Jana bil bulanan dahulu."
+                        body={t('studentFeesScreen.noFeeChargesYet')}
                     />
                 ) : (
                     <ul className="space-y-2">
@@ -302,7 +302,7 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
                                     : 'text-rose-700 font-semibold'
                             }
                         >
-                            {CHARGE_STATUS_LABELS[charge.status]}
+                            {t(t(CHARGE_STATUS_LABELS[charge.status]))}
                         </span>
                         {charge.due_date && ` · Perlu bayar ${charge.due_date}`}
                     </p>
@@ -355,7 +355,7 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
                             className="flex-1 px-3 py-2 rounded-lg bg-indigo-600 text-white text-xs font-bold
                                        hover:bg-indigo-700 disabled:bg-slate-300"
                         >
-                            {busy === 'discount' ? '…' : 'Simpan diskaun'}
+                            {busy === 'discount' ? '…' : t('studentFeesScreen.saveDiscount')}
                         </button>
                         <button
                             type="button"
@@ -363,7 +363,7 @@ function ChargeLine({ charge, onChanged }: { charge: Charge; onChanged: () => vo
                             disabled={busy !== null || charge.paid_amount > 0}
                             title={
                                 charge.paid_amount > 0
-                                    ? 'Caj ini sudah ada bayaran. Batalkan bayaran dahulu.'
+                                    ? t('studentFeesScreen.chargeAlreadyHasPayment')
                                     : undefined
                             }
                             className="flex-1 px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-bold

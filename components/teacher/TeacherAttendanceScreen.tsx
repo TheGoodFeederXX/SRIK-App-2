@@ -388,7 +388,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                         {visibleStudents.length === 0 && (
                             <div className="text-center py-10 bg-white">
                                 <p className="text-gray-500">
-                                    Tiada murid dijumpai untuk kelas ini.
+                                     {t('teacherAttendanceScreen.noStudentsFoundForThisClass')}
                                 </p>
                             </div>
                         )}
