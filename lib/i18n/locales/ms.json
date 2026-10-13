@@ -144,7 +144,8 @@
     "absent": "Tidak Hadir",
     "markFor": "{{mark}} untuk {{name}}",
     "confirmUnmarked_one": "{{count}} murid belum ditanda. Dia akan kekal tidak direkod. Simpan juga?",
-    "confirmUnmarked_other": "{{count}} murid belum ditanda. Mereka akan kekal tidak direkod. Simpan juga?"
+    "confirmUnmarked_other": "{{count}} murid belum ditanda. Mereka akan kekal tidak direkod. Simpan juga?",
+    "confirmUnmarked": "{{count}} murid belum ditanda. Mereka akan kekal sebagai \"belum direkod\". Simpan juga?"
   },
   "terms": {
     "present": "Hadir",

@@ -144,7 +144,8 @@
     "absent": "Absent",
     "markFor": "{{mark}} for {{name}}",
     "confirmUnmarked_one": "{{count}} student has no mark yet. They will stay unrecorded. Save anyway?",
-    "confirmUnmarked_other": "{{count}} students have no mark yet. They will stay unrecorded. Save anyway?"
+    "confirmUnmarked_other": "{{count}} students have no mark yet. They will stay unrecorded. Save anyway?",
+    "confirmUnmarked": "{{count}} students are not marked yet. They will stay \"not recorded\". Save anyway?"
   },
   "terms": {
     "present": "Present",

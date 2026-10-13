@@ -41,7 +41,7 @@ function walk(dir: string, out: string[] = []): string[] {
         const p = path.join(dir, e.name);
         if (e.isDirectory()) {
             if (e.name !== '__tests__') walk(p, out);
-        } else if (e.name.endsWith('.tsx')) out.push(p);
+        } else if (/\.tsx?$/.test(e.name)) out.push(p);
     }
     return out;
 }
@@ -153,5 +153,31 @@ describe('bahasa benar-benar bertukar', () => {
             }
         }
         expect(offenders, `teks ini tidak akan bertukar bahasa:\n${offenders.join('\n')}`).toEqual([]);
+    });
+    it('setiap kunci t() wujud dalam KEDUA-DUA bahasa', () => {
+        // A key defined in neither file renders as the raw key text — "attendanceRegister.confirmUnmarked"
+        // shown to a teacher. A key defined in only one file shows the wrong language. Both are the
+        // same defect from the reader's side, so both are checked here.
+        const ms = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib/i18n/locales/ms.json'), 'utf8'));
+        const en = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib/i18n/locales/en.json'), 'utf8'));
+        const flat = (o: Record<string, unknown>, p = '', out: Record<string, unknown> = {}) => {
+            for (const [k, v] of Object.entries(o)) {
+                if (v && typeof v === 'object') flat(v as Record<string, unknown>, `${p}${k}.`, out);
+                else out[`${p}${k}`] = v;
+            }
+            return out;
+        };
+        const M = flat(ms), E = flat(en);
+        const offenders: string[] = [];
+        const sources = [...walk(COMPONENTS), ...walk(path.join(ROOT, 'src'))];
+        for (const file of sources) {
+            const src = fs.readFileSync(file, 'utf8');
+            for (const m of src.matchAll(/\bt\(\s*'([a-zA-Z][\w.]*)'/g)) {
+                const key = m[1];
+                if (!(key in M)) offenders.push(`${path.relative(ROOT, file)}: '${key}' tiada dlm ms.json`);
+                if (!(key in E)) offenders.push(`${path.relative(ROOT, file)}: '${key}' tiada dlm en.json`);
+            }
+        }
+        expect([...new Set(offenders)], `kunci ini akan dipaparkan mentah kepada pengguna:\n${offenders.join('\n')}`).toEqual([]);
     });
 });
