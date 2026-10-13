@@ -156,7 +156,9 @@ const ALERT_COLOR_CLASSES: Record<string, string> = {
     'text-orange-500': 'bg-orange-100',
 };
 
-const AlertCard: React.FC<{ label: string; value: string | number; icon: React.ReactElement<{ className?: string }>; onClick: () => void; color: string; index: number }> = ({ label, value, icon, onClick, color, index }) => (
+const AlertCard: React.FC<{ label: string; value: string | number; icon: React.ReactElement<{ className?: string }>; onClick: () => void; color: string; index: number }> = ({ label, value, icon, onClick, color, index }) => {
+    const { t } = useTranslation();
+    return (
     <motion.button
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -171,11 +173,12 @@ const AlertCard: React.FC<{ label: string; value: string | number; icon: React.R
         </div>
         <div className="min-w-0">
             <p className="font-bold text-gray-800 text-lg">{value} {label}</p>
-            <p className="text-xs text-gray-500 font-medium">Action required</p>
+            <p className="text-xs text-gray-500 font-medium">{t('dashboardOverview.actionRequired')}</p>
         </div>
         <ChevronRightIcon className="h-6 w-6 text-gray-400 ml-auto" />
     </motion.button>
-);
+    );
+};
 
 const EnrollmentLineChart = ({ data, color }: { data: { year: number, count: number }[], color: string }) => {
     const width = 300; const height = 100; const padding = 20;
@@ -242,42 +245,47 @@ const ActivityLogItem: React.FC<{ log: AuditLog, isLast: boolean, index?: number
 
 
 // --- WIDGETS FOR LARGE SCREENS ---
-const AddUserWidget = ({ onClick }: { onClick: () => void }) => (
+const AddUserWidget = ({ onClick }: { onClick: () => void }) => {
+    const { t } = useTranslation();
+    return (
     <button onClick={onClick} className="bg-white p-4 rounded-xl shadow-sm text-left hover:bg-gray-50 transition-colors h-full flex flex-col">
         <div className="flex items-center space-x-3">
             <div className="p-2 bg-indigo-100 rounded-lg"><PlusIcon className="h-5 w-5 text-indigo-600" /></div>
-            <h4 className="font-bold text-gray-800">Add New User</h4>
+            <h4 className="font-bold text-gray-800">{t('dashboardOverview.addNewUser')}</h4>
         </div>
         <div className="flex-grow flex items-center justify-center space-x-4 mt-2">
-            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><StudentsIcon className="text-gray-500" /></div><p className="text-xs mt-1">Student</p></div>
-            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><StaffIcon className="text-gray-500" /></div><p className="text-xs mt-1">Teacher</p></div>
-            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><UsersIcon className="text-gray-500" /></div><p className="text-xs mt-1">Parent</p></div>
+            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><StudentsIcon className="text-gray-500" /></div><p className="text-xs mt-1">{t('dashboardOverview.student')}</p></div>
+            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><StaffIcon className="text-gray-500" /></div><p className="text-xs mt-1">{t('dashboardOverview.teacher')}</p></div>
+            <div className="text-center"><div className="p-3 bg-gray-100 rounded-full"><UsersIcon className="text-gray-500" /></div><p className="text-xs mt-1">{t('dashboardOverview.parent')}</p></div>
         </div>
     </button>
-);
+    );
+};
 
 const PublishReportsWidget = ({ onClick, count }: { onClick: () => void; count: number }) => {
+    const { t } = useTranslation();
     return (
         <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col h-full">
             <div className="flex items-center space-x-3">
                 <div className="p-2 bg-purple-100 rounded-lg"><ReportIcon className="h-5 w-5 text-purple-600" /></div>
-                <h4 className="font-bold text-gray-800">Publish Reports</h4>
+                <h4 className="font-bold text-gray-800">{t('dashboardOverview.publishReports')}</h4>
             </div>
             <div className="flex-grow flex flex-col items-center justify-center text-center">
                 <p className="text-5xl font-bold text-purple-600">{count}</p>
                 <p className="text-sm text-gray-600">reports are pending review</p>
             </div>
-            <button onClick={onClick} className="w-full mt-2 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700">View Reports</button>
+            <button onClick={onClick} className="w-full mt-2 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700">{t('dashboardOverview.viewReports')}</button>
         </div>
     );
 };
 
 const TimetableWidget = ({ onClick, schedule }: { onClick: () => void; schedule: any[] }) => {
+    const { t } = useTranslation();
     return (
         <div className="bg-white p-4 rounded-xl shadow-sm flex flex-col h-full">
             <div className="flex items-center space-x-3">
                 <div className="p-2 bg-indigo-100 rounded-lg"><ClipboardListIcon className="h-5 w-5 text-indigo-600" /></div>
-                <h4 className="font-bold text-gray-800">Today's Timetable</h4>
+                <h4 className="font-bold text-gray-800">{t('dashboardOverview.todayTimetable')}</h4>
             </div>
             <div className="flex-grow space-y-2 mt-3 text-sm">
                 {schedule.length > 0 ? schedule.slice(0, 3).map((item, index) => (
@@ -287,27 +295,30 @@ const TimetableWidget = ({ onClick, schedule }: { onClick: () => void; schedule:
                             {item.subject} <span className="text-gray-400 font-normal">({item.class_name})</span>
                         </span>
                     </div>
-                )) : <p className="text-gray-500 text-center pt-8">No classes scheduled for today.</p>}
+                )) : <p className="text-gray-500 text-center pt-8">{t('dashboardOverview.noClassesScheduled')}</p>}
             </div>
-            <button onClick={onClick} className="w-full mt-2 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">Manage Timetable</button>
+            <button onClick={onClick} className="w-full mt-2 py-2 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700">{t('dashboardOverview.manageTimetable')}</button>
         </div>
     );
 };
 
-const AnnounceWidget = ({ onClick }: { onClick: () => void }) => (
+const AnnounceWidget = ({ onClick }: { onClick: () => void }) => {
+    const { t } = useTranslation();
+    return (
     <button onClick={onClick} className="bg-white p-4 rounded-xl shadow-sm text-left hover:bg-gray-50 transition-colors h-full flex flex-col">
         <div className="flex items-center space-x-3">
             <div className="p-2 bg-teal-100 rounded-lg"><MegaphoneIcon className="h-5 w-5 text-teal-600" /></div>
-            <h4 className="font-bold text-gray-800">Send Announcement</h4>
+            <h4 className="font-bold text-gray-800">{t('dashboardOverview.sendAnnouncement')}</h4>
         </div>
         <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
                 <MegaphoneIcon className="h-16 w-16 text-teal-200" />
-                <p className="mt-2 text-sm text-gray-600">Reach parents, teachers, and students instantly.</p>
+                <p className="mt-2 text-sm text-gray-600">{t('dashboardOverview.reachEveryone')}</p>
             </div>
         </div>
     </button>
-);
+    );
+};
 
 
 
@@ -467,113 +478,113 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
     type QuickActionCategory = { id: string; name: string; items: QuickAction[] };
     const quickActionCategories: QuickActionCategory[] = [
         {
-            id: 'people', name: 'People & Enrollment', items: [
-                { label: 'School Status', icon: <School className="w-6 h-6" />, onClick: () => navigateTo('digitalTwin', 'School Status'), color: 'bg-slate-800' },
-                { label: 'Add User', icon: <PlusIcon />, onClick: () => navigateTo('selectUserTypeToAdd', 'Add New User', {}), color: 'bg-indigo-500' },
-                { label: 'Approvals', icon: <CheckCircleIcon />, onClick: () => navigateTo('studentApprovals', 'Student Approvals'), color: 'bg-indigo-600' },
-                { label: 'Onboarding', icon: <SchoolLogoIcon />, onClick: () => navigateTo('manageSchoolInfo', 'School Onboarding'), color: 'bg-pink-600' },
-                { label: 'Enroll Student', icon: <UserIcon />, onClick: () => navigateTo('enrollmentPage', 'New Student Enrollment'), color: 'bg-emerald-600' },
-                { label: 'Past Students', icon: <Archive className="w-6 h-6" />, onClick: () => navigateTo('pastStudents', 'Past Students'), color: 'bg-slate-600' },
-                { label: 'User Accounts', icon: <UsersIcon />, onClick: () => navigateTo('userAccounts', 'User Accounts'), color: 'bg-indigo-600' },
-                { label: 'Curriculum', icon: <Globe className="w-6 h-6" />, onClick: () => navigateTo('curriculumManagement', 'Curriculum Management'), color: 'bg-emerald-700' },
+            id: 'people', name: t('dashboardOverview.peopleAndEnrollment'), items: [
+                { label: t('dashboardOverview.schoolStatus'), icon: <School className="w-6 h-6" />, onClick: () => navigateTo('digitalTwin', t('dashboardOverview.schoolStatus')), color: 'bg-slate-800' },
+                { label: t('dashboardOverview.addUser'), icon: <PlusIcon />, onClick: () => navigateTo('selectUserTypeToAdd', t('dashboardOverview.addNewUser'), {}), color: 'bg-indigo-500' },
+                { label: t('dashboardOverview.approvals'), icon: <CheckCircleIcon />, onClick: () => navigateTo('studentApprovals', t('dashboardOverview.studentApprovals')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.onboarding'), icon: <SchoolLogoIcon />, onClick: () => navigateTo('manageSchoolInfo', t('dashboardOverview.schoolOnboarding')), color: 'bg-pink-600' },
+                { label: t('dashboardOverview.enrollStudent'), icon: <UserIcon />, onClick: () => navigateTo('enrollmentPage', t('dashboardOverview.newStudentEnrollment')), color: 'bg-emerald-600' },
+                { label: t('dashboardOverview.pastStudents'), icon: <Archive className="w-6 h-6" />, onClick: () => navigateTo('pastStudents', t('dashboardOverview.pastStudents')), color: 'bg-slate-600' },
+                { label: t('dashboardOverview.userAccounts'), icon: <UsersIcon />, onClick: () => navigateTo('userAccounts', t('dashboardOverview.userAccounts')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.curriculum'), icon: <Globe className="w-6 h-6" />, onClick: () => navigateTo('curriculumManagement', t('dashboardOverview.curriculumManagement')), color: 'bg-emerald-700' },
             ]
         },
         {
-            id: 'academic', name: 'Academic', items: [
-                { label: 'Timetable', icon: <ClipboardListIcon />, onClick: () => navigateTo('timetable', 'AI Timetable'), color: 'bg-indigo-500' },
-                { label: 'Teacher Assignments', icon: <UsersRound className="w-6 h-6" />, onClick: () => navigateTo('teacherAssignments', 'Teacher Assignments'), color: 'bg-purple-600' },
-                { label: 'Classrooms & QR', icon: <QrCode className="w-6 h-6" />, onClick: () => navigateTo('classroomManagement', 'Classrooms & QR Codes'), color: 'bg-sky-600' },
-                { label: 'Class Verification', icon: <ScanLine className="w-6 h-6" />, onClick: () => navigateTo('classVerification', 'Class Verification'), color: 'bg-blue-700' },
-                { label: 'Register Exams', icon: <DocumentTextIcon />, onClick: () => navigateTo('exams', 'External Exams'), color: 'bg-indigo-600' },
-                { label: 'Enter Results', icon: <TrendingUp />, onClick: () => navigateTo('resultsEntry', 'Results Entry'), color: 'bg-cyan-600' },
-                { label: 'Publish Reports', icon: <ReportIcon />, onClick: () => navigateTo('reportCardPublishing', 'Publish Reports', {}), color: 'bg-purple-500' },
-                { label: 'Promotion', icon: <GraduationCap />, onClick: () => navigateTo('sessionPromotion', 'End-of-Session Promotion'), color: 'bg-indigo-700' },
-                { label: 'Track Attendance', icon: <Calendar />, onClick: () => navigateTo('attendanceTracker', 'Curriculum Attendance'), color: 'bg-green-600' },
-                { label: 'Classroom Observation', icon: <ClipboardEdit className="w-6 h-6" />, onClick: () => navigateTo('classroomObservation', 'Classroom Observation'), color: 'bg-fuchsia-700' },
-                { label: 'Departments', icon: <Building2 className="w-6 h-6" />, onClick: () => navigateTo('departmentManagement', 'Departments'), color: 'bg-cyan-900' },
-                { label: 'School Clubs', icon: <Star className="w-6 h-6" />, onClick: () => navigateTo('clubManagement', 'School Clubs'), color: 'bg-amber-800' },
+            id: 'academic', name: t('dashboardOverview.academic'), items: [
+                { label: t('dashboardOverview.timetable'), icon: <ClipboardListIcon />, onClick: () => navigateTo('timetable', t('dashboardOverview.aiTimetable')), color: 'bg-indigo-500' },
+                { label: t('dashboardOverview.teacherAssignments'), icon: <UsersRound className="w-6 h-6" />, onClick: () => navigateTo('teacherAssignments', t('dashboardOverview.teacherAssignments')), color: 'bg-purple-600' },
+                { label: t('dashboardOverview.classroomsAndQr'), icon: <QrCode className="w-6 h-6" />, onClick: () => navigateTo('classroomManagement', t('dashboardOverview.classroomsAndQrCodes')), color: 'bg-sky-600' },
+                { label: t('dashboardOverview.classVerification'), icon: <ScanLine className="w-6 h-6" />, onClick: () => navigateTo('classVerification', t('dashboardOverview.classVerification')), color: 'bg-blue-700' },
+                { label: t('dashboardOverview.registerExams'), icon: <DocumentTextIcon />, onClick: () => navigateTo('exams', t('dashboardOverview.externalExams')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.enterResults'), icon: <TrendingUp />, onClick: () => navigateTo('resultsEntry', t('dashboardOverview.resultsEntry')), color: 'bg-cyan-600' },
+                { label: t('dashboardOverview.publishReports'), icon: <ReportIcon />, onClick: () => navigateTo('reportCardPublishing', t('dashboardOverview.publishReports'), {}), color: 'bg-purple-500' },
+                { label: t('dashboardOverview.promotion'), icon: <GraduationCap />, onClick: () => navigateTo('sessionPromotion', t('dashboardOverview.endOfSessionPromotion')), color: 'bg-indigo-700' },
+                { label: t('dashboardOverview.trackAttendance'), icon: <Calendar />, onClick: () => navigateTo('attendanceTracker', t('dashboardOverview.curriculumAttendance')), color: 'bg-green-600' },
+                { label: t('dashboardOverview.classroomObservation'), icon: <ClipboardEdit className="w-6 h-6" />, onClick: () => navigateTo('classroomObservation', t('dashboardOverview.classroomObservation')), color: 'bg-fuchsia-700' },
+                { label: t('dashboardOverview.departments'), icon: <Building2 className="w-6 h-6" />, onClick: () => navigateTo('departmentManagement', t('dashboardOverview.departments')), color: 'bg-cyan-900' },
+                { label: t('dashboardOverview.schoolClubs'), icon: <Star className="w-6 h-6" />, onClick: () => navigateTo('clubManagement', t('dashboardOverview.schoolClubs')), color: 'bg-amber-800' },
             ]
         },
         {
-            id: 'attendanceSafety', name: 'Attendance & Safety', items: [
-                { label: 'Attendance', icon: <ClockIcon />, onClick: () => navigateTo('teacherAttendance', 'Teacher Attendance'), color: 'bg-amber-500' },
-                { label: 'Health Log', icon: <HeartIcon />, onClick: () => navigateTo('healthLog', 'Health Log'), color: 'bg-red-500' },
-                { label: 'Bus Roster', icon: <BusVehicleIcon />, onClick: () => navigateTo('busDutyRoster', 'Bus Duty Roster'), color: 'bg-orange-500' },
-                { label: 'Compliance', icon: <Shield />, onClick: () => navigateTo('complianceOnboarding', 'School Compliance'), color: 'bg-violet-600' },
-                { label: 'SOP Cases', icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('sopCaseManagement', 'Case Management'), color: 'bg-rose-600' },
-                { label: 'Substitute Coverage', icon: <Repeat className="w-6 h-6" />, onClick: () => navigateTo('substituteCoverage', 'Substitute Coverage'), color: 'bg-teal-600' },
-                { label: 'Leave Approvals', icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('leaveApproval', 'Leave Approvals'), color: 'bg-lime-700' },
-                { label: 'At-Risk Students', icon: <ShieldAlert className="w-6 h-6" />, onClick: () => navigateTo('atRiskStudents', 'At-Risk Students'), color: 'bg-red-700' },
-                { label: 'Student Gate', icon: <LogOut className="w-6 h-6" />, onClick: () => navigateTo('studentGate', 'Student Departure'), color: 'bg-cyan-700' },
-                { label: 'Gate Pass Approvals', icon: <DoorOpen className="w-6 h-6" />, onClick: () => navigateTo('gatePassApprovals', 'Gate Pass Approvals'), color: 'bg-cyan-800' },
-                { label: 'Emergency', icon: <AlertTriangle />, onClick: () => setIsBroadcastOpen(true), color: 'bg-red-600 animate-pulse' },
+            id: 'attendanceSafety', name: t('dashboardOverview.attendanceAndSafety'), items: [
+                { label: t('dashboardOverview.attendance'), icon: <ClockIcon />, onClick: () => navigateTo('teacherAttendance', t('dashboardOverview.teacherAttendance')), color: 'bg-amber-500' },
+                { label: t('dashboardOverview.healthLog'), icon: <HeartIcon />, onClick: () => navigateTo('healthLog', t('dashboardOverview.healthLog')), color: 'bg-red-500' },
+                { label: t('dashboardOverview.busRoster'), icon: <BusVehicleIcon />, onClick: () => navigateTo('busDutyRoster', t('dashboardOverview.busDutyRoster')), color: 'bg-orange-500' },
+                { label: t('dashboardOverview.compliance'), icon: <Shield />, onClick: () => navigateTo('complianceOnboarding', t('dashboardOverview.schoolCompliance')), color: 'bg-violet-600' },
+                { label: t('dashboardOverview.sopCases'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('sopCaseManagement', t('dashboardOverview.caseManagement')), color: 'bg-rose-600' },
+                { label: t('dashboardOverview.substituteCoverage'), icon: <Repeat className="w-6 h-6" />, onClick: () => navigateTo('substituteCoverage', t('dashboardOverview.substituteCoverage')), color: 'bg-teal-600' },
+                { label: t('dashboardOverview.leaveApprovals'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('leaveApproval', t('dashboardOverview.leaveApprovals')), color: 'bg-lime-700' },
+                { label: t('dashboardOverview.atRiskStudents'), icon: <ShieldAlert className="w-6 h-6" />, onClick: () => navigateTo('atRiskStudents', t('dashboardOverview.atRiskStudents')), color: 'bg-red-700' },
+                { label: t('dashboardOverview.studentGate'), icon: <LogOut className="w-6 h-6" />, onClick: () => navigateTo('studentGate', t('dashboardOverview.studentDeparture')), color: 'bg-cyan-700' },
+                { label: t('dashboardOverview.gatePassApprovals'), icon: <DoorOpen className="w-6 h-6" />, onClick: () => navigateTo('gatePassApprovals', t('dashboardOverview.gatePassApprovals')), color: 'bg-cyan-800' },
+                { label: t('dashboardOverview.emergency'), icon: <AlertTriangle />, onClick: () => setIsBroadcastOpen(true), color: 'bg-red-600 animate-pulse' },
             ]
         },
         {
-            id: 'commsSystem', name: 'Communication & System', items: [
-                { label: 'Announce', icon: <MegaphoneIcon />, onClick: () => navigateTo('communicationHub', 'Communication Hub'), color: 'bg-teal-500' },
-                { label: 'Launch Hub', icon: <Rocket className="animate-bounce" />, onClick: () => navigateTo('onboardingPage', 'Pilot Onboarding'), color: 'bg-gray-900' },
+            id: 'commsSystem', name: t('dashboardOverview.communicationAndSystem'), items: [
+                { label: t('dashboardOverview.announce'), icon: <MegaphoneIcon />, onClick: () => navigateTo('communicationHub', t('dashboardOverview.communicationHub')), color: 'bg-teal-500' },
+                { label: t('dashboardOverview.launchHub'), icon: <Rocket className="animate-bounce" />, onClick: () => navigateTo('onboardingPage', t('dashboardOverview.pilotOnboarding')), color: 'bg-gray-900' },
             ]
         },
         {
-            id: 'contentManagement', name: 'Content Management', items: [
-                { label: 'School Policies', icon: <DocumentTextIcon />, onClick: () => navigateTo('managePolicies', 'Manage Policies'), color: 'bg-pink-500' },
-                { label: 'Volunteering', icon: <HelpingHandIcon />, onClick: () => navigateTo('manageVolunteering', 'Manage Volunteering'), color: 'bg-emerald-500' },
-                { label: 'Permission Slips', icon: <ClipboardListIcon />, onClick: () => navigateTo('managePermissionSlips', 'Manage Permission Slips'), color: 'bg-cyan-500' },
-                { label: 'Learning Resources', icon: <ElearningIcon />, onClick: () => navigateTo('manageLearningResources', 'Manage Learning Resources'), color: 'bg-indigo-600' },
-                { label: 'PTA Meetings', icon: <AcademicCapIcon />, onClick: () => navigateTo('managePTAMeetings', 'PTA Meetings'), color: 'bg-indigo-600' },
-                { label: 'External Exams', icon: <Beaker />, onClick: () => navigateTo('exams', 'External Exams'), color: 'bg-indigo-600 shadow-lg shadow-indigo-100 ring-2 ring-indigo-50' },
-                { label: 'Enrollment', icon: <UserGroupIcon />, onClick: () => navigateTo('enrollmentPage', 'Student Enrollment'), color: 'bg-indigo-600' },
-                { label: 'Curriculum', icon: <BookOpenIcon />, onClick: () => navigateTo('manageCurriculum', 'Curriculum Configuration'), color: 'bg-indigo-600' },
-                { label: 'Lesson Notes', icon: <BookOpenIcon />, onClick: () => navigateTo('lessonNotes', 'Lesson Notes Review'), color: 'bg-violet-600' },
+            id: 'contentManagement', name: t('dashboardOverview.contentManagement'), items: [
+                { label: t('dashboardOverview.schoolPolicies'), icon: <DocumentTextIcon />, onClick: () => navigateTo('managePolicies', t('dashboardOverview.managePolicies')), color: 'bg-pink-500' },
+                { label: t('dashboardOverview.volunteering'), icon: <HelpingHandIcon />, onClick: () => navigateTo('manageVolunteering', t('dashboardOverview.manageVolunteering')), color: 'bg-emerald-500' },
+                { label: t('dashboardOverview.permissionSlips'), icon: <ClipboardListIcon />, onClick: () => navigateTo('managePermissionSlips', t('dashboardOverview.managePermissionSlips')), color: 'bg-cyan-500' },
+                { label: t('dashboardOverview.learningResources'), icon: <ElearningIcon />, onClick: () => navigateTo('manageLearningResources', t('dashboardOverview.manageLearningResources')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.ptaMeetings'), icon: <AcademicCapIcon />, onClick: () => navigateTo('managePTAMeetings', t('dashboardOverview.ptaMeetings')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.externalExams'), icon: <Beaker />, onClick: () => navigateTo('exams', t('dashboardOverview.externalExams')), color: 'bg-indigo-600 shadow-lg shadow-indigo-100 ring-2 ring-indigo-50' },
+                { label: t('dashboardOverview.enrollment'), icon: <UserGroupIcon />, onClick: () => navigateTo('enrollmentPage', t('dashboardOverview.studentEnrollment')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.curriculum'), icon: <BookOpenIcon />, onClick: () => navigateTo('manageCurriculum', t('dashboardOverview.curriculumConfiguration')), color: 'bg-indigo-600' },
+                { label: t('dashboardOverview.lessonNotes'), icon: <BookOpenIcon />, onClick: () => navigateTo('lessonNotes', t('dashboardOverview.lessonNotesReview')), color: 'bg-violet-600' },
             ]
         },
         {
-            id: 'infrastructure', name: 'Infrastructure & Facilities', items: [
-                { label: 'Facility Register', icon: <SchoolLogoIcon />, onClick: () => navigateTo('facilityRegister', 'Facility Register'), color: 'bg-indigo-700' },
-                { label: 'Asset Inventory', icon: <ClipboardListIcon />, onClick: () => navigateTo('equipmentInventory', 'Equipment Inventory'), color: 'bg-indigo-700' },
+            id: 'infrastructure', name: t('dashboardOverview.infrastructureAndFacilities'), items: [
+                { label: t('dashboardOverview.facilityRegister'), icon: <SchoolLogoIcon />, onClick: () => navigateTo('facilityRegister', t('dashboardOverview.facilityRegister')), color: 'bg-indigo-700' },
+                { label: t('dashboardOverview.assetInventory'), icon: <ClipboardListIcon />, onClick: () => navigateTo('equipmentInventory', t('dashboardOverview.equipmentInventory')), color: 'bg-indigo-700' },
             ]
         },
         {
-            id: 'boardingTransport', name: 'Boarding & Transport', items: [
-                { label: 'Hostel Management', icon: <Building2 />, onClick: () => navigateTo('hostelManagement', 'Hostel & Boarding'), color: 'bg-violet-600' },
-                { label: 'Transport Mgmt', icon: <Bus />, onClick: () => navigateTo('transportManagement', 'Transport Management'), color: 'bg-orange-600' },
-                { label: 'Behavior Tracking', icon: <Star />, onClick: () => navigateTo('behaviorLog', 'Behavior & Progress'), color: 'bg-amber-600' },
+            id: 'boardingTransport', name: t('dashboardOverview.boardingAndTransport'), items: [
+                { label: t('dashboardOverview.hostelManagement'), icon: <Building2 />, onClick: () => navigateTo('hostelManagement', t('dashboardOverview.hostelAndBoarding')), color: 'bg-violet-600' },
+                { label: t('dashboardOverview.transportMgmt'), icon: <Bus />, onClick: () => navigateTo('transportManagement', t('dashboardOverview.transportManagement')), color: 'bg-orange-600' },
+                { label: t('dashboardOverview.behaviorTracking'), icon: <Star />, onClick: () => navigateTo('behaviorLog', t('dashboardOverview.behaviorAndProgress')), color: 'bg-amber-600' },
             ]
         },
         {
-            id: 'systemData', name: 'System & Data', items: [
-                { label: 'Custom Reports', icon: <BarChart3 />, onClick: () => navigateTo('customReportBuilder', 'Custom Report Builder'), color: 'bg-cyan-700' },
-                { label: 'Backup & Restore', icon: <Database />, onClick: () => navigateTo('backupRestore', 'Data Backup & Restore'), color: 'bg-emerald-700' },
-                { label: 'Active Sessions', icon: <Monitor />, onClick: () => navigateTo('sessionManagement', 'Session Management'), color: 'bg-slate-700' },
-                { label: 'Auto Invoices', icon: <Receipt />, onClick: () => navigateTo('autoInvoice', 'Auto Invoice Generator'), color: 'bg-teal-700' },
-                { label: 'Late Arrivals', icon: <Clock />, onClick: () => navigateTo('lateArrivalConfig', 'Late Arrival Config'), color: 'bg-rose-600' },
-                { label: 'Enrollment Trends', icon: <TrendingUp />, onClick: () => navigateTo('enrollmentTrends', 'Enrollment Trends'), color: 'bg-indigo-600' },
+            id: 'systemData', name: t('dashboardOverview.systemAndData'), items: [
+                { label: t('dashboardOverview.customReports'), icon: <BarChart3 />, onClick: () => navigateTo('customReportBuilder', t('dashboardOverview.customReportBuilder')), color: 'bg-cyan-700' },
+                { label: t('dashboardOverview.backupAndRestore'), icon: <Database />, onClick: () => navigateTo('backupRestore', t('dashboardOverview.dataBackupAndRestore')), color: 'bg-emerald-700' },
+                { label: t('dashboardOverview.activeSessions'), icon: <Monitor />, onClick: () => navigateTo('sessionManagement', t('dashboardOverview.sessionManagement')), color: 'bg-slate-700' },
+                { label: t('dashboardOverview.autoInvoices'), icon: <Receipt />, onClick: () => navigateTo('autoInvoice', t('dashboardOverview.autoInvoiceGenerator')), color: 'bg-teal-700' },
+                { label: t('dashboardOverview.lateArrivals'), icon: <Clock />, onClick: () => navigateTo('lateArrivalConfig', t('dashboardOverview.lateArrivalConfig')), color: 'bg-rose-600' },
+                { label: t('dashboardOverview.enrollmentTrends'), icon: <TrendingUp />, onClick: () => navigateTo('enrollmentTrends', t('dashboardOverview.enrollmentTrends')), color: 'bg-indigo-600' },
             ]
         },
         {
-            id: 'compliancePrivacy', name: 'Compliance & Privacy', items: [
-                { label: 'Consent Forms', icon: <FileCheck />, onClick: () => navigateTo('consentForms', 'Parental Consent (PDPA)'), color: 'bg-green-700' },
-                { label: 'Data Export', icon: <Download />, onClick: () => navigateTo('dataExport', 'Data Export & Deletion'), color: 'bg-gray-700' },
-                { label: 'Notification Settings', icon: <BellRing />, onClick: () => navigateTo('notificationDigest', 'Notification Digest'), color: 'bg-purple-600' },
-                { label: 'Project Boards', icon: <LayoutGrid />, onClick: () => navigateTo('projectBoard', 'Kanban Project Boards'), color: 'bg-sky-600' },
+            id: 'compliancePrivacy', name: t('dashboardOverview.complianceAndPrivacy'), items: [
+                { label: t('dashboardOverview.consentForms'), icon: <FileCheck />, onClick: () => navigateTo('consentForms', t('dashboardOverview.parentalConsentPdpa')), color: 'bg-green-700' },
+                { label: t('dashboardOverview.dataExport'), icon: <Download />, onClick: () => navigateTo('dataExport', t('dashboardOverview.dataExportAndDeletion')), color: 'bg-gray-700' },
+                { label: t('dashboardOverview.notificationSettings'), icon: <BellRing />, onClick: () => navigateTo('notificationDigest', t('dashboardOverview.notificationDigest')), color: 'bg-purple-600' },
+                { label: t('dashboardOverview.projectBoards'), icon: <LayoutGrid />, onClick: () => navigateTo('projectBoard', t('dashboardOverview.kanbanProjectBoards')), color: 'bg-sky-600' },
             ]
         },
         {
-            id: 'safetyWellbeing', name: 'Safety & Wellbeing', items: [
-                { label: 'Emergency Alerts', icon: <AlertTriangle className="animate-pulse" />, onClick: () => navigateTo('emergencyAlert', 'Emergency Alerts'), color: 'bg-red-600' },
-                { label: 'Health & Incidents', icon: <Activity />, onClick: () => navigateTo('safetyHealthLogs', 'Safety & Health'), color: 'bg-emerald-600' },
-                { label: 'Emergency Drills', icon: <Flame />, onClick: () => navigateTo('safetyHealthLogs', 'Safety & Health'), color: 'bg-orange-600' },
-                { label: 'Safeguarding', icon: <ShieldCheck />, onClick: () => navigateTo('safetyHealthLogs', 'Safety & Health'), color: 'bg-indigo-600' },
+            id: 'safetyWellbeing', name: t('dashboardOverview.safetyAndWellbeing'), items: [
+                { label: t('dashboardOverview.emergencyAlerts'), icon: <AlertTriangle className="animate-pulse" />, onClick: () => navigateTo('emergencyAlert', t('dashboardOverview.emergencyAlerts')), color: 'bg-red-600' },
+                { label: t('dashboardOverview.healthAndIncidents'), icon: <Activity />, onClick: () => navigateTo('safetyHealthLogs', t('dashboardOverview.safetyAndHealth')), color: 'bg-emerald-600' },
+                { label: t('dashboardOverview.emergencyDrills'), icon: <Flame />, onClick: () => navigateTo('safetyHealthLogs', t('dashboardOverview.safetyAndHealth')), color: 'bg-orange-600' },
+                { label: t('dashboardOverview.safeguarding'), icon: <ShieldCheck />, onClick: () => navigateTo('safetyHealthLogs', t('dashboardOverview.safetyAndHealth')), color: 'bg-indigo-600' },
             ]
         },
         {
-            id: 'governanceMinistry', name: 'Governance & Ministry', items: [
-                { label: 'Quality Assurance', icon: <Shield className="animate-pulse" />, onClick: () => navigateTo('inspectionHub', 'Inspection Hub'), color: 'bg-slate-800' },
-                { label: 'Ministry Reports', icon: <FileText />, onClick: () => navigateTo('inspectionHub', 'Inspection Hub'), color: 'bg-slate-700' },
-                { label: 'Live Compliance', icon: <Activity className="text-emerald-400" />, onClick: () => navigateTo('complianceDashboard', 'Compliance Dashboard'), color: 'bg-slate-900 shadow-xl shadow-slate-200' },
-                { label: 'Governance Hub', icon: <Shield className="text-yellow-400" />, onClick: () => navigateTo('governanceHub', 'Unified Governance'), color: 'bg-black shadow-xl' },
-                { label: 'System Validation', icon: <Beaker />, onClick: () => navigateTo('validationConsole', 'Validation Console'), color: 'bg-indigo-900' },
+            id: 'governanceMinistry', name: t('dashboardOverview.governanceAndMinistry'), items: [
+                { label: t('dashboardOverview.qualityAssurance'), icon: <Shield className="animate-pulse" />, onClick: () => navigateTo('inspectionHub', t('dashboardOverview.inspectionHub')), color: 'bg-slate-800' },
+                { label: t('dashboardOverview.ministryReports'), icon: <FileText />, onClick: () => navigateTo('inspectionHub', t('dashboardOverview.inspectionHub')), color: 'bg-slate-700' },
+                { label: t('dashboardOverview.liveCompliance'), icon: <Activity className="text-emerald-400" />, onClick: () => navigateTo('complianceDashboard', t('dashboardOverview.complianceDashboard')), color: 'bg-slate-900 shadow-xl shadow-slate-200' },
+                { label: t('dashboardOverview.governanceHub'), icon: <Shield className="text-yellow-400" />, onClick: () => navigateTo('governanceHub', t('dashboardOverview.unifiedGovernance')), color: 'bg-black shadow-xl' },
+                { label: t('dashboardOverview.systemValidation'), icon: <Beaker />, onClick: () => navigateTo('validationConsole', t('dashboardOverview.validationConsole')), color: 'bg-indigo-900' },
             ]
         },
     ];
@@ -600,7 +611,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                         onClick={() => refetch()}
                         className="ml-2 font-semibold underline"
                     >
-                        {t('common.retry', { defaultValue: 'Cuba lagi' })}
+                        {t('common.retry')}
                     </button>
                 </div>
             )}
@@ -613,29 +624,29 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                         </h2>
                         <p className="text-white/80">{t('dashboard.commandCenter')}</p>
                         <div className={`grid gap-3 sm:gap-4 mt-6 ${statCardLayout === 'compact' ? 'grid-cols-2 2xl:grid-cols-4' : 'grid-cols-1 xs:grid-cols-2'}`}>
-                            <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={display(totalStudents)} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', 'Manage Students', {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
-                            <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={display(totalStaff)} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', 'Manage Teachers', {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
-                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={display(totalParents)} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', 'Manage Guardians', {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
-                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={display(totalClasses)} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', 'Manage Classes', {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
+                            <StatCard layout={statCardLayout} index={0} label={t('dashboard.totalStudents')} value={display(totalStudents)} icon={<StudentsIcon />} colorClasses="bg-gradient-to-br from-blue-500 to-blue-700" onClick={() => navigateTo('studentList', t('dashboardOverview.manageStudents'), {})} trend={formatTrend(studentTrend)} trendColor="text-blue-200" />
+                            <StatCard layout={statCardLayout} index={1} label={t('dashboard.totalStaff')} value={display(totalStaff)} icon={<StaffIcon />} colorClasses="bg-gradient-to-br from-purple-400 to-purple-600" onClick={() => navigateTo('teacherList', t('dashboardOverview.manageTeachers'), {})} trend={formatTrend(teacherTrend)} trendColor="text-purple-200" />
+                            <StatCard layout={statCardLayout} index={2} label={t('dashboard.totalParents')} value={display(totalParents)} icon={<UsersIcon />} colorClasses="bg-gradient-to-br from-orange-400 to-orange-600" onClick={() => navigateTo('parentList', t('dashboardOverview.manageGuardians'), {})} trend={formatTrend(parentTrend)} trendColor="text-orange-200" />
+                            <StatCard layout={statCardLayout} index={3} label={t('dashboard.academicLevels')} value={display(totalClasses)} icon={<ViewGridIcon />} colorClasses="bg-gradient-to-br from-indigo-400 to-indigo-600" onClick={() => navigateTo('classList', t('dashboardOverview.manageClasses'), {})} trend={formatTrend(classTrend)} trendColor="text-indigo-200" />
                         </div>
                     </motion.div>
 
                     <div>
-                        <h2 className="text-xl font-bold text-gray-700 mb-4 px-1">Quick Actions</h2>
+                        <h2 className="text-xl font-bold text-gray-700 mb-4 px-1">{t('dashboardOverview.quickActions')}</h2>
 
                         {/* Daily Essentials — the handful of actions an admin reaches for most days,
                             pulled to the top so the dashboard reads at a glance instead of requiring
                             a full scroll through 11 department sections to find them. Every destination
                             here also still appears in its normal department section below. */}
                         <div className="mb-6">
-                            <h3 className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2 px-1">Daily Essentials</h3>
+                            <h3 className="text-xs font-bold text-indigo-500 uppercase tracking-wider mb-2 px-1">{t('dashboardOverview.dailyEssentials')}</h3>
                             <div className="grid gap-2 sm:gap-4 [grid-template-columns:repeat(auto-fit,minmax(5.5rem,1fr))]">
-                                <QuickActionCard index={0} label="Approvals" icon={<CheckCircleIcon />} onClick={() => navigateTo('studentApprovals', 'Student Approvals')} color="bg-indigo-600" />
-                                <QuickActionCard index={1} label="Attendance" icon={<ClockIcon />} onClick={() => navigateTo('teacherAttendance', 'Teacher Attendance')} color="bg-amber-500" />
-                                <QuickActionCard index={2} label="Announce" icon={<MegaphoneIcon />} onClick={() => navigateTo('communicationHub', 'Communication Hub')} color="bg-teal-500" />
+                                <QuickActionCard index={0} label={t('dashboardOverview.approvals')} icon={<CheckCircleIcon />} onClick={() => navigateTo('studentApprovals', t('dashboardOverview.studentApprovals'))} color="bg-indigo-600" />
+                                <QuickActionCard index={1} label={t('dashboardOverview.attendance')} icon={<ClockIcon />} onClick={() => navigateTo('teacherAttendance', t('dashboardOverview.teacherAttendance'))} color="bg-amber-500" />
+                                <QuickActionCard index={2} label={t('dashboardOverview.announce')} icon={<MegaphoneIcon />} onClick={() => navigateTo('communicationHub', t('dashboardOverview.communicationHub'))} color="bg-teal-500" />
                                 {/* "Fee Management" removed: already a direct nav item on both desktop (sidebar) and mobile (bottom nav). */}
-                                <QuickActionCard index={3} label="Timetable" icon={<ClipboardListIcon />} onClick={() => navigateTo('timetable', 'AI Timetable')} color="bg-indigo-500" />
-                                <QuickActionCard index={4} label="Emergency" icon={<AlertTriangle />} onClick={() => setIsBroadcastOpen(true)} color="bg-red-600 animate-pulse" />
+                                <QuickActionCard index={3} label={t('dashboardOverview.timetable')} icon={<ClipboardListIcon />} onClick={() => navigateTo('timetable', t('dashboardOverview.aiTimetable'))} color="bg-indigo-500" />
+                                <QuickActionCard index={4} label={t('dashboardOverview.emergency')} icon={<AlertTriangle />} onClick={() => setIsBroadcastOpen(true)} color="bg-red-600 animate-pulse" />
                             </div>
                         </div>
 
@@ -649,7 +660,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                                     type="text"
                                     value={actionSearch}
                                     onChange={(e) => setActionSearch(e.target.value)}
-                                    placeholder="Search all actions…"
+                                    placeholder={t('dashboardOverview.searchAllActions')}
                                     className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
                                 />
                             </div>
@@ -683,10 +694,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
 
                         {/* Desktop view */}
                         <div className="hidden lg:grid grid-cols-2 xl:grid-cols-3 gap-4 mt-8">
-                            <AddUserWidget onClick={() => navigateTo('selectUserTypeToAdd', 'Add New User', {})} />
-                            <PublishReportsWidget onClick={() => navigateTo('reportCardPublishing', 'Publish Reports', {})} count={unpublishedReports} />
-                            <TimetableWidget onClick={() => navigateTo('timetable', 'Timetable Management')} schedule={timetablePreview} />
-                            <AnnounceWidget onClick={() => navigateTo('communicationHub', 'Communication Hub')} />
+                            <AddUserWidget onClick={() => navigateTo('selectUserTypeToAdd', t('dashboardOverview.addNewUser'), {})} />
+                            <PublishReportsWidget onClick={() => navigateTo('reportCardPublishing', t('dashboardOverview.publishReports'), {})} count={unpublishedReports} />
+                            <TimetableWidget onClick={() => navigateTo('timetable', t('dashboardOverview.timetableManagement'))} schedule={timetablePreview} />
+                            <AnnounceWidget onClick={() => navigateTo('communicationHub', t('dashboardOverview.communicationHub'))} />
                         </div>
                     </div>
 
@@ -697,46 +708,46 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                 {/* Sidebar Column */}
                 <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-6 lg:self-start">
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="bg-white p-4 rounded-2xl shadow-sm">
-                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">School Health</h2>
+                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">{t('dashboardOverview.schoolHealth')}</h2>
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
                             <div>
-                                <p className="font-semibold text-gray-800">Today's Attendance</p>
+                                <p className="font-semibold text-gray-800">{t('dashboardOverview.todayAttendance')}</p>
                                 <p className="text-3xl font-bold text-indigo-600">{attendancePercentage > 0 ? `${attendancePercentage}%` : '--%'}</p>
                             </div>
                             <DonutChart percentage={attendancePercentage} color="#4f46e5" size={70} strokeWidth={8} />
                         </div>
                         <div className="mt-4">
-                            <p className="font-semibold text-gray-800 px-1">Enrollment Trend</p>
+                            <p className="font-semibold text-gray-800 px-1">{t('dashboardOverview.enrollmentTrend')}</p>
                             <EnrollmentLineChart data={enrollmentData} color="#4f46e5" />
                         </div>
                     </motion.div>
 
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }}>
-                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">Action Required</h2>
+                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">{t('dashboardOverview.actionRequired')}</h2>
                         <div className="space-y-3">
                             {pendingApprovalsCount > 0 && (
-                                <AlertCard index={0} label="Student Approvals" value={pendingApprovalsCount} icon={<CheckCircleIcon />} onClick={() => navigateTo('studentApprovals', 'Student Approvals')} color="text-indigo-600" />
+                                <AlertCard index={0} label={t('dashboardOverview.studentApprovals')} value={pendingApprovalsCount} icon={<CheckCircleIcon />} onClick={() => navigateTo('studentApprovals', t('dashboardOverview.studentApprovals'))} color="text-indigo-600" />
                             )}
                             {unpublishedReports > 0 && (
-                                <AlertCard index={1} label="Reports to Publish" value={unpublishedReports} icon={<ReportIcon />} onClick={() => navigateTo('reportCardPublishing', 'Publish Reports')} color="text-red-500" />
+                                <AlertCard index={1} label={t('dashboardOverview.reportsToPublish')} value={unpublishedReports} icon={<ReportIcon />} onClick={() => navigateTo('reportCardPublishing', t('dashboardOverview.publishReports'))} color="text-red-500" />
                             )}
                             {overdueFees > 0 && (
-                                <AlertCard index={2} label="in Overdue Fees" value={new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', 'Fee Management')} color="text-orange-500" />
+                                <AlertCard index={2} label="in Overdue Fees" value={new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', t('dashboardOverview.feeManagement'))} color="text-orange-500" />
                             )}
                             {unpublishedReports === 0 && overdueFees === 0 && (
                                 <div className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">
-                                    No urgent tasks. Well done!
+                                    {t('dashboardOverview.noUrgentTasks')}
                                 </div>
                             )}
                         </div>
                     </motion.div>
 
                     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }}>
-                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">Recent Activity</h2>
+                        <h2 className="text-lg font-bold text-gray-700 mb-3 px-1">{t('dashboardOverview.recentActivity')}</h2>
                         <div className="bg-white p-4 rounded-2xl shadow-sm space-y-4">
                             {recentActivities.map((log, index) => <ActivityLogItem key={log.id} log={log} isLast={index === recentActivities.length - 1} index={index} />)}
-                            <motion.button whileTap={{ scale: 0.97 }} onClick={() => navigateTo('auditLog', 'Audit Log')} className="mt-2 text-sm w-full text-center font-semibold text-indigo-600 hover:text-indigo-800 py-2.5 rounded-lg hover:bg-indigo-50 transition-colors">
-                                View Full Log
+                            <motion.button whileTap={{ scale: 0.97 }} onClick={() => navigateTo('auditLog', t('dashboardOverview.auditLog'))} className="mt-2 text-sm w-full text-center font-semibold text-indigo-600 hover:text-indigo-800 py-2.5 rounded-lg hover:bg-indigo-50 transition-colors">
+                                {t('dashboardOverview.viewFullLog')}
                             </motion.button>
                         </div>
                     </motion.div>

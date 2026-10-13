@@ -4,6 +4,7 @@ import { vi, describe, it, expect } from 'vitest';
 import DashboardOverview from '../DashboardOverview';
 import { renderWithProviders, resetTestQueryClient } from '../../../test-utils';
 import { api } from '../../../lib/api';
+import i18n from '../../../lib/i18n';
 
 // Mock dependencies
 vi.mock('../../../lib/database', () => ({
@@ -150,4 +151,51 @@ describe('DashboardOverview Component', () => {
       expect(tile.textContent, 'a tile is showing a number it does not have').toBe('—');
     }
   });
+
+  describe('the reader\'s language (Malay default, English selectable)', () => {
+    // The dashboard is the first thing every member of staff opens, so its navigation is the
+    // most-read text in the app. It was written in fixed English: a Malay-speaking head
+    // teacher read "Quick Actions" and "Attendance & Safety" every morning on a school where
+    // Malay is the language of work. These tests change the language FOR REAL and read the
+    // screen, because checking the locale file alone would pass while the screen ignored it.
+    const renderDash = () => renderWithProviders(
+      <DashboardOverview
+        navigateTo={vi.fn()}
+        handleBack={vi.fn()}
+        forceUpdate={vi.fn()}
+        schoolId="school-123"
+        currentBranchId={null}
+      />
+    );
+
+    afterEach(async () => {
+      await i18n.changeLanguage('ms');
+      resetTestQueryClient();
+    });
+
+    it('reads in Malay when the app is in Malay', async () => {
+      await i18n.changeLanguage('ms');
+      renderDash();
+      // 'Quick Actions' / 'Daily Essentials' / 'Recent Activity' in Malay.
+      expect(await screen.findByText('Tindakan Pantas')).toBeInTheDocument();
+      expect(screen.getByText('Keperluan Harian')).toBeInTheDocument();
+    });
+
+    it('reads in English once English is chosen', async () => {
+      await i18n.changeLanguage('en');
+      renderDash();
+      expect(await screen.findByText('Quick Actions')).toBeInTheDocument();
+      // The English must REPLACE the Malay, not sit beside it.
+      expect(screen.queryByText('Tindakan Pantas')).not.toBeInTheDocument();
+    });
+
+    it('translates the navigation labels the office works from', async () => {
+      await i18n.changeLanguage('ms');
+      renderDash();
+      await screen.findByText('Tindakan Pantas');
+      // A category heading from the quick-action registry.
+      expect(screen.getByText('Warga Sekolah & Pendaftaran')).toBeInTheDocument();
+    });
+  });
+
 });
