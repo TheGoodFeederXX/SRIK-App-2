@@ -167,7 +167,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                 <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={() => navigateTo('AddTeacherScreen', 'Add New Teacher')}
+                    onClick={() => navigateTo('AddTeacherScreen', t('teacherListScreen.addNewTeacher'))}
                     className="inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors shadow-sm shadow-blue-200 gap-2"
                 >
                     <PlusIcon className="h-5 w-5" />

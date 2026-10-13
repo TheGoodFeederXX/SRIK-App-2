@@ -435,10 +435,11 @@ const ClassStudents: React.FC<{
   onSelect: (student: Student) => void;
   onStatusChange: (student: any, newStatus: StudentStatus) => void;
 }> = ({ group, rows, onSelect, onStatusChange }) => {
+    const { t } = useTranslation();
   if (rows.length === 0) {
     return (
       <div className="px-2 py-1.5 text-sm text-gray-500">
-        No students in this class.
+        {t('studentListScreen.noStudentsInThisClass')}
       </div>
     );
   }
@@ -726,7 +727,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
       </main>
 
       <div className="fixed bottom-24 right-6 lg:bottom-12 lg:right-12 z-40">
-        <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={() => navigateTo('addStudent', 'Add New Student', {})} className="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" aria-label={t('studentListScreen.addNewStudent')}><Plus className="h-6 w-6" /></motion.button>
+        <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} onClick={() => navigateTo('addStudent', t('studentListScreen.addNewStudent'), {})} className="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" aria-label={t('studentListScreen.addNewStudent')}><Plus className="h-6 w-6" /></motion.button>
       </div>
 
       {/* Withdrawal reason modal */}

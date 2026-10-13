@@ -22,7 +22,7 @@ const TeacherSettingsScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('teacherSettingsScreen.settings')}
         explanation="There are no settings to change here yet. Ask the office if your details need correcting."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('teacherSettingsScreen.dashboard'))}
     />
     );
 };

@@ -128,7 +128,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                     subtitle: `Grade ${c.grade}${c.section || ''}`,
                     type: 'Class',
                     onClick: () => {
-                        if (dashboardType === DashboardType.Admin) navigateTo('classListScreen', 'Classes', {});
+                        if (dashboardType === DashboardType.Admin) navigateTo('classListScreen', t('globalSearchScreen.classes'), {});
                         else if (dashboardType === DashboardType.Teacher) navigateTo('classDetail', c.name, { classInfo: c });
                     }
                 });
@@ -157,7 +157,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                     type: 'Quiz',
                     onClick: () => {
                         if (dashboardType === DashboardType.Student) navigateTo('takeQuiz', q.title, { quiz: q });
-                        else navigateTo('quizList', 'Quizzes', {});
+                        else navigateTo('quizList', t('globalSearchScreen.quizzes'), {});
                     }
                 });
             });
@@ -169,7 +169,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                     title: n.title,
                     subtitle: n.category || 'Announcement',
                     type: 'Notice',
-                    onClick: () => navigateTo('noticeboard', 'Noticeboard', {})
+                    onClick: () => navigateTo('noticeboard', t('globalSearchScreen.noticeboard'), {})
                 });
             });
 

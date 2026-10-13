@@ -316,6 +316,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
     // Build a real PDF transcript from the student's own data (name, ID, class,
     // average, and each subject's published score) instead of printing the page.
     const handleDownloadTranscript = async () => {
+    const { t } = useTranslation();
         const toastId = toast.loading('Generating transcript...');
         try {
             const html2pdf = (await import('html2pdf.js')).default;
@@ -570,15 +571,15 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     </Button>
                                     {navigateTo && (
                                         <>
-                                            <Button onClick={() => navigateTo('editProfile', 'Edit Profile')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
+                                            <Button onClick={() => navigateTo('editProfile', t('studentProfileEnhanced.editProfile'))} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
                                                 <Settings className="w-4 h-4 mr-2" />
                                                 {t('studentProfileEnhanced.editProfile')}
                                             </Button>
-                                            <Button onClick={() => navigateTo('appearanceSettings', 'Appearance & Theme')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
+                                            <Button onClick={() => navigateTo('appearanceSettings', t('studentProfileEnhanced.appearanceTheme'))} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
                                                 <Sparkles className="w-4 h-4 mr-2" />
-                                                Appearance
+                                                {t('studentProfileEnhanced.appearance')}
                                             </Button>
-                                            <Button onClick={() => navigateTo('changePassword', 'Change Password')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-4">
+                                            <Button onClick={() => navigateTo('changePassword', t('studentProfileEnhanced.changePassword'))} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-4">
                                                 <Lock className="w-4 h-4 mr-2" />
                                                 {t('studentProfileEnhanced.changePassword')}
                                             </Button>
@@ -604,13 +605,13 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                 value="overview"
                                 className="!bg-transparent data-[state=active]:!text-orange-600 data-[state=active]:!border-orange-600 !border-b-2 border-transparent !shadow-none rounded-none px-0 pb-4 pt-4 font-semibold !text-gray-500"
                             >
-                                Overview
+                                {t('studentProfileEnhanced.overview')}
                             </TabsTrigger>
                             <TabsTrigger
                                 value="academic"
                                 className="!bg-transparent data-[state=active]:!text-orange-600 data-[state=active]:!border-orange-600 !border-b-2 border-transparent !shadow-none rounded-none px-0 pb-4 pt-4 font-semibold !text-gray-500"
                             >
-                                Academic
+                                {t('studentProfileEnhanced.academic')}
                             </TabsTrigger>
                             <TabsTrigger
                                 value="activities"
@@ -638,7 +639,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                 <div className="p-2 bg-orange-100 rounded-lg">
                                                     <User className="w-5 h-5 text-orange-600" />
                                                 </div>
-                                                Personal Information
+                                                {t('studentProfileEnhanced.personalInformation')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent className="p-6">
@@ -743,7 +744,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         <CardHeader className="border-b border-slate-100">
                                             <CardTitle className="text-lg flex items-center gap-2">
                                                 <WifiOff className="w-5 h-5 text-orange-600" />
-                                                Data Usage
+                                                {t('studentProfileEnhanced.dataUsage')}
                                             </CardTitle>
                                         </CardHeader>
                                         <CardContent className="!p-0">
@@ -794,7 +795,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                     <th className="px-6 py-4">{t('studentProfileEnhanced.assessment')}</th>
                                                     <th className="px-6 py-4">Score</th>
                                                     <th className="px-6 py-4">Grade</th>
-                                                    <th className="px-6 py-4">Status</th>
+                                                    <th className="px-6 py-4">{t('studentProfileEnhanced.status')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-100">
@@ -912,7 +913,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         }}
                                                     >
                                                         <Download className="w-4 h-4 mr-2" />
-                                                        Download
+                                                        {t('studentProfileEnhanced.download')}
                                                     </Button>
                                                 </div>
                                             </MotionListItem>

@@ -122,7 +122,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
             E-Learning Library
           </button>
           <button
-            onClick={() => navigateTo('educationalGames', 'Educational Games', {})}
+            onClick={() => navigateTo('educationalGames', t('learningHubScreen.educationalGames'), {})}
             className="py-3 bg-white border border-gray-200 rounded-xl font-bold text-sm text-gray-700 hover:bg-gray-50 transition-colors flex items-center justify-center gap-2"
           >
             <GameControllerIcon className="w-4 h-4 text-blue-600 shrink-0" />

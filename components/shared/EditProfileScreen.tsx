@@ -367,7 +367,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                                         <motion.button
                                             whileHover={{ scale: 1.01 }}
                                             whileTap={{ scale: 0.98 }}
-                                            onClick={() => navigateTo('changePassword', 'Change Password')}
+                                            onClick={() => navigateTo('changePassword', t('editProfileScreen.changePassword'))}
                                             className="w-full flex items-center justify-between p-4 bg-orange-50/50 rounded-2xl border border-orange-100 hover:bg-orange-50 transition-colors"
                                         >
                                             <span className="flex items-center space-x-2">

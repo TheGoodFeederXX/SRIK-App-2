@@ -282,7 +282,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                             transition={{ duration: 0.3, delay: 0.1 }}
                             className="bg-white p-4 rounded-xl shadow-sm space-y-2"
                         >
-                            <motion.button whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo('teacherPerformance', 'Performance Evaluation', { teacher })} className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
+                            <motion.button whileHover={{ x: 2 }} whileTap={{ scale: 0.98 }} onClick={() => navigateTo('teacherPerformance', t('teacherDetailAdminView.performanceEvaluation'), { teacher })} className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors">
                                 <ChartBarIcon className="w-6 h-6 text-indigo-500 flex-shrink-0" />
                                 <span className="font-semibold text-gray-700 text-sm sm:text-base">{t('teacherDetailAdminView.performanceEvaluation')}</span>
                             </motion.button>

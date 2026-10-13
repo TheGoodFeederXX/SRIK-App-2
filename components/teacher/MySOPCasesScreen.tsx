@@ -22,7 +22,7 @@ const MySOPCasesScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('mySOPCasesScreen.myReportedCases')}
         explanation="SOP case notes are not part of this school's records yet. Nothing you report here would be stored, so it has been switched off rather than leaving you with a box that silently loses what you type."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('mySOPCasesScreen.dashboard'))}
     />
     );
 };

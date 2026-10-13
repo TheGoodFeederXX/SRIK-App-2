@@ -22,7 +22,7 @@ const StudentGateScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('studentGateScreen.studentGate')}
         explanation="Pickup authorisation is not managed in this system yet, so it cannot be relied on to decide who may collect a child. The office keeps that list."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('studentGateScreen.dashboard'))}
     />
     );
 };

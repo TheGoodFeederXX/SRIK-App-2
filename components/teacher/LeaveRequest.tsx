@@ -275,7 +275,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Start Date
+                                            {t('leaveRequest.startDate')}
                                         </label>
                                         <input
                                             type="date"
@@ -289,7 +289,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
 
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            End Date
+                                            {t('leaveRequest.endDate')}
                                         </label>
                                         <input
                                             type="date"

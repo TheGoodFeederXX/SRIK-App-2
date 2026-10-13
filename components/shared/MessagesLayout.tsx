@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, Suspense } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -65,6 +66,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
     onSelectChat,
     newChatView = 'newChat'
 }) => {
+    const { t } = useTranslation();
     const theme = THEME[themeColor];
 
     const [rooms, setRooms] = useState<any[]>(_roomsCache.data);
@@ -169,7 +171,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                 <div className="px-4 pt-4 pb-3 border-b border-gray-100/60 bg-white/40 backdrop-blur-sm flex-shrink-0">
                     <div className="flex justify-between items-center mb-3">
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-bold text-gray-800 tracking-tight">Messages</h1>
+                            <h1 className="text-xl font-bold text-gray-800 tracking-tight">{t('messagesLayout.messages')}</h1>
                             {totalUnread > 0 && (
                                 <span className={`${theme.badge} text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
                                     {totalUnread > 99 ? '99+' : totalUnread}
@@ -182,7 +184,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                             whileTap={{ scale: 0.92, rotate: 90 }}
                             onClick={handlePlusClick}
                             className={`min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full ${theme.btn} transition-colors`}
-                            aria-label="New Message"
+                            aria-label={t('messagesLayout.newMessage')}
                         >
                             <PlusIcon className="w-5 h-5" />
                         </motion.button>
@@ -193,7 +195,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                         <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
                             type="search"
-                            placeholder="Search messages..."
+                            placeholder={t('messagesLayout.searchMessages')}
                             value={searchTerm}
                             onChange={e => setSearchTerm(e.target.value)}
                             className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-100/80 border-none rounded-xl focus:ring-2 focus:ring-offset-0 focus:bg-white/80 transition-all outline-none placeholder-gray-400 text-gray-700"
@@ -230,8 +232,8 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <p className="text-sm font-semibold text-gray-500 mb-1">No conversations yet</p>
-                            <p className="text-xs text-gray-400">Tap + to start a new message</p>
+                            <p className="text-sm font-semibold text-gray-500 mb-1">{t('messagesLayout.noConversationsYet')}</p>
+                            <p className="text-xs text-gray-400">{t('messagesLayout.tapToStartANewMessage')}</p>
                         </div>
                     ) : (
                         <div>
@@ -296,13 +298,13 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                 <button onClick={() => setNewChatMode(false)} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors" aria-label="Close">
                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                                 </button>
-                                <h2 className="font-bold text-gray-800 text-base">New Message</h2>
+                                <h2 className="font-bold text-gray-800 text-base">{t('messagesLayout.newMessage')}</h2>
                             </div>
                             <div className="px-4 py-3 border-b border-gray-50/80 flex-shrink-0">
                                 <input
                                     autoFocus
                                     type="search"
-                                    placeholder="Search by name…"
+                                    placeholder={t('messagesLayout.searchByName')}
                                     value={newChatSearch}
                                     onChange={e => setNewChatSearch(e.target.value)}
                                     className="w-full px-4 py-2.5 bg-gray-100/80 rounded-xl text-sm outline-none focus:bg-white focus:ring-2 focus:ring-offset-0 transition-all placeholder-gray-400"
@@ -311,8 +313,8 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                             <div className="flex-1 overflow-y-auto custom-scrollbar">
                                 {newChatContacts.length === 0 ? (
                                     <div className="flex flex-col items-center justify-center h-full p-8 text-center">
-                                        <p className="text-sm text-gray-400 mb-3">No contacts found</p>
-                                        <button onClick={() => { setNewChatMode(false); navigateTo?.(newChatView, 'New Message', {}); }} className={`px-4 py-2 text-sm font-semibold ${theme.filterActive} rounded-xl`}>Browse all contacts</button>
+                                        <p className="text-sm text-gray-400 mb-3">{t('messagesLayout.noContactsFound')}</p>
+                                        <button onClick={() => { setNewChatMode(false); navigateTo?.(newChatView, 'New Message', {}); }} className={`px-4 py-2 text-sm font-semibold ${theme.filterActive} rounded-xl`}>{t('messagesLayout.browseAllContacts')}</button>
                                     </div>
                                 ) : (
                                     newChatContacts.map(room => (
@@ -347,8 +349,8 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                                 </svg>
                             </div>
-                            <h2 className="text-lg font-bold text-gray-700 mb-1.5">No conversation selected</h2>
-                            <p className="text-sm text-gray-400 max-w-xs">Pick a chat from the list or tap + to start a new conversation.</p>
+                            <h2 className="text-lg font-bold text-gray-700 mb-1.5">{t('messagesLayout.noConversationSelected')}</h2>
+                            <p className="text-sm text-gray-400 max-w-xs">{t('messagesLayout.pickAChatFromTheListOrTapToStartANewConversati')}</p>
                         </div>
                     )}
                 </div>

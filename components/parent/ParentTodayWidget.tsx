@@ -219,7 +219,7 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
                     // no table backs any of them, so each was a permanently blank or zero
                     // card that told a parent nothing while looking like information.
                     {
-                        onClick: () => navigateTo('attendanceOverview', 'Attendance'),
+                        onClick: () => navigateTo('attendanceOverview', t('parentTodayWidget.attendance')),
                         iconBg: 'bg-emerald-50',
                         icon: <CircleCheck className="w-5 h-5 text-emerald-600" />,
                         corner: <span className="text-2xl">{attendanceIcon}</span>,
@@ -254,10 +254,10 @@ const ParentTodayWidget = ({ navigateTo }: { navigateTo: (view: string, title: s
             {/* Quick Actions — only destinations that are real. "Pay Fees" and
                 "Message Teacher" led to screens for features this school does not run. */}
             <div className="flex space-x-3 overflow-x-auto pb-2">
-                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('reportCard', 'Report Card')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
+                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('reportCard', t('parentTodayWidget.reportCard'))} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
                     <FileText className="w-4 h-4" /><span>{t('parentTodayWidget.viewReportCard')}</span>
                 </motion.button>
-                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('schoolCalendar', 'Calendar')} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
+                <motion.button whileTap={{ scale: 0.96 }} onClick={() => navigateTo('schoolCalendar', t('parentTodayWidget.calendar'))} className="flex items-center space-x-2 bg-white text-gray-700 min-h-11 px-5 py-2.5 rounded-2xl font-bold text-sm border border-gray-100 whitespace-nowrap hover:bg-gray-50 transition-colors">
                     <Calendar className="w-4 h-4" /><span>{t('parentTodayWidget.schoolCalendar')}</span>
                 </motion.button>
             </div>

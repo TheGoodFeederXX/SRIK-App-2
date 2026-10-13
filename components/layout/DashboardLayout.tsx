@@ -135,7 +135,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
                 });
             },
             onLogout: handleLogout,
-            schoolName: currentSchool?.name || user?.school?.name || user?.user_metadata?.school_name || 'SRI Al-Khairiah',
+            schoolName: currentSchool?.name || user?.school?.name || user?.user_metadata?.school_name || 'SRI Al-Khairiah', // The school's own name: a proper noun, identical in both languages.
             logoUrl: currentSchool?.logoUrl || user?.school?.logo_url || user?.user_metadata?.logo_url || ''
         };
 

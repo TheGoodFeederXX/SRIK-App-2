@@ -274,7 +274,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
                             {search
                                 ? 'Try a different name, phone number, or email.'
-                                : 'Guardians are added from a student\'s record, so each one is linked to a child.'}
+                                : t('parentListScreen.guardiansAreAddedFromAStudentsRecord')}
                         </p>
                     </div>
                 )}

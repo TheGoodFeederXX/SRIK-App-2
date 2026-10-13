@@ -392,10 +392,10 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <button
-                                                    onClick={() => navigateTo('cbtScores', 'Assessment Results', { test: exam })}
+                                                    onClick={() => navigateTo('cbtScores', t('cBTManagementScreen.assessmentResults'), { test: exam })}
                                                     className="px-3 py-1 bg-indigo-50 text-indigo-600 text-xs font-bold uppercase rounded hover:bg-indigo-100 transition-colors"
                                                 >
-                                                    Results
+                                                    {t('cBTManagementScreen.results')}
                                                 </button>
                                                 <button
                                                     onClick={() => togglePublish(exam)}

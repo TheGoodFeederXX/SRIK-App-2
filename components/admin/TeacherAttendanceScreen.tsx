@@ -212,7 +212,7 @@ const TeacherAttendanceScreen: React.FC<TeacherAttendanceScreenProps> = ({ navig
                     <motion.button
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.97 }}
-                        onClick={() => navigateTo('teacherAttendanceApproval', 'Attendance Approvals')}
+                        onClick={() => navigateTo('teacherAttendanceApproval', t('teacherAttendanceScreen.attendanceApprovals'))}
                         className="flex items-center space-x-2 bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
                     >
                         <span>Review Approvals {attendanceSummary.pending > 0 && `(${attendanceSummary.pending})`}</span>

@@ -47,7 +47,7 @@ const MathSprintResultsScreen: React.FC<MathSprintResultsScreenProps> = ({ score
 
             <div className="w-full max-w-sm mt-8 space-y-3">
                 <button
-                    onClick={() => navigateTo('mathSprintLobby', 'Math Sprint', {})}
+                    onClick={() => navigateTo('mathSprintLobby', t('mathSprintResultsScreen.mathSprint'), {})}
                     className="w-full py-3 text-lg font-bold text-white bg-orange-500 rounded-xl shadow-lg hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2"
                 >
                     <GameControllerIcon />

@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ title, avatarUrl, bgColor, onLogout, on
         </div>
         <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
           {onSearchClick && (
-            <motion.button whileTap={{ scale: 0.9 }} onClick={onSearchClick} className="relative p-1.5 sm:p-2 rounded-full hover:bg-current/10" aria-label="Search">
+            <motion.button whileTap={{ scale: 0.9 }} onClick={onSearchClick} className="relative p-1.5 sm:p-2 rounded-full hover:bg-current/10" aria-label={t('header.search')}>
               <SearchIcon className={`h-6 w-6 sm:h-7 sm:w-7 ${bgColor.includes('bg-white') || bgColor.includes('bg-gray-50') ? 'text-gray-900' : 'text-white'}`} />
             </motion.button>
           )}

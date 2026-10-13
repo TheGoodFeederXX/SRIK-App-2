@@ -1,4 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
+import i18n from '../../lib/i18n';
 import { ExclamationCircleIcon, RotateCcwIcon } from '../../constants';
 import { reportError } from '../../lib/sentry';
 
@@ -50,17 +51,17 @@ class ErrorBoundary extends Component<Props, State> {
             <ExclamationCircleIcon className="w-10 h-10 text-red-500" />
           </div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">
-            {this.props.title || "Something went wrong"}
+            {this.props.title || i18n.t('errorBoundary.somethingWentWrong')}
           </h2>
           <p className="text-gray-500 mb-6 max-w-xs mx-auto">
-            {this.props.message || "We encountered an error while loading this component. Please try again."}
+            {this.props.message || i18n.t('errorBoundary.componentLoadFailed')}
           </p>
           <button
             onClick={this.handleReset}
             className="flex items-center space-x-2 px-6 py-2.5 bg-sky-500 text-white font-semibold rounded-xl hover:bg-sky-600 transition-all shadow-md active:scale-95"
           >
             <RotateCcwIcon className="w-4 h-4" />
-            <span>Try Again</span>
+            <span>{i18n.t('errorBoundary.tryAgain')}</span>
           </button>
 
           {process.env.NODE_ENV === 'development' && (

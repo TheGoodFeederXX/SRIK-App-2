@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -18,7 +19,9 @@ interface QuizzesScreenProps {
   student?: { id?: string; name?: string } | null;
 }
 
-const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) => (
+const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
         title="Kuiz"
         explanation={
@@ -27,8 +30,9 @@ const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) =>
             'ditetapkan sekolah, dan markahnya direkodkan melalui menu Penilaian. ' +
             'Sila hubungi guru kelas untuk urusan berkaitan penilaian murid.'
         }
-        handleBack={navigateTo ? () => navigateTo('studentDashboard', 'Papan Pemuka', { student }) : undefined}
+        handleBack={navigateTo ? () => navigateTo('studentDashboard', t('quizzesScreen.papanPemuka'), { student }) : undefined}
     />
-);
+    );
+};
 
 export default QuizzesScreen;

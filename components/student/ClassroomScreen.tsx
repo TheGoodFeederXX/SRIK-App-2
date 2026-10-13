@@ -29,7 +29,7 @@ const ClassroomScreen: React.FC<ClassroomScreenProps> = ({ subjectName, navigate
             'pelajaran disediakan oleh guru secara langsung di dalam kelas. Sila ' +
             'hubungi guru kelas untuk urusan berkaitan pembelajaran.'
         }
-        handleBack={navigateTo ? () => navigateTo('studentDashboard', 'Papan Pemuka') : undefined}
+        handleBack={navigateTo ? () => navigateTo('studentDashboard', t('classroomScreen.papanPemuka')) : undefined}
     />
     );
 };

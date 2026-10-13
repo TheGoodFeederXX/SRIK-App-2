@@ -197,7 +197,7 @@ const StudyBuddy: React.FC = () => {
                         disabled={isLoading}
                     />
                     <motion.button whileHover={{ scale: (isLoading || !inputText) ? 1 : 1.03 }} whileTap={{ scale: (isLoading || !inputText) ? 1 : 0.95 }} type="submit" disabled={isLoading || !inputText} className={`px-4 py-2 rounded-full font-semibold text-white ${theme.mainBg} disabled:bg-orange-300 transition-colors shadow-md`}>
-                        Send
+                        {t('studyBuddy.send')}
                     </motion.button>
                 </form>
             </div>

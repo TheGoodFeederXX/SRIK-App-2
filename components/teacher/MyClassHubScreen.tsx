@@ -22,7 +22,7 @@ const MyClassHubScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('myClassHubScreen.myClassHub')}
         explanation="This summary is not built yet. Your class list, the register and the gradebook all work and are the places to go."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('myClassHubScreen.dashboard'))}
     />
     );
 };

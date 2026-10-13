@@ -1,5 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../../lib/api';
 import { isAIAllowedClient, AI_LOCKED_MESSAGE } from '../../lib/ai';
 import { MicrophoneIcon, StopIcon, VideoIcon } from '../../constants';
@@ -17,6 +18,7 @@ interface LiveSessionProps {
  * implemented — it sat on "Connecting..." forever.
  */
 const LiveSession: React.FC<LiveSessionProps> = ({ onClose }) => {
+    const { t } = useTranslation();
     const [status, setStatus] = useState<'connecting' | 'listening' | 'thinking' | 'speaking' | 'unsupported' | 'error'>('connecting');
     const [isMuted, setIsMuted] = useState(false);
     const [volumeLevel, setVolumeLevel] = useState(0);
@@ -156,12 +158,12 @@ const LiveSession: React.FC<LiveSessionProps> = ({ onClose }) => {
                 rec.onerror = (e: any) => {
                     if (e?.error === 'not-allowed') {
                         setStatus('error');
-                        setCaption('Microphone permission was denied.');
+                        setCaption(t('liveSession.microphonePermissionDenied'));
                     }
                 };
                 recognitionRef.current = rec;
                 setStatus('listening');
-                setCaption('Say something — I\'m listening!');
+                setCaption(t('liveSession.saySomethingIAmListening'));
                 startRecognition();
             } catch (error) {
                 console.error('Failed to start live session', error);

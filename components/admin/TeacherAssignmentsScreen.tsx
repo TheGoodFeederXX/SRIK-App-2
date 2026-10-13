@@ -170,18 +170,18 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
     };
 
     /** Opens the form pre-filled with what the teacher already has. */
-    const editTeacher = async (t: TeacherRecord) => {
+    const editTeacher = async (teacher: TeacherRecord) => {
         try {
-            const duties = await getTeacherDuties(t.id);
+            const duties = await getTeacherDuties(teacher.id);
             setForm({
-                teacherId: t.id,
+                teacherId: teacher.id,
                 classIds: duties.classIds,
                 subjectIds: duties.subjectIds,
-                isClassTeacher: classTeacherRows.some(a => a.teacherId === t.id),
+                isClassTeacher: classTeacherRows.some(a => a.teacherId === teacher.id),
             });
             setShowAssign(true);
         } catch (err) {
-            toast.error(err instanceof Error ? err.message : 'Could not load this teacher\'s duties.');
+            toast.error(err instanceof Error ? err.message : t('teacherAssignmentsScreen.couldNotLoadThisTeachersDuties'));
         }
     };
 

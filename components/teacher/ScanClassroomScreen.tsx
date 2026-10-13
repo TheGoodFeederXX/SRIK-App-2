@@ -22,7 +22,7 @@ const ScanClassroomScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('scanClassroomScreen.scanClassroom')}
         explanation="Scanning is not set up for this school yet. Attendance is taken from the class register, which works."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('scanClassroomScreen.dashboard'))}
     />
     );
 };

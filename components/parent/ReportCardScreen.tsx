@@ -386,7 +386,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
                 <p className="text-gray-600 mt-2">That term hasn't been published for {student.name} yet.</p>
                 {navigateTo && (
                     <button
-                        onClick={() => navigateTo('selectReportTerm', 'Select Term', { student })}
+                        onClick={() => navigateTo('selectReportTerm', t('reportCardScreen.selectTerm'), { student })}
                         className="mt-4 mx-auto px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium text-sm"
                     >
                         Pick Another Term
@@ -425,7 +425,7 @@ const ReportCardScreen: React.FC<ReportCardScreenProps> = ({ student, term, sess
                         {navigateTo && (
                             <motion.button
                                 whileTap={{ scale: 0.96 }}
-                                onClick={() => navigateTo('selectReportTerm', 'Select Term', { student })}
+                                onClick={() => navigateTo('selectReportTerm', t('reportCardScreen.selectTerm'), { student })}
                                 className="px-3 py-2 text-sm font-sans font-semibold text-green-700 hover:underline"
                             >
                                 Change Year/Term

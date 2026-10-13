@@ -246,7 +246,7 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                 <div className="bg-white p-4 rounded-2xl shadow-sm border border-gray-100">
                     <div className="flex justify-between items-center mb-4">
                         <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider underline">{t('unifiedParentHome.schoolUtilities')}</h3>
-                        <button onClick={() => navigateTo('schoolUtilities', 'School Utilities')} className="inline-flex items-center min-h-11 px-3 -my-3 -mr-3 rounded-lg text-xs text-indigo-600 font-bold hover:underline">{t('unifiedParentHome.viewAll')}</button>
+                        <button onClick={() => navigateTo('schoolUtilities', t('unifiedParentHome.schoolUtilities'))} className="inline-flex items-center min-h-11 px-3 -my-3 -mr-3 rounded-lg text-xs text-indigo-600 font-bold hover:underline">{t('unifiedParentHome.viewAll')}</button>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
                         {[
@@ -285,8 +285,8 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                     whileTap={{ scale: 0.98 }}
                     role="button"
                     tabIndex={0}
-                    onClick={() => navigateTo('attendance', 'Attendance', { student: students[activeChildIndex], studentId: child.id })}
-                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigateTo('attendance', 'Attendance', { student: students[activeChildIndex], studentId: child.id }); } }}
+                    onClick={() => navigateTo('attendance', t('unifiedParentHome.attendance'), { student: students[activeChildIndex], studentId: child.id })}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigateTo('attendance', t('unifiedParentHome.attendance'), { student: students[activeChildIndex], studentId: child.id }); } }}
                     className="bg-white p-5 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex items-center justify-between cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 >
                     <div className="flex items-center gap-4">
@@ -372,8 +372,8 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                         whileTap={{ scale: 0.98 }}
                         role="button"
                         tabIndex={0}
-                        onClick={() => navigateTo('noticeboard', 'Noticeboard', {})}
-                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigateTo('noticeboard', 'Noticeboard', {}); } }}
+                        onClick={() => navigateTo('noticeboard', t('unifiedParentHome.noticeboard'), {})}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigateTo('noticeboard', t('unifiedParentHome.noticeboard'), {}); } }}
                         className="bg-gradient-to-r from-indigo-600 to-purple-700 p-5 rounded-2xl shadow-lg hover:shadow-xl transition-shadow text-white flex items-center justify-between cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/60"
                     >
                         <div className="flex items-center gap-4">

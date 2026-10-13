@@ -180,7 +180,7 @@ const MediaGenerator: React.FC = () => {
                             <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileUpload} />
                             {uploadImage ? (
                                 <div className="relative inline-block">
-                                    <img src={uploadImage} className="h-20 rounded-md border" alt="Upload" />
+                                    <img src={uploadImage} className="h-20 rounded-md border" alt={t('mediaGenerator.upload')} />
                                     <button onClick={(e) => { e.stopPropagation(); setUploadImage(null); }} className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1"><XCircleIcon className="w-4 h-4" /></button>
                                 </div>
                             ) : (

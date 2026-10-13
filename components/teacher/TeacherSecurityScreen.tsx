@@ -98,7 +98,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
         <div className="p-4 space-y-5 bg-gray-50 h-full overflow-y-auto">
             <div className="bg-white rounded-xl shadow-sm p-2">
                 <button
-                    onClick={() => navigateTo('teacherChangePassword', 'Change Password')}
+                    onClick={() => navigateTo('teacherChangePassword', t('teacherSecurityScreen.changePassword'))}
                     className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg"
                 >
                     <div className="flex items-center space-x-4">

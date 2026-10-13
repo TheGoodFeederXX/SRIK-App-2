@@ -302,32 +302,32 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
         // Class Teacher only — the class-wide management hub.
         ...(isClassTeacher ? [{
           label: t('teacherOverview.myClass'), icon: <UserGroupIcon className="h-7 w-7" />,
-          action: () => navigateTo('myClassHub', 'My Class', { teacherId, schoolId, currentBranchId, classId: myRoles.class_teacher_of[0]?.id })
+          action: () => navigateTo('myClassHub', t('teacherOverview.myClass'), { teacherId, schoolId, currentBranchId, classId: myRoles.class_teacher_of[0]?.id })
         }] : []),
-        { label: t('teacherOverview.attendance'), icon: <TeacherAttendanceIcon className="h-7 w-7" />, action: () => navigateTo('selectClassForAttendance', 'Select Class', { teacherId, schoolId }) },
-        { label: t('teacherOverview.myAttendance'), icon: <CheckCircleIcon className="h-7 w-7" />, action: () => navigateTo('teacherSelfAttendance', 'My Attendance', { teacherId }) },
-        { label: t('teacherOverview.gradebook'), icon: <CalculatorIcon className="h-7 w-7" />, action: () => navigateTo('classGradebook', 'Class Gradebook', { teacherId }) },
-        { label: "Exams", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('examManagement', 'Manage Exams', { schoolId, teacherId, branchId: currentBranchId }) },
-        { label: t('teacherOverview.assessments'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('assessmentsHub', 'Assessments & Quizzes', { teacherId, branchId: currentBranchId }) },
-        { label: t('teacherOverview.aiPlanner'), icon: <SparklesIcon className="h-7 w-7" />, action: () => navigateTo('lessonPlanner', 'AI Lesson Planner', { teacherId }) },
-        { label: t('teacherOverview.lessonNotes'), icon: <BookOpenIcon className="h-7 w-7" />, action: () => navigateTo('lessonNotesUpload', 'Upload Lesson Notes', { teacherId }) },
+        { label: t('teacherOverview.attendance'), icon: <TeacherAttendanceIcon className="h-7 w-7" />, action: () => navigateTo('selectClassForAttendance', t('teacherOverview.selectClass'), { teacherId, schoolId }) },
+        { label: t('teacherOverview.myAttendance'), icon: <CheckCircleIcon className="h-7 w-7" />, action: () => navigateTo('teacherSelfAttendance', t('teacherOverview.myAttendance'), { teacherId }) },
+        { label: t('teacherOverview.gradebook'), icon: <CalculatorIcon className="h-7 w-7" />, action: () => navigateTo('classGradebook', t('teacherOverview.classGradebook'), { teacherId }) },
+        { label: "Exams", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('examManagement', t('teacherOverview.manageExams'), { schoolId, teacherId, branchId: currentBranchId }) },
+        { label: t('teacherOverview.assessments'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('assessmentsHub', t('teacherOverview.assessmentsQuizzes'), { teacherId, branchId: currentBranchId }) },
+        { label: t('teacherOverview.aiPlanner'), icon: <SparklesIcon className="h-7 w-7" />, action: () => navigateTo('lessonPlanner', t('teacherOverview.aiLessonPlanner'), { teacherId }) },
+        { label: t('teacherOverview.lessonNotes'), icon: <BookOpenIcon className="h-7 w-7" />, action: () => navigateTo('lessonNotesUpload', t('teacherOverview.uploadLessonNotes'), { teacherId }) },
         // "Reports" removed: already a direct nav item on both desktop (sidebar) and mobile (bottom nav).
       ],
     },
     {
       title: t('teacherOverview.students'),
       items: [
-        { label: t('teacherOverview.addStudent'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>, action: () => navigateTo('addStudent', 'Add Student', { schoolId }) },
-        { label: t('teacherOverview.atRiskStudents'), icon: atRiskIcon, action: () => navigateTo('myAtRiskStudents', 'At-Risk Students') },
-        { label: t('teacherOverview.observationFeedback'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('myObservations', 'Classroom Observation Feedback') },
-        { label: t('teacherOverview.studentGate'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>, action: () => navigateTo('studentGate', 'Student Departure') },
+        { label: t('teacherOverview.addStudent'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>, action: () => navigateTo('addStudent', t('teacherOverview.addStudent'), { schoolId }) },
+        { label: t('teacherOverview.atRiskStudents'), icon: atRiskIcon, action: () => navigateTo('myAtRiskStudents', t('teacherOverview.atRiskStudents')) },
+        { label: t('teacherOverview.observationFeedback'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('myObservations', t('teacherOverview.classroomObservationFeedback')) },
+        { label: t('teacherOverview.studentGate'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>, action: () => navigateTo('studentGate', t('teacherOverview.studentDeparture')) },
       ],
     },
     {
       title: t('teacherOverview.communication'),
       items: [
-        { label: t('teacherOverview.appointments'), icon: <CalendarPlusIcon className="h-7 w-7" />, action: () => navigateTo('appointments', 'Appointments', { teacherId }) },
-        { label: t('teacherOverview.virtualClass'), icon: <VideoIcon className="h-7 w-7" />, action: () => navigateTo('virtualClass', 'Virtual Classroom', { teacherId, schoolId }) },
+        { label: t('teacherOverview.appointments'), icon: <CalendarPlusIcon className="h-7 w-7" />, action: () => navigateTo('appointments', t('teacherOverview.appointments'), { teacherId }) },
+        { label: t('teacherOverview.virtualClass'), icon: <VideoIcon className="h-7 w-7" />, action: () => navigateTo('virtualClass', t('teacherOverview.virtualClassroom'), { teacherId, schoolId }) },
         // "Forum" removed: duplicates the Forum link already in both the
         // sidebar and the mobile bottom nav.
       ],
@@ -335,15 +335,15 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
     {
       title: t('teacherOverview.supportResources'),
       items: [
-        { label: t('teacherOverview.myFile'), icon: <BriefcaseIcon className="h-7 w-7" />, action: () => navigateTo('myPersonnelFile', 'My Personnel File', { teacherId }) },
-        { label: t('teacherOverview.scanClassroom'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10" /></svg>, action: () => navigateTo('scanClassroom', 'Scan Classroom', { teacherId }) },
-        { label: t('teacherOverview.substituteRequests'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4" /></svg>, action: () => navigateTo('substituteAssignments', 'Substitute Assignments') },
+        { label: t('teacherOverview.myFile'), icon: <BriefcaseIcon className="h-7 w-7" />, action: () => navigateTo('myPersonnelFile', t('teacherOverview.myPersonnelFile'), { teacherId }) },
+        { label: t('teacherOverview.scanClassroom'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2M7 12h10" /></svg>, action: () => navigateTo('scanClassroom', t('teacherOverview.scanClassroom'), { teacherId }) },
+        { label: t('teacherOverview.substituteRequests'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4M16 17H4m0 0l4 4m-4-4l4-4" /></svg>, action: () => navigateTo('substituteAssignments', t('teacherOverview.substituteAssignments')) },
         // "Resources" folded into Learning Hub below — AI Lesson Planner already
         // has its own tile above; E-Learning Library and Educational Games are
         // now quick-links inside the Learning Hub screen instead of a separate hub.
-        { label: t('teacherOverview.learningHub'), icon: <ElearningIcon className="h-7 w-7" />, action: () => navigateTo('learningHub', 'Learning Hub', { teacherId, schoolId }) },
-        { label: t('teacherOverview.reportIncident'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, action: () => navigateTo('mySopCases', 'My Reported Cases') },
-        { label: t('teacherOverview.reportAnIssue'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>, action: () => navigateTo('reportMaintenanceIssue', 'Report an Issue') },
+        { label: t('teacherOverview.learningHub'), icon: <ElearningIcon className="h-7 w-7" />, action: () => navigateTo('learningHub', t('teacherOverview.learningHub'), { teacherId, schoolId }) },
+        { label: t('teacherOverview.reportIncident'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, action: () => navigateTo('mySopCases', t('teacherOverview.myReportedCases')) },
+        { label: t('teacherOverview.reportAnIssue'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>, action: () => navigateTo('reportMaintenanceIssue', t('teacherOverview.reportAnIssue')) },
       ],
     },
   ];
@@ -424,7 +424,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
             <div className="flex justify-between items-end mb-2 px-1">
               <h3 className="text-lg font-bold text-gray-800">{t('teacherOverview.recentAssignments')}</h3>
               {ungradedAssignments.length > 1 && (
-                <button onClick={() => navigateTo('assignmentsList', 'Manage Assignments', {})} className="text-sm font-bold text-purple-600 hover:text-purple-800 px-2 py-1.5 -my-1 -mr-2 rounded-lg">
+                <button onClick={() => navigateTo('assignmentsList', t('teacherOverview.manageAssignments'), {})} className="text-sm font-bold text-purple-600 hover:text-purple-800 px-2 py-1.5 -my-1 -mr-2 rounded-lg">
                   See more
                 </button>
               )}
@@ -456,7 +456,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                     <p className="text-sm text-gray-500">{a.class_name}</p>
                   </div>
                   <div className="flex items-center space-x-2 text-purple-600 font-semibold">
-                    <span>View</span>
+                    <span>{t('teacherOverview.view')}</span>
                     <ChevronRightIcon className="w-5 h-5" />
                   </div>
                 </motion.button>
@@ -518,7 +518,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
               </div>
             ) : todaySchedule.length === 0 ? (
               <div className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">
-                No classes scheduled for today.
+                {t('teacherOverview.noClassesScheduledForToday')}
               </div>
             ) : (
               <div className="space-y-3">
@@ -604,14 +604,14 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
 
                 {todaySchedule.length > 4 && (
                   <button
-                    onClick={() => navigateTo('timetable', 'Timetable Dashboard', {})}
+                    onClick={() => navigateTo('timetable', t('teacherOverview.timetableDashboard'), {})}
                     className="text-sm font-semibold text-purple-600 w-full text-center mt-1 flex items-center justify-center gap-1 group"
                   >
                     See {todaySchedule.length - 4} more classes
                     <ChevronRightIcon className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
                 )}
-                <button onClick={() => navigateTo('timetable', 'Timetable Dashboard', {})} className="text-sm font-semibold text-purple-600 w-full text-center mt-1 py-2.5 rounded-lg hover:bg-purple-50 transition-colors">
+                <button onClick={() => navigateTo('timetable', t('teacherOverview.timetableDashboard'), {})} className="text-sm font-semibold text-purple-600 w-full text-center mt-1 py-2.5 rounded-lg hover:bg-purple-50 transition-colors">
                   View Full Timetable
                 </button>
               </div>

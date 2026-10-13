@@ -190,7 +190,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
             setSummary(response.text);
         } catch (error) {
             console.error("AI Error:", error);
-            setSummary("Unable to generate summary at this time.");
+            setSummary(t('studentProfileDashboard.unableToGenerateSummary'));
         } finally {
             setIsGeneratingSummary(false);
         }
@@ -554,7 +554,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                         whileHover={{ y: -2, boxShadow: '0 8px 16px -4px rgba(93, 92, 222, 0.25)' }}
                         whileTap={{ scale: 0.95, y: 0 }}
                         transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                        onClick={() => navigateTo('idCardManagement', 'Student ID Card', { initialUser: student, initialView: 'students' })}
+                        onClick={() => navigateTo('idCardManagement', t('studentProfileDashboard.studentIDCard'), { initialUser: student, initialView: 'students' })}
                         className="flex flex-col items-center justify-center gap-1.5 py-4 bg-[#EEF2FF] text-[#5D5CDE] rounded-2xl hover:bg-[#E0E7FF] transition-colors"
                     >
                         <CreditCard className="w-5 h-5" />

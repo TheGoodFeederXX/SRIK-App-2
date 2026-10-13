@@ -21,7 +21,7 @@ const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateT
             <div className="flex items-center justify-between gap-3 px-4 py-3 bg-white border-b border-gray-100 shrink-0">
                 <div className="flex items-center gap-3 min-w-0">
                     <button
-                        onClick={() => navigateTo('gamesHub', 'Games Hub')}
+                        onClick={() => navigateTo('gamesHub', t('worksheetsEmbedScreen.gamesHub'))}
                         className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors shrink-0"
                         aria-label={t('worksheetsEmbedScreen.backToGamesHub')}
                     >

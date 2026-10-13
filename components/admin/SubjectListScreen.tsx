@@ -302,7 +302,7 @@ export const SubjectListScreen: React.FC = () => {
 
                                 <div>
                                     <label htmlFor="subjectCategory" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Category
+                                        {t('subjectListScreen.category')}
                                     </label>
                                     <select
                                         id="subjectCategory"

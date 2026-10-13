@@ -220,7 +220,7 @@ const CommunityResourceDirectory: React.FC = () => {
                                     </div>
 
                                     <motion.button whileTap={{ scale: 0.97 }} className="w-full px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 font-semibold text-sm transition-colors">
-                                        View Details
+                                        {t('communityResourceDirectory.viewDetails')}
                                     </motion.button>
                                 </div>
                             </motion.div>

@@ -20,7 +20,7 @@ export const MainAdminOnly: React.FC<{ title?: string; onBack?: () => void; chil
                 <h3 className="font-bold text-slate-800 mb-1">{t('mainAdminOnly.managedByTheMainAdmin')}</h3>
                 <p className="text-sm text-slate-600 mb-4">{title} is a school-wide setting and can only be changed by the school’s main administrator.</p>
                 <button onClick={goBack} className="inline-flex items-center gap-1.5 rounded-xl bg-white border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:border-indigo-300 hover:text-indigo-700">
-                    <ArrowLeft className="h-4 w-4" /> Go back
+                    <ArrowLeft className="h-4 w-4" /> {t('mainAdminOnly.goBack')}
                 </button>
             </div>
         </div>

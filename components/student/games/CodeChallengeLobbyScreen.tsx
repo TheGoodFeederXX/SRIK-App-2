@@ -55,7 +55,7 @@ const CodeChallengeLobbyScreen: React.FC<CodeChallengeLobbyScreenProps> = ({ nav
 
             <div className="w-full max-w-sm space-y-4">
                 <button
-                    onClick={() => navigateTo('codeChallengeGame', 'Code Challenge', { student })}
+                    onClick={() => navigateTo('codeChallengeGame', t('codeChallengeLobbyScreen.codeChallenge'), { student })}
                     className="w-full py-4 text-xl font-bold text-white bg-purple-600 rounded-2xl shadow-xl hover:bg-purple-700 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-3"
                 >
                     <CpuIcon className="w-6 h-6 shrink-0" />

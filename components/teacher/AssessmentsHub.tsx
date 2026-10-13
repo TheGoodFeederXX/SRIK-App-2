@@ -20,7 +20,7 @@ const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, 
       color: 'bg-indigo-500',
       lightColor: 'bg-indigo-50',
       textColor: 'text-indigo-600',
-      action: () => navigateTo('assignmentsList', 'Manage Assignments', { teacherId, branchId: currentBranchId })
+      action: () => navigateTo('assignmentsList', t('assessmentsHub.manageAssignments'), { teacherId, branchId: currentBranchId })
     },
     {
       id: 'quizzes',
@@ -30,7 +30,7 @@ const AssessmentsHub: React.FC<AssessmentsHubProps> = ({ navigateTo, teacherId, 
       color: 'bg-orange-500',
       lightColor: 'bg-orange-50',
       textColor: 'text-orange-600',
-      action: () => navigateTo('quizBuilder', 'Quiz Builder', { teacherId })
+      action: () => navigateTo('quizBuilder', t('assessmentsHub.quizBuilder'), { teacherId })
     }
   ];
 

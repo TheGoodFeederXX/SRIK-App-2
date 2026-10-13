@@ -161,7 +161,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
                         <p className="text-lg font-semibold text-gray-900">{salaryData.currency}</p>
                     </div>
                     <div>
-                        <p className="text-sm text-gray-600">Status</p>
+                        <p className="text-sm text-gray-600">{t('teacherSalaryProfile.status')}</p>
                         <span className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${salaryData.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600'}`}>
                             {salaryData.is_active ? 'Active' : 'Inactive'}
                         </span>
@@ -226,7 +226,7 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
                                     <button
                                         onClick={() => navigateTo?.('payslips', 'My Payslips', { initialPayslipId: payslip.id })}
                                         className="ml-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
-                                        View Details
+                                        {t('teacherSalaryProfile.viewDetails')}
                                     </button>
                                 </div>
                             </div>

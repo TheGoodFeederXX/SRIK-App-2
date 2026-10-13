@@ -22,7 +22,7 @@ const LessonPlannerScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('lessonPlannerScreen.lessonPlanner')}
         explanation="Lesson plans are not stored here yet. Teachers keep their own, and nothing entered here would be saved."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('lessonPlannerScreen.dashboard'))}
     />
     );
 };

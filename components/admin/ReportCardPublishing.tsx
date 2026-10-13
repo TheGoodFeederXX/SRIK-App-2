@@ -330,7 +330,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
             <h2 className="text-base md:text-xl font-black text-gray-900 tracking-tight truncate flex flex-wrap items-center gap-2">
               {selectedClass ? 'Class Report Cards' : 'Report Cards'}
               <span className="px-2 py-0.5 rounded-lg bg-white border border-gray-200 text-[8px] md:text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
-                SRI Al-Khairiah
+                {t('reportCardPublishing.sriAlKhairiah')}
               </span>
             </h2>
           </div>
@@ -603,7 +603,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                       className="flex-1 p-2.5 md:p-3 text-[9px] md:text-xs font-black uppercase tracking-widest text-gray-500 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:text-gray-900 transition-all flex items-center justify-center gap-2 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
                     >
                       <EyeIcon className="w-3 md:w-4 h-3 md:h-4" />
-                      Preview
+                      {t('reportCardPublishing.preview')}
                     </button>
 
                     {student.hasReport && (
@@ -631,7 +631,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                         className="flex-1 p-2.5 md:p-3 text-[9px] md:text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-50 border border-amber-100 rounded-xl hover:bg-amber-100 transition-all flex items-center justify-center gap-2 active:scale-95"
                       >
                         <RefreshIcon className="w-3 md:w-4 h-3 md:h-4" />
-                        Unpublish
+                        {t('reportCardPublishing.unpublish')}
                       </button>
                     )}
                     {student.status === 'Draft' && (

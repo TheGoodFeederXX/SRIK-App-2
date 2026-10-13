@@ -602,7 +602,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
                 <AdminMessagesScreen
                     {...routeProps}
                     {...commonProps}
-                    onNewChat={() => navigateTo('adminNewChat', 'New Message')}
+                    onNewChat={() => navigateTo('adminNewChat', t('adminDashboard.newMessage'))}
                     onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || 'Chat', {
                         conversationId: convo.id,
                         roomDetails: convo

@@ -11,9 +11,9 @@ interface SelectUserTypeToAddScreenProps {
 const SelectUserTypeToAddScreen: React.FC<SelectUserTypeToAddScreenProps> = ({ navigateTo }) => {
     const { t } = useTranslation();
   const userTypes = [
-    { type: 'Student', icon: <StudentsIcon className="h-8 w-8 text-blue-700" />, action: () => navigateTo('addStudent', 'Add New Student', {}) },
-    { type: 'Teacher', icon: <StaffIcon className="h-8 w-8 text-purple-500" />, action: () => navigateTo('addTeacher', 'Add New Teacher', {}) },
-    { type: 'Parent', icon: <UsersIcon className="h-8 w-8 text-orange-500" />, action: () => navigateTo('addParent', 'Add New Parent', {}) },
+    { type: 'Student', icon: <StudentsIcon className="h-8 w-8 text-blue-700" />, action: () => navigateTo('addStudent', t('selectUserTypeToAddScreen.addNewStudent'), {}) },
+    { type: 'Teacher', icon: <StaffIcon className="h-8 w-8 text-purple-500" />, action: () => navigateTo('addTeacher', t('selectUserTypeToAddScreen.addNewTeacher'), {}) },
+    { type: 'Parent', icon: <UsersIcon className="h-8 w-8 text-orange-500" />, action: () => navigateTo('addParent', t('selectUserTypeToAddScreen.addNewParent'), {}) },
   ];
 
   return (

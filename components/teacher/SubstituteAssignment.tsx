@@ -22,7 +22,7 @@ const SubstituteAssignment: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('substituteAssignment.substituteAssignments')}
         explanation="Cover arrangements are not managed here yet. The office tells you directly when you are covering a class."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('substituteAssignment.dashboard'))}
     />
     );
 };

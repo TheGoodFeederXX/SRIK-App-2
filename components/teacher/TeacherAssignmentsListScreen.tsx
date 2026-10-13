@@ -183,7 +183,7 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
                 <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.92 }}
-                    onClick={() => navigateTo('assignmentCreator', 'Create Assignment', {})}
+                    onClick={() => navigateTo('assignmentCreator', t('teacherAssignmentsListScreen.createAssignment'), {})}
                     className="p-4 bg-indigo-600 text-white rounded-full shadow-xl hover:bg-indigo-700 transition-colors"
                 >
                     <PlusIcon className="h-6 w-6" />

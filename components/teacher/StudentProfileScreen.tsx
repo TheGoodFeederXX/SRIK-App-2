@@ -153,7 +153,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
 
                 <div className="lg:col-span-3">
                     <button
-                        onClick={() => navigateTo('selectTermForReport', 'Select Term', { student, subjectContext })}
+                        onClick={() => navigateTo('selectTermForReport', t('studentProfileScreen.selectTerm'), { student, subjectContext })}
                         className="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors"
                     >
                         <ReportIcon className="w-5 h-5" />
@@ -244,7 +244,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                             />
                             <div className="flex justify-end space-x-2">
                                 <button onClick={() => setIsAddingNote(false)} className="px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-                                <button onClick={handleAddNote} className="px-3 py-1 text-xs font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">Save</button>
+                                <button onClick={handleAddNote} className="px-3 py-1 text-xs font-semibold text-white bg-purple-600 rounded-md hover:bg-purple-700">{t('studentProfileScreen.save')}</button>
                             </div>
                         </div>
                     )}

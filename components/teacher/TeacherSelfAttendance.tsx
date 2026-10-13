@@ -145,7 +145,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        onClick={() => navigateTo('attendanceHistory', 'Attendance History', {})}
+                        onClick={() => navigateTo('attendanceHistory', t('teacherSelfAttendance.attendanceHistory'), {})}
                         className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center hover:bg-purple-200 transition-colors"
                         title={t('teacherSelfAttendance.viewAttendanceHistory')}
                     >

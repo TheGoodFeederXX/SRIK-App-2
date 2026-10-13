@@ -22,7 +22,7 @@ const ReportMaintenanceIssue: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('reportMaintenanceIssue.reportAMaintenanceIssue')}
         explanation="Maintenance reports are not recorded here yet. Please tell the office about a fault, and it will be logged their way."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('reportMaintenanceIssue.dashboard'))}
     />
     );
 };

@@ -22,7 +22,7 @@ const MyAtRiskStudents: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('myAtRiskStudents.myAtRiskStudents')}
         explanation="This school does not keep an at-risk flag on a child. Attendance and marks are in the register and the gradebook, which are the honest sources."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('myAtRiskStudents.dashboard'))}
     />
     );
 };

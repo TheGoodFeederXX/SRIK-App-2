@@ -230,7 +230,7 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
                     <h3 className="font-bold text-lg">{t('parentDashboard.personalizedAdvice')}</h3>
                     <p className="text-sm opacity-90">{t('parentDashboard.getAIPoweredTipsForYourChild')}</p>
                 </div>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo('aiParentingTips', 'AI Parenting Tips', { student: { ...student, academicPerformance: academicRecords } })} className="bg-white/20 min-h-11 px-4 py-2 rounded-lg font-semibold whitespace-nowrap flex-shrink-0 hover:bg-white/30 transition-colors flex items-center space-x-2">
+                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo('aiParentingTips', t('parentDashboard.aiParentingTips'), { student: { ...student, academicPerformance: academicRecords } })} className="bg-white/20 min-h-11 px-4 py-2 rounded-lg font-semibold whitespace-nowrap flex-shrink-0 hover:bg-white/30 transition-colors flex items-center space-x-2">
                     <SparklesIcon className="h-5 w-5" /><span>{t('parentDashboard.getTips')}</span>
                 </motion.button>
             </motion.div>
@@ -737,7 +737,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         permissionSlips: PermissionSlipScreen,
         appointments: (props: any) => <AppointmentScreen {...props} parentId={user?.id} students={students} />,
         aiParentingTips: AIParentingTipsScreen,
-        messages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', 'New Chat')} />,
+        messages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', t('parentDashboard.newChat'))} />,
         newChat: ParentNewChatScreen,
         chat: (props: any) => <ChatScreen {...props} currentUserId={currentUserId ?? undefined} themeColor="green" />,
         schoolUtilities: SchoolUtilitiesScreen,
@@ -752,7 +752,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         attendance: (props: any) => <AttendanceScreen {...props} />,
         // Alias mappings for widget navigation
         attendanceOverview: (props: any) => <AttendanceScreen {...props} />,
-        parentMessages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', 'New Chat')} />,
+        parentMessages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', t('parentDashboard.newChat'))} />,
         schoolCalendar: CalendarScreen,
         assignments: (props: any) => {
             const student = props.student || students[0];
@@ -881,7 +881,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
             {view !== 'aiAssistant' && view !== 'chat' && (
                 <AIChatWidget
                     dashboardType={DashboardType.Parent}
-                    onClick={() => navigateTo('aiAssistant', 'AI Assistant', {})}
+                    onClick={() => navigateTo('aiAssistant', t('parentDashboard.aiAssistant'), {})}
                 />
             )}
             <PremiumModal

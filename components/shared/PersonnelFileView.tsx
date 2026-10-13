@@ -318,13 +318,13 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                         <h3 className="font-bold text-gray-900 mb-2">{t('personnelFileView.qualifications')}</h3>
                         {infoRow('Subject Specialty', (teacher.subject_specialty || []).join(', '))}
                         {infoRow('Curriculum Eligibility', (teacher.curriculum_eligibility || []).join(', '))}
-                        {infoRow('Degree Certificate', teacher.degree_certificate ? <a className="text-indigo-600 underline" href={teacher.degree_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
+                        {infoRow('Degree Certificate', teacher.degree_certificate ? <a className="text-indigo-600 underline" href={teacher.degree_certificate} target="_blank" rel="noopener noreferrer">{t('personnelFileView.view')}</a> : '—')}
                         {/* The certificate named was the teaching licence of a
                             foreign country. A Malaysian teacher does not hold
                             one, so the file listed every teacher as missing a
                             foreign licence; the document is kept under the
                             neutral Malay term. */}
-                        {infoRow('Sijil Perguruan', teacher.trcn_certificate ? <a className="text-indigo-600 underline" href={teacher.trcn_certificate} target="_blank" rel="noopener noreferrer">View</a> : '—')}
+                        {infoRow('Sijil Perguruan', teacher.trcn_certificate ? <a className="text-indigo-600 underline" href={teacher.trcn_certificate} target="_blank" rel="noopener noreferrer">{t('personnelFileView.view')}</a> : '—')}
                         {infoRow('British Qualification', teacher.british_qualification)}
                     </div>
                 </div>

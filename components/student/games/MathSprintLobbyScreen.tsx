@@ -34,7 +34,7 @@ const MathSprintLobbyScreen: React.FC<MathSprintLobbyScreenProps> = ({ navigateT
 
             <div className="w-full max-w-sm mt-8 space-y-4">
                 <button
-                    onClick={() => navigateTo('mathSprintGame', 'Math Sprint', { student })}
+                    onClick={() => navigateTo('mathSprintGame', t('mathSprintLobbyScreen.mathSprint'), { student })}
                     className="w-full py-4 text-lg font-bold text-white bg-orange-500 rounded-xl shadow-lg hover:bg-orange-600 transition-colors"
                 >
                     Play Solo

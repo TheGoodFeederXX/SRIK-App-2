@@ -10,7 +10,7 @@ interface SystemSettingsScreenProps {
 
 const settingsCategories = [
   { view: 'upgrade', titleKey: 'systemSettingsScreen.billingPlan', descriptionKey: 'systemSettingsScreen.viewYourCurrentTermManageYourPlanAndUpgrade', icon: <CreditCard className="h-6 w-6" />, color: 'text-green-600 bg-green-100' },
-  { view: 'appearanceSettings', titleKey: 'systemSettingsScreen.appearanceTheme', descriptionKey: 'Switch Normal or Liquid Glass, and change the app accent colour.', icon: <Sparkles className="h-6 w-6" />, color: 'text-indigo-500 bg-indigo-100' },
+  { view: 'appearanceSettings', titleKey: 'systemSettingsScreen.appearanceTheme', descriptionKey: 'systemSettingsScreen.switchNormalOrLiquidGlass', icon: <Sparkles className="h-6 w-6" />, color: 'text-indigo-500 bg-indigo-100' },
   { view: 'studentList', titleKey: 'systemSettingsScreen.studentManagement', descriptionKey: 'systemSettingsScreen.manageStudentRecordsAndEnrollment', icon: <UserGroupIcon />, color: 'text-blue-500 bg-blue-100' },
   { view: 'teacherList', titleKey: 'systemSettingsScreen.manageTeachers', descriptionKey: 'systemSettingsScreen.manageTeacherProfilesAndAssignments', icon: <ProfileIcon />, color: 'text-purple-500 bg-purple-100' },
   { view: 'parentList', titleKey: 'systemSettingsScreen.parentManagement', descriptionKey: 'systemSettingsScreen.manageParentInformationAndLinks', icon: <UserGroupIcon />, color: 'text-orange-500 bg-orange-100' },

@@ -138,7 +138,7 @@ const TodayFocus: React.FC<{
                 timeRemaining: daysLeft > 0 ? `${daysLeft}d` : 'Today',
                 daysLeft,
                 type: 'assignment' as const,
-                onClick: () => navigateTo('assignmentSubmission', 'Submit Assignment', { assignment: hw }),
+                onClick: () => navigateTo('assignmentSubmission', t('studentDashboard.submitAssignment'), { assignment: hw }),
                 totalCount: assignments.length + quizzes.length
             };
         }
@@ -176,14 +176,14 @@ const TodayFocus: React.FC<{
                     <NextUpTask {...nextTask} />
                     {(nextTask.totalCount > 1) ? (
                         <button
-                            onClick={() => navigateTo('assignments', 'My Assignments')}
+                            onClick={() => navigateTo('assignments', t('studentDashboard.myAssignments'))}
                             className="w-full text-xs text-gray-500 text-center font-medium bg-gray-100/50 py-2.5 rounded-full hover:bg-gray-200/50 transition-colors"
                         >
                             + {nextTask.totalCount - 1} more assessment{(nextTask.totalCount - 1) > 1 ? 's' : ''} waiting for you
                         </button>
                     ) : (
                         <button
-                            onClick={() => navigateTo('assignments', 'My Assignments')}
+                            onClick={() => navigateTo('assignments', t('studentDashboard.myAssignments'))}
                             className="w-full text-xs text-gray-400 text-center font-medium hover:text-gray-600 transition-colors"
                         >
                             View All Tasks
@@ -205,7 +205,7 @@ const TodayFocus: React.FC<{
                         <h4 className="text-sm font-semibold text-gray-600">{t('studentDashboard.todaySSchedule')}</h4>
                         {schedule.length > 3 && (
                             <button
-                                onClick={() => navigateTo('timetable', 'Timetable Dashboard')}
+                                onClick={() => navigateTo('timetable', t('studentDashboard.timetableDashboard'))}
                                 className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors px-3 py-2 -my-1 -mr-2 rounded-lg"
                             >
                                 See More
@@ -318,21 +318,21 @@ const Overview: React.FC<{
     }, []);
 
     const quickAccessItems = [
-        { label: t('studentDashboard.subjects'), icon: <BookOpenIcon />, action: () => navigateTo('subjects', 'My Subjects') },
-        { label: t('studentDashboard.timetable'), icon: <CalendarIcon />, action: () => navigateTo('timetable', 'Timetable Dashboard') },
-        { label: t('studentDashboard.results'), icon: <ChartBarIcon />, action: () => navigateTo('results', 'Academic Performance', { studentId: student.id }) },
+        { label: t('studentDashboard.subjects'), icon: <BookOpenIcon />, action: () => navigateTo('subjects', t('studentDashboard.mySubjects')) },
+        { label: t('studentDashboard.timetable'), icon: <CalendarIcon />, action: () => navigateTo('timetable', t('studentDashboard.timetableDashboard')) },
+        { label: t('studentDashboard.results'), icon: <ChartBarIcon />, action: () => navigateTo('results', t('studentDashboard.academicPerformance'), { studentId: student.id }) },
         // "Games" removed: duplicates the Games tab already in both the
         // sidebar and the mobile bottom nav.
-        { label: t('studentDashboard.learningHub'), icon: <ElearningIcon />, action: () => navigateTo('learningHub', 'Learning Hub') },
-        { label: t('studentDashboard.freeResources'), icon: <GlobeIcon />, action: () => navigateTo('freeLearningResources', 'Free Learning Resources') },
+        { label: t('studentDashboard.learningHub'), icon: <ElearningIcon />, action: () => navigateTo('learningHub', t('studentDashboard.learningHub')) },
+        { label: t('studentDashboard.freeResources'), icon: <GlobeIcon />, action: () => navigateTo('freeLearningResources', t('studentDashboard.freeLearningResources')) },
         // Reporting channels — owner asked for them here (2026-09-18).
-        { label: t('studentDashboard.reportAConcern'), icon: <ShieldCheckIcon />, action: () => navigateTo('anonymousReporting', 'Report a Concern') },
-        { label: t('studentDashboard.discreetSupport'), icon: <HeartIcon />, action: () => navigateTo('discreetReporting', 'Discreet Support') },
+        { label: t('studentDashboard.reportAConcern'), icon: <ShieldCheckIcon />, action: () => navigateTo('anonymousReporting', t('studentDashboard.reportAConcern')) },
+        { label: t('studentDashboard.discreetSupport'), icon: <HeartIcon />, action: () => navigateTo('discreetReporting', t('studentDashboard.discreetSupport')) },
     ];
 
     const aiTools = [
-        { label: t('studentDashboard.aiStudyBuddy'), description: t('studentDashboard.stuckOnAProblem'), color: 'from-purple-500 to-indigo-600', action: () => navigateTo('studyBuddy', 'Study Buddy') },
-        { label: t('studentDashboard.aiAdventureQuest'), description: t('studentDashboard.turnAnyTextIntoAFunQuiz'), color: 'from-teal-400 to-blue-500', action: () => navigateTo('adventureQuest', 'AI Adventure Quest', {}) },
+        { label: t('studentDashboard.aiStudyBuddy'), description: t('studentDashboard.stuckOnAProblem'), color: 'from-purple-500 to-indigo-600', action: () => navigateTo('studyBuddy', t('studentDashboard.studyBuddy')) },
+        { label: t('studentDashboard.aiAdventureQuest'), description: t('studentDashboard.turnAnyTextIntoAFunQuiz'), color: 'from-teal-400 to-blue-500', action: () => navigateTo('adventureQuest', t('studentDashboard.aiAdventureQuest'), {}) },
     ];
 
     if (loading) return (
@@ -424,7 +424,7 @@ const Overview: React.FC<{
                                     exit={{ opacity: 0, scale: 0.96, height: 0, marginBottom: 0 }}
                                     transition={{ type: 'spring', stiffness: 400, damping: 32 }}
                                     whileTap={{ scale: 0.98 }}
-                                    onClick={() => navigateTo('liveClass', 'Virtual Classroom', { userRole: 'student', userId: student.id, displayName: student.name })}
+                                    onClick={() => navigateTo('liveClass', t('studentDashboard.virtualClassroom'), { userRole: 'student', userId: student.id, displayName: student.name })}
                                     style={{ animation: 'liveClassGlow 1.8s ease-in-out infinite' }}
                                     className="w-full flex items-center gap-3 p-4 rounded-2xl text-white bg-gradient-to-r from-red-500 to-rose-600 overflow-hidden"
                                 >
@@ -729,7 +729,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
     };
 
     const handleNotificationClick = () => {
-        navigateTo('notifications', 'Notifications', {});
+        navigateTo('notifications', t('studentDashboard.notifications'), {});
     };
 
     const commonProps = {
@@ -953,10 +953,10 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                                     <p className="text-gray-500 text-xs">{t('studentDashboard.youReceivedMessagesWhileYouWereAway')}</p>
                                 </div>
                                 <button
-                                    onClick={() => { setUnreadMsgCount(0); navigateTo('messages', 'Messages'); }}
+                                    onClick={() => { setUnreadMsgCount(0); navigateTo('messages', t('studentDashboard.messages')); }}
                                     className="flex-shrink-0 text-xs font-semibold text-blue-600 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl transition-colors"
                                 >
-                                    View
+                                    {t('studentDashboard.view')}
                                 </button>
                                 <button onClick={() => setUnreadMsgCount(0)} className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none" aria-label={t('studentDashboard.dismiss')}>×</button>
                             </div>

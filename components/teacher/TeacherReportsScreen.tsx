@@ -183,7 +183,7 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
                     <h2 className="text-xl font-bold text-gray-800">Reports: {getFormattedClassName(selectedClass.grade, selectedClass.section)}</h2>
                 </div>
                 <button
-                    onClick={() => navigateTo('aiPerformanceSummary', 'AI Class Summary', { students: students })}
+                    onClick={() => navigateTo('aiPerformanceSummary', t('teacherReportsScreen.aiClassSummary'), { students: students })}
                     className="mt-3 w-full flex items-center justify-center space-x-2 py-2 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
                     <AIIcon className="w-5 h-5" />
                     <span>{t('teacherReportsScreen.generateAIClassSummary')}</span>

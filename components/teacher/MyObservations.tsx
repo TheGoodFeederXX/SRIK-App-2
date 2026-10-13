@@ -22,7 +22,7 @@ const MyObservations: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('myObservations.myObservations')}
         explanation="Classroom observations are not recorded in this system yet. The office keeps these separately, so there is nothing here to show you."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('myObservations.dashboard'))}
     />
     );
 };

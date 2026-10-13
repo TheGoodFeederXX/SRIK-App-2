@@ -22,7 +22,7 @@ const VirtualClassScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('virtualClassScreen.virtualClasses')}
         explanation="Virtual classrooms are not set up for this school yet. Online sessions are arranged separately when they are needed."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('virtualClassScreen.dashboard'))}
     />
     );
 };

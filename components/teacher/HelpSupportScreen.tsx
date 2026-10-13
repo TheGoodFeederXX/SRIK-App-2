@@ -22,7 +22,7 @@ const HelpSupportScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('helpSupportScreen.helpAndSupport')}
         explanation="In-app support tickets are not switched on yet. Please contact the office directly and they will help you."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('helpSupportScreen.dashboard'))}
     />
     );
 };

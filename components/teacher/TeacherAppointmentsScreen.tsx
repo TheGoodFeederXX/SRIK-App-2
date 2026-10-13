@@ -22,7 +22,7 @@ const TeacherAppointmentsScreen: React.FC<any> = ({ navigateTo }) => {
     <ComingSoonScreen
         title={t('teacherAppointmentsScreen.appointments')}
         explanation="Appointment requests are not managed here yet. Please arrange them with the office directly."
-        handleBack={() => navigateTo('dashboard', 'Dashboard')}
+        handleBack={() => navigateTo('dashboard', t('teacherAppointmentsScreen.dashboard'))}
     />
     );
 };

@@ -139,7 +139,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                     <SectionHeader title={t('teacherReportCardPreviewScreen.academicPerformance')} />
                     <div className="overflow-x-auto text-xs">
                         <table className="min-w-full border">
-                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">{t('teacherReportCardPreviewScreen.subject')}</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">Total</th><th className="p-2 border w-12 text-center">Grade</th><th className="p-2 border">Remark</th></tr></thead>
+                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">{t('teacherReportCardPreviewScreen.subject')}</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">{t('teacherReportCardPreviewScreen.total')}</th><th className="p-2 border w-12 text-center">Grade</th><th className="p-2 border">Remark</th></tr></thead>
                             <tbody>
                                 {filteredRecords.length > 0 ? (
                                     filteredRecords.map((record, index) => (

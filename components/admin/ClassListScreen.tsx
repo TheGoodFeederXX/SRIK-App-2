@@ -155,7 +155,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                         </p>
                     </div>
                     <button
-                        onClick={() => navigateTo('classForm', 'Add New Class')}
+                        onClick={() => navigateTo('classForm', t('classListScreen.addNewClass'))}
                         className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all"
                     >
                         <PlusIcon className="w-4 h-4" />
@@ -307,7 +307,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                             Add the school's first class to begin placing students.
                         </p>
                         <button
-                            onClick={() => navigateTo('classForm', 'Add New Class')}
+                            onClick={() => navigateTo('classForm', t('classListScreen.addNewClass'))}
                             className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-all mt-6"
                         >
                             <PlusIcon className="w-4 h-4 inline mr-2" />

@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { DashboardType } from '../types';
 import { Routes, Route } from 'react-router';
@@ -17,15 +18,18 @@ const PremiumErrorPage = lazyWithRetry(() => import('./ui/PremiumErrorPage'));
  * sentence rather than a payment page for a company that has nothing to do with
  * their school.
  */
-const NotApplicablePage: React.FC = () => (
+const NotApplicablePage: React.FC = () => {
+    const { t } = useTranslation();
+    return (
     <div className="flex flex-col items-center justify-center h-full px-6 py-16 text-center">
-        <h2 className="text-xl font-bold text-gray-900 mb-2">Tiada apa-apa untuk dibayar di sini</h2>
+        <h2 className="text-xl font-bold text-gray-900 mb-2">{t('dashboardRouter.tiadaApaApaUntukDibayarDiSini')}</h2>
         <p className="text-sm text-gray-500 max-w-md leading-relaxed">
             Sistem ini dimiliki dan diuruskan oleh sekolah. Yuran murid dijelaskan di pejabat
             sekolah, bukan melalui halaman ini.
         </p>
     </div>
-);
+    );
+};
 
 const AdminDashboard = lazyWithRetry(() => import('./admin/AdminDashboard'));
 const TeacherDashboard = lazyWithRetry(() => import('./teacher/TeacherDashboard'));
@@ -52,6 +56,7 @@ interface DashboardRouterProps {
 }
 
 const DashboardRouter: React.FC<DashboardRouterProps> = (props) => {
+    const { t } = useTranslation();
     const { role, currentSchool, loading } = useAuth();
 
     useEffect(() => {
@@ -105,7 +110,7 @@ const DashboardRouter: React.FC<DashboardRouterProps> = (props) => {
             default:
                 return (
                     <PremiumErrorPage
-                        title="Access Denied"
+                        title={t('dashboardRouter.accessDenied')}
                         message="Your current role is not recognized or you don't have permission to access this area."
                         resetErrorBoundary={() => props.onLogout ? props.onLogout() : (window.location.href = '/login')}
                     />

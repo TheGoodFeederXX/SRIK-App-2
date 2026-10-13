@@ -150,6 +150,19 @@ for (const fn of ['toast.success', 'toast.error', 'toast', 'window.confirm', 'co
     });
 }
 
+// 4. The DISPLAY TITLE passed to navigateTo. `navigateTo('view', 'My Assignments')` — the
+// second argument becomes the header title the reader sees. This is display text and must follow
+// the chosen language, but it is a positional ARGUMENT, not a prop, so the rules above miss it.
+// Only the SECOND argument is touched: the first is a view ID the router matches on, and
+// translating it would break navigation.
+src = src.replace(/\bnavigateTo\s*\(\s*(['"])([^'"]+)\1\s*,\s*(['"])([^'"]{1,90})\3/g,
+    (full, q1, view, q2, title) => {
+        if (!MAP[title]) return full;
+        used.add(title); missed.delete(title);
+        changes.push(['navigateTo title', title]);
+        return full.replace(`${q2}${title}${q2}`, `t('${keyFor(title)}')`);
+    });
+
 if (changes.length === 0) {
     console.log(`  tiada perubahan: ${file}`);
     process.exit(0);
@@ -248,6 +261,10 @@ function addHooks(fileSource) {
                 if (!isContinuation) break;
             }
         }
+        // A CLASS component cannot use hooks, so adding one produces invalid code. Leave class
+        // components alone entirely; their text is translated by hand with the i18n instance.
+        const isClassComponent = /class\s+\w+\s+extends\s+(?:React\.)?(?:Component|PureComponent)/.test(fileSource);
+        if (isClassComponent) { out.push(line); continue; }
         if (!name) { out.push(line); continue; }
 
         // The body's extent, for the uses/has decision only. Count from the body's own brace.

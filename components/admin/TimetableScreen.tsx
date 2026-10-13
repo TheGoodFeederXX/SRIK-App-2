@@ -197,7 +197,7 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                         <div className="flex items-center gap-2">
                         {navigateTo && isOffice && (
                             <button
-                                onClick={() => navigateTo('timetableEditor', 'Sunting Jadual', { selectedClassId: selectedId })}
+                                onClick={() => navigateTo('timetableEditor', t('timetableScreen.suntingJadual'), { selectedClassId: selectedId })}
                                 className="flex items-center gap-2 px-3 py-2 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors text-sm"
                             >
                                 <EditIcon className="w-4 h-4" />

@@ -98,7 +98,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
     }, [selectedTeacherId, selectedCurriculum, exams]);
 
     const handleEdit = (exam: Exam) => {
-        navigateTo('addExam', 'Edit Exam', {
+        navigateTo('addExam', t('examManagement.editExam'), {
             examToEdit: exam,
             onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
                 try {
@@ -153,7 +153,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
     };
 
     const handleAddNew = () => {
-        navigateTo('addExam', 'Add New Exam', {
+        navigateTo('addExam', t('examManagement.addNewExam'), {
             onSave: async (examData: Omit<Exam, 'id' | 'isPublished' | 'teacherId'>) => {
                 try {
                     // The database requires a class, a subject and a term by ID.

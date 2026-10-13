@@ -91,7 +91,7 @@ const TeacherChangePasswordScreen: React.FC = () => {
                 </main>
                 <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">
                     <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500">
-                        Update Password
+                        {t('teacherChangePasswordScreen.updatePassword')}
                     </button>
                 </div>
             </form>
