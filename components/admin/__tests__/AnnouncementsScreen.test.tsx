@@ -118,7 +118,7 @@ describe('AnnouncementsScreen — withdrawing', () => {
         expect(screen.getByRole('button', { name: /Tarik balik/ })).toBeTruthy();
         // No delete button on a published notice: the record that families were
         // told must survive.
-        expect(screen.queryByRole('button', { name: /Padam draf/ })).toBeNull();
+        expect(screen.queryByRole('button', { name: /Delete draft/ })).toBeNull();
         expect(screen.getByText(/cannot be deleted, only withdrawn/)).toBeTruthy();
     });
 
@@ -136,7 +136,7 @@ describe('AnnouncementsScreen — withdrawing', () => {
     it('offers deletion only for a draft that was never published', async () => {
         renderScreen();
         await screen.findByText('Cuti Sekolah');
-        expect(screen.getByRole('button', { name: /Padam draf/ })).toBeTruthy();
+        expect(screen.getByRole('button', { name: /Delete draft/ })).toBeTruthy();
     });
 });
 

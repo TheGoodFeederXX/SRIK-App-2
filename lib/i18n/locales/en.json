@@ -1713,7 +1713,13 @@
     "publishNewRevision": "Publish new revision",
     "publish": "Publish",
     "average": "Average",
-    "dashMeansNotFilledIn": "A mark of — means not filled in. TH = absent, KE = exempt."
+    "dashMeansNotFilledIn": "A mark of — means not filled in. TH = absent, KE = exempt.",
+    "class": "Class",
+    "marks": "Marks",
+    "name": "Name",
+    "previewExplanation": "This is a preview — it shows what the report card would say if published now. It is not yet published and will not take effect until you publish it.",
+    "print": "Print",
+    "year": "Year"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "School Policies"
@@ -2410,7 +2416,10 @@
     "subjectPerformance": "📚 Subject Performance",
     "classComparison": "🏆 Class Comparison",
     "gambaranKeseluruhan": "📊 Overview",
-    "purataBawah50DAtauE": "average below 50% (D or E)"
+    "purataBawah50DAtauE": "average below 50% (D or E)",
+    "acrossClasses": "across {{count}} classes",
+    "marks": "Marks",
+    "marksCount": "{{count}} marks"
   },
   "academicSettingsScreen": {
     "academicConfiguration": "Academic Configuration",
@@ -2739,7 +2748,9 @@
     "audienceStudents": "Students",
     "statusDraft": "Draft — not yet published",
     "statusPublished": "Published",
-    "statusWithdrawn": "Withdrawn"
+    "statusWithdrawn": "Withdrawn",
+    "deleteDraft": "Delete draft",
+    "edit": "Edit"
   },
   "arrearsTracker": {
     "arrears": "Arrears"
@@ -3058,7 +3069,8 @@
     "cancelled": "Cancelled",
     "paymentNotDeleted": "The payment will not be deleted. It is marked as cancelled so the original record remains.",
     "amountMatches": "Total matches: {{amount}}",
-    "overAllocated": "Allocation exceeds the payment by {{amount}}."
+    "overAllocated": "Allocation exceeds the payment by {{amount}}.",
+    "remaining": "Remaining"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Fee Settings",
@@ -3511,7 +3523,8 @@
     "saveDiscount": "Save discount",
     "viewChargesPaymentsBalance": "View a student’s charges, payments and balance. Can be printed for parents.",
     "charged": "Charged",
-    "remaining": "Remaining"
+    "remaining": "Remaining",
+    "feeStatementFor": "Fee Statement — {{name}}"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Student ID Card"
@@ -3871,7 +3884,13 @@
   },
   "teacherCurriculumBadges": {
     "noCurriculumSet": "No Curriculum Set Yet",
-    "both": "Both"
+    "both": "Both",
+    "assignmentMayNotMeetStandards": "⚠️ This assignment may not meet curriculum standards and could affect examination preparation.",
+    "butClassRequires": "but this class requires",
+    "cannotBeAssignedToClass": "⚠️ Cannot be assigned to a class",
+    "curriculumMismatch": "Curriculum Does Not Match",
+    "noCurriculum": "no curriculum",
+    "qualifiedFor": "is qualified for"
   },
   "finance": {
     "chargeStatusOutstanding": "Unpaid",

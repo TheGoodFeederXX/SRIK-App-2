@@ -164,15 +164,15 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             <table className="w-full mt-5 text-sm border-collapse">
                 <tbody>
                     <tr>
-                        <td className="py-1 pr-3 text-gray-600 w-32">Nama</td>
+                        <td className="py-1 pr-3 text-gray-600 w-32">{t('reportCardScreen.name')}</td>
                         <td className="py-1 font-semibold">: {snapshot.student.fullName}</td>
                         <td className="py-1 pr-3 text-gray-600 w-28">{t('reportCardScreen.noDaftar')}</td>
                         <td className="py-1 font-semibold">: {snapshot.student.admissionNo || '—'}</td>
                     </tr>
                     <tr>
-                        <td className="py-1 pr-3 text-gray-600">Kelas</td>
+                        <td className="py-1 pr-3 text-gray-600">{t('reportCardScreen.class')}</td>
                         <td className="py-1 font-semibold">: {snapshot.class?.displayName || '—'}</td>
-                        <td className="py-1 pr-3 text-gray-600">Tahun</td>
+                        <td className="py-1 pr-3 text-gray-600">{t('reportCardScreen.year')}</td>
                         <td className="py-1 font-semibold">
                             : {snapshot.class?.yearLevel ? `Tahun ${snapshot.class.yearLevel}` : '—'}
                         </td>
@@ -186,7 +186,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                     <tr className="bg-gray-100">
                          {t('reportCardScreen.student')}
                         <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.penilaian')}</th>
-                        <th className="border border-gray-400 px-2 py-1 text-center w-16">Markah</th>
+                        <th className="border border-gray-400 px-2 py-1 text-center w-16">{t('reportCardScreen.marks')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">%</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">Gred</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">TP</th>
@@ -506,7 +506,7 @@ export default function ReportCardScreen() {
                     </div>
                     <div>
                         <label htmlFor="rcClass" className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
-                            Kelas
+                            {t('reportCardScreen.class')}
                         </label>
                         <select
                             id="rcClass"
@@ -579,7 +579,7 @@ export default function ReportCardScreen() {
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 disabled:opacity-50 transition-colors"
                     >
                         <PrinterIcon className="w-4 h-4" />
-                        Cetak
+                        {t('reportCardScreen.print')}
                     </button>
 
                     <button
@@ -612,9 +612,7 @@ export default function ReportCardScreen() {
                     <div className="flex items-start gap-2 text-sm bg-amber-50 border border-amber-200 rounded-xl p-3">
                         <ExclamationIcon className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
                         <p className="text-amber-800">
-                            Ini <span className="font-semibold">pratonton</span> — menunjukkan apa yang
-                            kad laporan <em>akan</em> katakan jika diterbitkan sekarang. Ia belum
-                            diterbitkan dan tidak akan berkuat kuasa sehingga anda menerbitkannya.
+                            {t('reportCardScreen.previewExplanation')}
                         </p>
                     </div>
                 )}
@@ -623,8 +621,7 @@ export default function ReportCardScreen() {
                     <div className="flex items-start gap-2 text-sm bg-gray-50 border border-gray-200 rounded-xl p-3">
                         <ExclamationIcon className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
                         <p className="text-gray-700">
-                             {t('reportCardScreen.noReportCardYetSwitchTo')}
-                            "Pratonton draf" untuk melihat bagaimana ia akan nampak, kemudian terbitkan.
+                            {t('reportCardScreen.noReportCardYetSwitchTo')}
                         </p>
                     </div>
                 )}

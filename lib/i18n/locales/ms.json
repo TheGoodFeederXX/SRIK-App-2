@@ -1705,7 +1705,7 @@
     "noAttendanceRecordsForTerm": "Tiada rekod kehadiran untuk penggal ini.",
     "term": "Penggal",
     "student": "Pelajar",
-    "noReportCardYetSwitchTo": "Pelajar ini belum ada kad laporan untuk penggal ini. Tukar ke",
+    "noReportCardYetSwitchTo": "Pelajar ini belum ada kad laporan untuk penggal ini. Tukar ke \"Pratonton draf\" untuk melihat bagaimana ia akan nampak, kemudian terbitkan.",
     "schoolInfoIncomplete": "Maklumat sekolah belum lengkap, jadi kepala kad laporan akan kosong.",
     "enrolStudentToClassFirst": "Daftarkan pelajar ke kelas ini dahulu.",
     "switchToDraftPreview": "Tukar ke \"Pratonton draf\" untuk melihat bagaimana ia akan nampak.",
@@ -1713,7 +1713,13 @@
     "publishNewRevision": "Terbitkan revisi baharu",
     "publish": "Terbitkan",
     "average": "Purata",
-    "dashMeansNotFilledIn": "Markah — bermaksud belum diisi. TH = tidak hadir, KE = dikecualikan."
+    "dashMeansNotFilledIn": "Markah — bermaksud belum diisi. TH = tidak hadir, KE = dikecualikan.",
+    "name": "Nama",
+    "class": "Kelas",
+    "year": "Tahun",
+    "marks": "Markah",
+    "previewExplanation": "Ini pratonton — menunjukkan apa yang kad laporan akan katakan jika diterbitkan sekarang. Ia belum diterbitkan dan tidak akan berkuat kuasa sehingga anda menerbitkannya.",
+    "print": "Cetak"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "Dasar Sekolah"
@@ -2410,7 +2416,10 @@
     "subjectPerformance": "📚 Prestasi Subjek",
     "classComparison": "🏆 Perbandingan Kelas",
     "gambaranKeseluruhan": "📊 Gambaran Keseluruhan",
-    "purataBawah50DAtauE": "purata bawah 50% (D atau E)"
+    "purataBawah50DAtauE": "purata bawah 50% (D atau E)",
+    "acrossClasses": "dalam {{count}} kelas",
+    "marksCount": "{{count}} markah",
+    "marks": "Markah"
   },
   "academicSettingsScreen": {
     "academicConfiguration": "Konfigurasi Akademik",
@@ -2739,7 +2748,9 @@
     "audienceStudents": "Pelajar",
     "statusDraft": "Draf — belum diterbitkan",
     "statusPublished": "Diterbitkan",
-    "statusWithdrawn": "Ditarik balik"
+    "statusWithdrawn": "Ditarik balik",
+    "edit": "Sunting",
+    "deleteDraft": "Padam draf"
   },
   "arrearsTracker": {
     "arrears": "Tunggakan"
@@ -3058,7 +3069,8 @@
     "cancelled": "Telah dibatalkan",
     "paymentNotDeleted": "Bayaran tidak akan dipadam. Ia ditanda dibatalkan supaya rekod asal kekal.",
     "amountMatches": "Jumlah sepadan: {{amount}}",
-    "overAllocated": "Agihan melebihi bayaran sebanyak {{amount}}."
+    "overAllocated": "Agihan melebihi bayaran sebanyak {{amount}}.",
+    "remaining": "Baki"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Tetapan Yuran",
@@ -3511,7 +3523,8 @@
     "saveDiscount": "Simpan diskaun",
     "viewChargesPaymentsBalance": "Lihat caj, bayaran dan baki seorang pelajar. Boleh dicetak untuk ibu bapa.",
     "charged": "Dicaj",
-    "remaining": "Baki"
+    "remaining": "Baki",
+    "feeStatementFor": "Penyata Yuran — {{name}}"
   },
   "studentIDCardDashboard": {
     "kadPengenalanMurid": "Kad Pengenalan Murid"
@@ -3871,7 +3884,13 @@
   },
   "teacherCurriculumBadges": {
     "noCurriculumSet": "Belum Ada Kurikulum Ditetapkan",
-    "both": "Kedua-duanya"
+    "both": "Kedua-duanya",
+    "cannotBeAssignedToClass": "⚠️ Tidak boleh ditugaskan ke kelas",
+    "curriculumMismatch": "Kurikulum Tidak Sepadan",
+    "qualifiedFor": "berkelayakan untuk",
+    "noCurriculum": "tiada kurikulum",
+    "butClassRequires": "tetapi kelas ini memerlukan",
+    "assignmentMayNotMeetStandards": "⚠️ Penugasan ini mungkin tidak menepati piawaian kurikulum dan menjejaskan persediaan peperiksaan."
   },
   "finance": {
     "chargeStatusOutstanding": "Belum bayar",

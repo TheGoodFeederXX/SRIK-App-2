@@ -565,7 +565,7 @@ function ChargeRow({
                     </p>
                 </div>
                 <div className="text-right shrink-0">
-                    <p className="text-xs text-slate-400">Baki</p>
+                    <p className="text-xs text-slate-400">{t('feeCollectionScreen.remaining')}</p>
                     <p className="text-sm font-bold text-slate-700">{formatMoney(charge.balance)}</p>
                 </div>
             </div>

@@ -208,7 +208,7 @@ function Statement({ studentId, studentName }: { studentId: string; studentName:
 
             <div className="statement-sheet">
                 <div className="hidden print:block mb-4">
-                    <h2 className="text-lg font-bold">Penyata Yuran — {studentName}</h2>
+                    <h2 className="text-lg font-bold">{t('studentFeesScreen.feeStatementFor', { name: studentName })}</h2>
                 </div>
 
                 {!charges.length ? (

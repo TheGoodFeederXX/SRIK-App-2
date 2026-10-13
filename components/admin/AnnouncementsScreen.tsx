@@ -168,7 +168,7 @@ export default function AnnouncementsScreen() {
                                     className="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs
                                                font-bold hover:bg-slate-200"
                                 >
-                                    Sunting
+                                    {t('announcementsScreen.edit')}
                                 </button>
                                 {item.status === 'DRAFT' && (
                                     <button
@@ -180,7 +180,7 @@ export default function AnnouncementsScreen() {
                                                    disabled:text-slate-300"
                                     >
                                         <TrashIcon className="w-3.5 h-3.5" />
-                                        Padam draf
+                                        {t('announcementsScreen.deleteDraft')}
                                     </button>
                                 )}
                             </div>

@@ -30,7 +30,7 @@ export default function TeacherCurriculumBadges({
                      {t('teacherCurriculumBadges.noCurriculumSet')}
                 </Badge>
                 {showWarning && (
-                    <span className="text-xs text-red-600">⚠️ Tidak boleh ditugaskan ke kelas</span>
+                    <span className="text-xs text-red-600">{t('teacherCurriculumBadges.cannotBeAssignedToClass')}</span>
                 )}
             </div>
         );
@@ -97,6 +97,7 @@ export function CurriculumMismatchWarning({
     teacherEligibility,
     requiredCurriculum
 }: CurriculumMismatchWarningProps) {
+    const { t } = useTranslation();
     if (canTeacherTeachCurriculum(teacherEligibility, requiredCurriculum)) {
         return null;
     }
@@ -105,14 +106,15 @@ export function CurriculumMismatchWarning({
         <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
             <AlertCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
             <div className="flex-1">
-                <p className="text-sm font-semibold text-red-900">Kurikulum Tidak Sepadan</p>
+                <p className="text-sm font-semibold text-red-900">{t('teacherCurriculumBadges.curriculumMismatch')}</p>
                 <p className="text-xs text-red-700 mt-1">
-                    <strong>{teacherName}</strong> berkelayakan untuk{' '}
-                    <strong>{teacherEligibility || 'tiada kurikulum'}</strong> tetapi kelas ini memerlukan{' '}
+                    <strong>{teacherName}</strong> {t('teacherCurriculumBadges.qualifiedFor')}{' '}
+                    <strong>{teacherEligibility || t('teacherCurriculumBadges.noCurriculum')}</strong>{' '}
+                    {t('teacherCurriculumBadges.butClassRequires')}{' '}
                     <strong>{requiredCurriculum}</strong>.
                 </p>
                 <p className="text-xs text-red-600 mt-2">
-                    ⚠️ Penugasan ini mungkin tidak menepati piawaian kurikulum dan menjejaskan persediaan peperiksaan.
+                    {t('teacherCurriculumBadges.assignmentMayNotMeetStandards')}
                 </p>
             </div>
         </div>

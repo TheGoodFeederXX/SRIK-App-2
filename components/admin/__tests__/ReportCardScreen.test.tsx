@@ -218,7 +218,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
 
         expect(screen.getAllByText(/Draft — not yet published/).length).toBeGreaterThan(0);
-        expect(screen.getByText(/belum diterbitkan dan tidak akan berkuat kuasa/)).toBeDefined();
+        expect(screen.getByText(/not yet published and will not take effect/)).toBeDefined();
     });
 
     it('will not publish from the preview, so a draft cannot go out by mistake', async () => {
@@ -282,7 +282,7 @@ describe('ReportCardScreen — SIRK report cards', () => {
         renderScreen();
 
         await waitFor(() => expect(document.querySelector('.report-card-sheet')).not.toBeNull());
-        fireEvent.click(screen.getByText('Cetak'));
+        fireEvent.click(screen.getByText('Print'));
 
         expect(print).toHaveBeenCalled();
         expect(document.querySelector('.no-print')).not.toBeNull();

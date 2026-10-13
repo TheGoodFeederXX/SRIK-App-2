@@ -260,7 +260,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                         <div>
                             <p className="text-xs sm:text-sm text-gray-600">{t('academicAnalytics.bilanganMarkah')}</p>
                             <p className="text-2xl sm:text-3xl font-bold text-gray-900">{metrics.marksCounted}</p>
-                            <p className="text-xs sm:text-xs text-gray-500 mt-1">dalam {classComparison.length} kelas</p>
+                            <p className="text-xs sm:text-xs text-gray-500 mt-1">{t('academicAnalytics.acrossClasses', { count: classComparison.length })}</p>
                         </div>
                         <div className="p-2 sm:p-3 bg-blue-100 rounded-lg">
                             <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
@@ -321,7 +321,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                 <div className="flex items-start justify-between mb-2">
                                     <div>
                                         <h4 className="font-semibold text-gray-900">{subject.subject ?? '—'}</h4>
-                                        <p className="text-xs text-gray-500">{subject.count} markah</p>
+                                        <p className="text-xs text-gray-500">{t('academicAnalytics.marksCount', { count: subject.count })}</p>
                                     </div>
                                     {/* Judged against the school's own pass line (50% is
                                         the floor of a C), not an invented threshold. */}
@@ -333,7 +333,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                         <p className="text-lg font-bold text-indigo-600">{subject.average}</p>
                                     </div>
                                     <div>
-                                        <p className="text-gray-600">Markah</p>
+                                        <p className="text-gray-600">{t('academicAnalytics.marks')}</p>
                                         <p className="text-lg font-bold text-gray-700">{subject.count}</p>
                                     </div>
                                 </div>
@@ -366,7 +366,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                         </div>
                                         <div>
                                             <h4 className="font-semibold text-gray-900">{classData.className ?? '—'}</h4>
-                                            <p className="text-xs text-gray-500">{classData.count} markah</p>
+                                            <p className="text-xs text-gray-500">{t('academicAnalytics.marksCount', { count: classData.count })}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -376,7 +376,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                                         <p className="text-lg font-bold text-indigo-600">{classData.average}</p>
                                     </div>
                                     <div className="bg-gray-50 rounded p-2">
-                                        <p className="text-xs text-gray-600">Markah</p>
+                                        <p className="text-xs text-gray-600">{t('academicAnalytics.marks')}</p>
                                         <p className="text-lg font-bold text-gray-700">{classData.count}</p>
                                     </div>
                                 </div>
