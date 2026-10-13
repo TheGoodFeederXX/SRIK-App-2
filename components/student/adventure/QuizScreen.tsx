@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AdventureData, UserAnswer } from '../../../types';
 import { CheckCircleIcon, XCircleIcon } from '../../../constants';
@@ -21,6 +22,7 @@ const getThemeClass = (theme: string) => {
 };
 
 const QuizScreen: React.FC<QuizScreenProps> = ({ adventureData, onQuizComplete }) => {
+    const { t } = useTranslation();
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
@@ -74,7 +76,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ adventureData, onQuizComplete }
                 >
                     <div className="flex-grow flex flex-col justify-center p-4 space-y-4">
                         <div className="bg-black/20 rounded-xl shadow-lg overflow-hidden">
-                            <img src={imageUrl} alt="Quiz illustration" className="w-full h-48 object-cover" />
+                            <img src={imageUrl} alt={t('quizScreen.quizIllustration')} className="w-full h-48 object-cover" />
                         </div>
                         <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl shadow-md">
                             <h2 className="text-xl font-bold text-gray-800 text-center">{currentQuestion.question}</h2>

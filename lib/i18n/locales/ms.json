@@ -105,7 +105,8 @@
     "commandCenter": "Ini pusat kawalan sekolah anda.",
     "last30Days": "30 hari lepas",
     "demoMode": "Mod Demo — perubahan direset setiap hari",
-    "createYourSchool": "Buka Sekolah Anda"
+    "createYourSchool": "Buka Sekolah Anda",
+    "countsUnavailable": "Angka ringkasan tidak dapat dibaca buat masa ini, jadi ia dipaparkan sebagai —. Sila muat semula sebentar lagi."
   },
   "pwa": {
     "installApp": "Pasang Aplikasi"
@@ -406,5 +407,295 @@
     "quickActions": "Tindakan Pantas",
     "searchAllActions": "Cari semua tindakan…",
     "reportsToPublish": "Laporan untuk Diterbitkan"
+  },
+  "academicReportScreen": {
+    "loadingReport": "Memuatkan laporan...",
+    "studentNotFound": "Murid tidak dijumpai.",
+    "performanceTrend": "Trend Prestasi",
+    "noPerformanceDataAvailableYet": "Tiada data prestasi tersedia lagi.",
+    "noRecordsForTheLatestTerm": "Tiada rekod untuk penggal terkini.",
+    "teacherSRemarks": "Ulasan Guru",
+    "noRemarksRecorded": "Tiada ulasan direkodkan."
+  },
+  "achievementsScreen": {
+    "achievements": "Pencapaian"
+  },
+  "anonymousReporting": {
+    "anonymousReporting": "Laporan Tanpa Nama"
+  },
+  "assignmentFeedbackScreen": {
+    "assignmentFeedback": "Maklum Balas Tugasan"
+  },
+  "assignmentSubmissionScreen": {
+    "assignmentSubmission": "Penyerahan Tugasan"
+  },
+  "assignmentsScreen": {
+    "myAssignments": "Tugasan Saya"
+  },
+  "attendanceScreen": {
+    "present": "Hadir",
+    "termAttendanceTrend": "Trend Kehadiran Penggal",
+    "schoolDays": "Hari persekolahan",
+    "previousMonth": "Bulan lepas",
+    "nextMonth": "Bulan depan"
+  },
+  "classroomScreen": {
+    "bilikDarjah": "Bilik Darjah"
+  },
+  "discreetReporting": {
+    "discreetReporting": "Laporan Berhati-hati"
+  },
+  "extracurricularsScreen": {
+    "extracurriculars": "Kokurikulum"
+  },
+  "freeLearningResourcesScreen": {
+    "freeLearningResources": "Sumber Pembelajaran Percuma"
+  },
+  "learningHubScreen": {
+    "learningHub": "Hab Pembelajaran"
+  },
+  "newMessageScreen": {
+    "nameYourGroup": "Namakan Kumpulan Anda",
+    "groupName": "Nama Kumpulan",
+    "selectAPersonToMessage": "Pilih orang untuk dihubungi",
+    "loadingContacts": "Memuatkan kenalan...",
+    "contactsWillAppearBasedOnYourRoleAndSchool": "Kenalan akan muncul berdasarkan peranan dan sekolah anda.",
+    "selectAtLeastOneMember": "Pilih sekurang-kurangnya satu ahli"
+  },
+  "quizPlayerScreen": {
+    "quizPlayer": "Pemain Kuiz"
+  },
+  "resultsScreen": {
+    "results": "Keputusan",
+    "questComplete": "Pengembaraan Selesai!",
+    "aiSummary": "Ringkasan AI",
+    "calculatingYourEpicPerformance": "Mengira prestasi hebat anda...",
+    "correct": "Betul",
+    "incorrect": "Salah",
+    "xpEarned": "XP Diperoleh",
+    "gemsFound": "Permata Dijumpai",
+    "reviewYourAnswers": "Semak Jawapan Anda",
+    "yourAnswer": "Jawapan anda:",
+    "correctAnswer": "Jawapan betul:",
+    "explorerSLog": "Log Penjelajah"
+  },
+  "studentChangePasswordScreen": {
+    "currentPassword": "Kata Laluan Semasa",
+    "newPassword": "Kata Laluan Baharu",
+    "confirmNewPassword": "Sahkan Kata Laluan Baharu",
+    "passwordUpdatedSuccessfully": "Kata laluan berjaya dikemas kini!",
+    "newPasswordsDoNotMatch": "Kata laluan baharu tidak sepadan."
+  },
+  "studentDashboard": {
+    "yourFocus": "Fokus Anda",
+    "youReAllCaughtUp": "Anda sudah selesai semua!",
+    "enjoyYourFreeTimeOrExploreTheLibrary": "Nikmati masa lapang anda atau terokai perpustakaan.",
+    "todaySSchedule": "Jadual Hari Ini",
+    "noClassesScheduledForToday": "Tiada kelas dijadualkan hari ini.",
+    "aiTools": "Alat AI",
+    "quickActions": "Tindakan Pantas",
+    "studentProfileNotFound": "Profil Murid Tidak Dijumpai",
+    "secureSessionActive": "Sesi Selamat Aktif",
+    "youReceivedMessagesWhileYouWereAway": "Anda menerima mesej semasa anda tidak berada di sini",
+    "dismiss": "Tutup",
+    "subjects": "Subjek",
+    "timetable": "Jadual Waktu",
+    "results": "Keputusan",
+    "learningHub": "Hab Pembelajaran",
+    "freeResources": "Sumber Percuma",
+    "reportAConcern": "Laporkan Kebimbangan",
+    "discreetSupport": "Sokongan Berhati-hati",
+    "aiStudyBuddy": "Rakan Belajar AI",
+    "aiAdventureQuest": "Pengembaraan AI",
+    "stuckOnAProblem": "Tersekat pada satu soalan?",
+    "turnAnyTextIntoAFunQuiz": "Jadikan mana-mana teks satu kuiz menyeronokkan!"
+  },
+  "studentFinanceScreen": {
+    "studentFinance": "Kewangan Murid"
+  },
+  "studentProfileEnhanced": {
+    "loadingProfile": "Memuatkan profil...",
+    "dashboard": "Papan Pemuka",
+    "studentProfile": "Profil Murid",
+    "copied": "Disalin!",
+    "editProfile": "Sunting Profil",
+    "changePassword": "Tukar Kata Laluan",
+    "basedOnYourRecentPerformanceWeRecommendFocusin": "Berdasarkan prestasi terkini anda, kami syorkan fokus pada:",
+    "noResultYet": "Tiada keputusan lagi",
+    "noSubjectsAssignedYet": "Tiada subjek ditugaskan lagi.",
+    "noUpcomingEvents": "Tiada acara akan datang.",
+    "academicRecords": "Rekod Akademik",
+    "subject": "Subjek",
+    "assessment": "Penilaian",
+    "completed": "Selesai",
+    "noAcademicRecordsAvailable": "Tiada rekod akademik tersedia.",
+    "joinNewActivity": "Sertai Aktiviti Baharu",
+    "studentDocuments": "Dokumen Murid",
+    "copyStudentIDToClipboard": "Salin ID murid",
+    "attendance": "Kehadiran",
+    "average": "Purata",
+    "performance": "Prestasi",
+    "submitted": "Dihantar",
+    "emailAddress": "Alamat E-mel",
+    "phoneNumber": "Nombor Telefon",
+    "dateOfBirth": "Tarikh Lahir",
+    "address": "Alamat",
+    "guardian": "Penjaga",
+    "guardianContact": "Hubungan Penjaga",
+    "classesAttended": "Kelas Dihadiri",
+    "assignmentsSubmitted": "Tugasan Dihantar",
+    "estStudyHours": "Anggaran Jam Belajar",
+    "achievements": "Pencapaian",
+    "documentUploadedSuccessfully": "Dokumen berjaya dimuat naik",
+    "transcriptDownloaded": "Transkrip dimuat turun",
+    "profileLinkCopiedToClipboard": "Pautan profil disalin!",
+    "unableToLoadProfileDataPleaseTryAgain": "Tidak dapat memuatkan data profil. Sila cuba lagi.",
+    "couldNotGenerateTranscript": "Tidak dapat menjana transkrip",
+    "couldNotCopyLinkPleaseCopyItFromTheAddressBar": "Tidak dapat menyalin pautan. Sila salin daripada bar alamat.",
+    "noFileAvailableForThisDocument": "Tiada fail tersedia untuk dokumen ini."
+  },
+  "studyBuddy": {
+    "uploadImage": "Muat naik imej",
+    "typeAMessage": "Taip mesej...",
+    "userUpload": "Muat naik pengguna"
+  },
+  "subjectsScreen": {
+    "subjects": "Subjek"
+  },
+  "videoLessonScreen": {
+    "videoLesson": "Pelajaran Video"
+  },
+  "worksheetsEmbedScreen": {
+    "worksheets": "Lembaran Kerja",
+    "externalResourceAdaptedmindCom": "Sumber luar · adaptedmind.com",
+    "openInNewTab": "Buka dalam Tab Baharu",
+    "loadingWorksheets": "Memuatkan lembaran kerja...",
+    "backToGamesHub": "Kembali ke Hab Permainan",
+    "adaptedmindWorksheetsExternalResource": "Lembaran Kerja AdaptedMind (sumber luar)"
+  },
+  "adventureQuestHost": {
+    "urlFetchingIsForDemoPurposesOnlyUsingSampleTex": "Pengambilan URL adalah untuk tujuan demo sahaja. Menggunakan teks contoh."
+  },
+  "homeScreen": {
+    "startYourAdventure": "Mulakan Pengembaraan Anda!",
+    "turnAnyLessonIntoAFunQuest": "Jadikan mana-mana pelajaran satu pengembaraan menyeronokkan.",
+    "challengeLevel": "Tahap Cabaran"
+  },
+  "loadingScreen": {
+    "craftingYourAdventure": "Menyediakan Pengembaraan Anda..."
+  },
+  "quizScreen": {
+    "quizIllustration": "Ilustrasi kuiz"
+  },
+  "studentCBTListScreen": {
+    "studentCBTList": "Senarai CBT Murid"
+  },
+  "studentCBTPlayerScreen": {
+    "ujianKomputer": "Ujian Komputer"
+  },
+  "alphabetFishingGame": {
+    "alphabetFishingGame": "Permainan Memancing Abjad"
+  },
+  "beanBagTossGame": {
+    "beanBagTossGame": "Permainan Lontar Beg Kacang"
+  },
+  "cBTExamGame": {
+    "cbtexamGame": "Permainan CBTExam"
+  },
+  "classBattleScreen": {
+    "classBattle": "Pertarungan Kelas"
+  },
+  "codeChallengeGameScreen": {
+    "codeChallengeGame": "Permainan Cabaran Kod"
+  },
+  "codeChallengeLobbyScreen": {
+    "codeChallenge": "Cabaran Kod!",
+    "inviteProgrammers": "Jemput Pengaturcara",
+    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Perkongsian tidak disokong pada pelayar anda. Anda boleh salin pautan secara manual!"
+  },
+  "countingShapesTapGame": {
+    "countingShapesTapGame": "Permainan Ketuk Bentuk"
+  },
+  "debateDashGame": {
+    "debateDashGame": "Permainan Debat Pantas"
+  },
+  "gamesHubScreen": {
+    "gamesHub": "Hab Permainan"
+  },
+  "geoGuesserGameScreen": {
+    "geoGuesserGame": "Permainan Teka Lokasi"
+  },
+  "geoGuesserLobbyScreen": {
+    "geoguesser": "GeoGuesser",
+    "locations": "Lokasi",
+    "continents": "Benua",
+    "challengeFriends": "Cabaran Rakan",
+    "geoguesserChallenge": "Cabaran GeoGuesser!",
+    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Perkongsian tidak disokong pada pelayar anda. Anda boleh salin pautan secara manual!"
+  },
+  "geometryJeopardyGame": {
+    "geometryJeopardyGame": "Permainan Jeopardy Geometri"
+  },
+  "historicalHotSeatGame": {
+    "historicalHotSeatGame": "Permainan Kerusi Panas Sejarah"
+  },
+  "mathBattleArenaGame": {
+    "mathBattleArenaGame": "Permainan Arena Pertarungan Matematik"
+  },
+  "mathSprintGameScreen": {
+    "mathSprintGame": "Permainan Sprint Matematik"
+  },
+  "mathSprintLobbyScreen": {
+    "mathSprint": "Sprint Matematik",
+    "answerAsManyMathProblemsAsYouCanBeforeTheTimer": "Jawab sebanyak mungkin soalan matematik sebelum masa tamat!",
+    "challengeAFriend": "Cabara Rakan",
+    "mathSprintChallenge": "Cabaran Sprint Matematik!",
+    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Perkongsian tidak disokong pada pelayar anda. Anda boleh salin pautan secara manual!"
+  },
+  "mathSprintResultsScreen": {
+    "gameOver": "Permainan Tamat!",
+    "yourScore": "Skor Anda",
+    "answered": "Dijawab",
+    "accuracy": "Ketepatan",
+    "playAgain": "Main Lagi",
+    "shareResults": "Kongsi Keputusan",
+    "myMathSprintScore": "Skor Sprint Matematik Saya!",
+    "sharingIsNotSupportedOnThisBrowser": "Perkongsian tidak disokong pada pelayar ini."
+  },
+  "peekabooLettersGame": {
+    "peekabooLettersGame": "Permainan Abjad Peekaboo"
+  },
+  "physicsLabGame": {
+    "physicsLabGame": "Permainan Makmal Fizik"
+  },
+  "redLightGreenLightGame": {
+    "redLightGreenLightGame": "Permainan Lampu Merah Lampu Hijau"
+  },
+  "sharkTankGame": {
+    "sharkTankGame": "Permainan Shark Tank"
+  },
+  "simonSaysGame": {
+    "simonSaysGame": "Permainan Simon Says"
+  },
+  "simpleMachineScavengerHuntGame": {
+    "simpleMachineScavengerHuntGame": "Permainan Pemburuan Mesin Mudah"
+  },
+  "spellingSparkleGame": {
+    "spellingSparkleGame": "Permainan Ejaan Sparkle"
+  },
+  "stockMarketGame": {
+    "stockMarketGame": "Permainan Pasaran Saham"
+  },
+  "virtualScienceLabGame": {
+    "virtualScienceLabGame": "Permainan Makmal Sains Maya"
+  },
+  "vocabularyAdventureGame": {
+    "vocabularyAdventureGame": "Permainan Pengembaraan Perbendaharaan Kata"
+  },
+  "vocabularyNinjaGame": {
+    "vocabularyNinjaGame": "Permainan Ninja Perbendaharaan Kata"
+  },
+  "vocabularyPictionaryGame": {
+    "vocabularyPictionaryGame": "Permainan Pictionary Perbendaharaan Kata"
   }
 }

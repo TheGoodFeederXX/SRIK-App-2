@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../../ui/ComingSoonScreen';
 
 /**
@@ -17,9 +18,11 @@ interface StudentCBTPlayerScreenProps {
     handleBack?: () => void;
 }
 
-const StudentCBTPlayerScreen: React.FC<StudentCBTPlayerScreenProps> = ({ test, studentId, handleBack }) => (
+const StudentCBTPlayerScreen: React.FC<StudentCBTPlayerScreenProps> = ({ test, studentId, handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Ujian Komputer"
+        title={t('studentCBTPlayerScreen.ujianKomputer')}
         explanation={
             'Ujian secara komputer belum tersedia di dalam sistem ini. Buat masa ini ' +
             'ujian murid dijalankan di dalam kelas melalui kaedah yang ditetapkan ' +
@@ -28,6 +31,7 @@ const StudentCBTPlayerScreen: React.FC<StudentCBTPlayerScreenProps> = ({ test, s
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default StudentCBTPlayerScreen;

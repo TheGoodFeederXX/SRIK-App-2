@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ChevronLeft, ExternalLink, FileText } from 'lucide-react';
 
 interface WorksheetsEmbedScreenProps {
@@ -11,6 +12,7 @@ interface WorksheetsEmbedScreenProps {
 const WORKSHEETS_URL = 'https://www.adaptedmind.com/';
 
 const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
 
     return (
@@ -21,7 +23,7 @@ const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateT
                     <button
                         onClick={() => navigateTo('gamesHub', 'Games Hub')}
                         className="p-2 -ml-2 rounded-full hover:bg-gray-100 transition-colors shrink-0"
-                        aria-label="Back to Games Hub"
+                        aria-label={t('worksheetsEmbedScreen.backToGamesHub')}
                     >
                         <ChevronLeft className="w-5 h-5 text-gray-600" />
                     </button>
@@ -29,8 +31,8 @@ const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateT
                         <FileText className="w-5 h-5" />
                     </div>
                     <div className="min-w-0">
-                        <p className="font-bold text-gray-900 truncate">Worksheets</p>
-                        <p className="text-xs text-gray-400 truncate">External resource · adaptedmind.com</p>
+                        <p className="font-bold text-gray-900 truncate">{t('worksheetsEmbedScreen.worksheets')}</p>
+                        <p className="text-xs text-gray-400 truncate">{t('worksheetsEmbedScreen.externalResourceAdaptedmindCom')}</p>
                     </div>
                 </div>
                 <a
@@ -40,7 +42,7 @@ const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateT
                     className="flex items-center gap-1.5 px-3 py-2 text-xs font-bold text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors shrink-0"
                 >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Open in New Tab</span>
+                    <span className="hidden sm:inline">{t('worksheetsEmbedScreen.openInNewTab')}</span>
                 </a>
             </div>
 
@@ -53,12 +55,12 @@ const WorksheetsEmbedScreen: React.FC<WorksheetsEmbedScreenProps> = ({ navigateT
                 {loading && (
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 z-10">
                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mb-3" />
-                        <p className="text-gray-400 text-sm font-medium">Loading worksheets...</p>
+                        <p className="text-gray-400 text-sm font-medium">{t('worksheetsEmbedScreen.loadingWorksheets')}</p>
                     </div>
                 )}
                 <iframe
                     src={WORKSHEETS_URL}
-                    title="AdaptedMind Worksheets (external resource)"
+                    title={t('worksheetsEmbedScreen.adaptedmindWorksheetsExternalResource')}
                     className="absolute inset-0 w-full h-full border-0"
                     style={{ WebkitOverflowScrolling: 'touch' as any }}
                     onLoad={() => setLoading(false)}

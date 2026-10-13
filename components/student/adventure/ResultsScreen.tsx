@@ -1,5 +1,6 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getAIClient, AI_MODEL_NAME } from '../../../lib/ai';
 import ReactMarkdown from 'react-markdown';
@@ -39,6 +40,7 @@ const Accordion: React.FC<{ title: string; children: React.ReactNode }> = ({ tit
 };
 
 const ResultsScreen: React.FC<ResultsScreenProps> = ({ adventureData, userAnswers, onRestart }) => {
+    const { t } = useTranslation();
     const [aiSummary, setAiSummary] = useState<string>('');
     const [isLoadingSummary, setIsLoadingSummary] = useState(true);
 
@@ -75,31 +77,31 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ adventureData, userAnswer
     return (
         <div className="p-4 bg-gray-100 h-full overflow-y-auto">
             <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="text-center">
-                <h1 className="text-3xl font-bold text-gray-800">Quest Complete!</h1>
+                <h1 className="text-3xl font-bold text-gray-800">{t('resultsScreen.questComplete')}</h1>
                 <div className="mt-4 bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex items-center space-x-2 text-teal-600">
                         <SparklesIcon className="h-5 w-5" />
-                        <h2 className="font-bold">AI Summary</h2>
+                        <h2 className="font-bold">{t('resultsScreen.aiSummary')}</h2>
                     </div>
                     <blockquote className="mt-2 text-left p-3 bg-teal-50 border border-teal-200 rounded-lg">
-                        {isLoadingSummary ? <p className="text-gray-600 italic">Calculating your epic performance...</p> : <p className="text-gray-700 italic">{aiSummary}</p>}
+                        {isLoadingSummary ? <p className="text-gray-600 italic">{t('resultsScreen.calculatingYourEpicPerformance')}</p> : <p className="text-gray-700 italic">{aiSummary}</p>}
                     </blockquote>
                 </div>
             </motion.div>
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
                 <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.1, type: 'spring', stiffness: 300, damping: 22 }} className="bg-white p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl text-teal-600">{score}%</p><p className="text-xs text-gray-500">Score</p></motion.div>
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15, type: 'spring', stiffness: 300, damping: 22 }} className="bg-white p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl text-green-600">{correctAnswers}</p><p className="text-xs text-gray-500">Correct</p></motion.div>
-                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 22 }} className="bg-white p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl text-red-600">{incorrectAnswers}</p><p className="text-xs text-gray-500">Incorrect</p></motion.div>
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.15, type: 'spring', stiffness: 300, damping: 22 }} className="bg-white p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl text-green-600">{correctAnswers}</p><p className="text-xs text-gray-500">{t('resultsScreen.correct')}</p></motion.div>
+                <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2, type: 'spring', stiffness: 300, damping: 22 }} className="bg-white p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl text-red-600">{incorrectAnswers}</p><p className="text-xs text-gray-500">{t('resultsScreen.incorrect')}</p></motion.div>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-3 text-center text-white">
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-yellow-400 p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl">+{xp}</p><p className="text-xs font-semibold">XP Earned</p></motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-sky-400 p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl">+{gems}</p><p className="text-xs font-semibold">Gems Found</p></motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.25 }} className="bg-yellow-400 p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl">+{xp}</p><p className="text-xs font-semibold">{t('resultsScreen.xpEarned')}</p></motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="bg-sky-400 p-3 rounded-xl shadow-sm"><p className="font-bold text-2xl">+{gems}</p><p className="text-xs font-semibold">{t('resultsScreen.gemsFound')}</p></motion.div>
             </div>
 
             <div className="mt-4">
-                <h2 className="font-bold text-gray-700 mb-2">Review Your Answers</h2>
+                <h2 className="font-bold text-gray-700 mb-2">{t('resultsScreen.reviewYourAnswers')}</h2>
                 <div className="space-y-2">
                     {adventureData.quiz.map((q, i) => {
                         const userAnswer = userAnswers.find(a => a.questionId === q.id);
@@ -115,8 +117,8 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ adventureData, userAnswer
                                 <p className="font-semibold text-gray-800 flex items-start"><span className="mr-2">{isCorrect ? <CheckCircleIcon className="text-green-500 w-5 h-5" /> : <XCircleIcon className="text-red-500 w-5 h-5" />}</span>{q.question}</p>
                                 {!isCorrect && (
                                     <div className="mt-2 pl-7 text-sm">
-                                        <p className="text-gray-700">Your answer: <span className="font-semibold">{userAnswer?.answer}</span></p>
-                                        <p className="text-gray-700">Correct answer: <span className="font-semibold">{q.correct_answer}</span></p>
+                                        <p className="text-gray-700">{t('resultsScreen.yourAnswer')} <span className="font-semibold">{userAnswer?.answer}</span></p>
+                                        <p className="text-gray-700">{t('resultsScreen.correctAnswer')} <span className="font-semibold">{q.correct_answer}</span></p>
                                         <p className="mt-1 p-2 bg-yellow-50 rounded-lg border border-yellow-200 text-yellow-800">💡 {q.explanation}</p>
                                     </div>
                                 )}
@@ -127,7 +129,7 @@ const ResultsScreen: React.FC<ResultsScreenProps> = ({ adventureData, userAnswer
             </div>
 
             <div className="mt-4">
-                <h2 className="font-bold text-gray-700 mb-2">Explorer's Log</h2>
+                <h2 className="font-bold text-gray-700 mb-2">{t('resultsScreen.explorerSLog')}</h2>
                 <div className="bg-white p-4 rounded-xl shadow-sm space-y-2">
                     <h3 className="text-lg font-bold text-teal-700 flex items-center space-x-2"><BookOpenIcon /><span>{adventureData.study_guide.title}</span></h3>
                     {adventureData.study_guide.sections.map((section, i) => (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 
 import { useAutoSync } from '../../hooks/useAutoSync';
@@ -75,6 +76,7 @@ interface AcademicReportScreenProps {
 }
 
 const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }) => {
+    const { t } = useTranslation();
     const [student, setStudent] = useState<Student | null>(null);
     const [performance, setPerformance] = useState<AcademicRecord[]>([]);
     const [behaviorNotes, setBehaviorNotes] = useState<BehaviorNote[]>([]);
@@ -128,8 +130,8 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
         return performance.filter(r => r.term === latestTerm);
     }, [performance, performanceByTerm]);
 
-    if (loading) return <div className="p-8 text-center text-gray-500">Loading report...</div>;
-    if (!student) return <div className="p-8 text-center text-gray-500">Student not found.</div>;
+    if (loading) return <div className="p-8 text-center text-gray-500">{t('academicReportScreen.loadingReport')}</div>;
+    if (!student) return <div className="p-8 text-center text-gray-500">{t('academicReportScreen.studentNotFound')}</div>;
 
     return (
         <div className="p-4 space-y-4 bg-gray-50">
@@ -147,12 +149,12 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center space-x-2 mb-2">
                         <TrendingUpIcon className="h-5 w-5 text-orange-600" />
-                        <h4 className="font-bold text-gray-800">Performance Trend</h4>
+                        <h4 className="font-bold text-gray-800">{t('academicReportScreen.performanceTrend')}</h4>
                     </div>
                     {performanceByTerm.length > 0 ? (
                         <PerformanceTrendChart data={performanceByTerm} />
                     ) : (
-                        <p className="text-center py-10 text-gray-400 text-sm italic">No performance data available yet.</p>
+                        <p className="text-center py-10 text-gray-400 text-sm italic">{t('academicReportScreen.noPerformanceDataAvailableYet')}</p>
                     )}
                 </motion.div>
 
@@ -165,7 +167,7 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
                     {latestTermRecords.length > 0 ? (
                         <SubjectScoresChart data={latestTermRecords} />
                     ) : (
-                        <p className="text-center py-10 text-gray-400 text-sm italic">No records for the latest term.</p>
+                        <p className="text-center py-10 text-gray-400 text-sm italic">{t('academicReportScreen.noRecordsForTheLatestTerm')}</p>
                     )}
                 </motion.div>
             </div>
@@ -174,7 +176,7 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, delay: 0.15 }} className="bg-white p-4 rounded-xl shadow-sm">
                 <div className="flex items-center space-x-2 mb-3">
                     <ClipboardListIcon className="h-5 w-5 text-orange-600" />
-                    <h4 className="font-bold text-gray-800">Teacher's Remarks</h4>
+                    <h4 className="font-bold text-gray-800">{t('academicReportScreen.teacherSRemarks')}</h4>
                 </div>
                 <div className="space-y-3">
                     {performance.filter(r => r.teacherRemark).map((record, idx) => (
@@ -189,7 +191,7 @@ const AcademicReportScreen: React.FC<AcademicReportScreenProps> = ({ studentId }
                             <p className="text-sm text-gray-700">{note.note}</p>
                             <p className="text-xs text-gray-500 text-right mt-1">- {note.by} on {new Date(note.date).toLocaleDateString("ms-MY")}</p>
                         </motion.div>
-                    )) : performance.every(r => !r.teacherRemark) && <p className="text-sm text-gray-400 text-center py-4">No remarks recorded.</p>}
+                    )) : performance.every(r => !r.teacherRemark) && <p className="text-sm text-gray-400 text-center py-4">{t('academicReportScreen.noRemarksRecorded')}</p>}
                 </div>
             </motion.div>
         </div>

@@ -1,5 +1,6 @@
 
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AdventureDifficulty } from '../../../types';
 import { SparklesIcon, PaperclipIcon } from '../../../constants';
@@ -12,6 +13,7 @@ interface HomeScreenProps {
 const LinkIcon = ({ className }: { className?: string }) => <svg xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 ${className || ''}`.trim()} viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" fill="none" strokeLinecap="round" strokeLinejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" /><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" /></svg>;
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
+    const { t } = useTranslation();
     const [inputType, setInputType] = useState<'file' | 'url'>('file');
     const [file, setFile] = useState<File | null>(null);
     const [url, setUrl] = useState('');
@@ -41,8 +43,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
         <div className="flex flex-col h-full bg-gradient-to-br from-orange-50 via-red-50 to-amber-100 p-4">
             <div className="text-center">
                 <SparklesIcon className="w-12 h-12 mx-auto text-orange-400" />
-                <h1 className="text-3xl font-bold text-gray-800 mt-2">Start Your Adventure!</h1>
-                <p className="text-gray-600 mt-1">Turn any lesson into a fun quest.</p>
+                <h1 className="text-3xl font-bold text-gray-800 mt-2">{t('homeScreen.startYourAdventure')}</h1>
+                <p className="text-gray-600 mt-1">{t('homeScreen.turnAnyLessonIntoAFunQuest')}</p>
             </div>
 
             <AnimatePresence>
@@ -115,7 +117,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ onStartAdventure, error }) => {
 
                 {/* Challenge Level */}
                 <div className="bg-white p-4 rounded-xl shadow-sm">
-                    <h3 className="font-bold text-gray-700 mb-3 text-center">Challenge Level</h3>
+                    <h3 className="font-bold text-gray-700 mb-3 text-center">{t('homeScreen.challengeLevel')}</h3>
                     <div className="space-y-2">
                         {difficulties.map(d => (
                             <motion.button

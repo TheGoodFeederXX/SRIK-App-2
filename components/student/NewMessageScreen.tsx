@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 ﻿import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { api } from '../../lib/api';
@@ -104,6 +105,7 @@ const GroupNameSheet: React.FC<{
     onBack: () => void;
     creating: boolean;
 }> = ({ count, onConfirm, onBack, creating }) => {
+    const { t } = useTranslation();
     const [name, setName] = useState('');
     return (
         <motion.div
@@ -118,7 +120,7 @@ const GroupNameSheet: React.FC<{
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
                 </button>
-                <h2 className="text-lg font-bold text-gray-800">Name Your Group</h2>
+                <h2 className="text-lg font-bold text-gray-800">{t('newMessageScreen.nameYourGroup')}</h2>
             </div>
 
             <div className="flex-1 p-6 flex flex-col gap-6">
@@ -132,7 +134,7 @@ const GroupNameSheet: React.FC<{
                 </div>
 
                 <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Group Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">{t('newMessageScreen.groupName')}</label>
                     <input
                         autoFocus
                         type="text"
@@ -169,6 +171,7 @@ const GroupNameSheet: React.FC<{
 
 // â”€â”€â”€ Main screen â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
+    const { t } = useTranslation();
     const { profile } = useProfile();
     const { user } = useAuth();
 
@@ -272,7 +275,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
     };
 
     const handleCreateGroup = async (groupName: string) => {
-        if (selected.length === 0) { toast.error('Select at least one member'); return; }
+        if (selected.length === 0) { toast.error(t('newMessageScreen.selectAtLeastOneMember')); return; }
         setCreatingGroup(true);
         try {
             const room = await api.createGroupChat(groupName, selected.map(c => c.userId));
@@ -344,7 +347,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                     </div>
                 ) : (
                     <div className="flex items-center justify-between mb-3">
-                        <span className="font-semibold text-gray-700 text-sm">Select a person to message</span>
+                        <span className="font-semibold text-gray-700 text-sm">{t('newMessageScreen.selectAPersonToMessage')}</span>
                         <button
                             onClick={enterGroupMode}
                             className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 hover:bg-orange-100 text-orange-600 text-xs font-semibold rounded-full border border-orange-200 transition-colors"
@@ -397,7 +400,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
             {loading ? (
                 <div className="flex-1 flex flex-col items-center justify-center gap-3">
                     <div className="w-8 h-8 border-2 border-orange-300 border-t-orange-600 rounded-full animate-spin" />
-                    <p className="text-sm text-gray-400">Loading contacts...</p>
+                    <p className="text-sm text-gray-400">{t('newMessageScreen.loadingContacts')}</p>
                 </div>
             ) : displayTabs.length === 0 ? (
                 <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
@@ -407,7 +410,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                     <p className="text-sm font-semibold text-gray-500">
                         {groupMode ? 'No students or teachers found' : 'No contacts available'}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">Contacts will appear based on your role and school.</p>
+                    <p className="text-xs text-gray-400 mt-1">{t('newMessageScreen.contactsWillAppearBasedOnYourRoleAndSchool')}</p>
                 </div>
             ) : (
                 <>

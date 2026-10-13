@@ -114,7 +114,12 @@ describe('DashboardOverview Component', () => {
     );
 
     // The alert names the problem rather than pretending the numbers are zero.
-    expect(await screen.findByRole('alert')).toHaveTextContent(/tidak dapat dibaca/i);
+    //
+    // This assertion used to demand the MALAY wording, and passed only because that wording was
+    // hard-coded as a `defaultValue` in the component — which is the very defect: a fallback
+    // cannot follow the reader's language, so an English reader saw Malay here. The key now
+    // exists in both locales. The language behaviour itself is proved in the test below.
+    expect(await screen.findByRole('alert')).toHaveTextContent(/cannot be read right now/i);
 
     // AND NO TILE CLAIMS THE SCHOOL IS EMPTY.
     //
@@ -198,4 +203,28 @@ describe('DashboardOverview Component', () => {
     });
   });
 
+
+  it('names the unreadable-figures problem in the reader\'s own language', async () => {
+    // The alert guarded by audit F29 must follow the language like everything else. It did not
+    // before: only a Malay `defaultValue` existed, so an English build showed Malay.
+    const stats = await import('../../../src/lib/supabase/stats');
+    (stats.getDashboardCounts as ReturnType<typeof vi.fn>).mockRejectedValue(new Error('offline'));
+
+    for (const [lang, expected] of [['ms', /tidak dapat dibaca/i], ['en', /cannot be read right now/i]] as const) {
+      resetTestQueryClient();
+      await i18n.changeLanguage(lang);
+      const { unmount } = renderWithProviders(
+        <DashboardOverview
+          navigateTo={vi.fn()}
+          handleBack={vi.fn()}
+          forceUpdate={vi.fn()}
+          schoolId="school-123"
+          currentBranchId={null}
+        />
+      );
+      expect(await screen.findByRole('alert')).toHaveTextContent(expected);
+      unmount();
+    }
+    await i18n.changeLanguage('ms');
+  });
 });

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ShareIcon, GlobeIcon, MapIcon } from '../../../constants';
 import { Student } from '../../../types';
 import { toast } from 'react-hot-toast';
@@ -9,15 +10,16 @@ interface GeoGuesserLobbyScreenProps {
 }
 
 const GeoGuesserLobbyScreen: React.FC<GeoGuesserLobbyScreenProps> = ({ navigateTo, student }) => {
+    const { t } = useTranslation();
 
     const handleShareChallenge = () => {
         if (navigator.share) {
             navigator.share({
-                title: 'GeoGuesser Challenge!',
+                title: t('geoGuesserLobbyScreen.geoguesserChallenge'),
                 text: "I'm travelling the world in GeoGuesser! Can you beat my score on the Smart School App?",
             }).catch((error) => console.log('Error sharing:', error));
         } else {
-            toast('Sharing is not supported on your browser. You can copy the link manually!', { icon: '📋' });
+            toast(t('geoGuesserLobbyScreen.sharingIsNotSupportedOnYourBrowserYouCanCopyTh'), { icon: '📋' });
         }
     };
 
@@ -33,7 +35,7 @@ const GeoGuesserLobbyScreen: React.FC<GeoGuesserLobbyScreenProps> = ({ navigateT
                 </div>
             </div>
 
-            <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">GeoGuesser</h1>
+            <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">{t('geoGuesserLobbyScreen.geoguesser')}</h1>
             <p className="text-gray-600 text-lg max-w-sm font-medium">
                 Travel the world from your screen! Identify famous landmarks and cities before time runs out.
             </p>
@@ -41,11 +43,11 @@ const GeoGuesserLobbyScreen: React.FC<GeoGuesserLobbyScreenProps> = ({ navigateT
             <div className="grid grid-cols-2 gap-4 w-full max-w-sm mt-8 mb-8">
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <div className="text-3xl font-black text-green-500 mb-1">50+</div>
-                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Locations</div>
+                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('geoGuesserLobbyScreen.locations')}</div>
                 </div>
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <div className="text-3xl font-black text-teal-500 mb-1">5</div>
-                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Continents</div>
+                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('geoGuesserLobbyScreen.continents')}</div>
                 </div>
             </div>
 
@@ -63,7 +65,7 @@ const GeoGuesserLobbyScreen: React.FC<GeoGuesserLobbyScreenProps> = ({ navigateT
                     className="w-full py-4 text-lg font-bold text-green-700 bg-green-50 border-2 border-green-200 rounded-2xl hover:bg-green-100 transition-colors flex items-center justify-center space-x-2"
                 >
                     <ShareIcon className="w-5 h-5 shrink-0" />
-                    <span className="min-w-0">Challenge Friends</span>
+                    <span className="min-w-0">{t('geoGuesserLobbyScreen.challengeFriends')}</span>
                 </button>
             </div>
 

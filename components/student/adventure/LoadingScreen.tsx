@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SparklesIcon } from '../../../constants';
 
@@ -13,6 +14,7 @@ const messages = [
 ];
 
 const LoadingScreen: React.FC = () => {
+    const { t } = useTranslation();
     const [message, setMessage] = useState(messages[0]);
 
     useEffect(() => {
@@ -39,7 +41,7 @@ const LoadingScreen: React.FC = () => {
                 <SparklesIcon className="w-24 h-24 text-white/50" />
                 <SparklesIcon className="w-16 h-16 text-white/80 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 animate-spin" />
             </motion.div>
-            <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-2xl font-bold mt-4">Crafting Your Adventure...</motion.h1>
+            <motion.h1 initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="text-2xl font-bold mt-4">{t('loadingScreen.craftingYourAdventure')}</motion.h1>
             <AnimatePresence mode="wait">
                 <motion.p
                     key={message}

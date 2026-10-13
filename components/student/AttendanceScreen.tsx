@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { StudentAttendance, AttendanceStatus } from '../../types';
@@ -70,6 +71,7 @@ interface AttendanceScreenProps {
 }
 
 const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
+    const { t } = useTranslation();
     const { currentSchool } = useAuth();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [attendanceData, setAttendanceData] = useState<StudentAttendance[]>([]);
@@ -90,7 +92,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
             // so the day counts still show when the calendar data fails to load.
             // WHOSE RECORD. A student normally views their own, and the database works
             // out who that is from the session. When a parent or the office opens this
-            // for a specific child they pass `studentId`, and the RLS policy admits the
+            // for a specific child they pass PROTECTED4, and the RLS policy admits the
             // row only if that child really is theirs — so an id here cannot be used to
             // read another family's child.
             const targetId = studentId
@@ -228,7 +230,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
                 className="bg-white rounded-xl shadow-sm p-4"
             >
                 <div className="flex justify-between items-center mb-4">
-                    <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Previous month"><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
+                    <motion.button whileTap={{ scale: 0.9 }} onClick={goToPreviousMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label={t('attendanceScreen.previousMonth')}><ChevronLeftIcon className="h-5 w-5 text-gray-600" /></motion.button>
                     <AnimatePresence mode="wait">
                         <motion.h3
                             key={currentDate.toISOString().slice(0, 7)}
@@ -241,7 +243,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
                             {currentDate.toLocaleString('ms-MY', { month: 'long', year: 'numeric' })}
                         </motion.h3>
                     </AnimatePresence>
-                    <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Next month"><ChevronRightIcon className="h-5 w-5 text-gray-600" /></motion.button>
+                    <motion.button whileTap={{ scale: 0.9 }} onClick={goToNextMonth} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label={t('attendanceScreen.nextMonth')}><ChevronRightIcon className="h-5 w-5 text-gray-600" /></motion.button>
                 </div>
                 <div className="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-gray-500 mb-2">
                     {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, index) => <div key={`${day}-${index}`}>{day}</div>)}
@@ -269,7 +271,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
             </motion.div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-green-600">{monthlyStats.present}</p><p className="text-xs text-gray-500">Present</p></motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-green-600">{monthlyStats.present}</p><p className="text-xs text-gray-500">{t('attendanceScreen.present')}</p></motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-red-600">{monthlyStats.absent}</p><p className="text-xs text-gray-500">Absent</p></motion.div>
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.15 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-blue-600">{monthlyStats.late}</p><p className="text-xs text-gray-500">Late</p></motion.div>
             </div>
@@ -282,7 +284,7 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
             >
                 <div className="flex justify-between items-center mb-2">
                     <div>
-                        <h3 className="font-bold text-gray-800">Term Attendance Trend</h3>
+                        <h3 className="font-bold text-gray-800">{t('attendanceScreen.termAttendanceTrend')}</h3>
                         {termSummary && <p className="text-xs text-gray-500">{termSummary.term} · {termSummary.session}</p>}
                     </div>
                     <div className="relative">
@@ -294,8 +296,8 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
                 </div>
                 {termSummary && (
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-center mb-3">
-                        <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termSummary.total}</p><p className="text-xs text-gray-500">School days</p></div>
-                        <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termSummary.present}</p><p className="text-xs text-gray-500">Present</p></div>
+                        <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termSummary.total}</p><p className="text-xs text-gray-500">{t('attendanceScreen.schoolDays')}</p></div>
+                        <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termSummary.present}</p><p className="text-xs text-gray-500">{t('attendanceScreen.present')}</p></div>
                         <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termSummary.absent}</p><p className="text-xs text-gray-500">Absent</p></div>
                         <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termSummary.late}</p><p className="text-xs text-gray-500">Late</p></div>
                     </div>

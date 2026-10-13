@@ -1,5 +1,6 @@
 
 import React, { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../../lib/ai';
 import { toast } from 'react-hot-toast';
 import HomeScreen from './HomeScreen';
@@ -31,6 +32,7 @@ const fileToGenerativePart = async (file: File) => {
 type AdventureContent = { type: 'text', content: string } | { type: 'media', content: { inlineData: { data: string; mimeType: string; } } };
 
 const AdventureQuestHost: React.FC<{ handleBack: () => void }> = ({ handleBack }) => {
+    const { t } = useTranslation();
     const [appState, setAppState] = useState<'home' | 'loading' | 'quiz' | 'results'>('home');
     const [adventureData, setAdventureData] = useState<AdventureData | null>(null);
     const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
@@ -125,7 +127,7 @@ const AdventureQuestHost: React.FC<{ handleBack: () => void }> = ({ handleBack }
     const handleStartAdventure = useCallback(async (source: { type: 'file'; value: File } | { type: 'url'; value: string }, difficulty: AdventureDifficulty) => {
         if (source.type === 'url') {
             const content = `(This is a demo using content from ${source.value}) In 1492, Columbus sailed the ocean blue. He was an explorer who made four trips across the Atlantic Ocean.`;
-            toast("URL fetching is for demo purposes only. Using sample text.", { icon: 'ℹ️' });
+            toast(t('adventureQuestHost.urlFetchingIsForDemoPurposesOnlyUsingSampleTex'), { icon: 'ℹ️' });
             await generateAdventure({ type: 'text', content }, difficulty);
             return;
         }

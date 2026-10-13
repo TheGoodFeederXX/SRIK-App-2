@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
 import ReactMarkdown from 'react-markdown';
@@ -34,6 +35,7 @@ const LoadingBubble = () => (
 );
 
 const StudyBuddy: React.FC = () => {
+    const { t } = useTranslation();
     const theme = THEME_CONFIG[DashboardType.Student];
     const [messages, setMessages] = useState<Message[]>([
         { role: 'model', text: "Hello! I'm your Study Buddy. Ask me anything about your school subjects, or upload a picture of a problem you're stuck on." }
@@ -156,7 +158,7 @@ const StudyBuddy: React.FC = () => {
                     >
                         <div className={`max-w-xs md:max-w-md lg:max-w-lg px-3 py-2 shadow flex flex-col ${msg.role === 'user' ? 'bg-orange-200 text-gray-800 rounded-t-xl rounded-bl-xl' : 'bg-white text-gray-800 rounded-t-xl rounded-br-xl'}`}>
                             {msg.imageUrl && (
-                                <img src={msg.imageUrl} alt="User upload" className="rounded-lg mb-2 max-h-48" />
+                                <img src={msg.imageUrl} alt={t('studyBuddy.userUpload')} className="rounded-lg mb-2 max-h-48" />
                             )}
                             <div className="prose prose-sm max-w-none prose-p:my-1 prose-headings:my-2">
                                 {msg.role === 'model' && !msg.text && index === messages.length - 1 && isLoading ? (
@@ -183,14 +185,14 @@ const StudyBuddy: React.FC = () => {
                         accept="image/*"
                         disabled={isLoading}
                     />
-                    <motion.button whileTap={{ scale: 0.9 }} type="button" onClick={handleCameraClick} disabled={isLoading} className="p-2 text-gray-500 hover:text-orange-500 disabled:opacity-50 transition-colors" aria-label="Upload image">
+                    <motion.button whileTap={{ scale: 0.9 }} type="button" onClick={handleCameraClick} disabled={isLoading} className="p-2 text-gray-500 hover:text-orange-500 disabled:opacity-50 transition-colors" aria-label={t('studyBuddy.uploadImage')}>
                         <CameraIcon className="h-6 w-6" />
                     </motion.button>
                     <input
                         type="text"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
-                        placeholder="Type a message..."
+                        placeholder={t('studyBuddy.typeAMessage')}
                         className="flex-grow px-4 py-2 bg-white border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 shadow-sm"
                         disabled={isLoading}
                     />

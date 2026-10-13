@@ -1,5 +1,6 @@
 ﻿
 import React, { useState, useMemo, useEffect, useRef, lazy, Suspense, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import { lazyWithRetry } from '../../lib/lazyRetry';
@@ -119,6 +120,7 @@ const TodayFocus: React.FC<{
     navigateTo: (view: string, title: string, props?: any) => void,
     student: Student
 }> = ({ schedule, assignments, quizzes, theme, navigateTo, student }) => {
+    const { t } = useTranslation();
     
     // Determine the highest priority task
     const nextTask = useMemo(() => {
@@ -167,7 +169,7 @@ const TodayFocus: React.FC<{
 
     return (
         <div className="space-y-4">
-            <h3 className="font-bold text-lg text-gray-800 ml-1">Your Focus</h3>
+            <h3 className="font-bold text-lg text-gray-800 ml-1">{t('studentDashboard.yourFocus')}</h3>
             
             {nextTask ? (
                 <div className="space-y-2">
@@ -191,8 +193,8 @@ const TodayFocus: React.FC<{
             ) : (
                 <div className="bg-white p-6 rounded-3xl shadow-sm text-center">
                     <SparklesIcon className="w-8 h-8 text-yellow-400 mx-auto mb-2" />
-                    <p className="text-gray-600 font-medium">You're all caught up!</p>
-                    <p className="text-xs text-gray-400 mt-1">Enjoy your free time or explore the library.</p>
+                    <p className="text-gray-600 font-medium">{t('studentDashboard.youReAllCaughtUp')}</p>
+                    <p className="text-xs text-gray-400 mt-1">{t('studentDashboard.enjoyYourFreeTimeOrExploreTheLibrary')}</p>
                 </div>
             )}
 
@@ -200,7 +202,7 @@ const TodayFocus: React.FC<{
             {schedule.length > 0 && (
                 <div className="bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200">
                     <div className="flex justify-between items-center mb-3">
-                        <h4 className="text-sm font-semibold text-gray-600">Today's Schedule</h4>
+                        <h4 className="text-sm font-semibold text-gray-600">{t('studentDashboard.todaySSchedule')}</h4>
                         {schedule.length > 3 && (
                             <button
                                 onClick={() => navigateTo('timetable', 'Timetable Dashboard')}
@@ -229,7 +231,7 @@ const TodayFocus: React.FC<{
                                 </div>
                             </motion.div>
                         ))}
-                        {schedule.length === 0 && <p className="text-xs text-gray-400 text-center italic">No classes scheduled for today.</p>}
+                        {schedule.length === 0 && <p className="text-xs text-gray-400 text-center italic">{t('studentDashboard.noClassesScheduledForToday')}</p>}
                     </div>
                 </div>
             )}
@@ -245,6 +247,7 @@ const Overview: React.FC<{
     currentUser: any;
     forceUpdate: () => void;
 }> = ({ navigateTo, student, schoolId, currentBranchId, currentUser, forceUpdate }) => {
+    const { t } = useTranslation();
     const theme = THEME_CONFIG[DashboardType.Student];
     const [todaySchedule, setTodaySchedule] = useState<any[]>([]);
     const [upcomingAssignments, setUpcomingAssignments] = useState<any[]>([]);
@@ -315,21 +318,21 @@ const Overview: React.FC<{
     }, []);
 
     const quickAccessItems = [
-        { label: 'Subjects', icon: <BookOpenIcon />, action: () => navigateTo('subjects', 'My Subjects') },
-        { label: 'Timetable', icon: <CalendarIcon />, action: () => navigateTo('timetable', 'Timetable Dashboard') },
-        { label: 'Results', icon: <ChartBarIcon />, action: () => navigateTo('results', 'Academic Performance', { studentId: student.id }) },
+        { label: t('studentDashboard.subjects'), icon: <BookOpenIcon />, action: () => navigateTo('subjects', 'My Subjects') },
+        { label: t('studentDashboard.timetable'), icon: <CalendarIcon />, action: () => navigateTo('timetable', 'Timetable Dashboard') },
+        { label: t('studentDashboard.results'), icon: <ChartBarIcon />, action: () => navigateTo('results', 'Academic Performance', { studentId: student.id }) },
         // "Games" removed: duplicates the Games tab already in both the
         // sidebar and the mobile bottom nav.
-        { label: 'Learning Hub', icon: <ElearningIcon />, action: () => navigateTo('learningHub', 'Learning Hub') },
-        { label: 'Free Resources', icon: <GlobeIcon />, action: () => navigateTo('freeLearningResources', 'Free Learning Resources') },
+        { label: t('studentDashboard.learningHub'), icon: <ElearningIcon />, action: () => navigateTo('learningHub', 'Learning Hub') },
+        { label: t('studentDashboard.freeResources'), icon: <GlobeIcon />, action: () => navigateTo('freeLearningResources', 'Free Learning Resources') },
         // Reporting channels — owner asked for them here (2026-09-18).
-        { label: 'Report a Concern', icon: <ShieldCheckIcon />, action: () => navigateTo('anonymousReporting', 'Report a Concern') },
-        { label: 'Discreet Support', icon: <HeartIcon />, action: () => navigateTo('discreetReporting', 'Discreet Support') },
+        { label: t('studentDashboard.reportAConcern'), icon: <ShieldCheckIcon />, action: () => navigateTo('anonymousReporting', 'Report a Concern') },
+        { label: t('studentDashboard.discreetSupport'), icon: <HeartIcon />, action: () => navigateTo('discreetReporting', 'Discreet Support') },
     ];
 
     const aiTools = [
-        { label: 'AI Study Buddy', description: 'Stuck on a problem?', color: 'from-purple-500 to-indigo-600', action: () => navigateTo('studyBuddy', 'Study Buddy') },
-        { label: 'AI Adventure Quest', description: 'Turn any text into a fun quiz!', color: 'from-teal-400 to-blue-500', action: () => navigateTo('adventureQuest', 'AI Adventure Quest', {}) },
+        { label: t('studentDashboard.aiStudyBuddy'), description: t('studentDashboard.stuckOnAProblem'), color: 'from-purple-500 to-indigo-600', action: () => navigateTo('studyBuddy', 'Study Buddy') },
+        { label: t('studentDashboard.aiAdventureQuest'), description: t('studentDashboard.turnAnyTextIntoAFunQuiz'), color: 'from-teal-400 to-blue-500', action: () => navigateTo('adventureQuest', 'AI Adventure Quest', {}) },
     ];
 
     if (loading) return (
@@ -377,9 +380,9 @@ const Overview: React.FC<{
                         student={student}
                     />
                     <div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">AI Tools</h3>
+                        <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">{t('studentDashboard.aiTools')}</h3>
                         {/* The column count follows the available width instead of being
-                            fixed at three. There are two tools, so `grid-cols-3` reserved a
+                            fixed at three. There are two tools, so PROTECTED3 reserved a
                             third column that was never filled — the empty gap to the right of
                             the cards — and it held three columns even on a phone, which gave
                             each card about a third of a 390px screen. auto-fit lets the cards
@@ -412,7 +415,7 @@ const Overview: React.FC<{
                 {/* Sidebar */}
                 <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-6 lg:self-start">
                     <div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">Quick Actions</h3>
+                        <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">{t('studentDashboard.quickActions')}</h3>
                         <AnimatePresence>
                             {liveClass && (
                                 <motion.button
@@ -446,8 +449,8 @@ const Overview: React.FC<{
                             )}
                         </AnimatePresence>
                         {/* Wraps by the room it actually has, not by the viewport: these tiles
-                            sit in a column the sidebar narrows from `lg` up, where a
-                            viewport breakpoint like `lg:grid-cols-3` measured 60px cells at
+                            sit in a column the sidebar narrows from PROTECTED6 up, where a
+                            viewport breakpoint like PROTECTED7 measured 60px cells at
                             1024px — worse than on a phone.
 
                             Flex rather than grid so the seventh tile is not stranded at the
@@ -484,6 +487,7 @@ interface StudentDashboardProps {
 }
 
 const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHomePage, currentUser }) => {
+    const { t } = useTranslation();
     const [scrolled, setScrolled] = useState(false);
     const {
         view, title, props: routeProps,
@@ -853,7 +857,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                     <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <span className="text-3xl">🎓</span>
                     </div>
-                    <h2 className="text-2xl font-bold text-gray-800 mb-2">Student Profile Not Found</h2>
+                    <h2 className="text-2xl font-bold text-gray-800 mb-2">{t('studentDashboard.studentProfileNotFound')}</h2>
                     <p className="text-gray-600 mb-6">
                         We couldn't find a student record linked to your account.
                         Please contact the school administrator to set up your student profile.
@@ -867,7 +871,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                         </button>
                     </div>
                     <div className="mt-4 pt-4 border-t border-gray-100">
-                        <p className="text-xs text-gray-400 uppercase tracking-widest font-bold">Secure Session Active</p>
+                        <p className="text-xs text-gray-400 uppercase tracking-widest font-bold">{t('studentDashboard.secureSessionActive')}</p>
                     </div>
                 </div>
             </div>
@@ -880,11 +884,11 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
     // messages/newChat keep the nav so users can switch tabs; chat and games go fully immersive
     const hideBottomNav = isFullScreen && view !== 'messages' && view !== 'newChat';
 
-    // Portalled straight to <body>: rendered this deep in the tree, `fixed`
+    // Portalled straight to <body>: rendered this deep in the tree, PROTECTED15
     // stopped meaning "relative to the viewport" the moment ANY ancestor
     // (DashboardLayout's animated wrapper, a motion.div higher up, etc.) had
     // an active CSS transform — a transformed ancestor becomes the new
-    // containing block for a `fixed` descendant per the CSS spec, so on a
+    // containing block for a PROTECTED16 descendant per the CSS spec, so on a
     // real phone these banners rendered clipped and off-center instead of
     // centered under the header. Same fix PremiumLoader already uses for the
     // same reason.
@@ -897,11 +901,11 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
             {/* The outer div does the CENTERING via a plain CSS transform
                 (Tailwind's -translate-x-1/2 class); the inner motion.div only
                 animates opacity/y/scale. Framer Motion fully owns the
-                `transform` style of whatever element it's animating — a
+                PROTECTED17 style of whatever element it's animating — a
                 motion.div carrying BOTH the enter/exit animation AND the
                 Tailwind centering class silently drops the Tailwind
                 transform (motion's own inline transform wins), so the banner
-                rendered flush against `left: 50%` with no compensating shift
+                rendered flush against PROTECTED18 with no compensating shift
                 and overflowed off the right edge of the screen instead of
                 sitting centered under the header. */}
             <AnimatePresence>
@@ -922,7 +926,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                                     <p className="font-bold text-gray-900 text-sm truncate">{reminderBanner.title}</p>
                                     <p className="text-gray-600 text-sm break-words">{reminderBanner.message}</p>
                                 </div>
-                                <button onClick={() => setReminderBanner(null)} className="flex-shrink-0 w-8 h-8 -mr-1 -mt-1 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none" aria-label="Dismiss">×</button>
+                                <button onClick={() => setReminderBanner(null)} className="flex-shrink-0 w-8 h-8 -mr-1 -mt-1 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none" aria-label={t('studentDashboard.dismiss')}>×</button>
                             </div>
                         </motion.div>
                     </div>
@@ -946,7 +950,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                                     <p className="font-bold text-gray-900 text-sm">
                                         {unreadMsgCount === 1 ? '1 unread message' : `${unreadMsgCount} unread messages`}
                                     </p>
-                                    <p className="text-gray-500 text-xs">You received messages while you were away</p>
+                                    <p className="text-gray-500 text-xs">{t('studentDashboard.youReceivedMessagesWhileYouWereAway')}</p>
                                 </div>
                                 <button
                                     onClick={() => { setUnreadMsgCount(0); navigateTo('messages', 'Messages'); }}
@@ -954,7 +958,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                                 >
                                     View
                                 </button>
-                                <button onClick={() => setUnreadMsgCount(0)} className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none" aria-label="Dismiss">×</button>
+                                <button onClick={() => setUnreadMsgCount(0)} className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors text-lg leading-none" aria-label={t('studentDashboard.dismiss')}>×</button>
                             </div>
                         </motion.div>
                     </div>
@@ -986,9 +990,9 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
                                 
                                 // Additional prop injection
                                 if (view === 'curriculum') {
-                                    // `student.level` is the gamification XP level (Int, defaults to 1) —
+                                    // PROTECTED21 is the gamification XP level (Int, defaults to 1) —
                                     // not the academic class level string CurriculumScreen expects
-                                    // ("Primary 4", "JSS 1", ...). Derive it from `grade` instead, using
+                                    // ("Primary 4", "JSS 1", ...). Derive it from PROTECTED22 instead, using
                                     // the same grade->name convention as class creation (constants.tsx).
                                     componentProps.level = getFormattedClassName(student?.grade ?? 0);
                                     componentProps.department = student?.department;

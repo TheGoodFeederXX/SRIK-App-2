@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -16,9 +17,11 @@ interface ClassroomScreenProps {
   navigateTo: (view: string, title: string, props?: any) => void;
 }
 
-const ClassroomScreen: React.FC<ClassroomScreenProps> = ({ subjectName, navigateTo }) => (
+const ClassroomScreen: React.FC<ClassroomScreenProps> = ({ subjectName, navigateTo }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="Bilik Darjah"
+        title={t('classroomScreen.bilikDarjah')}
         explanation={
             'Halaman bilik darjah belum tersedia di dalam sistem ini. Buat masa ini ' +
             'murid boleh melihat markah penilaian, rekod kehadiran dan laporan ' +
@@ -28,6 +31,7 @@ const ClassroomScreen: React.FC<ClassroomScreenProps> = ({ subjectName, navigate
         }
         handleBack={navigateTo ? () => navigateTo('studentDashboard', 'Papan Pemuka') : undefined}
     />
-);
+    );
+};
 
 export default ClassroomScreen;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Share2 as ShareIcon, Code as CodeIcon, Terminal as TerminalIcon, Cpu as CpuIcon } from 'lucide-react';
 import { Student } from '../../../types';
 import { toast } from 'react-hot-toast';
@@ -9,15 +10,16 @@ interface CodeChallengeLobbyScreenProps {
 }
 
 const CodeChallengeLobbyScreen: React.FC<CodeChallengeLobbyScreenProps> = ({ navigateTo, student }) => {
+    const { t } = useTranslation();
 
     const handleShareChallenge = () => {
         if (navigator.share) {
             navigator.share({
-                title: 'Code Challenge!',
+                title: t('codeChallengeLobbyScreen.codeChallenge'),
                 text: "I'm mastering logic in Code Challenge! Can you solve the algorithm on the Smart School App?",
             }).catch((error) => console.log('Error sharing:', error));
         } else {
-            toast('Sharing is not supported on your browser. You can copy the link manually!', { icon: '💻' });
+            toast(t('codeChallengeLobbyScreen.sharingIsNotSupportedOnYourBrowserYouCanCopyTh'), { icon: '💻' });
         }
     };
 
@@ -34,7 +36,7 @@ const CodeChallengeLobbyScreen: React.FC<CodeChallengeLobbyScreenProps> = ({ nav
             </div>
 
             <h1 className="text-4xl font-black text-purple-600 tracking-tight mb-2">
-                Code Challenge
+                {t('codeChallengeLobbyScreen.codeChallenge')}
             </h1>
             <p className="text-gray-600 text-lg max-w-sm font-medium">
                 Master the language of the future. Use logic blocks to solve puzzles and control the bot!
@@ -65,7 +67,7 @@ const CodeChallengeLobbyScreen: React.FC<CodeChallengeLobbyScreenProps> = ({ nav
                     className="w-full py-4 text-lg font-bold text-purple-700 bg-purple-50 border-2 border-purple-200 rounded-2xl hover:bg-purple-100 transition-colors flex items-center justify-center space-x-2"
                 >
                     <ShareIcon className="w-5 h-5 shrink-0" />
-                    <span className="min-w-0">Invite Programmers</span>
+                    <span className="min-w-0">{t('codeChallengeLobbyScreen.inviteProgrammers')}</span>
                 </button>
             </div>
 

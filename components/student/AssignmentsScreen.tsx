@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ComingSoonScreen from '../ui/ComingSoonScreen';
 
 /**
@@ -13,9 +14,11 @@ import ComingSoonScreen from '../ui/ComingSoonScreen';
  * "you have no homework" — a statement a child would act on. "This is not built
  * yet" is true and a child can understand it.
  */
-const AssignmentsScreen: React.FC<any> = ({ handleBack }) => (
+const AssignmentsScreen: React.FC<any> = ({ handleBack }) => {
+    const { t } = useTranslation();
+    return (
     <ComingSoonScreen
-        title="My Assignments"
+        title={t('assignmentsScreen.myAssignments')}
         explanation={
             'Homework and assignments are not recorded in this system yet. '
             + 'When they are, you will see the work your teachers have set, when it is due, '
@@ -23,6 +26,7 @@ const AssignmentsScreen: React.FC<any> = ({ handleBack }) => (
         }
         handleBack={handleBack}
     />
-);
+    );
+};
 
 export default AssignmentsScreen;

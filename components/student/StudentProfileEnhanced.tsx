@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAutoSync } from '../../hooks/useAutoSync';
 import {
@@ -36,7 +37,7 @@ import { onImageClick } from '../shared/ImageLightbox';
 
 // ... (existing imports)
 
-// Extracurricular activities don't carry a `color` field from the API — cycle
+// Extracurricular activities don't carry a PROTECTED0 field from the API — cycle
 // through a fixed, fully-static palette by index instead of building Tailwind
 // class names dynamically (which the compiler can't detect and would purge).
 const ACTIVITY_COLOR_PALETTE = [
@@ -55,6 +56,7 @@ interface StudentProfileEnhancedProps {
 }
 
 export default function StudentProfileEnhanced({ studentId, student: initialStudent, navigateTo, initialTab }: StudentProfileEnhancedProps) {
+    const { t } = useTranslation();
     const { customId, formatId, copyToClipboard, copied } = useUserIdentity();
     const [student, setStudent] = useState<any>(initialStudent || null);
     const [loading, setLoading] = useState(!initialStudent);
@@ -80,7 +82,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             const normalized = {
                 ...initialStudent,
                 // The admission number IS the child's school identifier. There is no
-                // separate `school_generated_id` — that column exists nowhere.
+                // separate PROTECTED1 — that column exists nowhere.
                 school_id_display: initialStudent.admission_number,
                 admission_number: initialStudent.admission_number,
                 // Ensure grade/section are present for class display
@@ -160,9 +162,9 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
 
             // THE CHILD'S REAL RECORD, field by field. The old loader spread a response
             // from an undeployed server and then read a dozen aliases off it —
-            // `firstName`, `first_name`, `schoolGeneratedId`, `school_generated_id`,
-            // `dob`, `birthday`, `dateOfBirth` — none of which the database has. It also
-            // read `school_generated_id`, which exists NOWHERE.
+            // PROTECTED3, PROTECTED4, PROTECTED5, PROTECTED6,
+            // PROTECTED7, PROTECTED8, PROTECTED9 — none of which the database has. It also
+            // read PROTECTED10, which exists NOWHERE.
             const dbStudent = await getStudent(id.toString());
 
             if (dbStudent) {
@@ -234,7 +236,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
 
             } catch (error) {
             console.error('Error fetching profile data:', error);
-            toast.error('Unable to load profile data. Please try again.');
+            toast.error(t('studentProfileEnhanced.unableToLoadProfileDataPleaseTryAgain'));
             } finally {
             setLoading(false);
             }
@@ -261,7 +263,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             const success = await uploadStudentDocument(student.id, docData);
             
             if (success) {
-                toast.success('Document uploaded successfully', { id: toastId });
+                toast.success(t('studentProfileEnhanced.documentUploadedSuccessfully'), { id: toastId });
                 fetchProfileData(student.id); // Refresh documents
             }
         } catch (error: any) {
@@ -347,10 +349,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                 margin: 10,
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
             }).from(el).save();
-            toast.success('Transcript downloaded', { id: toastId });
+            toast.success(t('studentProfileEnhanced.transcriptDownloaded'), { id: toastId });
         } catch (err) {
             console.error('Transcript error:', err);
-            toast.error('Could not generate transcript', { id: toastId });
+            toast.error(t('studentProfileEnhanced.couldNotGenerateTranscript'), { id: toastId });
         }
     };
 
@@ -397,13 +399,13 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
 
     // Optimistic UI: only block the whole screen on the very first load (no
     // student data yet). Background re-syncs (real-time updates via useAutoSync)
-    // set `loading` again but must not blank out an already-rendered profile.
+    // set PROTECTED16 again but must not blank out an already-rendered profile.
     if (!student) {
         return (
             <div className="flex items-center justify-center min-h-screen bg-slate-50">
                 <div className="flex flex-col items-center gap-4">
                     <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                    <p className="text-sm text-slate-600 font-medium">Loading profile...</p>
+                    <p className="text-sm text-slate-600 font-medium">{t('studentProfileEnhanced.loadingProfile')}</p>
                 </div>
             </div>
         );
@@ -433,9 +435,9 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                     <div className="max-w-7xl mx-auto">
                         {/* Navigation Breadcrumb */}
                         <div className="flex items-center gap-2 text-sm text-white/80 mb-8">
-                            <span className="hover:text-white cursor-pointer transition-colors">Dashboard</span>
+                            <span className="hover:text-white cursor-pointer transition-colors">{t('studentProfileEnhanced.dashboard')}</span>
                             <ChevronRight className="w-4 h-4" />
-                            <span className="text-white font-semibold">Student Profile</span>
+                            <span className="text-white font-semibold">{t('studentProfileEnhanced.studentProfile')}</span>
                         </div>
 
                         {/* Profile Header — identity, then the stats in one even row, then the
@@ -454,7 +456,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             ) : (
                                                 <span className="text-4xl lg:text-5xl font-bold tracking-tight">
                                                     {/* Initials from the single stored name. The record has
-                                                        no separate first/last fields — only `full_name`. */}
+                                                        no separate first/last fields — only PROTECTED17. */}
                                                     {student.name ? (
                                                         student.name.split(' ').map((n: string) => n[0]).slice(0, 2).join('')
                                                     ) : (
@@ -492,12 +494,12 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             whileTap={{ scale: 0.96 }}
                                             className="rounded-full min-h-[44px] inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
                                             onClick={() => copyToClipboard(student.admission_number || '')}
-                                            aria-label="Copy student ID to clipboard"
+                                            aria-label={t('studentProfileEnhanced.copyStudentIDToClipboard')}
                                         >
                                             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-2.5 text-sm flex items-center gap-2">
                                                 ID: {student.admission_number || 'Pending'}
                                                 <Copy className="w-3 h-3 opacity-70" />
-                                                {copied && <span className="text-xs ml-1">Copied!</span>}
+                                                {copied && <span className="text-xs ml-1">{t('studentProfileEnhanced.copied')}</span>}
                                             </Badge>
                                         </motion.button>
                                     </div>
@@ -516,7 +518,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <MotionListItem>
                                         <StatCard
                                             icon={<TrendingUp className="w-5 h-5" />}
-                                            label="Attendance"
+                                            label={t('studentProfileEnhanced.attendance')}
                                             value={`${stats.attendanceRate}%`}
                                             trend={stats.attendanceRate > 90 ? "+ Good" : "Needs Imp."}
                                             trendUp={stats.attendanceRate > 90}
@@ -525,7 +527,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <MotionListItem>
                                         <StatCard
                                             icon={<Award className="w-5 h-5" />}
-                                            label="Average"
+                                            label={t('studentProfileEnhanced.average')}
                                             value={`${stats.averageScore}%`}
                                             trend={stats.averageScore > 75 ? "+ Good" : "Fair"}
                                             trendUp={stats.averageScore > 75}
@@ -534,7 +536,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <MotionListItem>
                                         <StatCard
                                             icon={<BookOpen className="w-5 h-5" />}
-                                            label="Performance"
+                                            label={t('studentProfileEnhanced.performance')}
                                             value={performance.length.toString()}
                                             badge="Subjects"
                                         />
@@ -542,7 +544,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <MotionListItem>
                                         <StatCard
                                             icon={<Target className="w-5 h-5" />}
-                                            label="Submitted"
+                                            label={t('studentProfileEnhanced.submitted')}
                                             value={stats.assignmentsSubmitted.toString()}
                                             badge="Assign."
                                         />
@@ -558,9 +560,9 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <Button onClick={async () => {
                                         try {
                                             await navigator.clipboard.writeText(window.location.href);
-                                            toast.success('Profile link copied to clipboard!');
+                                            toast.success(t('studentProfileEnhanced.profileLinkCopiedToClipboard'));
                                         } catch {
-                                            toast.error('Could not copy link. Please copy it from the address bar.');
+                                            toast.error(t('studentProfileEnhanced.couldNotCopyLinkPleaseCopyItFromTheAddressBar'));
                                         }
                                     }} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-1 sm:order-2">
                                         <Share2 className="w-4 h-4 mr-2" />
@@ -570,7 +572,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         <>
                                             <Button onClick={() => navigateTo('editProfile', 'Edit Profile')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
                                                 <Settings className="w-4 h-4 mr-2" />
-                                                Edit Profile
+                                                {t('studentProfileEnhanced.editProfile')}
                                             </Button>
                                             <Button onClick={() => navigateTo('appearanceSettings', 'Appearance & Theme')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-3">
                                                 <Sparkles className="w-4 h-4 mr-2" />
@@ -578,7 +580,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             </Button>
                                             <Button onClick={() => navigateTo('changePassword', 'Change Password')} className="flex-auto sm:flex-none min-h-[44px] !bg-white/10 !text-white border border-white/30 hover:!bg-white/20 backdrop-blur-sm order-4">
                                                 <Lock className="w-4 h-4 mr-2" />
-                                                Change Password
+                                                {t('studentProfileEnhanced.changePassword')}
                                             </Button>
                                         </>
                                     )}
@@ -641,12 +643,12 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         </CardHeader>
                                         <CardContent className="p-6">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <InfoField icon={<Mail />} label="Email Address" value={student.email || 'N/A'} />
-                                                <InfoField icon={<Phone />} label="Phone Number" value={student.phone || student.parentPhone || 'N/A'} />
-                                                <InfoField icon={<Calendar />} label="Date of Birth" value={student.dob ? new Date(student.dob).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'} />
-                                                <InfoField icon={<MapPin />} label="Address" value={student.address || 'N/A'} />
-                                                <InfoField icon={<User />} label="Guardian" value={student.parentName || student.guardian_name || 'N/A'} />
-                                                <InfoField icon={<Phone />} label="Guardian Contact" value={student.parentPhone || student.guardian_phone || 'N/A'} />
+                                                <InfoField icon={<Mail />} label={t('studentProfileEnhanced.emailAddress')} value={student.email || 'N/A'} />
+                                                <InfoField icon={<Phone />} label={t('studentProfileEnhanced.phoneNumber')} value={student.phone || student.parentPhone || 'N/A'} />
+                                                <InfoField icon={<Calendar />} label={t('studentProfileEnhanced.dateOfBirth')} value={student.dob ? new Date(student.dob).toLocaleDateString('ms-MY', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A'} />
+                                                <InfoField icon={<MapPin />} label={t('studentProfileEnhanced.address')} value={student.address || 'N/A'} />
+                                                <InfoField icon={<User />} label={t('studentProfileEnhanced.guardian')} value={student.parentName || student.guardian_name || 'N/A'} />
+                                                <InfoField icon={<Phone />} label={t('studentProfileEnhanced.guardianContact')} value={student.parentPhone || student.guardian_phone || 'N/A'} />
                                             </div>
                                         </CardContent>
                                     </Card>
@@ -661,7 +663,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                     </div>
                                                     <div className="flex-1">
                                                         <h3 className="text-lg font-bold text-white mb-1">🎯 Today's Learning Focus</h3>
-                                                        <p className="text-orange-100 text-sm mb-3">Based on your recent performance, we recommend focusing on:</p>
+                                                        <p className="text-orange-100 text-sm mb-3">{t('studentProfileEnhanced.basedOnYourRecentPerformanceWeRecommendFocusin')}</p>
                                                         <div className="space-y-2">
                                                             {learningFocus.map((item: any, idx: number) => {
                                                                 const colors: any = {
@@ -702,7 +704,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         {p.score == null ? (
                                                             <div className="flex items-center justify-between">
                                                                 <span className="text-sm font-semibold text-slate-700">{p.subject}</span>
-                                                                <span className="text-xs font-medium text-slate-400 italic">No result yet</span>
+                                                                <span className="text-xs font-medium text-slate-400 italic">{t('studentProfileEnhanced.noResultYet')}</span>
                                                             </div>
                                                         ) : (
                                                             <PerformanceBar
@@ -714,7 +716,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         )}
                                                     </MotionListItem>
                                                 )) : (
-                                                    <div className="text-center py-4 text-slate-500">No subjects assigned yet.</div>
+                                                    <div className="text-center py-4 text-slate-500">{t('studentProfileEnhanced.noSubjectsAssignedYet')}</div>
                                                 )}
                                             </MotionList>
                                         </CardContent>
@@ -729,10 +731,10 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             <CardTitle className="text-lg">Stats</CardTitle>
                                         </CardHeader>
                                         <CardContent className="space-y-4">
-                                            <QuickStat icon={<CheckCircle />} label="Classes Attended" value={`${stats.attendanceRate}%`} color="emerald" />
-                                            <QuickStat icon={<FileText />} label="Assignments Submitted" value={stats.assignmentsSubmitted} color="blue" />
-                                            <QuickStat icon={<Clock />} label="Est. Study Hours" value={`${stats.studyHours}h`} color="purple" />
-                                            <QuickStat icon={<Award />} label="Achievements" value={stats.achievements} color="amber" />
+                                            <QuickStat icon={<CheckCircle />} label={t('studentProfileEnhanced.classesAttended')} value={`${stats.attendanceRate}%`} color="emerald" />
+                                            <QuickStat icon={<FileText />} label={t('studentProfileEnhanced.assignmentsSubmitted')} value={stats.assignmentsSubmitted} color="blue" />
+                                            <QuickStat icon={<Clock />} label={t('studentProfileEnhanced.estStudyHours')} value={`${stats.studyHours}h`} color="purple" />
+                                            <QuickStat icon={<Award />} label={t('studentProfileEnhanced.achievements')} value={stats.achievements} color="amber" />
                                         </CardContent>
                                     </Card>
 
@@ -768,7 +770,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         />
                                                     </MotionListItem>
                                                 )) : (
-                                                    <div className="p-4 text-center text-slate-500 text-sm">No upcoming events.</div>
+                                                    <div className="p-4 text-center text-slate-500 text-sm">{t('studentProfileEnhanced.noUpcomingEvents')}</div>
                                                 )}
                                             </MotionList>
                                         </CardContent>
@@ -781,15 +783,15 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                         <TabsContent value="academic" className="p-6 lg:p-8">
                             <Card className="border-slate-200 shadow-sm">
                                 <CardHeader className="border-b border-slate-100">
-                                    <CardTitle>Academic Records</CardTitle>
+                                    <CardTitle>{t('studentProfileEnhanced.academicRecords')}</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-0">
                                     <div className="overflow-x-auto">
                                         <table className="w-full text-sm text-left">
                                             <thead className="sticky top-0 z-10 bg-slate-50 text-slate-500 font-medium border-b border-slate-100">
                                                 <tr>
-                                                    <th className="sticky left-0 z-10 bg-slate-50 px-6 py-4 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">Subject</th>
-                                                    <th className="px-6 py-4">Assessment</th>
+                                                    <th className="sticky left-0 z-10 bg-slate-50 px-6 py-4 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">{t('studentProfileEnhanced.subject')}</th>
+                                                    <th className="px-6 py-4">{t('studentProfileEnhanced.assessment')}</th>
                                                     <th className="px-6 py-4">Score</th>
                                                     <th className="px-6 py-4">Grade</th>
                                                     <th className="px-6 py-4">Status</th>
@@ -806,11 +808,11 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                                 {getGradeLetter(p.score)}
                                                             </Badge>
                                                         </td>
-                                                        <td className="px-6 py-4 text-emerald-600 font-medium">Completed</td>
+                                                        <td className="px-6 py-4 text-emerald-600 font-medium">{t('studentProfileEnhanced.completed')}</td>
                                                     </tr>
                                                 )) : (
                                                     <tr>
-                                                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">No academic records available.</td>
+                                                        <td colSpan={5} className="px-6 py-8 text-center text-slate-500">{t('studentProfileEnhanced.noAcademicRecordsAvailable')}</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -856,7 +858,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-4 group-hover:bg-orange-100">
                                         <span className="text-2xl font-light">+</span>
                                     </div>
-                                    <span className="font-medium">Join New Activity</span>
+                                    <span className="font-medium">{t('studentProfileEnhanced.joinNewActivity')}</span>
                                 </button>
                             </MotionList>
                         </TabsContent>
@@ -864,7 +866,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                         <TabsContent value="documents" className="p-6 lg:p-8">
                             <Card className="border-slate-200 shadow-sm">
                                  <CardHeader className="border-b border-slate-100 flex flex-row items-center justify-between">
-                                    <CardTitle>Student Documents</CardTitle>
+                                    <CardTitle>{t('studentProfileEnhanced.studentDocuments')}</CardTitle>
                                     <div className="flex items-center gap-2">
                                         <input
                                             type="file"
@@ -905,7 +907,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                         size="sm"
                                                         className="hidden sm:flex"
                                                         onClick={() => {
-                                                            if (!doc.url) { toast.error('No file available for this document.'); return; }
+                                                            if (!doc.url) { toast.error(t('studentProfileEnhanced.noFileAvailableForThisDocument')); return; }
                                                             window.open(doc.url, '_blank', 'noopener,noreferrer');
                                                         }}
                                                     >

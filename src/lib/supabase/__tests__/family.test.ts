@@ -401,8 +401,44 @@ describe('F27: the parent portal reads the family from the session, not a parame
         // And it read `school_generated_id`, plus a dozen camel/snake aliases, none of
         // which the students table has.
         expect(src, 'the profile reads a column that exists nowhere').not.toMatch(/school_generated_id/);
-        expect(src, 'the profile reads alias fields that do not exist')
-            .not.toMatch(/first_name|firstName|dateOfBirth|schoolGeneratedId/);
+        // WHAT THIS IS REALLY ASKING: does the screen READ a field with this name?
+        //
+        // This took five attempts, and the reason is worth recording so nobody repeats it.
+        // A translation key is written `t('studentProfileEnhanced.dateOfBirth')` — a DOT
+        // followed by the very word being hunted — so the original `\.dateOfBirth` pattern
+        // matched a KEY and failed a screen that reads no such field.
+        //
+        // The obvious repair, removing string literals first, ALSO failed: when several
+        // literals sit side by side the removal glues the leftover text together and
+        // re-creates a dot. The reliable rule looks BACKWARD instead of rewriting. For each
+        // `.<field>`, walk back over the identifier in front of the dot; if the character
+        // before that identifier is a quote, the whole thing is a string literal, not a read.
+        // No rewriting, so nothing can be mis-glued.
+        //
+        // Verified by mutation BOTH ways: `data.dateOfBirth` is caught, and a bare key is not.
+        const readsField = (source, field) => {
+            const re = new RegExp(`\\.\\s*${field}\\b`, 'g');
+            let match;
+            while ((match = re.exec(source)) !== null) {
+                const dot = match.index;
+                let i = dot - 1;
+                while (i >= 0 && /[A-Za-z0-9_$]/.test(source[i])) i--;
+                const before = source[i];
+                if (before === "'" || before === '"' || before === '`') continue; // a key
+                return true; // a real member access
+            }
+            const destructured = new RegExp(
+                `(?:const|let|var)\\s*\\{[^}]*\\b${field}\\b[^}]*\\}\\s*=`,
+            );
+            return destructured.test(source);
+        };
+
+        // THE ASSERTIONS. Without this loop the helper above is defined and never used, and the
+        // test passes while checking nothing — which is how it behaved after an editing slip and
+        // was only caught by re-introducing the very defect it exists to stop.
+        for (const field of ['first_name', 'firstName', 'dateOfBirth', 'schoolGeneratedId']) {
+            expect(readsField(src, field), `the profile reads the alias field ${field}`).toBe(false);
+        }
 
         // What it reads instead: the real record, and the child's real attendance.
         expect(src).toMatch(/getStudent\(/);
