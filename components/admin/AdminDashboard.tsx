@@ -137,7 +137,6 @@ const MasterReportingHub = lazyWithRetry(() => import('./MasterReportingHub'));
 const ValidationConsole = lazyWithRetry(() => import('./ValidationConsole'));
 const UnifiedGovernanceHub = lazyWithRetry(() => import('./UnifiedGovernanceHub'));
 const EnhancedEnrollmentPage = lazyWithRetry(() => import('./EnhancedEnrollmentPage'));
-const ComplianceOnboardingPage = lazyWithRetry(() => import('./ComplianceOnboardingPage'));
 const StudentProfileEnhanced = lazyWithRetry(() => import('../student/StudentProfileEnhanced'));
 const TeacherProfileEnhanced = lazyWithRetry(() => import('../teacher/TeacherProfileEnhanced'));
 const CalendarScreen = lazyWithRetry(() => import('../shared/CalendarScreen'));
@@ -158,8 +157,6 @@ const AdminActionsScreen = lazyWithRetry(() => import('./AdminActionsScreen'));
 const CurriculumManagementScreen = lazyWithRetry(() => import('./CurriculumManagementScreen'));
 const ClassFormScreen = lazyWithRetry(() => import('./ClassFormScreen'));
 const SubjectListScreen = lazyWithRetry(() => import('./SubjectListScreen'));
-const HostelManagementScreen = lazyWithRetry(() => import('./HostelManagementScreen'));
-const TransportManagementScreen = lazyWithRetry(() => import('./TransportManagementScreen'));
 const CustomReportBuilder = lazyWithRetry(() => import('./CustomReportBuilder'));
 const BackupRestoreScreen = lazyWithRetry(() => import('./BackupRestoreScreen'));
 const SessionManagementScreen = lazyWithRetry(() => import('./SessionManagementScreen'));
@@ -173,7 +170,6 @@ const ProjectBoardScreen = lazyWithRetry(() => import('../shared/ProjectBoardScr
 const EnrollmentTrendsWidget = lazyWithRetry(() => import('./EnrollmentTrendsWidget'));
 const ArrearsTracker = lazyWithRetry(() => import('./ArrearsTracker'));
 const AwardPoints = lazyWithRetry(() => import('./AwardPoints'));
-const CustomGamesListScreen = lazyWithRetry(() => import('./CustomGamesListScreen'));
 const IDVerificationPanel = lazyWithRetry(() => import('./IDVerificationPanel'));
 const LeaveApproval = lazyWithRetry(() => import('./LeaveApproval'));
 const LeaveBalance = lazyWithRetry(() => import('./LeaveBalance'));
@@ -181,7 +177,6 @@ const PayrollDashboard = lazyWithRetry(() => import('./PayrollDashboard'));
 const PayslipGenerator = lazyWithRetry(() => import('./PayslipGenerator'));
 const ReportCardPreview = lazyWithRetry(() => import('./ReportCardPreview'));
 const ResourceUploadModal = lazyWithRetry(() => import('./ResourceUploadModal'));
-const SalaryConfiguration = lazyWithRetry(() => import('./SalaryConfiguration'));
 const SchoolInfoScreen = lazyWithRetry(() => import('./SchoolInfoScreen'));
 const StudentApprovalScreen = lazyWithRetry(() => import('./StudentApprovalScreen'));
 const StudentDetailReport = lazyWithRetry(() => import('./StudentDetailReport'));
@@ -447,7 +442,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         validationConsole: ValidationConsole,
         governanceHub: UnifiedGovernanceHub,
         enhancedEnrollment: EnhancedEnrollmentPage,
-        complianceOnboarding: ComplianceOnboardingPage,
         studentProfile: StudentProfileEnhanced,
         teacherProfile: TeacherProfileEnhanced,
         schoolCalendar: CalendarScreen,
@@ -470,8 +464,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         curriculumManagement: CurriculumManagementScreen,
         classForm: ClassFormScreen,
         subjectList: SubjectListScreen,
-        hostelManagement: HostelManagementScreen,
-        transportManagement: TransportManagementScreen,
         customReportBuilder: CustomReportBuilder,
         backupRestore: BackupRestoreScreen,
         sessionManagement: SessionManagementScreen,
@@ -485,7 +477,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         enrollmentTrends: EnrollmentTrendsWidget,
         arrearsTracker: ArrearsTracker,
         awardPoints: AwardPoints,
-        customGamesList: CustomGamesListScreen,
         idVerification: IDVerificationPanel,
         leaveApproval: LeaveApproval,
         leaveBalance: LeaveBalance,
@@ -493,7 +484,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         payslipGenerator: PayslipGenerator,
         reportCardPreview: ReportCardPreview,
         resourceUpload: ResourceUploadModal,
-        salaryConfiguration: SalaryConfiguration,
         schoolInfo: SchoolInfoScreen,
         studentApproval: StudentApprovalScreen,
         studentDetailReport: StudentDetailReport,

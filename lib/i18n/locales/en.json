@@ -340,7 +340,6 @@
     "classroomsAndQrCodes": "Classrooms & QR Codes",
     "communicationAndSystem": "Communication & System",
     "communicationHub": "Communication Hub",
-    "compliance": "Compliance",
     "complianceAndPrivacy": "Compliance & Privacy",
     "complianceDashboard": "Compliance Dashboard",
     "consentForms": "Consent Forms",
@@ -372,8 +371,6 @@
     "governanceHub": "Governance Hub",
     "healthAndIncidents": "Health & Incidents",
     "healthLog": "Health Log",
-    "hostelAndBoarding": "Hostel & Boarding",
-    "hostelManagement": "Hostel Management",
     "infrastructureAndFacilities": "Infrastructure & Facilities",
     "inspectionHub": "Inspection Hub",
     "kanbanProjectBoards": "Kanban Project Boards",
@@ -415,7 +412,6 @@
     "safetyAndHealth": "Safety & Health",
     "safetyAndWellbeing": "Safety & Wellbeing",
     "schoolClubs": "School Clubs",
-    "schoolCompliance": "School Compliance",
     "schoolOnboarding": "School Onboarding",
     "schoolPolicies": "School Policies",
     "schoolStatus": "School Status",
@@ -432,8 +428,6 @@
     "timetable": "Timetable",
     "timetableManagement": "Timetable Management",
     "trackAttendance": "Track Attendance",
-    "transportManagement": "Transport Management",
-    "transportMgmt": "Transport Mgmt",
     "unifiedGovernance": "Unified Governance",
     "userAccounts": "User Accounts",
     "validationConsole": "Validation Console",
@@ -3023,9 +3017,6 @@
   "complianceDashboard": {
     "compliance": "Compliance"
   },
-  "complianceOnboardingPage": {
-    "pendaftaranPematuhan": "Compliance Enrolment"
-  },
   "consentFormScreen": {
     "consentForm": "Consent Form"
   },
@@ -3049,9 +3040,6 @@
   },
   "curriculumSettingsScreen": {
     "curriculumSettings": "Curriculum Settings"
-  },
-  "customGamesListScreen": {
-    "permainanPembelajaran": "Learning Games"
   },
   "customReportBuilder": {
     "pembinaLaporanTersuai": "Custom Report Builder"
@@ -3274,9 +3262,6 @@
   },
   "healthLogScreen": {
     "logKesihatan": "Health Log"
-  },
-  "hostelManagementScreen": {
-    "pengurusanAsrama": "Hostel Management"
   },
   "iDVerificationPanel": {
     "idverification": "IDVerification"
@@ -3524,9 +3509,6 @@
   },
   "safetyHealthLogs": {
     "logKeselamatanKesihatan": "Safety & Health Log"
-  },
-  "salaryConfiguration": {
-    "konfigurasiGaji": "Salary Configuration"
   },
   "scanAssetScreen": {
     "scanAsset": "Scan Asset"
@@ -3900,9 +3882,6 @@
     "onceTimetableReady": "Once a timetable is set up, the school week will be shown here.",
     "draftNotPublished": "This timetable is still a draft and has not been published, so teachers should not yet",
     "edit": "Edit"
-  },
-  "transportManagementScreen": {
-    "pengurusanPengangkutan": "Transport Management"
   },
   "uSSDWorkflow": {
     "ussdWorkflowBuilder": "USSD Workflow Builder",
