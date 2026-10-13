@@ -387,7 +387,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                             options={classOptions}
                             selected={selectedClasses}
                             onToggle={id => toggle(selectedClasses, setSelectedClasses, id)}
-                            emptyHint="No classes yet. Create classes for the current academic year first."
+                            emptyHint={t('addTeacherScreen.noClassesYetHint')}
                             icon={<UsersIcon className="w-5 h-5" />}
                         />
                         <CheckList
@@ -395,7 +395,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                             options={subjectOptions}
                             selected={selectedSubjects}
                             onToggle={id => toggle(selectedSubjects, setSelectedSubjects, id)}
-                            emptyHint="No subjects yet. Add subjects before assigning them."
+                            emptyHint={t('addTeacherScreen.noSubjectsYetHint')}
                             icon={<BookOpenIcon className="w-5 h-5" />}
                         />
                         {selectedSubjects.length > 0 && selectedClasses.length === 0 && (

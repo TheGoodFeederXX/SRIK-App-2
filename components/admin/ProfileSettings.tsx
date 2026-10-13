@@ -23,7 +23,7 @@ const ProfileSettings: React.FC<any> = ({ handleBack }) => {
     return (
     <ComingSoonScreen
         title={t('profileSettings.profile')}
-        explanation="Profile is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        explanation={t('notBuiltScreen.profile')}
         handleBack={handleBack}
     />
     );

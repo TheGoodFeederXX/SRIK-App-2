@@ -15,8 +15,9 @@ interface VoiceSearchWidgetProps {
     showInput?: boolean;
 }
 
-const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeholder = 'Search or speak...', showInput = true }) => {
+const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeholder, showInput = true }) => {
     const { t } = useTranslation();
+    const placeholderText = placeholder ?? t('voiceSearchWidget.searchOrSpeak');
     const [isListening, setIsListening] = useState(false);
     const [transcript, setTranscript] = useState('');
     const [inputValue, setInputValue] = useState('');
@@ -81,7 +82,7 @@ const VoiceSearchWidget: React.FC<VoiceSearchWidgetProps> = ({ onSearch, placeho
     return (
         <form onSubmit={handleSubmit} className="relative flex items-center">
             <Search className="absolute left-4 w-5 h-5 text-gray-400" />
-            <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder={placeholder}
+            <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)} placeholder={placeholderText}
                 className="w-full pl-12 pr-14 py-3 bg-white border border-gray-100 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none text-sm font-medium" />
             <button type="button" onClick={toggleListening}
                 className={`absolute right-2 p-2 rounded-xl transition-all ${isListening ? 'bg-red-100 text-red-600 animate-pulse' : 'bg-gray-100 text-gray-500 hover:bg-indigo-50 hover:text-indigo-600'}`}>

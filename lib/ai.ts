@@ -1,4 +1,4 @@
-
+import i18n from './i18n';
 export const GEMINI_MODEL_NAME = "gemini-2.0-flash";
 export const AI_MODEL_NAME = GEMINI_MODEL_NAME;
 
@@ -15,7 +15,7 @@ export const AI_MODEL_NAME = GEMINI_MODEL_NAME;
 let __aiAllowed = true;
 export const setAIAllowed = (allowed: boolean) => { __aiAllowed = !!allowed; };
 export const isAIAllowedClient = () => __aiAllowed;
-export const AI_LOCKED_MESSAGE = 'Ciri AI tidak tersedia buat masa ini.';
+export const AI_LOCKED_MESSAGE = i18n.t('ai.lockedMessage');
 
 export const AI_GENERATION_CONFIG = {
     responseMimeType: "application/json"
@@ -79,7 +79,7 @@ export class GeminiClient {
             return { text: AI_LOCKED_MESSAGE, blocked: true, error: new Error('AI_NOT_ALLOWED') };
         }
         if (!this.apiKey) {
-            return { text: "Error: AI API Key is missing. Please check your settings." };
+            return { text: i18n.t('ai.apiKeyMissing') };
         }
 
         // Handle both object params and direct content pass (legacy support if any)

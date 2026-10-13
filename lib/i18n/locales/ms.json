@@ -2340,7 +2340,8 @@
   },
   "voiceSearchWidget": {
     "voiceSearchNotAvailablePleaseTypeYourQuery": "Carian suara tidak tersedia. Sila taip pertanyaan anda.",
-    "voiceSearchIsNotSupportedInThisBrowser": "Carian suara tidak disokong pada pelayar ini."
+    "voiceSearchIsNotSupportedInThisBrowser": "Carian suara tidak disokong pada pelayar ini.",
+    "searchOrSpeak": "Cari atau sebut..."
   },
   "accent": {
     "indigo": "Indigo",
@@ -2579,7 +2580,9 @@
     "couldNotSaveTheTeacher": "Tidak dapat menyimpan guru",
     "couldNotCreateTheLoginAccount": "Tidak dapat mencipta akaun log masuk",
     "teacherSavedButDutiesWereNot": "Guru disimpan, tetapi tugas tidak",
-    "createLoginAccount": "Cipta Akaun Log Masuk"
+    "createLoginAccount": "Cipta Akaun Log Masuk",
+    "noClassesYetHint": "Belum ada kelas. Cipta kelas untuk tahun akademik semasa dahulu.",
+    "noSubjectsYetHint": "Belum ada mata pelajaran. Tambah mata pelajaran sebelum menetapkannya."
   },
   "adminActionsScreen": {
     "quickActions": "Tindakan Pantas",
@@ -3593,7 +3596,8 @@
     "theStudentWasSavedButSomeDocumentsDidNotUpload": "Murid disimpan, tetapi sebahagian dokumen tidak dimuat naik.",
     "registering": "Mendaftar...",
     "completeEnrollment": "Lengkapkan Pendaftaran",
-    "enrollmentFailed": "Pendaftaran gagal."
+    "enrollmentFailed": "Pendaftaran gagal.",
+    "kssrDescription": "Kurikulum Standard Sekolah Rendah."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Penyata Yuran Pelajar",
@@ -4085,5 +4089,13 @@
     "hideHistory": "Sembunyikan Sejarah",
     "viewHistoryCount": "Lihat Sejarah ({{count}})",
     "sendCriticalAlertsDescription": "Hantar amaran kritikal kepada semua pengguna melalui pemberitahuan push, SMS, dan emel"
+  },
+  "notBuiltScreen": {
+    "addParent": "Tambah Ibu Bapa belum dibina untuk sekolah ini. Perkhidmatan di belakangnya belum berjalan, dan tiada rekod disimpan untuknya, jadi apa-apa di sini tidak akan menjadi nyata. Apabila ia dibina, skrin ini akan diganti.",
+    "editProfile": "Sunting Profil belum dibina untuk sekolah ini. Perkhidmatan di belakangnya belum berjalan, dan tiada rekod disimpan untuknya, jadi apa-apa di sini tidak akan menjadi nyata. Apabila ia dibina, skrin ini akan diganti.",
+    "profile": "Profil belum dibina untuk sekolah ini. Perkhidmatan di belakangnya belum berjalan, dan tiada rekod disimpan untuknya, jadi apa-apa di sini tidak akan menjadi nyata. Apabila ia dibina, skrin ini akan diganti."
+  },
+  "premiumLoader": {
+    "bootMessage": "Menyediakan ruang sekolah anda..."
   }
 }

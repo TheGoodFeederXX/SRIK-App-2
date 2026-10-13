@@ -23,7 +23,7 @@ const AddParentScreen: React.FC<any> = ({ handleBack }) => {
     return (
     <ComingSoonScreen
         title={t('addParentScreen.addParent')}
-        explanation="Add Parent is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        explanation={t('notBuiltScreen.addParent')}
         handleBack={handleBack}
     />
     );

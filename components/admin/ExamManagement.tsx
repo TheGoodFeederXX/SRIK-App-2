@@ -282,7 +282,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                 onConfirm={handleDelete}
                 title={t('examManagement.deleteExam')}
                 message={t('examManagement.areYouSureYouWantToDeleteThisExamThisActionCan')}
-                confirmText="Delete"
+                confirmText={t('common.delete')}
                 isDanger
             />
         </div>

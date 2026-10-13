@@ -99,7 +99,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                                         </div>
                                         <span className={`px-2 py-1 text-xs font-semibold rounded-full border ${EXAM_TYPE_COLORS[exam.type] || 'bg-gray-100 text-gray-800 border-gray-300'}`}>
                                             {/* The school's own wording, not the database's
-                                                constant: "Peperiksaan Pertengahan Tahun" is
+                                                constant: t('assessments.typeMidYearExam') is
                                                 what a teacher calls it, MID_YEAR_EXAM is not. */}
                                             {t(ASSESSMENT_TYPE_LABELS[exam.type as AssessmentType]) ?? exam.type}
                                         </span>

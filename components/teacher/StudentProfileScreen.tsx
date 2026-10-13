@@ -290,7 +290,7 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
                 onConfirm={() => { if (noteToDelete) handleDeleteNote(noteToDelete); }}
                 title={t('studentProfileScreen.deleteNote')}
                 message={t('studentProfileScreen.areYouSureYouWantToDeleteThisNoteThisCannotBeU')}
-                confirmText="Delete"
+                confirmText={t('common.delete')}
                 isDanger
             />
         </div>

@@ -2340,7 +2340,8 @@
   },
   "voiceSearchWidget": {
     "voiceSearchNotAvailablePleaseTypeYourQuery": "Voice search not available. Please type your query.",
-    "voiceSearchIsNotSupportedInThisBrowser": "Voice search is not supported in this browser."
+    "voiceSearchIsNotSupportedInThisBrowser": "Voice search is not supported in this browser.",
+    "searchOrSpeak": "Search or speak..."
   },
   "accent": {
     "indigo": "Indigo",
@@ -2579,7 +2580,9 @@
     "couldNotSaveTheTeacher": "Could not save the teacher",
     "couldNotCreateTheLoginAccount": "Could not create the login account",
     "teacherSavedButDutiesWereNot": "Teacher saved, but duties were not",
-    "createLoginAccount": "Create Login Account"
+    "createLoginAccount": "Create Login Account",
+    "noClassesYetHint": "No classes yet. Create classes for the current academic year first.",
+    "noSubjectsYetHint": "No subjects yet. Add subjects before assigning them."
   },
   "adminActionsScreen": {
     "quickActions": "Quick Actions",
@@ -3593,7 +3596,8 @@
     "theStudentWasSavedButSomeDocumentsDidNotUpload": "The student was saved, but some documents did not upload.",
     "registering": "Registering...",
     "completeEnrollment": "Complete Enrollment",
-    "enrollmentFailed": "Enrollment failed."
+    "enrollmentFailed": "Enrollment failed.",
+    "kssrDescription": "Primary School Standard Curriculum."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Student Fee Statement",
@@ -4085,5 +4089,13 @@
     "hideHistory": "Hide History",
     "viewHistoryCount": "View History ({{count}})",
     "sendCriticalAlertsDescription": "Send critical alerts to all users via push notifications, SMS, and email"
+  },
+  "notBuiltScreen": {
+    "addParent": "Add Parent is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced.",
+    "editProfile": "Edit Profile is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced.",
+    "profile": "Profile is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+  },
+  "premiumLoader": {
+    "bootMessage": "Preparing your school space..."
   }
 }

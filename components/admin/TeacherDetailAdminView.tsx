@@ -358,7 +358,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                 onConfirm={handleDelete}
                 title={t('teacherDetailAdminView.deleteTeacherAccount')}
                 message={`Are you sure you want to delete ${teacher.full_name || teacher.name}? This action cannot be undone.`}
-                confirmText="Delete"
+                confirmText={t('common.delete')}
                 isDanger
             />
 

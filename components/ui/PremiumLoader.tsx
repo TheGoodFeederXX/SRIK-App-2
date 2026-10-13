@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { SCHOOL_LOGO_SRC, SCHOOL_NAME, SCHOOL_MONOGRAM } from '../../src/lib/branding';
+import i18n from '../../lib/i18n';
 
 /**
  * The one loading screen in the app.
@@ -27,7 +28,7 @@ import { SCHOOL_LOGO_SRC, SCHOOL_NAME, SCHOOL_MONOGRAM } from '../../src/lib/bra
  * its own loader, so a caption that changes halfway is the one remaining thing
  * that makes a continuous wait read as two separate loading screens.
  */
-export const BOOT_MESSAGE = 'Menyediakan ruang sekolah anda...';
+export const BOOT_MESSAGE = i18n.t('premiumLoader.bootMessage');
 
 const PremiumLoader: React.FC<{ message?: string; fullScreen?: boolean }> = ({ message = BOOT_MESSAGE, fullScreen = true }) => {
     // If the crest file has not been supplied yet, fall back to the school's

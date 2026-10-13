@@ -346,7 +346,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                     <AcademicCapIcon className="w-4 h-4" /> Academic Track
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 overflow-x-auto pb-1 hide-scrollbar">
-                                    <SelectCard value="KSSR" title="KSSR" desc="Kurikulum Standard Sekolah Rendah." icon={BookOpenIcon} />
+                                    <SelectCard value="KSSR" title="KSSR" desc={t('studentEnrollmentPage.kssrDescription')} icon={BookOpenIcon} />
                                     <SelectCard value="BRITISH" title={t('studentEnrollmentPage.british')} desc="Cambridge/Edexcel. IGCSE." icon={BookOpenIcon} />
                                     <SelectCard value="DUAL" title="Dual" desc="Hybrid Intensive Program." icon={AcademicCapIcon} />
                                 </div>

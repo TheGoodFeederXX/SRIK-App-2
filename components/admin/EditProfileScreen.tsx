@@ -23,7 +23,7 @@ const EditProfileScreen: React.FC<any> = ({ handleBack }) => {
     return (
     <ComingSoonScreen
         title={t('editProfileScreen.editProfile')}
-        explanation="Edit Profile is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+        explanation={t('notBuiltScreen.editProfile')}
         handleBack={handleBack}
     />
     );
