@@ -137,7 +137,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
         </main>
         <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">
           <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500">
-            {examToEdit ? 'Update Exam' : 'Save Exam'}
+            {examToEdit ? t('addExamScreen.updateExam') : t('addExamScreen.saveExam')}
           </motion.button>
         </div>
       </form>

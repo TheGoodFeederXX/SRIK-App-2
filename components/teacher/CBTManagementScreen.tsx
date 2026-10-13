@@ -210,7 +210,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
         } catch (err: any) {
             console.error("Upload error:", err);
             setErrorMsg(err.message || "Failed to process upload.");
-            toast.error(err.message || "Upload failed.");
+            toast.error(err.message || t('cBTManagementScreen.uploadFailed'));
         } finally {
             setIsUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = '';
@@ -401,7 +401,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                                                     onClick={() => togglePublish(exam)}
                                                     className="text-sm text-indigo-600 font-semibold hover:underline"
                                                 >
-                                                    {exam.isPublished ? 'Unpublish' : 'Publish'}
+                                                    {exam.isPublished ? t('cBTManagementScreen.unpublish') : t('cBTManagementScreen.publish')}
                                                 </button>
                                                 <button
                                                     onClick={(e) => {

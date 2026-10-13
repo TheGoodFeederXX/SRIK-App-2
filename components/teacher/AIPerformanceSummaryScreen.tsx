@@ -34,7 +34,7 @@ const AIPerformanceSummaryScreen: React.FC<AIPerformanceSummaryScreenProps> = ({
                 const ai = getAIClient();
                 const studentDataForPrompt = students.map(s => {
                     const latestGrades = s.academicPerformance?.slice(-3).map(p => `${p.subject}: ${p.score}%`).join(', ') || 'N/A';
-                    const behavior = s.behaviorNotes?.map(n => `${n.type}: ${n.title}`).join(', ') || 'No notes';
+                    const behavior = s.behaviorNotes?.map(n => `${n.type}: ${n.title}`).join(', ') || t('aIPerformanceSummaryScreen.noNotes');
                     return `- ${s.name}: Grades=[${latestGrades}], Behavior=[${behavior}]`;
                 }).join('\n');
 

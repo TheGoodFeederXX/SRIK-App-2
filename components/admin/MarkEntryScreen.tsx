@@ -594,7 +594,7 @@ export default function MarkEntryScreen() {
                             className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 transition-colors"
                         >
                             <SaveIcon className="w-4 h-4" />
-                            {isSaving ? 'Menyimpan…' : 'Simpan markah'}
+                            {isSaving ? t('markEntryScreen.menyimpan') : t('markEntryScreen.simpanMarkah')}
                         </button>
                         <button
                             type="button"

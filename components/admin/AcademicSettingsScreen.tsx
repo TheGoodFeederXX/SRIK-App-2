@@ -110,7 +110,7 @@ const AcademicSettingsScreen: React.FC = () => {
           disabled={saving || loading}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-50"
         >
-          {saving ? 'Saving...' : 'Save Changes'}
+          {saving ? t('academicSettingsScreen.saving') : t('academicSettingsScreen.saveChanges')}
         </motion.button>
       </div>
 

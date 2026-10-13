@@ -223,7 +223,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                     disabled={loading}
                                     className={`w-full py-3.5 rounded-xl text-white font-bold shadow-md transition-shadow ${loading ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 hover:shadow-lg'}`}
                                 >
-                                    {loading ? 'Verifying...' : 'Link Account'}
+                                    {loading ? t('linkChildScreen.verifying') : t('linkChildScreen.linkAccount')}
                                 </motion.button>
                             </div>
 

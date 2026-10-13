@@ -242,7 +242,7 @@ const UserRolesScreen: React.FC = () => {
                     disabled={isLoading}
                     className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white ${isLoading ? 'bg-sky-400' : 'bg-sky-500 hover:bg-sky-600'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 transition-colors`}
                 >
-                    {isLoading ? 'Saving...' : 'Save Changes'}
+                    {isLoading ? t('userRolesScreen.saving') : t('userRolesScreen.saveChanges')}
                 </motion.button>
             </div>
         </div>

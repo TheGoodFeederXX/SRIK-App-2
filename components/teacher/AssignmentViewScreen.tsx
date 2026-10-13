@@ -54,7 +54,7 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
                     <header className="flex justify-between items-center border-b-2 border-gray-300 pb-4 mb-6">
                         <div>
                             <h1 className="text-2xl font-bold text-gray-800">{currentSchool?.name || 'School'}</h1>
-                            <p className="font-semibold text-gray-600">{subject || 'Assessment'} - {className || ''}</p>
+                            <p className="font-semibold text-gray-600">{subject || t('assignmentViewScreen.assessment')} - {className || ''}</p>
                         </div>
                         <div className="text-right">
                             <h2 className="text-xl font-bold text-gray-800">{assessment.type}</h2>

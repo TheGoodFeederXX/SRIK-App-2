@@ -73,7 +73,7 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
               {student?.avatarUrl ? (
                 <img
                   src={student.avatarUrl}
-                  alt={student?.name || 'Student'}
+                  alt={student?.name || t('adminStudentListForReport.student')}
                   className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-sm group-hover:border-indigo-200 transition-colors"
                 />
               ) : (
@@ -86,7 +86,7 @@ const AdminStudentListForReport: React.FC<AdminStudentListForReportProps> = ({ c
 
             <div className="flex-grow text-left">
               <p className="font-bold text-gray-900 group-hover:text-indigo-700 transition-colors">{student?.name || 'N/A'}</p>
-              <p className="text-xs text-gray-500 font-medium tracking-wide">ID: <span className="font-mono text-gray-400">{student?.schoolGeneratedId || 'Pending'}</span></p>
+              <p className="text-xs text-gray-500 font-medium tracking-wide">ID: <span className="font-mono text-gray-400">{student?.schoolGeneratedId || t('adminStudentListForReport.pending')}</span></p>
             </div>
 
             <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-indigo-100 transition-colors">

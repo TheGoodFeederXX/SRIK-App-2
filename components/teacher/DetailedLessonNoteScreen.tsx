@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { DocumentTextIcon } from '../../constants';
@@ -9,6 +10,7 @@ interface DetailedLessonNoteScreenProps {
 }
 
 const DetailedLessonNoteScreen: React.FC<DetailedLessonNoteScreenProps> = ({ note, title }) => {
+    const { t } = useTranslation();
   return (
     <div className="p-4 bg-gray-50 printable-area">
         <div className="bg-white p-6 rounded-xl shadow-sm">
@@ -16,10 +18,10 @@ const DetailedLessonNoteScreen: React.FC<DetailedLessonNoteScreenProps> = ({ not
                 <div className="bg-purple-100 p-2 rounded-lg">
                     <DocumentTextIcon className="w-6 h-6 text-purple-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800">{title || "Detailed Lesson Note"}</h2>
+                <h2 className="text-2xl font-bold text-gray-800">{title || t('detailedLessonNoteScreen.detailedLessonNote')}</h2>
             </div>
             <div className="prose prose-sm max-w-none prose-headings:text-purple-800 prose-strong:text-gray-800 prose-a:text-purple-600 text-gray-700">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{note || "No detailed note content was provided for this lesson."}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{note || t('detailedLessonNoteScreen.noDetailedNoteContentWasProvidedForThisLesson')}</ReactMarkdown>
             </div>
         </div>
     </div>

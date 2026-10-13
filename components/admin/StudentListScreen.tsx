@@ -773,7 +773,7 @@ const StudentListScreen: React.FC<StudentListScreenProps> = ({ filter, navigateT
                   disabled={!withdrawalReason.trim() || isChangingStatus}
                   className="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
-                  {isChangingStatus ? 'Saving…' : 'Confirm Withdrawal'}
+                  {isChangingStatus ? t('studentListScreen.saving') : t('studentListScreen.confirmWithdrawal')}
                 </motion.button>
               </div>
             </motion.div>

@@ -7,6 +7,7 @@ import { LockIcon, EyeIcon, EyeOffIcon } from '../../constants';
 import { changePassword, describePasswordProblem } from '../../src/lib/supabase/auth';
 
 const PasswordInput = ({ id, label, value, onChange }: { id: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -26,7 +27,7 @@ const PasswordInput = ({ id, label, value, onChange }: { id: string, label: stri
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute inset-y-0 right-3 flex items-center pr-2 text-gray-400 hover:text-gray-600 transition-colors cursor-pointer focus:outline-none"
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? t('studentChangePasswordScreen.hidePassword') : t('studentChangePasswordScreen.showPassword')}
                 >
                     {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
                 </button>
@@ -60,7 +61,7 @@ const StudentChangePasswordScreen: React.FC = () => {
         }
 
         setLoading(true);
-        const loadingToast = toast.loading("Updating password...");
+        const loadingToast = toast.loading(t('studentChangePasswordScreen.updatingPassword'));
         try {
             // See ChangePasswordScreen: the current password is re-checked, so an
             // unlocked laptop cannot be used to take the account away.
@@ -75,7 +76,7 @@ const StudentChangePasswordScreen: React.FC = () => {
             setConfirmPassword('');
         } catch (err: any) {
             console.error("Error updating password:", err);
-            toast.error(err.message || "Failed to update password", { id: loadingToast });
+            toast.error(err.message || t('studentChangePasswordScreen.failedToUpdatePassword'), { id: loadingToast });
         } finally {
             setLoading(false);
         }
@@ -104,7 +105,7 @@ const StudentChangePasswordScreen: React.FC = () => {
                         disabled={loading}
                         className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors ${loading ? 'opacity-50' : ''}`}
                     >
-                        {loading ? 'Updating...' : 'Update Password'}
+                        {loading ? t('studentChangePasswordScreen.updating') : t('studentChangePasswordScreen.updatePassword')}
                     </motion.button>
                 </div>
             </form>

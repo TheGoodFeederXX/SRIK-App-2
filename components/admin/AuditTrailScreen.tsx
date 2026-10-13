@@ -118,9 +118,7 @@ export default function AuditTrailScreen() {
                     </div>
                     <p className="font-semibold text-slate-700">{t('auditTrailScreen.tiadaRekod')}</p>
                     <p className="text-sm text-slate-500 mt-1">
-                        {entries.length
-                            ? 'Tiada rekod sepadan dengan carian anda.'
-                            : 'Belum ada perubahan direkodkan.'}
+                        {entries.length ? t('auditTrailScreen.tiadaRekodSepadanDenganCarianAnda') : t('auditTrailScreen.belumAdaPerubahanDirekodkan')}
                     </p>
                 </div>
             ) : (

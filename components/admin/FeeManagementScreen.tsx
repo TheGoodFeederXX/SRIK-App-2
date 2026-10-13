@@ -363,7 +363,7 @@ function FeeForm({
             <div className="absolute inset-0 bg-slate-900/40" onClick={onClose} aria-hidden="true" />
             <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-5 max-h-[90vh] overflow-y-auto">
                 <h2 className="font-bold text-slate-800 mb-4">
-                    {fee.id ? 'Ubah jenis yuran' : 'Tambah jenis yuran'}
+                    {fee.id ? t('feeManagementScreen.ubahJenisYuran') : t('feeManagementScreen.tambahJenisYuran')}
                 </h2>
 
                 <div className="space-y-4">

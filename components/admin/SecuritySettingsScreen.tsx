@@ -116,7 +116,7 @@ const SecuritySettingsScreen: React.FC = () => {
                     disabled={isLoading}
                     className="mt-4 w-full bg-indigo-600 text-white font-bold py-2 rounded-xl hover:bg-indigo-700 transition disabled:opacity-50"
                 >
-                    {isLoading ? 'Saving...' : 'Save Policy'}
+                    {isLoading ? t('securitySettingsScreen.saving') : t('securitySettingsScreen.savePolicy')}
                 </motion.button>
             </motion.div>
 

@@ -160,7 +160,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                         onClick={saveSchoolCurricula}
                         className="px-5 py-2 rounded-lg bg-indigo-600 text-white font-semibold text-sm disabled:opacity-50"
                     >
-                        {savingSchool ? 'Saving...' : 'Save School Curricula'}
+                        {savingSchool ? t('curriculumManagementScreen.saving') : t('curriculumManagementScreen.saveSchoolCurricula')}
                     </motion.button>
                 </div>
             </div>

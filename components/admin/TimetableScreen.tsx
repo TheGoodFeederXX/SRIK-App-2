@@ -217,7 +217,7 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                                             mode === m ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
                                         }`}
                                     >
-                                        {m === 'CLASS' ? 'Ikut Kelas' : 'Ikut Guru'}
+                                        {m === 'CLASS' ? t('timetableScreen.ikutKelas') : t('timetableScreen.ikutGuru')}
                                     </button>
                                 ))}
                             </div>
@@ -279,7 +279,7 @@ const TimetableScreen: React.FC<TimetableScreenProps> = ({ navigateTo, selectedC
                     selected && (
                         <div className="px-1">
                             <p className="text-sm font-semibold text-gray-700">
-                                {mode === 'CLASS' ? 'Jadual kelas' : 'Jadual anda'}: {selected.label}
+                                {mode === 'CLASS' ? t('timetableScreen.jadualKelas') : t('timetableScreen.jadualAnda')}: {selected.label}
                             </p>
                         </div>
                     )

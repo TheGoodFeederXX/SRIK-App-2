@@ -154,7 +154,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                 <div className="flex justify-between items-center gap-3 px-1">
                     <div>
                         <p className="text-sm font-bold text-gray-800">
-                            {guardians.length} {guardians.length === 1 ? 'Guardian' : 'Guardians'}
+                            {guardians.length} {guardians.length === 1 ? t('parentListScreen.guardian') : t('parentListScreen.guardians')}
                         </p>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                             Emergency and contact people
@@ -269,7 +269,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                     <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-gray-300">
                         <StudentsIcon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                         <h3 className="text-lg font-bold text-gray-800">
-                            {search ? 'No Matches' : 'No Guardians Yet'}
+                            {search ? t('parentListScreen.noMatches') : t('parentListScreen.noGuardiansYet')}
                         </h3>
                         <p className="text-gray-500 max-w-xs mx-auto mt-2">
                             {search
@@ -298,7 +298,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
                         >
                             <div className="flex items-start justify-between">
                                 <h2 className="text-lg font-bold text-gray-900">
-                                    {form.id ? 'Edit guardian' : 'Add guardian'}
+                                    {form.id ? t('parentListScreen.editGuardian') : t('parentListScreen.addGuardian')}
                                 </h2>
                                 <button
                                     onClick={() => setIsFormOpen(false)}

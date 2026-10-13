@@ -58,7 +58,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
             setTitle(''); setDescription(''); setShowAdd(false);
             fetchData();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to add entry');
+            toast.error(err?.message || t('studentTeacherTimeline.failedToAddEntry'));
         } finally {
             setSaving(false);
         }
@@ -69,7 +69,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
             await api.deleteTimelineEvent(id);
             setEvents(prev => prev.filter(e => e.id !== id));
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to remove entry');
+            toast.error(err?.message || t('studentTeacherTimeline.failedToRemoveEntry'));
         }
     };
 

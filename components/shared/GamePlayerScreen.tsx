@@ -50,11 +50,11 @@ const GamePlayerScreen: React.FC<GamePlayerScreenProps> = ({ game, mode, handleB
     const percentage = Math.round((score / game.questions.length) * 100);
     return (
       <div className="p-6 flex flex-col items-center justify-center h-full text-center bg-gray-50">
-        <h2 className="text-2xl font-bold text-gray-800">{mode === 'test' ? 'Test Complete!' : 'Game Over!'}</h2>
+        <h2 className="text-2xl font-bold text-gray-800">{mode === 'test' ? t('gamePlayerScreen.testComplete') : t('gamePlayerScreen.gameOver')}</h2>
         <p className="text-5xl font-bold my-4 text-purple-600">{percentage}%</p>
         <p className="text-gray-600">{t('gamePlayerScreen.youAnswered')} <span className="font-semibold">{score}</span> out of <span className="font-semibold">{game.questions.length}</span> questions correctly.</p>
         <button onClick={handleBack} className="mt-8 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg shadow-sm hover:bg-purple-700">
-          {mode === 'test' ? 'Back to Editor' : 'Back to Games'}
+          {mode === 'test' ? t('gamePlayerScreen.backToEditor') : t('gamePlayerScreen.backToGames')}
         </button>
       </div>
     );
@@ -109,7 +109,7 @@ const GamePlayerScreen: React.FC<GamePlayerScreenProps> = ({ game, mode, handleB
                 onClick={handleNext}
                 className="w-full py-4 px-4 font-medium text-white bg-purple-600 rounded-lg shadow-sm hover:bg-purple-700"
             >
-               {currentQuestionIndex < game.questions.length - 1 ? 'Next Question' : 'Finish Game'}
+               {currentQuestionIndex < game.questions.length - 1 ? t('gamePlayerScreen.nextQuestion') : t('gamePlayerScreen.finishGame')}
             </button>
         )}
       </main>

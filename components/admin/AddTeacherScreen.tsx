@@ -246,7 +246,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
             if (isEditing) {
                 const result = await updateTeacher(teacherToEdit!.id, input);
                 if (!result.success) {
-                    toast.error(result.error || 'Could not save the teacher');
+                    toast.error(result.error || t('addTeacherScreen.couldNotSaveTheTeacher'));
                     return;
                 }
                 if (academicYearId) {
@@ -276,7 +276,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
             });
 
             if (!result.success) {
-                toast.error(result.error || 'Could not save the teacher');
+                toast.error(result.error || t('addTeacherScreen.couldNotSaveTheTeacher'));
                 return;
             }
 
@@ -304,7 +304,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
             handleBack();
         } catch (error: any) {
             console.error('Failed to save the teacher:', error);
-            toast.error(error?.message || 'Could not save the teacher');
+            toast.error(error?.message || t('addTeacherScreen.couldNotSaveTheTeacher'));
         } finally {
             setIsLoading(false);
         }
@@ -323,7 +323,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                 toast.success(t('addTeacherScreen.loginAccountCreated'));
                 forceUpdate();
             } else {
-                toast.error(result.accountWarning || 'Could not create the login account');
+                toast.error(result.accountWarning || t('addTeacherScreen.couldNotCreateTheLoginAccount'));
             }
         } finally {
             setIsLoading(false);

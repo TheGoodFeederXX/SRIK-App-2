@@ -156,7 +156,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
             await api.patch('/auth/update-username', { username });
             toast.success(t('editTeacherProfileScreen.usernameUpdatedSuccessfully'));
         } catch (err: any) {
-            toast.error(err.message || 'Error updating username');
+            toast.error(err.message || t('editTeacherProfileScreen.errorUpdatingUsername'));
         } finally {
             setUpdatingUsername(false);
         }
@@ -279,7 +279,7 @@ const EditTeacherProfileScreen: React.FC<EditTeacherProfileScreenProps> = ({ onP
                         disabled={saving}
                         className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-70 disabled:cursor-wait"
                     >
-                        {saving ? 'Saving...' : 'Save Changes'}
+                        {saving ? t('editTeacherProfileScreen.saving') : t('editTeacherProfileScreen.saveChanges')}
                     </button>
                 </div>
             </form>

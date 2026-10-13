@@ -232,7 +232,7 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
                         className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-blue-700 bg-blue-100 rounded-md hover:bg-blue-200 disabled:opacity-50"
                     >
                         <ShareIcon className="w-4 h-4" />
-                        <span>{isPublishing ? 'Publishing...' : 'Publish to Library'}</span>
+                        <span>{isPublishing ? t('lessonPlanDetailScreen.publishing') : t('lessonPlanDetailScreen.publishToLibrary')}</span>
                     </button>
                 </div>
             </div>

@@ -94,7 +94,7 @@ const AttachmentInput: React.FC<{ urls: string[]; onChange: (urls: string[]) => 
         <div>
             <label className="flex items-center gap-2 text-sm font-semibold text-indigo-600 cursor-pointer hover:text-indigo-800">
                 <Paperclip className="w-4 h-4" />
-                {uploading ? 'Uploading...' : 'Attach supporting documents'}
+                {uploading ? t('personnelFileView.uploading') : t('personnelFileView.attachSupportingDocuments')}
                 <input type="file" multiple className="hidden" onChange={handleFiles} disabled={uploading} />
             </label>
             {urls.length > 0 && (
@@ -153,7 +153,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             }
         } catch (err: any) {
             console.error('Error loading personnel file:', err);
-            toast.error(err?.message || 'Failed to load personnel file');
+            toast.error(err?.message || t('personnelFileView.failedToLoadPersonnelFile'));
         } finally {
             setLoading(false);
         }
@@ -173,7 +173,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             setRecordForm({ type: 'commendation', title: '', details: '', effective_date: todayStr(), attachment_urls: [] });
             fetchFile();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to add record');
+            toast.error(err?.message || t('personnelFileView.failedToAddRecord'));
         } finally { setSaving(false); }
     };
 
@@ -189,7 +189,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             setQueryForm({ subject: '', reason: '', issue_date: todayStr(), response_deadline: '', attachment_urls: [] });
             fetchFile();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to issue query letter');
+            toast.error(err?.message || t('personnelFileView.failedToIssueQueryLetter'));
         } finally { setSaving(false); }
     };
 
@@ -202,7 +202,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             setCloseForm({ outcome: 'resolved', outcome_note: '' });
             fetchFile();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to close query letter');
+            toast.error(err?.message || t('personnelFileView.failedToCloseQueryLetter'));
         } finally { setSaving(false); }
     };
 
@@ -216,7 +216,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
             setResponseForm({ response_text: '', attachment_urls: [] });
             fetchFile();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to submit response');
+            toast.error(err?.message || t('personnelFileView.failedToSubmitResponse'));
         } finally { setSaving(false); }
     };
 
@@ -548,7 +548,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                                     </button>
                                                     <button onClick={handleRespond} disabled={saving}
                                                         className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition-colors text-sm disabled:opacity-60">
-                                                        <Send className="w-4 h-4" /> {saving ? 'Submitting...' : 'Submit Response'}
+                                                        <Send className="w-4 h-4" /> {saving ? t('personnelFileView.submitting') : t('personnelFileView.submitResponse')}
                                                     </button>
                                                 </div>
                                             </div>
@@ -635,7 +635,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                 className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleAddRecord} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-indigo-600 text-white rounded-2xl font-bold hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-200 disabled:opacity-60">
-                                {saving ? 'Saving...' : 'Add to File'}
+                                {saving ? t('personnelFileView.saving') : t('personnelFileView.addToFile')}
                             </motion.button>
                         </div>
                     </motion.div>
@@ -700,7 +700,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                 className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleIssueQuery} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-amber-600 text-white rounded-2xl font-bold hover:bg-amber-700 transition-colors shadow-lg shadow-amber-200 disabled:opacity-60">
-                                {saving ? 'Sending...' : 'Send Query Letter'}
+                                {saving ? t('personnelFileView.sending') : t('personnelFileView.sendQueryLetter')}
                             </motion.button>
                         </div>
                     </motion.div>
@@ -756,7 +756,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                 className="flex-grow py-3 px-4 border border-gray-200 rounded-2xl text-gray-600 font-bold hover:bg-gray-50 transition-colors">Cancel</motion.button>
                             <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.97 }} onClick={handleCloseQuery} disabled={saving}
                                 className="flex-grow py-3 px-4 bg-gray-900 text-white rounded-2xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-60">
-                                {saving ? 'Closing...' : 'Close Query'}
+                                {saving ? t('personnelFileView.closing') : t('personnelFileView.closeQuery')}
                             </motion.button>
                         </div>
                     </motion.div>

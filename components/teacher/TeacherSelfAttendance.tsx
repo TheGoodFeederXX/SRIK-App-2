@@ -80,7 +80,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
             if (result.recorded) {
                 toast.success(t('teacherSelfAttendance.attendanceMarkedSuccessfully'));
             } else {
-                toast.error(result.reason || 'Attendance could not be recorded.');
+                toast.error(result.reason || t('teacherSelfAttendance.attendanceCouldNotBeRecorded'));
             }
             await loadAttendanceData();
         } catch (error: any) {
@@ -88,7 +88,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
             // The database's own words explain the refusal ("The office has already
             // recorded your attendance for today"). Replacing them with a generic
             // message would hide the one thing the teacher needs to know.
-            toast.error(error?.message || 'Failed to mark attendance');
+            toast.error(error?.message || t('teacherSelfAttendance.failedToMarkAttendance'));
         } finally {
             setSubmitting(false);
         }
@@ -198,7 +198,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                                 ) : (
                                     <CheckCircleIcon className="h-5 w-5" />
                                 )}
-                                {submitting ? 'Processing...' : 'Mark Attendance (Check Out)'}
+                                {submitting ? t('teacherSelfAttendance.processing') : t('teacherSelfAttendance.markAttendanceCheckOut')}
                             </motion.button>
                         )}
                     </div>
@@ -215,7 +215,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                         ) : (
                             <CheckCircleIcon className="h-5 w-5" />
                         )}
-                        {submitting ? 'Processing...' : 'Mark Attendance (Check In)'}
+                        {submitting ? t('teacherSelfAttendance.processing') : t('teacherSelfAttendance.markAttendanceCheckIn')}
                     </motion.button>
                 )}
             </motion.div>
@@ -243,7 +243,7 @@ const TeacherSelfAttendance: React.FC<TeacherSelfAttendanceProps> = ({ navigateT
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold text-gray-800">Check-in: {record.check_in}</p>
-                                        <p className="text-xs text-gray-500">{record.status || 'Present'}</p>
+                                        <p className="text-xs text-gray-500">{record.status || t('teacherSelfAttendance.present')}</p>
                                     </div>
                                 </div>
                                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${getStatusColor(record.approval_status)}`}>

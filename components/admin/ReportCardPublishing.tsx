@@ -77,7 +77,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
         })),
       });
     } catch (e: any) {
-      toast.error(e?.message || 'Could not load history');
+      toast.error(e?.message || t('reportCardPublishing.couldNotLoadHistory'));
       setHistory(null);
     }
   };
@@ -328,7 +328,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
               {selectedClass ? `Grade ${selectedClass.grade}${selectedClass.section}` : 'Active Registry Context'}
             </p>
             <h2 className="text-base md:text-xl font-black text-gray-900 tracking-tight truncate flex flex-wrap items-center gap-2">
-              {selectedClass ? 'Class Report Cards' : 'Report Cards'}
+              {selectedClass ? t('reportCardPublishing.classReportCards') : t('reportCardPublishing.reportCards')}
               <span className="px-2 py-0.5 rounded-lg bg-white border border-gray-200 text-[8px] md:text-xs text-gray-500 font-bold uppercase tracking-widest whitespace-nowrap">
                 {t('reportCardPublishing.sriAlKhairiah')}
               </span>
@@ -441,7 +441,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                 </span>
                 <input
                   type="text"
-                  placeholder={selectedClass ? 'Filter students...' : 'Filter by class or student name...'}
+                  placeholder={selectedClass ? t('reportCardPublishing.filterStudents') : t('reportCardPublishing.filterByClassOrStudentName')}
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                   className="w-full pl-9 pr-4 py-2 text-xs md:text-xs font-bold text-gray-800 bg-gray-50 border border-gray-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all outline-none"
@@ -698,7 +698,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
               {history.entries && history.entries.map((h: any) => {
                 const grades = (h.new_values && h.new_values.grades) || {};
                 const before = (h.old_values && h.old_values.grades) || {};
-                const who = h.user?.full_name || h.metadata?.actor_role || 'Unknown';
+                const who = h.user?.full_name || h.metadata?.actor_role || t('reportCardPublishing.unknown');
                 const when = new Date(h.performed_at || h.created_at).toLocaleString('ms-MY');
                 const label = String(h.action || '').replace('report_card.', '').replace(/_/g, ' ');
                 return (

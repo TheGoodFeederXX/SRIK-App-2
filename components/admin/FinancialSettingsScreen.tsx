@@ -74,7 +74,7 @@ const FinancialSettingsScreen: React.FC = () => {
         disabled={isLoading}
         className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition disabled:opacity-50"
       >
-        {isLoading ? 'Saving...' : 'Save Financial Settings'}
+        {isLoading ? t('financialSettingsScreen.saving') : t('financialSettingsScreen.saveFinancialSettings')}
       </motion.button>
     </div>
   );

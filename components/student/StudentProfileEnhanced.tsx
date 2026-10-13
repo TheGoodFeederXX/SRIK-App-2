@@ -246,7 +246,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const toastId = toast.loading('Uploading document...');
+        const toastId = toast.loading(t('studentProfileEnhanced.uploadingDocument'));
         try {
             // Stored in the school's own bucket against this child. The old call uploaded
             // to a server that is not deployed, so no document was ever kept.
@@ -317,7 +317,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
     // average, and each subject's published score) instead of printing the page.
     const handleDownloadTranscript = async () => {
     const { t } = useTranslation();
-        const toastId = toast.loading('Generating transcript...');
+        const toastId = toast.loading(t('studentProfileEnhanced.generatingTranscript'));
         try {
             const html2pdf = (await import('html2pdf.js')).default;
             const rows = (performance || [])
@@ -453,7 +453,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     <div className="relative w-32 h-32 lg:w-40 lg:h-40 bg-white rounded-full p-1.5 shadow-2xl">
                                         <div className="w-full h-full rounded-full bg-gradient-to-br from-orange-500 to-amber-600 flex items-center justify-center text-white overflow-hidden">
                                             {student.avatarUrl || student.profile_photo ? (
-                                                <img src={student.avatarUrl || student.profile_photo} alt={student.name || 'Profile'} onClick={onImageClick} className="w-full h-full object-cover cursor-zoom-in" />
+                                                <img src={student.avatarUrl || student.profile_photo} alt={student.name || t('studentProfileEnhanced.profile')} onClick={onImageClick} className="w-full h-full object-cover cursor-zoom-in" />
                                             ) : (
                                                 <span className="text-4xl lg:text-5xl font-bold tracking-tight">
                                                     {/* Initials from the single stored name. The record has
@@ -473,7 +473,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                 {/* Name & Title */}
                                 <div className="text-center sm:text-left min-w-0">
                                     <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2 tracking-tight">
-                                        {student.name || 'Student Profile'}
+                                        {student.name || t('studentProfileEnhanced.studentProfile')}
                                     </h1>
                                     <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 mb-4">
                                         <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-1.5 text-sm font-semibold">
@@ -498,7 +498,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             aria-label={t('studentProfileEnhanced.copyStudentIDToClipboard')}
                                         >
                                             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-2.5 text-sm flex items-center gap-2">
-                                                ID: {student.admission_number || 'Pending'}
+                                                ID: {student.admission_number || t('studentProfileEnhanced.pending')}
                                                 <Copy className="w-3 h-3 opacity-70" />
                                                 {copied && <span className="text-xs ml-1">{t('studentProfileEnhanced.copied')}</span>}
                                             </Badge>
@@ -539,7 +539,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             icon={<BookOpen className="w-5 h-5" />}
                                             label={t('studentProfileEnhanced.performance')}
                                             value={performance.length.toString()}
-                                            badge="Subjects"
+                                            badge={t('studentProfileEnhanced.subjects')}
                                         />
                                     </MotionListItem>
                                     <MotionListItem>
@@ -547,7 +547,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             icon={<Target className="w-5 h-5" />}
                                             label={t('studentProfileEnhanced.submitted')}
                                             value={stats.assignmentsSubmitted.toString()}
-                                            badge="Assign."
+                                            badge={t('studentProfileEnhanced.assign')}
                                         />
                                     </MotionListItem>
                                 </MotionList>

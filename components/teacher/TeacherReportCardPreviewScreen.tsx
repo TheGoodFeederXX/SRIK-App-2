@@ -170,8 +170,8 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                             </div>
 
                             <div className="mt-6 space-y-4">
-                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.teacherSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || 'No comment yet.'}"</p></div>
-                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.principalSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || 'No comment yet.'}"</p></div>
+                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.teacherSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || t('teacherReportCardPreviewScreen.noCommentYet')}"</p></div>
+                                <div><label className="font-semibold text-sm text-gray-700">{t('teacherReportCardPreviewScreen.principalSComment')}</label><p className="w-full mt-1 p-2 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || t('teacherReportCardPreviewScreen.noCommentYet')}"</p></div>
                             </div>
                         </>
                     )}

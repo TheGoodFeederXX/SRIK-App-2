@@ -343,7 +343,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                         disabled={submitting}
                                         className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:bg-gray-400"
                                     >
-                                        {submitting ? 'Submitting...' : 'Submit Request'}
+                                        {submitting ? t('leaveRequest.submitting') : t('leaveRequest.submitRequest')}
                                     </button>
                                     <button
                                         type="button"
@@ -376,7 +376,7 @@ const LeaveRequest: React.FC<LeaveRequestProps> = ({ teacherId, schoolId, curren
                                     <div className="flex-1">
                                         <div className="flex items-center space-x-2">
                                             <h4 className="font-semibold text-gray-900">
-                                                {request.leave_type || 'Leave Request'}
+                                                {request.leave_type || t('leaveRequest.leaveRequest')}
                                             </h4>
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(request.status)}`}>
                                                 {request.status}

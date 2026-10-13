@@ -130,7 +130,7 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-5 rounded-full -mr-16 -mt-16"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-5 rounded-full -ml-12 -mb-12"></div>
                     <h3 className="text-2xl font-bold text-white mb-1 tracking-tight">{t('selectReportTermScreen.reportCard')}</h3>
-                    <p className="text-purple-100 font-medium text-sm">{student.name || 'Student'}</p>
+                    <p className="text-purple-100 font-medium text-sm">{student.name || t('selectReportTermScreen.student')}</p>
                     {changeChildView && (
                         <motion.button
                             whileTap={{ scale: 0.96 }}

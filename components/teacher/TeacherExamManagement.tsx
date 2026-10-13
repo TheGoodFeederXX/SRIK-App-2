@@ -59,7 +59,7 @@ const TeacherExamManagement: React.FC<TeacherExamManagementProps> = ({ navigateT
                 : all;
             setExams(mine.map(toExamRow));
         } catch (error: any) {
-            toast.error(error.message || 'Failed to load exams');
+            toast.error(error.message || t('teacherExamManagement.failedToLoadExams'));
         } finally {
             setLoading(false);
         }

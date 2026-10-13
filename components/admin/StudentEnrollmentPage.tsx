@@ -162,7 +162,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
             if (onComplete) onComplete(); else handleBack();
         } catch (error: any) {
             console.error(error);
-            toast.error(error.message || 'Enrollment failed.');
+            toast.error(error.message || t('studentEnrollmentPage.enrollmentFailed'));
         } finally {
             setLoading(false);
         }
@@ -409,7 +409,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                     disabled={loading}
                     className="order-1 sm:order-2 px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 hover:shadow-xl transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
                 >
-                    {loading ? 'Registering...' : 'Complete Enrollment'}
+                    {loading ? t('studentEnrollmentPage.registering') : t('studentEnrollmentPage.completeEnrollment')}
                     {!loading && <CheckCircleIcon className="w-5 h-5" />}
                 </motion.button>
             </div>

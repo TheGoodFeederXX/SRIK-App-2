@@ -201,7 +201,7 @@ const TimetableEditorScreen: React.FC<TimetableEditorScreenProps> = ({ selectedC
                                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white font-bold rounded-xl hover:bg-green-700 disabled:opacity-50 transition-colors"
                             >
                                 <CheckIcon className="w-4 h-4" />
-                                {isPublishing ? 'Publishing...' : 'Publish Timetable'}
+                                {isPublishing ? t('timetableEditorScreen.publishing') : t('timetableEditorScreen.publishTimetable')}
                             </button>
                         )}
                     </div>

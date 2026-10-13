@@ -58,7 +58,7 @@ const TeacherChangePasswordScreen: React.FC = () => {
         }
 
         setLoading(true);
-        const loadingToast = toast.loading("Updating password...");
+        const loadingToast = toast.loading(t('teacherChangePasswordScreen.updatingPassword'));
         try {
             // See ChangePasswordScreen: the current password is re-checked, so an
             // unlocked laptop cannot be used to take the account away.
@@ -73,7 +73,7 @@ const TeacherChangePasswordScreen: React.FC = () => {
             setConfirmPassword('');
         } catch (err: any) {
             console.error("Error updating password:", err);
-            toast.error(err.message || "Failed to update password", { id: loadingToast });
+            toast.error(err.message || t('teacherChangePasswordScreen.failedToUpdatePassword'), { id: loadingToast });
         } finally {
             setLoading(false);
         }

@@ -143,7 +143,7 @@ export const SubjectListScreen: React.FC = () => {
                 <div className="flex justify-between items-center px-2">
                     <div className="flex flex-col">
                         <p className="text-sm font-bold text-gray-800">
-                            {subjects.length} {subjects.length === 1 ? 'Subject' : 'Subjects'}
+                            {subjects.length} {subjects.length === 1 ? t('subjectListScreen.subject') : t('subjectListScreen.subjects')}
                         </p>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                             Taught across the school's classes
@@ -243,7 +243,7 @@ export const SubjectListScreen: React.FC = () => {
                         >
                             <div className="flex items-start justify-between">
                                 <h2 className="text-lg font-bold text-gray-900">
-                                    {editing ? 'Edit subject' : 'Add subject'}
+                                    {editing ? t('subjectListScreen.editSubject') : t('subjectListScreen.addSubject')}
                                 </h2>
                                 <button
                                     onClick={closeForm}

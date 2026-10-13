@@ -95,7 +95,7 @@ const MessagesLayout: React.FC<MessagesLayoutProps> = ({
             const data = await api.getChatRooms();
             const formatted = (data || []).map((c: any) => {
                 const other = c.participants?.find((p: any) => p.user_id !== currentUserId)?.user;
-                const displayName = other?.student_profile?.display_name || other?.full_name || c.name || 'Unknown';
+                const displayName = other?.student_profile?.display_name || other?.full_name || c.name || t('messagesLayout.unknown');
                 const lastMsg = c.messages?.[0];
                 return {
                     id: c.id,

@@ -161,7 +161,7 @@ const AccessibilitySettings: React.FC = () => {
                         disabled={loading}
                         className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-bold disabled:opacity-50"
                     >
-                        {loading ? 'Saving...' : 'Save Settings'}
+                        {loading ? t('accessibilitySettings.saving') : t('accessibilitySettings.saveSettings')}
                     </motion.button>
                 </div>
             </motion.div>

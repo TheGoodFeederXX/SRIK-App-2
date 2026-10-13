@@ -7,6 +7,7 @@ import { LockIcon, EyeIcon, EyeOffIcon } from '../../constants';
 import { changePassword, describePasswordProblem } from '../../src/lib/supabase/auth';
 
 const PasswordInput = ({ id, label, value, onChange }: { id: string, label: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void }) => {
+    const { t } = useTranslation();
     const [showPassword, setShowPassword] = useState(false);
 
     return (
@@ -25,7 +26,7 @@ const PasswordInput = ({ id, label, value, onChange }: { id: string, label: stri
                 <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={showPassword ? t('parentChangePasswordScreen.hidePassword') : t('parentChangePasswordScreen.showPassword')}
                     className="absolute inset-y-0 right-2 flex items-center justify-center w-11 text-gray-400 hover:text-gray-600 cursor-pointer focus:outline-none"
                 >
                     {showPassword ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
@@ -60,7 +61,7 @@ const ParentChangePasswordScreen: React.FC = () => {
         }
 
         setLoading(true);
-        const loadingToast = toast.loading("Updating password...");
+        const loadingToast = toast.loading(t('parentChangePasswordScreen.updatingPassword'));
         try {
             // See ChangePasswordScreen: the current password is re-checked, so an
             // unlocked laptop cannot be used to take the account away.
@@ -75,7 +76,7 @@ const ParentChangePasswordScreen: React.FC = () => {
             setConfirmPassword('');
         } catch (err: any) {
             console.error("Error updating password:", err);
-            toast.error(err.message || "Failed to update password", { id: loadingToast });
+            toast.error(err.message || t('parentChangePasswordScreen.failedToUpdatePassword'), { id: loadingToast });
         } finally {
             setLoading(false);
         }
@@ -99,7 +100,7 @@ const ParentChangePasswordScreen: React.FC = () => {
                         disabled={loading}
                         className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-green-600 hover:bg-green-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 ${loading ? 'opacity-50' : ''}`}
                     >
-                        {loading ? 'Updating...' : 'Update Password'}
+                        {loading ? t('parentChangePasswordScreen.updating') : t('parentChangePasswordScreen.updatePassword')}
                     </motion.button>
                 </div>
             </form>

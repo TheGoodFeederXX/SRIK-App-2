@@ -94,7 +94,7 @@ const CreateForumTopicScreen: React.FC<CreateForumTopicScreenProps> = ({ handleB
                         </div>
                     )}
                     <div>
-                        <p className="font-semibold text-gray-800 text-sm">{currentUser.name || 'Teacher'}</p>
+                        <p className="font-semibold text-gray-800 text-sm">{currentUser.name || t('createForumTopicScreen.teacher')}</p>
                         <p className="text-xs text-gray-400">{t('createForumTopicScreen.postingAsYourself')}</p>
                     </div>
                 </div>

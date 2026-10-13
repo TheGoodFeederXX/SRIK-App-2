@@ -79,7 +79,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               disabled={isLoading}
               className="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-70 text-sm"
             >
-              {isLoading ? 'Sending Code...' : 'Send Reset Code'}
+              {isLoading ? t('login.sendingCode') : t('login.sendResetCode')}
             </button>
             <button
               type="button"
@@ -146,7 +146,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               disabled={isLoading}
               className="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-bold rounded-xl shadow-md transition-all active:scale-95 disabled:opacity-70 text-sm"
             >
-              {isLoading ? 'Sending...' : 'Send New Link'}
+              {isLoading ? t('login.sending') : t('login.sendNewLink')}
             </button>
             <button
               type="button"

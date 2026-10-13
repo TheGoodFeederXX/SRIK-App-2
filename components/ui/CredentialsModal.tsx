@@ -237,7 +237,7 @@ Visit: https://your-school-app.com/login
             <div>
               <h2 className="text-xl sm:text-2xl font-bold break-words">{t('credentialsModal.success')}</h2>
               <p className="text-green-100 text-sm break-words">
-                {secondaryCredentials ? 'Accounts created successfully' : 'Account created successfully'}
+                {secondaryCredentials ? t('credentialsModal.accountsCreatedSuccessfully') : t('credentialsModal.accountCreatedSuccessfully')}
               </p>
             </div>
           </div>

@@ -193,7 +193,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 className="font-bold text-lg text-gray-900 leading-tight">{request.teacher?.full_name || 'Unknown Teacher'}</h3>
+                                        <h3 className="font-bold text-lg text-gray-900 leading-tight">{request.teacher?.full_name || t('teacherAttendanceApproval.unknownTeacher')}</h3>
                                         <p className="text-sm text-gray-500 font-medium">{request.teacher?.email}</p>
                                     </div>
                                 </div>

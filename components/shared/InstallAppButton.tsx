@@ -54,9 +54,9 @@ const InstallAppButton: React.FC = () => {
                 : ['Open this page in Safari.', "Share → 'Add to Home Screen'."];
         }
         if (platform === 'android') {
-            return ['Tap the browser menu (⋮).', "Tap 'Install app' / 'Add to Home screen'.", "Tap 'Install'."];
+            return [t('installAppButton.tapTheBrowserMenu'), t('installAppButton.tapInstallAppAddToHomeScreen'), t('installAppButton.tapInstall')];
         }
-        return ["Click the install icon in the address bar,", "or browser menu → 'Install School App'."];
+        return [t('installAppButton.clickTheInstallIconInTheAddressBar'), t('installAppButton.orBrowserMenuInstallSchoolApp')];
     })();
 
     return (

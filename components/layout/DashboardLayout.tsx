@@ -251,7 +251,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
 
                 {!hideHeader && (
                     <Header
-                        title={title || 'Dashboard'}
+                        title={title || t('dashboardLayout.dashboard')}
                         // Use profile.avatar_url (live state) -> fallback to top-level user field -> auth metadata -> empty
                         avatarUrl={profile?.avatar_url || user?.avatar_url || user?.user_metadata?.avatar_url || ''}
                         bgColor={theme?.mainBg || 'bg-blue-700'}

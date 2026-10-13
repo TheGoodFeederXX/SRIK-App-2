@@ -226,7 +226,7 @@ const TodayFocus: React.FC<{
                                 <div className="flex-1 overflow-hidden">
                                     <p className="text-sm font-bold text-gray-800 leading-none truncate">{entry.subject}</p>
                                     <p className="text-xs text-gray-400 mt-1 truncate">
-                                        {entry.class_name} • {entry.teacher_name || 'Assigned'}
+                                        {entry.class_name} • {entry.teacher_name || t('studentDashboard.assigned')}
                                     </p>
                                 </div>
                             </motion.div>
@@ -492,7 +492,7 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
     const {
         view, title, props: routeProps,
         navigateTo: pushView, replaceView, handleBack: navigateBack, canGoBack,
-    } = useDashboardRouting('overview', 'Student Dashboard');
+    } = useDashboardRouting('overview', t('studentDashboard.studentDashboard'));
     const [activeBottomNav, setActiveBottomNav] = useState(() => {
         return sessionStorage.getItem('student_activeBottomNav') || 'home';
     });
@@ -706,25 +706,25 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
 
         switch (screen) {
             case 'home':
-                replaceView('overview', 'Student Dashboard');
+                replaceView('overview', t('studentDashboard.studentDashboard'));
                 break;
             case 'quizzes':
-                replaceView('quizzes', 'Assessments & Quizzes');
+                replaceView('quizzes', t('studentDashboard.assessmentsQuizzes'));
                 break;
             case 'results':
-                replaceView('results', 'Academic Performance', { studentId: student.id });
+                replaceView('results', t('studentDashboard.academicPerformance'), { studentId: student.id });
                 break;
             case 'games':
-                replaceView('gamesHub', 'Games Hub');
+                replaceView('gamesHub', t('studentDashboard.gamesHub'));
                 break;
             case 'messages':
-                replaceView('messages', 'Messages');
+                replaceView('messages', t('studentDashboard.messages'));
                 break;
             case 'profile':
-                replaceView('profile', 'My Profile');
+                replaceView('profile', t('studentDashboard.myProfile'));
                 break;
             default:
-                replaceView('overview', 'Student Dashboard');
+                replaceView('overview', t('studentDashboard.studentDashboard'));
         }
     };
 

@@ -123,7 +123,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ adventureData, onQuizComplete }
                                 className="p-4"
                             >
                                 <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.98 }} onClick={handleNext} className="w-full py-4 text-lg font-bold text-teal-800 bg-white rounded-xl shadow-lg hover:bg-gray-200 transition-colors">
-                                    {currentQuestionIndex < adventureData.quiz.length - 1 ? 'Next Question' : 'Finish Quest'}
+                                    {currentQuestionIndex < adventureData.quiz.length - 1 ? t('quizScreen.nextQuestion') : t('quizScreen.finishQuest')}
                                 </motion.button>
                             </motion.div>
                         )}

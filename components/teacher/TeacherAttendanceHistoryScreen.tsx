@@ -77,7 +77,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                 setHistory(data);
             } catch (err: any) {
                 console.error("Error fetching history:", err);
-                toast.error(err.message || "Failed to load history");
+                toast.error(err.message || t('teacherAttendanceHistoryScreen.failedToLoadHistory'));
             } finally {
                 setLoading(false);
             }
@@ -310,7 +310,8 @@ const BADGE_STYLES: Record<string, string> = {
 };
 
 const Badge = ({ status }: { status: string }) => {
-    const display = status || 'Present';
+    const { t } = useTranslation();
+    const display = status || t('teacherAttendanceHistoryScreen.present');
     const style = BADGE_STYLES[display.toLowerCase()] || 'bg-gray-50 text-gray-600 border-gray-100';
     return (
         <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border ${style}`}>

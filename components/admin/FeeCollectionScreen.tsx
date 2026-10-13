@@ -528,7 +528,7 @@ function CollectPanel({
                                            disabled:bg-slate-300 disabled:cursor-not-allowed
                                            bg-indigo-600 hover:bg-indigo-700"
                             >
-                                {saving ? 'Menyimpan…' : 'Simpan bayaran'}
+                                {saving ? t('feeCollectionScreen.menyimpan') : t('feeCollectionScreen.simpanBayaran')}
                             </button>
                         </>
                     )}
@@ -733,7 +733,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
                                     className="px-3 py-2 rounded-lg bg-rose-600 text-white text-xs font-bold
                                                hover:bg-rose-700 disabled:bg-slate-300"
                                 >
-                                    {busy ? 'Membatalkan…' : 'Sahkan pembatalan'}
+                                    {busy ? t('feeCollectionScreen.membatalkan') : t('feeCollectionScreen.sahkanPembatalan')}
                                 </button>
                                 <button
                                     type="button"

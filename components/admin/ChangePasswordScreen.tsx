@@ -58,7 +58,7 @@ const ChangePasswordScreen: React.FC = () => {
             setConfirmPassword('');
         } catch (err: any) {
             console.error('Error changing password:', err);
-            toast.error(err.message || 'Failed to change password.');
+            toast.error(err.message || t('changePasswordScreen.failedToChangePassword'));
         } finally {
             setLoading(false);
         }
@@ -76,7 +76,7 @@ const ChangePasswordScreen: React.FC = () => {
                 </main>
                 <div className="p-4 mt-auto bg-gray-50 border-t border-gray-200">
                     <motion.button whileHover={!loading ? { scale: 1.01 } : {}} whileTap={!loading ? { scale: 0.98 } : {}} type="submit" disabled={loading} className={`w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm font-medium text-white bg-sky-500 hover:bg-sky-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-                        {loading ? 'Updating...' : 'Update Password'}
+                        {loading ? t('changePasswordScreen.updating') : t('changePasswordScreen.updatePassword')}
                     </motion.button>
                 </div>
             </form>

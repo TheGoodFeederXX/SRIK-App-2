@@ -204,7 +204,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         return sessionStorage.getItem('admin_activeBottomNav') || 'home';
     });
     const { view, title, props: routeProps, navigateTo, replaceView, handleBack, canGoBack } =
-        useDashboardRouting('overview', 'Admin Dashboard');
+        useDashboardRouting('overview', t('adminDashboard.adminDashboard'));
     const [version, setVersion] = useState(0);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [dbStatus, setDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
@@ -540,35 +540,35 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
     const handleBottomNavClick = (screen: string) => {
         setActiveBottomNav(screen);
         switch (screen) {
-            case 'actions': replaceView('adminActions', 'Quick Actions'); break;
-            case 'home': replaceView('overview', 'Admin Dashboard'); break;
-            case 'studentList': replaceView('studentList', 'Students'); break;
-            case 'teacherList': replaceView('teacherList', 'Teachers'); break;
-            case 'parentList': replaceView('parentList', 'Guardians'); break;
-            case 'studentApprovals': replaceView('studentApprovals', 'Student Approvals'); break;
-            case 'classList': replaceView('classList', 'Classes'); break;
-            case 'subjectList': replaceView('subjectList', 'Subjects'); break;
-            case 'attendanceOverview': replaceView('attendanceOverview', 'Attendance'); break;
-            case 'attendanceRegister': replaceView('attendanceRegister', 'Attendance'); break;
-            case 'markEntry': replaceView('markEntry', 'Mark Entry'); break;
-            case 'reportCard': replaceView('reportCard', 'Report Cards'); break;
-            case 'feeCollection': replaceView('feeCollection', 'Fee Collection'); break;
-            case 'feeSetup': replaceView('feeSetup', 'Fee Setup'); break;
-            case 'studentFees': replaceView('studentFees', 'Student Fees'); break;
-            case 'guardianAccounts': replaceView('guardianAccounts', 'Guardian Accounts'); break;
-            case 'announcements': replaceView('announcements', 'Announcements'); break;
-            case 'auditTrail': replaceView('auditTrail', 'Audit Trail'); break;
-            case 'timetable': replaceView('timetable', 'Timetable'); break;
+            case 'actions': replaceView('adminActions', t('adminDashboard.quickActions')); break;
+            case 'home': replaceView('overview', t('adminDashboard.adminDashboard')); break;
+            case 'studentList': replaceView('studentList', t('adminDashboard.students')); break;
+            case 'teacherList': replaceView('teacherList', t('adminDashboard.teachers')); break;
+            case 'parentList': replaceView('parentList', t('adminDashboard.guardians')); break;
+            case 'studentApprovals': replaceView('studentApprovals', t('adminDashboard.studentApprovals')); break;
+            case 'classList': replaceView('classList', t('adminDashboard.classes')); break;
+            case 'subjectList': replaceView('subjectList', t('adminDashboard.subjects')); break;
+            case 'attendanceOverview': replaceView('attendanceOverview', t('adminDashboard.attendance')); break;
+            case 'attendanceRegister': replaceView('attendanceRegister', t('adminDashboard.attendance')); break;
+            case 'markEntry': replaceView('markEntry', t('adminDashboard.markEntry')); break;
+            case 'reportCard': replaceView('reportCard', t('adminDashboard.reportCards')); break;
+            case 'feeCollection': replaceView('feeCollection', t('adminDashboard.feeCollection')); break;
+            case 'feeSetup': replaceView('feeSetup', t('adminDashboard.feeSetup')); break;
+            case 'studentFees': replaceView('studentFees', t('adminDashboard.studentFees')); break;
+            case 'guardianAccounts': replaceView('guardianAccounts', t('adminDashboard.guardianAccounts')); break;
+            case 'announcements': replaceView('announcements', t('adminDashboard.announcements')); break;
+            case 'auditTrail': replaceView('auditTrail', t('adminDashboard.auditTrail')); break;
+            case 'timetable': replaceView('timetable', t('adminDashboard.timetable')); break;
             case 'examManagement': replaceView('examManagement', 'Exams'); break;
-            case 'results': replaceView('resultsEntry', 'Results'); break;
-            case 'compliance': replaceView('complianceDashboard', 'Compliance'); break;
-            case 'messages': replaceView('adminMessages', 'Messages'); break;
-            case 'parentChatAccess': replaceView('parentChatAccess', 'Parent Chat Access'); break;
-            case 'communication': replaceView('communicationHub', 'Communication Hub'); break;
-            case 'analytics': replaceView('analytics', 'School Analytics'); break;
-            case 'settings': replaceView('profileSettings', 'Profile Settings'); break;
-            case 'staffManagement': replaceView('teacherList', 'Manage Teachers'); break;
-            default: replaceView('overview', 'Admin Dashboard');
+            case 'results': replaceView('resultsEntry', t('adminDashboard.results')); break;
+            case 'compliance': replaceView('complianceDashboard', t('adminDashboard.compliance')); break;
+            case 'messages': replaceView('adminMessages', t('adminDashboard.messages')); break;
+            case 'parentChatAccess': replaceView('parentChatAccess', t('adminDashboard.parentChatAccess')); break;
+            case 'communication': replaceView('communicationHub', t('adminDashboard.communicationHub')); break;
+            case 'analytics': replaceView('analytics', t('adminDashboard.schoolAnalytics')); break;
+            case 'settings': replaceView('profileSettings', t('adminDashboard.profileSettings')); break;
+            case 'staffManagement': replaceView('teacherList', t('adminDashboard.manageTeachers')); break;
+            default: replaceView('overview', t('adminDashboard.adminDashboard'));
         }
     };
 

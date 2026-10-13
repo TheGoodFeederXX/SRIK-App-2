@@ -351,7 +351,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
   return (
     <div className="p-4 lg:p-6 space-y-6 bg-gray-50">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className={`p-5 rounded-2xl text-white shadow-lg ${theme.mainBg}`}>
-        <h3 className="text-2xl font-bold">Welcome, {teacherProfile?.name || 'Teacher'}!</h3>
+        <h3 className="text-2xl font-bold">Welcome, {teacherProfile?.name || t('teacherOverview.teacher')}!</h3>
         <p className="text-sm opacity-90 mt-1">{t('teacherOverview.readyToInspireToday')}</p>
         {(isClassTeacher || isSubjectTeacher) && (
           <div className="flex flex-wrap gap-2 mt-3">

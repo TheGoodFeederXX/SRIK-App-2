@@ -107,7 +107,7 @@ const StudyBuddy: React.FC = () => {
                 }
             });
 
-            const responseText = response.text || "No response from AI.";
+            const responseText = response.text || t('studyBuddy.noResponseFromAI');
 
             setMessages(prev => {
                 const newMessages = [...prev];

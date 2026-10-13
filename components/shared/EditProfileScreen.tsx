@@ -170,7 +170,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
             // Or upload immediately and get URL?
             // Let's upload immediately as it's a smoother UX for "preview" effectively becoming "remote"
 
-            const toastId = toast.loading('Uploading image...');
+            const toastId = toast.loading(t('editProfileScreen.uploadingImage'));
             try {
                 // Stored in the school's own document bucket and addressed by a SIGNED
                 // link, because the bucket is private: a picture of a staff member must
@@ -389,7 +389,7 @@ const EditProfileScreen: React.FC<EditProfileScreenProps> = ({ onBack, navigateT
                         onClick={handleSave}
                         disabled={saving}
                         className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/40 transition-shadow mt-8 disabled:opacity-70 disabled:cursor-wait">
-                        {saving ? 'Saving...' : 'Save Changes'}
+                        {saving ? t('editProfileScreen.saving') : t('editProfileScreen.saveChanges')}
                     </motion.button>
                 </motion.div>
             </main>

@@ -45,7 +45,7 @@ const AdminSelectTermForReport: React.FC<AdminSelectTermForReportProps> = ({ stu
     <div className="p-4 space-y-4 bg-gray-50 h-full">
       <div className="bg-indigo-50 p-4 rounded-xl text-center border border-indigo-200">
         <DocumentTextIcon className="h-10 w-10 mx-auto text-indigo-400 mb-2" />
-        <h3 className="font-bold text-lg text-indigo-800">Select Term for {student?.name || 'Student'}</h3>
+        <h3 className="font-bold text-lg text-indigo-800">Select Term for {student?.name || t('adminSelectTermForReport.student')}</h3>
         <p className="text-sm text-indigo-700">{t('adminSelectTermForReport.chooseTheAcademicTermYouWantToViewOrEdit')}</p>
       </div>
       <div className="space-y-3">

@@ -46,7 +46,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
             setQrCodeUrl(qrCodeUrl);
             setEnrolling(true);
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to start 2FA setup.');
+            toast.error(err?.message || t('teacherSecurityScreen.failedToStart2FASetup'));
         } finally {
             setBusy(false);
         }
@@ -67,7 +67,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
             setSecret('');
             toast.success(t('teacherSecurityScreen.twoFactorAuthenticationEnabled'));
         } catch (err: any) {
-            toast.error(err?.message || 'Invalid code — please try again.');
+            toast.error(err?.message || t('teacherSecurityScreen.invalidCodePleaseTryAgain'));
         } finally {
             setBusy(false);
         }
@@ -86,7 +86,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
             setDisableCode('');
             toast.success(t('teacherSecurityScreen.twoFactorAuthenticationDisabled'));
         } catch (err: any) {
-            toast.error(err?.message || 'Invalid code — please try again.');
+            toast.error(err?.message || t('teacherSecurityScreen.invalidCodePleaseTryAgain'));
         } finally {
             setBusy(false);
         }
@@ -117,7 +117,7 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                         <ShieldCheckIcon className={`h-6 w-6 ${twoFactor ? 'text-green-500' : 'text-gray-400'}`} />
                         <div>
                             <h3 className="font-bold text-gray-800">{t('teacherSecurityScreen.twoFactorAuthentication')}</h3>
-                            <p className="text-sm text-gray-500">{twoFactor ? 'Enabled — your account is protected.' : 'Add an extra layer of security.'}</p>
+                            <p className="text-sm text-gray-500">{twoFactor ? t('teacherSecurityScreen.enabledYourAccountIsProtected') : t('teacherSecurityScreen.addAnExtraLayerOfSecurity')}</p>
                         </div>
                     </div>
                     {twoFactor ? (

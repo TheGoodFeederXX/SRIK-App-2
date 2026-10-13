@@ -132,7 +132,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
             if (!classId) return;
             if (selectedClass !== 'all' && classId !== selectedClass) return;
 
-            const className = classNameById.get(classId) || 'Unknown';
+            const className = classNameById.get(classId) || t('attendanceHeatmap.unknown');
             // Normalize to YYYY-MM-DD: Prisma serializes `date` as a full ISO
             // timestamp, and comparing/sorting raw ISO strings across rows is
             // fine, but re-parsing them for display is safer without the time part.

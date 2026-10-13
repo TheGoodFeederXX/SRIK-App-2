@@ -253,7 +253,7 @@ const AppearancePanel: React.FC = () => {
           disabled={isDefault}
           className="mt-6 w-full min-h-11 flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl bg-indigo-600 text-white text-[11px] font-black uppercase tracking-wide hover:bg-indigo-500 transition-colors disabled:opacity-40 disabled:cursor-default"
         >
-          <RotateCcw className="w-3.5 h-3.5" /> {isDefault ? 'Default look in use' : 'Reset to default'}
+          <RotateCcw className="w-3.5 h-3.5" /> {isDefault ? t('appearancePanel.defaultLookInUse') : t('appearancePanel.resetToDefault')}
         </motion.button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { api } from '../../lib/api';
 import { useAuth } from '../../context/AuthContext';
@@ -9,6 +10,7 @@ interface UpdatePromptProps {
 }
 
 export default function UpdatePrompt({ forced = false, targetVersion }: UpdatePromptProps) {
+    const { t } = useTranslation();
     // UpdatePrompt is mounted unconditionally at the app root (alongside, not
     // inside, the authenticated shell), so it renders before any login and
     // survives logout too. Its version-check call below hits a protected
@@ -231,7 +233,7 @@ export default function UpdatePrompt({ forced = false, targetVersion }: UpdatePr
                                     lineHeight: 1.2,
                                 }}
                             >
-                                {forced ? 'System Update Required' : 'New Update Available'}
+                                {forced ? t('updatePrompt.systemUpdateRequired') : t('updatePrompt.newUpdateAvailable')}
                             </h3>
                             <p
                                 style={{
@@ -307,7 +309,7 @@ export default function UpdatePrompt({ forced = false, targetVersion }: UpdatePr
                                     }}
                                 />
                             )}
-                            {updating ? 'Updating…' : 'Update Now'}
+                            {updating ? t('updatePrompt.updating') : t('updatePrompt.updateNow')}
                         </button>
                         
                         <button

@@ -125,7 +125,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
    const {
      view, title, props: routeProps,
      navigateTo: pushView, replaceView, handleBack, canGoBack,
-   } = useDashboardRouting('overview', 'Teacher Dashboard');
+   } = useDashboardRouting('overview', t('teacherDashboard.teacherDashboard'));
    // navigateTo('overview', ...) used to reset the stack to a single root
    // rather than push (see the original navigateTo below) — every other
    // view pushed normally. Preserved as the one place this dashboard's
@@ -134,7 +134,7 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
    // below (whose deps include navigateTo) re-run on every single render
    // instead of only when the underlying navigation functions change.
    const navigateTo = useCallback((nextView: string, nextTitle: string, nextProps: any = {}) => {
-     if (nextView === 'overview') replaceView('overview', 'Teacher Dashboard', nextProps);
+     if (nextView === 'overview') replaceView('overview', t('teacherDashboard.teacherDashboard'), nextProps);
      else pushView(nextView, nextTitle, nextProps);
    }, [replaceView, pushView]);
    const [activeBottomNav, setActiveBottomNav] = useState('home');
@@ -238,14 +238,14 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
   const handleBottomNavClick = (screen: string) => {
     setActiveBottomNav(screen);
     switch (screen) {
-      case 'home': replaceView('overview', 'Teacher Dashboard'); break;
-      case 'timetable': replaceView('timetable', 'Timetable Dashboard'); break;
-      case 'lessonNotes': replaceView('lessonNotesUpload', 'Lesson Notes'); break;
-      case 'reports': replaceView('reports', 'Student Reports'); break;
-      case 'forum': replaceView('collaborationForum', 'Collaboration Forum'); break;
-      case 'messages': replaceView('messages', 'Messages'); break;
-      case 'settings': replaceView('settings', 'Settings'); break;
-      default: replaceView('overview', 'Teacher Dashboard');
+      case 'home': replaceView('overview', t('teacherDashboard.teacherDashboard')); break;
+      case 'timetable': replaceView('timetable', t('teacherDashboard.timetableDashboard')); break;
+      case 'lessonNotes': replaceView('lessonNotesUpload', t('teacherDashboard.lessonNotes')); break;
+      case 'reports': replaceView('reports', t('teacherDashboard.studentReports')); break;
+      case 'forum': replaceView('collaborationForum', t('teacherDashboard.collaborationForum')); break;
+      case 'messages': replaceView('messages', t('teacherDashboard.messages')); break;
+      case 'settings': replaceView('settings', t('teacherDashboard.settings')); break;
+      default: replaceView('overview', t('teacherDashboard.teacherDashboard'));
     }
   };
 

@@ -261,7 +261,7 @@ function Composer({
             <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-xl p-5
                             max-h-[90vh] overflow-y-auto">
                 <h2 className="font-bold text-slate-800 mb-4">
-                    {announcement ? 'Sunting pengumuman' : 'Tulis pengumuman'}
+                    {announcement ? t('announcementsScreen.suntingPengumuman') : t('announcementsScreen.tulisPengumuman')}
                 </h2>
 
                 <div className="space-y-4">
@@ -330,7 +330,7 @@ function Composer({
                             className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm
                                        hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
                         >
-                            {busy ? 'Menyimpan…' : 'Simpan sebagai draf'}
+                            {busy ? t('announcementsScreen.menyimpan') : t('announcementsScreen.simpanSebagaiDraf')}
                         </button>
                         <button
                             type="button"

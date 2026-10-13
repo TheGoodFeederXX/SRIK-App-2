@@ -34,7 +34,7 @@ export default function VersionStatusCard() {
                     <p className="text-sm text-gray-500">{t('versionStatusCard.viewAndManageYourApplicationVersionStatus')}</p>
                 </div>
                 <div className={`px-3 py-1 rounded-full text-xs font-bold ${isMismatch ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
-                    {isMismatch ? 'Update Pending' : 'Up to Date'}
+                    {isMismatch ? t('versionStatusCard.updatePending') : t('versionStatusCard.upToDate')}
                 </div>
             </div>
 

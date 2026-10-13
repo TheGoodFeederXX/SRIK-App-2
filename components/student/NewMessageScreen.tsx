@@ -285,7 +285,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                 isGroup: true
             });
         } catch (e: any) {
-            toast.error(e?.message || 'Could not create group');
+            toast.error(e?.message || t('newMessageScreen.couldNotCreateGroup'));
         } finally {
             setCreatingGroup(false);
         }
@@ -363,7 +363,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                     <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                         type="text"
-                        placeholder={groupMode ? "Search students & teachers..." : "Search by name..."}
+                        placeholder={groupMode ? t('newMessageScreen.searchStudentsTeachers') : t('newMessageScreen.searchByName')}
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
                         className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-100/80 border-none rounded-xl focus:ring-2 focus:ring-orange-200 focus:bg-white transition-all outline-none placeholder-gray-400 text-gray-700"
@@ -408,7 +408,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                         <SearchIcon className="w-7 h-7 text-gray-300" />
                     </div>
                     <p className="text-sm font-semibold text-gray-500">
-                        {groupMode ? 'No students or teachers found' : 'No contacts available'}
+                        {groupMode ? t('newMessageScreen.noStudentsOrTeachersFound') : t('newMessageScreen.noContactsAvailable')}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">{t('newMessageScreen.contactsWillAppearBasedOnYourRoleAndSchool')}</p>
                 </div>

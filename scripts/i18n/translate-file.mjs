@@ -150,12 +150,105 @@ for (const fn of ['toast.success', 'toast.error', 'toast', 'window.confirm', 'co
     });
 }
 
+// 3a. TOAST MESSAGES. `toast.success('...')`, `toast.error('...')`, `toast.loading('...')` all
+// render their argument to the reader, and `badge="..."` is a display prop on a local component.
+// Both were missed by the prop rules because `toast.` is not a JSX attribute.
+for (const fn of ['success', 'error', 'loading', 'message', 'info']) {
+    const re = new RegExp(`\\btoast\\.${fn}\\(\\s*([\"'])([^\"']{1,90})\\1`, 'g');
+    src = src.replace(re, (full, q, text) => {
+        if (!MAP[text]) return full;
+        used.add(text); missed.delete(text);
+        changes.push([`toast.${fn}`, text]);
+        return full.replace(`${q}${text}${q}`, `t('${keyFor(text)}')`);
+    });
+}
+// `badge="Subjects"` — a display prop on a local card component.
+src = src.replace(/\bbadge=(["'])([^"']{1,60})\1/g, (full, q, text) => {
+    if (!MAP[text]) return full;
+    used.add(text); missed.delete(text);
+    changes.push(['badge', text]);
+    return `badge={t('${keyFor(text)}')}`;
+});
+// A literal FALLBACK after `||` inside JSX: `{student.name || 'Student Profile'}`. The literal is
+// what the reader sees when the real value is missing, so it must follow the language.
+src = src.replace(/(\{\s*[\w$.?[\]]+\s*\|\|\s*)(['"])([^'"]{1,90})\2(\s*\})/g,
+    (full, pre, q, text, post) => {
+        if (!MAP[text]) return full;
+        used.add(text); missed.delete(text);
+        changes.push(['jsx fallback', text]);
+        return `${pre}t('${keyFor(text)}')${post}`;
+    });
+
+// 3a-2. A LITERAL FALLBACK INSIDE A CALL: `toast.error(e?.message || 'Could not load history')`.
+// The literal is what the reader sees when the real error carries no message.
+src = src.replace(/\b(toast\.\w+\s*\(\s*)([^,)\n]{1,80}?\s*\|\|\s*)(['"])([^'"]{1,90})\3/g,
+    (full, pre, mid, q, text) => {
+        if (!MAP[text]) return full;
+        used.add(text); missed.delete(text);
+        changes.push(['toast fallback', text]);
+        return `${pre}${mid}t('${keyFor(text)}')`;
+    });
+// The same shape in an assignment: `const who = x || 'Unknown'` where `who` is rendered.
+src = src.replace(/(\b(?:const|let|var)\s+\w+\s*=\s*[^;\n]{1,80}?\s*\|\s*\|\s*)(['"])([^'"]{1,90})\2/g,
+    (full, pre, q, text) => {
+        if (!MAP[text]) return full;
+        // Only when the literal is a short label, never a URL or a data token.
+        if (/^(?:https?:|\/|\.|[a-z_]+$)/.test(text)) return full;
+        used.add(text); missed.delete(text);
+        changes.push(['|| fallback', text]);
+        return `${pre}t('${keyFor(text)}')`;
+    });
+
+// 3a-3. A MULTI-LINE CONCATENATION that forms ONE sentence:
+// `'First part ' + 'second part.'`. Joined and translated as a single string, because
+// translating the fragments separately would give the translator no whole sentence to work with.
+src = src.replace(/(['"])((?:[^'"\n]|\\.){1,200}?)\1\s*\+\s*\n\s*(['"])((?:[^'"\n]|\\.){1,200}?)\3/g,
+    (full, q1, a, q2, b) => {
+        const whole = a + b;
+        if (!MAP[whole]) return full;
+        used.add(whole); missed.delete(whole);
+        changes.push(['concat', whole]);
+        return `t('${keyFor(whole)}')`;
+    });
+
+// 3a-4. A LIST OF DISPLAY INSTRUCTIONS RETURNED FOR RENDERING:
+// `return ['Tap the Share button in Safari.', "Tap 'Add to Home Screen'."];`
+// Each element is a sentence shown to the reader. Two restrictions keep this SAFE:
+//   - the list must be RETURNED by the current component (`return [...]`), so a module-level
+//     constant (where no `t` exists) and a list assigned to a typed data variable are both left
+//     alone;
+//   - every element must be a sentence present in the dictionary, so a list of view IDs or status
+//     codes is never touched.
+// Quote styles are matched independently: a double-quoted element may contain apostrophes.
+src = src.replace(/(\breturn\s*)\[([^\[\]]{4,600})\]/g, (full, kw, inner) => {
+    const parts = inner.match(/"[^"]{2,140}"|'[^']{2,140}'/g);
+    if (!parts || parts.length < 2) return full;
+    const texts = parts.map((x) => x.slice(1, -1));
+    if (!texts.every((x) => MAP[x])) return full;
+    texts.forEach((x) => { used.add(x); missed.delete(x); changes.push(['array', x]); });
+    return `${kw}[${texts.map((x) => `t('${keyFor(x)}')`).join(', ')}]`;
+});
+
+// 3b. A JSX TERNARY that CHOOSES BETWEEN TWO LITERALS: `{cond ? 'Class Report Cards' : 'Report
+// Cards'}`. Whichever branch runs, a literal is rendered, so both must be translated. The
+// condition is left untouched.
+src = src.replace(/\{\s*([^{}?]{1,60}?)\s*\?\s*(['"])([^'"]{1,90})\2\s*:\s*(['"])([^'"]{1,90})\4\s*\}/g,
+    (full, cond, q1, a, q2, b) => {
+        if (!MAP[a] || !MAP[b]) return full;
+        used.add(a); used.add(b); missed.delete(a); missed.delete(b);
+        changes.push(['ternary', a, b]);
+        return `{${cond} ? t('${keyFor(a)}') : t('${keyFor(b)}')}`;
+    });
+
 // 4. The DISPLAY TITLE passed to navigateTo. `navigateTo('view', 'My Assignments')` — the
 // second argument becomes the header title the reader sees. This is display text and must follow
 // the chosen language, but it is a positional ARGUMENT, not a prop, so the rules above miss it.
 // Only the SECOND argument is touched: the first is a view ID the router matches on, and
 // translating it would break navigation.
-src = src.replace(/\bnavigateTo\s*\(\s*(['"])([^'"]+)\1\s*,\s*(['"])([^'"]{1,90})\3/g,
+// `replaceView` and `useDashboardRouting` carry the SAME shape: (viewId, displayTitle). The
+// title reaches the header/breadcrumb, so it must follow the language too. Grouped into one
+// alternation so a single rule covers every function that navigates by (id, title).
+src = src.replace(/\b(?:navigateTo|replaceView|useDashboardRouting)\s*\(\s*(['"])([^'"]+)\1\s*,\s*(['"])([^'"]{1,90})\3/g,
     (full, q1, view, q2, title) => {
         if (!MAP[title]) return full;
         used.add(title); missed.delete(title);

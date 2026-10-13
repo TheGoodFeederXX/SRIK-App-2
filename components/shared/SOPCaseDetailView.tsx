@@ -53,7 +53,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             setCaseData(data);
         } catch (err: any) {
             console.error('Error loading case:', err);
-            toast.error(err?.message || 'Failed to load case');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToLoadCase'));
         } finally {
             setLoading(false);
         }
@@ -76,7 +76,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             toast.success(t('sOPCaseDetailView.evidenceUploaded'));
             fetchCase();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to upload evidence');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToUploadEvidence'));
         } finally {
             setUploading(false);
             e.target.value = '';
@@ -91,7 +91,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             setAdvanceNotes('');
             fetchCase();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to advance the case');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToAdvanceTheCase'));
         } finally {
             setAdvancing(false);
         }
@@ -107,7 +107,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             setDecisionText(''); setOutcome('no_action');
             fetchCase();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to record decision');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToRecordDecision'));
         } finally {
             setSavingDecision(false);
         }
@@ -121,7 +121,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             toast.success(t('sOPCaseDetailView.letterDraftedReviewAndSendWhenReady'));
             fetchCase();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to draft letter');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToDraftLetter'));
         } finally {
             setSavingLetter(false);
         }
@@ -136,7 +136,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
             setShowLetter(false);
             fetchCase();
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to send letter');
+            toast.error(err?.message || t('sOPCaseDetailView.failedToSendLetter'));
         }
     };
 
@@ -213,7 +213,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                     <h3 className="font-bold text-gray-900">{t('sOPCaseDetailView.evidence')}</h3>
                     {!isArchived && (
                         <label className="flex items-center gap-1.5 text-sm font-semibold text-indigo-600 cursor-pointer hover:text-indigo-800">
-                            <Paperclip className="w-4 h-4" /> {uploading ? 'Uploading...' : 'Upload'}
+                            <Paperclip className="w-4 h-4" /> {uploading ? t('sOPCaseDetailView.uploading') : t('sOPCaseDetailView.upload')}
                             <input type="file" multiple className="hidden" onChange={handleUploadEvidence} disabled={uploading} />
                         </label>
                     )}
@@ -224,7 +224,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                         {caseData.evidence.map((ev: any) => (
                             <a key={ev.id} href={ev.url} target="_blank" rel="noopener noreferrer" className="px-5 py-3 flex items-center gap-2 hover:bg-gray-50">
                                 <Paperclip className="w-4 h-4 text-indigo-500" />
-                                <span className="text-sm text-indigo-600 font-semibold">{ev.description || 'Document'}</span>
+                                <span className="text-sm text-indigo-600 font-semibold">{ev.description || t('sOPCaseDetailView.document')}</span>
                                 <span className="text-xs text-gray-400 ml-auto">{fmtDateTime(ev.created_at)}</span>
                             </a>
                         ))}
@@ -343,7 +343,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                             {!letterDraft ? (
                                 <motion.button whileHover={!savingLetter ? { scale: 1.01 } : {}} whileTap={!savingLetter ? { scale: 0.98 } : {}} onClick={handleGenerateLetter} disabled={savingLetter}
                                     className="w-full flex items-center justify-center gap-2 py-3 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-60">
-                                    <FileText className="w-4 h-4" /> {savingLetter ? 'Drafting...' : 'Auto-Draft Letter'}
+                                    <FileText className="w-4 h-4" /> {savingLetter ? t('sOPCaseDetailView.drafting') : t('sOPCaseDetailView.autoDraftLetter')}
                                 </motion.button>
                             ) : (
                                 <div>

@@ -139,7 +139,7 @@ const ChildStatCard: React.FC<{ data: any, navigateTo: (view: string, title: str
                                     <p className="text-sm font-semibold" style={{ color: colorTheme.text }}>{getFormattedClassName(student.grade, student.section)}</p>
                                 )}
                             </div>
-                            <p className="text-xs text-gray-500 mt-1">ID: {student.schoolGeneratedId || 'Pending'}</p>
+                            <p className="text-xs text-gray-500 mt-1">ID: {student.schoolGeneratedId || t('parentDashboard.pending')}</p>
                         </div>
                     </div>
                     <button onClick={() => navigateTo('childDetail', student.name, { student: student })} className="bg-white p-2 rounded-full shadow-sm hover:bg-gray-100">
@@ -522,7 +522,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
     const { currentSchool, currentBranchId, user } = useAuth();
 
     const { view, title, props: routeProps, navigateTo, replaceView, handleBack, canGoBack } =
-        useDashboardRouting('dashboard', 'Parent Dashboard');
+        useDashboardRouting('dashboard', t('parentDashboard.parentDashboard'));
 
     // Initialize activeBottomNav from localStorage or default. Cosmetic UI
     // state only (which bottom-tab icon is highlighted) — the URL is now the
@@ -684,12 +684,12 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
     const handleBottomNavClick = (screen: string) => {
         setActiveBottomNav(screen);
         switch (screen) {
-            case 'home': replaceView('dashboard', 'Parent Dashboard'); break;
-            case 'fees': replaceView('myFees', 'Yuran Anak'); break;
-            case 'reports': replaceView('selectReport', 'Select Report Card'); break;
-            case 'messages': replaceView('messages', 'Messages'); break;
-            case 'more': replaceView('more', 'More Options'); break;
-            default: replaceView('dashboard', 'Parent Dashboard');
+            case 'home': replaceView('dashboard', t('parentDashboard.parentDashboard')); break;
+            case 'fees': replaceView('myFees', t('parentDashboard.yuranAnak')); break;
+            case 'reports': replaceView('selectReport', t('parentDashboard.selectReportCard')); break;
+            case 'messages': replaceView('messages', t('parentDashboard.messages')); break;
+            case 'more': replaceView('more', t('parentDashboard.moreOptions')); break;
+            default: replaceView('dashboard', t('parentDashboard.parentDashboard'));
         }
     };
 
@@ -795,7 +795,7 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
                 <h2 className="text-xl font-bold text-gray-800">{t('parentDashboard.featureComingSoon')}</h2>
                 <p className="text-gray-500 mt-2">The requested view "{view}" is being optimized or is not available for your account yet.</p>
                 <button 
-                    onClick={() => replaceView('dashboard', 'Parent Dashboard')}
+                    onClick={() => replaceView('dashboard', t('parentDashboard.parentDashboard'))}
                     className="mt-6 w-full bg-indigo-600 text-white py-3 rounded-xl font-bold hover:bg-indigo-700 transition-colors"
                 >
                     Back to Home

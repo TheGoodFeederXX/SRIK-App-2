@@ -111,7 +111,7 @@ const ClassDetailScreen: React.FC<ClassDetailScreenProps> = ({ classInfo, naviga
                 <div className="flex-grow text-left">
                   <p className="font-bold text-gray-800">{student.name}</p>
                   <p className="text-sm text-gray-500">
-                    ID: {student.schoolId || 'Pending'}
+                    ID: {student.schoolId || t('classDetailScreen.pending')}
                     {student.curriculum_type && (
                       <span className="ml-2 text-gray-600 bg-gray-100 px-1 py-0.5 rounded text-xs">{student.curriculum_type}</span>
                     )}

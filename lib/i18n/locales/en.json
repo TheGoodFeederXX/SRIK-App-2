@@ -472,7 +472,12 @@
     "selectAPersonToMessage": "Select a person to message",
     "loadingContacts": "Loading contacts...",
     "contactsWillAppearBasedOnYourRoleAndSchool": "Contacts will appear based on your role and school.",
-    "selectAtLeastOneMember": "Select at least one member"
+    "selectAtLeastOneMember": "Select at least one member",
+    "searchStudentsTeachers": "Search students & teachers...",
+    "searchByName": "Search by name...",
+    "noStudentsOrTeachersFound": "No students or teachers found",
+    "noContactsAvailable": "No contacts available",
+    "couldNotCreateGroup": "Could not create group"
   },
   "quizPlayerScreen": {
     "quizPlayer": "Quiz Player"
@@ -496,7 +501,13 @@
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
     "passwordUpdatedSuccessfully": "Password updated successfully!",
-    "newPasswordsDoNotMatch": "New passwords do not match."
+    "newPasswordsDoNotMatch": "New passwords do not match.",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password",
+    "updating": "Updating...",
+    "updatePassword": "Update Password",
+    "updatingPassword": "Updating password...",
+    "failedToUpdatePassword": "Failed to update password"
   },
   "studentDashboard": {
     "yourFocus": "Your Focus",
@@ -531,7 +542,12 @@
     "studyBuddy": "Study Buddy",
     "virtualClassroom": "Virtual Classroom",
     "notifications": "Notifications",
-    "messages": "Messages"
+    "messages": "Messages",
+    "studentDashboard": "Student Dashboard",
+    "assessmentsQuizzes": "Assessments & Quizzes",
+    "gamesHub": "Games Hub",
+    "myProfile": "My Profile",
+    "assigned": "Assigned"
   },
   "studentFinanceScreen": {
     "studentFinance": "Student Finance"
@@ -583,13 +599,20 @@
     "dataUsage": "Data Usage",
     "status": "Status",
     "download": "Download",
-    "appearanceTheme": "Appearance & Theme"
+    "appearanceTheme": "Appearance & Theme",
+    "uploadingDocument": "Uploading document...",
+    "generatingTranscript": "Generating transcript...",
+    "subjects": "Subjects",
+    "assign": "Assign.",
+    "profile": "Profile",
+    "pending": "Pending"
   },
   "studyBuddy": {
     "uploadImage": "Upload image",
     "typeAMessage": "Type a message...",
     "userUpload": "User upload",
-    "send": "Send"
+    "send": "Send",
+    "noResponseFromAI": "No response from AI."
   },
   "subjectsScreen": {
     "subjects": "Subjects"
@@ -612,13 +635,24 @@
   "homeScreen": {
     "startYourAdventure": "Start Your Adventure!",
     "turnAnyLessonIntoAFunQuest": "Turn any lesson into a fun quest.",
-    "challengeLevel": "Challenge Level"
+    "challengeLevel": "Challenge Level",
+    "youngExplorer47Years": "Young Explorer (4-7 years)",
+    "braveAdventurer811Years": "Brave Adventurer (8-11 years)",
+    "masterSage1215Years": "Master Sage (12-15 years)"
   },
   "loadingScreen": {
-    "craftingYourAdventure": "Crafting Your Adventure..."
+    "craftingYourAdventure": "Crafting Your Adventure...",
+    "summoningTheAIOracle": "Summoning the AI oracle...",
+    "decodingAncientScrolls": "Decoding ancient scrolls...",
+    "polishingTheQuizQuestions": "Polishing the quiz questions...",
+    "craftingMagicalIllustrations": "Crafting magical illustrations...",
+    "buildingYourQuestMap": "Building your quest map...",
+    "wakingUpTheKnowledgeSprites": "Waking up the knowledge sprites..."
   },
   "quizScreen": {
-    "quizIllustration": "Quiz illustration"
+    "quizIllustration": "Quiz illustration",
+    "nextQuestion": "Next Question",
+    "finishQuest": "Finish Quest"
   },
   "studentCBTListScreen": {
     "studentCBTList": "Student CBTList"
@@ -740,7 +774,8 @@
     "theAIIsCrunchingTheNumbersToProvideYouWithActi": "The AI is crunching the numbers to provide you with actionable insights.",
     "overallSummary": "Overall Summary",
     "topPerformers": "Top Performers",
-    "studentsNeedingSupport": "Students Needing Support"
+    "studentsNeedingSupport": "Students Needing Support",
+    "noNotes": "No notes"
   },
   "assessmentsHub": {
     "assessmentsQuizzes": "Assessments & Quizzes",
@@ -758,7 +793,8 @@
     "openAnAssignmentToViewIt": "Open an assignment to view it.",
     "assignmentPreview": "Assignment Preview",
     "spaceForPracticalWorkDiagram": "Space for practical work/diagram.",
-    "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "To share, please print/save as PDF or take a screenshot."
+    "toSharePleasePrintSaveAsPDFOrTakeAScreenshot": "To share, please print/save as PDF or take a screenshot.",
+    "assessment": "Assessment"
   },
   "badgeSystem": {
     "badgeSystem": "Badge System"
@@ -787,7 +823,10 @@
     "failedToUpdateStatus": "Failed to update status.",
     "failedToDeleteExam": "Failed to delete exam",
     "results": "Results",
-    "assessmentResults": "Assessment Results"
+    "assessmentResults": "Assessment Results",
+    "unpublish": "Unpublish",
+    "publish": "Publish",
+    "uploadFailed": "Upload failed."
   },
   "cBTScoresScreen": {
     "cbtscores": "CBTScores"
@@ -802,7 +841,8 @@
     "selectAClassToViewItsDetails": "Select a class to view its details.",
     "attendance": "Attendance",
     "newAssignment": "New Assignment",
-    "noStudentsFoundInThisClass": "No students found in this class."
+    "noStudentsFoundInThisClass": "No students found in this class.",
+    "pending": "Pending"
   },
   "classGradebookScreen": {
     "gradebook": "Gradebook",
@@ -829,7 +869,8 @@
     "shareYourIdeasQuestionsOrStartADiscussion": "Share your ideas, questions, or start a discussion...",
     "topicPostedSuccessfully": "Topic posted successfully!",
     "pleaseFillInBothTheTitleAndContent": "Please fill in both the title and content.",
-    "failedToCreateTopicPleaseTryAgain": "Failed to create topic. Please try again."
+    "failedToCreateTopicPleaseTryAgain": "Failed to create topic. Please try again.",
+    "teacher": "Teacher"
   },
   "editTeacherProfileScreen": {
     "profileNotFound": "Profile not found.",
@@ -846,7 +887,10 @@
     "teacher": "Teacher",
     "profileUpdatedSuccessfully": "Profile updated successfully!",
     "usernameUpdatedSuccessfully": "Username updated successfully!",
-    "failedToUploadPhotoPleaseTryAgain": "Failed to upload photo. Please try again."
+    "failedToUploadPhotoPleaseTryAgain": "Failed to upload photo. Please try again.",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "errorUpdatingUsername": "Error updating username"
   },
   "educationalGamesScreen": {
     "educationalGames": "Educational Games"
@@ -871,7 +915,8 @@
     "someGradesCouldNotBeSavedReEnterThemToRetry": "Some grades could not be saved — re-enter them to retry.",
     "gradesWillAutoSave": "Grades will auto-save.",
     "selectAnExamToEnterGrades": "Select an exam to enter grades.",
-    "loadingStudentList": "Loading student list..."
+    "loadingStudentList": "Loading student list...",
+    "pending": "Pending"
   },
   "gradeSubmissionScreen": {
     "gradeSubmission": "Grade Submission"
@@ -899,7 +944,10 @@
     "endDateMustBeAfterStartDate": "End date must be after start date",
     "failedToSubmitLeaveRequest": "Failed to submit leave request",
     "startDate": "Start Date",
-    "endDate": "End Date"
+    "endDate": "End Date",
+    "submitting": "Submitting...",
+    "submitRequest": "Submit Request",
+    "leaveRequest": "Leave Request"
   },
   "lessonContentScreen": {
     "lessonContent": "Lesson Content"
@@ -921,7 +969,9 @@
     "generatingCreativeClassroomActivities": "Generating creative classroom activities...",
     "materialsNeeded": "Materials Needed:",
     "suggestAIActivity": "Suggest AI Activity",
-    "aiGeneratedLessonPlan": "AI Generated Lesson Plan"
+    "aiGeneratedLessonPlan": "AI Generated Lesson Plan",
+    "publishing": "Publishing...",
+    "publishToLibrary": "Publish to Library"
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Lesson Planner",
@@ -981,7 +1031,8 @@
   },
   "quickAttendance": {
     "classAttendance": "Class Attendance",
-    "noClassSelectedPleaseGoBackAndPickAClassFirst": "No class selected. Please go back and pick a class first."
+    "noClassSelectedPleaseGoBackAndPickAClassFirst": "No class selected. Please go back and pick a class first.",
+    "failedToSaveAttendancePleaseTryAgain": "Failed to save attendance. Please try again."
   },
   "quizBuilderScreen": {
     "quizBuilder": "Quiz Builder",
@@ -1001,7 +1052,10 @@
     "enterYourQuestionHere": "Enter your question here...",
     "pleaseProvideATitleSubjectAndAtLeastOneQuestio": "Please provide a title, subject, and at least one question.",
     "teacherProfileNotFoundPleaseTryReloading": "Teacher profile not found. Please try reloading.",
-    "missingSchoolIDPleaseTryReloading": "Missing School ID. Please try reloading."
+    "missingSchoolIDPleaseTryReloading": "Missing School ID. Please try reloading.",
+    "loadingClasses": "Loading classes...",
+    "selectAClass": "Select a Class",
+    "correctAnswer": "Correct answer"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Recognition Platform"
@@ -1036,7 +1090,10 @@
     "selectAStudentFirst": "Select a student first.",
     "academicContext": "Academic Context",
     "selectAcademicSession": "Select Academic Session",
-    "chooseTermToOpen": "Choose Term to Open"
+    "chooseTermToOpen": "Choose Term to Open",
+    "penggal1": "Penggal 1",
+    "penggal2": "Penggal 2",
+    "penggal3": "Penggal 3"
   },
   "studentCredentialsScreen": {
     "studentCredentials": "Student Credentials"
@@ -1066,7 +1123,10 @@
     "failedToDeleteNote": "Failed to delete note",
     "anErrorOccurredWhileDeletingTheNote": "An error occurred while deleting the note",
     "save": "Save",
-    "selectTerm": "Select Term"
+    "selectTerm": "Select Term",
+    "penggal1": "Penggal 1",
+    "penggal2": "Penggal 2",
+    "penggal3": "Penggal 3"
   },
   "substituteAssignment": {
     "substituteAssignments": "Substitute Assignments",
@@ -1093,7 +1153,8 @@
     "attendanceHistory": "Attendance History",
     "noRecordsFound": "No Records Found",
     "youHavenTMarkedYourAttendanceYetCheckInFromThe": "You haven't marked your attendance yet. Check-in from the main dashboard.",
-    "approvedByAdmin": "Approved by Admin"
+    "approvedByAdmin": "Approved by Admin",
+    "failedToLoadHistory": "Failed to load history"
   },
   "teacherAttendanceScreen": {
     "selectAClassToMarkAttendance": "Select a class to mark attendance.",
@@ -1117,7 +1178,9 @@
     "confirmNewPassword": "Confirm New Password",
     "passwordUpdatedSuccessfully": "Password updated successfully!",
     "newPasswordsDoNotMatch": "New passwords do not match.",
-    "updatePassword": "Update Password"
+    "updatePassword": "Update Password",
+    "updatingPassword": "Updating password...",
+    "failedToUpdatePassword": "Failed to update password"
   },
   "teacherCommunicationScreen": {
     "discard": "Discard",
@@ -1142,13 +1205,21 @@
     "noClassesAssignedToYouYet": "No classes assigned to you yet."
   },
   "teacherDashboard": {
-    "teacherProfileNotFound": "Teacher Profile Not Found"
+    "teacherProfileNotFound": "Teacher Profile Not Found",
+    "teacherDashboard": "Teacher Dashboard",
+    "timetableDashboard": "Timetable Dashboard",
+    "lessonNotes": "Lesson Notes",
+    "studentReports": "Student Reports",
+    "collaborationForum": "Collaboration Forum",
+    "messages": "Messages",
+    "settings": "Settings"
   },
   "teacherExamManagement": {
     "published": "Published",
     "pending": "Pending",
     "enterGrades": "Enter Grades",
-    "noExamsHaveBeenScheduledForYourClassesYet": "No exams have been scheduled for your classes yet."
+    "noExamsHaveBeenScheduledForYourClassesYet": "No exams have been scheduled for your classes yet.",
+    "failedToLoadExams": "Failed to load exams"
   },
   "teacherNotificationSettingsScreen": {
     "loadingSettings": "Loading settings...",
@@ -1215,7 +1286,8 @@
     "substituteAssignments": "Substitute Assignments",
     "myReportedCases": "My Reported Cases",
     "manageAssignments": "Manage Assignments",
-    "timetableDashboard": "Timetable Dashboard"
+    "timetableDashboard": "Timetable Dashboard",
+    "teacher": "Teacher"
   },
   "teacherProfileEnhanced": {
     "myProfile": "My Profile"
@@ -1242,7 +1314,23 @@
     "skillsBehaviour": "Skills & Behaviour",
     "psychomotorSkills": "Psychomotor Skills",
     "attendanceRecord": "Attendance Record",
-    "total": "Total"
+    "total": "Total",
+    "noCommentYet": "No comment yet.",
+    "neatness": "Neatness",
+    "punctuality": "Punctuality",
+    "politeness": "Politeness",
+    "respectForOthers": "Respect for Others",
+    "participationInClass": "Participation in Class",
+    "homeworkCompletion": "Homework Completion",
+    "teamworkCooperation": "Teamwork/Cooperation",
+    "attentiveness": "Attentiveness",
+    "creativity": "Creativity",
+    "honestyIntegrity": "Honesty/Integrity",
+    "handwriting": "Handwriting",
+    "drawingArtSkills": "Drawing/Art Skills",
+    "craftSkills": "Craft Skills",
+    "musicDance": "Music & Dance",
+    "sportsParticipation": "Sports Participation"
   },
   "teacherReportsScreen": {
     "loadingClasses": "Loading classes...",
@@ -1281,7 +1369,11 @@
     "twoFactorAuthenticationEnabled": "Two-factor authentication enabled.",
     "twoFactorAuthenticationDisabled": "Two-factor authentication disabled.",
     "enterThe6DigitCodeFromYourAuthenticatorApp": "Enter the 6-digit code from your authenticator app.",
-    "enterYourCurrent6DigitAuthenticatorCodeToConfi": "Enter your current 6-digit authenticator code to confirm."
+    "enterYourCurrent6DigitAuthenticatorCodeToConfi": "Enter your current 6-digit authenticator code to confirm.",
+    "enabledYourAccountIsProtected": "Enabled — your account is protected.",
+    "addAnExtraLayerOfSecurity": "Add an extra layer of security.",
+    "failedToStart2FASetup": "Failed to start 2FA setup.",
+    "invalidCodePleaseTryAgain": "Invalid code — please try again."
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Loading attendance records...",
@@ -1294,7 +1386,13 @@
     "attendanceHistory": "Attendance History",
     "noAttendanceRecordsYet": "No attendance records yet.",
     "viewAttendanceHistory": "View Attendance History",
-    "attendanceMarkedSuccessfully": "Attendance marked successfully!"
+    "attendanceMarkedSuccessfully": "Attendance marked successfully!",
+    "processing": "Processing...",
+    "markAttendanceCheckOut": "Mark Attendance (Check Out)",
+    "markAttendanceCheckIn": "Mark Attendance (Check In)",
+    "present": "Present",
+    "attendanceCouldNotBeRecorded": "Attendance could not be recorded.",
+    "failedToMarkAttendance": "Failed to mark attendance"
   },
   "teacherSettingsScreen": {
     "settings": "Settings",
@@ -1338,7 +1436,9 @@
     "noChildrenLinked": "No Children Linked",
     "removeLink": "Remove Link",
     "removeChildLink": "Remove Child Link",
-    "failedToUnlinkStudent": "Failed to unlink student."
+    "failedToUnlinkStudent": "Failed to unlink student.",
+    "verifying": "Verifying...",
+    "linkAccount": "Link Account"
   },
   "myAnnouncementsScreen": {
     "pengumuman": "Pengumuman",
@@ -1360,7 +1460,13 @@
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
     "passwordUpdatedSuccessfully": "Password updated successfully!",
-    "newPasswordsDoNotMatch": "New passwords do not match."
+    "newPasswordsDoNotMatch": "New passwords do not match.",
+    "hidePassword": "Hide password",
+    "showPassword": "Show password",
+    "updating": "Updating...",
+    "updatePassword": "Update Password",
+    "updatingPassword": "Updating password...",
+    "failedToUpdatePassword": "Failed to update password"
   },
   "parentDashboard": {
     "personalizedAdvice": "Personalized Advice",
@@ -1386,7 +1492,13 @@
     "behavior": "Behavior",
     "aiParentingTips": "AI Parenting Tips",
     "newChat": "New Chat",
-    "aiAssistant": "AI Assistant"
+    "aiAssistant": "AI Assistant",
+    "parentDashboard": "Parent Dashboard",
+    "yuranAnak": "Yuran Anak",
+    "selectReportCard": "Select Report Card",
+    "messages": "Messages",
+    "moreOptions": "More Options",
+    "pending": "Pending"
   },
   "parentNewChatScreen": {
     "parentNewChat": "Parent New Chat"
@@ -1426,7 +1538,8 @@
     "switchedSchoolSuccessfully": "Switched school successfully",
     "failedToSwitchSchool": "Failed to switch school",
     "idIsStillPendingGeneration": "ID is still pending generation.",
-    "helpCenterComingSoon": "Help Center coming soon!"
+    "helpCenterComingSoon": "Help Center coming soon!",
+    "idPending": "ID: Pending"
   },
   "parentSecurityScreen": {
     "parentSecurity": "Parent Security"
@@ -1497,7 +1610,25 @@
     "pratontonDraf": "Pratonton draf",
     "tiadaPelajarAktifDalamKelasIni": "Tiada pelajar aktif dalam kelas ini",
     "sebabPilihan": "Sebab (pilihan)",
-    "selectTerm": "Select Term"
+    "selectTerm": "Select Term",
+    "namaSekolahBelumDiisi": "Nama sekolah belum diisi",
+    "schoolAcademy": "School Academy",
+    "noCommentProvided": "No comment provided.",
+    "neatness": "Neatness",
+    "punctuality": "Punctuality",
+    "politeness": "Politeness",
+    "respectForOthers": "Respect for Others",
+    "participationInClass": "Participation in Class",
+    "homeworkCompletion": "Homework Completion",
+    "teamworkCooperation": "Teamwork/Cooperation",
+    "attentiveness": "Attentiveness",
+    "creativity": "Creativity",
+    "honestyIntegrity": "Honesty/Integrity",
+    "handwriting": "Handwriting",
+    "drawingArtSkills": "Drawing/Art Skills",
+    "craftSkills": "Craft Skills",
+    "musicDance": "Music & Dance",
+    "sportsParticipation": "Sports Participation"
   },
   "schoolPoliciesScreen": {
     "schoolPolicies": "School Policies"
@@ -1598,7 +1729,9 @@
     "minimizeAnimations": "Minimize animations",
     "english": "English",
     "settingsSavedSuccessfully": "Settings saved successfully!",
-    "failedToSaveSettings": "Failed to save settings"
+    "failedToSaveSettings": "Failed to save settings",
+    "saving": "Saving...",
+    "saveSettings": "Save Settings"
   },
   "appearancePanel": {
     "goodMorning": "Good morning",
@@ -1624,11 +1757,14 @@
     "glassBalanced": "Balanced",
     "glassBalancedHint": "The default look",
     "glassVivid": "Vivid",
-    "glassVividHint": "Deeper blur, more shine"
+    "glassVividHint": "Deeper blur, more shine",
+    "defaultLookInUse": "Default look in use",
+    "resetToDefault": "Reset to default"
   },
   "askAIWidget": {
     "askAI": "Ask AI",
-    "askAQuestion": "Ask a question..."
+    "askAQuestion": "Ask a question...",
+    "failedToGetAnAnswer": "Failed to get an answer"
   },
   "busRouteScreen": {
     "busRoute": "Bus Route"
@@ -1690,7 +1826,10 @@
     "profileUpdatedSuccessfully": "Profile updated successfully!",
     "pleaseEnterYourFullNameBeforeSaving": "Please enter your full name before saving.",
     "namaPenggunaTidakBolehDiubahSendiriSilaHubungi": "Nama pengguna tidak boleh diubah sendiri. Sila hubungi pejabat sekolah.",
-    "editProfile": "Edit Profile"
+    "editProfile": "Edit Profile",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes",
+    "uploadingImage": "Uploading image..."
   },
   "examSchedule": {
     "examSchedule": "Exam Schedule"
@@ -1699,7 +1838,13 @@
     "gameDataNotFound": "Game Data Not Found",
     "theSelectedGameIsCurrentlyUnavailableOrHasNoQu": "The selected game is currently unavailable or has no questions.",
     "goBack": "Go Back",
-    "youAnswered": "You answered"
+    "youAnswered": "You answered",
+    "testComplete": "Test Complete!",
+    "gameOver": "Game Over!",
+    "backToEditor": "Back to Editor",
+    "backToGames": "Back to Games",
+    "nextQuestion": "Next Question",
+    "finishGame": "Finish Game"
   },
   "globalSearchScreen": {
     "trySearchingForSomethingElse": "Try searching for something else.",
@@ -1738,7 +1883,8 @@
     "animate": "Animate",
     "generated": "Generated",
     "pleaseUploadAReferenceImageFirst": "Please upload a reference image first.",
-    "upload": "Upload"
+    "upload": "Upload",
+    "failedToGenerateMediaPleaseTryAgain": "Failed to generate media. Please try again."
   },
   "mentalHealthResources": {
     "mentalHealthResources": "Mental Health Resources"
@@ -1753,7 +1899,8 @@
     "noConversationSelected": "No conversation selected",
     "pickAChatFromTheListOrTapToStartANewConversati": "Pick a chat from the list or tap + to start a new conversation.",
     "searchMessages": "Search messages...",
-    "searchByName": "Search by name…"
+    "searchByName": "Search by name…",
+    "unknown": "Unknown"
   },
   "noticeboardScreen": {
     "noticeboard": "Noticeboard"
@@ -1783,7 +1930,9 @@
     "schoolWideAnnouncementsAndUpdates": "School-wide announcements and updates.",
     "notificationPreferencesSaved": "Notification preferences saved!",
     "emergencyAlertsMustAlwaysBeInstant": "Emergency alerts must always be instant!",
-    "failedToSavePreferences": "Failed to save preferences"
+    "failedToSavePreferences": "Failed to save preferences",
+    "saving": "Saving...",
+    "savePreferences": "Save Preferences"
   },
   "notificationsScreen": {
     "notifications": "Notifications"
@@ -1795,7 +1944,9 @@
   "panicButton": {
     "alertSentHelpIsOnTheWay": "Alert Sent — Help Is On The Way",
     "emergencyPanicButton": "Emergency Panic Button",
-    "failedToSendAlertPleaseCallEmergencyServicesDi": "Failed to send alert. Please call emergency services directly."
+    "failedToSendAlertPleaseCallEmergencyServicesDi": "Failed to send alert. Please call emergency services directly.",
+    "sending": "Sending...",
+    "holdTOSEND": "HOLD TO SEND 🚨"
   },
   "permissionSlips": {
     "slipKebenaran": "Slip Kebenaran"
@@ -1868,7 +2019,22 @@
     "pleaseSetAResponseDeadline": "Please set a response deadline",
     "pleaseWriteYourResponse": "Please write your response",
     "note": "Note",
-    "view": "View"
+    "view": "View",
+    "uploading": "Uploading...",
+    "attachSupportingDocuments": "Attach supporting documents",
+    "submitting": "Submitting...",
+    "submitResponse": "Submit Response",
+    "saving": "Saving...",
+    "addToFile": "Add to File",
+    "sending": "Sending...",
+    "sendQueryLetter": "Send Query Letter",
+    "closing": "Closing...",
+    "closeQuery": "Close Query",
+    "failedToLoadPersonnelFile": "Failed to load personnel file",
+    "failedToAddRecord": "Failed to add record",
+    "failedToIssueQueryLetter": "Failed to issue query letter",
+    "failedToCloseQueryLetter": "Failed to close query letter",
+    "failedToSubmitResponse": "Failed to submit response"
   },
   "projectBoardScreen": {
     "projectBoard": "Project Board"
@@ -1932,13 +2098,28 @@
     "letterDraftedReviewAndSendWhenReady": "Letter drafted — review and send when ready",
     "letterSent": "Letter sent",
     "pleaseDescribeTheDecision": "Please describe the decision",
-    "sendThisLetterNowItCannotBeEditedAfterward": "Send this letter now? It cannot be edited afterward."
+    "sendThisLetterNowItCannotBeEditedAfterward": "Send this letter now? It cannot be edited afterward.",
+    "uploading": "Uploading...",
+    "upload": "Upload",
+    "drafting": "Drafting...",
+    "autoDraftLetter": "Auto-Draft Letter",
+    "document": "Document",
+    "failedToLoadCase": "Failed to load case",
+    "failedToUploadEvidence": "Failed to upload evidence",
+    "failedToAdvanceTheCase": "Failed to advance the case",
+    "failedToRecordDecision": "Failed to record decision",
+    "failedToDraftLetter": "Failed to draft letter",
+    "failedToSendLetter": "Failed to send letter"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Select a student first.",
     "reportCard": "Report Card",
     "selectAcademicSession": "Select Academic Session",
-    "chooseTermToView": "Choose Term to View"
+    "chooseTermToView": "Choose Term to View",
+    "student": "Student",
+    "penggal1": "Penggal 1",
+    "penggal2": "Penggal 2",
+    "penggal3": "Penggal 3"
   },
   "studentGateScreen": {
     "studentGate": "Student Gate",
@@ -1950,7 +2131,9 @@
     "noEventsRecordedYet": "No events recorded yet.",
     "titleEGWonSpellingCompetition": "Title (e.g. Won spelling competition)",
     "descriptionOptional": "Description (optional)",
-    "timelineEntryAdded": "Timeline entry added"
+    "timelineEntryAdded": "Timeline entry added",
+    "failedToAddEntry": "Failed to add entry",
+    "failedToRemoveEntry": "Failed to remove entry"
   },
   "surveysAndPolls": {
     "surveysAndPolls": "Surveys And Polls"
@@ -1969,7 +2152,9 @@
     "localClient": "Local Client",
     "schoolTarget": "School Target",
     "synchronizationRequired": "Synchronization Required",
-    "updateNow": "Update Now"
+    "updateNow": "Update Now",
+    "updatePending": "Update Pending",
+    "upToDate": "Up to Date"
   },
   "voiceSearchWidget": {
     "voiceSearchNotAvailablePleaseTypeYourQuery": "Voice search not available. Please type your query.",
@@ -2003,7 +2188,11 @@
     "enterYourEmailAddressAndWeLlSendYouACodeToRese": "Enter your email address and we'll send you a code to reset your password.",
     "backToSignIn": "Back to Sign In",
     "checkYourEmail": "Check Your Email",
-    "yourEmailAddress": "Your Email Address"
+    "yourEmailAddress": "Your Email Address",
+    "sendingCode": "Sending Code...",
+    "sendResetCode": "Send Reset Code",
+    "sending": "Sending...",
+    "sendNewLink": "Send New Link"
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Verifying credentials..."
@@ -2027,7 +2216,9 @@
     "downloadPDF": "Download PDF",
     "copyUsername": "Copy username",
     "copyPassword": "Copy password",
-    "copyStudentID": "Copy Student ID"
+    "copyStudentID": "Copy Student ID",
+    "accountsCreatedSuccessfully": "Accounts created successfully",
+    "accountCreatedSuccessfully": "Account created successfully"
   },
   "dashboardBottomNav": {
     "analytics": "Analytics",
@@ -2076,7 +2267,10 @@
     "errorIllustration": "Error Illustration"
   },
   "premiumModal": {
-    "upgradeToPremium": "Upgrade to Premium"
+    "upgradeToPremium": "Upgrade to Premium",
+    "advancedPerformanceAnalytics": "Advanced Performance Analytics",
+    "realTimeAttendanceTracking": "Real-time Attendance Tracking",
+    "prioritySupportMore": "Priority Support & More"
   },
   "motion-ui": {
     "closeModal": "Close modal",
@@ -2094,7 +2288,10 @@
     "purataKeseluruhan": "Purata Keseluruhan",
     "kelasPerluPerhatian": "Kelas Perlu Perhatian",
     "kelasTerbaik": "Kelas Terbaik",
-    "failedToLoadAnalytics": "Failed to load analytics"
+    "failedToLoadAnalytics": "Failed to load analytics",
+    "penggal1": "Penggal 1",
+    "penggal2": "Penggal 2",
+    "penggal3": "Penggal 3"
   },
   "academicSettingsScreen": {
     "academicConfiguration": "Academic Configuration",
@@ -2117,7 +2314,9 @@
     "loadingSettings": "Loading settings...",
     "settingsSavedSuccessfully": "Settings saved successfully!",
     "errorLoadingAcademicSettings": "Error loading academic settings.",
-    "schoolContextMissing": "School context missing."
+    "schoolContextMissing": "School context missing.",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes"
   },
   "addExamScreen": {
     "examType": "Exam Type",
@@ -2128,7 +2327,9 @@
     "selectSubject": "Select subject...",
     "loadingFormData": "Loading form data...",
     "failedToLoadFormData": "Failed to load form data",
-    "pleaseFillAllFields": "Please fill all fields."
+    "pleaseFillAllFields": "Please fill all fields.",
+    "updateExam": "Update Exam",
+    "saveExam": "Save Exam"
   },
   "addParentScreen": {
     "addParent": "Add Parent"
@@ -2170,7 +2371,9 @@
     "couldNotLoadThisTeacher": "Could not load this teacher",
     "staffCodeAndFullNameAreRequired": "Staff code and full name are required",
     "anEmailAddressIsNeededToCreateALoginAccount": "An email address is needed to create a login account",
-    "anEmailAddressIsRequired": "An email address is required"
+    "anEmailAddressIsRequired": "An email address is required",
+    "couldNotSaveTheTeacher": "Could not save the teacher",
+    "couldNotCreateTheLoginAccount": "Could not create the login account"
   },
   "adminActionsScreen": {
     "quickActions": "Quick Actions",
@@ -2211,7 +2414,33 @@
     "thisScreen": "This screen",
     "loadingAnalytics": "Loading analytics...",
     "searchingSchoolDatabase": "Searching school database...",
-    "newMessage": "New Message"
+    "newMessage": "New Message",
+    "adminDashboard": "Admin Dashboard",
+    "quickActions": "Quick Actions",
+    "students": "Students",
+    "teachers": "Teachers",
+    "guardians": "Guardians",
+    "studentApprovals": "Student Approvals",
+    "classes": "Classes",
+    "subjects": "Subjects",
+    "attendance": "Attendance",
+    "markEntry": "Mark Entry",
+    "reportCards": "Report Cards",
+    "feeCollection": "Fee Collection",
+    "feeSetup": "Fee Setup",
+    "studentFees": "Student Fees",
+    "guardianAccounts": "Guardian Accounts",
+    "announcements": "Announcements",
+    "auditTrail": "Audit Trail",
+    "timetable": "Timetable",
+    "results": "Results",
+    "compliance": "Compliance",
+    "messages": "Messages",
+    "parentChatAccess": "Parent Chat Access",
+    "communicationHub": "Communication Hub",
+    "schoolAnalytics": "School Analytics",
+    "profileSettings": "Profile Settings",
+    "manageTeachers": "Manage Teachers"
   },
   "adminLessonNotesScreen": {
     "notaPelajaran": "Nota Pelajaran"
@@ -2233,13 +2462,19 @@
   },
   "adminSelectTermForReport": {
     "noStudentSelected": "No student selected.",
-    "chooseTheAcademicTermYouWantToViewOrEdit": "Choose the academic term you want to view or edit."
+    "chooseTheAcademicTermYouWantToViewOrEdit": "Choose the academic term you want to view or edit.",
+    "student": "Student",
+    "penggal1": "Penggal 1",
+    "penggal2": "Penggal 2",
+    "penggal3": "Penggal 3"
   },
   "adminStudentListForReport": {
     "noClassSelectedOpenThisViewByPickingAClassFrom": "No class selected. Open this view by picking a class from Reports.",
     "noStudentsFound": "No Students Found",
     "loadingClassRoster": "Loading class roster...",
-    "failedToLoadClassRoster": "Failed to load class roster"
+    "failedToLoadClassRoster": "Failed to load class roster",
+    "student": "Student",
+    "pending": "Pending"
   },
   "adminStudentReportCardScreen": {
     "endOfTermReportCard": "End of Term Report Card",
@@ -2267,7 +2502,24 @@
     "psychomotorSkills": "Psychomotor Skills",
     "attendanceRecord": "Attendance Record",
     "comments": "Comments",
-    "schoolLogo": "School Logo"
+    "schoolLogo": "School Logo",
+    "schoolAcademy": "School Academy",
+    "noCommentProvided": "No comment provided.",
+    "neatness": "Neatness",
+    "punctuality": "Punctuality",
+    "politeness": "Politeness",
+    "respectForOthers": "Respect for Others",
+    "participationInClass": "Participation in Class",
+    "homeworkCompletion": "Homework Completion",
+    "teamworkCooperation": "Teamwork/Cooperation",
+    "attentiveness": "Attentiveness",
+    "creativity": "Creativity",
+    "honestyIntegrity": "Honesty/Integrity",
+    "handwriting": "Handwriting",
+    "drawingArtSkills": "Drawing/Art Skills",
+    "craftSkills": "Craft Skills",
+    "musicDance": "Music & Dance",
+    "sportsParticipation": "Sports Participation"
   },
   "alumniHistoryScreen": {
     "alumniHistory": "Alumni History"
@@ -2333,7 +2585,10 @@
     "tarikhTamatPilihan": "Tarikh tamat (pilihan)",
     "contohCutiHariRaya": "Contoh: Cuti hari raya",
     "tulisMesejKepadaIbuBapa": "Tulis mesej kepada ibu bapa…",
-    "drafDipadam": "Draf dipadam."
+    "drafDipadam": "Draf dipadam.",
+    "suntingPengumuman": "Sunting pengumuman",
+    "menyimpan": "Menyimpan…",
+    "simpanSebagaiDraf": "Simpan sebagai draf"
   },
   "arrearsTracker": {
     "arrears": "Arrears"
@@ -2359,7 +2614,8 @@
     "attendanceRateLegend": "Attendance Rate Legend:",
     "below70": "Below 70%",
     "reportExportedSuccessfully": "Report exported successfully!",
-    "failedToLoadAttendanceData": "Failed to load attendance data"
+    "failedToLoadAttendanceData": "Failed to load attendance data",
+    "unknown": "Unknown"
   },
   "attendanceOverviewScreen": {
     "attendance": "Attendance",
@@ -2381,7 +2637,9 @@
     "tiadaRekod": "Tiada rekod",
     "rekodBaharuDicipta": "Rekod baharu dicipta",
     "tiadaPerubahanBidangDirekodkan": "Tiada perubahan bidang direkodkan.",
-    "cariNamaPenggunaAtauNoRujukan": "Cari nama pengguna atau no. rujukan"
+    "cariNamaPenggunaAtauNoRujukan": "Cari nama pengguna atau no. rujukan",
+    "tiadaRekodSepadanDenganCarianAnda": "Tiada rekod sepadan dengan carian anda.",
+    "belumAdaPerubahanDirekodkan": "Belum ada perubahan direkodkan."
   },
   "auditTrailViewer": {
     "comprehensiveSystemActivityAndSecurityMonitori": "Comprehensive system activity and security monitoring",
@@ -2426,7 +2684,10 @@
     "primaryColorTheme": "Primary Color Theme",
     "brandingSettingsSavedSuccessfully": "Branding settings saved successfully",
     "logoUploadedPressSaveToApplyIt": "Logo uploaded — press Save to apply it",
-    "pleaseWaitForTheLogoToFinishUploading": "Please wait for the logo to finish uploading."
+    "pleaseWaitForTheLogoToFinishUploading": "Please wait for the logo to finish uploading.",
+    "saving": "Saving...",
+    "saveBrandingSettings": "Save Branding Settings",
+    "uploadingLogo": "Uploading logo..."
   },
   "budgetPlanner": {
     "budgetPlanner": "Budget Planner"
@@ -2439,7 +2700,10 @@
     "newPassword": "New Password",
     "confirmNewPassword": "Confirm New Password",
     "passwordChangedSuccessfully": "Password changed successfully!",
-    "newPasswordsDoNotMatch": "New passwords do not match."
+    "newPasswordsDoNotMatch": "New passwords do not match.",
+    "updating": "Updating...",
+    "updatePassword": "Update Password",
+    "failedToChangePassword": "Failed to change password."
   },
   "classAttendanceDetailScreen": {
     "noStudentsFoundForThisClass": "No students found for this class.",
@@ -2456,7 +2720,9 @@
   "classListScreen": {
     "noClassesYet": "No Classes Yet",
     "loadingClasses": "Loading classes...",
-    "addNewClass": "Add New Class"
+    "addNewClass": "Add New Class",
+    "student": "Student",
+    "students": "Students"
   },
   "classVerificationScreen": {
     "classVerification": "Class Verification"
@@ -2479,7 +2745,9 @@
     "enableInAppNotifications": "Enable In-App Notifications",
     "notificationChannels": "Notification Channels",
     "parentPortalSettings": "Parent Portal Settings",
-    "communicationSettingsSavedSuccessfully": "Communication settings saved successfully"
+    "communicationSettingsSavedSuccessfully": "Communication settings saved successfully",
+    "saving": "Saving...",
+    "saveCommunicationSettings": "Save Communication Settings"
   },
   "complianceChecklist": {
     "complianceChecklist": "Compliance Checklist"
@@ -2507,7 +2775,9 @@
     "schoolCurriculaUpdated": "School curricula updated.",
     "failedToLoadStudents": "Failed to load students.",
     "failedToSaveSchoolCurricula": "Failed to save school curricula.",
-    "perStudentCurriculumIsNotRecordedForThisSchool": "Per-student curriculum is not recorded for this school yet."
+    "perStudentCurriculumIsNotRecordedForThisSchool": "Per-student curriculum is not recorded for this school yet.",
+    "saving": "Saving...",
+    "saveSchoolCurricula": "Save School Curricula"
   },
   "curriculumSettingsScreen": {
     "curriculumSettings": "Curriculum Settings"
@@ -2603,7 +2873,11 @@
     "cariNamaPelajarAtauNomborPendaftaran": "Cari nama pelajar atau nombor pendaftaran",
     "contohDibayarOlehNenek": "Contoh: dibayar oleh nenek",
     "sebabPembatalanWajib": "Sebab pembatalan (wajib)",
-    "silaNyatakanSebabPembatalan": "Sila nyatakan sebab pembatalan."
+    "silaNyatakanSebabPembatalan": "Sila nyatakan sebab pembatalan.",
+    "menyimpan": "Menyimpan…",
+    "simpanBayaran": "Simpan bayaran",
+    "membatalkan": "Membatalkan…",
+    "sahkanPembatalan": "Sahkan pembatalan"
   },
   "feeManagementScreen": {
     "tetapanYuran": "Tetapan Yuran",
@@ -2613,7 +2887,8 @@
     "contohYuranBulanan": "Contoh: Yuran Bulanan",
     "contohBULANAN": "Contoh: BULANAN",
     "biarkanKosongJikaBelumDitetapkan": "Biarkan kosong jika belum ditetapkan",
-    "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan."
+    "tiadaTahunAkademikSemasaDitetapkan": "Tiada tahun akademik semasa ditetapkan.",
+    "ubahJenisYuran": "Ubah jenis yuran"
   },
   "financialSettingsScreen": {
     "defaultCurrency": "Default Currency",
@@ -2622,7 +2897,9 @@
     "gbp": "GBP (£)",
     "tuitionFeeStructure": "Tuition & Fee Structure",
     "invoicePaymentMethods": "Invoice & Payment Methods",
-    "financialSettingsSaved": "Financial settings saved"
+    "financialSettingsSaved": "Financial settings saved",
+    "saving": "Saving...",
+    "saveFinancialSettings": "Save Financial Settings"
   },
   "gatePassApprovals": {
     "gatePassApprovals": "Gate Pass Approvals"
@@ -2646,7 +2923,11 @@
     "contohAhmadBinAli": "Contoh: Ahmad bin Ali",
     "contoh0123456789": "Contoh: 0123456789",
     "penjagaDitambahSeterusnyaCiptaAkaunDanPautkanA": "Penjaga ditambah. Seterusnya, cipta akaun dan pautkan anak mereka.",
-    "silaNyatakanSebabPerubahanIni": "Sila nyatakan sebab perubahan ini."
+    "silaNyatakanSebabPerubahanIni": "Sila nyatakan sebab perubahan ini.",
+    "mencipta": "Mencipta…",
+    "ciptaAkaun": "Cipta akaun",
+    "menyimpan": "Menyimpan…",
+    "simpanPenjaga": "Simpan penjaga"
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
@@ -2717,7 +2998,9 @@
     "tidakHadir": "Tidak hadir",
     "dikecualikan": "Dikecualikan",
     "catatanPilihan": "Catatan (pilihan)",
-    "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit"
+    "sebabPilihanDisimpanDalamRekodAudit": "Sebab (pilihan) — disimpan dalam rekod audit",
+    "menyimpan": "Menyimpan…",
+    "simpanMarkah": "Simpan markah"
   },
   "markStudentExitScreen": {
     "markStudentExit": "Mark Student Exit"
@@ -2752,7 +3035,13 @@
     "searchGuardians": "Search guardians",
     "loadingGuardians": "Loading guardians...",
     "pleaseEnterANameAndAPhoneNumber": "Please enter a name and a phone number.",
-    "guardiansAreAddedFromAStudentsRecord": "Guardians are added from a student's record, so each one is linked to a child."
+    "guardiansAreAddedFromAStudentsRecord": "Guardians are added from a student's record, so each one is linked to a child.",
+    "guardian": "Guardian",
+    "guardians": "Guardians",
+    "noMatches": "No Matches",
+    "noGuardiansYet": "No Guardians Yet",
+    "editGuardian": "Edit guardian",
+    "addGuardian": "Add guardian"
   },
   "pastStudentsScreen": {
     "pastStudents": "Past Students"
@@ -2812,7 +3101,17 @@
     "noCurrentTermIsSet": "No current term is set.",
     "sriAlKhairiah": "SRI Al-Khairiah",
     "preview": "Preview",
-    "unpublish": "Unpublish"
+    "unpublish": "Unpublish",
+    "classReportCards": "Class Report Cards",
+    "reportCards": "Report Cards",
+    "tabSubmitted": "SUBMITTED",
+    "tabPublished": "PUBLISHED",
+    "tabDrafts": "DRAFTS",
+    "tabAll": "ALL",
+    "filterStudents": "Filter students...",
+    "filterByClassOrStudentName": "Filter by class or student name...",
+    "couldNotLoadHistory": "Could not load history",
+    "unknown": "Unknown"
   },
   "reportsScreen": {
     "purataMarkah": "Purata markah",
@@ -2880,7 +3179,9 @@
     "recentSystemLogins": "Recent System Logins",
     "activeNow": "Active now",
     "securitySettingsSaved": "Security settings saved",
-    "noSchoolSelectedToSavePolicy": "No school selected to save policy."
+    "noSchoolSelectedToSavePolicy": "No school selected to save policy.",
+    "saving": "Saving...",
+    "savePolicy": "Save Policy"
   },
   "selectUserTypeToAddScreen": {
     "whatTypeOfUserDoYouWantToAdd": "What type of user do you want to add?",
@@ -2926,7 +3227,10 @@
     "streetAddress": "Street Address...",
     "enrollmentSubmittedSuccessfully": "Enrollment submitted successfully!",
     "pleaseFillInAllRequiredFields": "Please fill in all required fields.",
-    "theStudentWasSavedButSomeDocumentsDidNotUpload": "The student was saved, but some documents did not upload."
+    "theStudentWasSavedButSomeDocumentsDidNotUpload": "The student was saved, but some documents did not upload.",
+    "registering": "Registering...",
+    "completeEnrollment": "Complete Enrollment",
+    "enrollmentFailed": "Enrollment failed."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Penyata Yuran Pelajar",
@@ -2960,7 +3264,9 @@
     "searchByName": "Search by name...",
     "reasonForWithdrawalEGRelocatedTransferredFinan": "Reason for withdrawal (e.g. relocated, transferred, financial)...",
     "failedToUpdateStatusPleaseTryAgain": "Failed to update status. Please try again.",
-    "noStudentsInThisClass": "No students in this class."
+    "noStudentsInThisClass": "No students in this class.",
+    "saving": "Saving…",
+    "confirmWithdrawal": "Confirm Withdrawal"
   },
   "studentProfileDashboard": {
     "noStudentSelected": "No student selected.",
@@ -2998,7 +3304,11 @@
     "optional": "Optional",
     "loadingSubjects": "Loading subjects...",
     "pleaseEnterBothASubjectCodeAndAName": "Please enter both a subject code and a name.",
-    "category": "Category"
+    "category": "Category",
+    "subject": "Subject",
+    "subjects": "Subjects",
+    "editSubject": "Edit subject",
+    "addSubject": "Add subject"
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3064,7 +3374,9 @@
     "pleaseChooseATeacher": "Please choose a teacher.",
     "chooseAtLeastOneClassOrSubject": "Choose at least one class or subject.",
     "noAcademicYearIsSetAsCurrent": "No academic year is set as current.",
-    "couldNotLoadThisTeachersDuties": "Could not load this teacher's duties."
+    "couldNotLoadThisTeachersDuties": "Could not load this teacher's duties.",
+    "saving": "Saving...",
+    "saveDuties": "Save duties"
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Attendance Approvals",
@@ -3080,7 +3392,8 @@
     "attendanceRejected": "Attendance rejected.",
     "failedToLoadPendingAttendanceRequests": "Failed to load pending attendance requests",
     "anErrorOccurredWhileApprovingAttendance": "An error occurred while approving attendance.",
-    "anErrorOccurredWhileRejectingAttendance": "An error occurred while rejecting attendance."
+    "anErrorOccurredWhileRejectingAttendance": "An error occurred while rejecting attendance.",
+    "unknownTeacher": "Unknown Teacher"
   },
   "teacherAttendanceDetail": {
     "noTeacherSelectedOpenThisViewFromATeacherRow": "No teacher selected. Open this view from a teacher row.",
@@ -3103,7 +3416,9 @@
     "deleteAccount": "Delete Account",
     "deleteTeacherAccount": "Delete Teacher Account",
     "changeTeacherStatus": "Change Teacher Status",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "unknownError": "Unknown error",
+    "general": "General"
   },
   "teacherListScreen": {
     "teacherManagement": "Teacher Management",
@@ -3141,7 +3456,9 @@
     "loadingTheWeek": "Loading the week...",
     "lessonRemoved": "Lesson removed.",
     "timetablePublished": "Timetable published.",
-    "chooseASubjectFirst": "Choose a subject first."
+    "chooseASubjectFirst": "Choose a subject first.",
+    "publishing": "Publishing...",
+    "publishTimetable": "Publish Timetable"
   },
   "timetableScreen": {
     "jadualTidakDapatDimuatkan": "Jadual tidak dapat dimuatkan",
@@ -3154,7 +3471,11 @@
     "nothingTimetabled": "Nothing Timetabled",
     "memuatkanJadual": "Memuatkan jadual...",
     "memuatkanMinggu": "Memuatkan minggu...",
-    "suntingJadual": "Sunting Jadual"
+    "suntingJadual": "Sunting Jadual",
+    "ikutKelas": "Ikut Kelas",
+    "ikutGuru": "Ikut Guru",
+    "jadualKelas": "Jadual kelas",
+    "jadualAnda": "Jadual anda"
   },
   "transportManagementScreen": {
     "pengurusanPengangkutan": "Pengurusan Pengangkutan"
@@ -3180,7 +3501,9 @@
     "theOfficeFullAccessAndTheOnlyRoleThatCannotBeR": "The office. Full access, and the only role that cannot be reduced.",
     "seesTheirOwnClassesAndRecordsAttendanceAndMark": "Sees their own classes, and records attendance and marks for them.",
     "permissionsSavedSuccessfully": "Permissions saved successfully!",
-    "schoolContextMissing": "School context missing."
+    "schoolContextMissing": "School context missing.",
+    "saving": "Saving...",
+    "saveChanges": "Save Changes"
   },
   "userSeeder": {
     "userSeeder": "User Seeder"
@@ -3212,5 +3535,37 @@
   "liveSession": {
     "saySomethingIAmListening": "Say something — I'm listening!",
     "microphonePermissionDenied": "Microphone permission was denied."
+  },
+  "updatePrompt": {
+    "systemUpdateRequired": "System Update Required",
+    "newUpdateAvailable": "New Update Available",
+    "updating": "Updating…",
+    "updateNow": "Update Now"
+  },
+  "dashboardLayout": {
+    "dashboard": "Dashboard"
+  },
+  "detailedLessonNoteScreen": {
+    "detailedLessonNote": "Detailed Lesson Note",
+    "noDetailedNoteContentWasProvidedForThisLesson": "No detailed note content was provided for this lesson."
+  },
+  "tt": {
+    "openThisPageInSafari": "Open this page in Safari.",
+    "tapTheBrowserMenu": "Tap the browser menu (⋮)."
+  },
+  "installAppButton": {
+    "tapAdd": "Tap 'Add'.",
+    "tapAddToHomeScreen": "Tap 'Add to Home Screen'.",
+    "tapInstallApp": "Tap 'Install app' / 'Add to Home screen'.",
+    "tapInstall": "Tap 'Install'.",
+    "shareAddToHomeScreen": "Share → 'Add to Home Screen'.",
+    "clickInstallIcon": "Click the install icon in the address bar,",
+    "orBrowserMenuInstall": "or browser menu → 'Install School App'.",
+    "tapTheShareButtonInSafari": "Tap the Share button in Safari.",
+    "openThisPageInSafari": "Open this page in Safari.",
+    "tapTheBrowserMenu": "Tap the browser menu (⋮).",
+    "tapInstallAppAddToHomeScreen": "Tap 'Install app' / 'Add to Home screen'.",
+    "clickTheInstallIconInTheAddressBar": "Click the install icon in the address bar,",
+    "orBrowserMenuInstallSchoolApp": "or browser menu → 'Install School App'."
   }
 }

@@ -52,7 +52,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                     ) : (
                         <SchoolLogoIcon className="text-green-500 h-12 w-12" />
                     )}
-                    <h1 className="text-2xl font-bold text-gray-800">{schoolName || 'School Academy'}</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">{schoolName || t('reportCardScreen.schoolAcademy')}</h1>
                 </div>
                 {motto && <p className="text-gray-500 italic text-xs mt-1">"{motto}"</p>}
                 {address && <p className="text-gray-400 text-xs mt-0.5">{address}</p>}
@@ -178,11 +178,11 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
             <div className="space-y-4 font-sans">
                 <div>
                     <h4 className="font-bold text-gray-800">{t('reportCardScreen.teacherSComment')}</h4>
-                    <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || 'No comment provided.'}"</div>
+                    <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.teacherComment || t('reportCardScreen.noCommentProvided')}"</div>
                 </div>
                 <div>
                     <h4 className="font-bold text-gray-800">{t('reportCardScreen.principalSComment')}</h4>
-                    <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || 'No comment provided.'}"</div>
+                    <div className="mt-1 p-3 text-sm bg-gray-50 rounded-md text-gray-800 italic">"{report.principalComment || t('reportCardScreen.noCommentProvided')}"</div>
                 </div>
             </div>
         </div>

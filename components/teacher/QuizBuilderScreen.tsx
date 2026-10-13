@@ -290,7 +290,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                 className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none disabled:bg-gray-50 disabled:text-gray-400"
                                 disabled={classesLoading}
                             >
-                                <option value="">{classesLoading ? 'Loading classes...' : 'Select a Class'}</option>
+                                <option value="">{classesLoading ? t('quizBuilderScreen.loadingClasses') : t('quizBuilderScreen.selectAClass')}</option>
                                 {teacherClasses.map((c: any) => (
                                     <option key={c.id} value={c.id}>
                                         {getFormattedClassName(c.grade, c.section)}
@@ -371,7 +371,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${opt.isCorrect ? 'border-green-500 bg-green-50' : 'border-gray-300'
                                                             }`}
                                                         title={t('quizBuilderScreen.markAsCorrectAnswer')}
-                                                        aria-label={opt.isCorrect ? 'Correct answer' : 'Mark as correct answer'}
+                                                        aria-label={opt.isCorrect ? t('quizBuilderScreen.correctAnswer') : t('quizBuilderScreen.markAsCorrectAnswer')}
                                                         aria-pressed={opt.isCorrect}
                                                     >
                                                         {opt.isCorrect && <div className="w-3 h-3 bg-green-500 rounded-full" />}

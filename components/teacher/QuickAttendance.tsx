@@ -59,7 +59,7 @@ export const QuickAttendance: React.FC<{ classId: string }> = ({ classId }) => {
             setShowSuccess(true);
             setTimeout(() => setShowSuccess(false), 2000);
         } catch (error: any) {
-            toast.error(error?.message || 'Failed to save attendance. Please try again.');
+            toast.error(error?.message || t('quickAttendance.failedToSaveAttendancePleaseTryAgain'));
         }
     };
 

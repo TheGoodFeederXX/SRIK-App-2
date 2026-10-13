@@ -528,7 +528,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
                                         disabled={isSaving}
                                         className="flex-1 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
                                     >
-                                        {isSaving ? 'Saving...' : 'Save duties'}
+                                        {isSaving ? t('teacherAssignmentsScreen.saving') : t('teacherAssignmentsScreen.saveDuties')}
                                     </button>
                                 </div>
                             </form>

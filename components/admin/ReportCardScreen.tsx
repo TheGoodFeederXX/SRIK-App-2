@@ -127,7 +127,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
             <div className="flex items-start gap-4 border-b-2 border-gray-800 pb-4">
                 <div className="flex-1 text-center">
                     <h1 className="text-lg sm:text-xl font-bold uppercase tracking-wide">
-                        {school?.name || 'Nama sekolah belum diisi'}
+                        {school?.name || t('reportCardScreen.namaSekolahBelumDiisi')}
                     </h1>
                     {school?.address && (
                         <p className="text-xs text-gray-600 mt-1">{school.address}</p>

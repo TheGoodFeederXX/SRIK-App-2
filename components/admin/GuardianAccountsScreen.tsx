@@ -411,7 +411,7 @@ function GuardianPanel({
                                         className="w-full py-2.5 rounded-xl bg-indigo-600 text-white font-bold
                                                    text-sm hover:bg-indigo-700 disabled:bg-slate-300"
                                     >
-                                        {busy ? 'Mencipta…' : 'Cipta akaun'}
+                                        {busy ? t('guardianAccountsScreen.mencipta') : t('guardianAccountsScreen.ciptaAkaun')}
                                     </button>
                                 </div>
                             </>
@@ -602,7 +602,7 @@ function AddGuardianModal({
                             className="flex-1 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-sm
                                        hover:bg-indigo-700 disabled:bg-slate-300 disabled:cursor-not-allowed"
                         >
-                            {busy ? 'Menyimpan…' : 'Simpan penjaga'}
+                            {busy ? t('guardianAccountsScreen.menyimpan') : t('guardianAccountsScreen.simpanPenjaga')}
                         </button>
                         <button
                             type="button"

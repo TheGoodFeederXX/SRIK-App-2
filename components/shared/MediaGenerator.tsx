@@ -113,7 +113,7 @@ const MediaGenerator: React.FC = () => {
             console.error("Generation failed:", error);
             // The proxy sends honest, specific messages (e.g. media service
             // unreachable, or plan-locked) — show them rather than a generic line.
-            toast.error(error?.message || "Failed to generate media. Please try again.");
+            toast.error(error?.message || t('mediaGenerator.failedToGenerateMediaPleaseTryAgain'));
         } finally {
             setIsLoading(false);
         }

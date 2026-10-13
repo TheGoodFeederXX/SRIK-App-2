@@ -42,7 +42,7 @@ const AskAIWidget = ({ embedded = false }: { embedded?: boolean } = {}) => {
             const res = await api.askAI(text);
             setHistory(h => [...h, { question: text, answer: res.answer, data: res.data }]);
         } catch (err: any) {
-            toast.error(err?.message || 'Failed to get an answer');
+            toast.error(err?.message || t('askAIWidget.failedToGetAnAnswer'));
         } finally {
             setAsking(false);
         }

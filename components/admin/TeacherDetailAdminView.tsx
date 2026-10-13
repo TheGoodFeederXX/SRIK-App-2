@@ -83,7 +83,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                 : classItem?.class?.name || classItem?.name || 'Unknown Class') || 'Unknown Class';
 
             let displayName = classNameStr;
-            let subject = (teacher?.subjects?.[0]) || 'General';
+            let subject = (teacher?.subjects?.[0]) || t('teacherDetailAdminView.general');
 
             if (typeof classNameStr === 'string' && classNameStr.includes('-')) {
                 const parts = classNameStr.split(/\s*[-–]\s*/);
@@ -114,7 +114,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
             handleBack();
         } catch (error: any) {
             console.error('Error deleting teacher:', error);
-            toast.error('Failed to delete teacher: ' + (error.message || 'Unknown error'));
+            toast.error('Failed to delete teacher: ' + (error.message || t('teacherDetailAdminView.unknownError')));
         }
     };
 

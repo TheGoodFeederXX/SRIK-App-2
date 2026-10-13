@@ -176,7 +176,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                                         style={{ transform: `scaleX(${holdProgress / 100})`, transition: holdProgress === 0 ? 'transform 0.15s ease-out' : 'none' }}
                                     />
                                     <span className="relative">
-                                        {isActivating ? 'Sending...' : 'HOLD TO SEND 🚨'}
+                                        {isActivating ? t('panicButton.sending') : t('panicButton.holdTOSEND')}
                                     </span>
                                 </button>
                             </div>

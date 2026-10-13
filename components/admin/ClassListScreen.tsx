@@ -151,7 +151,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
                             {classes.length} {classes.length === 1 ? 'Class' : 'Classes'}
                         </p>
                         <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-                            {totalStudents} {totalStudents === 1 ? 'Student' : 'Students'} placed
+                            {totalStudents} {totalStudents === 1 ? t('classListScreen.student') : t('classListScreen.students')} placed
                         </p>
                     </div>
                     <button

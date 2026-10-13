@@ -85,7 +85,7 @@ const BrandingSettingsScreen: React.FC = () => {
         const preview = URL.createObjectURL(file);
         setLogo(preview);
         setUploading(true);
-        const toastId = toast.loading('Uploading logo...');
+        const toastId = toast.loading(t('brandingSettingsScreen.uploadingLogo'));
         try {
             // Not uploadAvatar: that writes to the signed-in admin's OWN fixed
             // profile-photo object, so saving a school logo replaced the admin's
@@ -137,7 +137,7 @@ const BrandingSettingsScreen: React.FC = () => {
                 disabled={isLoading || uploading}
                 className="w-full bg-indigo-600 text-white font-bold py-3 rounded-xl shadow-lg hover:bg-indigo-700 transition disabled:opacity-50"
             >
-                {isLoading ? 'Saving...' : 'Save Branding Settings'}
+                {isLoading ? t('brandingSettingsScreen.saving') : t('brandingSettingsScreen.saveBrandingSettings')}
             </motion.button>
         </div>
     );
