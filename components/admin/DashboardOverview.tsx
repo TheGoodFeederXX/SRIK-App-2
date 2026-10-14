@@ -510,7 +510,6 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                 { label: t('dashboardOverview.attendance'), icon: <ClockIcon />, onClick: () => navigateTo('teacherAttendance', t('dashboardOverview.teacherAttendance')), color: 'bg-amber-500' },
                 { label: t('dashboardOverview.healthLog'), icon: <HeartIcon />, onClick: () => navigateTo('healthLog', t('dashboardOverview.healthLog')), color: 'bg-red-500' },
                 { label: t('dashboardOverview.busRoster'), icon: <BusVehicleIcon />, onClick: () => navigateTo('busDutyRoster', t('dashboardOverview.busDutyRoster')), color: 'bg-orange-500' },
-                { label: t('dashboardOverview.compliance'), icon: <Shield />, onClick: () => navigateTo('complianceOnboarding', t('dashboardOverview.schoolCompliance')), color: 'bg-violet-600' },
                 { label: t('dashboardOverview.sopCases'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('sopCaseManagement', t('dashboardOverview.caseManagement')), color: 'bg-rose-600' },
                 { label: t('dashboardOverview.substituteCoverage'), icon: <Repeat className="w-6 h-6" />, onClick: () => navigateTo('substituteCoverage', t('dashboardOverview.substituteCoverage')), color: 'bg-teal-600' },
                 { label: t('dashboardOverview.leaveApprovals'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('leaveApproval', t('dashboardOverview.leaveApprovals')), color: 'bg-lime-700' },
@@ -547,8 +546,6 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
         },
         {
             id: 'boardingTransport', name: t('dashboardOverview.boardingAndTransport'), items: [
-                { label: t('dashboardOverview.hostelManagement'), icon: <Building2 />, onClick: () => navigateTo('hostelManagement', t('dashboardOverview.hostelAndBoarding')), color: 'bg-violet-600' },
-                { label: t('dashboardOverview.transportMgmt'), icon: <Bus />, onClick: () => navigateTo('transportManagement', t('dashboardOverview.transportManagement')), color: 'bg-orange-600' },
                 { label: t('dashboardOverview.behaviorTracking'), icon: <Star />, onClick: () => navigateTo('behaviorLog', t('dashboardOverview.behaviorAndProgress')), color: 'bg-amber-600' },
             ]
         },

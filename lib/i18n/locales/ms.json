@@ -340,7 +340,6 @@
     "classroomsAndQrCodes": "Bilik Darjah & Kod QR",
     "communicationAndSystem": "Komunikasi & Sistem",
     "communicationHub": "Hab Komunikasi",
-    "compliance": "Pematuhan",
     "complianceAndPrivacy": "Pematuhan & Privasi",
     "complianceDashboard": "Papan Pemuka Pematuhan",
     "consentForms": "Borang Keizinan",
@@ -372,8 +371,6 @@
     "governanceHub": "Hab Tadbir Urus",
     "healthAndIncidents": "Kesihatan & Insiden",
     "healthLog": "Log Kesihatan",
-    "hostelAndBoarding": "Asrama & Penginapan",
-    "hostelManagement": "Pengurusan Asrama",
     "infrastructureAndFacilities": "Infrastruktur & Kemudahan",
     "inspectionHub": "Hab Pemeriksaan",
     "kanbanProjectBoards": "Papan Projek Kanban",
@@ -415,7 +412,6 @@
     "safetyAndHealth": "Keselamatan & Kesihatan",
     "safetyAndWellbeing": "Keselamatan & Kesejahteraan",
     "schoolClubs": "Kelab Sekolah",
-    "schoolCompliance": "Pematuhan Sekolah",
     "schoolOnboarding": "Permulaan Sekolah",
     "schoolPolicies": "Dasar Sekolah",
     "schoolStatus": "Status Sekolah",
@@ -432,8 +428,6 @@
     "timetable": "Jadual Waktu",
     "timetableManagement": "Pengurusan Jadual Waktu",
     "trackAttendance": "Jejak Kehadiran",
-    "transportManagement": "Pengurusan Pengangkutan",
-    "transportMgmt": "Urus Pengangkutan",
     "unifiedGovernance": "Tadbir Urus Bersepadu",
     "userAccounts": "Akaun Pengguna",
     "validationConsole": "Konsol Pengesahan",
@@ -3023,9 +3017,6 @@
   "complianceDashboard": {
     "compliance": "Pematuhan"
   },
-  "complianceOnboardingPage": {
-    "pendaftaranPematuhan": "Pendaftaran Pematuhan"
-  },
   "consentFormScreen": {
     "consentForm": "Borang Persetujuan"
   },
@@ -3049,9 +3040,6 @@
   },
   "curriculumSettingsScreen": {
     "curriculumSettings": "Tetapan Kurikulum"
-  },
-  "customGamesListScreen": {
-    "permainanPembelajaran": "Permainan Pembelajaran"
   },
   "customReportBuilder": {
     "pembinaLaporanTersuai": "Pembina Laporan Tersuai"
@@ -3274,9 +3262,6 @@
   },
   "healthLogScreen": {
     "logKesihatan": "Log Kesihatan"
-  },
-  "hostelManagementScreen": {
-    "pengurusanAsrama": "Pengurusan Asrama"
   },
   "iDVerificationPanel": {
     "idverification": "IDVerification"
@@ -3524,9 +3509,6 @@
   },
   "safetyHealthLogs": {
     "logKeselamatanKesihatan": "Log Keselamatan & Kesihatan"
-  },
-  "salaryConfiguration": {
-    "konfigurasiGaji": "Konfigurasi Gaji"
   },
   "scanAssetScreen": {
     "scanAsset": "Imbas Aset"
@@ -3900,9 +3882,6 @@
     "onceTimetableReady": "Sebaik sahaja jadual disediakan, minggu persekolahan akan dipaparkan di sini.",
     "draftNotPublished": "Jadual ini masih draf dan belum diterbitkan, jadi guru belum sepatutnya",
     "edit": "Sunting"
-  },
-  "transportManagementScreen": {
-    "pengurusanPengangkutan": "Pengurusan Pengangkutan"
   },
   "uSSDWorkflow": {
     "ussdWorkflowBuilder": "Pembina Aliran Kerja USSD",
