@@ -13,7 +13,6 @@
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { buildRounds, BattleQuestion } from './gameContent.service';
 import { GameScoreService } from './gameScore.service';
-import { generateAIQuestions } from './gameQuestion.service';
 import prisma from '../config/database';
 
 /**
@@ -22,26 +21,9 @@ import prisma from '../config/database';
  * failure (missing API key, quota, network) so a battle never fails to start.
  */
 async function buildRoundsForRoom(room: Room): Promise<BattleQuestion[]> {
-    try {
-        const hostStudent = await prisma.student.findUnique({
-            where: { user_id: room.hostId },
-            select: { id: true, branch_id: true },
-        });
-        if (!hostStudent) throw new Error('Host has no student profile');
-        return await generateAIQuestions({
-            schoolId: room.schoolId,
-            branchId: hostStudent.branch_id,
-            studentId: hostStudent.id,
-            gameType: 'class-battle',
-            subject: room.subject,
-            grade: room.grade,
-            count: room.questionCount,
-            historyScope: 'school', // everyone in the room shares one question set
-        });
-    } catch (err: any) {
-        console.warn('[ClassBattle] AI question generation failed, using offline bank:', err?.message);
-        return buildRounds(room.subject, room.grade, room.questionCount);
-    }
+    // AI GENERATION WAS REMOVED. Battles used to ask Gemini for fresh questions and fall
+    // back to the offline bank when the call failed; the bank is now the only source.
+    return buildRounds(room.subject, room.grade, room.questionCount);
 }
 
 interface Player {

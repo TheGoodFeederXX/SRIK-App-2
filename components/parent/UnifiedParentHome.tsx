@@ -13,7 +13,6 @@ import { useSchoolScope } from '../../context/SchoolScopeContext';
 import { Student } from '../../types';
 import SuspensionNoticeBanner from '../shared/SuspensionNoticeBanner';
 import ChildRiskBanner from '../shared/ChildRiskBanner';
-import AIInsightsPanel from '../shared/AIInsightsPanel';
 import { viewImage } from '../shared/ImageLightbox';
 
 export interface ChildOverview {
@@ -390,10 +389,8 @@ export const UnifiedParentHome: React.FC<UnifiedParentHomeProps> = ({ students, 
                 )}
             </div>
 
-            {/* AI Insights */}
             <div className="px-4 pt-4 pb-4">
-                <AIInsightsPanel />
-            </div>
+                            </div>
         </div>
     );
 };

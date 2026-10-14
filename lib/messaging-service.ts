@@ -1,5 +1,4 @@
 import { api } from './api';
-import { getAIClient } from './ai';
 
 export class MessagingService {
     /**
@@ -67,28 +66,6 @@ export class MessagingService {
         if (!hours) return true; // Default to always available if not set
 
         return time >= hours.start_time && time <= hours.end_time;
-    }
-
-    /**
-     * Detects non-Malay text and suggests a Malay translation.
-     *
-     * The detector looked for Yoruba, Igbo and Hausa — languages of the country
-     * this app was first built for. At a Malaysian school the useful check is
-     * the reverse: flag anything that is not in Malay so it can be translated.
-     */
-    static async getTranslationSuggestion(content: string) {
-        const ai = getAIClient();
-        const prompt = `Identify if the following text is NOT in Malay (Bahasa Melayu).
-        If it is not in Malay, translate it to Malay. If it is already in Malay, return "null".
-        Text: "${content}"`;
-
-        try {
-            const result = await ai.generateContent(prompt);
-            const text = result.text;
-            return text.toLowerCase().includes('null') ? null : text;
-        } catch {
-            return null;
-        }
     }
 
     private static async notifyAdminOfUrgentMessage(msgId: string, schoolId: string) {

@@ -4,12 +4,11 @@ import { DigitalTwinService } from './digitalTwin.service';
 import { TeacherAssignmentService } from './teacherAssignment.service';
 
 /**
- * The Insight Engine — every "AI Insights" panel is a role-scoped bundle of
- * numbers pulled from real, already-tracked data (reusing the Early Warning,
- * Digital Twin, and Workload engines built earlier this session). No AI call
- * happens here: the language model is only used in askAI.service.ts to
- * understand a free-text question and phrase an answer — never to invent or
- * recompute a figure that belongs here.
+ * The Insight Engine — every insights panel is a role-scoped bundle of numbers
+ * pulled from real, already-tracked data (reusing the Early Warning, Digital
+ * Twin, and Workload engines built earlier this session). NO AI CALL HAPPENS
+ * HERE, and none happens anywhere in the app any more: the language model was
+ * removed, so these figures are the whole feature rather than a fallback for it.
  */
 
 function todayStr(): string {

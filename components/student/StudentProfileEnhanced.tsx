@@ -22,7 +22,6 @@ import {
     Clock, Target, Briefcase, Globe, Copy, Lock, WifiOff, Sparkles
 } from 'lucide-react';
 import DataUsageSettings from '../shared/DataUsageSettings';
-import { getAIClient, AI_MODEL_NAME, SchemaType as Type } from '../../lib/ai';
 import { getStudent } from '../../src/lib/supabase/students';
 import { getClassSubjectNames, getCurrentAcademicYear } from '../../src/lib/supabase/academics';
 import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
@@ -73,9 +72,6 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
     const [activities, setActivities] = useState<any[]>([]);
     const [documents, setDocuments] = useState<any[]>([]);
 
-    // AI Focus State
-    const [learningFocus, setLearningFocus] = useState<any>(null);
-    const [focusLoading, setFocusLoading] = useState(false);
 
     useEffect(() => {
         if (initialStudent) {
@@ -92,66 +88,6 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             setStudent(normalized);
         }
     }, [initialStudent]);
-
-    const generateLearningFocus = useCallback(async (studentData: any, averageScore: number) => {
-        setFocusLoading(true);
-        try {
-            const ai = getAIClient();
-
-            const prompt = `Analyze this student's performance and suggest 2 key learning focus areas for today.
-            Student: ${studentData.name}
-            Grade: ${studentData.class_name || '10'}
-            Performance: Average ${averageScore}%
-            
-            Return JSON with:
-            - title (string) e.g. "Quadratic Equations"
-            - subject (string) e.g. "Math"
-            - reason (string) e.g. "Score: 65%" or "Upcoming Test"
-            - color (string) one of: pink, teal, violet, orange
-            
-            Limit to 2 items.`;
-
-            const response = await ai.models.generateContent({
-                model: AI_MODEL_NAME,
-                contents: prompt,
-                config: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: Type.OBJECT,
-                        properties: {
-                            focus_areas: {
-                                type: Type.ARRAY,
-                                items: {
-                                    type: Type.OBJECT,
-                                    properties: {
-                                        title: { type: Type.STRING },
-                                        subject: { type: Type.STRING },
-                                        reason: { type: Type.STRING },
-                                        color: { type: Type.STRING }
-                                    },
-                                    required: ["title", "subject", "reason", "color"]
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-
-            const data = JSON.parse(response.text);
-            if (data.focus_areas) {
-                setLearningFocus(data.focus_areas);
-            }
-        } catch (e: any) {
-            // Suppress API key errors or JSON parse errors to avoid console noise for the user
-            if (e?.message?.includes('API key') || e instanceof SyntaxError) {
-                console.log("AI Focus unavailable (API Key/Network)");
-            } else {
-                console.error("AI Focus Error:", e);
-            }
-        } finally {
-            setFocusLoading(false);
-        }
-    }, []);
 
     const fetchProfileData = useCallback(async (id: string | number) => {
         try {
@@ -240,7 +176,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
             } finally {
             setLoading(false);
             }
-            }, [generateLearningFocus]);
+            }, []);
 
     const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -653,40 +589,6 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                             </div>
                                         </CardContent>
                                     </Card>
-
-                                    {/* AI Personal Focus */}
-                                    {learningFocus && (
-                                        <div className="bg-gradient-to-r from-orange-600 to-amber-600 rounded-xl p-1 shadow-lg mb-6 transform hover:scale-[1.01] transition-transform">
-                                            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-5">
-                                                <div className="flex items-start gap-4">
-                                                    <div className="p-3 bg-white/20 rounded-lg text-white animate-pulse">
-                                                        <Target className="w-6 h-6" />
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <h3 className="text-lg font-bold text-white mb-1">{t('studentProfileEnhanced.todaySLearningFocus')}</h3>
-                                                        <p className="text-orange-100 text-sm mb-3">{t('studentProfileEnhanced.basedOnYourRecentPerformanceWeRecommendFocusin')}</p>
-                                                        <div className="space-y-2">
-                                                            {learningFocus.map((item: any, idx: number) => {
-                                                                const colors: any = {
-                                                                    pink: 'bg-pink-400',
-                                                                    teal: 'bg-teal-400',
-                                                                    violet: 'bg-violet-400',
-                                                                    orange: 'bg-orange-400'
-                                                                };
-                                                                return (
-                                                                    <div key={idx} className="flex items-center gap-2 text-white/90 bg-white/10 p-2 rounded px-3 border border-white/10">
-                                                                        <div className={`w-2 h-2 rounded-full ${colors[item.color] || 'bg-white'}`}></div>
-                                                                        <span className="text-sm font-medium">{item.title} ({item.subject})</span>
-                                                                        <span className="text-xs ml-auto opacity-75">{item.reason}</span>
-                                                                    </div>
-                                                                );
-                                                            })}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )}
 
                                     {/* Academic Performance */}
                                     <Card className="border-slate-200 shadow-sm">

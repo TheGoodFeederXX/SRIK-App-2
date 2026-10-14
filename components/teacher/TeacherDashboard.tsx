@@ -69,15 +69,13 @@ import StudentGateScreen from '../shared/StudentGateScreen';
 import SOPCaseDetailScreen from './SOPCaseDetailScreen';
 import ReportIncidentScreen from '../shared/ReportIncidentScreen';
 import LessonPlannerScreen from './LessonPlannerScreen';
-import LessonPlanDetailScreen, { AIActivitySuggester } from './LessonPlanDetailScreen';
+import LessonPlanDetailScreen from './LessonPlanDetailScreen';
 import DetailedLessonNoteScreen from './DetailedLessonNoteScreen';
 import SelectTermForReportScreen from './SelectTermForReportScreen';
 import ProfessionalDevelopmentScreen from './ProfessionalDevelopmentScreen';
-import AIPerformanceSummaryScreen from './AIPerformanceSummaryScreen';
 import EducationalGamesScreen from './EducationalGamesScreen';
 import LessonContentScreen from './LessonContentScreen';
 import AssignmentViewScreen from './AssignmentViewScreen';
-import AIGameCreatorScreen from './AIGameCreatorScreen';
 import GamePlayerScreen from '../shared/GamePlayerScreen';
 import TeacherAppointmentsScreen from './TeacherAppointmentsScreen';
 import VirtualClassScreen from './VirtualClassScreen';
@@ -308,16 +306,13 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
     teacherChangePassword: TeacherChangePasswordScreen,
     lessonPlanner: LessonPlannerScreen,
     lessonPlanDetail: LessonPlanDetailScreen,
-    suggestActivity: (props: any) => <AIActivitySuggester {...props} subject={props.subject || teacherProfile.subject || ''} handleBack={handleBack} />,
     lessonContent: LessonContentScreen,
     assignmentView: AssignmentViewScreen,
     detailedLessonNote: DetailedLessonNoteScreen,
     notifications: (props: any) => <NotificationsScreen {...props} userType="teacher" />,
     selectTermForReport: SelectTermForReportScreen,
     professionalDevelopment: ProfessionalDevelopmentScreen,
-    aiPerformanceSummary: AIPerformanceSummaryScreen,
     educationalGames: EducationalGamesScreen,
-    aiGameCreator: AIGameCreatorScreen,
     gamePlayer: GamePlayerScreen,
     appointments: (props: any) => <TeacherAppointmentsScreen {...props} teacherId={teacherId || ''} />,
     virtualClass: VirtualClassScreen,

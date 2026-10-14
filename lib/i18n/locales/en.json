@@ -313,7 +313,7 @@
     "multipleChoice": "Multiple Choice"
   },
   "dashboardOverview": {
-    "aiTimetable": "AI Timetable",
+    "aiTimetable": "Timetable",
     "academic": "Academic",
     "activeSessions": "Active Sessions",
     "addNewUser": "Add New User",
@@ -532,7 +532,6 @@
   "resultsScreen": {
     "results": "Results",
     "questComplete": "Quest Complete!",
-    "aiSummary": "AI Summary",
     "calculatingYourEpicPerformance": "Calculating your epic performance...",
     "correct": "Correct",
     "incorrect": "Incorrect",
@@ -562,7 +561,6 @@
     "enjoyYourFreeTimeOrExploreTheLibrary": "Enjoy your free time or explore the library.",
     "todaySSchedule": "Today's Schedule",
     "noClassesScheduledForToday": "No classes scheduled for today.",
-    "aiTools": "AI Tools",
     "quickActions": "Quick Actions",
     "studentProfileNotFound": "Student Profile Not Found",
     "secureSessionActive": "Secure Session Active",
@@ -575,8 +573,6 @@
     "freeResources": "Free Resources",
     "reportAConcern": "Report a Concern",
     "discreetSupport": "Discreet Support",
-    "aiStudyBuddy": "AI Study Buddy",
-    "aiAdventureQuest": "AI Adventure Quest",
     "stuckOnAProblem": "Stuck on a problem?",
     "turnAnyTextIntoAFunQuiz": "Turn any text into a fun quiz!",
     "view": "View",
@@ -835,9 +831,6 @@
   "vocabularyPictionaryGame": {
     "vocabularyPictionaryGame": "Vocabulary Pictionary Game"
   },
-  "aIGameCreatorScreen": {
-    "aigameCreator": "AIGame Creator"
-  },
   "aIPerformanceSummaryScreen": {
     "analyzingClassPerformance": "Analyzing Class Performance...",
     "theAIIsCrunchingTheNumbersToProvideYouWithActi": "The AI is crunching the numbers to provide you with actionable insights.",
@@ -1042,7 +1035,6 @@
     "assessments": "Assessments",
     "openALessonPlanToViewItsDetails": "Open a lesson plan to view its details.",
     "selectATermToViewResources": "Select a term to view resources.",
-    "aiActivityIdeas": "AI Activity Ideas",
     "creativeIdeasFor": "Creative ideas for:",
     "generatingCreativeClassroomActivities": "Generating creative classroom activities...",
     "materialsNeeded": "Materials Needed:",
@@ -1051,7 +1043,11 @@
     "publishing": "Publishing...",
     "publishToLibrary": "Publish to Library",
     "assignment": "Assignment",
-    "viewAsAssignment": "View as Assignment"
+    "viewAsAssignment": "View as Assignment",
+    "lessonPlanHeading": "Lesson Plan: {{subject}} ({{className}})",
+    "lessonPlanTitle": "Lesson Plan: {{subject}} ({{className}})",
+    "planPublished": "Plan published to library!",
+    "failedToPublish": "Failed to publish plan."
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Lesson Planner",
@@ -1375,7 +1371,7 @@
     "classGradebook": "Class Gradebook",
     "manageExams": "Manage Exams",
     "assessmentsQuizzes": "Assessments & Quizzes",
-    "aiLessonPlanner": "AI Lesson Planner",
+    "aiLessonPlanner": "Lesson Planner",
     "uploadLessonNotes": "Upload Lesson Notes",
     "classroomObservationFeedback": "Classroom Observation Feedback",
     "studentDeparture": "Student Departure",
@@ -1440,8 +1436,7 @@
     "loadingStudentData": "Loading student data...",
     "avgScore": "Avg Score:",
     "attendance": "Attendance:",
-    "noStudentsInThisClass": "No students in this class.",
-    "aiClassSummary": "AI Class Summary"
+    "noStudentsInThisClass": "No students in this class."
   },
   "teacherSalaryProfile": {
     "couldnTLoadYourSalaryProfile": "Couldn't load your salary profile",
@@ -1509,9 +1504,6 @@
   },
   "workloadCalculator": {
     "workloadCalculator": "Workload Calculator"
-  },
-  "aIParentingTips": {
-    "aiparentingTips": "AIParenting Tips"
   },
   "appointmentScreen": {
     "janjiTemuGuru": "Teacher Appointment"
@@ -1605,9 +1597,7 @@
     "reportCard": "Report Card",
     "academics": "Academics",
     "behavior": "Behavior",
-    "aiParentingTips": "AI Parenting Tips",
     "newChat": "New Chat",
-    "aiAssistant": "AI Assistant",
     "parentDashboard": "Parent Dashboard",
     "yuranAnak": "Children's Fees",
     "selectReportCard": "Select Report Card",
@@ -1866,7 +1856,6 @@
     "mySchool": "My School",
     "liveVoice": "Live Voice",
     "creativeStudio": "Creative Studio",
-    "aiAssistant": "AI Assistant",
     "askAnything": "Ask anything...",
     "upload": "Upload",
     "noResponseGenerated": "No response generated."
@@ -1875,7 +1864,6 @@
     "openAIAssistant": "Open AI Assistant"
   },
   "aIInsightsPanel": {
-    "aiInsights": "AI Insights",
     "nothingUrgentRightNowAllClear": "Nothing urgent right now — all clear."
   },
   "accessibilitySettings": {
@@ -3652,7 +3640,6 @@
     "noStudentSelectedOpenThisViewFromAStudentRowIn": "No student selected. Open this view from a student row in the Student List.",
     "academicPerformance": "Academic Performance",
     "overallAverage": "Overall Average",
-    "aiGeneratedSummary": "AI-Generated Summary",
     "generateSummary": "Generate Summary",
     "personalProfile": "Personal Profile",
     "dateOfBirth": "Date of Birth",

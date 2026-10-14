@@ -3,7 +3,6 @@ import { AuthRequest } from '../middleware/auth.middleware';
 import prisma from '../config/database';
 import { seedClassBattleGames, getClassmates, getBattleSetup } from '../services/classBattle.service';
 import { getEffectiveBranchId } from '../utils/branchScope';
-import { generateAIQuestions } from '../services/gameQuestion.service';
 import { buildRounds } from '../services/gameContent.service';
 import { sendError } from '../utils/httpError';
 
@@ -89,23 +88,11 @@ export const getAIQuestions = async (req: AuthRequest, res: Response) => {
 
         const requestedCount = Math.min(Math.max(parseInt(count || '10', 10) || 10, 1), 25);
 
-        try {
-            const questions = await generateAIQuestions({
-                schoolId: school_id,
-                branchId: branchId || student.branch_id,
-                studentId: student.id,
-                gameType,
-                subject,
-                grade: student.grade,
-                count: requestedCount,
-                historyScope: 'student',
-            });
-            res.json({ questions, source: 'ai' });
-        } catch (aiErr: any) {
-            console.warn(`[Games] AI question generation failed for ${gameType}, using offline bank:`, aiErr?.message);
-            const questions = buildRounds(subject, student.grade, requestedCount);
-            res.json({ questions, source: 'offline' });
-        }
+        // QUESTIONS COME FROM THE OFFLINE BANK. This endpoint used to call Gemini and fall
+        // back to the bank on failure; AI was removed from the app, so the bank is now the
+        // only source and there is nothing left to fall back from.
+        const questions = buildRounds(subject, student.grade, requestedCount);
+        res.json({ questions, source: 'offline' });
     } catch (error: any) {
         sendError(res, error, 'game.controller.ts');
     }

@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Student, ClassInfo } from '../../types';
-import { ChevronLeftIcon, AIIcon, getFormattedClassName } from '../../constants';
+import { ChevronLeftIcon, getFormattedClassName } from '../../constants';
 import { listStudents } from '../../src/lib/supabase/students';
 import {
     listAssessments,
@@ -182,12 +182,6 @@ const TeacherReportsScreen: React.FC<TeacherReportsScreenProps> = ({ navigateTo,
                 <div className="mt-2">
                     <h2 className="text-xl font-bold text-gray-800">Reports: {getFormattedClassName(selectedClass.grade, selectedClass.section)}</h2>
                 </div>
-                <button
-                    onClick={() => navigateTo('aiPerformanceSummary', t('teacherReportsScreen.aiClassSummary'), { students: students })}
-                    className="mt-3 w-full flex items-center justify-center space-x-2 py-2 px-4 bg-purple-600 text-white font-semibold rounded-xl shadow-md hover:bg-purple-700 transition-colors">
-                    <AIIcon className="w-5 h-5" />
-                    <span>{t('teacherReportsScreen.generateAIClassSummary')}</span>
-                </button>
             </header>
             <main className="flex-grow p-4 space-y-3 overflow-y-auto">
                 {loading ? <div className="text-center py-4">{t('teacherReportsScreen.loadingStudentData')}</div> : (

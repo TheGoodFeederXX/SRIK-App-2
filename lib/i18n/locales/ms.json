@@ -313,7 +313,7 @@
     "multipleChoice": "Pilihan Raya"
   },
   "dashboardOverview": {
-    "aiTimetable": "Jadual Waktu AI",
+    "aiTimetable": "Jadual Waktu",
     "academic": "Akademik",
     "activeSessions": "Sesi Aktif",
     "addNewUser": "Tambah Pengguna Baharu",
@@ -532,7 +532,6 @@
   "resultsScreen": {
     "results": "Keputusan",
     "questComplete": "Pengembaraan Selesai!",
-    "aiSummary": "Ringkasan AI",
     "calculatingYourEpicPerformance": "Mengira prestasi hebat anda...",
     "correct": "Betul",
     "incorrect": "Salah",
@@ -562,7 +561,6 @@
     "enjoyYourFreeTimeOrExploreTheLibrary": "Nikmati masa lapang anda atau terokai perpustakaan.",
     "todaySSchedule": "Jadual Hari Ini",
     "noClassesScheduledForToday": "Tiada kelas dijadualkan hari ini.",
-    "aiTools": "Alat AI",
     "quickActions": "Tindakan Pantas",
     "studentProfileNotFound": "Profil Murid Tidak Dijumpai",
     "secureSessionActive": "Sesi Selamat Aktif",
@@ -575,8 +573,6 @@
     "freeResources": "Sumber Percuma",
     "reportAConcern": "Laporkan Kebimbangan",
     "discreetSupport": "Sokongan Berhati-hati",
-    "aiStudyBuddy": "Rakan Belajar AI",
-    "aiAdventureQuest": "Pengembaraan AI",
     "stuckOnAProblem": "Tersekat pada satu soalan?",
     "turnAnyTextIntoAFunQuiz": "Jadikan mana-mana teks satu kuiz menyeronokkan!",
     "view": "Lihat",
@@ -835,9 +831,6 @@
   "vocabularyPictionaryGame": {
     "vocabularyPictionaryGame": "Permainan Pictionary Perbendaharaan Kata"
   },
-  "aIGameCreatorScreen": {
-    "aigameCreator": "Pencipta Permainan AI"
-  },
   "aIPerformanceSummaryScreen": {
     "analyzingClassPerformance": "Menganalisis Prestasi Kelas...",
     "theAIIsCrunchingTheNumbersToProvideYouWithActi": "AI sedang menganalisis angka untuk memberikan pandangan yang boleh diambil tindakan.",
@@ -1042,7 +1035,6 @@
     "assessments": "Penilaian",
     "openALessonPlanToViewItsDetails": "Buka rancangan pelajaran untuk melihat butirannya.",
     "selectATermToViewResources": "Pilih penggal untuk melihat sumber.",
-    "aiActivityIdeas": "Idea Aktiviti AI",
     "creativeIdeasFor": "Idea kreatif untuk:",
     "generatingCreativeClassroomActivities": "Menjana aktiviti kelas yang kreatif...",
     "materialsNeeded": "Bahan Diperlukan:",
@@ -1051,7 +1043,11 @@
     "publishing": "Menerbitkan...",
     "publishToLibrary": "Terbitkan ke Perpustakaan",
     "assignment": "Tugasan",
-    "viewAsAssignment": "Lihat sebagai Tugasan"
+    "viewAsAssignment": "Lihat sebagai Tugasan",
+    "lessonPlanHeading": "Rancangan Pelajaran: {{subject}} ({{className}})",
+    "lessonPlanTitle": "Rancangan Pelajaran: {{subject}} ({{className}})",
+    "planPublished": "Rancangan pelajaran disiarkan ke perpustakaan!",
+    "failedToPublish": "Gagal menyiarkan rancangan pelajaran."
   },
   "lessonPlannerScreen": {
     "lessonPlanner": "Perancang Pelajaran",
@@ -1375,7 +1371,7 @@
     "classGradebook": "Buku Gred Kelas",
     "manageExams": "Urus Peperiksaan",
     "assessmentsQuizzes": "Penilaian & Kuiz",
-    "aiLessonPlanner": "Perancang Pelajaran AI",
+    "aiLessonPlanner": "Perancang Pelajaran",
     "uploadLessonNotes": "Muat Naik Nota Pelajaran",
     "classroomObservationFeedback": "Maklum Balas Pemerhatian Kelas",
     "studentDeparture": "Kepulangan Murid",
@@ -1440,8 +1436,7 @@
     "loadingStudentData": "Memuatkan data murid...",
     "avgScore": "Purata Skor:",
     "attendance": "Kehadiran:",
-    "noStudentsInThisClass": "Tiada murid dalam kelas ini.",
-    "aiClassSummary": "Ringkasan Kelas AI"
+    "noStudentsInThisClass": "Tiada murid dalam kelas ini."
   },
   "teacherSalaryProfile": {
     "couldnTLoadYourSalaryProfile": "Tidak dapat memuatkan profil gaji anda",
@@ -1509,9 +1504,6 @@
   },
   "workloadCalculator": {
     "workloadCalculator": "Kalkulator Beban Kerja"
-  },
-  "aIParentingTips": {
-    "aiparentingTips": "Petua Keibubapaan AI"
   },
   "appointmentScreen": {
     "janjiTemuGuru": "Janji Temu Guru"
@@ -1605,9 +1597,7 @@
     "reportCard": "Kad Laporan",
     "academics": "Akademik",
     "behavior": "Tingkah Laku",
-    "aiParentingTips": "Petua Keibubapaan AI",
     "newChat": "Sembang Baharu",
-    "aiAssistant": "Pembantu AI",
     "parentDashboard": "Papan Pemuka Ibu Bapa",
     "yuranAnak": "Yuran Anak",
     "selectReportCard": "Pilih Kad Laporan",
@@ -1866,7 +1856,6 @@
     "mySchool": "Sekolah Saya",
     "liveVoice": "Suara Langsung",
     "creativeStudio": "Studio Kreatif",
-    "aiAssistant": "Pembantu AI",
     "askAnything": "Tanya apa sahaja...",
     "upload": "Muat Naik",
     "noResponseGenerated": "Tiada balasan dijana."
@@ -1875,7 +1864,6 @@
     "openAIAssistant": "Buka Pembantu AI"
   },
   "aIInsightsPanel": {
-    "aiInsights": "Pandangan AI",
     "nothingUrgentRightNowAllClear": "Tiada perkara mendesak sekarang — semuanya jelas."
   },
   "accessibilitySettings": {
@@ -3652,7 +3640,6 @@
     "noStudentSelectedOpenThisViewFromAStudentRowIn": "Tiada murid dipilih. Buka paparan ini dari baris murid dalam Senarai Murid.",
     "academicPerformance": "Prestasi Akademik",
     "overallAverage": "Purata Keseluruhan",
-    "aiGeneratedSummary": "Ringkasan Dijana AI",
     "generateSummary": "Jana Ringkasan",
     "personalProfile": "Profil Peribadi",
     "dateOfBirth": "Tarikh Lahir",

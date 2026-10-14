@@ -125,13 +125,48 @@ bukan dilaksanakan secara separa.
 3. Buang bahagian Prisma daripada `postinstall`.
 4. Kemudian ulang penilaian gate §7.1 sebelum menyentuh `backend/`.
 
-## 8. Rollback
+## 8. Penyingkiran AI penuh (0.8.33)
+
+Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.
+
+| Lapisan | Dibuang |
+|---|---|
+| Komponen UI | `AIChatScreen`, `AIChatWidget`, `AskAIWidget`, `AIInsightsPanel`, `MediaGenerator`, `AILoadingOverlay`, `AIPerformanceSummaryScreen`, `AIGameCreatorScreen`, `StudyBuddy`, `AIParentingTips`, seluruh `components/student/adventure/`, `LiveSession` |
+| Pustaka | `lib/ai.ts`, `lib/ai-assistant.ts`, `lib/ai-secure.ts`, `lib/ai-grading.ts`, `lib/ai-educator-service.ts`, `lib/ai-lesson-planner.ts`, `lib/gemini.ts` |
+| Backend | `ai/aiGateway/aiKnowledge/askAI/geminiAI/nvidiaAI/gameQuestion` service, `ai.controller`, `ai.routes`, `aiGate.middleware`, laluan `/ai`, `/insights/ask*`, `/games/ai-questions` |
+| Konfigurasi | `VITE_AI_PROVIDER`, `VITE_GEMINI_API_KEY`, `NVIDIA_API_KEY`, `geminiApiKey`, `nvidiaApiKey/nvidiaBaseUrl/nvidiaGenaiBaseUrl` |
+| Dependensi | `@google/generative-ai` (dibuang bersama `scripts/generate-translations.ts`) |
+| Ujian AI | `ai-is-not-behind-a-paywall`, `ai-knowledge-base` (branding), `aiGateway.service`, `geminiAI.service`, `insights_askai`, `ai-knowledge` (backend) |
+| Terjemahan | 13 kunci bernama AI dibuang; 2 tajuk dibersihkan (`dashboardOverview.aiTimetable` → "Jadual Waktu", `teacherOverview.aiLessonPlanner` → "Perancang Pelajaran") |
+
+Tingkah laku yang berubah, disebut terus:
+- Kuis permainan kini **sentiasa** menjana soalan daripada bank luar talian — laluan Gemini dibuang, bukan disekat.
+- Kertas soalan `aiTimetable`/`aiLessonPlanner` dan lawatan pelancongan (onboarding) tidak lagi
+  menjanjikan AI yang tiada.
+- Butang "Jana Ringkasan Kelas AI" di skrin Laporan Guru dibuang (skrin tujuannya sudah tiada).
+
+**Pepijat pengawal yang ditemui semasa kerja ini (dan diperbaiki):** ujian
+`no-legacy-api` mengira skrin terjejak dengan regex `import X from '...'`. Baris
+`import LessonPlanDetailScreen, { AIActivitySuggester } from '...'` **gagal** dipadankan,
+jadi `LessonPlanDetailScreen` tersembunyi daripada pemeriksaan itu sejak dulu. Selepas
+AI dibuang, sintaks import menjadi padan, dan barulah skrin itu muncul — bersama satu
+pelanggaran **sebenar** yang sudah lama wujud: skrin itu memanggil `lib/api` (pelayan yang
+tidak wujud) untuk "menerbitkan" rancangan pelajaran, jadi butang itu senyap-senyap tidak
+berbuat apa-apa. Diputuskan dengan pemilik untuk **membaiki skrin itu** (bukan melaporkan
+sahaja): muat naik kini ke baldi peribadi `srik-documents` dan baris ke jadual `documents`.
+
+Pengiraan **tiada** ujian hijau tanpa asas: `tsc` frontend 0 ralat, `tsc` backend 0 ralat,
+**519 ujian frontend lulus** (73 fail), `vite build` keluar 0, pariti locale
+**3286 = 3286** kunci, tiada perubahan pada `supabase/`.
+
+## 9. Rollback
 
 Setiap fasa ialah commit berasingan dan boleh dibalikkan secara berasingan:
 
 ```bash
 git revert 056ea6f   # C2 sahaja
 git revert e2e07f5   # C1 sahaja
+git revert <sha 0.8.33>   # penyingkiran AI sahaja
 ```
 
 Tiada `git reset --hard`, tiada force push, dan tiada mutasi data dijalankan.

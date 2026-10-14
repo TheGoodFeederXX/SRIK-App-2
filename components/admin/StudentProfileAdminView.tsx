@@ -20,7 +20,6 @@ import {
     AwardIcon
 } from '../../constants';
 import DonutChart from '../ui/DonutChart';
-import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
 import ReactMarkdown from 'react-markdown';
 import ConfirmationModal from '../ui/ConfirmationModal';
 import { api } from '../../lib/api';
@@ -138,8 +137,6 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
     const dockRef = useDockedBar();
 
     const [student, setStudent] = useState(initialStudent);
-    const [summary, setSummary] = useState('');
-    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showClassModal, setShowClassModal] = useState(false);
     const [attendanceData, setAttendanceData] = useState({
@@ -236,31 +233,6 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
         }
     };
 
-    const generateSummary = async () => {
-        setIsGeneratingSummary(true);
-        setSummary(''); // Clear previous summary
-        try {
-            const ai = getAIClient();
-            const academicSummary = student.academicPerformance?.map(p => `${p.subject}: ${p.score}% `).join(', ') || 'N/A';
-            const behaviorSummary = student.behaviorNotes?.map(n => `${n.type} - ${n.title}: ${n.note} `).join('; ') || 'No notes';
-
-            const prompt = `Generate a concise, professional summary for a school administrator about the student ${student.name}. Highlight key academic strengths, areas needing attention, and any notable behavioral patterns. Keep it to 2 - 3 short paragraphs. Base this summary on the following data: \n - Academic Performance: ${academicSummary} \n - Behavioral Notes: ${behaviorSummary} `;
-
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.0-flash',
-                contents: prompt
-            });
-
-            setSummary(response.text);
-
-        } catch (error) {
-            console.error("Error generating student summary:", error);
-            setSummary("Could not generate summary at this time.");
-        } finally {
-            setIsGeneratingSummary(false);
-        }
-    };
-
     return (
         <div className="flex flex-col h-full bg-gray-50">
             <main className="flex-grow p-4 overflow-y-auto pb-[calc(var(--docked-bar-height,0px)+1.5rem)] lg:pb-6">
@@ -326,41 +298,6 @@ const StudentProfileAdminView: React.FC<StudentProfileAdminViewProps> = ({ stude
 
                     {/* Sidebar */}
                     <div className="lg:col-span-1 space-y-4">
-                        {/* AI Summary */}
-                        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.1 }} className="bg-gradient-to-br from-indigo-600 to-indigo-800 p-6 rounded-3xl shadow-lg relative overflow-hidden group">
-                            <SparklesIcon className="absolute -right-4 -bottom-4 h-32 w-32 text-white/10 group-hover:scale-110 transition-transform duration-500" />
-                            <div className="relative z-10">
-                                <div className="flex items-center space-x-2 mb-4 text-white">
-                                    <SparklesIcon className="h-5 w-5" />
-                                    <h4 className="font-bold">AI Insight</h4>
-                                </div>
-                                {summary && !isGeneratingSummary ? (
-                                    <div className="text-sm text-white/90 leading-relaxed font-medium bg-white/10 p-4 rounded-2xl backdrop-blur-sm">
-                                        <ReactMarkdown>{summary}</ReactMarkdown>
-                                    </div>
-                                ) : (
-                                    <motion.button
-                                        whileHover={!isGeneratingSummary ? { scale: 1.02 } : {}} whileTap={!isGeneratingSummary ? { scale: 0.98 } : {}}
-                                        onClick={generateSummary}
-                                        disabled={isGeneratingSummary}
-                                        className="w-full flex items-center justify-center space-x-2 py-4 bg-white text-indigo-700 font-bold rounded-2xl shadow-xl hover:bg-gray-50 transition-all disabled:opacity-70 group"
-                                    >
-                                        {isGeneratingSummary ? (
-                                            <>
-                                                <div className="w-5 h-5 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-                                                <span>Analyzing Data...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <AIIcon className="w-5 h-5 group-hover:rotate-12 transition-transform" />
-                                                <span>Generate Admin Summary</span>
-                                            </>
-                                        )}
-                                    </motion.button>
-                                )}
-                            </div>
-                        </motion.div>
-
                         {/* Attendance Summary */}
                         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.15 }} className="bg-white p-6 rounded-3xl shadow-sm">
                             <div className="flex items-center justify-between mb-6">

@@ -1,7 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth.middleware';
 import { InsightService } from '../services/insight.service';
-import { AskAIService } from '../services/askAI.service';
 import prisma from '../config/database';
 import { getEffectiveBranchId } from '../utils/branchScope';
 import { sendError } from '../utils/httpError';
@@ -32,24 +31,6 @@ export const getMyInsights = async (req: AuthRequest, res: Response) => {
             return res.json(await InsightService.getStudentInsights(req.user.school_id, student.id));
         }
         return res.json({ role, recommendations: [] });
-    } catch (error: any) {
-        sendError(res, error, 'insight.controller.ts');
-    }
-};
-
-export const askAI = async (req: AuthRequest, res: Response) => {
-    try {
-        const branchId = getEffectiveBranchId(req.user, req.body.branch_id);
-        const result = await AskAIService.ask(req.user.school_id, branchId, req.user.id, req.user.role, req.body.question);
-        res.json(result);
-    } catch (error: any) {
-        res.status(/required/i.test(error.message) ? 400 : 500).json({ message: error.message });
-    }
-};
-
-export const getAskAISuggestions = async (req: AuthRequest, res: Response) => {
-    try {
-        res.json({ questions: AskAIService.listAvailableQuestions(req.user.role) });
     } catch (error: any) {
         sendError(res, error, 'insight.controller.ts');
     }

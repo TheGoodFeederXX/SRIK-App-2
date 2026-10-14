@@ -1,11 +1,12 @@
 
+import { uploadFile } from '../../src/lib/supabase/storage';
+import { requireSupabase } from '../../src/lib/supabase/client';
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { GeneratedResources, TermResources, GeneratedLessonPlan, GeneratedAssessment, AssessmentQuestion, DetailedNote } from '../../types';
 import { DocumentTextIcon, ShareIcon, BookOpenIcon, ClipboardListIcon, ChevronRightIcon, SparklesIcon, CheckCircleIcon, RotateCcwIcon, ClockIcon } from '../../constants';
-import { api } from '../../lib/api';
 
 const Toast: React.FC<{ message: string; onClear: () => void; }> = ({ message, onClear }) => {
     useEffect(() => {
@@ -192,30 +193,36 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
         try {
             const content = JSON.stringify(currentResources, null, 2);
             const fileName = `lesson-plan-${Date.now()}.json`;
-            
-            // Create a File object from the content
             const file = new File([content], fileName, { type: 'application/json' });
 
-            // 2. Upload using new local endpoint
-            const { publicUrl } = await api.uploadFile('lesson-materials', `plans/${fileName}`, file);
+            // THE REAL STORAGE AND THE REAL TABLE. This used to call
+            // `api.uploadFile('lesson-materials', ...)` and `api.createResource(...)` — an
+            // undeployed server, a bucket that does not exist, and a `resources` table this
+            // database has never had. So "publish" silently did nothing. Files now go to the
+            // private `srik-documents` bucket and the row goes into `documents`, whose
+            // columns are what this insert actually names.
+            const uploaded = await uploadFile({ type: 'SCHOOL' }, file);
 
-            // 3. Insert into Resources
-            await api.createResource({
-                title: `Lesson Plan: ${currentResources.subject} (${currentResources.className})`,
-                type: 'Document',
-                subject: currentResources.subject,
-                grade: 0, 
-                url: publicUrl,
-                description: t('lessonPlanDetailScreen.aiGeneratedLessonPlan'),
-                is_public: true,
-                language: 'English'
-            }, { useBackend: true });
+            const db = requireSupabase();
+            const { data: { user } } = await db.auth.getUser();
+            const { error } = await db.from('documents').insert({
+                owner_type: 'SCHOOL',
+                category: 'LESSON_PLAN',
+                title: t('lessonPlanDetailScreen.lessonPlanTitle', {
+                    subject: currentResources.subject,
+                    className: currentResources.className,
+                }),
+                storage_key: uploaded.storageKey,
+                mime_type: file.type,
+                size_bytes: file.size,
+                uploaded_by: user?.id ?? null,
+            });
+            if (error) throw new Error(error.message);
 
-            setToastMessage('Plan published to library!');
-
+            setToastMessage(t('lessonPlanDetailScreen.planPublished'));
         } catch (err: any) {
             console.error('Publish error:', err);
-            setToastMessage('Failed to publish plan.');
+            setToastMessage(t('lessonPlanDetailScreen.failedToPublish'));
         } finally {
             setIsPublishing(false);
         }
@@ -226,7 +233,7 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
             {toastMessage && <Toast message={toastMessage} onClear={() => setToastMessage('')} />}
             <div className="p-3 border-b border-gray-200 flex justify-between items-center flex-shrink-0 bg-white print:hidden">
                 <div>
-                    <h2 className="text-lg font-bold text-gray-800">AI Plan: {resources.subject} ({resources.className})</h2>
+                    <h2 className="text-lg font-bold text-gray-800">{t('lessonPlanDetailScreen.lessonPlanHeading', { subject: resources.subject, className: resources.className })}</h2>
                 </div>
                 <div className="flex space-x-2">
                     <button
@@ -255,119 +262,3 @@ const LessonPlanDetailScreen: React.FC<{ resources: GeneratedResources; navigate
 };
 
 export default LessonPlanDetailScreen;
-
-// --- Activity Suggester Component ---
-import { getAIClient, SchemaType as Type } from '../../lib/ai';
-
-export const AIActivitySuggester: React.FC<{ topic: string, subject: string, handleBack: () => void }> = ({ topic, subject, handleBack }) => {
-    const { t } = useTranslation();
-    const [isGenerating, setIsGenerating] = useState(true);
-    const [suggestions, setSuggestions] = useState<any[]>([]);
-    const [toastMessage, setToastMessage] = useState('');
-
-    useEffect(() => {
-        const generate = async () => {
-            try {
-                const ai = getAIClient();
-                // The prompt asked for a NIGERIAN classroom and for materials
-                // available in Nigeria, so suggested activities and shopping lists
-                // did not fit a Malaysian school. SRIK teaches in Malaysia.
-                const prompt = `Generate 3 creative learning activities for the topic "${topic}" in the subject "${subject}" for a Malaysian primary classroom. 
-                Include:
-                1. A Group Activity
-                2. A Creative/Artistic Activity
-                3. A Quick Quiz/Game
-                
-                For each, provide a title, duration, materials needed, and step-by-step instructions. Focus on low-cost materials available in Malaysia.`;
-
-                const response = await ai.models.generateContent({
-                    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-                    generationConfig: {
-                        temperature: 0.8,
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: Type.OBJECT,
-                            properties: {
-                                activities: {
-                                    type: Type.ARRAY,
-                                    items: {
-                                        type: Type.OBJECT,
-                                        properties: {
-                                            title: { type: Type.STRING },
-                                            type: { type: Type.STRING },
-                                            duration: { type: Type.STRING },
-                                            materials: { type: Type.ARRAY, items: { type: Type.STRING } },
-                                            steps: { type: Type.ARRAY, items: { type: Type.STRING } }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-
-                if (response.text) {
-                    const data = JSON.parse(response.text.replace(/```json/g, '').replace(/```/g, '').trim());
-                    setSuggestions(data.activities);
-                }
-            } catch (err) {
-                console.error(err);
-                setToastMessage("Failed to generate activities.");
-            } finally {
-                setIsGenerating(false);
-            }
-        };
-        generate();
-    }, [topic, subject]);
-
-    return (
-        <div className="p-4 bg-gray-50 h-full overflow-y-auto pb-24">
-            {toastMessage && <Toast message={toastMessage} onClear={() => setToastMessage('')} />}
-            <header className="mb-6">
-                <button onClick={handleBack} className="text-gray-500 mb-2 font-bold flex items-center">{t('common.back')}</button>
-                <h2 className="text-2xl font-bold text-gray-800 font-outfit">{t('lessonPlanDetailScreen.aiActivityIdeas')}</h2>
-                <p className="text-sm text-gray-500">{t('lessonPlanDetailScreen.creativeIdeasFor')} <span className="text-purple-600 font-bold">{topic}</span></p>
-            </header>
-
-            {isGenerating ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                    <RotateCcwIcon className="w-12 h-12 text-indigo-600 animate-spin mb-4" />
-                    <p className="text-gray-600 font-medium">{t('lessonPlanDetailScreen.generatingCreativeClassroomActivities')}</p>
-                </div>
-            ) : (
-                <div className="space-y-6">
-                    {suggestions.map((act, i) => (
-                        <div key={i} className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-bl-full -mr-8 -mt-8 flex items-center justify-center pt-6 pl-6">
-                                <SparklesIcon className="w-6 h-6 text-indigo-300" />
-                            </div>
-                            <span className="text-xs font-bold uppercase tracking-widest text-indigo-500 bg-indigo-50 px-3 py-1 rounded-full">{act.type}</span>
-                            <h3 className="text-xl font-bold text-gray-900 mt-2 mb-1">{act.title}</h3>
-                            <div className="flex items-center space-x-3 text-sm text-gray-500 mb-4">
-                                <span className="flex items-center space-x-1 font-bold"><ClockIcon className="w-4 h-4" /> <span>{act.duration}</span></span>
-                            </div>
-                            
-                            <div className="mb-4">
-                                <h4 className="text-sm font-bold text-gray-800 mb-2">{t('lessonPlanDetailScreen.materialsNeeded')}</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    {act.materials.map((m: string, j: number) => (
-                                        <span key={j} className="text-xs bg-gray-50 text-gray-600 px-2 py-1 rounded-lg border">{m}</span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="space-y-3">
-                                {act.steps.map((step: string, j: number) => (
-                                    <div key={j} className="flex space-x-3">
-                                        <span className="flex-shrink-0 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center text-xs font-bold text-gray-500">{j + 1}</span>
-                                        <p className="text-sm text-gray-600 leading-relaxed">{step}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
-};

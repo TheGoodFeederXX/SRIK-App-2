@@ -8,9 +8,8 @@ import { useDashboardRouting } from '../../hooks/useDashboardRouting';
 import { api } from '../../lib/api';
 import { DashboardType, Student, StudentAssignment } from '../../types';
 import { formatSchoolId } from '../../utils/idFormatter';
-import { THEME_CONFIG, ClockIcon, ClipboardListIcon, BellIcon, ChartBarIcon, ChevronRightIcon, SUBJECT_COLORS, BookOpenIcon, MegaphoneIcon, AttendanceSummaryIcon, CalendarIcon, ElearningIcon, StudyBuddyIcon, SparklesIcon, ReceiptIcon, AwardIcon, HelpIcon, GameControllerIcon, VideoIcon, GlobeIcon, ShieldCheckIcon, HeartIcon, getFormattedClassName } from '../../constants';
+import { THEME_CONFIG, ClockIcon, ClipboardListIcon, BellIcon, ChartBarIcon, ChevronRightIcon, SUBJECT_COLORS, BookOpenIcon, MegaphoneIcon, AttendanceSummaryIcon, CalendarIcon, ElearningIcon, SparklesIcon, ReceiptIcon, AwardIcon, HelpIcon, GameControllerIcon, VideoIcon, GlobeIcon, ShieldCheckIcon, HeartIcon, getFormattedClassName } from '../../constants';
 import Header from '../ui/Header';
-import AIInsightsPanel from '../shared/AIInsightsPanel';
 import { StudentBottomNav } from '../ui/DashboardBottomNav';
 // import { mockNotifications } from '../../data'; // REMOVED
 import { } from '../../data'; // Ensure no mocks imported
@@ -33,8 +32,6 @@ import { useSocket } from '../../context/SocketContext';
 // Lazy load all view components
 const GlobalSearchScreen = lazyWithRetry(() => import('../shared/GlobalSearchScreen'));
 import SuspensionNoticeBanner from '../shared/SuspensionNoticeBanner';
-const StudyBuddy = lazyWithRetry(() => import('../student/StudyBuddy'));
-const AdventureQuestHost = lazyWithRetry(() => import('../student/adventure/AdventureQuestHost'));
 const ExamSchedule = lazyWithRetry(() => import('../shared/ExamSchedule'));
 const NoticeboardScreen = lazyWithRetry(() => import('../shared/NoticeboardScreen'));
 const CalendarScreen = lazyWithRetry(() => import('../shared/CalendarScreen'));
@@ -330,11 +327,6 @@ const Overview: React.FC<{
         { label: t('studentDashboard.discreetSupport'), icon: <HeartIcon />, action: () => navigateTo('discreetReporting', t('studentDashboard.discreetSupport')) },
     ];
 
-    const aiTools = [
-        { label: t('studentDashboard.aiStudyBuddy'), description: t('studentDashboard.stuckOnAProblem'), color: 'from-purple-500 to-indigo-600', action: () => navigateTo('studyBuddy', t('studentDashboard.studyBuddy')) },
-        { label: t('studentDashboard.aiAdventureQuest'), description: t('studentDashboard.turnAnyTextIntoAFunQuiz'), color: 'from-teal-400 to-blue-500', action: () => navigateTo('adventureQuest', t('studentDashboard.aiAdventureQuest'), {}) },
-    ];
-
     if (loading) return (
         <div className="p-4 lg:p-6 bg-gray-50 min-h-full animate-pulse">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -379,38 +371,6 @@ const Overview: React.FC<{
                         navigateTo={navigateTo}
                         student={student}
                     />
-                    <div>
-                        <h3 className="text-lg font-bold text-gray-800 mb-2 px-1">{t('studentDashboard.aiTools')}</h3>
-                        {/* The column count follows the available width instead of being
-                            fixed at three. There are two tools, so PROTECTED3 reserved a
-                            third column that was never filled — the empty gap to the right of
-                            the cards — and it held three columns even on a phone, which gave
-                            each card about a third of a 390px screen. auto-fit lets the cards
-                            fill whatever room there is: one per row when there is less than
-                            ~13rem each (small phones, where the longer label and its
-                            description need the width), two side by side from about 29rem,
-                            and more only if more tools are ever added. */}
-                        <div className="grid gap-3 sm:gap-4 [grid-template-columns:repeat(auto-fit,minmax(9rem,1fr))]">
-                            {aiTools.map((tool, i) => (
-                                <motion.button
-                                    key={tool.label}
-                                    initial={{ opacity: 0, y: 12 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ type: 'spring', bounce: 0, duration: 0.35, delay: i * 0.06 }}
-                                    whileHover={{ y: -3, boxShadow: '0 12px 24px -8px rgba(0,0,0,0.25)' }}
-                                    whileTap={{ scale: 0.97 }}
-                                    onClick={tool.action}
-                                    className={`flex flex-col items-start p-4 rounded-2xl shadow-lg text-white text-left bg-gradient-to-r ${tool.color} focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-indigo-500`}
-                                >
-                                    <SparklesIcon className="h-6 w-6 mb-2 flex-shrink-0" />
-                                    <h4 className="font-bold leading-snug">{tool.label}</h4>
-                                    <p className="text-xs opacity-90 leading-snug">{tool.description}</p>
-                                </motion.button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <AIInsightsPanel />
                 </div>
                 {/* Sidebar */}
                 <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-6 lg:self-start">
@@ -747,8 +707,6 @@ const StudentDashboard: React.FC<StudentDashboardProps> = ({ onLogout, setIsHome
 
     const viewComponents: Record<string, any> = useMemo(() => ({
         overview: Overview,
-        studyBuddy: StudyBuddy,
-        adventureQuest: AdventureQuestHost,
         examSchedule: ExamSchedule,
         noticeboard: NoticeboardScreen,
         calendar: CalendarScreen,

@@ -31,8 +31,6 @@ import { formatSchoolId } from '../../utils/idFormatter';
 import PremiumLoader, { BOOT_MESSAGE } from '../ui/PremiumLoader';
 import PremiumModal from '../ui/PremiumModal';
 import ErrorBoundary from '../ui/ErrorBoundary';
-import AIChatScreen from '../shared/AIChatScreen';
-import AIChatWidget from '../shared/AIChatWidget';
 
 
 import { getHomeworkStatus } from '../../utils/homeworkUtils';
@@ -67,7 +65,6 @@ import ParentPhotoGalleryScreen from './ParentPhotoGalleryScreen';
 import VolunteeringScreen from './VolunteeringScreen';
 import PermissionSlipScreen from './PermissionSlipScreen';
 import AppointmentScreen from './AppointmentScreen';
-import AIParentingTipsScreen from './AIParentingTips';
 import ParentMessagesScreen from './ParentMessagesScreen';
 import ParentNewChatScreen from './ParentNewChatScreen';
 import ChatScreen from '../shared/ChatScreen';
@@ -220,20 +217,6 @@ const AcademicsTab = ({ student, navigateTo, schoolId, currentBranchId }: { stud
 
     return (
         <div className="p-4 space-y-4">
-            <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.25 }}
-                className="bg-gradient-to-r from-green-500 to-teal-500 p-4 rounded-2xl shadow-lg flex flex-wrap items-center justify-between gap-3 text-white"
-            >
-                <div>
-                    <h3 className="font-bold text-lg">{t('parentDashboard.personalizedAdvice')}</h3>
-                    <p className="text-sm opacity-90">{t('parentDashboard.getAIPoweredTipsForYourChild')}</p>
-                </div>
-                <motion.button whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} onClick={() => navigateTo('aiParentingTips', t('parentDashboard.aiParentingTips'), { student: { ...student, academicPerformance: academicRecords } })} className="bg-white/20 min-h-11 px-4 py-2 rounded-lg font-semibold whitespace-nowrap flex-shrink-0 hover:bg-white/30 transition-colors flex items-center space-x-2">
-                    <SparklesIcon className="h-5 w-5" /><span>{t('parentDashboard.getTips')}</span>
-                </motion.button>
-            </motion.div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-4 rounded-xl shadow-sm">
                     <div className="flex justify-between items-center">
@@ -695,9 +678,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
 
     const viewComponents: { [key: string]: React.ComponentType<any> } = {
         dashboard: UnifiedParentHome,
-        // The one assistant: free chat, plus the "My School" tab that answers
-        // from this parent's own children's records.
-        aiAssistant: (props: any) => <AIChatScreen {...props} dashboardType={DashboardType.Parent} />,
         smartCalendar: SmartCalendar,
         todaySummary: (props: any) => <ParentTodayWidget {...props} />,
         myFees: MyChildrenFeesScreen,
@@ -736,7 +716,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         volunteering: VolunteeringScreen,
         permissionSlips: PermissionSlipScreen,
         appointments: (props: any) => <AppointmentScreen {...props} parentId={user?.id} students={students} />,
-        aiParentingTips: AIParentingTipsScreen,
         messages: (props: any) => <ParentMessagesScreen {...props} onSelectChat={(convo: any) => navigateTo('chat', convo.displayName || convo.participant?.name || 'Chat', { conversationId: convo.id, roomDetails: convo })} onNewChat={() => navigateTo('newChat', t('parentDashboard.newChat'))} />,
         newChat: ParentNewChatScreen,
         chat: (props: any) => <ChatScreen {...props} currentUserId={currentUserId ?? undefined} themeColor="green" />,
@@ -840,12 +819,12 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         );
     }
 
-    // The AI Assistant brings its own header, back button and docked input bar
-    // (it was written as a standalone screen), so it is shown full-screen like
-    // the chat views. Leaving the dashboard chrome in place would put its input
-    // bar on top of the bottom nav.
-    const isFullScreen = ['messages', 'newChat', 'chat', 'aiAssistant'].includes(view);
-    const hideBottomNav = view === 'chat' || view === 'aiAssistant';
+    // The message views bring their own header, back button and docked input bar
+    // (they were written as standalone screens), so they are shown full-screen.
+    // Leaving the dashboard chrome in place would put their input bar on top of
+    // the bottom nav.
+    const isFullScreen = ['messages', 'newChat', 'chat'].includes(view);
+    const hideBottomNav = view === 'chat';
 
     return (
         <DashboardLayout
@@ -874,15 +853,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
             <Suspense fallback={<DashboardSuspenseFallback />}>
                 {isSearchOpen && <GlobalSearchScreen onClose={() => setIsSearchOpen(false)} navigateTo={navigateTo} dashboardType={DashboardType.Parent} />}
             </Suspense>
-            {/* A single AI entry point. Hidden while the assistant is open so the
-                button never floats over its own screen, and in a chat, where it
-                would sit on the message box. */}
-            {view !== 'aiAssistant' && view !== 'chat' && (
-                <AIChatWidget
-                    dashboardType={DashboardType.Parent}
-                    onClick={() => navigateTo('aiAssistant', t('parentDashboard.aiAssistant'), {})}
-                />
-            )}
             <PremiumModal
                 isOpen={isPremiumModalOpen}
                 onClose={() => setIsPremiumModalOpen(false)}

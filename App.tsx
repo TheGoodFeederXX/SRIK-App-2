@@ -37,8 +37,6 @@ const SetPasswordScreen = lazyWithRetry(() => import('./components/auth/SetPassw
 const ChangePasswordScreen = lazyWithRetry(() => import('./components/auth/ChangePasswordScreen'));
 const InviteAcceptScreen = lazyWithRetry(() => import('./components/auth/InviteAcceptScreen'));
 const VerificationGuard = lazyWithRetry(() => import('./components/auth/VerificationGuard'));
-const AIChatScreen = lazyWithRetry(() => import('./components/shared/AIChatScreen'));
-const AIChatWidget = lazyWithRetry(() => import('./components/shared/AIChatWidget'));
 const MobileNavigationHandler = lazyWithRetry(() => import('./components/shared/MobileNavigationHandler'));
 const ContextualMarquee = lazyWithRetry(() => import('./components/shared/ContextualMarquee'));
 const UpdatePrompt = lazyWithRetry(() => import('./components/shared/UpdatePrompt'));
@@ -145,7 +143,6 @@ const AuthenticatedApp: React.FC = () => {
 
   const latestVersion = maxVersion(latestRegistryVersion, currentSchool?.platform_version, APP_VERSION);
   const isVersionMismatch = isOutdated(APP_VERSION, latestVersion);
-  const [isChatOpen, setIsChatOpen] = useState(false);
   const [isHomePage, setIsHomePage] = useState(true);
 
   const [showAuthConfirm, setShowAuthConfirm] = useState(false);
@@ -190,7 +187,6 @@ const AuthenticatedApp: React.FC = () => {
   const handleLogout = async () => {
     await signOut();
     setIsHomePage(true);
-    setIsChatOpen(false);
   };
 
   const renderDashboard = useMemo(() => {
@@ -240,8 +236,6 @@ const AuthenticatedApp: React.FC = () => {
     </Suspense>
   );
 
-  if (isChatOpen) return <AIChatScreen onBack={() => setIsChatOpen(false)} dashboardType={role} />;
-
   if (!user || !role) {
     return (
       <Suspense fallback={<LoadingScreen />}>
@@ -250,10 +244,6 @@ const AuthenticatedApp: React.FC = () => {
         <Login />
       </Suspense>
     );
-  }
-
-  if (isChatOpen) {
-    return <AIChatScreen onBack={() => setIsChatOpen(false)} dashboardType={role} />;
   }
 
   return (
@@ -279,9 +269,6 @@ const AuthenticatedApp: React.FC = () => {
             <UpdatePrompt forced={true} targetVersion={latestVersion} />
           )}
           {renderDashboard}
-          {/* The Parent dashboard draws its own AI button (it opens the assistant
-              inside the dashboard), so this one would sit exactly on top of it. */}
-          {isHomePage && role !== DashboardType.Parent && <AIChatWidget dashboardType={role} onClick={() => setIsChatOpen(true)} />}
         </VerificationGuard>
         </LazyMotionConfig>
       </Suspense>

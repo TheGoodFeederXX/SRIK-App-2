@@ -18,7 +18,6 @@ import { getStudent, setStudentStatus } from '../../src/lib/supabase/students';
 import { getStudentAttendanceRange } from '../../src/lib/supabase/attendance';
 import { getClassSubjectNames, getCurrentAcademicYear } from '../../src/lib/supabase/academics';
 import { useAutoSync } from '../../hooks/useAutoSync';
-import { getAIClient, AI_MODEL_NAME } from '../../lib/ai';
 import ConfirmationModal from '../ui/ConfirmationModal';
 import DonutChart from '../ui/DonutChart';
 import ReactMarkdown from 'react-markdown';
@@ -50,8 +49,6 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
         return <div className="p-6 text-center text-sm text-gray-500">{t('studentProfileDashboard.noStudentSelected')}</div>;
     }
     
-    const [summary, setSummary] = useState('');
-    const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loading, setLoading] = useState(true);
     const [attendanceData, setAttendanceData] = useState({
@@ -166,35 +163,6 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
         console.log('🔄 [StudentProfileDashboard] Real-time auto-sync triggered');
         loadFullData();
     });
-
-    const handleGenerateSummary = async () => {
-        setIsGeneratingSummary(true);
-        try {
-            const ai = getAIClient();
-            const academicStr = subjectRows
-                .map(p => `${p.subject}: ${p.score !== null ? `${p.score}%` : 'no result yet'}`)
-                .join(', ') || 'No data';
-            const behaviorStr = behaviorNotes?.map(n => n.note).join('; ') || 'No notes';
-
-            const prompt = `Analyze this student's data and provide a concise summary for school administrators:
-            Name: ${student.name}
-            Academic: ${academicStr}
-            Attendance: ${attendanceData.present} present, ${attendanceData.absent} absent
-            Behavior: ${behaviorStr}`;
-
-            const response = await ai.models.generateContent({
-                model: 'gemini-2.0-flash',
-                contents: prompt
-            });
-
-            setSummary(response.text);
-        } catch (error) {
-            console.error("AI Error:", error);
-            setSummary(t('studentProfileDashboard.unableToGenerateSummary'));
-        } finally {
-            setIsGeneratingSummary(false);
-        }
-    };
 
     const handleDelete = async () => {
         try {
@@ -331,48 +299,6 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
 
                     {/* Right Column (1/3) */}
                     <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
-                        {/* AI Summary Card */}
-                        <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
-                            <div className="flex items-center gap-2 mb-4">
-                                <Sparkles className="w-5 h-5 text-[#5956E9]" />
-                                <h3 className="font-bold text-gray-800">{t('studentProfileDashboard.aiGeneratedSummary')}</h3>
-                            </div>
-
-                            <AnimatePresence mode="wait">
-                                {summary ? (
-                                    <motion.div
-                                        key="summary"
-                                        initial={{ opacity: 0, y: 6 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="text-sm text-gray-700 leading-relaxed bg-[#F8F9FF] p-4 rounded-xl"
-                                    >
-                                        <ReactMarkdown>{summary}</ReactMarkdown>
-                                    </motion.div>
-                                ) : (
-                                    <motion.button
-                                        key="generate"
-                                        initial={{ opacity: 1 }}
-                                        exit={{ opacity: 0 }}
-                                        whileHover={{ scale: 1.01 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleGenerateSummary}
-                                        disabled={isGeneratingSummary}
-                                        className="w-full flex items-center justify-center gap-2 py-4 bg-[#EEF2FF] text-[#5D5CDE] font-bold rounded-xl hover:bg-[#E0E7FF] transition-all disabled:opacity-50"
-                                    >
-                                        {isGeneratingSummary ? (
-                                            <div className="w-5 h-5 border-2 border-[#5D5CDE] border-t-transparent rounded-full animate-spin"></div>
-                                        ) : (
-                                            <>
-                                                <Sparkles className="w-4 h-4" />
-                                                <span>{t('studentProfileDashboard.generateSummary')}</span>
-                                            </>
-                                        )}
-                                    </motion.button>
-                                )}
-                            </AnimatePresence>
-                        </motion.section>
-
                         {/* Personal Information Card */}
                         <motion.section variants={fadeUp} transition={{ duration: 0.35 }} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200">
                             <div className="flex items-center gap-2 mb-4">

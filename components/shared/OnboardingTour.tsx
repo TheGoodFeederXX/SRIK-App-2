@@ -28,7 +28,7 @@ interface TourStep {
 const ADMIN_STEPS: TourStep[] = [
     { title: 'Welcome to Your Dashboard!', description: 'This is your school\'s command center. You\'ll see an overview of total students, teachers, attendance, and critical alerts right here.', icon: <Home className="w-8 h-8" />, highlight: 'Dashboard Overview' },
     { title: 'Manage Your People', description: 'Add students, teachers, and parents. Approve pending registrations, assign classes, and manage user accounts — all in one place.', icon: <Users className="w-8 h-8" />, highlight: 'People Management' },
-    { title: 'Academic Control', description: 'Create timetables with AI, manage exams, enter results, and publish report cards. The gradebook auto-calculates positions and grades.', icon: <BookOpen className="w-8 h-8" />, highlight: 'Academics' },
+    { title: 'Academic Control', description: 'Create timetables, manage exams, enter results, and publish report cards. The gradebook auto-calculates positions and grades.', icon: <BookOpen className="w-8 h-8" />, highlight: 'Academics' },
     { title: 'Fee Management', description: 'Assign fees by class, record payments, track arrears, and send reminders.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Finance' },
     { title: 'Analytics & Reports', description: 'View enrollment trends, attendance heatmaps, financial reports, and build custom reports with our drag-and-drop report builder.', icon: <BarChart3 className="w-8 h-8" />, highlight: 'Analytics' },
     { title: 'Communication Hub', description: 'Send announcements, chat with teachers and parents, schedule conferences, and broadcast emergency alerts.', icon: <MessageSquare className="w-8 h-8" />, highlight: 'Communication' },
@@ -39,13 +39,13 @@ const TEACHER_STEPS: TourStep[] = [
     { title: 'Welcome, Teacher!', description: 'Your dashboard shows your assigned classes, upcoming lessons, and pending tasks at a glance.', icon: <Home className="w-8 h-8" />, highlight: 'Dashboard' },
     { title: 'Take Attendance', description: 'Mark attendance for your classes with one tap. Use QR codes for faster check-ins. Reports are auto-generated weekly.', icon: <CheckCircle2 className="w-8 h-8" />, highlight: 'Attendance' },
     { title: 'Gradebook & Results', description: 'Enter grades, view class analytics, and submit results for report card publishing. Auto-grading works for MCQ assignments.', icon: <BookOpen className="w-8 h-8" />, highlight: 'Gradebook' },
-    { title: 'Lesson Planner', description: 'Plan your lessons with AI-powered suggestions. Upload notes, create quizzes, and assign homework — all from one screen.', icon: <Calendar className="w-8 h-8" />, highlight: 'Lessons' },
+    { title: 'Lesson Planner', description: 'Plan your lessons, upload notes, create quizzes, and assign homework — all from one screen.', icon: <Calendar className="w-8 h-8" />, highlight: 'Lessons' },
     { title: 'Messages & Chat', description: 'Communicate directly with parents, admins, and other teachers. Join subject forums and collaborate on curriculum.', icon: <MessageSquare className="w-8 h-8" />, highlight: 'Communication' },
 ];
 
 const PARENT_STEPS: TourStep[] = [
     { title: 'Welcome, Parent!', description: 'See all your children\'s daily updates in one dashboard — attendance, homework, fees, and bus status.', icon: <Home className="w-8 h-8" />, highlight: 'Today\'s View' },
-    { title: 'Track Progress', description: 'View your child\'s grades, report cards, behavior logs, and attendance history. Get AI-powered insights and tips.', icon: <BarChart3 className="w-8 h-8" />, highlight: 'Progress' },
+    { title: 'Track Progress', description: 'View your child\'s grades, report cards, behavior logs, and attendance history.', icon: <BarChart3 className="w-8 h-8" />, highlight: 'Progress' },
     { title: 'Pay Fees Online', description: 'See each child\'s fee balance and the full list of charges. Payments are recorded by the school office.', icon: <CreditCard className="w-8 h-8" />, highlight: 'Fees' },
     { title: 'Stay Connected', description: 'Message teachers directly, receive notifications about your child, and RSVP to school events and PTA meetings.', icon: <MessageSquare className="w-8 h-8" />, highlight: 'Communication' },
     { title: 'Notifications', description: 'Customize your notification preferences — choose digest mode, instant alerts, or mute specific categories.', icon: <Bell className="w-8 h-8" />, highlight: 'Notifications' },
@@ -55,7 +55,7 @@ const STUDENT_STEPS: TourStep[] = [
     { title: 'Welcome, Student!', description: 'Your dashboard shows your upcoming assignments, recent grades, and daily schedule.', icon: <Home className="w-8 h-8" />, highlight: 'Dashboard' },
     { title: 'Assignments & Quizzes', description: 'View and submit assignments, take quizzes, and check your results. Computer-based tests open right in the app.', icon: <BookOpen className="w-8 h-8" />, highlight: 'Assignments' },
     { title: 'Rewards & Badges', description: 'Earn points for good behavior and academic achievements. Climb the leaderboard and unlock badges!', icon: <Sparkles className="w-8 h-8" />, highlight: 'Rewards' },
-    { title: 'Study Tools', description: 'Access learning resources, find study buddies, use the AI chat assistant, and join virtual classes.', icon: <Users className="w-8 h-8" />, highlight: 'Learning' },
+    { title: 'Study Tools', description: 'Access learning resources and study tools, and join virtual classes.', icon: <Users className="w-8 h-8" />, highlight: 'Learning' },
 ];
 
 interface OnboardingTourProps {

@@ -54,14 +54,6 @@ export const config = {
         || process.env.GOOGLE_API_KEY
         || process.env.GEMINI_API_KEY
         || '',
-    // Google Gemini key — the FALLBACK chat provider (see aiGateway.service.ts)
-    // and the game-question generator. Server-side only.
-    geminiApiKey: process.env.GEMINI_API_KEY || '',
-    // NVIDIA NIM key (build.nvidia.com) powering the app's AI features via the
-    // backend proxy. Server-side only — never exposed to the browser bundle.
-    nvidiaApiKey: process.env.NVIDIA_API_KEY || process.env.NVIDIA_NIM_API_KEY || '',
-    nvidiaBaseUrl: process.env.NVIDIA_BASE_URL || 'https://integrate.api.nvidia.com/v1',
-    nvidiaGenaiBaseUrl: process.env.NVIDIA_GENAI_BASE_URL || 'https://ai.api.nvidia.com/v1',
     // A public OAuth client ID, not a secret. The fallback is the same one the
     // frontend's Google button uses when VITE_GOOGLE_CLIENT_ID is unset
     // (components/auth/Login.tsx), so the token audience check still matches.

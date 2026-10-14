@@ -109,6 +109,9 @@ describe('StudentDashboard Visibility (Minimal)', () => {
              expect(screen.queryByText(/Your Focus/i)).toBeInTheDocument();
         }, { timeout: 10000 });
 
-        expect(screen.getByText(/AI Tools/i)).toBeInTheDocument();
+        // The "AI Tools" section was REMOVED with the rest of the AI features, so the
+        // dashboard must no longer show it. Asserting its absence keeps a future change
+        // from quietly putting an AI section back in front of students.
+        expect(screen.queryByText(/AI Tools/i)).not.toBeInTheDocument();
     });
 });
