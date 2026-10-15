@@ -35,15 +35,18 @@ const CommunityResourceDirectory: React.FC = () => {
     const [selectedResource, setSelectedResource] = useState<CommunityResource | null>(null);
     const [loading, setLoading] = useState(true);
 
+    // `name` stays the stable filter value (records are tagged with it); `labelKey`
+    // is what a parent reads. Translating `name` itself would silently stop the
+    // filter matching, so the two are kept apart on purpose.
     const categories = [
-        { name: 'All', icon: HelpCircle, color: 'bg-gray-500', textColor: 'text-gray-500' },
-        { name: 'Health', icon: Heart, color: 'bg-red-500', textColor: 'text-red-500' },
-        { name: 'Food Support', icon: Utensils, color: 'bg-orange-500', textColor: 'text-orange-500' },
-        { name: 'Vocational Training', icon: Briefcase, color: 'bg-blue-500', textColor: 'text-blue-500' },
-        { name: 'Legal Aid', icon: Scale, color: 'bg-purple-500', textColor: 'text-purple-500' },
-        { name: 'Youth Programs', icon: UsersIcon, color: 'bg-green-500', textColor: 'text-green-500' },
-        { name: 'Mental Health', icon: Brain, color: 'bg-pink-500', textColor: 'text-pink-500' },
-        { name: 'Emergency Shelter', icon: Home, color: 'bg-indigo-500', textColor: 'text-indigo-500' }
+        { name: 'All', labelKey: 'common.all', icon: HelpCircle, color: 'bg-gray-500', textColor: 'text-gray-500' },
+        { name: 'Health', labelKey: 'communityResourceDirectory.health', icon: Heart, color: 'bg-red-500', textColor: 'text-red-500' },
+        { name: 'Food Support', labelKey: 'communityResourceDirectory.foodSupport', icon: Utensils, color: 'bg-orange-500', textColor: 'text-orange-500' },
+        { name: 'Vocational Training', labelKey: 'communityResourceDirectory.vocationalTraining', icon: Briefcase, color: 'bg-blue-500', textColor: 'text-blue-500' },
+        { name: 'Legal Aid', labelKey: 'communityResourceDirectory.legalAid', icon: Scale, color: 'bg-purple-500', textColor: 'text-purple-500' },
+        { name: 'Youth Programs', labelKey: 'communityResourceDirectory.youthPrograms', icon: UsersIcon, color: 'bg-green-500', textColor: 'text-green-500' },
+        { name: 'Mental Health', labelKey: 'communityResourceDirectory.mentalHealth', icon: Brain, color: 'bg-pink-500', textColor: 'text-pink-500' },
+        { name: 'Emergency Shelter', labelKey: 'communityResourceDirectory.emergencyShelter', icon: Home, color: 'bg-indigo-500', textColor: 'text-indigo-500' }
     ];
 
     useEffect(() => {
@@ -146,7 +149,7 @@ const CommunityResourceDirectory: React.FC = () => {
                                     }`}
                             >
                                 <Icon className="h-6 w-6 mx-auto mb-2" />
-                                <p className="text-xs font-semibold text-center">{category.name}</p>
+                                <p className="text-xs font-semibold text-center">{t(category.labelKey)}</p>
                             </motion.button>
                         );
                     })}

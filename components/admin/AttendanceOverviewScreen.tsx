@@ -77,7 +77,7 @@ const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ nav
                         {[
                             { label: t('attendanceOverviewScreen.classes'), value: `${rows.length - outstanding.length}/${rows.length}`, tone: outstanding.length === 0 ? 'text-green-600' : 'text-amber-600' },
                             { label: t('attendanceOverviewScreen.recorded'), value: `${totalRecorded}/${totalExpected}`, tone: 'text-indigo-600' },
-                            { label: 'Absent', value: String(totalAbsent), tone: 'text-red-600' },
+                            { label: t('attendanceOverviewScreen.absent'), value: String(totalAbsent), tone: 'text-red-600' },
                         ].map(card => (
                             <div key={card.label} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-3 text-center">
                                 <p className={`text-lg font-bold ${card.tone}`}>{card.value}</p>

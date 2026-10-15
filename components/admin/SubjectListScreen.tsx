@@ -107,7 +107,7 @@ export const SubjectListScreen: React.FC = () => {
     };
 
     const handleDelete = async (subject: SubjectRecord) => {
-        if (!window.confirm(`Remove ${subject.name}? This cannot be undone.`)) return;
+        if (!window.confirm(t('subjectListScreen.removeSubjectConfirm', { name: subject.name }))) return;
 
         const result = await deleteSubject(subject.id);
         if (!result.success) {

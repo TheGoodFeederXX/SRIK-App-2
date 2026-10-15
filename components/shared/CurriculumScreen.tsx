@@ -21,9 +21,26 @@ const categoryStyles: { [key in CurriculumSubjectCategory]: string } = {
   'Pre-Primary Core': 'bg-fuchsia-100 text-fuchsia-800',
 };
 
+/**
+ * The category arrives from the database, so it cannot be translated where it is
+ * stored — a value a teacher typed would break the key. It is translated at the
+ * point of display instead, and the raw value still drives the colour.
+ */
+const CATEGORY_KEY: { [key in CurriculumSubjectCategory]: string } = {
+  'Core': 'curriculumCategory.core',
+  'Compulsory': 'curriculumCategory.compulsory',
+  'Elective': 'curriculumCategory.elective',
+  'Pre-Vocational Electives': 'curriculumCategory.preVocationalElectives',
+  'Other Electives': 'curriculumCategory.otherElectives',
+  'Foundational Play-Based Learning': 'curriculumCategory.foundationalPlayBasedLearning',
+  'Core Foundational': 'curriculumCategory.coreFoundational',
+  'Pre-Primary Core': 'curriculumCategory.prePrimaryCore',
+};
+
 const CategoryBadge: React.FC<{ category: CurriculumSubjectCategory }> = ({ category }) => {
+  const { t } = useTranslation();
   const style = categoryStyles[category] || 'bg-gray-100 text-gray-800';
-  return <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${style}`}>{category}</span>;
+  return <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${style}`}>{t(CATEGORY_KEY[category])}</span>;
 };
 
 interface CurriculumScreenProps {
@@ -113,7 +130,7 @@ const CurriculumScreen: React.FC<CurriculumScreenProps> = ({ level, department }
         <div className="text-center py-10 bg-white rounded-lg shadow-sm">
           <BookOpenIcon className="mx-auto h-12 w-12 text-gray-300" />
           <h3 className="mt-2 text-sm font-medium text-gray-900">{t('curriculumScreen.noCurriculumFound')}</h3>
-          <p className="mt-1 text-sm text-gray-500">Could not find subjects for the selected level ({level}).</p>
+          <p className="mt-1 text-sm text-gray-500">{t('curriculumScreen.couldNotFindSubjectsForLevel', { level })}</p>
         </div>
       ) : (
         categoryOrder.map((category, catIdx) => {

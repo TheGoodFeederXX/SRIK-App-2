@@ -228,7 +228,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
 
     /** Clears every duty for a teacher, keeping the old set as history. */
     const handleClear = async (teacher: TeacherRecord) => {
-        if (!window.confirm(`Remove all duties for ${teacher.fullName}? The previous duties are kept on record.`)) return;
+        if (!window.confirm(t('teacherAssignmentsScreen.removeAllDutiesConfirm', { name: teacher.fullName }))) return;
 
         const yearId = await getCurrentAcademicYearId();
         if (!yearId) {

@@ -54,8 +54,8 @@ export const AdminBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen
     const { t } = useTranslation();
   const navItems = [
     // Order set by the owner: Home, Fees, Analytics, Messages, Settings.
-    { id: 'home', icon: <HomeIcon />, label: 'Home' },
-    { id: 'feeManagement', shortId: 'feeManagementShort', icon: <DocumentTextIcon />, label: 'Fees' },
+    { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
+    { id: 'feeManagement', shortId: 'feeManagementShort', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.fees') },
     { id: 'analytics', icon: <AnalyticsIcon />, label: t('dashboardBottomNav.analytics') },
     { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
     { id: 'settings', icon: <SettingsIcon />, label: t('dashboardBottomNav.settings') },
@@ -72,9 +72,9 @@ export const AdminBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen
 export const TeacherBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
     const { t } = useTranslation();
   const navItems = [
-    { id: 'home', icon: <HomeIcon />, label: 'Home' },
+    { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
     { id: 'reports', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.reports') },
-    { id: 'forum', icon: <UserGroupIcon />, label: 'Forum' },
+    { id: 'forum', icon: <UserGroupIcon />, label: t('dashboardBottomNav.forum') },
     { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
     { id: 'settings', icon: <SettingsIcon />, label: t('dashboardBottomNav.settings') },
   ];
@@ -90,11 +90,11 @@ export const TeacherBottomNav = ({ activeScreen, setActiveScreen }: { activeScre
 export const ParentBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
     const { t } = useTranslation();
   const navItems = [
-    { id: 'home', icon: <HomeIcon />, label: 'Home' },
-    { id: 'fees', icon: <DocumentTextIcon />, label: 'Fees' },
+    { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
+    { id: 'fees', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.fees') },
     { id: 'reports', icon: <DocumentTextIcon />, label: t('dashboardBottomNav.reports') },
     { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
-    { id: 'more', icon: <ProfileIcon />, label: 'More' },
+    { id: 'more', icon: <ProfileIcon />, label: t('dashboardBottomNav.more') },
   ];
   return (
     <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">
@@ -108,9 +108,9 @@ export const ParentBottomNav = ({ activeScreen, setActiveScreen }: { activeScree
 export const StudentBottomNav = ({ activeScreen, setActiveScreen }: { activeScreen: string, setActiveScreen: (screen: string) => void }) => {
     const { t } = useTranslation();
   const navItems = [
-    { id: 'home', icon: <HomeIcon />, label: 'Home' },
+    { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
     { id: 'quizzes', icon: <ClockIcon />, label: t('dashboardBottomNav.quizzes') },
-    { id: 'games', icon: <GameControllerIcon />, label: 'Games' },
+    { id: 'games', icon: <GameControllerIcon />, label: t('dashboardBottomNav.games') },
     { id: 'messages', icon: <MessagesIcon />, label: t('dashboardBottomNav.messages') },
     { id: 'profile', icon: <ProfileIcon />, label: t('dashboardBottomNav.profile') },
   ];
@@ -128,10 +128,10 @@ export const ProprietorBottomNav = ({ activeScreen, setActiveScreen }: { activeS
   const navItems = [
     { id: 'overview', icon: <LayoutDashboard />, label: t('dashboardBottomNav.overview') },
     { id: 'finance', icon: <Wallet />, label: t('dashboardBottomNav.finance') },
-    { id: 'compliance', icon: <ShieldCheck />, label: 'Audit' },
+    { id: 'compliance', icon: <ShieldCheck />, label: t('common.audit') },
     { id: 'academic', icon: <BookOpen />, label: t('dashboardBottomNav.academic') },
     { id: 'stem', icon: <Beaker />, label: 'STEM' },
-    { id: 'people', icon: <Users />, label: 'People' },
+    { id: 'people', icon: <Users />, label: t('dashboardBottomNav.people') },
   ];
   return (
     <div className="w-full bg-white/95 backdrop-blur-sm border-t border-gray-100 p-2 flex justify-around items-center print:hidden">

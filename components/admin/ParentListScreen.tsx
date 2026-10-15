@@ -118,7 +118,7 @@ const GuardianListScreen: React.FC<GuardianListScreenProps> = () => {
     };
 
     const handleDelete = async (g: GuardianRecord) => {
-        if (!window.confirm(`Remove ${g.fullName}? This cannot be undone.`)) return;
+        if (!window.confirm(t('parentListScreen.removeGuardianConfirm', { name: g.fullName }))) return;
 
         const result = await deleteGuardian(g.id);
         if (!result.success) {

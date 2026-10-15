@@ -56,7 +56,7 @@ const SetPasswordScreen: React.FC<{ onDone?: () => void }> = ({ onDone }) => {
         try {
             const result = await updatePassword(password);
             if (!result.success) {
-                throw new Error(result.error || 'Could not update the password.');
+                throw new Error(result.error || t('setPasswordScreen.couldNotUpdateThePassword'));
             }
 
             // No flag to clear here — see the note above. Signing out after the
@@ -69,7 +69,7 @@ const SetPasswordScreen: React.FC<{ onDone?: () => void }> = ({ onDone }) => {
             else window.location.href = '/';
         } catch (err: any) {
             console.error('Set password error:', err);
-            setError(err.message || 'Could not update the password.');
+            setError(err.message || t('setPasswordScreen.couldNotUpdateThePassword'));
         } finally {
             setIsSaving(false);
         }

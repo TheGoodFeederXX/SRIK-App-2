@@ -76,4 +76,27 @@ describe('translation keys used by screens actually resolve', () => {
         const onlyEn = [...EN_KEYS].filter((k) => !MS_KEYS.has(k));
         expect({ onlyMs, onlyEn }).toEqual({ onlyMs: [], onlyEn: [] });
     });
+
+    it('a value passed where a KEY belongs is not actually an English sentence', () => {
+        // A KEY THAT IS SECRETLY A SENTENCE renders the sentence itself, so the screen looks
+        // translated and is not. `UserRolesScreen` carried
+        // `descriptionKey: 'A parent or guardian. Sees only their own children.'` — the guard
+        // above passes it, because `t()` of a missing key returns the key, and nobody noticed
+        // the guardian card was still English on a Malay screen.
+        //
+        // A real key has no spaces at all. That single rule is unambiguous and cannot mistake
+        // a legitimate key for a sentence.
+        const offenders: string[] = [];
+        for (const file of SCREENS) {
+            let src: string;
+            try { src = readFileSync(resolve(ROOT, file), 'utf8'); } catch { continue; }
+            const code = src.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/[^\n]*/g, '$1');
+            // `xKey: '…'` / `xKey = '…'` — a value that claims to be a key.
+            for (const m of code.matchAll(/\b\w*[Kk]ey\s*[:=]\s*['"]([^'"]+)['"]/g)) {
+                const value = m[1];
+                if (/\s/.test(value)) offenders.push(`${file}: ${value}`);
+            }
+        }
+        expect(offenders).toEqual([]);
+    });
 });

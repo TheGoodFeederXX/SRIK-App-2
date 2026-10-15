@@ -43,9 +43,9 @@ const SidebarItem = ({ icon, label, isActive, onClick, activeColor }: SidebarIte
 export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
     const { t } = useTranslation();
     const navItems = [
-        { id: 'home', icon: <HomeIcon />, label: 'Home' },
+        { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
         { id: 'quizzes', icon: <ClockIcon />, label: t('dashboardSidebar.quizzes') },
-        { id: 'games', icon: <GameControllerIcon />, label: 'Games' },
+        { id: 'games', icon: <GameControllerIcon />, label: t('dashboardBottomNav.games') },
         { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
         { id: 'profile', icon: <ProfileIcon />, label: t('dashboardSidebar.profile') },
     ];
@@ -150,10 +150,10 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
     const { t } = useTranslation();
     const { classes: teacherClasses } = useTeacherClasses();
     const navItems = [
-        { id: 'home', icon: <HomeIcon />, label: 'Home' },
+        { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
         { id: 'lessonNotes', icon: <DocumentTextIcon />, label: t('dashboardSidebar.lessonNotes') },
         { id: 'reports', icon: <ReportIcon />, label: t('dashboardSidebar.reports') },
-        { id: 'forum', icon: <UserGroupIcon />, label: 'Forum' },
+        { id: 'forum', icon: <UserGroupIcon />, label: t('dashboardBottomNav.forum') },
         { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
         { id: 'settings', icon: <SettingsIcon />, label: t('dashboardSidebar.settings') },
     ];
@@ -206,11 +206,11 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
 export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolName, logoUrl }: { activeScreen: string, setActiveScreen: (screen: string) => void, onLogout?: () => void, schoolName?: string, logoUrl?: string }) => {
     const { t } = useTranslation();
     const navItems = [
-        { id: 'home', icon: <HomeIcon />, label: 'Home' },
+        { id: 'home', icon: <HomeIcon />, label: t('dashboardBottomNav.home') },
         { id: 'fees', icon: <DocumentTextIcon />, label: t('dashboardSidebar.feeStatus') },
         { id: 'reports', icon: <ReportIcon />, label: t('dashboardSidebar.reports') },
         { id: 'messages', icon: <MessagesIcon />, label: t('dashboardSidebar.messages') },
-        { id: 'more', icon: <SettingsIcon />, label: 'More' },
+        { id: 'more', icon: <SettingsIcon />, label: t('dashboardBottomNav.more') },
     ];
 
     return (

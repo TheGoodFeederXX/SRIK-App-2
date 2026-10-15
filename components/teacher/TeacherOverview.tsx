@@ -306,7 +306,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
         { label: t('teacherOverview.attendance'), icon: <TeacherAttendanceIcon className="h-7 w-7" />, action: () => navigateTo('selectClassForAttendance', t('teacherOverview.selectClass'), { teacherId, schoolId }) },
         { label: t('teacherOverview.myAttendance'), icon: <CheckCircleIcon className="h-7 w-7" />, action: () => navigateTo('teacherSelfAttendance', t('teacherOverview.myAttendance'), { teacherId }) },
         { label: t('teacherOverview.gradebook'), icon: <CalculatorIcon className="h-7 w-7" />, action: () => navigateTo('classGradebook', t('teacherOverview.classGradebook'), { teacherId }) },
-        { label: "Exams", icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('examManagement', t('teacherOverview.manageExams'), { schoolId, teacherId, branchId: currentBranchId }) },
+        { label: t('teacherOverview.exams'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('examManagement', t('teacherOverview.manageExams'), { schoolId, teacherId, branchId: currentBranchId }) },
         { label: t('teacherOverview.assessments'), icon: <ClipboardListIcon className="h-7 w-7" />, action: () => navigateTo('assessmentsHub', t('teacherOverview.assessmentsQuizzes'), { teacherId, branchId: currentBranchId }) },
         { label: t('teacherOverview.aiPlanner'), icon: <SparklesIcon className="h-7 w-7" />, action: () => navigateTo('lessonPlanner', t('teacherOverview.aiLessonPlanner'), { teacherId }) },
         { label: t('teacherOverview.lessonNotes'), icon: <BookOpenIcon className="h-7 w-7" />, action: () => navigateTo('lessonNotesUpload', t('teacherOverview.uploadLessonNotes'), { teacherId }) },

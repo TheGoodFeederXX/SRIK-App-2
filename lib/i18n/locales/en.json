@@ -146,7 +146,9 @@
     "exampleLocation": "e.g. Building A, Room 101",
     "exampleSubject": "e.g. Mathematics",
     "push": "Push",
-    "live": "Live"
+    "live": "Live",
+    "audit": "Audit",
+    "all": "All"
   },
   "auth": {
     "signIn": "Sign In",
@@ -856,7 +858,8 @@
     "answerAsManyMathProblemsAsYouCanBeforeTheTimer": "Answer as many math problems as you can before the timer runs out!",
     "challengeAFriend": "Challenge a Friend",
     "mathSprintChallenge": "Math Sprint Challenge!",
-    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Sharing is not supported on your browser. You can copy the link manually!"
+    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Sharing is not supported on your browser. You can copy the link manually!",
+    "shareChallengeText": "Think you're faster at math? Challenge me in Math Sprint on the Smart School App!"
   },
   "mathSprintResultsScreen": {
     "gameOver": "Game Over!",
@@ -1462,7 +1465,8 @@
     "timetableDashboard": "Timetable Dashboard",
     "teacher": "Teacher",
     "submissions": "Submissions",
-    "viewFullTimetable": "View Full Timetable"
+    "viewFullTimetable": "View Full Timetable",
+    "exams": "Exams"
   },
   "teacherProfileEnhanced": {
     "myProfile": "My Profile"
@@ -1620,7 +1624,8 @@
     "pleaseEnterTheStudent": "Please enter the student's admission number.",
     "pleaseEnterTheChild": "Please enter the child's admission number.",
     "pleaseEnterTheStudentIdCode": "Please enter the student's ID code.",
-    "pleaseEnterTheChildsDateOfBirth": "Please enter the child's date of birth to confirm the link."
+    "pleaseEnterTheChildsDateOfBirth": "Please enter the child's date of birth to confirm the link.",
+    "removeLinkConfirm": "Are you sure you want to remove the link to {{name}}? You will lose access to their dashboard data."
   },
   "myAnnouncementsScreen": {
     "pengumuman": "Announcements",
@@ -1925,7 +1930,8 @@
     "busRoute": "Bus Route",
     "schoolCalendar": "School Calendar",
     "noticeboard": "Noticeboard",
-    "bookAppointment": "Book Appointment"
+    "bookAppointment": "Book Appointment",
+    "meet": "Meet"
   },
   "volunteerSignup": {
     "volunteerSignup": "Volunteer Signup"
@@ -2041,7 +2047,14 @@
     "searchByNameLocationOrService": "Search by name, location, or service...",
     "failedToLoadResources": "Failed to load resources",
     "viewDetails": "View Details",
-    "communityResourceDirectory": "🗺️ Community Resource Directory"
+    "communityResourceDirectory": "🗺️ Community Resource Directory",
+    "health": "Health",
+    "foodSupport": "Food Support",
+    "vocationalTraining": "Vocational Training",
+    "legalAid": "Legal Aid",
+    "youthPrograms": "Youth Programs",
+    "mentalHealth": "Mental Health",
+    "emergencyShelter": "Emergency Shelter"
   },
   "conferenceScheduling": {
     "penjadualanPerjumpaan": "Meeting Scheduling"
@@ -2051,7 +2064,9 @@
   },
   "curriculumScreen": {
     "loadingCurriculum": "Loading curriculum...",
-    "noCurriculumFound": "No Curriculum Found"
+    "noCurriculumFound": "No Curriculum Found",
+    "couldNotFindSubjectsForLevel": "Could not find subjects for the selected level ({{level}}).",
+    "errorFetchingCurriculumSubjects": "Error fetching curriculum subjects:"
   },
   "dataUsageSettings": {
     "lowDataMode": "Low data mode",
@@ -2109,7 +2124,8 @@
     "classes": "Classes",
     "quizzes": "Quizzes",
     "noticeboard": "Noticeboard",
-    "submissions": "Submissions"
+    "submissions": "Submissions",
+    "searchInDashboard": "Search in {{dashboard}} Dashboard..."
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Learning Hub Resource Viewer"
@@ -2191,7 +2207,11 @@
     "emergencyAlertsMustAlwaysBeInstant": "Emergency alerts must always be instant!",
     "failedToSavePreferences": "Failed to save preferences",
     "saving": "Saving...",
-    "savePreferences": "Save Preferences"
+    "savePreferences": "Save Preferences",
+    "digest": "Digest",
+    "inApp": "In-app",
+    "email": "Email",
+    "push": "Push"
   },
   "notificationsScreen": {
     "notifications": "Notifications"
@@ -2456,7 +2476,8 @@
     "thisWillOnlyTakeAMoment": "This will only take a moment.",
     "authenticationIsNotConfiguredYet": "Authentication is not configured yet.",
     "thisLinkIsInvalidOrHasExpired": "This link is invalid or has expired. Please request a new one.",
-    "verificationFailed": "Verification Failed"
+    "verificationFailed": "Verification Failed",
+    "theLinkMayBeExpiredOrInvalid": "The link may be expired or invalid."
   },
   "inviteAcceptScreen": {
     "thisWillOnlyTakeAMoment": "This will only take a moment.",
@@ -2466,7 +2487,8 @@
     "verifyingYourInvitation": "Verifying your invitation...",
     "theInvitationLinkIsIncomplete": "The invitation link is incomplete. Please ask the office for a new one.",
     "welcomeYourAccountIsReady": "Welcome! Your account is ready.",
-    "couldNotProcessInvitation": "Could not process invitation"
+    "couldNotProcessInvitation": "Could not process invitation",
+    "theLinkMayBeExpiredOrAlreadyUsed": "The link may be expired or already used."
   },
   "login": {
     "forgotPassword": "Forgot Password",
@@ -2481,7 +2503,10 @@
     "openLinkToChoosePassword": "Open it to choose a new password.",
     "resetLinkSentTo": "We have sent a password reset link to",
     "emailRequired": "Email is required",
-    "pleaseEnterBothEmailAndPassword": "Please enter both email and password."
+    "pleaseEnterBothEmailAndPassword": "Please enter both email and password.",
+    "failedToSendResetCode": "Failed to send reset code",
+    "failedToSendResetLink": "Failed to send reset link",
+    "invalidCredentials": "Invalid credentials"
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Verifying credentials..."
@@ -2522,7 +2547,13 @@
     "profile": "Profile",
     "overview": "Overview",
     "finance": "Finance",
-    "academic": "Academic"
+    "academic": "Academic",
+    "home": "Home",
+    "fees": "Fees",
+    "forum": "Forum",
+    "more": "More",
+    "games": "Games",
+    "people": "People"
   },
   "dashboardSidebar": {
     "students": "Students",
@@ -2672,7 +2703,8 @@
     "usedOnReportCardsAndReceiptsMustBeUnique": "Used on report cards and receipts. Must be unique.",
     "mykadOrBirthCertificateNumberIfAvailable": "MyKad or birth certificate number, if available.",
     "leaveBlankIfThisIsTheirFirstSchool": "Leave blank if this is their first school.",
-    "pleaseEnterTheAdmissionNumberAndTheStudent": "Please enter the admission number and the student's name."
+    "pleaseEnterTheAdmissionNumberAndTheStudent": "Please enter the admission number and the student's name.",
+    "studentSavedBut": "Student saved, but {{warning}}."
   },
   "addTeacherScreen": {
     "notStated": "Not stated",
@@ -2731,7 +2763,10 @@
     "students": "Students",
     "teachers": "Teachers",
     "safetyHealth": "Safety & Health",
-    "userRoles": "User Roles"
+    "userRoles": "User Roles",
+    "system": "System",
+    "marks": "Marks",
+    "roles": "Roles"
   },
   "adminDashboard": {
     "databaseConnectionError": "Database Connection Error",
@@ -2785,7 +2820,8 @@
     "chooseAClassToViewStudentReportCards": "Choose a class to view student report cards.",
     "noClassesFound": "No classes found.",
     "loadingLiveData": "Loading live data...",
-    "reports": "Reports"
+    "reports": "Reports",
+    "viewReports": "View reports {{className}} - {{subject}}"
   },
   "adminSelectTermForReport": {
     "noStudentSelected": "No student selected.",
@@ -2980,7 +3016,8 @@
     "noClassesWithStudents": "No Classes With Students",
     "classes": "Classes",
     "recorded": "Recorded",
-    "loadingAttendance": "Loading attendance..."
+    "loadingAttendance": "Loading attendance...",
+    "absent": "Absent"
   },
   "auditLogScreen": {
     "noLogsFoundAuditSystemActive": "No logs found. Audit system active.",
@@ -3067,7 +3104,8 @@
     "failedToChangePassword": "Failed to change password.",
     "pleaseFillInBothFields": "Please fill in both fields.",
     "theTwoPasswordsDoNotMatch": "The two passwords do not match.",
-    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters."
+    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters.",
+    "couldNotUpdateThePassword": "Could not update the password."
   },
   "classAttendanceDetailScreen": {
     "noStudentsFoundForThisClass": "No students found for this class.",
@@ -3081,7 +3119,8 @@
     "pleaseChooseAYearLevelFrom1To6": "Please choose a year level from 1 to 6.",
     "pleaseEnterAClassName": "Please enter a class name.",
     "couldNotSaveTheClass": "Could not save the class.",
-    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again."
+    "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
+    "classSavedButSubjectsNot": "Class saved, but subjects not: {{error}}"
   },
   "classListScreen": {
     "noClassesYet": "No Classes Yet",
@@ -3093,7 +3132,8 @@
     "couldNotLoadTheStudents": "Could not load the students.",
     "addClass": "Add Class",
     "addFirstClassHint": "Add the school's first class to begin placing students.",
-    "addFirstClass": "Add First Class"
+    "addFirstClass": "Add First Class",
+    "removeClassConfirm": "Remove {{name}}? This cannot be undone."
   },
   "classVerificationScreen": {
     "classVerification": "Class Verification"
@@ -3514,7 +3554,8 @@
     "couldNotRemoveTheGuardian": "Could not remove the guardian.",
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
     "searchPlaceholder": "Search by guardian or child's name, phone, or email",
-    "notLinkedYetHint": "Not linked to any student yet. Add them from the student's record."
+    "notLinkedYetHint": "Not linked to any student yet. Add them from the student's record.",
+    "removeGuardianConfirm": "Remove {{name}}? This cannot be undone."
   },
   "pastStudentsScreen": {
     "pastStudents": "Past Students"
@@ -3818,7 +3859,8 @@
     "taughtIn": "Taught in",
     "eGBahasaMelayu": "e.g., Bahasa Melayu",
     "addSubjectHint": "Add the subjects the school teaches, then choose them per class.",
-    "addFirstSubject": "Add First Subject"
+    "addFirstSubject": "Add First Subject",
+    "removeSubjectConfirm": "Remove {{name}}? This cannot be undone."
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Substitute Coverage"
@@ -3894,7 +3936,8 @@
     "editDutiesFor": "Edit duties for",
     "clearDutiesFor": "Clear duties for",
     "noClassTeachersYet": "No class teachers yet.",
-    "noSubjectTeachersYet": "No subject teachers yet."
+    "noSubjectTeachersYet": "No subject teachers yet.",
+    "removeAllDutiesConfirm": "Remove all duties for {{name}}? The previous duties are kept on record."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Attendance Approvals",
@@ -3944,7 +3987,8 @@
     "general": "General",
     "statusChangedTo": "Status changed to",
     "failedToUpdateStatus": "Failed to update status: ",
-    "failedToDeleteTeacher": "Failed to delete teacher:"
+    "failedToDeleteTeacher": "Failed to delete teacher:",
+    "deleteTeacherConfirm": "Are you sure you want to delete the account for {{name}}? This action cannot be undone."
   },
   "teacherListScreen": {
     "teacherManagement": "Teacher Management",
@@ -4035,7 +4079,11 @@
     "schoolContextMissing": "School context missing.",
     "saving": "Saving...",
     "saveChanges": "Save Changes",
-    "failedToSave": "Failed to save:"
+    "failedToSave": "Failed to save:",
+    "administrator": "Administrator",
+    "teacher": "Teacher",
+    "guardian": "Guardian",
+    "aParentOrGuardianSeesOnlyTheirOwnChildren": "A parent or guardian. Sees only their own children."
   },
   "userSeeder": {
     "userSeeder": "User Seeder"
@@ -4076,7 +4124,9 @@
     "systemUpdateRequired": "System Update Required",
     "newUpdateAvailable": "New Update Available",
     "updating": "Updating…",
-    "updateNow": "Update Now"
+    "updateNow": "Update Now",
+    "versionNowAvailable": "Version {{version}} now available. Please update to stay in sync.",
+    "aNewVersionIsReady": "A new version with the latest improvements is ready."
   },
   "dashboardLayout": {
     "dashboard": "Dashboard"
@@ -4201,7 +4251,8 @@
     "uploadFile": "Upload File"
   },
   "cbtManagementScreen": {
-    "uploadQuestionBank": "Upload Question Bank"
+    "uploadQuestionBank": "Upload Question Bank",
+    "failedToProcessUpload": "Failed to process upload."
   },
   "editTimesModal": {
     "appliesToAllWeekdays": "Applies to all weekdays (the default).",
@@ -4236,7 +4287,8 @@
   "setPasswordScreen": {
     "pleaseFillInBothFields": "Please fill in both fields.",
     "theTwoPasswordsDoNotMatch": "The two passwords do not match.",
-    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters."
+    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters.",
+    "couldNotUpdateThePassword": "Could not update the password."
   },
   "dataErrors": {
     "couldNotLoadClasses": "Could not load classes",
@@ -4298,5 +4350,15 @@
   "apiLegacy": {
     "yourScoreCouldNotBeSaved": "Your score could not be saved{{detail}}. Check your connection and finish the game again.",
     "profileImageMustBeLessThan2mb": "Profile image must be less than 2MB after compression"
+  },
+  "curriculumCategory": {
+    "core": "Core",
+    "compulsory": "Compulsory",
+    "elective": "Elective",
+    "preVocationalElectives": "Pre-Vocational Electives",
+    "otherElectives": "Other Electives",
+    "foundationalPlayBasedLearning": "Foundational Play-Based Learning",
+    "coreFoundational": "Core Foundational",
+    "prePrimaryCore": "Pre-Primary Core"
   }
 }

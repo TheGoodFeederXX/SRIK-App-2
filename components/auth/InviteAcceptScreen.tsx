@@ -119,7 +119,7 @@ const InviteAcceptScreen: React.FC = () => {
                 console.error('[InviteAcceptScreen]', err);
                 setStatus('error');
                 setMessage(t('inviteAcceptScreen.couldNotProcessInvitation'));
-                setErrorDetails(err.message || 'The link may be expired or already used.');
+                setErrorDetails(err.message || t('inviteAcceptScreen.theLinkMayBeExpiredOrAlreadyUsed'));
             }
         };
 

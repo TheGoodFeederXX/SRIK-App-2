@@ -93,7 +93,7 @@ const AuthCallback: React.FC = () => {
                 console.error('AuthCallback error:', err);
                 setStatus('error');
                 setMessage(t('authCallback.verificationFailed'));
-                setErrorDetails(err.message || 'The link may be expired or invalid.');
+                setErrorDetails(err.message || t('authCallback.theLinkMayBeExpiredOrInvalid'));
             }
         };
 

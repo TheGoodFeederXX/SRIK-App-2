@@ -51,7 +51,7 @@ const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) =
                 { label: t('adminActionsScreen.attendance'), icon: <CalendarCheck className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('attendanceOverview', t('adminActionsScreen.attendance')), bg: "bg-blue-50" },
                 { label: t('adminActionsScreen.classes'), icon: <GraduationCapIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('classList', t('adminActionsScreen.classes')), bg: "bg-blue-50" },
                 { label: t('adminActionsScreen.subjects'), icon: <BookOpen className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('subjectList', t('adminActionsScreen.subjects')), bg: "bg-blue-50" },
-                { label: "Marks", icon: <ClipboardList className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('markEntry', 'Marks'), bg: "bg-blue-50" },
+                { label: t('adminActionsScreen.marks'), icon: <ClipboardList className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('markEntry', t('adminActionsScreen.marks')), bg: "bg-blue-50" },
                 { label: t('adminActionsScreen.reportCards'), icon: <FileText className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('reportCard', t('adminActionsScreen.reportCards')), bg: "bg-blue-50" },
                 { label: t('adminActionsScreen.timetable'), icon: <Calendar className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('timetable', t('adminActionsScreen.timetable')), bg: "bg-blue-50" },
                 { label: t('adminActionsScreen.teacherAssignments'), icon: <UsersCogIcon className="w-5 h-5 text-blue-600" />, onClick: () => navigateTo('teacherAssignments', t('adminActionsScreen.teacherAssignments')), bg: "bg-blue-50" },
@@ -80,10 +80,10 @@ const AdminActionsScreen: React.FC<AdminActionsScreenProps> = ({ navigateTo }) =
             ]
         },
         {
-            title: "System",
+            title: t('adminActionsScreen.system'),
             items: [
                 { label: t('adminActionsScreen.auditTrail'), icon: <ShieldCheck className="w-5 h-5 text-slate-600" />, onClick: () => navigateTo('auditTrail', t('adminActionsScreen.auditTrail')), bg: "bg-slate-50" },
-                { label: "Roles", icon: <Shield className="w-5 h-5 text-emerald-600" />, onClick: () => navigateTo('userRoles', t('adminActionsScreen.userRoles')), bg: "bg-emerald-50" },
+                { label: t('adminActionsScreen.roles'), icon: <Shield className="w-5 h-5 text-emerald-600" />, onClick: () => navigateTo('userRoles', t('adminActionsScreen.userRoles')), bg: "bg-emerald-50" },
                 { label: t('adminActionsScreen.settings'), icon: <Settings className="w-5 h-5 text-gray-600" />, onClick: () => navigateTo('systemSettings', t('adminActionsScreen.settings')), bg: "bg-gray-50" },
             ]
         }

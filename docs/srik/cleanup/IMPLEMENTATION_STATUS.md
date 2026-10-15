@@ -239,6 +239,63 @@ Pengiraan babak ini: `tsc` 0, `tsc` backend 0, **531 ujian lulus** (74 fail),
 `vite build` keluar 0 (308 cebisan JS), pariti locale **3484 = 3484**,
 `supabase/`, `AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
 
+### 9b. Terjemahan babak ketiga: teks yang lari daripada pengimbas (0.8.36)
+
+Pemilik mahu buruan "lebih dalam". Pengimbas terdahulu hanya mengenal teks JSX
+kasar. Lapisan baharu mencari tiga bentuk yang lari daripadanya: kunci objek
+(`label:`/`title:`/`name:`), literal templat, dan teks paparan yang dibina dalam
+kod. Untuk mesej ralat sistem luar, pemilik memilih **ayat mudah di hadapan,
+butiran teknikal di belakang**.
+
+**Penemuan terbesar: menu navigasi.** `DashboardBottomNav.tsx` dan
+`DashboardSidebar.tsx` — bar bawah dan sisi yang ada pada **hampir setiap
+skrin** — menyimpan 17 label sebagai teks keras Inggeris: "Home", "Fees",
+"Forum", "More", "Games", "People", "Audit". Hanya sebahagian jiran mereka sudah
+memakai `t()`, jadi fail itu kelihatan diterjemah. Seorang pengguna Melayu
+melihat menu Inggeris sepanjang masa.
+
+**Penemuan kedua: kunci yang sebenarnya ayat.** `UserRolesScreen` menyimpan
+`descriptionKey: 'A parent or guardian. Sees only their own children.'` — ayat
+Inggeris penuh diletakkan di tempat yang sepatutnya mengandungi kunci. Kerana
+`t()` bagi kunci yang tidak wujud memulangkan kunci itu sendiri, kad penjaga
+memaparkan ayat Inggeris itu pada skrin Melayu, dan kelihatan seperti sudah
+diterjemah. Ini kelas pepijat yang **tiada pengawal lain dapat melihat**: `tsc`
+gembira, skrin berjalan, dan ujian lama lulus.
+
+Pengawal baharu ditambah dalam `screen-keys-resolve.test.ts`: sebarang nilai
+yang diberikan kepada apa-apa `*Key` **tidak boleh mengandungi ruang**. Kunci
+sebenar tidak pernah ada ruang. Disahkan songsang: mengembalikan ayat itu
+menjadikan ujian gagal dengan nama fail dan ayat tepat; dipulihkan, lulus.
+
+**Juga dibetulkan:**
+
+- Layar kurikulum (`CurriculumScreen`) — mesej kosong
+  "Could not find subjects for the selected level (…)" dipaparkan kepada
+  **setiap** murid, kerana `getCurriculum` hanya mengenal tahap Nigeria
+  ("Primary 1", "JSS 2", "SSS 1") dan sekolah ini menghantar "Grade 4", jadi ia
+  sentiasa memulangkan senarai kosong.
+- Lencana kategori kurikulum ("Core", "Compulsory", "Elective") — data dari
+  pangkalan data, jadi diterjemah semasa dipaparkan, bukan semasa disimpan.
+- 11 dialog pengesahan tindakan merbahaya ("Remove …? This cannot be undone.",
+  "Remove all duties for …?", "Are you sure you want to delete …?") — teks yang
+  dibaca sebelum sesuatu dipadam.
+- Label tindakan pantas admin dan guru ("Marks", "System", "Roles", "Exams",
+  "Absent").
+- Kategori direktori sumber ibu bapa. Nilai `name` **dikekalkan** sebagai penapis
+  dan `labelKey` ditambah untuk paparan: menterjemah `name` sendiri akan
+  mematikan penapisan secara senyap.
+- Ayat kongsi Math Sprint, dan mesej kemas kini versi.
+
+**Kesilapan saya sendiri.** Satu skrip penggantian global memusnahkan lapan fail
+— seluruh huruf `t` bertukar menjadi `(`. `tsc` melaporkan 5130 ralat serta-merta
+dan fail dipulihkan daripada git. Semua suntingan seterusnya menggunakan pembantu
+yang **menolak** melainkan padanan tepat satu; ia menolak tiga suntingan yang
+salah teka, bukan merosakkan fail.
+
+Pengiraan babak ini: `tsc` 0, `tsc` backend 0, **532 ujian lulus** (74 fail),
+`vite build` keluar 0, pariti locale **3544 = 3544**, `supabase/`,
+`AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
+
 ## 10. Penyingkiran AI penuh (0.8.33)
 
 Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.

@@ -17,7 +17,7 @@ const MathSprintLobbyScreen: React.FC<MathSprintLobbyScreenProps> = ({ navigateT
         if (navigator.share) {
             navigator.share({
                 title: t('mathSprintLobbyScreen.mathSprintChallenge'),
-                text: "Think you're faster at math? Challenge me in Math Sprint on the Smart School App!",
+                text: t('mathSprintLobbyScreen.shareChallengeText'),
             }).catch((error) => console.log('Error sharing:', error));
         } else {
             toast(t('mathSprintLobbyScreen.sharingIsNotSupportedOnYourBrowserYouCanCopyTh'), { icon: '📋' });

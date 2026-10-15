@@ -269,7 +269,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
             // A partial failure is reported rather than hidden: the student
             // exists, and the owner needs to know what is still missing.
             if (result.warning) {
-                toast(`Student saved, but ${result.warning}.`, { icon: '⚠️' });
+                toast(t('addStudentScreen.studentSavedBut', { warning: result.warning }), { icon: '⚠️' });
             } else {
                 toast.success(`${fullName.trim()} has been registered.`);
             }

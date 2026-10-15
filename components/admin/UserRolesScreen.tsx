@@ -51,23 +51,23 @@ const PermissionToggle = ({ enabled, onToggle, disabled = false }: { enabled: bo
  * saving it could never have worked even with a live server: there was nothing to
  * save it TO. The permission codes shown now are the ones `has_permission` reads.
  */
-const ROLE_LABELS: { code: RoleCode; name: string; descriptionKey: string; icon: React.FC<any> }[] = [
+const ROLE_LABELS: { code: RoleCode; nameKey: string; descriptionKey: string; icon: React.FC<any> }[] = [
     {
         code: 'ADMIN',
-        name: 'Administrator',
+        nameKey: 'userRolesScreen.administrator',
         descriptionKey: 'userRolesScreen.theOfficeFullAccessAndTheOnlyRoleThatCannotBeR',
         icon: UsersIcon,
     },
     {
         code: 'TEACHER',
-        name: 'Teacher',
+        nameKey: 'userRolesScreen.teacher',
         descriptionKey: 'userRolesScreen.seesTheirOwnClassesAndRecordsAttendanceAndMark',
         icon: BookOpenIcon,
     },
     {
         code: 'GUARDIAN',
-        name: 'Guardian',
-        descriptionKey: 'A parent or guardian. Sees only their own children.',
+        nameKey: 'userRolesScreen.guardian',
+        descriptionKey: 'userRolesScreen.aParentOrGuardianSeesOnlyTheirOwnChildren',
         icon: UsersIcon,
     },
 ];
@@ -211,7 +211,7 @@ const UserRolesScreen: React.FC = () => {
                                     <IconComponent className="h-8 w-8" />
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-lg text-gray-800">{role.name}</h3>
+                                    <h3 className="font-bold text-lg text-gray-800">{t(role.nameKey)}</h3>
                                     <p className="text-sm text-gray-500">{t(role.descriptionKey)}</p>
                                 </div>
                             </div>

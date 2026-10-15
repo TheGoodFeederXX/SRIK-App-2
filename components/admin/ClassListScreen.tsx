@@ -111,7 +111,7 @@ const ClassListScreen: React.FC<ClassListScreenProps> = ({ navigateTo }) => {
     const handleDeleteClass = async (cls: ClassRecord) => {
         // The confirmation names the class, so a wrong click is obvious before
         // anything is removed.
-        if (!window.confirm(`Remove ${cls.displayName}? This cannot be undone.`)) return;
+        if (!window.confirm(t('classListScreen.removeClassConfirm', { name: cls.displayName }))) return;
 
         const result = await deleteClass(cls.id);
         if (!result.success) {

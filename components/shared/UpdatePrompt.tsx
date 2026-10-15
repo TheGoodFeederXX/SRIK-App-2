@@ -244,8 +244,8 @@ export default function UpdatePrompt({ forced = false, targetVersion }: UpdatePr
                                 }}
                             >
                                 {forced
-                                    ? `Version ${targetVersion} is now available. Please update to stay in sync.`
-                                    : `A new version${displayVersion ? ` (v${displayVersion})` : ''} with the latest improvements is ready.`
+                                    ? t('updatePrompt.versionNowAvailable', { version: targetVersion })
+                                    : `${t('updatePrompt.aNewVersionIsReady')}${displayVersion ? ` (v${displayVersion})` : ''}`
                                 }
                             </p>
                         </div>

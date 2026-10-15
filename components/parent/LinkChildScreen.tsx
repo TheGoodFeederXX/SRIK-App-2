@@ -318,7 +318,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                 onClose={() => setShowUnlinkModal(false)}
                 onConfirm={confirmUnlink}
                 title={t('linkChildScreen.removeChildLink')}
-                message={`Are you sure you want to remove the link to ${childToUnlink?.name}? You will lose access to their dashboard data.`}
+                message={t('linkChildScreen.removeLinkConfirm', { name: childToUnlink?.name })}
                 confirmText={t('linkChildScreen.removeLink')}
                 isDanger={true}
             />

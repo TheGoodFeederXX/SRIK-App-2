@@ -209,7 +209,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
 
         } catch (err: any) {
             console.error("Upload error:", err);
-            setErrorMsg(err.message || "Failed to process upload.");
+            setErrorMsg(err.message || t('cbtManagementScreen.failedToProcessUpload'));
             toast.error(err.message || t('cBTManagementScreen.uploadFailed'));
         } finally {
             setIsUploading(false);

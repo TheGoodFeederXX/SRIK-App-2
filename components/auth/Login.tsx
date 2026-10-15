@@ -61,7 +61,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
               await forgotPassword(email);
               setView('reset-password');
             } catch (err: any) {
-              setError(err.message || 'Failed to send reset code');
+              setError(err.message || t('login.failedToSendResetCode'));
             } finally {
               setIsLoading(false);
             }
@@ -139,7 +139,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
                 try {
                   await forgotPassword(email);
                 } catch (err: any) {
-                  setError(err.message || 'Failed to send reset link');
+                  setError(err.message || t('login.failedToSendResetLink'));
                 } finally {
                   setIsLoading(false);
                 }
@@ -184,7 +184,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
         // instead of showing a generic failure. Supabase confirms email via a
         // LINK, not a typed code, so there is no code-entry screen to route to:
         // the user is told to check their inbox and the message stays on screen.
-        throw new Error(result.error || 'Invalid credentials');
+        throw new Error(result.error || t('login.invalidCredentials'));
       }
 
       // The Supabase session is already persisted. AuthContext restores it and
@@ -193,7 +193,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
       // settles, which is why there is no navigate() call.
     } catch (err: any) {
       console.error("Login Error", err);
-      setError(err.message || 'Invalid credentials');
+      setError(err.message || t('login.invalidCredentials'));
     } finally {
       setIsLoading(false);
     }

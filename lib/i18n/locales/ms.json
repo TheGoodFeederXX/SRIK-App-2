@@ -146,7 +146,9 @@
     "exampleLocation": "cth. Blok A, Bilik 101",
     "exampleSubject": "cth. Matematik",
     "push": "Push",
-    "live": "Langgan"
+    "live": "Langgan",
+    "audit": "Audit",
+    "all": "Semua"
   },
   "auth": {
     "signIn": "Log Masuk",
@@ -856,7 +858,8 @@
     "answerAsManyMathProblemsAsYouCanBeforeTheTimer": "Jawab sebanyak mungkin soalan matematik sebelum masa tamat!",
     "challengeAFriend": "Cabara Rakan",
     "mathSprintChallenge": "Cabaran Sprint Matematik!",
-    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Perkongsian tidak disokong pada pelayar anda. Anda boleh salin pautan secara manual!"
+    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Perkongsian tidak disokong pada pelayar anda. Anda boleh salin pautan secara manual!",
+    "shareChallengeText": "Rasa anda lebih pantas mengira? Cabar saya dalam Math Sprint di aplikasi sekolah!"
   },
   "mathSprintResultsScreen": {
     "gameOver": "Permainan Tamat!",
@@ -1462,7 +1465,8 @@
     "timetableDashboard": "Papan Pemuka Jadual Waktu",
     "teacher": "Guru",
     "submissions": "Penyerahan",
-    "viewFullTimetable": "Lihat Jadual Penuh"
+    "viewFullTimetable": "Lihat Jadual Penuh",
+    "exams": "Peperiksaan"
   },
   "teacherProfileEnhanced": {
     "myProfile": "Profil Saya"
@@ -1620,7 +1624,8 @@
     "pleaseEnterTheStudent": "Sila masukkan nombor pendaftaran murid.",
     "pleaseEnterTheChild": "Sila masukkan nombor pendaftaran anak.",
     "pleaseEnterTheStudentIdCode": "Sila masukkan kod ID murid.",
-    "pleaseEnterTheChildsDateOfBirth": "Sila masukkan tarikh lahir anak untuk mengesahkan pautan."
+    "pleaseEnterTheChildsDateOfBirth": "Sila masukkan tarikh lahir anak untuk mengesahkan pautan.",
+    "removeLinkConfirm": "Adakah anda pasti mahu membuang pautan kepada {{name}}? Anda akan hilang akses kepada data papan pemuka mereka."
   },
   "myAnnouncementsScreen": {
     "pengumuman": "Pengumuman",
@@ -1925,7 +1930,8 @@
     "busRoute": "Laluan Bas",
     "schoolCalendar": "Kalendar Sekolah",
     "noticeboard": "Papan Notis",
-    "bookAppointment": "Tempah Temu Janji"
+    "bookAppointment": "Tempah Temu Janji",
+    "meet": "Bertemu"
   },
   "volunteerSignup": {
     "volunteerSignup": "Pendaftaran Sukarelawan"
@@ -2041,7 +2047,14 @@
     "searchByNameLocationOrService": "Cari mengikut nama, lokasi, atau perkhidmatan...",
     "failedToLoadResources": "Gagal memuatkan sumber",
     "viewDetails": "Lihat Butiran",
-    "communityResourceDirectory": "🗺️ Direktori Sumber Komuniti"
+    "communityResourceDirectory": "🗺️ Direktori Sumber Komuniti",
+    "health": "Kesihatan",
+    "foodSupport": "Bantuan Makanan",
+    "vocationalTraining": "Latihan Vokasional",
+    "legalAid": "Bantuan Guaman",
+    "youthPrograms": "Program Belia",
+    "mentalHealth": "Kesihatan Mental",
+    "emergencyShelter": "Tempat Perlindungan Kecemasan"
   },
   "conferenceScheduling": {
     "penjadualanPerjumpaan": "Penjadualan Perjumpaan"
@@ -2051,7 +2064,9 @@
   },
   "curriculumScreen": {
     "loadingCurriculum": "Memuatkan kurikulum...",
-    "noCurriculumFound": "Tiada Kurikulum Dijumpai"
+    "noCurriculumFound": "Tiada Kurikulum Dijumpai",
+    "couldNotFindSubjectsForLevel": "Tidak menemui mata pelajaran untuk tahap yang dipilih ({{level}}).",
+    "errorFetchingCurriculumSubjects": "Ralat semasa mengambil mata pelajaran kurikulum:"
   },
   "dataUsageSettings": {
     "lowDataMode": "Mod data rendah",
@@ -2109,7 +2124,8 @@
     "classes": "Kelas",
     "quizzes": "Kuiz",
     "noticeboard": "Papan Notis",
-    "submissions": "Penyerahan"
+    "submissions": "Penyerahan",
+    "searchInDashboard": "Cari dalam papan pemuka {{dashboard}}..."
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Paparan Sumber Hab Pembelajaran"
@@ -2191,7 +2207,11 @@
     "emergencyAlertsMustAlwaysBeInstant": "Makluman kecemasan mesti sentiasa segera!",
     "failedToSavePreferences": "Gagal menyimpan keutamaan",
     "saving": "Menyimpan...",
-    "savePreferences": "Simpan Keutamaan"
+    "savePreferences": "Simpan Keutamaan",
+    "digest": "Ringkasan",
+    "inApp": "Dalam Aplikasi",
+    "email": "E-mel",
+    "push": "Push"
   },
   "notificationsScreen": {
     "notifications": "Pemberitahuan"
@@ -2456,7 +2476,8 @@
     "thisWillOnlyTakeAMoment": "Ini hanya mengambil masa sebentar.",
     "authenticationIsNotConfiguredYet": "Pengesahan belum dikonfigurasikan lagi.",
     "thisLinkIsInvalidOrHasExpired": "Pautan ini tidak sah atau sudah tamat tempoh. Sila minta pautan baharu.",
-    "verificationFailed": "Pengesahan gagal"
+    "verificationFailed": "Pengesahan gagal",
+    "theLinkMayBeExpiredOrInvalid": "Pautan itu mungkin sudah tamat tempoh atau tidak sah."
   },
   "inviteAcceptScreen": {
     "thisWillOnlyTakeAMoment": "Ini hanya mengambil masa sebentar.",
@@ -2466,7 +2487,8 @@
     "verifyingYourInvitation": "Mengesahkan jemputan anda...",
     "theInvitationLinkIsIncomplete": "Pautan jemputan tidak lengkap. Sila minta pautan baharu daripada pejabat.",
     "welcomeYourAccountIsReady": "Selamat datang! Akaun anda sudah sedia.",
-    "couldNotProcessInvitation": "Tidak dapat memproses jemputan"
+    "couldNotProcessInvitation": "Tidak dapat memproses jemputan",
+    "theLinkMayBeExpiredOrAlreadyUsed": "Pautan itu mungkin sudah tamat tempoh atau telah digunakan."
   },
   "login": {
     "forgotPassword": "Lupa Kata Laluan",
@@ -2481,7 +2503,10 @@
     "openLinkToChoosePassword": "Buka pautan itu untuk memilih kata laluan baharu.",
     "resetLinkSentTo": "Kami telah menghantar pautan set semula kata laluan kepada",
     "emailRequired": "E-mel diperlukan",
-    "pleaseEnterBothEmailAndPassword": "Sila masukkan e-mel dan kata laluan."
+    "pleaseEnterBothEmailAndPassword": "Sila masukkan e-mel dan kata laluan.",
+    "failedToSendResetCode": "Gagal menghantar kod tetapan semula",
+    "failedToSendResetLink": "Gagal menghantar pautan tetapan semula",
+    "invalidCredentials": "Kelayakan tidak sah"
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Mengesahkan bukti kelayakan..."
@@ -2522,7 +2547,13 @@
     "profile": "Profil",
     "overview": "Gambaran Keseluruhan",
     "finance": "Kewangan",
-    "academic": "Akademik"
+    "academic": "Akademik",
+    "home": "Utama",
+    "fees": "Yuran",
+    "forum": "Forum",
+    "more": "Lagi",
+    "games": "Permainan",
+    "people": "Orang"
   },
   "dashboardSidebar": {
     "students": "Murid",
@@ -2672,7 +2703,8 @@
     "usedOnReportCardsAndReceiptsMustBeUnique": "Digunakan pada kad laporan dan resit. Mesti unik.",
     "mykadOrBirthCertificateNumberIfAvailable": "Nombor MyKad atau sijil lahir, jika ada.",
     "leaveBlankIfThisIsTheirFirstSchool": "Biarkan kosong jika ini sekolah pertama mereka.",
-    "pleaseEnterTheAdmissionNumberAndTheStudent": "Sila masukkan nombor pendaftaran dan nama murid."
+    "pleaseEnterTheAdmissionNumberAndTheStudent": "Sila masukkan nombor pendaftaran dan nama murid.",
+    "studentSavedBut": "Murid disimpan, tetapi {{warning}}."
   },
   "addTeacherScreen": {
     "notStated": "Tidak dinyatakan",
@@ -2731,7 +2763,10 @@
     "students": "Murid",
     "teachers": "Guru",
     "safetyHealth": "Keselamatan & Kesihatan",
-    "userRoles": "Peranan Pengguna"
+    "userRoles": "Peranan Pengguna",
+    "system": "Sistem",
+    "marks": "Markah",
+    "roles": "Peranan"
   },
   "adminDashboard": {
     "databaseConnectionError": "Ralat Sambungan Pangkalan Data",
@@ -2785,7 +2820,8 @@
     "chooseAClassToViewStudentReportCards": "Pilih kelas untuk melihat kad laporan murid.",
     "noClassesFound": "Tiada kelas dijumpai.",
     "loadingLiveData": "Memuatkan data langsung...",
-    "reports": "Laporan"
+    "reports": "Laporan",
+    "viewReports": "Lihat laporan {{className}} - {{subject}}"
   },
   "adminSelectTermForReport": {
     "noStudentSelected": "Tiada murid dipilih.",
@@ -2980,7 +3016,8 @@
     "noClassesWithStudents": "Tiada Kelas Dengan Murid",
     "classes": "Kelas",
     "recorded": "Direkodkan",
-    "loadingAttendance": "Memuatkan kehadiran..."
+    "loadingAttendance": "Memuatkan kehadiran...",
+    "absent": "Tidak Hadir"
   },
   "auditLogScreen": {
     "noLogsFoundAuditSystemActive": "Tiada log dijumpai. Sistem audit aktif.",
@@ -3067,7 +3104,8 @@
     "failedToChangePassword": "Gagal menukar kata laluan.",
     "pleaseFillInBothFields": "Sila isi kedua-dua ruang.",
     "theTwoPasswordsDoNotMatch": "Dua kata laluan itu tidak sepadan.",
-    "passwordMustBeAtLeast12Characters": "Kata laluan mesti sekurang-kurangnya 12 aksara."
+    "passwordMustBeAtLeast12Characters": "Kata laluan mesti sekurang-kurangnya 12 aksara.",
+    "couldNotUpdateThePassword": "Tidak dapat mengemas kini kata laluan."
   },
   "classAttendanceDetailScreen": {
     "noStudentsFoundForThisClass": "Tiada murid dijumpai untuk kelas ini.",
@@ -3081,7 +3119,8 @@
     "pleaseChooseAYearLevelFrom1To6": "Sila pilih peringkat tahun dari 1 hingga 6.",
     "pleaseEnterAClassName": "Sila masukkan nama kelas.",
     "couldNotSaveTheClass": "Tidak dapat menyimpan kelas.",
-    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi."
+    "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
+    "classSavedButSubjectsNot": "Kelas disimpan, tetapi mata pelajaran gagal: {{error}}"
   },
   "classListScreen": {
     "noClassesYet": "Belum Ada Kelas",
@@ -3093,7 +3132,8 @@
     "couldNotLoadTheStudents": "Tidak dapat memuatkan murid.",
     "addClass": "Tambah Kelas",
     "addFirstClassHint": "Tambah kelas pertama sekolah untuk mula menempatkan pelajar.",
-    "addFirstClass": "Tambah Kelas Pertama"
+    "addFirstClass": "Tambah Kelas Pertama",
+    "removeClassConfirm": "Buang {{name}}? Tindakan ini tidak boleh dibatalkan."
   },
   "classVerificationScreen": {
     "classVerification": "Pengesahan Kelas"
@@ -3514,7 +3554,8 @@
     "couldNotRemoveTheGuardian": "Tidak dapat membuang penjaga.",
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
     "searchPlaceholder": "Cari mengikut nama penjaga atau anak, telefon, atau emel",
-    "notLinkedYetHint": "Belum dipautkan kepada mana-mana pelajar. Tambah dari rekod pelajar."
+    "notLinkedYetHint": "Belum dipautkan kepada mana-mana pelajar. Tambah dari rekod pelajar.",
+    "removeGuardianConfirm": "Buang {{name}}? Tindakan ini tidak boleh dibatalkan."
   },
   "pastStudentsScreen": {
     "pastStudents": "Murid Lepas"
@@ -3818,7 +3859,8 @@
     "taughtIn": "Diajar dalam",
     "eGBahasaMelayu": "cth., Bahasa Melayu",
     "addSubjectHint": "Tambah mata pelajaran yang diajar sekolah, kemudian pilih mengikut kelas.",
-    "addFirstSubject": "Tambah Mata Pelajaran Pertama"
+    "addFirstSubject": "Tambah Mata Pelajaran Pertama",
+    "removeSubjectConfirm": "Buang {{name}}? Tindakan ini tidak boleh dibatalkan."
   },
   "substituteCoverageScreen": {
     "substituteCoverage": "Liputan Ganti"
@@ -3894,7 +3936,8 @@
     "editDutiesFor": "Sunting tugas untuk",
     "clearDutiesFor": "Kosongkan tugas untuk",
     "noClassTeachersYet": "Belum ada guru kelas.",
-    "noSubjectTeachersYet": "Belum ada guru mata pelajaran."
+    "noSubjectTeachersYet": "Belum ada guru mata pelajaran.",
+    "removeAllDutiesConfirm": "Buang semua tugas untuk {{name}}? Tugas sebelum ini kekal dalam rekod."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Kelulusan Kehadiran",
@@ -3944,7 +3987,8 @@
     "general": "Umum",
     "statusChangedTo": "Status ditukar kepada",
     "failedToUpdateStatus": "Gagal mengemas kini status: ",
-    "failedToDeleteTeacher": "Gagal memadam guru:"
+    "failedToDeleteTeacher": "Gagal memadam guru:",
+    "deleteTeacherConfirm": "Adakah anda pasti mahu memadam akaun {{name}}? Tindakan ini tidak boleh dibatalkan."
   },
   "teacherListScreen": {
     "teacherManagement": "Pengurusan Guru",
@@ -4035,7 +4079,11 @@
     "schoolContextMissing": "Konteks sekolah hilang.",
     "saving": "Menyimpan...",
     "saveChanges": "Simpan Perubahan",
-    "failedToSave": "Gagal menyimpan:"
+    "failedToSave": "Gagal menyimpan:",
+    "administrator": "Pentadbir",
+    "teacher": "Guru",
+    "guardian": "Penjaga",
+    "aParentOrGuardianSeesOnlyTheirOwnChildren": "Ibu bapa atau penjaga. Hanya melihat anak mereka sendiri."
   },
   "userSeeder": {
     "userSeeder": "Penyemai Pengguna"
@@ -4076,7 +4124,9 @@
     "systemUpdateRequired": "Kemas Kini Sistem Diperlukan",
     "newUpdateAvailable": "Kemas Kini Baharu Tersedia",
     "updating": "Mengemas kini…",
-    "updateNow": "Kemas Kini Sekarang"
+    "updateNow": "Kemas Kini Sekarang",
+    "versionNowAvailable": "Versi {{version}} kini tersedia. Sila kemas kini supaya kekal segerak.",
+    "aNewVersionIsReady": "Versi baharu dengan penambahbaikan terkini sudah sedia."
   },
   "dashboardLayout": {
     "dashboard": "Papan Pemuka"
@@ -4201,7 +4251,8 @@
     "uploadFile": "Muat Naik Fail"
   },
   "cbtManagementScreen": {
-    "uploadQuestionBank": "Muat Naik Bank Soalan"
+    "uploadQuestionBank": "Muat Naik Bank Soalan",
+    "failedToProcessUpload": "Gagal memproses muat naik."
   },
   "editTimesModal": {
     "appliesToAllWeekdays": "Terpakai untuk semua hari bekerja (lalai).",
@@ -4236,7 +4287,8 @@
   "setPasswordScreen": {
     "pleaseFillInBothFields": "Sila isi kedua-dua ruang.",
     "theTwoPasswordsDoNotMatch": "Dua kata laluan itu tidak sepadan.",
-    "passwordMustBeAtLeast12Characters": "Kata laluan mesti sekurang-kurangnya 12 aksara."
+    "passwordMustBeAtLeast12Characters": "Kata laluan mesti sekurang-kurangnya 12 aksara.",
+    "couldNotUpdateThePassword": "Tidak dapat mengemas kini kata laluan."
   },
   "dataErrors": {
     "couldNotLoadClasses": "Tidak dapat memuatkan kelas",
@@ -4298,5 +4350,15 @@
   "apiLegacy": {
     "yourScoreCouldNotBeSaved": "Markah anda tidak dapat disimpan{{detail}}. Semak sambungan anda dan tamatkan permainan sekali lagi.",
     "profileImageMustBeLessThan2mb": "Gambar profil mesti kurang daripada 2MB selepas pemampatan"
+  },
+  "curriculumCategory": {
+    "core": "Teras",
+    "compulsory": "Wajib",
+    "elective": "Pilihan",
+    "preVocationalElectives": "Pilihan Pra-Vokasional",
+    "otherElectives": "Pilihan Lain",
+    "foundationalPlayBasedLearning": "Pembelajaran Asas Berasaskan Permainan",
+    "coreFoundational": "Asas Teras",
+    "prePrimaryCore": "Teras Pra-Sekolah"
   }
 }

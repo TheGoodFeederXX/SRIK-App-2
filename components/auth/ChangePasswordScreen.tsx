@@ -50,7 +50,7 @@ const ChangePasswordScreen: React.FC = () => {
             // 1. Change the credential itself — Supabase owns the password.
             const changed = await updatePassword(password);
             if (!changed.success) {
-                throw new Error(changed.error || 'Could not update the password.');
+                throw new Error(changed.error || t('changePasswordScreen.couldNotUpdateThePassword'));
             }
 
             // 2. Only now mark the account as no longer temporary. If this step
@@ -67,7 +67,7 @@ const ChangePasswordScreen: React.FC = () => {
             await refreshUser();
         } catch (err: any) {
             console.error('Change password error:', err);
-            setError(err.message || 'Could not update the password.');
+            setError(err.message || t('changePasswordScreen.couldNotUpdateThePassword'));
         } finally {
             setIsSaving(false);
         }

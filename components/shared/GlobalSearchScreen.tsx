@@ -229,7 +229,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                         type="search"
                         value={searchTerm}
                         onChange={e => setSearchTerm(e.target.value)}
-                        placeholder={`Search in ${dashboardType} Dashboard...`}
+                        placeholder={t('globalSearchScreen.searchInDashboard', { dashboard: dashboardType })}
                         autoFocus
                         className={`w-full pl-10 pr-10 py-3 text-lg bg-white border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent ${isSearching ? 'opacity-70' : ''}`}
                     />
