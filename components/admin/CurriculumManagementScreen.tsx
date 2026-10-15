@@ -13,23 +13,16 @@ import CenteredLoader from '../ui/CenteredLoader';
 // 3. Student.curriculum_type   — the actual track each individual student is enrolled in
 // (Teachers' "Mark by Curriculum Track" attendance screen filters students by #3.)
 
-// These are the school's own codes and labels. They used to be the Nigerian
-// curriculum codes (NIGERIAN / "Nigerian (NERDC)") — NERDC is Nigeria's
-// curriculum body, and SRIK is accredited for KSSR, so the school was listed
-// as offering a curriculum it does not teach.
-const SCHOOL_CURRICULA = [
-    { code: 'KSSR', label: 'KSSR' },
-    { code: 'BRITISH', labelKey: 'curriculumManagementScreen.britishUKNC' },
-];
-
-const BRANCH_FOCUS_OPTIONS = [
-    { value: 'kssr', label: 'KSSR' },
-    { value: 'british', labelKey: 'curriculumManagementScreen.britishUKNC' },
-    { value: 'american', labelKey: 'curriculumManagementScreen.americanCommonCore' },
-    { value: 'dual', labelKey: 'curriculumManagementScreen.dualCurriculum' },
-];
-
-const STUDENT_TRACK_OPTIONS = ['KSSR', 'British', 'Both'];
+// THE SCHOOL'S CURRICULUM IS KSSR. NOT A LIST OF ONE.
+//
+// `SCHOOL_CURRICULA` used to offer 'KSSR' and 'BRITISH'. `BRANCH_FOCUS_OPTIONS` —
+// which was never read anywhere, so it offered nothing while still claiming the
+// school could be 'american' — listed four. `STUDENT_TRACK_OPTIONS` let an admin
+// mark an individual child as following the British curriculum or a dual stream.
+// The school is accredited for KSSR, follows the Malaysian primary syllabus, and
+// has no dual stream, so each of those was a way to record a curriculum that is
+// not taught. They are gone rather than hidden.
+const SCHOOL_CURRICULUM = 'KSSR';
 
 interface CurriculumManagementScreenProps {
     navigateTo?: (view: string, title: string, props?: any) => void;
@@ -46,7 +39,6 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
     const [students, setStudents] = useState<any[]>([]);
     const [studentsLoading, setStudentsLoading] = useState(true);
     const [studentSearch, setStudentSearch] = useState('');
-    const [savingStudentId, setSavingStudentId] = useState<string | null>(null);
 
     const [loading, setLoading] = useState(true);
 
@@ -108,22 +100,10 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
         }
     };
 
-    const changeStudentTrack = async (studentId: string, track: string) => {
-        setSavingStudentId(studentId);
-        const prev = students;
-        setStudents(cur => cur.map(s => s.id === studentId ? { ...s, curriculum_type: track } : s));
-        try {
-            // SRIK has no per-student curriculum field, and this used to call
-            // `api.updateStudent` on a server that is not deployed — so the change
-            // looked saved, reverted on the next load, and nothing said why.
-            // Putting the row back is the honest behaviour: the screen must not
-            // show a value the school does not store.
-            setStudents(prev);
-            toast.error(t('curriculumManagementScreen.perStudentCurriculumIsNotRecordedForThisSchool'));
-        } finally {
-            setSavingStudentId(null);
-        }
-    };
+    // `changeStudentTrack` stood here. It wrote a per-student curriculum the school does
+    // not store: the change appeared to save, reverted on the next load, and the teacher
+    // was told nothing. With the track selector gone there is no per-student curriculum
+    // to change, so the handler went with it rather than being left to rot unwired.
 
     const filteredStudents = students.filter(s =>
         (s.full_name || s.name || '').toLowerCase().includes(studentSearch.toLowerCase()) ||
@@ -141,17 +121,13 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                     <h2 className="font-bold text-lg text-gray-800">{t('curriculumManagementScreen.schoolCurricula')}</h2>
                 </div>
                 <p className="text-sm text-gray-500 mb-4">{t('curriculumManagementScreen.whichCurriculaThisSchoolIsAccreditedToOfferOve')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {SCHOOL_CURRICULA.map(c => (
-                        <button
-                            key={c.code}
-                            onClick={() => toggleSchoolCurriculum(c.code)}
-                            className={`flex items-center justify-between p-4 rounded-xl border-2 text-left transition-colors ${schoolCurricula.includes(c.code) ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-gray-300'}`}
-                        >
-                            <span className="font-semibold text-gray-800">{c.label}</span>
-                            {schoolCurricula.includes(c.code) && <CheckCircle2 className="w-5 h-5 text-indigo-600" />}
-                        </button>
-                    ))}
+                {/* Was a grid of toggle buttons for KSSR / British. The school has one
+                    curriculum, so the toggle let an admin switch off the only syllabus
+                    the school teaches. The value stays where the controls were, in the
+                    same card, so the layout does not move. */}
+                <div className="flex items-center justify-between p-4 rounded-xl border-2 border-indigo-500 bg-indigo-50">
+                    <span className="font-semibold text-gray-800">{SCHOOL_CURRICULUM}</span>
+                    <CheckCircle2 className="w-5 h-5 text-indigo-600" />
                 </div>
                 <div className="mt-4 flex justify-end">
                     <motion.button
@@ -169,7 +145,7 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
             <div className="bg-white rounded-xl shadow-sm p-5">
                 <h2 className="font-bold text-lg text-gray-800 mb-1">{t('curriculumManagementScreen.studentCurriculumTracks')}</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                    Which curriculum each student is enrolled in — this is what teachers and parents see.
+                    {t('curriculumManagementScreen.whichCurriculumEachStudentIsEnrolledInThisIsWhatTeachersAndParentsSee')}
                 </p>
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
@@ -193,16 +169,15 @@ const CurriculumManagementScreen: React.FC<CurriculumManagementScreenProps> = ()
                                         {s.grade ? `Grade ${s.grade}${s.section ? ` ${s.section}` : ''}` : s.admission_number}
                                     </p>
                                 </div>
-                                <select
-                                    value={s.curriculum_type || 'KSSR'}
-                                    disabled={savingStudentId === s.id}
-                                    onChange={(e) => changeStudentTrack(s.id, e.target.value)}
-                                    className="text-sm border border-gray-300 rounded-lg px-2 py-1.5 bg-white flex-shrink-0 disabled:opacity-50"
-                                >
-                                    {STUDENT_TRACK_OPTIONS.map(t => (
-                                        <option key={t} value={t}>{t}</option>
-                                    ))}
-                                </select>
+                                {/* Was a dropdown offering KSSR / British / Both per
+                                    child. The school follows KSSR, so the only honest
+                                    thing this row can say is KSSR; the three-way
+                                    choice existed to record a track the school does
+                                    not store (see `changeStudentTrack`, which has to
+                                    undo the change and explain why). */}
+                                <span className="text-sm border border-gray-200 rounded-lg px-2 py-1.5 bg-gray-50 text-gray-700 flex-shrink-0">
+                                    {t('curriculumManagementScreen.kssr')}
+                                </span>
                             </div>
                         ))}
                         {filteredStudents.length === 0 && (

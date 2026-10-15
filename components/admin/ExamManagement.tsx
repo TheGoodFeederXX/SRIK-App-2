@@ -89,7 +89,9 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                 // is their mock. This school has no such exams, so the filter
                 // matched nothing; KSSR school exams are the national track.
                 if (selectedCurriculum === 'KSSR') return ['KSSR', 'PEPERIKSAAN', 'MOCK'].includes(exam.type);
-                if (selectedCurriculum === 'British') return ['IGCSE', 'CHECKPOINT', 'MOCK-BRI'].includes(exam.type);
+                // A 'British' branch stood here, matching IGCSE/CHECKPOINT exam types.
+                // The school sits neither Cambridge nor IGCSE, and the selector no longer
+                // offers that track, so the branch could only ever match nothing.
                 return true;
             });
         }
@@ -225,7 +227,7 @@ const ExamManagement: React.FC<ExamManagementProps> = ({ navigateTo, forceUpdate
                     >
                         <option value="all">{t('examManagement.allTracks')}</option>
                         <option value="KSSR">KSSR</option>
-                        <option value="British">{t('examManagement.britishCambridgeIGCSE')}</option>
+
                     </select>
                 </div>
             </div>

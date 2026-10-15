@@ -316,16 +316,18 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                     </div>
                     <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 md:col-span-2">
                         <h3 className="font-bold text-gray-900 mb-2">{t('personnelFileView.qualifications')}</h3>
-                        {infoRow('Subject Specialty', (teacher.subject_specialty || []).join(', '))}
-                        {infoRow('Curriculum Eligibility', (teacher.curriculum_eligibility || []).join(', '))}
-                        {infoRow('Degree Certificate', teacher.degree_certificate ? <a className="text-indigo-600 underline" href={teacher.degree_certificate} target="_blank" rel="noopener noreferrer">{t('personnelFileView.view')}</a> : '—')}
+                        {infoRow(t('personnelFileView.subjectSpecialty'), (teacher.subject_specialty || []).join(', '))}
+                        {infoRow(t('personnelFileView.curriculumEligibility'), (teacher.curriculum_eligibility || []).join(', '))}
+                        {infoRow(t('personnelFileView.degreeCertificate'), teacher.degree_certificate ? <a className="text-indigo-600 underline" href={teacher.degree_certificate} target="_blank" rel="noopener noreferrer">{t('personnelFileView.view')}</a> : '—')}
                         {/* The certificate named was the teaching licence of a
                             foreign country. A Malaysian teacher does not hold
                             one, so the file listed every teacher as missing a
                             foreign licence; the document is kept under the
                             neutral Malay term. */}
                         {infoRow('Sijil Perguruan', teacher.trcn_certificate ? <a className="text-indigo-600 underline" href={teacher.trcn_certificate} target="_blank" rel="noopener noreferrer">{t('personnelFileView.view')}</a> : '—')}
-                        {infoRow('British Qualification', teacher.british_qualification)}
+                        {/* 'British Qualification' stood here. No type declares the field and nothing
+                            ever set it, so the row always rendered blank — a qualification
+                            line that named a foreign country and carried no information. */}
                     </div>
                 </div>
             )}

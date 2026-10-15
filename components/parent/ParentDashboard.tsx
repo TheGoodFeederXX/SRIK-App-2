@@ -37,10 +37,9 @@ import { getHomeworkStatus } from '../../utils/homeworkUtils';
 import { realtimeService } from '../../services/RealtimeService';
 import { useDashboardRouting } from '../../hooks/useDashboardRouting';
 
-const formatCurriculumLabel = (curriculumType?: string) =>
-    // A parent sees which track their child is on. The dual label used to say
-    // "Nigerian & British"; the national track here is KSSR.
-    curriculumType === 'Both' ? 'KSSR & British Curriculum' : `${curriculumType} Curriculum`;
+// `formatCurriculumLabel` stood here, building "KSSR & British Curriculum" from a
+// stored `curriculum_type`. Nothing called it, and it would have printed a curriculum
+// the school does not teach, so it was removed rather than corrected.
 import { syncEngine } from '../../lib/syncEngine';
 import { useAutoSync } from '../../hooks/useAutoSync';
 

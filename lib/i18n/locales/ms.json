@@ -148,7 +148,8 @@
     "push": "Push",
     "live": "Langgan",
     "audit": "Audit",
-    "all": "Semua"
+    "all": "Semua",
+    "year": "Tahun"
   },
   "auth": {
     "signIn": "Log Masuk",
@@ -741,7 +742,8 @@
     "studentID": "ID Murid:",
     "downloadTranscript": "Muat Turun Transkrip",
     "shareProfile": "Kongsi Profil",
-    "uploadNew": "Muat Naik Baharu"
+    "uploadNew": "Muat Naik Baharu",
+    "kssrCurriculum": "Kurikulum KSSR"
   },
   "studyBuddy": {
     "uploadImage": "Muat naik imej",
@@ -2319,7 +2321,10 @@
     "failedToSubmitResponse": "Gagal menghantar balasan",
     "classTeacher": "Guru Kelas —",
     "eGUnauthorizedAbsenceOn10July": "cth. Ketidakhadiran tanpa kebenaran pada 10 Julai",
-    "examplePromotion": "cth. Dinaikkan pangkat sebagai Ketua Panitia"
+    "examplePromotion": "cth. Dinaikkan pangkat sebagai Ketua Panitia",
+    "subjectSpecialty": "Pengkhususan Subjek",
+    "curriculumEligibility": "Kelayakan Kurikulum",
+    "degreeCertificate": "Sijil Ijazah"
   },
   "projectBoardScreen": {
     "projectBoard": "Papan Projek"
@@ -2644,8 +2649,6 @@
     "configureAdmissionFormsRequiredDocumentsAndApp": "Konfigurasikan borang kemasukan, dokumen diperlukan, dan status permohonan di sini.",
     "primaryCurriculumType": "Jenis Kurikulum Utama",
     "kurikulumKSSR": "Kurikulum KSSR",
-    "britishCurriculum": "Kurikulum British",
-    "bothDualCurriculum": "Kedua-dua (Kurikulum Dwibahasa)",
     "schoolCalendar": "Kalendar Sekolah",
     "gradingScales": "Skala Gred",
     "enrollmentSettings": "Tetapan Pendaftaran",
@@ -2656,7 +2659,8 @@
     "schoolContextMissing": "Konteks sekolah hilang.",
     "saving": "Menyimpan...",
     "saveChanges": "Simpan Perubahan",
-    "failedToSaveSettings": "Gagal menyimpan tetapan"
+    "failedToSaveSettings": "Gagal menyimpan tetapan",
+    "thisSettingDeterminesTheDefaultSubjectListsAndTermStructuresUsedThroughoutTheSystem": "Tetapan ini menentukan senarai mata pelajaran lalai dan struktur penggal yang digunakan di seluruh sistem."
   },
   "addExamScreen": {
     "examType": "Jenis Peperiksaan",
@@ -3175,9 +3179,6 @@
     "whichCurriculaThisSchoolIsAccreditedToOfferOve": "Kurikulum mana yang sekolah ini diakreditasi untuk menawarkan secara keseluruhan.",
     "studentCurriculumTracks": "Trek Kurikulum Murid",
     "noStudentsFound": "Tiada murid dijumpai.",
-    "britishUKNC": "British (UK NC)",
-    "americanCommonCore": "Amerika (Common Core)",
-    "dualCurriculum": "Kurikulum Dwibahasa",
     "searchStudentsByNameOrAdmissionNumber": "Cari murid mengikut nama atau nombor pendaftaran...",
     "loadingCurriculumSettings": "Memuatkan tetapan kurikulum...",
     "loadingStudents": "Memuatkan murid...",
@@ -3186,7 +3187,9 @@
     "failedToSaveSchoolCurricula": "Gagal menyimpan kurikulum sekolah.",
     "perStudentCurriculumIsNotRecordedForThisSchool": "Kurikulum per-murid belum direkodkan untuk sekolah ini.",
     "saving": "Menyimpan...",
-    "saveSchoolCurricula": "Simpan Kurikulum Sekolah"
+    "saveSchoolCurricula": "Simpan Kurikulum Sekolah",
+    "kssr": "KSSR",
+    "whichCurriculumEachStudentIsEnrolledInThisIsWhatTeachersAndParentsSee": "Kurikulum mana setiap murid didaftarkan — inilah yang dilihat guru dan ibu bapa."
   },
   "curriculumSettingsScreen": {
     "curriculumSettings": "Tetapan Kurikulum"
@@ -3239,7 +3242,6 @@
     "allTeachers": "Semua Guru",
     "curriculumTrack": "Trek Kurikulum",
     "allTracks": "Semua Trek",
-    "britishCambridgeIGCSE": "British (Cambridge/IGCSE)",
     "published": "Diterbitkan",
     "pending": "Menunggu",
     "publish": "Terbitkan",
@@ -3749,7 +3751,6 @@
     "homeAddress": "Alamat Rumah",
     "uploadRecords": "Muat Naik Rekod",
     "birthCertPreviousResults": "Sijil Lahir, Keputusan Terdahulu",
-    "british": "British",
     "parentGuardianName": "Nama Ibu Bapa/Penjaga",
     "streetAddress": "Alamat Jalan...",
     "enrollmentSubmittedSuccessfully": "Pendaftaran berjaya dihantar!",
@@ -3759,9 +3760,6 @@
     "completeEnrollment": "Lengkapkan Pendaftaran",
     "enrollmentFailed": "Pendaftaran gagal.",
     "kssrDescription": "Kurikulum Standard Sekolah Rendah.",
-    "cambridgeEdexcelIgcse": "Cambridge/Edexcel. IGCSE.",
-    "dual": "Dual",
-    "hybridIntensiveProgram": "Program Intensif Hibrid.",
     "freeLimitReached": "Had percuma dicapai: anda mempunyai {{count}}/{{limit}} pengguna. Sila naik taraf."
   },
   "studentFeesScreen": {

@@ -38,9 +38,16 @@ const AcademicSettingsScreen: React.FC = () => {
 
   const [calendar, setCalendar] = useState({ start: '2024-09-05', end: '2025-06-20' });
   const [grading, setGrading] = useState({ scale: 'percentage', weighted: true });
-  // Default curriculum. The default was 'Nigerian', so a fresh school saved a
-  // curriculum this school does not follow; SRIK follows KSSR.
-  const [curriculumType, setCurriculumType] = useState<'KSSR' | 'British' | 'Both'>('KSSR');
+  // The curriculum. KSSR IS THE SCHOOL'S CURRICULUM AND THE ONLY ONE IT HAS.
+  //
+  // This was a three-way choice — 'KSSR' | 'British' | 'Both' — and the default was
+  // once 'Nigerian'. The school is not accredited for the British curriculum, has no
+  // dual stream, and follows the Malaysian primary syllabus, so the two extra options
+  // were a way to save a setting that made the rest of the app offer subject lists and
+  // term structures the school does not use. SRIK follows KSSR; that is now the
+  // setting, not an option in a list.
+  const KSSR = 'KSSR' as const;
+  const [curriculumType, setCurriculumType] = useState<string>(KSSR);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -62,7 +69,12 @@ const AcademicSettingsScreen: React.FC = () => {
 
       if (stored.academic_calendar) setCalendar(stored.academic_calendar);
       if (stored.grading_config) setGrading(stored.grading_config);
-      if (stored.curriculum_type) setCurriculumType(stored.curriculum_type);
+      // A setting saved before this change may still say 'British' or 'Both'. Those
+      // are no longer choices, so reading one back would leave the select showing a
+      // blank — and the next save would write that blankness over the real value.
+      // Anything other than this school's own curriculum is therefore read as KSSR,
+      // and the next save corrects what is stored.
+      if (stored.curriculum_type === KSSR) setCurriculumType(KSSR);
     } catch (err) {
       console.error('Failed to load settings:', err);
       toast.error(t('academicSettingsScreen.errorLoadingAcademicSettings'));
@@ -149,17 +161,18 @@ const AcademicSettingsScreen: React.FC = () => {
           <Accordion title={t('academicSettingsScreen.curriculumContent')}>
             <div className="space-y-3">
               <label className="text-sm font-medium text-gray-700">{t('academicSettingsScreen.primaryCurriculumType')}</label>
-              <select 
-                value={curriculumType} 
-                onChange={e => setCurriculumType(e.target.value as any)} 
-                className="w-full p-2 border border-gray-300 rounded-md bg-gray-50"
+              {/* Was a dropdown offering KSSR / British / Both. The school has one
+                  curriculum, so a dropdown was a way to select a syllabus the school
+                  does not teach. The value is shown in the same place, in the same
+                  shape as the control it replaces, so the layout does not move. */}
+              <div
+                className="w-full p-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700"
+                aria-label={t('academicSettingsScreen.primaryCurriculumType')}
               >
-                <option value="KSSR">{t('academicSettingsScreen.kurikulumKSSR')}</option>
-                <option value="British">{t('academicSettingsScreen.britishCurriculum')}</option>
-                <option value="Both">{t('academicSettingsScreen.bothDualCurriculum')}</option>
-              </select>
+                {t('academicSettingsScreen.kurikulumKSSR')}
+              </div>
               <p className="text-xs text-gray-500 italic mt-1">
-                This setting determines the default subject lists and term structures used throughout the system.
+                {t('academicSettingsScreen.thisSettingDeterminesTheDefaultSubjectListsAndTermStructuresUsedThroughoutTheSystem')}
               </p>
             </div>
           </Accordion>

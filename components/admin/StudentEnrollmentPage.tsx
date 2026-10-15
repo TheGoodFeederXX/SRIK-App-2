@@ -35,8 +35,11 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
         classId: '',
         grade: -3,
         section: 'A',
-        // The national track is KSSR, not the Nigerian curriculum.
-        curriculum: 'KSSR' as 'KSSR' | 'BRITISH' | 'DUAL'
+        // The school's curriculum, and the only one it follows. This was typed
+        // 'KSSR' | 'BRITISH' | 'DUAL' and offered as three pickable cards, but the value
+        // was never sent when the child was saved — so choosing British or Dual did
+        // nothing except look as though it had. KSSR is what the school teaches.
+        curriculum: 'KSSR'
     });
     const [uploadedDocs, setUploadedDocs] = useState<File[]>([]);
 
@@ -346,15 +349,13 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                     <AcademicCapIcon className="w-4 h-4" /> Academic Track
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 overflow-x-auto pb-1 hide-scrollbar">
+                                    {/* Was three pickable cards: KSSR, British and Dual.
+                                        The school follows KSSR and the choice was never
+                                        saved, so the two extra cards only invited an admin
+                                        to pick a track that would be silently ignored. The
+                                        remaining card keeps the same shape and position. */}
                                     <SelectCard value="KSSR" title="KSSR" desc={t('studentEnrollmentPage.kssrDescription')} icon={BookOpenIcon} />
-                                    <SelectCard value="BRITISH" title={t('studentEnrollmentPage.british')} desc={t('studentEnrollmentPage.cambridgeEdexcelIgcse')} icon={BookOpenIcon} />
-                                    <SelectCard value="DUAL" title={t('studentEnrollmentPage.dual')} desc={t('studentEnrollmentPage.hybridIntensiveProgram')} icon={AcademicCapIcon} />
                                 </div>
-                                {formData.curriculum === 'DUAL' && (
-                                    <div className="mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-xs text-indigo-800">
-                                        Creates two separate academic records per term.
-                                    </div>
-                                )}
                             </section>
 
                             {/* 4. DOCUMENTS */}

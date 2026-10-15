@@ -148,7 +148,8 @@
     "push": "Push",
     "live": "Live",
     "audit": "Audit",
-    "all": "All"
+    "all": "All",
+    "year": "Year"
   },
   "auth": {
     "signIn": "Sign In",
@@ -741,7 +742,8 @@
     "studentID": "Student ID:",
     "downloadTranscript": "Download Transcript",
     "shareProfile": "Share Profile",
-    "uploadNew": "Upload New"
+    "uploadNew": "Upload New",
+    "kssrCurriculum": "KSSR Curriculum"
   },
   "studyBuddy": {
     "uploadImage": "Upload image",
@@ -2319,7 +2321,10 @@
     "failedToSubmitResponse": "Failed to submit response",
     "classTeacher": "Class Teacher —",
     "eGUnauthorizedAbsenceOn10July": "e.g. Unauthorized absence on 10 July",
-    "examplePromotion": "e.g. Promoted to Head of Department"
+    "examplePromotion": "e.g. Promoted to Head of Department",
+    "subjectSpecialty": "Subject Specialty",
+    "curriculumEligibility": "Curriculum Eligibility",
+    "degreeCertificate": "Degree Certificate"
   },
   "projectBoardScreen": {
     "projectBoard": "Project Board"
@@ -2644,8 +2649,6 @@
     "configureAdmissionFormsRequiredDocumentsAndApp": "Configure admission forms, required documents, and application statuses here.",
     "primaryCurriculumType": "Primary Curriculum Type",
     "kurikulumKSSR": "KSSR Curriculum",
-    "britishCurriculum": "British Curriculum",
-    "bothDualCurriculum": "Both (Dual Curriculum)",
     "schoolCalendar": "School Calendar",
     "gradingScales": "Grading Scales",
     "enrollmentSettings": "Enrollment Settings",
@@ -2656,7 +2659,8 @@
     "schoolContextMissing": "School context missing.",
     "saving": "Saving...",
     "saveChanges": "Save Changes",
-    "failedToSaveSettings": "Failed to save settings"
+    "failedToSaveSettings": "Failed to save settings",
+    "thisSettingDeterminesTheDefaultSubjectListsAndTermStructuresUsedThroughoutTheSystem": "This setting determines the default subject lists and term structures used throughout the system."
   },
   "addExamScreen": {
     "examType": "Exam Type",
@@ -3175,9 +3179,6 @@
     "whichCurriculaThisSchoolIsAccreditedToOfferOve": "Which curricula this school is accredited to offer overall.",
     "studentCurriculumTracks": "Student Curriculum Tracks",
     "noStudentsFound": "No students found.",
-    "britishUKNC": "British (UK NC)",
-    "americanCommonCore": "American (Common Core)",
-    "dualCurriculum": "Dual Curriculum",
     "searchStudentsByNameOrAdmissionNumber": "Search students by name or admission number...",
     "loadingCurriculumSettings": "Loading curriculum settings...",
     "loadingStudents": "Loading students...",
@@ -3186,7 +3187,9 @@
     "failedToSaveSchoolCurricula": "Failed to save school curricula.",
     "perStudentCurriculumIsNotRecordedForThisSchool": "Per-student curriculum is not recorded for this school yet.",
     "saving": "Saving...",
-    "saveSchoolCurricula": "Save School Curricula"
+    "saveSchoolCurricula": "Save School Curricula",
+    "kssr": "KSSR",
+    "whichCurriculumEachStudentIsEnrolledInThisIsWhatTeachersAndParentsSee": "Which curriculum each student is enrolled in — this is what teachers and parents see."
   },
   "curriculumSettingsScreen": {
     "curriculumSettings": "Curriculum Settings"
@@ -3239,7 +3242,6 @@
     "allTeachers": "All Teachers",
     "curriculumTrack": "Curriculum Track",
     "allTracks": "All Tracks",
-    "britishCambridgeIGCSE": "British (Cambridge/IGCSE)",
     "published": "Published",
     "pending": "Pending",
     "publish": "Publish",
@@ -3749,7 +3751,6 @@
     "homeAddress": "Home Address",
     "uploadRecords": "Upload Records",
     "birthCertPreviousResults": "Birth Cert, Previous Results",
-    "british": "British",
     "parentGuardianName": "Parent/Guardian Name",
     "streetAddress": "Street Address...",
     "enrollmentSubmittedSuccessfully": "Enrollment submitted successfully!",
@@ -3759,9 +3760,6 @@
     "completeEnrollment": "Complete Enrollment",
     "enrollmentFailed": "Enrollment failed.",
     "kssrDescription": "Primary School Standard Curriculum.",
-    "cambridgeEdexcelIgcse": "Cambridge/Edexcel. IGCSE.",
-    "dual": "Dual",
-    "hybridIntensiveProgram": "Hybrid Intensive Program.",
     "freeLimitReached": "Free Limit Reached: You have {{count}}/{{limit}} users. Please upgrade."
   },
   "studentFeesScreen": {

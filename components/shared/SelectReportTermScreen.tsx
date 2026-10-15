@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Student } from '../../types';
 import { ChevronRightIcon, DocumentTextIcon } from '../../constants';
 import { useProfile } from '../../context/ProfileContext';
+import { classLevelName } from '../../lib/gradeLevel';
 
 interface SelectReportTermScreenProps {
     student?: Student;
@@ -31,18 +32,13 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
 
     const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
 
-    const getGradeName = (grade: number) => {
-        const className = (student as any).className || '';
-        if (className.toUpperCase().includes('SSS') || className.toUpperCase().includes('SENIOR')) {
-            if (grade >= 1 && grade <= 3) return `SSS ${grade}`;
-        }
-        if (className.toUpperCase().includes('JSS') || className.toUpperCase().includes('JUNIOR')) {
-            if (grade >= 1 && grade <= 3) return `JSS ${grade}`;
-        }
-        if (grade >= 7 && grade <= 9) return `JSS ${grade - 6}`;
-        if (grade >= 10 && grade <= 12) return `SSS ${grade - 9}`;
-        return `Grade ${grade}`;
-    };
+    // This school teaches grades 1–6 only. The function that stood here mapped a
+    // grade of 7 to "JSS 1" and a grade of 10 to "SSS 1" — Nigerian lower/upper
+    // secondary — so a parent could be shown a school level that does not exist
+    // here. It also sniffed the class text for "SENIOR"/"JUNIOR". One shared helper
+    // replaces it, and a grade outside 1–6 is named by its number, not forced into
+    // a band that would be untrue.
+    const getGradeName = (grade: number) => classLevelName(grade, t('common.year'));
 
     const activeEntryYear = React.useMemo(() => {
         const now = new Date();

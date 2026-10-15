@@ -18,7 +18,10 @@ interface ResultsEntryProps {
     teacherId?: string;
     classId?: string;
     examId?: string;
-    teacherCurriculumEligibility?: 'KSSR' | 'British' | 'Both' | null;
+    // Was 'KSSR' | 'British' | 'Both'. The school teaches one curriculum, and nothing
+    // ever read this prop, so the wider union only allowed a value that does not exist
+    // here to be typed in.
+    teacherCurriculumEligibility?: 'KSSR' | null;
     handleBack?: () => void;
 }
 

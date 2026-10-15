@@ -56,8 +56,9 @@ export function toAssessmentType(type: string): AssessmentType {
         MIDTERM: 'MID_YEAR_EXAM',
         MIDYEAR: 'MID_YEAR_EXAM',
         FINAL: 'FINAL_EXAM',
-        IGCSE: 'SPECIAL_EXAM',
-        CHECKPOINT: 'SPECIAL_EXAM',
+        // IGCSE and CHECKPOINT were mapped here as Cambridge qualifications. This
+        // school sits neither, so the mapping only ever named an exam that cannot
+        // be set here. A stored value would be unknown and fall through below.
         QUIZ: 'QUIZ',
         TEST: 'TEST',
         UJIAN: 'TEST',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-hot-toast';
 import { Student, BehaviorNote } from '../../types';
+import { classLevelName } from '../../lib/gradeLevel';
 import { DocumentTextIcon, BookOpenIcon, ClipboardListIcon, CheckCircleIcon, PlusIcon, SUBJECT_COLORS, ReportIcon, TrashIcon } from '../../constants';
 import { fetchBehaviorNotes, createBehaviorNote, deleteBehaviorNote, fetchAcademicPerformance } from '../../lib/database';
 import { useAuth } from '../../context/AuthContext';
@@ -118,23 +119,8 @@ const StudentProfileScreen: React.FC<StudentProfileScreenProps> = ({ student: ra
         }
     };
 
-    const getGradeName = (grade: number) => {
-        // If we have a class name that clearly states the level, use it as a hint
-        const className = (student as any).className || '';
-        if (className.toUpperCase().includes('SSS') || className.toUpperCase().includes('SENIOR')) {
-            if (grade >= 1 && grade <= 3) return `SSS ${grade}`;
-        }
-        if (className.toUpperCase().includes('JSS') || className.toUpperCase().includes('JUNIOR')) {
-            if (grade >= 1 && grade <= 3) return `JSS ${grade}`;
-        }
-
-        // Default absolute mapping for Oliskey system
-        if (grade >= 7 && grade <= 9) return `JSS ${grade - 6}`;
-        if (grade >= 10 && grade <= 12) return `SSS ${grade - 9}`;
-        
-        // Fallback or primary
-        return `Grade ${grade}`;
-    };
+    // One shared helper — this school has grades 1–6, not JSS/SSS. See lib/gradeLevel.ts.
+    const getGradeName = (grade: number) => classLevelName(grade, t('common.year'));
 
     return (
         <div className="p-4 bg-gray-50 h-full overflow-y-auto">

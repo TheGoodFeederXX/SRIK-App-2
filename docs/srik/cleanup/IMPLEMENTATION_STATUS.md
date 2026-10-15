@@ -296,6 +296,84 @@ Pengiraan babak ini: `tsc` 0, `tsc` backend 0, **532 ujian lulus** (74 fail),
 `vite build` keluar 0, pariti locale **3544 = 3544**, `supabase/`,
 `AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
 
+### 9c. Istilah kurikulum asing dibuang, KSSR dikekalkan (0.8.36)
+
+Pemilik meminta dua perkara: buang kurikulum British dan kekalkan KSSR sahaja;
+dan gantikan istilah kolej/universiti/sekolah menengah dengan istilah sekolah
+rendah. Pemilik memilih pembetulan penuh — bukan menyembunyikan pilihan, tetapi
+membuangnya.
+
+**Apa yang sebenarnya rosak.** Kod ini berasal daripada projek Nigeria. Sisa
+sistem itu masih hidup di tempat yang paling mudah terlepas pandang: **nilai yang
+dipaparkan** kelihatan sudah bersih kerana teks Inggerisnya sudah ada
+terjemahan Melayu, tetapi **pilihan yang boleh disimpan** masih menawarkan
+kurikulum sekolah tidak ajar.
+
+- `AcademicSettingsScreen` — senarai jatuh menawarkan `KSSR` / `British` / `Both`,
+  dan satu ketika dahulu lalainya ialah 'Nigerian'. Tetapan ini memberi suapan
+  kepada senarai subjek dan struktur penggal di seluruh aplikasi, jadi memilih
+  'British' bukan sekadar label salah — ia mengubah tingkah laku.
+- `CurriculumManagementScreen` — tiga senarai berasingan. `BRANCH_FOCUS_OPTIONS`
+  menawarkan `american` walaupun **tiada siapa membacanya**; `STUDENT_TRACK_OPTIONS`
+  membenarkan admin menanda seorang anak sebagai trek British.
+- `StudentEnrollmentPage` — tiga kad pilihan (KSSR / BRITISH / DUAL) semasa
+  mendaftar murid baharu. **Nilai itu tidak pernah dihantar ke pelayan**, jadi
+  memilih 'British' langsung tiada kesan — hanya kelihatan seolah-olah ada.
+- `ExamManagement` dan `AddExamScreen` — menawarkan peperiksaan IGCSE/CHECKPOINT
+  (Cambridge) dan nama pilihan 'British'.
+- `PersonnelFileView` — baris 'British Qualification'. Tiada jenis data
+  mengisytiharkan medan itu dan tiada apa-apa mengisinya, jadi baris itu
+  **sentiasa kosong**: satu baris kelayakan yang menyebut negara asing dan tidak
+  membawa maklumat.
+- `PersonnelFileView` juga memakai istilah kolej/universiti: 'Degree
+  Certificate' untuk sijil ijazah guru — kini 'Sijil Ijazah'.
+- `DEFAULT_STANDARD_CLASSES` dan `SUBJECTS_LIST` dalam `constants.tsx` —
+  senarai kelas sampai JSS/SSS dan senarai 64 subjek bertag `Nigerian` /
+  `British` / `Both`.
+
+**Istilah tingkatan: bahagian yang paling berisiko.** Empat skrin menyimpan
+**salinan berasingan** fungsi yang sama, dan setiap salinan menukar gred 7 kepada
+"JSS 1" dan gred 10 kepada "SSS 1" — sekolah menengah rendah dan atas Nigeria.
+Dua daripadanya turut meneka daripada teks kelas ("SENIOR"/"JUNIOR"). Empat
+salinan bermakna satu pembetulan boleh tersasar dan tiga yang lain tertinggal —
+itulah sebabnya ia mula bercanggah. Kesemuanya digantikan dengan **satu pembantu
+kongsi** (`lib/gradeLevel.ts`).
+
+Bahagian "berisiko" itu bukan hiasan: gred di luar 1–6 **tidak** dinamakan
+"Tahun 7". Sekolah ini tidak ada Tahun 7, jadi pembantu memulangkan `null` dan
+skrin memutuskan sendiri — menamakannya akan menyatakan sesuatu yang tidak benar
+pada kad laporan yang dibaca ibu bapa.
+
+`getFormattedClassName` turut membetulkan gred ≥7: ia dahulunya menghasilkan "JSS
+1", dan nilai itu mengalir sebagai `student.level`.
+
+**Keselamatan data lama.** Nilai yang sudah tersimpan boleh berbunyi 'British'.
+Pada tetapan kurikulum, pembacaan nilai selain KSSR kini **dibaca sebagai KSSR**
+— kalau tidak, senarai jatuh itu akan kosong, dan simpanan seterusnya akan
+menulis kekosongan itu menimpa nilai sebenar.
+
+**Pengawal baharu, disahkan songsang.** 16 ujian dalam
+`lib/__tests__/grade-level.test.ts`. Setiap satu dibuktikan gagal apabila
+kecacatan diperkenalkan semula, dengan nama fail yang betul:
+
+- memasukkan semula `{ name: 'SSS 1', level: 'Secondary' }` → gagal;
+- memasukkan semula pilihan `<option value="British">` → gagal;
+- memasukkan semula kad `BRITISH` dalam pendaftaran murid → gagal.
+
+Ujian ini membaca **kata sebenar** yang dihasilkan, bukan sekadar "ia
+memulangkan rentetan" — ujian yang lemah akan lulus pada kod yang rosak.
+Komen dikecualikan semasa mengimbas, kerana penjelasan tentang apa yang dibuang
+bukan pengenalan semula.
+
+**Dibuang, bukan disimpan sebagai perangkap.** Kunci terjemahan untuk kurikulum
+asing turut dibuang, supaya nama itu tidak boleh muncul semula dalam UI.
+
+Pengiraan babak ini: `tsc` 0, `tsc` backend 0, **548 ujian lulus** (75 fail),
+`vite build` keluar 0, pariti locale **3542 = 3542**. Dalam bundle aplikasi,
+istilah `British`, `IGCSE`, `Cambridge`, `Edexcel`, `Common Core`, `Nigerian`,
+`Yoruba` dan `JSS`/`SSS` kesemuanya **0 kemunculan**; `Kurikulum KSSR` hadir.
+`supabase/`, `AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
+
 ## 10. Penyingkiran AI penuh (0.8.33)
 
 Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.

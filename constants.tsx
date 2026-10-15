@@ -220,6 +220,12 @@ export const gradeColors: { [key: number]: string } = {
   12: 'bg-indigo-100 text-indigo-800',
 };
 
+// The classes this school runs: pre-primary and six primary years, and nothing above.
+//
+// The list continued to JSS 1–3 and SSS 1–3, level 'Secondary'. Those are Nigerian lower
+// and upper secondary school. SRIK teaches primary children only, so the list described
+// six years the school does not have — and a teacher picking a class from it could be
+// offered a year that does not exist.
 export const DEFAULT_STANDARD_CLASSES = [
   { name: 'Creche', grade: -3, section: 'A', level: 'Pre-Primary' },
   { name: 'Pre-Nursery', grade: -2, section: 'A', level: 'Pre-Primary' },
@@ -231,12 +237,6 @@ export const DEFAULT_STANDARD_CLASSES = [
   { name: 'Primary 4', grade: 4, section: 'A', level: 'Primary' },
   { name: 'Primary 5', grade: 5, section: 'A', level: 'Primary' },
   { name: 'Primary 6', grade: 6, section: 'A', level: 'Primary' },
-  { name: 'JSS 1', grade: 7, section: 'A', level: 'Secondary' },
-  { name: 'JSS 2', grade: 8, section: 'A', level: 'Secondary' },
-  { name: 'JSS 3', grade: 9, section: 'A', level: 'Secondary' },
-  { name: 'SSS 1', grade: 10, section: 'A', level: 'Secondary' },
-  { name: 'SSS 2', grade: 11, section: 'A', level: 'Secondary' },
-  { name: 'SSS 3', grade: 12, section: 'A', level: 'Secondary' },
 ];
 
 export const getFormattedClassName = (grade: number, section?: string | null | undefined, includeGradeWord: boolean = true, subject?: string) => {
@@ -245,12 +245,12 @@ export const getFormattedClassName = (grade: number, section?: string | null | u
 
   if (grade >= 1 && grade <= 6) {
     suffix = 'Primary ';
-  } else if (grade >= 7 && grade <= 9) {
-    suffix = 'JSS ';
-    displayGrade = grade - 6;
-  } else if (grade >= 10 && grade <= 12) {
-    suffix = 'SSS ';
-    displayGrade = grade - 9;
+  } else if (grade >= 7) {
+    // Grades 7 and above are secondary years in other systems — JSS/SSS here until
+    // now. This school has no such class, so naming one produced a level that does not
+    // exist and was passed onward as the child's level. The number is shown without a
+    // school level attached, which is true, instead of "JSS 1", which is not.
+    suffix = '';
   } else if (grade <= 0) {
     // Nursery / Creche Logic
     if (grade === 0) {
@@ -275,79 +275,11 @@ export const getFormattedClassName = (grade: number, section?: string | null | u
   return name;
 };
 
-export const SUBJECTS_LIST = [
-  // Pre-Primary / Nursery (Mostly Both)
-  { id: 1, name: 'Numeracy', curriculum: 'Both' },
-  { id: 2, name: 'Literacy', curriculum: 'Both' },
-  { id: 3, name: 'Social Habits', curriculum: 'Nigerian' },
-  { id: 4, name: 'Health Habits', curriculum: 'Nigerian' },
-  { id: 5, name: 'Creative Arts', curriculum: 'Both' },
-  { id: 6, name: 'Rhymes and Songs', curriculum: 'Both' },
-  { id: 7, name: 'Movement and Physical Activity', curriculum: 'Both' },
-  { id: 8, name: 'Social-Emotional Development', curriculum: 'Both' },
-  { id: 9, name: 'Language and Communication', curriculum: 'Both' },
-  { id: 10, name: 'Cognitive Skills', curriculum: 'Both' },
-  { id: 11, name: 'Gross & Fine Motor Skills', curriculum: 'Both' },
-  { id: 12, name: 'Sensory Exploration', curriculum: 'Both' },
-  
-  // Primary & Junior Secondary
-  { id: 13, name: 'Mathematics', curriculum: 'Both' },
-  { id: 14, name: 'English Studies', curriculum: 'Nigerian' },
-  { id: 15, name: 'Basic Science and Technology (BST)', curriculum: 'Nigerian' },
-  { id: 16, name: 'Social Studies', curriculum: 'Nigerian' },
-  { id: 17, name: 'Civic Education', curriculum: 'Nigerian' },
-  { id: 18, name: 'Christian Religious Studies (CRS)', curriculum: 'Nigerian' },
-  { id: 19, name: 'Islamic Religious Studies (IRS)', curriculum: 'Nigerian' },
-  { id: 20, name: 'Cultural and Creative Arts (CCA)', curriculum: 'Nigerian' },
-  { id: 21, name: 'Physical and Health Education (PHE)', curriculum: 'Both' },
-  { id: 22, name: 'Computer Studies/ICT', curriculum: 'Both' },
-  { id: 23, name: 'Agricultural Science', curriculum: 'Nigerian' },
-  { id: 24, name: 'Home Economics', curriculum: 'Nigerian' },
-  { id: 25, name: 'Business Studies', curriculum: 'Both' },
-  { id: 26, name: 'French Language', curriculum: 'Both' },
-  { id: 27, name: 'Yoruba Language', curriculum: 'Nigerian' },
-  { id: 28, name: 'Igbo Language', curriculum: 'Nigerian' },
-  { id: 29, name: 'Hausa Language', curriculum: 'Nigerian' },
-  { id: 30, name: 'Arabic Language', curriculum: 'Nigerian' },
-  { id: 31, name: 'Basic Science', curriculum: 'Nigerian' },
-  { id: 32, name: 'Basic Technology', curriculum: 'Nigerian' },
-
-  // British Specific (Common in International Schools)
-  { id: 33, name: 'English Language', curriculum: 'Both' },
-  { id: 34, name: 'General Science', curriculum: 'British' },
-  { id: 35, name: 'Global Perspectives', curriculum: 'British' },
-  { id: 36, name: 'History (World)', curriculum: 'British' },
-  { id: 37, name: 'Geography (Global)', curriculum: 'British' },
-  { id: 38, name: 'Spanish', curriculum: 'British' },
-  { id: 39, name: 'German', curriculum: 'British' },
-  { id: 40, name: 'PSHE', curriculum: 'British' },
-
-  // Senior Secondary (SSS) / Key Stage 4 & 5
-  { id: 41, name: 'General Mathematics', curriculum: 'Nigerian' },
-  { id: 42, name: 'Further Mathematics', curriculum: 'Both' },
-  { id: 43, name: 'Physics', curriculum: 'Both' },
-  { id: 44, name: 'Chemistry', curriculum: 'Both' },
-  { id: 45, name: 'Biology', curriculum: 'Both' },
-  { id: 46, name: 'Economics', curriculum: 'Both' },
-  { id: 47, name: 'Financial Accounting', curriculum: 'Nigerian' },
-  { id: 48, name: 'Commerce', curriculum: 'Nigerian' },
-  { id: 49, name: 'Government', curriculum: 'Nigerian' },
-  { id: 50, name: 'Geography', curriculum: 'Both' },
-  { id: 51, name: 'History', curriculum: 'Both' },
-  { id: 52, name: 'Literature-in-English', curriculum: 'Both' },
-  { id: 53, name: 'Technical Drawing', curriculum: 'Nigerian' },
-  { id: 54, name: 'Food and Nutrition', curriculum: 'Nigerian' },
-  { id: 55, name: 'Data Processing', curriculum: 'Nigerian' },
-  { id: 56, name: 'Office Practice', curriculum: 'Nigerian' },
-  { id: 57, name: 'Visual Arts', curriculum: 'Both' },
-  { id: 58, name: 'Music', curriculum: 'Both' },
-  { id: 59, name: 'Entrepreneurship', curriculum: 'Nigerian' },
-  { id: 60, name: 'Additional Mathematics', curriculum: 'British' },
-  { id: 61, name: 'Sociology', curriculum: 'British' },
-  { id: 62, name: 'Psychology', curriculum: 'British' },
-  { id: 63, name: 'Business Management', curriculum: 'British' },
-  { id: 64, name: 'Accounting (A-Level/IGCSE)', curriculum: 'British' }
-];
+// SUBJECTS_LIST stood here: 64 subjects each tagged curriculum 'Nigerian', 'British' or 'Both',
+// including 'Christian Religious Studies (CRS)', 'Accounting (A-Level/IGCSE)' and 'Yoruba'. Nothing
+// imported it — a test mocked it away as [] — and it was absent from the build output, so no user
+// ever saw it. It was removed rather than corrected because a school that follows KSSR must not
+// carry a list of three curricula it does not teach, waiting to be wired up again by mistake.
 
 export const EXAM_TYPE_COLORS: { [key: string]: string } = {
   'Mid-term': 'bg-blue-100 text-blue-800 border-blue-200',

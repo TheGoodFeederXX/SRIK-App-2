@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Student } from '../../types';
+import { classLevelName } from '../../lib/gradeLevel';
 import { ChevronRightIcon, DocumentTextIcon } from '../../constants';
 
 interface SelectTermForReportScreenProps {
@@ -16,23 +17,8 @@ const SelectTermForReportScreen: React.FC<SelectTermForReportScreenProps> = ({ s
   const terms = ["Penggal 1", "Penggal 2", "Penggal 3"];
   
   // Helper to map grade number to class label
-  const getGradeName = (grade: number) => {
-    // If we have a class name that clearly states the level, use it as a hint
-    const className = (student as any).className || '';
-    if (className.toUpperCase().includes('SSS') || className.toUpperCase().includes('SENIOR')) {
-      if (grade >= 1 && grade <= 3) return `SSS ${grade}`;
-    }
-    if (className.toUpperCase().includes('JSS') || className.toUpperCase().includes('JUNIOR')) {
-      if (grade >= 1 && grade <= 3) return `JSS ${grade}`;
-    }
-
-    // Default absolute mapping
-    if (grade >= 7 && grade <= 9) return `JSS ${grade - 6}`;
-    if (grade >= 10 && grade <= 12) return `SSS ${grade - 9}`;
-    
-    // Fallback or relative
-    return `Grade ${grade}`;
-  };
+  // One shared helper — this school has grades 1–6, not JSS/SSS. See lib/gradeLevel.ts.
+  const getGradeName = (grade: number) => classLevelName(grade, t('common.year'));
 
   const activeEntryYear = React.useMemo(() => {
     const now = new Date();

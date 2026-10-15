@@ -93,8 +93,10 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
   };
 
   // WAEC/NECO are foreign national exam boards this school does not sit; the
-  // school's own exam types are used instead.
-  const examTypes = ['Mid-term', 'Final', 'Quiz', 'Test', 'Assessment', 'Ujian', 'IGCSE', 'CHECKPOINT'];
+  // school's own exam types are used instead. So were IGCSE and CHECKPOINT, which
+  // are Cambridge qualifications — listing them offered an exam the school cannot
+  // set. What remains are the school's own types.
+  const examTypes = ['Mid-term', 'Final', 'Quiz', 'Test', 'Assessment', 'Ujian'];
 
   if (loading && availableClasses.length === 0) {
     return <CenteredLoader message={t('addExamScreen.loadingFormData')} className="p-8" />;

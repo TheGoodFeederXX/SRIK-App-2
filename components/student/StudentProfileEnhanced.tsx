@@ -419,10 +419,14 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                         {student.curriculum_type && (
                                             <Badge className="bg-white/20 text-white border-white/30 backdrop-blur-sm px-4 py-1.5 text-sm font-semibold">
                                                 <Globe className="w-4 h-4 mr-2" />
-                                                {/* The dual-track badge named a
-                                                    foreign curriculum; the national
-                                                    track here is KSSR. */}
-                                                {student.curriculum_type === 'Both' ? 'KSSR & British Curriculum' : `${student.curriculum_type} Curriculum`}
+                                                {/* This read the stored `curriculum_type` and
+                                                    printed it back — so a record saved as
+                                                    'British' or 'Both' showed a child's
+                                                    curriculum as one this school does not
+                                                    teach. The school follows KSSR, so the
+                                                    badge states that rather than echoing a
+                                                    value that may be foreign. */}
+                                                {t('studentProfileEnhanced.kssrCurriculum')}
                                             </Badge>
                                         )}
                                         <motion.button
