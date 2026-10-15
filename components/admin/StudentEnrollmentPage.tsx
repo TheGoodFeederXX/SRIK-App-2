@@ -87,7 +87,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
             setLoading(true);
             const { allowed, count, limit } = await checkUserLimit(profile.schoolId);
             if (!allowed) {
-                toast.error(`Free Limit Reached: You have ${count}/${limit} users. Please upgrade.`);
+                toast.error(t('studentEnrollmentPage.freeLimitReached', { count, limit }));
                 setLoading(false);
                 return;
             }
@@ -219,7 +219,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.firstName')}</label>
                                         <input
                                             className="input-field"
-                                            placeholder="e.g. David"
+                                            placeholder={t('common.exampleFirstName')}
                                             value={formData.studentFirstName}
                                             onChange={e => handleChange('studentFirstName', e.target.value)}
                                         />
@@ -228,7 +228,7 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         <label className="label text-xs sm:text-sm">{t('studentEnrollmentPage.lastName')}</label>
                                         <input
                                             className="input-field"
-                                            placeholder="e.g. Okonkwo"
+                                            placeholder={t('common.exampleLastName')}
                                             value={formData.studentLastName}
                                             onChange={e => handleChange('studentLastName', e.target.value)}
                                         />

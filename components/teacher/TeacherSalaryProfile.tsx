@@ -238,12 +238,11 @@ const TeacherSalaryProfile: React.FC<TeacherSalaryProfileProps> = ({ teacherId, 
             {/* Info Note */}
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
                 <p className="text-sm text-blue-800">
-                    <strong>Note:</strong> Your salary includes base pay plus any allowances, bonuses, and deductions.
+                    <strong>{t('teacherSalaryProfile.note')}</strong> {t('teacherSalaryProfile.yourSalaryIncludesBasePay')}
                     {/* The note told a teacher the figures were computed under a
                         foreign country's tax and pension rules. This school's
                         payroll runs under Malaysian rules, so it was false. */}
-                    Yang ditolak ialah caruman berkanun Malaysia (KWSP/PERKESO) mengikut kadar semasa.
-                </p>
+                                    </p>
             </div>
         </div>
     );

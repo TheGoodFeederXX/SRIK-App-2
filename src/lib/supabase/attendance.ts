@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Attendance data access — SRIK.
  *
@@ -126,7 +127,7 @@ export async function getClassRegister(
         // morning and a short one would mark children absent who were never listed.
         .limit(2000);
 
-    if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
+    if (enrollError) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheClassList')}: ${enrollError.message}`);
 
     const enrolled = (enrollments ?? []) as unknown as {
         id: string; student_id: string; class_id: string;
@@ -300,7 +301,7 @@ export async function getSchoolDayOverview(date: string): Promise<SchoolDayRow[]
         .eq('status', 'ACTIVE')
         .order('year_level');
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
 
     const classRows = (classes ?? []) as unknown as {
         id: string; display_name: string; year_level: number;
@@ -394,7 +395,7 @@ export async function getClassAttendanceSummary(
         .gte('attendance_date', from)
         .lte('attendance_date', to);
 
-    if (error) throw new Error(`Could not load attendance: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadAttendance')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as {
         student_id: string; status: AttendanceStatus;
@@ -463,7 +464,7 @@ export async function getStudentAttendanceRange(
         .limit(500)
         .order('attendance_date');
 
-    if (error) throw new Error(`Could not load attendance: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadAttendance')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as {
         student_id: string;

@@ -64,11 +64,11 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
 
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4 mb-8 text-lg">
                         <div className="flex items-center">
-                            <label className="font-bold mr-2">Name:</label>
+                            <label className="font-bold mr-2">{t('common.name')}:</label>
                             <div className="flex-grow border-b-2 border-gray-400"></div>
                         </div>
                         <div className="flex items-center">
-                            <label className="font-bold mr-2">Date:</label>
+                            <label className="font-bold mr-2">{t('common.date')}:</label>
                             <div className="flex-grow border-b-2 border-gray-400"></div>
                         </div>
                     </div>

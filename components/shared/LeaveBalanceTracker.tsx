@@ -135,7 +135,7 @@ const LeaveBalanceTracker: React.FC<LeaveBalanceTrackerProps> = ({ teacherId, co
                         {/* Stats */}
                         <div className="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-gray-200">
                             <div>
-                                <p className="text-xs text-gray-600">Used</p>
+                                <p className="text-xs text-gray-600">{t('common.used')}</p>
                                 <p className="text-sm font-semibold text-gray-900">{balance.used_days} days</p>
                             </div>
                             <div>

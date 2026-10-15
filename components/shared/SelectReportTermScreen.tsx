@@ -186,13 +186,13 @@ const SelectReportTermScreen: React.FC<SelectReportTermScreenProps> = ({ student
                                 </div>
                                 <div className="mt-3 flex flex-wrap gap-1 justify-center">
                                     {item.isStart && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-green-500 text-white shadow-sm">STARTED</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-green-500 text-white shadow-sm">{t('selectReportTermScreen.started')}</span>
                                     )}
                                     {item.isCurrent && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-blue-500 text-white shadow-sm">CURRENT</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-blue-500 text-white shadow-sm">{t('selectReportTermScreen.current')}</span>
                                     )}
                                     {item.isFuture && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-purple-500 text-white shadow-sm">REMAINING</span>
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-purple-500 text-white shadow-sm">{t('selectReportTermScreen.remaining')}</span>
                                     )}
                                 </div>
                             </motion.button>

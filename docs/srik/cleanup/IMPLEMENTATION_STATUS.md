@@ -176,6 +176,69 @@ membuang blok CSS → gagal.
 Pengiraan: `tsc` 0, `tsc` backend 0, **531 ujian lulus** (74 fail),
 `vite build` keluar 0, pariti locale **3367 = 3367**, `supabase/` tidak disentuh.
 
+### 9a. Terjemahan babak kedua + penyingkiran kod mati (0.8.35)
+
+Pemilik meminta buruan diteruskan ke **semua** kawasan — skrin utama, dokumen
+cetak, mesej ralat/toast, dan notifikasi — dan memilih **"padam terus kod mati"**.
+
+**Diterjemah (bab ini):** 99 mesej ralat/toast dan label, semuanya disahkan
+kebolehan-capainya. Yang ketara:
+
+- Skrin **log masuk dan kata laluan** — "Email is required", "The two passwords
+  do not match.", "Password must be at least 12 characters." Skrin ini yang
+  pertama dilihat pengguna.
+- **Dokumen cetak** — kepala jadual kad laporan ("Late", "Exam", "Term", "Live"),
+  yang dicetak dan diberi kepada ibu bapa.
+- **Lapisan data** (`src/lib/supabase/*.ts`) — 51 mesej "Could not load …" yang
+  muncul dalam toast. Corak `i18n.t()` sedia ada daripada `auditTrail.ts`
+  digunakan; 31 kunci baharu di bawah `dataErrors.*`, disemak wujud dalam kedua-dua
+  fail bahasa. Nota: laluan import perlu `../../../lib/i18n`, bukan `../../` —
+  kesilapan pertama dikesan oleh `tsc`, bukan oleh mata.
+
+**Kod mati dipadam: 121 fail.** Graf kebolehan-capai dibina semula dengan fail
+ujian sebagai titik permulaan juga (versi pertama terlepas ini, dan menandakan
+dua fail ujian hidup sebagai mati).
+
+**Tiga fail SENGAJA TIDAK DIPADAM**, walaupun tiada kod mengimportnya, kerana
+ujian hidup mengesahkan kewujudannya:
+
+| Fail | Sebab |
+| --- | --- |
+| `components/admin/CalendarManager.tsx` | `no-legacy-api.test.ts` menyenaraikannya dalam `MIGRATED`, dan ujian "the list is a real list of files" gagal jika ia hilang |
+| `components/parent/AlertsScreen.tsx` | `family.test.ts` **membaca teks sumbernya** untuk memastikan ia tidak kembali ke API lama |
+| `lib/paymentGateways.ts` | `tests/branding/no-legacy-branding.test.ts` menyenaraikannya dalam `ALLOWED` dan mengesahkan setiap entri masih wujud |
+
+Dua yang pertama ialah pengawal regresi: memadamnya akan menghapuskan ujian yang
+menghalang ciri itu dibina semula. Yang ketiga ialah pengecualian penjenamaan
+yang masih dinyatakan sebabnya.
+
+**Perangkap yang hampir menyebabkan kesilapan:** terdapat berbilang fail dengan
+**nama asas yang sama** dalam direktori berbeza — `components/admin/Header.tsx`
+lwn `components/ui/Header.tsx`, `components/shared/NewChatScreen.tsx` lwn
+`components/teacher/NewChatScreen.tsx`, `hooks/useNotifications.ts` lwn
+`lib/hooks/useNotifications.ts`, `hooks/useOnlineStatus.ts` lwn
+`components/shared/OfflineIndicator.tsx`. Carian mengikut nama asas memberi
+amaran palsu dan, lebih bahaya, boleh memberi **keyakinan palsu**. Semakan
+dijalankan semula oleh pemeriksa bebas yang menyelesaikan setiap specifier
+import kepada fail sebenar; ia menemui tiga fail selamat di atas.
+
+**Dibetulkan dalam ujian:** `family.test.ts` menuntut penjelasan
+`ComingSoonScreen` ditulis sebagai literal (`explanation=`). Skrin yang sudah
+diterjemah menggunakan `explanationKey=`, jadi peraturan itu memaksa teks
+Inggeris kekal hidup semata-mata untuk memenuhi jenis — teks yang tiada pembaca
+boleh capai, kerana kunci sentiasa menang. Pengawal itu diperkuat: ia menerima
+kedua-dua bentuk DAN mengesahkan teks yang dirujuk kunci itu wujud serta melebihi
+120 aksara **dalam kedua-dua fail bahasa**. Disahkan songsang: memendekkan
+`quizzesScreen.explanation` kepada "Too short." menjadikan ujian gagal dengan
+mesej tepat; dipulihkan → lulus.
+
+`ComingSoonScreen` kini menerima `title`/`explanation` sebagai **pilihan** apabila
+kunci diberikan; jenis itu masih memaksa satu daripadanya hadir.
+
+Pengiraan babak ini: `tsc` 0, `tsc` backend 0, **531 ujian lulus** (74 fail),
+`vite build` keluar 0 (308 cebisan JS), pariti locale **3484 = 3484**,
+`supabase/`, `AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
+
 ## 10. Penyingkiran AI penuh (0.8.33)
 
 Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.

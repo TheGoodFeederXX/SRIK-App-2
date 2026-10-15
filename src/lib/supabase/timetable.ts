@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Timetable data access — SRIK.
  *
@@ -88,7 +89,7 @@ export async function getActiveTimetable(): Promise<TimetableInfo | null> {
         .limit(2000)
         .order('version', { ascending: false });
 
-    if (error) throw new Error(`Could not load the timetable: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheTimetable')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as {
         id: string; name: string; version: number; status: TimetableInfo['status'];
@@ -122,7 +123,7 @@ export async function listPeriods(timetableId: string): Promise<PeriodRecord[]> 
         .eq('timetable_id', timetableId)
         .order('period_number');
 
-    if (error) throw new Error(`Could not load the period times: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadThePeriodTimes')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         id: string; day_of_week: DayOfWeek; period_number: number;
@@ -225,7 +226,7 @@ export async function getClassTimetable(timetableId: string, classId: string) {
             .limit(500),
     ]);
 
-    if (entriesRes.error) throw new Error(`Could not load the timetable: ${entriesRes.error.message}`);
+    if (entriesRes.error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheTimetable')}: ${entriesRes.error.message}`);
 
     const entries = ((entriesRes.data ?? []) as unknown as RawEntry[]).map(r => {
         const e = toEntry(r);
@@ -252,7 +253,7 @@ export async function getTeacherTimetable(timetableId: string, teacherId: string
             .limit(500),
     ]);
 
-    if (entriesRes.error) throw new Error(`Could not load the timetable: ${entriesRes.error.message}`);
+    if (entriesRes.error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheTimetable')}: ${entriesRes.error.message}`);
 
     const entries = ((entriesRes.data ?? []) as unknown as RawEntry[]).map(r => {
         const e = toEntry(r);
@@ -288,7 +289,7 @@ export async function listTimetableClasses(timetableId: string): Promise<Timetab
         .eq('timetable_periods.timetable_id', timetableId)
         .limit(2000);
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
 
     const counts = new Map<string, { label: string; yearLevel: number; n: number }>();
     for (const r of (data ?? []) as unknown as {
@@ -317,7 +318,7 @@ export async function listTimetableTeachers(timetableId: string): Promise<Timeta
         .not('teacher_id', 'is', null)
         .limit(2000);
 
-    if (error) throw new Error(`Could not load teachers: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTeachers')}: ${error.message}`);
 
     const counts = new Map<string, { label: string; n: number }>();
     for (const r of (data ?? []) as unknown as {
@@ -385,7 +386,7 @@ export async function findIncompleteEntries(timetableId: string) {
             .is('subject_id', null),
     ]);
 
-    if (total.error) throw new Error(`Could not check the timetable: ${total.error.message}`);
+    if (total.error) throw new Error(`${i18n.t('dataErrors.couldNotCheckTheTimetable')}: ${total.error.message}`);
 
     return {
         missingTeacher: noTeacher.count ?? 0,
@@ -458,7 +459,7 @@ export async function listAssignableSubjects(
         .eq('assignment_type', 'SUBJECT_TEACHER')
         .not('subject_id', 'is', null);
 
-    if (error) throw new Error(`Could not load subjects: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadSubjects')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         subject_id: string; teacher_id: string;
@@ -634,7 +635,7 @@ export async function findTeacherClash(
         .neq('class_id', excludeClassId)
         .limit(1);
 
-    if (error) throw new Error(`Could not check for a clash: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotCheckForAClash')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as {
         classes: { display_name: string }; subjects: { code: string } | null;
@@ -682,7 +683,7 @@ export async function getMyClassId(): Promise<string | null> {
         .order('enrolled_at', { ascending: false })
         .limit(1);
 
-    if (error) throw new Error(`Could not find your class: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotFindYourClass')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as { class_id: string | null }[];
     return rows.length > 0 ? rows[0].class_id : null;
@@ -705,7 +706,7 @@ export async function getMyTeacherId(): Promise<string | null> {
         .eq('user_id', (await supabase.auth.getUser()).data.user?.id ?? '')
         .limit(1);
 
-    if (error) throw new Error(`Could not read your role: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotReadYourRole')}: ${error.message}`);
 
     // Only a teacher has a teacher row to find; asking as anyone else would be a
     // wasted round trip and a confusing empty result.
@@ -718,7 +719,7 @@ export async function getMyTeacherId(): Promise<string | null> {
         .limit(2000)
         .limit(1);
 
-    if (teacherError) throw new Error(`Could not find your teacher record: ${teacherError.message}`);
+    if (teacherError) throw new Error(`${i18n.t('dataErrors.couldNotFindYourTeacherRecord')}: ${teacherError.message}`);
 
     const found = (rows ?? []) as { id: string }[];
     return found.length > 0 ? found[0].id : null;

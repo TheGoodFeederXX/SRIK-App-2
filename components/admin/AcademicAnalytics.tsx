@@ -163,7 +163,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-xl shadow-sm p-4 mb-6">
                 <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
                     <div>
-                        <label className="block text-xs font-semibold text-gray-700 mb-2">Term</label>
+                        <label className="block text-xs font-semibold text-gray-700 mb-2">{t('common.term')}</label>
                         <div className="flex flex-wrap gap-2">
                             {(['current', ...CANONICAL_TERMS] as const).map(term => (
                                 <motion.button

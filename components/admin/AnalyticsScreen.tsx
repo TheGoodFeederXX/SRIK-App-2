@@ -302,7 +302,7 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                 setMetrics(data);
                 setLoaded(true);
             } else {
-                setError("Failed to fetch analytics data from the server.");
+                setError(t('analyticsScreen.failedToFetchAnalyticsDataFromTheServer'));
             }
         } catch (err: any) {
             setError(err.message || "An unexpected error occurred while loading analytics.");
@@ -379,7 +379,7 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
                                     <DonutChart percentage={fees.paid || 0} color="#22c55e" size={120} strokeWidth={12} />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center">
                                         <span className="text-2xl font-bold text-gray-800">{fees.paid}%</span>
-                                        <span className="text-xs text-gray-500">Paid</span>
+                                        <span className="text-xs text-gray-500">{t('common.paid')}</span>
                                     </div>
                                 </div>
                                 <div className="space-y-2 text-sm">

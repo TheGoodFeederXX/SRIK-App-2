@@ -229,7 +229,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
     const handleSubmit = useCallback(async (e?: React.FormEvent) => {
         e?.preventDefault();
         if (!admissionNo.trim() || !fullName.trim()) {
-            toast.error("Please enter the admission number and the student's name.");
+            toast.error(t('addStudentScreen.pleaseEnterTheAdmissionNumberAndTheStudent'));
             return;
         }
 
@@ -305,7 +305,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                         value={admissionNo}
                         onChange={setAdmissionNo}
                         icon={<History size={18} />}
-                        hint="Used on report cards and receipts. Must be unique."
+                        hint={t('addStudentScreen.usedOnReportCardsAndReceiptsMustBeUnique')}
                     />
                     <InputField
                         id="fullName"
@@ -363,7 +363,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                         onChange={setIdentityNo}
                         icon={<User size={18} />}
                         required={false}
-                        hint="MyKad or birth certificate number, if available."
+                        hint={t('addStudentScreen.mykadOrBirthCertificateNumberIfAvailable')}
                     />
                     <InputField
                         id="address"
@@ -383,7 +383,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                         onChange={setPreviousSchool}
                         icon={<History size={18} />}
                         required={false}
-                        hint="Leave blank if this is their first school."
+                        hint={t('addStudentScreen.leaveBlankIfThisIsTheirFirstSchool')}
                     />
                     <InputField
                         id="admissionDate"

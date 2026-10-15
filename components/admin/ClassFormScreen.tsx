@@ -169,7 +169,7 @@ const ClassFormScreen: React.FC<ClassFormScreenProps> = ({
                                 type="text"
                                 value={name}
                                 onChange={e => setName(e.target.value)}
-                                placeholder="e.g., Al-Junaidi"
+                                placeholder={t('common.exampleClassName')}
                                 className="w-full p-3 bg-gray-50 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 required
                             />

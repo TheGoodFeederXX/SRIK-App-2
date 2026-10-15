@@ -200,7 +200,7 @@ const TeacherAttendanceApproval: React.FC<TeacherAttendanceApprovalProps> = ({ n
 
                                 <div className="space-y-3 mb-6 bg-gray-50 rounded-xl p-4 border border-gray-100">
                                     <div className="flex justify-between items-center text-sm">
-                                        <span className="text-gray-500 font-medium">Date</span>
+                                        <span className="text-gray-500 font-medium">{t('common.date')}</span>
                                         <span className="text-gray-900 font-semibold">{formatDate(request.date)}</span>
                                     </div>
                                     <div className="flex justify-between items-center text-sm">

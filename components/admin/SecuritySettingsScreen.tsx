@@ -81,7 +81,7 @@ const SecuritySettingsScreen: React.FC = () => {
             });
             toast.success(t('securitySettingsScreen.securitySettingsSaved'));
         } catch (error: any) {
-            toast.error(`Error: ${error.message} `);
+            toast.error(`${t('common.error')}: ${error.message}`);
         } finally {
             setIsLoading(false);
         }

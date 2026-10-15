@@ -356,8 +356,8 @@ const AuditTrailViewer: React.FC = () => {
                                         <p className="text-gray-900">{new Date(selectedLog.performed_at).toLocaleString('ms-MY')}</p>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-gray-700">User</p>
-                                        <p className="text-gray-900">{selectedLog.user_email || 'System'}</p>
+                                        <p className="text-sm font-semibold text-gray-700">{t('common.user')}</p>
+                                        <p className="text-gray-900">{selectedLog.user_email || t('common.system')}</p>
                                     </div>
                                     <div>
                                         <p className="text-sm font-semibold text-gray-700">{t('auditTrailViewer.actionType')}</p>

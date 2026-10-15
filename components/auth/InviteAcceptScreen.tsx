@@ -82,16 +82,16 @@ const InviteAcceptScreen: React.FC = () => {
                 const tokenToUse = accessToken || localToken;
 
                 if (!tokenToUse) {
-                    throw new Error('No valid tokens found. The invite link may have expired.');
+                    throw new Error(t('inviteAcceptScreen.noValidTokensFound'));
                 }
 
                 // 2. ACTUALLY SIGN IN. Storing the tokens in sessionStorage was not a
                 // session: nothing ever handed them to Supabase, so the next screen saw
                 // no signed-in user and sent the invitee back to the sign-in page. The
                 // account existed; they just could not reach it.
-                setMessage('Verifying your invitation...');
+                setMessage(t('inviteAcceptScreen.verifyingYourInvitation'));
                 if (!accessToken || !refreshToken) {
-                    throw new Error('The invitation link is incomplete. Please ask the office for a new one.');
+                    throw new Error(t('inviteAcceptScreen.theInvitationLinkIsIncomplete'));
                 }
                 const sessionResult = await acceptInviteSession(accessToken, refreshToken);
                 if (!sessionResult.success) {
@@ -104,7 +104,7 @@ const InviteAcceptScreen: React.FC = () => {
                 // the role in the steps above; there is nothing left to finish.
                 setSchoolGeneratedId(null);
                 setStatus('success');
-                setMessage('Welcome! Your account is ready.');
+                setMessage(t('inviteAcceptScreen.welcomeYourAccountIsReady'));
 
                 // 4. Redirect after brief welcome display
                 // Attempt to get role from user metadata or fallback
@@ -118,7 +118,7 @@ const InviteAcceptScreen: React.FC = () => {
             } catch (err: any) {
                 console.error('[InviteAcceptScreen]', err);
                 setStatus('error');
-                setMessage('Could not process invitation');
+                setMessage(t('inviteAcceptScreen.couldNotProcessInvitation'));
                 setErrorDetails(err.message || 'The link may be expired or already used.');
             }
         };

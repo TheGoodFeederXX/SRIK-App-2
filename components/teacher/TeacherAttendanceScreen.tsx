@@ -245,7 +245,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
                 return;
             }
 
-            toast.success(`Attendance for ${selectedDate} saved successfully!`);
+            toast.success(t('teacherAttendanceScreen.attendanceSavedSuccessfully', { date: selectedDate }));
 
             // Re-read rather than patching local state: the database is the record,
             // and the term counts below each name are derived from it.
@@ -296,7 +296,7 @@ const TeacherMarkAttendanceScreen: React.FC<TeacherMarkAttendanceScreenProps> = 
         // A teacher marks a register for today or a past day — never the future.
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         if (dateVal > todayStr) {
-            toast.error("You can't mark attendance for a future date.");
+            toast.error(t('teacherAttendanceScreen.youCantMarkAttendanceForAFutureDate'));
             return;
         }
         setSelectedDate(dateVal);

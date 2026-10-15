@@ -1,3 +1,4 @@
+import i18n from '../lib/i18n';
 import { api } from '../lib/api';
 import { toast } from 'react-hot-toast';
 import {
@@ -330,11 +331,11 @@ export async function fetchStudentDocuments(studentId: string | number): Promise
 export async function uploadStudentDocument(studentId: string | number, docData: any): Promise<boolean> {
     try {
         await api.addMyDocument(docData);
-        toast.success('Document uploaded successfully');
+        toast.success(i18n.t('studentService.documentUploadedSuccessfully'));
         return true;
     } catch (err) {
         console.error('Error uploading student document:', err);
-        toast.error('Failed to upload document');
+        toast.error(i18n.t('studentService.failedToUploadDocument'));
         return false;
     }
 }

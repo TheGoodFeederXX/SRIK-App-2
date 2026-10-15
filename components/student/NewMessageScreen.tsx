@@ -216,7 +216,7 @@ const NewMessageScreen: React.FC<NewMessageScreenProps> = ({ navigateTo }) => {
                 if (firstGroup) setActiveTab(firstGroup);
             } catch (e: any) {
                 console.error('Failed to load contacts', e);
-                setError('Could not load contacts. Please try again.');
+                setError(t('newMessageScreen.couldNotLoadContactsPleaseTryAgain'));
             } finally {
                 setLoading(false);
             }

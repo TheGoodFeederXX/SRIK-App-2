@@ -1,3 +1,4 @@
+import i18n from '../../lib/i18n';
 import { API_BASE_URL } from '../config';
 import { getJwtExpiryMs, getJwtSubject } from '../tokenUtils';
 import { networkManager } from '../networkManager';
@@ -193,7 +194,7 @@ class ApiCore {
             }
 
             if (isOfflineBlockedEndpoint(endpoint)) {
-                throw new Error('Payments require an internet connection. Please reconnect and try again.');
+                throw new Error(i18n.t('apiCore.paymentsRequireAnInternetConnection'));
             }
 
             let parsedBody: any = {};
@@ -358,7 +359,7 @@ class ApiCore {
 
                     if (fetchErr.name === 'AbortError') {
                         console.error(`â±ï¸ [API-TIMEOUT] Request to ${url} timed out after 30s`);
-                        throw new Error('Connection timed out. Please check your internet or try again.');
+                        throw new Error(i18n.t('apiCore.connectionTimedOut'));
                     }
                     console.error(`ðŸ’¥ [API-FATAL] Network error hitting ${url}:`, fetchErr.message);
                     throw fetchErr;
@@ -517,7 +518,7 @@ class ApiCore {
             const refreshToken = sessionStorage.getItem('auth_refresh_token') || localStorage.getItem('auth_refresh_token');
             const result = await this.post<any>('/auth/refresh', { refreshToken });
             if (!result || !result.token) {
-                throw new Error('Failed to refresh session');
+                throw new Error(i18n.t('apiCore.failedToRefreshSession'));
             }
             sessionStorage.setItem('auth_token', result.token);
             if (result.refreshToken) {

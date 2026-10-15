@@ -168,8 +168,8 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
     try {
       // Publishing is the database's job, and it refuses while any child still has
       // no decision on a mark — a rule the screen must not be able to bypass.
-      await publishReportCard(String(studentId), currentTermId as string, `Set to ${newStatus} by the office`);
-      toast.success(`Report ${newStatus.toLowerCase()} successfully`);
+      await publishReportCard(String(studentId), currentTermId as string, t('reportCardPublishing.setToStatusByTheOffice', { status: newStatus }));
+      toast.success(t('reportCardPublishing.reportStatusUpdatedSuccessfully', { status: newStatus.toLowerCase() }));
       fetchStudentsWithReports(); // Refresh data
     } catch (err) {
       console.error('Error updating report status:', err);
@@ -285,8 +285,8 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
     const toPublish = filteredRoster.filter(s => s.status === 'Submitted' && s.activeReportId);
     if (toPublish.length === 0) return;
 
-    if (window.confirm(`Are you sure you want to publish all ${toPublish.length} submitted report cards for this class and term?`)) {
-      toast.loading(`Publishing ${toPublish.length} reports...`, { id: 'bulk-publish' });
+    if (window.confirm(t('reportCardPublishing.confirmPublishAll', { count: toPublish.length }))) {
+      toast.loading(t('reportCardPublishing.publishingReports', { count: toPublish.length }), { id: 'bulk-publish' });
 
       try {
         // Publishing is done by the database, one child at a time, so a failure
@@ -390,7 +390,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                 </div>
               </div>
               <div className="flex-1">
-                <label className="block text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Term</label>
+                <label className="block text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">{t('common.term')}</label>
                 <div className="flex gap-2 overflow-x-auto no-scrollbar">
                   {CANONICAL_TERMS.map(term => (
                     <button
@@ -499,7 +499,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                     </div>
                     <div className="flex-1 p-2 rounded-xl bg-emerald-50 border border-emerald-100 text-center">
                       <div className="text-sm font-black text-emerald-700">{group.publishedCount}</div>
-                      <div className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">Live</div>
+                      <div className="text-[8px] font-black text-emerald-400 uppercase tracking-widest">{t('reportCardPublishing.live')}</div>
                     </div>
                   </div>
                 </motion.button>
@@ -573,7 +573,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                       {student.status === 'Published' && (
                         <div className="ml-auto flex items-center gap-1.5">
                           <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                          <span className="text-[8px] md:text-[9px] uppercase font-black text-emerald-600 tracking-widest">Live</span>
+                          <span className="text-[8px] md:text-[9px] uppercase font-black text-emerald-600 tracking-widest">{t('reportCardPublishing.live')}</span>
                         </div>
                       )}
                     </div>
@@ -590,7 +590,7 @@ const ReportCardPublishing: React.FC<ReportCardPublishingProps> = ({ schoolId: p
                       <div className="text-xs md:text-xs font-black text-gray-700">{selectedYear}</div>
                     </div>
                     <div className="p-2 md:p-3 rounded-xl md:rounded-2xl bg-gray-50 border border-gray-100 text-center group-hover:bg-gray-100 transition-colors">
-                      <div className="text-[8px] md:text-[9px] text-gray-500 uppercase font-black tracking-[0.15em] mb-1">Term</div>
+                      <div className="text-[8px] md:text-[9px] text-gray-500 uppercase font-black tracking-[0.15em] mb-1">{t('common.term')}</div>
                       <div className="text-xs md:text-xs font-black text-gray-700">{selectedTerm}</div>
                     </div>
                   </div>

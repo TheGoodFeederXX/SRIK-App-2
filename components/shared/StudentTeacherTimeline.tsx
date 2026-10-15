@@ -50,7 +50,7 @@ const StudentTeacherTimeline = ({ subjectType, subjectId, canEdit }: { subjectTy
     useEffect(() => { fetchData(); }, [fetchData]);
 
     const handleAdd = async () => {
-        if (!title.trim()) { toast.error('A title is required'); return; }
+        if (!title.trim()) { toast.error(t('studentTeacherTimeline.aTitleIsRequired')); return; }
         setSaving(true);
         try {
             await api.addTimelineEvent({ subject_type: subjectType, subject_id: subjectId, title: title.trim(), description: description.trim() || undefined, event_date: eventDate, event_type: 'Custom' });

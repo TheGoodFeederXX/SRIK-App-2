@@ -727,7 +727,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                                 <AlertCard index={1} label={t('dashboardOverview.reportsToPublish')} value={unpublishedReports} icon={<ReportIcon />} onClick={() => navigateTo('reportCardPublishing', t('dashboardOverview.publishReports'))} color="text-red-500" />
                             )}
                             {overdueFees > 0 && (
-                                <AlertCard index={2} label="in Overdue Fees" value={new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', t('dashboardOverview.feeManagement'))} color="text-orange-500" />
+                                <AlertCard index={2} label={t('dashboardOverview.inOverdueFees')} value={new Intl.NumberFormat('ms-MY', { style: 'currency', currency: 'MYR', maximumFractionDigits: 0 }).format(overdueFees)} icon={<ReceiptIcon />} onClick={() => navigateTo('feeManagement', t('dashboardOverview.feeManagement'))} color="text-orange-500" />
                             )}
                             {unpublishedReports === 0 && overdueFees === 0 && (
                                 <div className="bg-white p-4 rounded-xl shadow-sm text-center text-gray-500">

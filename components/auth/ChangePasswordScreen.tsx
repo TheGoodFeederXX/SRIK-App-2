@@ -31,17 +31,17 @@ const ChangePasswordScreen: React.FC = () => {
         setError('');
 
         if (!password || !confirm) {
-            setError('Please fill in both fields.');
+            setError(t('changePasswordScreen.pleaseFillInBothFields'));
             return;
         }
         if (password !== confirm) {
-            setError('The two passwords do not match.');
+            setError(t('changePasswordScreen.theTwoPasswordsDoNotMatch'));
             return;
         }
         // Mirrors the project's minimum_password_length so the user is told
         // before a round trip, rather than after a confusing rejection.
         if (password.length < 12) {
-            setError('Password must be at least 12 characters.');
+            setError(t('changePasswordScreen.passwordMustBeAtLeast12Characters'));
             return;
         }
 

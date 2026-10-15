@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Assessments and report cards — SRIK.
  *
@@ -138,7 +139,7 @@ export async function listTerms(): Promise<AcademicTerm[]> {
         .limit(2000)
         .order('sequence');
 
-    if (error) throw new Error(`Could not load the terms: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheTerms')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         id: string; name: string; sequence: number;
@@ -227,7 +228,7 @@ export async function listAssessments(
     if (filter?.subjectId) query = query.eq('subject_id', filter.subjectId);
 
     const { data, error } = await query.order('created_at', { ascending: false });
-    if (error) throw new Error(`Could not load the assessments: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheAssessments')}: ${error.message}`);
 
     return ((data ?? []) as unknown as RawAssessment[]).map(toAssessment);
 }
@@ -241,7 +242,7 @@ export async function getAssessment(id: string): Promise<Assessment | null> {
         .eq('id', id)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load the assessment: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheAssessment')}: ${error.message}`);
     return data ? toAssessment(data as unknown as RawAssessment) : null;
 }
 
@@ -339,7 +340,7 @@ export async function getMarkRegister(assessmentId: string): Promise<MarkRegiste
         .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`)
         .limit(2000);
 
-    if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
+    if (enrollError) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheClassList')}: ${enrollError.message}`);
 
     const studentIds = ((enrollments ?? []) as unknown as { student_id: string }[])
         .map(e => e.student_id);
@@ -358,8 +359,8 @@ export async function getMarkRegister(assessmentId: string): Promise<MarkRegiste
             .in('student_id', studentIds),
     ]);
 
-    if (studentsRes.error) throw new Error(`Could not load the students: ${studentsRes.error.message}`);
-    if (resultsRes.error) throw new Error(`Could not load the marks: ${resultsRes.error.message}`);
+    if (studentsRes.error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheStudents')}: ${studentsRes.error.message}`);
+    if (resultsRes.error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheMarks')}: ${resultsRes.error.message}`);
 
     const students = (studentsRes.data ?? []) as unknown as {
         id: string; full_name: string; admission_no: string; status: string;
@@ -470,7 +471,7 @@ export async function listGradeBoundaries(): Promise<GradeBoundary[]> {
         .eq('status', 'ACTIVE')
         .order('sort_order');
 
-    if (error) throw new Error(`Could not load the grade scale: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheGradeScale')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         id: string; grade: string; min_percent: number;
@@ -524,7 +525,7 @@ export async function listReportCards(termId: string): Promise<ReportCardRow[]> 
         .eq('academic_term_id', termId)
         .order('version', { ascending: false });
 
-    if (error) throw new Error(`Could not load the report cards: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheReportCards')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         id: string; student_id: string; academic_term_id: string; version: number;
@@ -644,7 +645,7 @@ export async function getReportSnapshot(
         .limit(1)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load the report card: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheReportCard')}: ${error.message}`);
     if (!data) return null;
 
     const row = data as unknown as {
@@ -669,7 +670,7 @@ export async function previewReport(
         p_academic_term_id: termId,
     });
 
-    if (error) throw new Error(`Could not build the report preview: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotBuildTheReportPreview')}: ${error.message}`);
     return toSnapshot(data);
 }
 
@@ -740,7 +741,7 @@ export async function getSchoolDetails(): Promise<SchoolDetails | null> {
         .limit(2000)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load the school details: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheSchoolDetails')}: ${error.message}`);
     if (!data) return null;
 
     const d = data as unknown as {
@@ -788,7 +789,7 @@ export async function listClassStudents(classId: string): Promise<ClassStudent[]
         .lte('enrolled_at', `${todayInKualaLumpur()}T23:59:59`)
         .or(`ended_at.is.null,ended_at.gte.${todayInKualaLumpur()}T00:00:00`);
 
-    if (enrollError) throw new Error(`Could not load the class list: ${enrollError.message}`);
+    if (enrollError) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheClassList')}: ${enrollError.message}`);
 
     const ids = ((enrollments ?? []) as unknown as { student_id: string }[]).map(e => e.student_id);
     if (ids.length === 0) return [];
@@ -799,7 +800,7 @@ export async function listClassStudents(classId: string): Promise<ClassStudent[]
         .limit(2000)
         .in('id', ids);
 
-    if (error) throw new Error(`Could not load the students: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheStudents')}: ${error.message}`);
 
     return ((data ?? []) as unknown as {
         id: string; full_name: string; admission_no: string; status: string;
@@ -918,7 +919,7 @@ export async function getAcademicAnalytics(
         p_class_id: classId || null,
     });
 
-    if (error) throw new Error(`Could not load academic analytics: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadAcademicAnalytics')}: ${error.message}`);
     return data as unknown as AcademicAnalytics;
 }
 
@@ -954,7 +955,7 @@ export async function listSubjectMarks(termId: string): Promise<SubjectMarkRow[]
     const db = requireSupabase();
     const { data, error } = await db.rpc('subject_marks_for_term', { p_academic_term_id: termId });
 
-    if (error) throw new Error(`Could not load subject marks: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadSubjectMarks')}: ${error.message}`);
     return ((data ?? []) as unknown as {
         student_id: string; student_name: string; subject_id: string; subject_name: string | null;
         average_percent: number | string | null; marks_counted: number;

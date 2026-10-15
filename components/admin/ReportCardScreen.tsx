@@ -188,7 +188,7 @@ function ReportSheet({ snapshot, school, isDraft, gradeBoundaries, version }: Re
                         <th className="border border-gray-400 px-2 py-1 text-left">{t('reportCardScreen.penilaian')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-16">{t('reportCardScreen.marks')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">%</th>
-                        <th className="border border-gray-400 px-2 py-1 text-center w-14">Gred</th>
+                        <th className="border border-gray-400 px-2 py-1 text-center w-14">{t('common.grade')}</th>
                         <th className="border border-gray-400 px-2 py-1 text-center w-14">TP</th>
                     </tr>
                 </thead>

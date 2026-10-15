@@ -158,8 +158,8 @@ const ResourceSharing: React.FC<ResourceSharingProps> = ({ teacherId }) => {
 
                             <div className="space-y-2 text-sm text-gray-600 mb-4">
                                 <p><strong>{t('resourceSharing.subject')}</strong> {resource.subject}</p>
-                                {!!resource.grade && <p><strong>Grade:</strong> {resource.grade}</p>}
-                                <p><strong>By:</strong> {resource.author_name}</p>
+                                {!!resource.grade && <p><strong>{t('common.grade')}:</strong> {resource.grade}</p>}
+                                <p><strong>{t('common.by')}:</strong> {resource.author_name}</p>
                             </div>
 
                             <div className="flex items-center justify-between">

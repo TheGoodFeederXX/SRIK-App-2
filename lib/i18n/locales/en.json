@@ -129,7 +129,24 @@
     "legal": "Legal",
     "parent": "Parent",
     "pay": "Pay",
-    "auto": "Auto"
+    "auto": "Auto",
+    "paid": "Paid",
+    "system": "System",
+    "cost": "Cost",
+    "used": "Used",
+    "more": "More",
+    "demo": "Demo",
+    "now": "NOW",
+    "by": "By",
+    "home": "Home",
+    "exampleClassName": "e.g. Al-Junaidi",
+    "exampleFirstName": "e.g. Ahmad",
+    "exampleLastName": "e.g. Abdullah",
+    "exampleStudentCode": "e.g. SCH-001-STU-1001",
+    "exampleLocation": "e.g. Building A, Room 101",
+    "exampleSubject": "e.g. Mathematics",
+    "push": "Push",
+    "live": "Live"
   },
   "auth": {
     "signIn": "Sign In",
@@ -506,7 +523,8 @@
     "quickActions": "Quick Actions",
     "searchAllActions": "Search all actions…",
     "reportsToPublish": "Reports to Publish",
-    "reportsArePendingReview": "reports are pending review"
+    "reportsArePendingReview": "reports are pending review",
+    "inOverdueFees": "in Overdue Fees"
   },
   "academicReportScreen": {
     "loadingReport": "Loading report...",
@@ -564,7 +582,8 @@
     "searchTopicsKeywords": "Search topics, keywords...",
     "couldNotLoadLearningHubResources": "Could not load Learning Hub resources",
     "selectOneOfYourClassesInTheMonitorTabFirstSoIK": "Select one of your classes in the Monitor tab first, so I know who to recommend this to.",
-    "couldNotRecommendThisResource": "Could not recommend this resource"
+    "couldNotRecommendThisResource": "Could not recommend this resource",
+    "recommendedToStudents": "Recommended to {{count}} student(s)."
   },
   "newMessageScreen": {
     "nameYourGroup": "Name Your Group",
@@ -578,7 +597,8 @@
     "noStudentsOrTeachersFound": "No students or teachers found",
     "noContactsAvailable": "No contacts available",
     "couldNotCreateGroup": "Could not create group",
-    "eGStudyGroup10AScienceProject": "e.g. Study Group 10A, Science Project..."
+    "eGStudyGroup10AScienceProject": "e.g. Study Group 10A, Science Project...",
+    "couldNotLoadContactsPleaseTryAgain": "Could not load contacts. Please try again."
   },
   "quizPlayerScreen": {
     "quizPlayer": "Quiz Player"
@@ -1189,7 +1209,10 @@
     "correctAnswer": "Correct answer",
     "failedToCreateQuiz": "Failed to create quiz",
     "removeQuestion": "Remove question",
-    "eGWeeklyMathAssessment": "e.g. Weekly Math Assessment"
+    "eGWeeklyMathAssessment": "e.g. Weekly Math Assessment",
+    "addedQuestion": "Added {{type}} Question",
+    "multipleChoice": "Multiple Choice",
+    "theory": "Theory"
   },
   "recognitionPlatform": {
     "recognitionPlatform": "Recognition Platform"
@@ -1310,7 +1333,9 @@
     "couldNotSaveAttendancePleaseTryAgain": "Could not save attendance. Please try again.",
     "couldNotLoadTheRegister": "Could not load the register.",
     "couldNotSaveAttendance": "Could not save attendance.",
-    "noStudentsFoundForThisClass": "No students found for this class."
+    "noStudentsFoundForThisClass": "No students found for this class.",
+    "attendanceSavedSuccessfully": "Attendance for {{date}} saved successfully!",
+    "youCantMarkAttendanceForAFutureDate": "You can't mark attendance for a future date."
   },
   "teacherChangePasswordScreen": {
     "currentPassword": "Current Password",
@@ -1508,7 +1533,9 @@
     "accountNumber": "Account Number",
     "recentPayslips": "Recent Payslips",
     "status": "Status",
-    "viewDetails": "View Details"
+    "viewDetails": "View Details",
+    "note": "Note:",
+    "yourSalaryIncludesBasePay": "Your salary includes base pay plus any allowances, bonuses, and deductions. The deductions are Malaysian statutory contributions (EPF/SOCSO) at the current rates."
   },
   "teacherSecurityScreen": {
     "checkingSecurityProtocols": "Checking security protocols...",
@@ -1524,7 +1551,9 @@
     "failedToStart2FASetup": "Failed to start 2FA setup.",
     "invalidCodePleaseTryAgain": "Invalid code — please try again.",
     "scanThisQRCodeWithAnAuthenticatorAppGoogleAuth": "Scan this QR code with an authenticator app (Google Authenticator, Authy, etc.), then enter the 6-digit code it shows.",
-    "disable": "Disable"
+    "disable": "Disable",
+    "twoFactorQrCode": "2FA QR code",
+    "manualEntryKey": "Manual entry key:"
   },
   "teacherSelfAttendance": {
     "loadingAttendanceRecords": "Loading attendance records...",
@@ -1547,7 +1576,8 @@
   },
   "teacherSettingsScreen": {
     "settings": "Settings",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "noSettingsToChangeYet": "There are no settings to change here yet. Ask the office if your details need correcting."
   },
   "teacherUnifiedAttendanceScreen": {
     "teacherUnifiedAttendance": "Teacher Unified Attendance"
@@ -1586,7 +1616,11 @@
     "removeChildLink": "Remove Child Link",
     "failedToUnlinkStudent": "Failed to unlink student.",
     "verifying": "Verifying...",
-    "linkAccount": "Link Account"
+    "linkAccount": "Link Account",
+    "pleaseEnterTheStudent": "Please enter the student's admission number.",
+    "pleaseEnterTheChild": "Please enter the child's admission number.",
+    "pleaseEnterTheStudentIdCode": "Please enter the student's ID code.",
+    "pleaseEnterTheChildsDateOfBirth": "Please enter the child's date of birth to confirm the link."
   },
   "myAnnouncementsScreen": {
     "pengumuman": "Announcements",
@@ -2264,7 +2298,8 @@
     "failedToCloseQueryLetter": "Failed to close query letter",
     "failedToSubmitResponse": "Failed to submit response",
     "classTeacher": "Class Teacher —",
-    "eGUnauthorizedAbsenceOn10July": "e.g. Unauthorized absence on 10 July"
+    "eGUnauthorizedAbsenceOn10July": "e.g. Unauthorized absence on 10 July",
+    "examplePromotion": "e.g. Promoted to Head of Department"
   },
   "projectBoardScreen": {
     "projectBoard": "Project Board"
@@ -2353,7 +2388,10 @@
     "student": "Student",
     "penggal1": "Semester 1",
     "penggal2": "Semester 2",
-    "penggal3": "Semester 3"
+    "penggal3": "Semester 3",
+    "started": "STARTED",
+    "current": "CURRENT",
+    "remaining": "REMAINING"
   },
   "studentGateScreen": {
     "studentGate": "Student Gate",
@@ -2368,7 +2406,8 @@
     "timelineEntryAdded": "Timeline entry added",
     "failedToAddEntry": "Failed to add entry",
     "failedToRemoveEntry": "Failed to remove entry",
-    "addEntry": "Add Entry"
+    "addEntry": "Add Entry",
+    "aTitleIsRequired": "A title is required"
   },
   "surveysAndPolls": {
     "surveysAndPolls": "Surveys And Polls"
@@ -2414,12 +2453,20 @@
     "cyan": "Cyan"
   },
   "authCallback": {
-    "thisWillOnlyTakeAMoment": "This will only take a moment."
+    "thisWillOnlyTakeAMoment": "This will only take a moment.",
+    "authenticationIsNotConfiguredYet": "Authentication is not configured yet.",
+    "thisLinkIsInvalidOrHasExpired": "This link is invalid or has expired. Please request a new one.",
+    "verificationFailed": "Verification Failed"
   },
   "inviteAcceptScreen": {
     "thisWillOnlyTakeAMoment": "This will only take a moment.",
     "yourSchoolID": "Your School ID",
-    "goToLogin": "Go to Login"
+    "goToLogin": "Go to Login",
+    "noValidTokensFound": "No valid tokens found. The invite link may have expired.",
+    "verifyingYourInvitation": "Verifying your invitation...",
+    "theInvitationLinkIsIncomplete": "The invitation link is incomplete. Please ask the office for a new one.",
+    "welcomeYourAccountIsReady": "Welcome! Your account is ready.",
+    "couldNotProcessInvitation": "Could not process invitation"
   },
   "login": {
     "forgotPassword": "Forgot Password",
@@ -2432,7 +2479,9 @@
     "sending": "Sending...",
     "sendNewLink": "Send New Link",
     "openLinkToChoosePassword": "Open it to choose a new password.",
-    "resetLinkSentTo": "We have sent a password reset link to"
+    "resetLinkSentTo": "We have sent a password reset link to",
+    "emailRequired": "Email is required",
+    "pleaseEnterBothEmailAndPassword": "Please enter both email and password."
   },
   "verifiedAdminRoute": {
     "verifyingCredentials": "Verifying credentials..."
@@ -2461,7 +2510,8 @@
     "accountCreatedSuccessfully": "Account created successfully",
     "securityNote": "🔒 Security Note:",
     "nextSteps": "📧 Next Steps:",
-    "activeImmediately": "active immediately"
+    "activeImmediately": "active immediately",
+    "couldNotGeneratePdf": "Could not generate PDF. Please try the \"Download TXT\" option."
   },
   "dashboardBottomNav": {
     "analytics": "Analytics",
@@ -2618,7 +2668,11 @@
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
     "savedButTheClassWasNotChanged": "Saved, but the class was not changed",
     "studentFullName": "Student's full name",
-    "guardianName": "Guardian's name"
+    "guardianName": "Guardian's name",
+    "usedOnReportCardsAndReceiptsMustBeUnique": "Used on report cards and receipts. Must be unique.",
+    "mykadOrBirthCertificateNumberIfAvailable": "MyKad or birth certificate number, if available.",
+    "leaveBlankIfThisIsTheirFirstSchool": "Leave blank if this is their first school.",
+    "pleaseEnterTheAdmissionNumberAndTheStudent": "Please enter the admission number and the student's name."
   },
   "addTeacherScreen": {
     "notStated": "Not stated",
@@ -2851,7 +2905,8 @@
     "weeklyHoursAppearOnceTeachersHaveLessonsOnATim": "Weekly hours appear once teachers have lessons on a timetable.",
     "dailyAttendanceAppearsHereOnceRegistersAreMark": "Daily attendance appears here once registers are marked.",
     "newEnrolmentsPerMonthAppearHere": "New enrolments per month appear here.",
-    "couldNotLoadThisData": "Couldn't load this data"
+    "couldNotLoadThisData": "Couldn't load this data",
+    "failedToFetchAnalyticsDataFromTheServer": "Failed to fetch analytics data from the server."
   },
   "announcementsScreen": {
     "pengumuman": "Announcements",
@@ -3009,7 +3064,10 @@
     "newPasswordsDoNotMatch": "New passwords do not match.",
     "updating": "Updating...",
     "updatePassword": "Update Password",
-    "failedToChangePassword": "Failed to change password."
+    "failedToChangePassword": "Failed to change password.",
+    "pleaseFillInBothFields": "Please fill in both fields.",
+    "theTwoPasswordsDoNotMatch": "The two passwords do not match.",
+    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters."
   },
   "classAttendanceDetailScreen": {
     "noStudentsFoundForThisClass": "No students found for this class.",
@@ -3530,7 +3588,12 @@
     "statusPublished": "Published",
     "statusDraft": "Draft",
     "drafting": "Drafting",
-    "noReportYet": "No Report Yet"
+    "noReportYet": "No Report Yet",
+    "live": "Live",
+    "reportStatusUpdatedSuccessfully": "Report {{status}} successfully",
+    "confirmPublishAll": "Are you sure you want to publish all {{count}} submitted report cards for this class and term?",
+    "publishingReports": "Publishing {{count}} reports...",
+    "setToStatusByTheOffice": "Set to {{status}} by the office"
   },
   "reportsScreen": {
     "purataMarkah": "Average marks",
@@ -3657,7 +3720,8 @@
     "kssrDescription": "Primary School Standard Curriculum.",
     "cambridgeEdexcelIgcse": "Cambridge/Edexcel. IGCSE.",
     "dual": "Dual",
-    "hybridIntensiveProgram": "Hybrid Intensive Program."
+    "hybridIntensiveProgram": "Hybrid Intensive Program.",
+    "freeLimitReached": "Free Limit Reached: You have {{count}}/{{limit}} users. Please upgrade."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Student Fee Statement",
@@ -3859,7 +3923,8 @@
     "onLeave": "On Leave",
     "resetChanges": "Reset changes",
     "failedToSaveAttendanceChanges": "Failed to save attendance changes",
-    "saveAttendanceCount": "Save Attendance ({{count}})"
+    "saveAttendanceCount": "Save Attendance ({{count}})",
+    "successfullyUpdatedRecords": "Successfully updated {{count}} records"
   },
   "teacherDetailAdminView": {
     "noTeacherSelectedOpenThisViewFromATeacherRowIn": "No teacher selected. Open this view from a teacher row in the Teacher List.",
@@ -3878,7 +3943,8 @@
     "unknownError": "Unknown error",
     "general": "General",
     "statusChangedTo": "Status changed to",
-    "failedToUpdateStatus": "Failed to update status: "
+    "failedToUpdateStatus": "Failed to update status: ",
+    "failedToDeleteTeacher": "Failed to delete teacher:"
   },
   "teacherListScreen": {
     "teacherManagement": "Teacher Management",
@@ -3968,7 +4034,8 @@
     "permissionsSavedSuccessfully": "Permissions saved successfully!",
     "schoolContextMissing": "School context missing.",
     "saving": "Saving...",
-    "saveChanges": "Save Changes"
+    "saveChanges": "Save Changes",
+    "failedToSave": "Failed to save:"
   },
   "userSeeder": {
     "userSeeder": "User Seeder"
@@ -4165,5 +4232,71 @@
   "vendorManagement": {
     "vendor": "Vendor",
     "explanation": "Vendor is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+  },
+  "setPasswordScreen": {
+    "pleaseFillInBothFields": "Please fill in both fields.",
+    "theTwoPasswordsDoNotMatch": "The two passwords do not match.",
+    "passwordMustBeAtLeast12Characters": "Password must be at least 12 characters."
+  },
+  "dataErrors": {
+    "couldNotLoadClasses": "Could not load classes",
+    "couldNotLoadSubjects": "Could not load subjects",
+    "couldNotLoadClassSubjects": "Could not load class subjects",
+    "couldNotLoadTheTerms": "Could not load the terms",
+    "couldNotLoadTheAssessments": "Could not load the assessments",
+    "couldNotLoadTheAssessment": "Could not load the assessment",
+    "couldNotLoadTheClassList": "Could not load the class list",
+    "couldNotLoadTheStudents": "Could not load the students",
+    "couldNotLoadTheMarks": "Could not load the marks",
+    "couldNotLoadTheGradeScale": "Could not load the grade scale",
+    "couldNotLoadTheReportCards": "Could not load the report cards",
+    "couldNotLoadTheReportCard": "Could not load the report card",
+    "couldNotBuildTheReportPreview": "Could not build the report preview",
+    "couldNotLoadTheSchoolDetails": "Could not load the school details",
+    "couldNotLoadAcademicAnalytics": "Could not load academic analytics",
+    "couldNotLoadSubjectMarks": "Could not load subject marks",
+    "couldNotLoadAttendance": "Could not load attendance",
+    "couldNotLoadYourChildren": "Could not load your children",
+    "couldNotLoadTheStudent": "Could not load the student",
+    "couldNotLoadTeachers": "Could not load teachers",
+    "couldNotLoadTheTeacher": "Could not load the teacher",
+    "couldNotLoadTheAcademicYear": "Could not load the academic year",
+    "couldNotLoadTeachingDuties": "Could not load teaching duties",
+    "couldNotLoadYourTeacherRecord": "Could not load your teacher record",
+    "couldNotLoadTheTimetable": "Could not load the timetable",
+    "couldNotLoadThePeriodTimes": "Could not load the period times",
+    "couldNotCheckTheTimetable": "Could not check the timetable",
+    "couldNotCheckForAClash": "Could not check for a clash",
+    "couldNotFindYourClass": "Could not find your class",
+    "couldNotReadYourRole": "Could not read your role",
+    "couldNotFindYourTeacherRecord": "Could not find your teacher record",
+    "thisAssessmentCouldNotBeFound": "This assessment could not be found.",
+    "theAccountWasCreatedButNoTemporaryPasswordWasReturned": "The account was created but no temporary password was returned.",
+    "aStudentFileNeedsTheStudent": "A student file needs the student.",
+    "aTeacherFileNeedsTheTeacher": "A teacher file needs the teacher.",
+    "noFileAddressWasReturned": "No file address was returned"
+  },
+  "authContext": {
+    "useTheLinkSentToYourEmailToSetANewPassword": "Use the link sent to your email to set a new password."
+  },
+  "apiCore": {
+    "paymentsRequireAnInternetConnection": "Payments require an internet connection. Please reconnect and try again.",
+    "connectionTimedOut": "Connection timed out. Please check your internet or try again.",
+    "failedToRefreshSession": "Failed to refresh session"
+  },
+  "studentService": {
+    "documentUploadedSuccessfully": "Document uploaded successfully",
+    "failedToUploadDocument": "Failed to upload document"
+  },
+  "useUserIdentity": {
+    "idCopiedToClipboard": "ID copied to clipboard",
+    "failedToCopyId": "Failed to copy ID"
+  },
+  "broadcasts": {
+    "unauthorized": "Unauthorized"
+  },
+  "apiLegacy": {
+    "yourScoreCouldNotBeSaved": "Your score could not be saved{{detail}}. Check your connection and finish the game again.",
+    "profileImageMustBeLessThan2mb": "Profile image must be less than 2MB after compression"
   }
 }

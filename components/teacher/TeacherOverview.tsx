@@ -585,7 +585,7 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
                           {formatTime12Hour(entry.start_time)}
                         </p>
                         {isCurrent && (
-                          <span className="text-xs font-black text-green-600 uppercase tracking-wide">NOW</span>
+                          <span className="text-xs font-black text-green-600 uppercase tracking-wide">{t('common.now')}</span>
                         )}
                       </div>
                       <div className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${

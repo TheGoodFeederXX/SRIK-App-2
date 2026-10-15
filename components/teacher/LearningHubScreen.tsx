@@ -94,7 +94,7 @@ const TeacherLearningHubScreen: React.FC<LearningHubScreenProps> = ({ navigateTo
         title: `Recommended: ${resource.title}`,
         items: [{ resource_id: resource.id }],
       })));
-      toast.success(`Recommended to ${classStudents.length} student(s).`);
+      toast.success(t('learningHubScreen.recommendedToStudents', { count: classStudents.length }));
     } catch {
       toast.error(t('learningHubScreen.couldNotRecommendThisResource'));
     }

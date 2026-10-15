@@ -41,7 +41,7 @@ const AuthCallback: React.FC = () => {
         const settle = async () => {
             try {
                 if (!isSupabaseConfigured || !supabase) {
-                    throw new Error('Authentication is not configured yet.');
+                    throw new Error(t('authCallback.authenticationIsNotConfiguredYet'));
                 }
 
                 // Any error Supabase passed back in the URL (expired link, etc.).
@@ -63,7 +63,7 @@ const AuthCallback: React.FC = () => {
 
                 const session = data.session;
                 if (!session?.user) {
-                    throw new Error('This link is invalid or has expired. Please request a new one.');
+                    throw new Error(t('authCallback.thisLinkIsInvalidOrHasExpired'));
                 }
 
                 // `type=recovery` marks a password-reset link. Such a session is
@@ -92,7 +92,7 @@ const AuthCallback: React.FC = () => {
             } catch (err: any) {
                 console.error('AuthCallback error:', err);
                 setStatus('error');
-                setMessage('Verification Failed');
+                setMessage(t('authCallback.verificationFailed'));
                 setErrorDetails(err.message || 'The link may be expired or invalid.');
             }
         };

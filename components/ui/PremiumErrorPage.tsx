@@ -104,7 +104,7 @@ const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
                                 className="py-3 bg-white border-2 border-gray-100 text-gray-700 font-bold rounded-2xl hover:bg-gray-50 hover:border-gray-200 transition-all flex items-center justify-center space-x-2"
                             >
                                 <Home className="w-5 h-5 shrink-0" />
-                                <span className="min-w-0">Home</span>
+                                <span className="min-w-0">{t('common.home')}</span>
                             </button>
                             <button
                                 onClick={handleContactSupport}

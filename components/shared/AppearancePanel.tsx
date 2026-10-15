@@ -77,7 +77,7 @@ const LivePreview: React.FC<{ a: Appearance; roleLabel: string }> = ({ a, roleLa
             <Icon className="w-3.5 h-3.5" />{label}
           </div>
         ))}
-        <div className="flex flex-col items-center gap-0.5 text-[9px] font-semibold text-gray-400"><Sparkles className="w-3.5 h-3.5" />More</div>
+        <div className="flex flex-col items-center gap-0.5 text-[9px] font-semibold text-gray-400"><Sparkles className="w-3.5 h-3.5" />{t('common.more')}</div>
       </div>
     </div>
   );

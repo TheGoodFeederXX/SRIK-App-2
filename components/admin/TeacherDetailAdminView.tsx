@@ -114,7 +114,7 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
             handleBack();
         } catch (error: any) {
             console.error('Error deleting teacher:', error);
-            toast.error('Failed to delete teacher: ' + (error.message || t('teacherDetailAdminView.unknownError')));
+            toast.error(t('teacherDetailAdminView.failedToDeleteTeacher') + ' ' + (error.message || t('teacherDetailAdminView.unknownError')));
         }
     };
 

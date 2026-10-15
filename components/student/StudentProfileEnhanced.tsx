@@ -267,9 +267,9 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                 <div style="font-family:Arial,sans-serif;padding:24px;color:#1f2937">
                     <h2 style="margin:0 0 12px">${t('studentProfileEnhanced.academicTranscript')}</h2>
                     <p style="margin:0 0 16px;line-height:1.6">
-                        <b>Name:</b> ${student.name || ''}<br/>
+                        <b>${t('common.name')}:</b> ${student.name || ''}<br/>
                         <b>${t('studentProfileEnhanced.studentID')}</b> ${student.admission_number || ''}<br/>
-                        <b>Class:</b> ${student.class_name || ('Grade ' + (student.grade ?? ''))}<br/>
+                        <b>${t('common.class')}:</b> ${student.class_name || ('Grade ' + (student.grade ?? ''))}<br/>
                         <b>${t('studentProfileEnhanced.overallAverage')}</b> ${stats.averageScore}%
                     </p>
                     <table style="border-collapse:collapse;width:100%;font-size:13px">

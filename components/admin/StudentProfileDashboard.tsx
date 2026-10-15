@@ -385,7 +385,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-amber-500"></div>
-                                            <span className="text-xs font-semibold text-gray-500">Late</span>
+                                            <span className="text-xs font-semibold text-gray-500">{t('common.late')}</span>
                                             <span className="text-xs font-bold text-gray-800 ml-auto">{attendanceData.late}</span>
                                         </div>
                                         <div className="flex items-center gap-2">

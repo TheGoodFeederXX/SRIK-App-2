@@ -1,3 +1,4 @@
+import i18n from './i18n';
 import { InspectionTemplate } from '../types/inspector';
 
 import { optimizeImage } from './mediaOptimizer';
@@ -86,7 +87,7 @@ class ExpressApiClient {
             // Every game only logs this to the console, so a lost score was
             // invisible to the student. Say it once, here, for all 23 games.
             const { toast } = await import('react-hot-toast');
-            toast.error(`Your score could not be saved${err?.message ? `: ${err.message}` : ''}. Check your connection and finish the game again.`, { duration: 6000 });
+            toast.error(i18n.t('apiLegacy.yourScoreCouldNotBeSaved', { detail: err?.message ? `: ${err.message}` : '' }), { duration: 6000 });
             throw err;
         }
     }
@@ -3213,7 +3214,7 @@ class ExpressApiClient {
             format: 'image/webp',
         });
         if (optimizedFile.size > 2 * 1024 * 1024) {
-            throw new Error('Profile image must be less than 2MB after compression');
+            throw new Error(i18n.t('apiLegacy.profileImageMustBeLessThan2mb'));
         }
         return this.uploadFileWithCategory(optimizedFile, 'avatar');
     }

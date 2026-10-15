@@ -97,11 +97,11 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!studentCode.trim()) {
-            toast.error("Please enter the student's ID code.");
+            toast.error(t('linkChildScreen.pleaseEnterTheStudentIdCode'));
             return;
         }
         if (!dateOfBirth) {
-            toast.error("Please enter the child's date of birth to confirm the link.");
+            toast.error(t('linkChildScreen.pleaseEnterTheChildsDateOfBirth'));
             return;
         }
 
@@ -176,7 +176,7 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                     type="text"
                                     value={studentCode}
                                     onChange={(e) => setStudentCode(e.target.value.toUpperCase())}
-                                    placeholder="e.g. SCH-001-STU-1001"
+                                    placeholder={t('common.exampleStudentCode')}
                                     className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 uppercase tracking-wide font-mono"
                                 />
                                 <p className="text-xs text-gray-500 mt-2 font-medium">

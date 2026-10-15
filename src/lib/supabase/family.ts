@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * A guardian's own children, and what is happening with them.
  *
@@ -46,7 +47,7 @@ export async function listMyChildren(): Promise<ChildSummary[]> {
         .select('student_id, relationship, is_primary')
         .limit(200);
 
-    if (linkError) throw new Error(`Could not load your children: ${linkError.message}`);
+    if (linkError) throw new Error(`${i18n.t('dataErrors.couldNotLoadYourChildren')}: ${linkError.message}`);
 
     const rows = (links ?? []) as unknown as {
         student_id: string;

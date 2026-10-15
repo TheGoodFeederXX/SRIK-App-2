@@ -47,7 +47,7 @@ const FinancialSettingsScreen: React.FC = () => {
 
       toast.success(t('financialSettingsScreen.financialSettingsSaved'));
     } catch (error: any) {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`${t('common.error')}: ${error.message}`);
     } finally {
       setIsLoading(false);
     }

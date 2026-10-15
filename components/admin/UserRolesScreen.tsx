@@ -190,7 +190,7 @@ const UserRolesScreen: React.FC = () => {
             await fetchPermissions();
         } catch (error: any) {
             console.error('Save failed:', error);
-            toast.error('Failed to save: ' + error.message);
+            toast.error(t('userRolesScreen.failedToSave') + ' ' + error.message);
         } finally {
             setIsLoading(false);
         }

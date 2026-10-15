@@ -1,3 +1,4 @@
+import i18n from './i18n';
 
 import { api } from './api';
 import { EmergencyBroadcast } from '../types';
@@ -14,7 +15,7 @@ export async function sendEmergencyBroadcast(
 ): Promise<{ success: boolean; error?: string }> {
     try {
         const { data: { user } } = await api.auth.getUser();
-        if (!user) throw new Error('Unauthorized');
+        if (!user) throw new Error(i18n.t('broadcasts.unauthorized'));
 
         // 1. Log the broadcast in database
         const { data: broadcast, error: dbError } = await api

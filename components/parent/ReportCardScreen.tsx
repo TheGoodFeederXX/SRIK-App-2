@@ -166,7 +166,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                             <p className="text-lg font-bold text-red-700">{report.attendance.absent}</p>
                         </div>
                         <div className="bg-amber-50 p-3 rounded-lg text-center">
-                            <p className="text-xs text-amber-600 font-medium">Late</p>
+                            <p className="text-xs text-amber-600 font-medium">{t('common.late')}</p>
                             <p className="text-lg font-bold text-amber-700">{report.attendance.late}</p>
                         </div>
                     </div>

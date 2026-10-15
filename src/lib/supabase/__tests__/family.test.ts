@@ -371,7 +371,33 @@ describe('F27: the parent portal reads the family from the session, not a parame
 
             // And it must EXPLAIN itself. A placeholder with no explanation does not say
             // what is missing or who to ask, which is most of its value.
-            expect(src, `${file} does not explain why`).toMatch(/explanation=/);
+            //
+            // The explanation may be a literal (`explanation=`) or a key
+            // (`explanationKey=`) — both reach the reader, and the key form is what a
+            // translated screen uses. Demanding only the literal used to force a
+            // translated screen to keep an English string alive that no reader could
+            // reach, because the key always won.
+            const keyMatch = src.match(/explanationKey\s*=\s*"([^"]+)"/);
+            expect(
+                /explanation\s*=/.test(src) || !!keyMatch,
+                `${file} does not explain why`,
+            ).toBe(true);
+
+            if (keyMatch) {
+                // A key missing from the locale files explains nothing at all.
+                for (const lang of ['ms', 'en'] as const) {
+                    const bundle = JSON.parse(read(`lib/i18n/locales/${lang}.json`));
+                    const value = keyMatch[1]
+                        .split('.')
+                        .reduce<any>((node, part) => node?.[part], bundle);
+                    expect(
+                        typeof value === 'string' && value.length > 120,
+                        `${file}: ${keyMatch[1]} is missing or too short in ${lang}.json`,
+                    ).toBe(true);
+                }
+                continue;
+            }
+
             const words = (src.match(/explanation=\{[\s\S]*?\n\s*\}/) || [''])[0];
             expect(words.length, `${file} explains itself in too few words`)
                 .toBeGreaterThan(120);

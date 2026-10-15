@@ -2,8 +2,16 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ComingSoonScreenProps {
-    /** What the teacher came here for, in their own words. */
-    title: string;
+    /**
+     * What the teacher came here for, in their own words.
+     *
+     * OPTIONAL WHEN `titleKey` IS GIVEN. The literal was required, which forced
+     * every already-translated screen to keep an English string alive purely to
+     * satisfy the type — text no reader could ever reach, because the key always
+     * won. A caller that has a key does not need the literal; a caller that has
+     * no key still must supply one, and the type enforces that below.
+     */
+    title?: string;
     /**
      * Why it is not ready, said plainly. Not "an error occurred" — the person
      * reading this is a teacher, and "this part is not built yet" is a complete
@@ -17,7 +25,7 @@ interface ComingSoonScreenProps {
      * selectable. `explanationKey` is supported so those paragraphs can be moved
      * into the locale files one screen at a time, without a single flag day.
      */
-    explanation: string;
+    explanation?: string;
     explanationKey?: string;
     titleKey?: string;
     handleBack: () => void;

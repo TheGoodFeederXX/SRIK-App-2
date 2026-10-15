@@ -217,7 +217,7 @@ Visit: https://your-school-app.com/login
       document.body.removeChild(element);
     } catch (err) {
       console.error('PDF generation failed:', err);
-      toast.error('Could not generate PDF. Please try the "Download TXT" option.');
+      toast.error(t('credentialsModal.couldNotGeneratePdf'));
       // Attempt cleanup if it exists in body
       const clones = document.querySelectorAll('[style*="left: -9999px"]');
       clones.forEach(c => c.remove());

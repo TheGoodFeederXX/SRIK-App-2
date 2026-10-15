@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Class and subject data access — SRIK.
  *
@@ -168,7 +169,7 @@ export async function listClasses(): Promise<ClassRecord[]> {
         .order('year_level')
         .order('name');
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
     const rows = (data ?? []) as unknown as ClassRow[];
     if (rows.length === 0) return [];
 
@@ -216,7 +217,7 @@ export async function listClassOptions(): Promise<ClassOption[]> {
         .order('year_level')
         .order('name');
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
     return ((data ?? []) as unknown as { id: string; display_name: string }[])
         .map(c => ({ id: c.id, label: c.display_name }));
 }
@@ -351,7 +352,7 @@ export async function listSubjects(): Promise<SubjectRecord[]> {
         .limit(2000)
         .order('name');
 
-    if (error) throw new Error(`Could not load subjects: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadSubjects')}: ${error.message}`);
     const rows = (data ?? []) as unknown as SubjectRow[];
     if (rows.length === 0) return [];
 
@@ -385,7 +386,7 @@ export async function listSubjectOptions(): Promise<ClassOption[]> {
         .eq('status', 'ACTIVE')
         .order('name');
 
-    if (error) throw new Error(`Could not load subjects: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadSubjects')}: ${error.message}`);
     return ((data ?? []) as unknown as { id: string; name: string; code: string }[])
         .map(s => ({ id: s.id, label: s.name }));
 }
@@ -490,7 +491,7 @@ export async function listClassSubjects(): Promise<ClassSubjectRecord[]> {
         .from('class_subjects')
         .select('class_id, subject_id')
         .limit(2000);
-    if (error) throw new Error(`Could not load class subjects: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClassSubjects')}: ${error.message}`);
 
     return ((data ?? []) as unknown as ClassSubjectRow[]).map(r => ({
         classId: r.class_id,

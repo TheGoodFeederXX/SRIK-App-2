@@ -54,7 +54,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
           
           <form className="space-y-4" onSubmit={async (e) => {
             e.preventDefault();
-            if (!email) { setError('Email is required'); return; }
+            if (!email) { setError(t('login.emailRequired')); return; }
             setIsLoading(true);
             setError('');
             try {
@@ -167,7 +167,7 @@ const Login: React.FC<{ onNavigateToSignup?: () => void; onNavigateToCreateSchoo
     setError('');
 
     if (!email || !password) {
-      setError('Please enter both email and password.');
+      setError(t('login.pleaseEnterBothEmailAndPassword'));
       return;
     }
 

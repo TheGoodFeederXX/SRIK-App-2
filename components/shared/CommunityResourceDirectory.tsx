@@ -352,7 +352,7 @@ const CommunityResourceDirectory: React.FC = () => {
 
                                 {selectedResource.cost_details && !selectedResource.is_free && (
                                     <div>
-                                        <h3 className="font-semibold text-gray-900 mb-2">Cost</h3>
+                                        <h3 className="font-semibold text-gray-900 mb-2">{t('common.cost')}</h3>
                                         <p className="text-gray-700">{selectedResource.cost_details}</p>
                                     </div>
                                 )}

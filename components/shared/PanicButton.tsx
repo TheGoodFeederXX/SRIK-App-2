@@ -144,7 +144,7 @@ const PanicButton: React.FC<PanicButtonProps> = ({ isFloating = true, schoolId }
                                     type="text"
                                     value={location}
                                     onChange={(e) => setLocation(e.target.value)}
-                                    placeholder="e.g., Building A, Room 101"
+                                    placeholder={t('common.exampleLocation')}
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
                                 />
                             </div>

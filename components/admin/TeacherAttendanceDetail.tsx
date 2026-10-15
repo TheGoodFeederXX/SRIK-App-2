@@ -120,7 +120,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                 }
                 await recordStaffAttendance(teacher.id, date, dbStatus);
             }
-            toast.success(`Successfully updated ${pendingChanges.size} records`);
+            toast.success(t('teacherAttendanceDetail.successfullyUpdatedRecords', { count: pendingChanges.size }));
             setPendingChanges(new Map());
             await fetchAttendance();
         } catch (err) {

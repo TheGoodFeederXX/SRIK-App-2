@@ -97,7 +97,7 @@ const TeacherAssignmentsListScreen: React.FC<TeacherAssignmentsListScreenProps> 
         <div className="flex flex-col h-full bg-gray-100 relative">
             <div className="absolute top-2 right-2 z-10 flex items-center gap-2 bg-white px-3 py-1 rounded-full shadow-sm">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-xs text-green-700 font-medium">Live</span>
+                <span className="text-xs text-green-700 font-medium">{t('common.live')}</span>
             </div>
 
             {/*

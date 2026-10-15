@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Student data access — SRIK.
  *
@@ -282,7 +283,7 @@ export async function getStudent(id: string): Promise<StudentRecord | null> {
         .eq('id', id)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load the student: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheStudent')}: ${error.message}`);
     if (!data) return null;
 
     const row = data as unknown as StudentRow;
@@ -527,7 +528,7 @@ export async function listClassOptions(): Promise<ClassOption[]> {
         // limit records that this is a bounded list rather than an oversight.
         .limit(500);
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
     return ((data ?? []) as unknown as ClassRow[]).map(c => ({ id: c.id, label: c.display_name }));
 }
 

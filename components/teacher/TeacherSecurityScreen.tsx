@@ -144,8 +144,8 @@ const TeacherSecurityScreen: React.FC<TeacherSecurityScreenProps> = ({ navigateT
                 {enrolling && (
                     <div className="border-t border-gray-100 pt-4 space-y-3">
                         <p className="text-sm text-gray-600">{t('teacherSecurityScreen.scanThisQRCodeWithAnAuthenticatorAppGoogleAuth')}</p>
-                        {qrCodeUrl && <img src={qrCodeUrl} alt="2FA QR code" className="w-40 h-40 mx-auto border border-gray-200 rounded-lg" />}
-                        {secret && <p className="text-xs text-center font-mono text-gray-400 break-all">Manual entry key: {secret}</p>}
+                        {qrCodeUrl && <img src={qrCodeUrl} alt={t('teacherSecurityScreen.twoFactorQrCode')} className="w-40 h-40 mx-auto border border-gray-200 rounded-lg" />}
+                        {secret && <p className="text-xs text-center font-mono text-gray-400 break-all">\{t('teacherSecurityScreen.manualEntryKey')} {secret}</p>}
                         <input
                             type="text"
                             inputMode="numeric"

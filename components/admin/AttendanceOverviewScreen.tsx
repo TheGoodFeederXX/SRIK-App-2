@@ -53,7 +53,7 @@ const AttendanceOverviewScreen: React.FC<AttendanceOverviewScreenProps> = ({ nav
                         <p className="text-xs text-gray-500">{t('attendanceOverviewScreen.whichClassesHaveHandedInTheirRegister')}</p>
                     </div>
                     <div className="shrink-0">
-                        <label htmlFor="overviewDate" className="sr-only">Date</label>
+                        <label htmlFor="overviewDate" className="sr-only">{t('common.date')}</label>
                         <input
                             id="overviewDate"
                             type="date"

@@ -113,7 +113,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
               </select>
             </div>
             <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">{t('common.date')}</label>
               <input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
             </div>
             <div>

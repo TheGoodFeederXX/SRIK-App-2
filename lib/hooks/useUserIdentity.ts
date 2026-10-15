@@ -1,3 +1,4 @@
+import i18n from '../../lib/i18n';
 import { useState, useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
@@ -32,11 +33,11 @@ export const useUserIdentity = () => {
         try {
             await navigator.clipboard.writeText(text);
             setCopied(true);
-            toast.success('ID copied to clipboard');
+            toast.success(i18n.t('useUserIdentity.idCopiedToClipboard'));
             setTimeout(() => setCopied(false), 2000);
         } catch (err) {
             console.error('Failed to copy:', err);
-            toast.error('Failed to copy ID');
+            toast.error(i18n.t('useUserIdentity.failedToCopyId'));
         }
     }, []);
 

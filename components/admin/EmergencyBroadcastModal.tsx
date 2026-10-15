@@ -121,7 +121,7 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                                                         }}
                                                         className="text-red-600 rounded focus:ring-red-500"
                                                     />
-                                                    <span>Push</span>
+                                                    <span>{t('common.push')}</span>
                                                 </label>
                                                 <label className="flex items-center space-x-2 text-sm cursor-pointer">
                                                     <input type="checkbox"

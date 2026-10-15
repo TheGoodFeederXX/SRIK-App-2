@@ -640,7 +640,7 @@ function ReceiptCard({ payment, onReversed }: { payment: Payment; onReversed: ()
         setBusy(true);
         try {
             await reversePayment(payment.id, reason.trim());
-            toast.success(`Bayaran ${payment.reference} telah dibatalkan.`);
+            toast.success(t('feeCollectionScreen.paymentCancelled', { reference: payment.reference }));
             onReversed();
         } catch (err) {
             toast.error(friendlyFinanceError(err));

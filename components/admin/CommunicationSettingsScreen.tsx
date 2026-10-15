@@ -46,7 +46,7 @@ const CommunicationSettingsScreen: React.FC = () => {
       await updateSchoolSettings({ communicationChannels: channels });
       toast.success(t('communicationSettingsScreen.communicationSettingsSavedSuccessfully'));
     } catch (error: any) {
-      toast.error(`Error: ${error.message}`);
+      toast.error(`${t('common.error')}: ${error.message}`);
     } finally {
       setIsLoading(false);
     }

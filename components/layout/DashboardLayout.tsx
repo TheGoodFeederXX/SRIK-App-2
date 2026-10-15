@@ -225,7 +225,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, title, onBa
                         <span className="flex items-center gap-1.5 flex-shrink-0">
                             <span className="w-1.5 h-1.5 rounded-full bg-yellow-300 animate-pulse" />
                             <span className="hidden sm:inline">{t('dashboard.demoMode')}</span>
-                            <span className="sm:hidden">Demo</span>
+                            <span className="sm:hidden">{t('common.demo')}</span>
                         </span>
                         <motion.button
                             whileTap={{ scale: 0.95 }}

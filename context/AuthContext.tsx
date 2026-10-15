@@ -1,3 +1,4 @@
+import i18n from '../lib/i18n';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 import { DashboardType, School } from '../types';
 import { DEMO_SCHOOL_ID, DEMO_BRANCH_ID } from '../lib/mockAuth';
@@ -743,7 +744,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         // the emailed link), so there is nothing to do here but report that
         // this path is no longer used. Kept so existing callers do not break.
         resetPassword: async () => {
-            throw new Error('Use the link sent to your email to set a new password.');
+            throw new Error(i18n.t('authContext.useTheLinkSentToYourEmailToSetANewPassword'));
         }
     }), [session, user, role, currentSchool, currentBranchId, loading, isDemo, memberships, initializeAuth]);
 

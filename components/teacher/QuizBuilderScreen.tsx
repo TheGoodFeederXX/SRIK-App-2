@@ -109,7 +109,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
             points: type === 'MultipleChoice' ? 1 : 5
         };
         setQuestions([...questions, newQ]);
-        toast.success(`Added ${type === 'MultipleChoice' ? 'Multiple Choice' : 'Theory'} Question`);
+        toast.success(t('quizBuilderScreen.addedQuestion', { type: type === 'MultipleChoice' ? t('quizBuilderScreen.multipleChoice') : t('quizBuilderScreen.theory') }));
     };
 
     const updateQuestionText = (id: number, text: string) => {
@@ -279,7 +279,7 @@ const QuizBuilderScreen: React.FC<QuizBuilderScreenProps> = ({ onClose, teacherI
                                 value={subject}
                                 onChange={e => setSubject(e.target.value)}
                                 className="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                placeholder="e.g. Mathematics"
+                                placeholder={t('common.exampleSubject')}
                             />
                         </div>
                         <div>

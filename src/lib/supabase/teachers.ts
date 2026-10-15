@@ -1,3 +1,4 @@
+import i18n from '../../../lib/i18n';
 /**
  * Teacher data access — SRIK.
  *
@@ -106,7 +107,7 @@ export async function listTeachers(): Promise<TeacherRecord[]> {
         .order('full_name');
 
     if (teachersError) {
-        throw new Error(`Could not load teachers: ${teachersError.message}`);
+        throw new Error(`${i18n.t('dataErrors.couldNotLoadTeachers')}: ${teachersError.message}`);
     }
     if (!teachers || teachers.length === 0) return [];
     const teacherRows = teachers as unknown as TeacherRow[];
@@ -182,7 +183,7 @@ export async function getTeacher(id: string): Promise<TeacherRecord | null> {
         .eq('id', id)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load the teacher: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheTeacher')}: ${error.message}`);
     if (!data) return null;
     const row = data as unknown as TeacherRow;
 
@@ -354,7 +355,7 @@ export async function listSubjectOptions(): Promise<Option[]> {
         .eq('status', 'ACTIVE')
         .order('name');
 
-    if (error) throw new Error(`Could not load subjects: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadSubjects')}: ${error.message}`);
     return ((data ?? []) as unknown as NamedRow[]).map(s => ({ id: s.id, label: s.name }));
 }
 
@@ -377,7 +378,7 @@ export async function listClassOptions(): Promise<Option[]> {
         .eq('status', 'CURRENT')
         .maybeSingle();
 
-    if (yearError) throw new Error(`Could not load the academic year: ${yearError.message}`);
+    if (yearError) throw new Error(`${i18n.t('dataErrors.couldNotLoadTheAcademicYear')}: ${yearError.message}`);
     if (!year) return [];
 
     const { data, error } = await db
@@ -389,7 +390,7 @@ export async function listClassOptions(): Promise<Option[]> {
         .order('year_level')
         .order('name');
 
-    if (error) throw new Error(`Could not load classes: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadClasses')}: ${error.message}`);
     return ((data ?? []) as unknown as ClassRow[]).map(c => ({ id: c.id, label: c.display_name }));
 }
 
@@ -463,7 +464,7 @@ export async function listAssignments(
         .eq('academic_year_id', yearId)
         .eq('status', 'ACTIVE');
 
-    if (error) throw new Error(`Could not load teaching duties: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadTeachingDuties')}: ${error.message}`);
 
     const rows = (data ?? []) as unknown as {
         id: string; teacher_id: string; class_id: string;
@@ -627,7 +628,7 @@ export async function getMyTeacherProfile(): Promise<TeacherRecord | null> {
         .eq('user_id', userId)
         .maybeSingle();
 
-    if (error) throw new Error(`Could not load your teacher record: ${error.message}`);
+    if (error) throw new Error(`${i18n.t('dataErrors.couldNotLoadYourTeacherRecord')}: ${error.message}`);
     if (!data) return null;
 
     return getTeacher((data as unknown as { id: string }).id);
