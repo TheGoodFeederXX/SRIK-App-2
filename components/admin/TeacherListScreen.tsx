@@ -258,7 +258,7 @@ const TeacherListScreen: React.FC<TeacherListScreenProps> = ({ navigateTo, curre
                         onChange={(e) => setFilterStatus(e.target.value)}
                     >
                         <option value="All">{t('teacherListScreen.allStatus')}</option>
-                        <option value="Active">Active</option>
+                        <option value="Active">{t('common.active')}</option>
                         <option value="On Leave">{t('teacherListScreen.onLeave')}</option>
                         <option value="Inactive">{t('teacherListScreen.inactive')}</option>
                     </select>

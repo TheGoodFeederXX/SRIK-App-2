@@ -23,7 +23,9 @@ const QuizzesScreen: React.FC<QuizzesScreenProps> = ({ navigateTo, student }) =>
     const { t } = useTranslation();
     return (
     <ComingSoonScreen
+        titleKey="quizzesScreen.kuiz"
         title="Kuiz"
+        explanationKey="quizzesScreen.explanation"
         explanation={
             'Kuiz dalam talian belum tersedia di dalam sistem ini. Buat masa ini ' +
             'penilaian murid dijalankan oleh guru di dalam kelas melalui kaedah yang ' +

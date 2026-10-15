@@ -3,61 +3,38 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useProfile } from '../../context/ProfileContext';
 import { toast } from 'react-hot-toast';
+import {
+    DEFAULT_ACCESSIBILITY_SETTINGS,
+    loadAccessibilitySettings,
+    saveAccessibilitySettings,
+    applyAccessibilitySettings,
+    type AccessibilitySettings as Settings,
+} from '../../src/lib/accessibility';
 
-const DEFAULT_SETTINGS = {
-    font_size: 100,
-    high_contrast: false,
-    text_to_speech_enabled: false,
-    speech_rate: 1.0,
-    language: 'en',
-    reduce_motion: false
-};
-
-const storageKey = (userId?: string) => `accessibility_settings:${userId || 'anonymous'}`;
+// The shape and the storage live in src/lib/accessibility.ts, which the app
+// root also reads at start-up. Keeping ONE definition means a preference saved
+// here is a preference the next page load still honours.
+const DEFAULT_SETTINGS: Settings = DEFAULT_ACCESSIBILITY_SETTINGS;
 
 const AccessibilitySettings: React.FC = () => {
     const { t } = useTranslation();
     const { profile } = useProfile();
-    const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+    const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchSettings();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // Preferences are per-person; re-read them when the signed-in person is
+        // known so one staff member's choices never apply to the next.
+        const data = loadAccessibilitySettings(profile?.id);
+        setSettings(data);
+        applyAccessibilitySettings(data);
     }, [profile?.id]);
-
-    const fetchSettings = () => {
-        // Accessibility preferences are a per-device, client-only setting —
-        // there is no backing table on the server for them.
-        try {
-            const raw = localStorage.getItem(storageKey(profile?.id));
-            if (raw) {
-                const data = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-                setSettings(data);
-                applySettings(data);
-            }
-        } catch (error) {
-            console.log('No existing settings');
-        }
-    };
-
-    const applySettings = (s: any) => {
-        document.documentElement.style.fontSize = `${s.font_size}%`;
-        if (s.high_contrast) {
-            document.body.classList.add('high-contrast');
-        } else {
-            document.body.classList.remove('high-contrast');
-        }
-        if (s.reduce_motion) {
-            document.body.classList.add('reduce-motion');
-        }
-    };
 
     const handleSave = async () => {
         try {
             setLoading(true);
-            localStorage.setItem(storageKey(profile?.id), JSON.stringify(settings));
-            applySettings(settings);
+            saveAccessibilitySettings(profile?.id, settings);
+            applyAccessibilitySettings(settings);
             toast.success(t('accessibilitySettings.settingsSavedSuccessfully'));
         } catch (error: any) {
             toast.error(t('accessibilitySettings.failedToSaveSettings'));
@@ -109,22 +86,6 @@ const AccessibilitySettings: React.FC = () => {
 
                     <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                         <div>
-                            <p className="font-medium text-gray-900">{t('accessibilitySettings.textToSpeech')}</p>
-                            <p className="text-sm text-gray-600">{t('accessibilitySettings.readTextAloud')}</p>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                                type="checkbox"
-                                checked={settings.text_to_speech_enabled}
-                                onChange={(e) => setSettings({ ...settings, text_to_speech_enabled: e.target.checked })}
-                                className="sr-only peer"
-                            />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                        </label>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div>
                             <p className="font-medium text-gray-900">{t('accessibilitySettings.reduceMotion')}</p>
                             <p className="text-sm text-gray-600">{t('accessibilitySettings.minimizeAnimations')}</p>
                         </div>
@@ -139,21 +100,6 @@ const AccessibilitySettings: React.FC = () => {
                         </label>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Preferred Language
-                        </label>
-                        <select
-                            value={settings.language}
-                            onChange={(e) => setSettings({ ...settings, language: e.target.value })}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                        >
-                            <option value="en">{t('accessibilitySettings.english')}</option>
-                            <option value="yo">Yoruba</option>
-                            <option value="ig">Igbo</option>
-                            <option value="ha">Hausa</option>
-                        </select>
-                    </div>
 
                     <motion.button
                         whileHover={!loading ? { scale: 1.01 } : {}} whileTap={!loading ? { scale: 0.98 } : {}}

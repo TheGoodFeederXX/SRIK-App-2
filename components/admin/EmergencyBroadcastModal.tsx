@@ -132,7 +132,7 @@ export const EmergencyBroadcastModal: React.FC<EmergencyBroadcastModalProps> = (
                                                         }}
                                                         className="text-red-600 rounded focus:ring-red-500"
                                                     />
-                                                    <span>Email</span>
+                                                    <span>{t('common.email')}</span>
                                                 </label>
                                             </div>
                                         </div>

@@ -39,9 +39,9 @@ const IVRLessonRecorder: React.FC = () => {
                                 a provider is described by whether it covers
                                 Malaysia. */}
                             <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
-                                <li><span className="font-medium">{t('iVRLessonRecorder.africaSTalking')}</span> — covers parts of Africa; check Malaysia coverage before use</li>
+                                <li><span className="font-medium">{t('iVRLessonRecorder.africaSTalking')}</span> — {t('iVRLessonRecorder.coversPartsOfAfricaCheckMalaysiaCoverage')}</li>
                                 <li><span className="font-medium">Twilio</span> {t('iVRLessonRecorder.globalIVRPlatform')}</li>
-                                <li><span className="font-medium">{t('iVRLessonRecorder.infobip')}</span> — enterprise voice messaging</li>
+                                <li><span className="font-medium">{t('iVRLessonRecorder.infobip')}</span> — {t('iVRLessonRecorder.enterpriseVoiceMessaging')}</li>
                             </ul>
                         </div>
                     </div>

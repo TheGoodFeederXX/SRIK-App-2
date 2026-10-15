@@ -11,14 +11,20 @@ interface PremiumErrorPageProps {
 }
 
 const PremiumErrorPage: React.FC<PremiumErrorPageProps> = ({
-    title = "Oops! Something went wrong",
-    message = "Our systems encountered an unexpected hiccup. Don't worry, your data is safe.",
+    title,
+    message,
     error,
     resetErrorBoundary,
     illustration = "/error-illustration.png" // Fallback to a default if not provided
 }) => {
     const { t } = useTranslation();
     const [imageError, setImageError] = React.useState(false);
+
+    // Defaults are resolved HERE rather than in the parameter list, because a
+    // translation needs `t` — which does not exist until after the hook runs.
+    // The old English strings were baked in before any language could apply.
+    title = title ?? t('premiumErrorPage.oopsSomethingWentWrong');
+    message = message ?? t('premiumErrorPage.ourSystemsEncounteredUnexpectedHiccup');
 
     const handleGoHome = () => {
         window.location.href = '/';

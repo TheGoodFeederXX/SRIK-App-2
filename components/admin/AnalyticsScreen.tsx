@@ -320,7 +320,7 @@ const AnalyticsScreen: React.FC<AnalyticsScreenProps> = ({ schoolId, currentBran
     // A failed load with nothing loaded before: cards show an error state
     // instead of empty charts / "0%" that would look like real data.
     const failed = !!error && !loaded;
-    const errorState = <CardState icon={<AlertTriangleIcon className="w-10 h-10" />} title="Couldn't load this data" message={i18n.t('analyticsScreen.checkYourConnectionAndTryAgain')} onRetry={loadData} />;
+    const errorState = <CardState icon={<AlertTriangleIcon className="w-10 h-10" />} title={t('analyticsScreen.couldNotLoadThisData')} message={i18n.t('analyticsScreen.checkYourConnectionAndTryAgain')} onRetry={loadData} />;
     const fees = metrics.fees || { paid: 0, overdue: 0, unpaid: 0, total: 0 };
     const performance: any[] = Array.isArray(metrics.performance) ? metrics.performance : [];
     const workload: any[] = Array.isArray(metrics.workload) ? metrics.workload : [];

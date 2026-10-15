@@ -270,11 +270,11 @@ const AuditTrailViewer: React.FC = () => {
                             <thead className="bg-gray-50">
                                 <tr>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.dateTime')}</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">User</th>
-                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Action</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('common.user')}</th>
+                                    <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('common.action')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.resource')}</th>
                                     <th className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.description')}</th>
-                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">Risk</th>
+                                    <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">{t('common.risk')}</th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.status')}</th>
                                     <th className="px-4 py-3 text-center text-xs font-semibold text-gray-700 uppercase">{t('auditTrailViewer.actions')}</th>
                                 </tr>

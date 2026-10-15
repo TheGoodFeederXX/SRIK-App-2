@@ -306,7 +306,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                 <table className="min-w-full border-collapse">
                     <thead>
                         <tr>
-                            <th className="border border-gray-300 p-2 bg-gray-100 sticky left-0 z-10">Class</th>
+                            <th className="border border-gray-300 p-2 bg-gray-100 sticky left-0 z-10">{t('common.class')}</th>
                             {columns.map(col => (
                                 <th key={col.key} className="border border-gray-300 p-2 bg-gray-100 text-xs whitespace-nowrap">
                                     {col.label}
@@ -382,7 +382,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.05 }} className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm text-gray-600">Trend</p>
+                            <p className="text-sm text-gray-600">{t('common.trend')}</p>
                             <div className="flex items-center space-x-2">
                                 <p className="text-3xl font-bold text-gray-900">{stats.trendPercentage}%</p>
                                 {stats.trend === 'up' ? (
@@ -417,7 +417,7 @@ const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({ schoolId }) => {
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2, delay: 0.12 }} className="bg-white rounded-xl shadow-sm p-6 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Class</label>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">{t('common.class')}</label>
                         <select
                             value={selectedClass}
                             onChange={(e) => setSelectedClass(e.target.value === 'all' ? 'all' : e.target.value)}

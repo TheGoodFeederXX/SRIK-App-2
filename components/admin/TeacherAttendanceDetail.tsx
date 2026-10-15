@@ -216,8 +216,8 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                 <div className="flex justify-center space-x-3 mt-4 text-xs">
                     <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>{t('teacherAttendanceDetail.present')}</span>
                     <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-yellow-400 mr-1.5"></div>{t('teacherAttendanceDetail.pending')}</span>
-                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>Absent</span>
-                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-amber-400 mr-1.5"></div>Leave</span>
+                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>{t('common.absent')}</span>
+                    <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-amber-400 mr-1.5"></div>{t('common.leave')}</span>
                 </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
@@ -227,7 +227,7 @@ const TeacherAttendanceDetail: React.FC<{ teacher: Teacher }> = ({ teacher }) =>
                 </motion.div>
                 <motion.div layout className="bg-white p-3 rounded-xl shadow-sm border border-transparent hover:border-red-100 transition-colors">
                     <motion.p key={stats.absent} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-lg text-red-600">{stats.absent}</motion.p>
-                    <p className="text-xs text-gray-500">Absent</p>
+                    <p className="text-xs text-gray-500">{t('common.absent')}</p>
                 </motion.div>
                 <motion.div layout className="bg-white p-3 rounded-xl shadow-sm border border-transparent hover:border-amber-100 transition-colors">
                     <motion.p key={stats.leave} initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="font-bold text-lg text-amber-600">{stats.leave}</motion.p>

@@ -117,7 +117,7 @@ const AddExamScreen: React.FC<AddExamScreenProps> = ({ onSave, examToEdit }) => 
               <input type="date" id="date" value={date} onChange={e => setDate(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500" />
             </div>
             <div>
-              <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">Class</label>
+              <label htmlFor="className" className="block text-sm font-medium text-gray-700 mb-1">{t('common.class')}</label>
               <select id="className" value={className} onChange={e => setClassName(e.target.value)} required className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-sky-500 focus:border-sky-500">
                 <option value="" disabled>{t('addExamScreen.selectClass')}</option>
                 {/* The ID is the value. Two classes can share a label across years,

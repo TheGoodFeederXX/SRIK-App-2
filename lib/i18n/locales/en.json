@@ -75,7 +75,61 @@
     "confirmBroadcast": "Confirm Broadcast?",
     "backToList": "Back to List",
     "backToPaths": "Back to Paths",
-    "saveAttendance": "Save Attendance"
+    "saveAttendance": "Save Attendance",
+    "class": "Class",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "absent": "Absent",
+    "present": "Present",
+    "late": "Late",
+    "leave": "Leave",
+    "grade": "Grade",
+    "remark": "Remark",
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "term": "Term",
+    "other": "Other",
+    "father": "Father",
+    "mother": "Mother",
+    "action": "Action",
+    "title": "Title",
+    "reason": "Reason",
+    "share": "Share",
+    "video": "Video",
+    "event": "Event",
+    "urgent": "Urgent",
+    "period": "Period",
+    "score": "Score",
+    "levels": "Levels",
+    "logic": "Logic",
+    "skill": "Skill",
+    "trend": "Trend",
+    "topic": "Topic",
+    "scheme": "Scheme",
+    "query": "Query",
+    "stats": "Stats",
+    "guardian": "Guardian",
+    "relationship": "Relationship",
+    "attendance": "Attendance",
+    "user": "User",
+    "risk": "Risk",
+    "call": "Call",
+    "exam": "Exam",
+    "noData": "No data",
+    "week": "Week",
+    "plans": "Plans",
+    "text": "Text",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "health": "Health",
+    "food": "Food",
+    "legal": "Legal",
+    "parent": "Parent",
+    "pay": "Pay",
+    "auto": "Auto"
   },
   "auth": {
     "signIn": "Sign In",
@@ -2288,7 +2342,8 @@
     "failedToDraftLetter": "Failed to draft letter",
     "failedToSendLetter": "Failed to send letter",
     "needsEvidence": "(needs evidence)",
-    "needsDecision": "(needs decision)"
+    "needsDecision": "(needs decision)",
+    "pasteRecipientUserId": "Paste recipient's user ID"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Select a student first.",
@@ -2434,7 +2489,10 @@
     "profile": "Profile",
     "lessonNotes": "Lesson Notes",
     "reports": "Reports",
-    "feeStatus": "Fee Status"
+    "feeStatus": "Fee Status",
+    "home": "Home",
+    "exams": "Exams",
+    "logo": "School logo"
   },
   "header": {
     "openMenu": "Open menu",
@@ -2453,7 +2511,9 @@
     "support": "Support",
     "contactOurTechnicalTeam": "Contact our technical team",
     "errorIllustration": "Error Illustration",
-    "needHelp": "Need help?"
+    "needHelp": "Need help?",
+    "oopsSomethingWentWrong": "Oops! Something went wrong",
+    "ourSystemsEncounteredUnexpectedHiccup": "Our systems encountered an unexpected hiccup. Don't worry, your data is safe."
   },
   "premiumModal": {
     "upgradeToPremium": "Upgrade to Premium",
@@ -2556,7 +2616,9 @@
     "couldNotRegisterTheStudent": "Could not register the student.",
     "couldNotLoadThisStudent": "Could not load this student.",
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
-    "savedButTheClassWasNotChanged": "Saved, but the class was not changed"
+    "savedButTheClassWasNotChanged": "Saved, but the class was not changed",
+    "studentFullName": "Student's full name",
+    "guardianName": "Guardian's name"
   },
   "addTeacherScreen": {
     "notStated": "Not stated",
@@ -2788,7 +2850,8 @@
     "teachersYouAddWillShowHereWithTheirWeeklyTeach": "Teachers you add will show here with their weekly teaching hours.",
     "weeklyHoursAppearOnceTeachersHaveLessonsOnATim": "Weekly hours appear once teachers have lessons on a timetable.",
     "dailyAttendanceAppearsHereOnceRegistersAreMark": "Daily attendance appears here once registers are marked.",
-    "newEnrolmentsPerMonthAppearHere": "New enrolments per month appear here."
+    "newEnrolmentsPerMonthAppearHere": "New enrolments per month appear here.",
+    "couldNotLoadThisData": "Couldn't load this data"
   },
   "announcementsScreen": {
     "pengumuman": "Announcements",
@@ -2823,7 +2886,8 @@
     "statusPublished": "Published",
     "statusWithdrawn": "Withdrawn",
     "deleteDraft": "Delete draft",
-    "edit": "Edit"
+    "edit": "Edit",
+    "tajuk": "Title"
   },
   "arrearsTracker": {
     "arrears": "Arrears"
@@ -3262,7 +3326,9 @@
     "supportedProvidersAnyOneRequired": "Supported providers (any one required):",
     "africaSTalking": "Africa's Talking",
     "infobip": "Infobip",
-    "globalIVRPlatform": "— global IVR platform"
+    "globalIVRPlatform": "— global IVR platform",
+    "coversPartsOfAfricaCheckMalaysiaCoverage": "covers parts of Africa; check Malaysia coverage before use",
+    "enterpriseVoiceMessaging": "enterprise voice messaging"
   },
   "integrationHub": {
     "integration": "Integration"
@@ -3487,7 +3553,9 @@
     "infobip": "Infobip",
     "africaSTalking": "Africa's Talking",
     "localMalaysianGateway": "Local Malaysian gateway",
-    "globalReliableHigherCost": "— global, reliable, higher cost"
+    "globalReliableHigherCost": "— global, reliable, higher cost",
+    "globalEnterpriseMessaging": "global, enterprise messaging",
+    "regionalProviderCheckMalaysiaCoverageBeforeUse": "regional provider; check Malaysia coverage before use"
   },
   "sOPCaseManagementScreen": {
     "sopcaseManagement": "SOPCase Management"
@@ -3517,7 +3585,9 @@
     "enterSchoolAnthemText": "Enter school anthem text...",
     "enterSchoolPledgeText": "Enter school pledge text...",
     "schoolInformationUpdated": "School information updated!",
-    "failedToSaveSchoolInformation": "Failed to save school information."
+    "failedToSaveSchoolInformation": "Failed to save school information.",
+    "logo": "School logo",
+    "hero": "Hero image"
   },
   "schoolOnboardingScreen": {
     "pendaftaranSekolah": "School Enrolment"
@@ -3584,7 +3654,10 @@
     "registering": "Registering...",
     "completeEnrollment": "Complete Enrollment",
     "enrollmentFailed": "Enrollment failed.",
-    "kssrDescription": "Primary School Standard Curriculum."
+    "kssrDescription": "Primary School Standard Curriculum.",
+    "cambridgeEdexcelIgcse": "Cambridge/Edexcel. IGCSE.",
+    "dual": "Dual",
+    "hybridIntensiveProgram": "Hybrid Intensive Program."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Student Fee Statement",
@@ -3755,7 +3828,9 @@
     "somethingWentWrongPleaseTryAgain": "Something went wrong. Please try again.",
     "duties": "Duties —",
     "editDutiesFor": "Edit duties for",
-    "clearDutiesFor": "Clear duties for"
+    "clearDutiesFor": "Clear duties for",
+    "noClassTeachersYet": "No class teachers yet.",
+    "noSubjectTeachersYet": "No subject teachers yet."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Attendance Approvals",
@@ -3913,7 +3988,9 @@
     "schoolOwnedNotice": "This system is owned and run by the school. Student fees are settled at the school office, not through this page."
   },
   "quizzesScreen": {
-    "papanPemuka": "Dashboard"
+    "papanPemuka": "Dashboard",
+    "kuiz": "Quiz",
+    "explanation": "Online quizzes are not available in this system yet. For now, student assessment is carried out by teachers in class using the method the school sets, and the marks are recorded through the Assessment menu. Please contact the class teacher for matters relating to student assessment."
   },
   "errorBoundary": {
     "tryAgain": "Try Again",
@@ -4080,5 +4157,13 @@
   },
   "premiumLoader": {
     "bootMessage": "Preparing your school space..."
+  },
+  "chatScreen": {
+    "chat": "Chat",
+    "explanation": "Chat is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
+  },
+  "vendorManagement": {
+    "vendor": "Vendor",
+    "explanation": "Vendor is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
   }
 }

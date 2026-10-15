@@ -26,13 +26,15 @@ const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
     <h3 className="font-bold text-lg text-purple-800 border-b-2 border-purple-200 pb-1 mb-3">{title}</h3>
 );
 
-const SchemeOfWorkTab: React.FC<{ scheme: TermResources['schemeOfWork'] }> = ({ scheme }) => (
+const SchemeOfWorkTab: React.FC<{ scheme: TermResources['schemeOfWork'] }> = ({ scheme }) => {
+    const { t } = useTranslation();
+    return (
     <div className="overflow-x-auto bg-white p-2 rounded-lg border">
         <table className="min-w-full">
             <thead className="bg-gray-100">
                 <tr>
-                    <th className="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase w-24">Week</th>
-                    <th className="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase">Topic</th>
+                    <th className="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase w-24">{t('common.week')}</th>
+                    <th className="px-4 py-2 text-left text-xs font-bold text-gray-600 uppercase">{t('common.topic')}</th>
                 </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -45,7 +47,8 @@ const SchemeOfWorkTab: React.FC<{ scheme: TermResources['schemeOfWork'] }> = ({ 
             </tbody>
         </table>
     </div>
-);
+    );
+};
 
 
 const LessonPlanLink: React.FC<{ plan: GeneratedLessonPlan, onSuggest: () => void, onClick: () => void }> = ({ plan, onSuggest, onClick }) => {
@@ -53,7 +56,7 @@ const LessonPlanLink: React.FC<{ plan: GeneratedLessonPlan, onSuggest: () => voi
     return (
         <div className="flex items-center space-x-2">
             <button onClick={onClick} className="flex-grow text-left p-3 font-semibold flex justify-between items-center hover:bg-purple-50 bg-white rounded-lg border group transition-colors">
-                <span className="text-purple-800 group-hover:text-purple-900">Week {plan.week}: {plan.topic}</span>
+                <span className="text-purple-800 group-hover:text-purple-900">{t('common.week')} {plan.week}: {plan.topic}</span>
                 <ChevronRightIcon className="h-5 w-5 text-gray-400" />
             </button>
             <button 
@@ -166,7 +169,7 @@ const TermContent: React.FC<{
     return (
         <div>
             <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg mb-4 print:hidden">
-                <button onClick={() => setActiveTab('scheme')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'scheme' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>Scheme</button>
+                <button onClick={() => setActiveTab('scheme')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'scheme' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>{t('common.scheme')}</button>
                 <button onClick={() => setActiveTab('plans')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'plans' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>{t('lessonPlanDetailScreen.lessonPlans')}</button>
                 <button onClick={() => setActiveTab('assessments')} className={`w-1/3 py-2 text-sm font-semibold rounded-md transition-colors ${activeTab === 'assessments' ? 'bg-white shadow text-black' : 'text-gray-600 hover:bg-gray-300/50'}`}>{t('lessonPlanDetailScreen.assessments')}</button>
             </div>

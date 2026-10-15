@@ -39,8 +39,8 @@ const SMSLessonManager: React.FC = () => {
                                 so the list describes reach, not a foreign market. */}
                             <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
                                 <li><span className="font-medium">Twilio</span> {t('sMSLessonManager.globalReliableHigherCost')}</li>
-                                <li><span className="font-medium">{t('sMSLessonManager.infobip')}</span> — global, enterprise messaging</li>
-                                <li><span className="font-medium">{t('sMSLessonManager.africaSTalking')}</span> — regional provider; check Malaysia coverage before use</li>
+                                <li><span className="font-medium">{t('sMSLessonManager.infobip')}</span> — {t('sMSLessonManager.globalEnterpriseMessaging')}</li>
+                                <li><span className="font-medium">{t('sMSLessonManager.africaSTalking')}</span> — {t('sMSLessonManager.regionalProviderCheckMalaysiaCoverageBeforeUse')}</li>
                                 <li><span className="font-medium">{t('sMSLessonManager.localMalaysianGateway')}</span> — arrange one directly with a local provider</li>
                             </ul>
                         </div>

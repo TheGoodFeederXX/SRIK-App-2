@@ -272,8 +272,8 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-center">
                 <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.05 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-green-600">{monthlyStats.present}</p><p className="text-xs text-gray-500">{t('attendanceScreen.present')}</p></motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-red-600">{monthlyStats.absent}</p><p className="text-xs text-gray-500">Absent</p></motion.div>
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.15 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-blue-600">{monthlyStats.late}</p><p className="text-xs text-gray-500">Late</p></motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.1 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-red-600">{monthlyStats.absent}</p><p className="text-xs text-gray-500">{t('common.absent')}</p></motion.div>
+                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.15 }} className="bg-white p-3 rounded-xl shadow-sm hover:shadow-md transition-shadow"><p className="font-bold text-lg text-blue-600">{monthlyStats.late}</p><p className="text-xs text-gray-500">{t('common.late')}</p></motion.div>
             </div>
 
             <motion.div
@@ -298,8 +298,8 @@ const AttendanceScreen: React.FC<AttendanceScreenProps> = ({ studentId }) => {
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-center mb-3">
                         <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termSummary.total}</p><p className="text-xs text-gray-500">{t('attendanceScreen.schoolDays')}</p></div>
                         <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termSummary.present}</p><p className="text-xs text-gray-500">{t('attendanceScreen.present')}</p></div>
-                        <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termSummary.absent}</p><p className="text-xs text-gray-500">Absent</p></div>
-                        <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termSummary.late}</p><p className="text-xs text-gray-500">Late</p></div>
+                        <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termSummary.absent}</p><p className="text-xs text-gray-500">{t('common.absent')}</p></div>
+                        <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termSummary.late}</p><p className="text-xs text-gray-500">{t('common.late')}</p></div>
                     </div>
                 )}
                 <SimpleLineChart data={termStats.trendData} color="#FF9800" />

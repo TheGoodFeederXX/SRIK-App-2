@@ -75,7 +75,61 @@
     "confirmBroadcast": "Sahkan Siaran?",
     "backToList": "Kembali ke Senarai",
     "backToPaths": "Kembali ke Laluan",
-    "saveAttendance": "Simpan Kehadiran"
+    "saveAttendance": "Simpan Kehadiran",
+    "class": "Kelas",
+    "gender": "Jantina",
+    "male": "Lelaki",
+    "female": "Perempuan",
+    "absent": "Tidak Hadir",
+    "present": "Hadir",
+    "late": "Lewat",
+    "leave": "Cuti",
+    "grade": "Gred",
+    "remark": "Catatan",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "archived": "Diarkibkan",
+    "term": "Penggal",
+    "other": "Lain-lain",
+    "father": "Bapa",
+    "mother": "Ibu",
+    "action": "Tindakan",
+    "title": "Tajuk",
+    "reason": "Sebab",
+    "share": "Kongsi",
+    "video": "Video",
+    "event": "Peristiwa",
+    "urgent": "Segera",
+    "period": "Tempoh",
+    "score": "Markah",
+    "levels": "Tahap",
+    "logic": "Logik",
+    "skill": "Kemahiran",
+    "trend": "Trend",
+    "topic": "Topik",
+    "scheme": "Skema",
+    "query": "Pertanyaan",
+    "stats": "Statistik",
+    "guardian": "Penjaga",
+    "relationship": "Hubungan",
+    "attendance": "Kehadiran",
+    "user": "Pengguna",
+    "risk": "Risiko",
+    "call": "Panggil",
+    "exam": "Peperiksaan",
+    "noData": "Tiada data",
+    "week": "Minggu",
+    "plans": "Rancangan",
+    "text": "Teks",
+    "low": "Rendah",
+    "medium": "Sederhana",
+    "high": "Tinggi",
+    "health": "Kesihatan",
+    "food": "Makanan",
+    "legal": "Undang-undang",
+    "parent": "Ibu Bapa",
+    "pay": "Bayar",
+    "auto": "Auto"
   },
   "auth": {
     "signIn": "Log Masuk",
@@ -2288,7 +2342,8 @@
     "failedToDraftLetter": "Gagal mendraf surat",
     "failedToSendLetter": "Gagal menghantar surat",
     "needsEvidence": "(perlu bukti)",
-    "needsDecision": "(perlu keputusan)"
+    "needsDecision": "(perlu keputusan)",
+    "pasteRecipientUserId": "Tampal ID pengguna penerima"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Pilih murid dahulu.",
@@ -2434,7 +2489,10 @@
     "profile": "Profil",
     "lessonNotes": "Nota Pelajaran",
     "reports": "Laporan",
-    "feeStatus": "Status Yuran"
+    "feeStatus": "Status Yuran",
+    "home": "Utama",
+    "exams": "Peperiksaan",
+    "logo": "Logo sekolah"
   },
   "header": {
     "openMenu": "Buka menu",
@@ -2453,7 +2511,9 @@
     "support": "Sokongan",
     "contactOurTechnicalTeam": "Hubungi pasukan teknikal kami",
     "errorIllustration": "Ilustrasi Ralat",
-    "needHelp": "Perlukan bantuan?"
+    "needHelp": "Perlukan bantuan?",
+    "oopsSomethingWentWrong": "Maaf! Ada masalah berlaku",
+    "ourSystemsEncounteredUnexpectedHiccup": "Sistem kami menghadapi masalah tidak dijangka. Jangan risau, data anda selamat."
   },
   "premiumModal": {
     "upgradeToPremium": "Naik Taraf ke Premium",
@@ -2556,7 +2616,9 @@
     "couldNotRegisterTheStudent": "Tidak dapat mendaftarkan murid.",
     "couldNotLoadThisStudent": "Tidak dapat memuatkan murid ini.",
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
-    "savedButTheClassWasNotChanged": "Disimpan, tetapi kelas tidak ditukar"
+    "savedButTheClassWasNotChanged": "Disimpan, tetapi kelas tidak ditukar",
+    "studentFullName": "Nama penuh murid",
+    "guardianName": "Nama penjaga"
   },
   "addTeacherScreen": {
     "notStated": "Tidak dinyatakan",
@@ -2788,7 +2850,8 @@
     "teachersYouAddWillShowHereWithTheirWeeklyTeach": "Guru yang anda tambah akan muncul di sini dengan jam pengajaran mingguan mereka.",
     "weeklyHoursAppearOnceTeachersHaveLessonsOnATim": "Jam mingguan muncul sebaik guru mempunyai pelajaran dalam jadual waktu.",
     "dailyAttendanceAppearsHereOnceRegistersAreMark": "Kehadiran harian muncul di sini sebaik sahaja daftar ditanda.",
-    "newEnrolmentsPerMonthAppearHere": "Pendaftaran baharu sebulan muncul di sini."
+    "newEnrolmentsPerMonthAppearHere": "Pendaftaran baharu sebulan muncul di sini.",
+    "couldNotLoadThisData": "Gagal memuatkan data ini"
   },
   "announcementsScreen": {
     "pengumuman": "Pengumuman",
@@ -2823,7 +2886,8 @@
     "statusPublished": "Diterbitkan",
     "statusWithdrawn": "Ditarik balik",
     "edit": "Sunting",
-    "deleteDraft": "Padam draf"
+    "deleteDraft": "Padam draf",
+    "tajuk": "Tajuk"
   },
   "arrearsTracker": {
     "arrears": "Tunggakan"
@@ -3262,7 +3326,9 @@
     "supportedProvidersAnyOneRequired": "Penyedia disokong (mana-mana satu diperlukan):",
     "africaSTalking": "Africa's Talking",
     "infobip": "Infobip",
-    "globalIVRPlatform": "— platform IVR global"
+    "globalIVRPlatform": "— platform IVR global",
+    "coversPartsOfAfricaCheckMalaysiaCoverage": "meliputi sebahagian Afrika; semak liputan Malaysia sebelum guna",
+    "enterpriseVoiceMessaging": "pesanan suara perusahaan"
   },
   "integrationHub": {
     "integration": "Integrasi"
@@ -3487,7 +3553,9 @@
     "infobip": "Infobip",
     "africaSTalking": "Africa's Talking",
     "localMalaysianGateway": "Gerbang Malaysia Tempatan",
-    "globalReliableHigherCost": "— global, boleh dipercayai, kos lebih tinggi"
+    "globalReliableHigherCost": "— global, boleh dipercayai, kos lebih tinggi",
+    "globalEnterpriseMessaging": "global, pesanan perusahaan",
+    "regionalProviderCheckMalaysiaCoverageBeforeUse": "pembekal serantau; semak liputan Malaysia sebelum guna"
   },
   "sOPCaseManagementScreen": {
     "sopcaseManagement": "Pengurusan Kes SOP"
@@ -3517,7 +3585,9 @@
     "enterSchoolAnthemText": "Masukkan teks lagu sekolah...",
     "enterSchoolPledgeText": "Masukkan teks ikrar sekolah...",
     "schoolInformationUpdated": "Maklumat sekolah dikemas kini!",
-    "failedToSaveSchoolInformation": "Gagal menyimpan maklumat sekolah."
+    "failedToSaveSchoolInformation": "Gagal menyimpan maklumat sekolah.",
+    "logo": "Logo sekolah",
+    "hero": "Imej utama"
   },
   "schoolOnboardingScreen": {
     "pendaftaranSekolah": "Pendaftaran Sekolah"
@@ -3584,7 +3654,10 @@
     "registering": "Mendaftar...",
     "completeEnrollment": "Lengkapkan Pendaftaran",
     "enrollmentFailed": "Pendaftaran gagal.",
-    "kssrDescription": "Kurikulum Standard Sekolah Rendah."
+    "kssrDescription": "Kurikulum Standard Sekolah Rendah.",
+    "cambridgeEdexcelIgcse": "Cambridge/Edexcel. IGCSE.",
+    "dual": "Dual",
+    "hybridIntensiveProgram": "Program Intensif Hibrid."
   },
   "studentFeesScreen": {
     "penyataYuranPelajar": "Penyata Yuran Pelajar",
@@ -3755,7 +3828,9 @@
     "somethingWentWrongPleaseTryAgain": "Sesuatu tidak kena. Sila cuba lagi.",
     "duties": "Tugas —",
     "editDutiesFor": "Sunting tugas untuk",
-    "clearDutiesFor": "Kosongkan tugas untuk"
+    "clearDutiesFor": "Kosongkan tugas untuk",
+    "noClassTeachersYet": "Belum ada guru kelas.",
+    "noSubjectTeachersYet": "Belum ada guru mata pelajaran."
   },
   "teacherAttendanceApproval": {
     "attendanceApprovals": "Kelulusan Kehadiran",
@@ -3913,7 +3988,9 @@
     "schoolOwnedNotice": "Sistem ini dimiliki dan diuruskan oleh sekolah. Yuran murid dijelaskan di pejabat sekolah, bukan melalui halaman ini."
   },
   "quizzesScreen": {
-    "papanPemuka": "Papan Pemuka"
+    "papanPemuka": "Papan Pemuka",
+    "kuiz": "Kuiz",
+    "explanation": "Kuiz dalam talian belum tersedia di dalam sistem ini. Buat masa ini penilaian murid dijalankan oleh guru di dalam kelas melalui kaedah yang ditetapkan sekolah, dan markahnya direkodkan melalui menu Penilaian. Sila hubungi guru kelas untuk urusan berkaitan penilaian murid."
   },
   "errorBoundary": {
     "tryAgain": "Cuba Lagi",
@@ -4080,5 +4157,13 @@
   },
   "premiumLoader": {
     "bootMessage": "Menyediakan ruang sekolah anda..."
+  },
+  "chatScreen": {
+    "chat": "Sembang",
+    "explanation": "Sembang belum dibina untuk sekolah ini lagi. Perkhidmatan di belakangnya tidak berjalan, dan tiada rekod disimpan untuknya, jadi apa-apa di sini tidak akan benar. Apabila ia dibina, skrin ini akan diganti."
+  },
+  "vendorManagement": {
+    "vendor": "Vendor",
+    "explanation": "Vendor belum dibina untuk sekolah ini lagi. Perkhidmatan di belakangnya tidak berjalan, dan tiada rekod disimpan untuknya, jadi apa-apa di sini tidak akan benar. Apabila ia dibina, skrin ini akan diganti."
   }
 }

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react';
 import { DashboardType } from './types';
+import { applySavedAccessibilitySettings } from './src/lib/accessibility';
 import i18n from './lib/i18n';
 import { OfflineIndicator } from './components/shared/OfflineIndicator';
 import { RealtimeStatusIndicator } from './components/shared/RealtimeStatusIndicator';
@@ -279,6 +280,13 @@ const AuthenticatedApp: React.FC = () => {
 const App: React.FC = () => {
   const [isInitializing, setIsInitializing] = useState(true);
   const [initMessage] = useState(BOOT_MESSAGE);
+
+  // Apply the person's saved accessibility preferences before the first frame.
+  // Until now these were applied ONLY inside the settings screen itself, so a
+  // text size chosen there was lost the moment the user navigated away.
+  useEffect(() => {
+    applySavedAccessibilitySettings();
+  }, []);
 
   useEffect(() => {
     // These modules are not needed to paint the shell. Load them only after the

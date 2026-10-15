@@ -243,8 +243,8 @@ const TeacherCommunicationScreen: React.FC = () => {
                             <div>
                                 <h3 className="text-lg font-bold text-gray-800 mb-2">{t('teacherCommunicationScreen.2AnnouncementType')}</h3>
                                 <div className="flex space-x-1 bg-gray-200 p-1 rounded-lg">
-                                    <button type="button" onClick={() => { setMode('text'); stopStream(); }} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'text' ? 'bg-white shadow' : 'text-gray-600'}`}>Text</button>
-                                    <button type="button" onClick={() => setMode('video')} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'video' ? 'bg-white shadow' : 'text-gray-600'}`}>Video</button>
+                                    <button type="button" onClick={() => { setMode('text'); stopStream(); }} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'text' ? 'bg-white shadow' : 'text-gray-600'}`}>{t('common.text')}</button>
+                                    <button type="button" onClick={() => setMode('video')} className={`w-1/2 py-2 text-sm font-semibold rounded-md ${mode === 'video' ? 'bg-white shadow' : 'text-gray-600'}`}>{t('common.video')}</button>
                                 </div>
                             </div>
 
@@ -259,8 +259,8 @@ const TeacherCommunicationScreen: React.FC = () => {
                                     <option value="General">{t('teacherCommunicationScreen.general')}</option>
                                     <option value="Homework">{t('teacherCommunicationScreen.homework')}</option>
                                     <option value="Test Reminder">{t('teacherCommunicationScreen.testReminder')}</option>
-                                    <option value="Event">Event</option>
-                                    <option value="Urgent">Urgent</option>
+                                    <option value="Event">{t('common.event')}</option>
+                                    <option value="Urgent">{t('common.urgent')}</option>
                                     <option value="Holiday">{t('teacherCommunicationScreen.holiday')}</option>
                                 </select>
                             </div>

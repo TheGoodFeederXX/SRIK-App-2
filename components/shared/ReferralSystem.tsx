@@ -218,13 +218,13 @@ const ReferralSystem: React.FC = () => {
                                 onChange={(e) => setReferralType(e.target.value)}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                             >
-                                <option>Health</option>
-                                <option>Food</option>
+                                <option>{t('common.health')}</option>
+                                <option>{t('common.food')}</option>
                                 <option>{t('referralSystem.shelter')}</option>
-                                <option>Legal</option>
+                                <option>{t('common.legal')}</option>
                                 <option>{t('referralSystem.counseling')}</option>
                                 <option>{t('referralSystem.financial')}</option>
-                                <option>Other</option>
+                                <option>{t('common.other')}</option>
                             </select>
                         </div>
 
@@ -235,9 +235,9 @@ const ReferralSystem: React.FC = () => {
                                 onChange={(e) => setUrgency(e.target.value)}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
                             >
-                                <option>Low</option>
-                                <option>Medium</option>
-                                <option>High</option>
+                                <option>{t('common.low')}</option>
+                                <option>{t('common.medium')}</option>
+                                <option>{t('common.high')}</option>
                                 <option>{t('referralSystem.critical')}</option>
                             </select>
                         </div>

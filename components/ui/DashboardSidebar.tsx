@@ -54,7 +54,7 @@ export const StudentSidebar = ({ activeScreen, setActiveScreen, onLogout, school
         <div className="h-full flex flex-col bg-white border-r border-gray-200">
             <div className="p-6 flex items-center space-x-3 border-b border-gray-100">
                 {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain" />
+                    <img src={logoUrl} alt={t('dashboardSidebar.logo')} className="w-8 h-8 rounded-lg object-contain" />
                 ) : (
                     <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'S'}</span>
@@ -103,7 +103,7 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
         <div className="h-full flex flex-col bg-white border-r border-gray-200">
             <div className="p-6 flex items-center space-x-3 border-b border-gray-100">
                 {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain" />
+                    <img src={logoUrl} alt={t('dashboardSidebar.logo')} className="w-8 h-8 rounded-lg object-contain" />
                 ) : (
                     <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'A'}</span>
@@ -114,11 +114,11 @@ export const AdminSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolNa
 
             <nav className="flex-1 py-6 overflow-y-auto">
                 <div className="space-y-1">
-                    <SidebarItem id="home" icon={<HomeIcon />} label="Home" isActive={activeScreen === 'home'} onClick={() => setActiveScreen('home')} activeColor="text-indigo-600" />
+                    <SidebarItem id="home" icon={<HomeIcon />} label={t('dashboardSidebar.home')} isActive={activeScreen === 'home'} onClick={() => setActiveScreen('home')} activeColor="text-indigo-600" />
                     <SidebarItem id="studentList" icon={<StudentsIcon />} label={t('dashboardSidebar.students')} isActive={activeScreen === 'studentList'} onClick={() => setActiveScreen('studentList')} activeColor="text-indigo-600" />
                     <SidebarItem id="teacherList" icon={<UserGroupIcon />} label={t('dashboardSidebar.teachers')} isActive={activeScreen === 'teacherList'} onClick={() => setActiveScreen('teacherList')} activeColor="text-indigo-600" />
                     <SidebarItem id="timetable" icon={<ClipboardListIcon />} label={t('dashboardSidebar.timetable')} isActive={activeScreen === 'timetable'} onClick={() => setActiveScreen('timetable')} activeColor="text-indigo-600" />
-                    <SidebarItem id="examManagement" icon={<ExamIcon />} label="Exams" isActive={activeScreen === 'examManagement'} onClick={() => setActiveScreen('examManagement')} activeColor="text-indigo-600" />
+                    <SidebarItem id="examManagement" icon={<ExamIcon />} label={t('dashboardSidebar.exams')} isActive={activeScreen === 'examManagement'} onClick={() => setActiveScreen('examManagement')} activeColor="text-indigo-600" />
                     <SidebarItem id="results" icon={<EnterResultsIcon />} label={t('dashboardSidebar.results')} isActive={activeScreen === 'results'} onClick={() => setActiveScreen('results')} activeColor="text-indigo-600" />
                     <SidebarItem id="compliance" icon={<ShieldCheckIcon />} label={t('dashboardSidebar.compliance')} isActive={activeScreen === 'compliance'} onClick={() => setActiveScreen('compliance')} activeColor="text-indigo-600" />
                     <SidebarItem id="studentApprovals" icon={<CheckCircleIcon />} label={t('dashboardSidebar.approvals')} isActive={activeScreen === 'studentApprovals'} onClick={() => setActiveScreen('studentApprovals')} activeColor="text-indigo-600" />
@@ -162,7 +162,7 @@ export const TeacherSidebar = ({ activeScreen, setActiveScreen, onLogout, school
         <div className="h-full flex flex-col bg-white border-r border-gray-200">
             <div className="p-6 flex items-center space-x-3 border-b border-gray-100">
                 {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain" />
+                    <img src={logoUrl} alt={t('dashboardSidebar.logo')} className="w-8 h-8 rounded-lg object-contain" />
                 ) : (
                     <div className="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'T'}</span>
@@ -217,7 +217,7 @@ export const ParentSidebar = ({ activeScreen, setActiveScreen, onLogout, schoolN
         <div className="h-full flex flex-col bg-white border-r border-gray-200">
             <div className="p-6 flex items-center space-x-3 border-b border-gray-100">
                 {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg object-contain" />
+                    <img src={logoUrl} alt={t('dashboardSidebar.logo')} className="w-8 h-8 rounded-lg object-contain" />
                 ) : (
                     <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
                         <span className="text-white font-bold text-lg">{schoolName ? schoolName.charAt(0) : 'P'}</span>

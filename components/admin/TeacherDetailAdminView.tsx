@@ -209,8 +209,8 @@ const TeacherDetailAdminView: React.FC<TeacherDetailAdminViewProps> = ({ teacher
                                 </div>
                             )}
                             <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-2">
-                                <a href={`mailto:${teacher.email}`} className="flex items-center space-x-1 text-sm text-gray-600 hover:text-indigo-600"><MailIcon className="w-4 h-4" /><span>Email</span></a>
-                                <a href={`tel:${teacher.phone}`} className="flex items-center space-x-1 text-sm text-gray-600 hover:text-indigo-600"><PhoneIcon className="w-4 h-4" /><span>Call</span></a>
+                                <a href={`mailto:${teacher.email}`} className="flex items-center space-x-1 text-sm text-gray-600 hover:text-indigo-600"><MailIcon className="w-4 h-4" /><span>{t('common.email')}</span></a>
+                                <a href={`tel:${teacher.phone}`} className="flex items-center space-x-1 text-sm text-gray-600 hover:text-indigo-600"><PhoneIcon className="w-4 h-4" /><span>{t('common.call')}</span></a>
                             </div>
                         </div>
                     </motion.div>

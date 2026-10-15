@@ -19,7 +19,9 @@ import ComingSoonScreen from './../ui/ComingSoonScreen';
  */
 const VendorManagement: React.FC<any> = ({ handleBack }) => (
     <ComingSoonScreen
+        titleKey="vendorManagement.vendor"
         title="Vendor"
+        explanationKey="vendorManagement.explanation"
         explanation="Vendor is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced."
         handleBack={handleBack}
     />

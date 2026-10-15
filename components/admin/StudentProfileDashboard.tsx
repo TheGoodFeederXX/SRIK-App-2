@@ -310,7 +310,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                             
                             <div className="space-y-4">
                                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
-                                    <span className="text-xs font-semibold text-gray-500 uppercase">Gender</span>
+                                    <span className="text-xs font-semibold text-gray-500 uppercase">{t('common.gender')}</span>
                                     <span className="text-sm font-bold text-gray-800">{s?.gender || s?.Gender || 'Not Specified'}</span>
                                 </div>
                                 <div className="flex justify-between items-center py-2 border-b border-gray-50">
@@ -380,7 +380,7 @@ const StudentProfileDashboard: React.FC<StudentProfileDashboardProps> = ({
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="w-2 h-2 rounded-full bg-red-500"></div>
-                                            <span className="text-xs font-semibold text-gray-500">Absent</span>
+                                            <span className="text-xs font-semibold text-gray-500">{t('common.absent')}</span>
                                             <span className="text-xs font-bold text-gray-800 ml-auto">{attendanceData.absent}</span>
                                         </div>
                                         <div className="flex items-center gap-2">

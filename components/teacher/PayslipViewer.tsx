@@ -246,7 +246,7 @@ const PayslipViewer: React.FC<PayslipViewerProps> = ({ teacherId, initialPayslip
                                         <p className="font-semibold">{teacherId}</p>
                                     </div>
                                     <div>
-                                        <p className="text-gray-600">Period</p>
+                                        <p className="text-gray-600">{t('common.period')}</p>
                                         <p className="font-semibold">
                                             {new Date(selectedPayslip.period_start).toLocaleDateString("ms-MY")} - {new Date(selectedPayslip.period_end).toLocaleDateString("ms-MY")}
                                         </p>

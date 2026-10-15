@@ -102,7 +102,7 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
                                 <div><p className="text-gray-400 font-semibold text-xs uppercase">{t('suspensionNoticeBanner.issuedBy')}</p><p className="font-semibold text-gray-900">{open.issued_by_name}</p></div>
                             )}
                             <div>
-                                <p className="text-gray-400 font-semibold text-xs uppercase">Reason</p>
+                                <p className="text-gray-400 font-semibold text-xs uppercase">{t('common.reason')}</p>
                                 <p className="text-gray-700 whitespace-pre-wrap mt-1">{open.reason}</p>
                             </div>
                             {open.return_conditions && (

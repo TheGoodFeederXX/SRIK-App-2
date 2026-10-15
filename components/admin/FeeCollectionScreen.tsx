@@ -571,7 +571,7 @@ function ChargeRow({
                 </div>
             </div>
             <div className="mt-2 flex items-center gap-2">
-                <span className="text-xs text-slate-500">Bayar</span>
+                <span className="text-xs text-slate-500">{t('common.pay')}</span>
                 <input
                     type="number"
                     inputMode="decimal"

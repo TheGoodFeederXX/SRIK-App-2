@@ -64,11 +64,11 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-gray-900 font-sans">
                 <InfoField label={t('reportCardScreen.fullName')} value={student.name} />
                 <InfoField label={t('reportCardScreen.classGrade')} value={`${student.grade}${student.section}`} />
-                <InfoField label="Term" value={report.term} />
+                <InfoField label={t('common.term')} value={report.term} />
                 <InfoField label={t('reportCardScreen.session')} value={report.session} />
                 {student.admission_number && <InfoField label={t('reportCardScreen.admissionNo')} value={student.admission_number} />}
                 {student.curriculum_type && <InfoField label={t('reportCardScreen.curriculum')} value={student.curriculum_type} />}
-                {student.gender && <InfoField label="Gender" value={student.gender} />}
+                {student.gender && <InfoField label={t('common.gender')} value={student.gender} />}
                 {(student.birthday || student.dateOfBirth) && <InfoField label={t('reportCardScreen.dateOfBirth')} value={student.birthday || student.dateOfBirth} />}
                 {report.position && <InfoField label={t('reportCardScreen.positionInClass')} value={`${report.position}${report.totalStudents ? ` / ${report.totalStudents}` : ''}`} />}
             </div>
@@ -83,8 +83,8 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                             <th className="p-2 border border-gray-300 w-16 text-center">{t('reportCardScreen.ca40')}</th>
                             <th className="p-2 border border-gray-300 w-16 text-center">{t('reportCardScreen.exam60')}</th>
                             <th className="p-2 border border-gray-300 w-16 text-center bg-green-100">{t('reportCardScreen.total100')}</th>
-                            <th className="p-2 border border-gray-300 w-16 text-center">Grade</th>
-                            <th className="p-2 border border-gray-300">Remark</th>
+                            <th className="p-2 border border-gray-300 w-16 text-center">{t('common.grade')}</th>
+                            <th className="p-2 border border-gray-300">{t('common.remark')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,7 +162,7 @@ const TermReport: React.FC<{ report: ReportCard, student: Student, schoolName?: 
                             <p className="text-lg font-bold text-green-700">{report.attendance.present}</p>
                         </div>
                         <div className="bg-red-50 p-3 rounded-lg text-center">
-                            <p className="text-xs text-red-600 font-medium">Absent</p>
+                            <p className="text-xs text-red-600 font-medium">{t('common.absent')}</p>
                             <p className="text-lg font-bold text-red-700">{report.attendance.absent}</p>
                         </div>
                         <div className="bg-amber-50 p-3 rounded-lg text-center">

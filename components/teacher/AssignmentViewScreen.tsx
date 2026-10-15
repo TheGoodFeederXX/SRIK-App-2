@@ -41,7 +41,7 @@ const AssignmentViewScreen: React.FC<AssignmentViewScreenProps> = ({ assessment,
                 <h2 className="text-lg font-bold text-gray-800">{t('assignmentViewScreen.assignmentPreview')}</h2>
                 <div className="flex items-center space-x-2">
                     <button onClick={handleShare} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-sky-700 bg-sky-100 rounded-md hover:bg-sky-200">
-                        <ShareIcon className="w-4 h-4" /><span>Share</span>
+                        <ShareIcon className="w-4 h-4" /><span>{t('common.share')}</span>
                     </button>
                     <button onClick={handlePrint} className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-semibold text-purple-700 bg-purple-100 rounded-md hover:bg-purple-200">
                         <DocumentTextIcon className="w-4 h-4" /><span>{t('common.print')}</span>

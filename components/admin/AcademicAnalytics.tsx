@@ -179,7 +179,7 @@ const AcademicAnalytics: React.FC<AcademicAnalyticsProps> = ({ schoolId, current
                         </div>
                     </div>
                     <div className="sm:ml-auto">
-                        <label className="block text-xs font-semibold text-gray-700 mb-2">Class</label>
+                        <label className="block text-xs font-semibold text-gray-700 mb-2">{t('common.class')}</label>
                         <select
                             value={selectedClass || 'all'}
                             onChange={(e) => setSelectedClass(e.target.value === 'all' ? null : e.target.value)}

@@ -439,15 +439,15 @@ const AttendanceTab = ({ student }: { student: Student }) => {
             </div>
             <div className="flex justify-center space-x-3 mt-4 text-xs">
                 <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-green-400 mr-1.5"></div>{t('parentDashboard.present')}</span>
-                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>Absent</span>
-                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-1.5"></div>Late</span>
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-red-400 mr-1.5"></div>{t('common.absent')}</span>
+                <span className="flex items-center"><div className="w-3 h-3 rounded-full bg-blue-400 mr-1.5"></div>{t('common.late')}</span>
             </div>
             {termDays && (
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-center mt-4">
                     <div className="bg-gray-50 rounded-lg p-2"><p className="font-bold text-gray-800">{termDays.total}</p><p className="text-xs text-gray-500">{t('parentDashboard.schoolDays')}</p></div>
                     <div className="bg-green-50 rounded-lg p-2"><p className="font-bold text-green-600">{termDays.present}</p><p className="text-xs text-gray-500">{t('parentDashboard.present')}</p></div>
-                    <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termDays.absent}</p><p className="text-xs text-gray-500">Absent</p></div>
-                    <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termDays.late}</p><p className="text-xs text-gray-500">Late</p></div>
+                    <div className="bg-red-50 rounded-lg p-2"><p className="font-bold text-red-600">{termDays.absent}</p><p className="text-xs text-gray-500">{t('common.absent')}</p></div>
+                    <div className="bg-blue-50 rounded-lg p-2"><p className="font-bold text-blue-600">{termDays.late}</p><p className="text-xs text-gray-500">{t('common.late')}</p></div>
                 </div>
             )}
         </div>

@@ -208,10 +208,10 @@ const LinkChildScreen: React.FC<LinkChildScreenProps> = ({ handleBack, forceUpda
                                     onChange={(e) => setRelationship(e.target.value)}
                                     className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
-                                    <option value="Father">Father</option>
-                                    <option value="Mother">Mother</option>
+                                    <option value="Father">{t('common.father')}</option>
+                                    <option value="Mother">{t('common.mother')}</option>
                                     <option value="Guardian">{t('linkChildScreen.guardian')}</option>
-                                    <option value="Other">Other</option>
+                                    <option value="Other">{t('common.other')}</option>
                                 </select>
                             </div>
 

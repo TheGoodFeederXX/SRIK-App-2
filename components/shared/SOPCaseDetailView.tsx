@@ -292,7 +292,7 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                                     <option value="warning">{t('sOPCaseDetailView.warning')}</option>
                                     <option value="suspension">{t('sOPCaseDetailView.suspension')}</option>
                                     <option value="expulsion">{t('sOPCaseDetailView.expulsion')}</option>
-                                    <option value="other">Other</option>
+                                    <option value="other">{t('common.other')}</option>
                                 </select>
                                 {(outcome === 'warning' || outcome === 'suspension') && (
                                     <p className="text-xs text-gray-400 mt-1">A {outcome === 'warning' ? 'teacher warning' : 'student suspension'} can be created directly from Personnel Files / Past Students screens using this decision as the reason.</p>
@@ -328,15 +328,15 @@ const SOPCaseDetailView: React.FC<SOPCaseDetailViewProps> = ({ caseId, mode }) =
                                     <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.recipientType')}</label>
                                     <select className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={recipientType} onChange={e => setRecipientType(e.target.value)}>
-                                        <option value="parent">Parent</option>
+                                        <option value="parent">{t('common.parent')}</option>
                                         <option value="student">{t('sOPCaseDetailView.student')}</option>
                                         <option value="teacher">{t('sOPCaseDetailView.teacher')}</option>
-                                        <option value="other">Other</option>
+                                        <option value="other">{t('common.other')}</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-1">{t('sOPCaseDetailView.recipientUserID')}</label>
-                                    <input type="text" placeholder="Paste recipient's user ID" className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
+                                    <input type="text" placeholder={t('sOPCaseDetailView.pasteRecipientUserId')} className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                         value={recipientId} onChange={e => setRecipientId(e.target.value)} />
                                 </div>
                             </div>

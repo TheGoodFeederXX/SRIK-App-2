@@ -298,7 +298,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
 
                 {tab === 'class' && (
                     <DutyList
-                        emptyText="No class teachers yet."
+                        emptyText={t('teacherAssignmentsScreen.noClassTeachersYet')}
                         rows={classTeacherRows}
                         teachers={teachers}
                         renderDetail={a => a.className}
@@ -310,7 +310,7 @@ const TeacherAssignmentsScreen: React.FC<TeacherAssignmentsScreenProps> = ({
 
                 {tab === 'subject' && (
                     <DutyList
-                        emptyText="No subject teachers yet."
+                        emptyText={t('teacherAssignmentsScreen.noSubjectTeachersYet')}
                         rows={subjectTeacherRows}
                         teachers={teachers}
                         renderDetail={a => `${a.subjectName ?? 'Subject'} · ${a.className}`}

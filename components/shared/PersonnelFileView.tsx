@@ -487,7 +487,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                 </div>
                                 <div className="px-5 py-4 space-y-4">
                                     <div>
-                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Query</p>
+                                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{t('common.query')}</p>
                                         <p className="text-sm text-gray-700 whitespace-pre-wrap">{q.reason}</p>
                                         <AttachmentLinks urls={q.attachment_urls} />
                                     </div>
@@ -606,7 +606,7 @@ const PersonnelFileView: React.FC<PersonnelFileViewProps> = ({ teacherId, mode }
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Title</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">{t('common.title')}</label>
                                 <input type="text" placeholder="e.g. Promoted to Head of Department"
                                     className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none"
                                     value={recordForm.title}

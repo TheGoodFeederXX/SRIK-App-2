@@ -341,21 +341,21 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                             onChange={setStaffCode} icon={<UserIcon className="w-5 h-5" />} />
                         <InputField id="name" label={t('addTeacherScreen.fullName')} value={name}
                             onChange={setName} icon={<UserIcon className="w-5 h-5" />} />
-                        <InputField id="email" label="Email" value={email}
+                        <InputField id="email" label={t('common.email')} value={email}
                             onChange={setEmail} icon={<MailIcon className="w-5 h-5" />} type="email"
                             required={createAccount} />
-                        <InputField id="phone" label="Phone" value={phone}
+                        <InputField id="phone" label={t('common.phone')} value={phone}
                             onChange={setPhone} icon={<PhoneIcon className="w-5 h-5" />} type="tel"
                             required={false} />
 
                         <div>
-                            <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">Gender</label>
+                            <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">{t('common.gender')}</label>
                             <select id="gender" value={gender}
                                 onChange={e => setGender(e.target.value as '' | 'MALE' | 'FEMALE')}
                                 className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700">
                                 <option value="">{t('addTeacherScreen.notStated')}</option>
-                                <option value="MALE">Male</option>
-                                <option value="FEMALE">Female</option>
+                                <option value="MALE">{t('common.male')}</option>
+                                <option value="FEMALE">{t('common.female')}</option>
                             </select>
                         </div>
 
@@ -372,7 +372,7 @@ const AddTeacherScreen: React.FC<AddTeacherScreenProps> = ({
                                 <select id="status" value={status}
                                     onChange={e => setStatus(e.target.value as 'ACTIVE' | 'INACTIVE' | 'ARCHIVED')}
                                     className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700">
-                                    <option value="ACTIVE">Active</option>
+                                    <option value="ACTIVE">{t('common.active')}</option>
                                     <option value="INACTIVE">{t('addTeacherScreen.inactive')}</option>
                                     <option value="ARCHIVED">{t('addTeacherScreen.archived')}</option>
                                 </select>

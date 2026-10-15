@@ -288,7 +288,7 @@ const CBTManagementScreen: React.FC<CBTManagementScreenProps> = ({ navigateTo, t
                         <div className="space-y-5">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Class</label>
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">{t('common.class')}</label>
                                     <select value={selectedClassId} onChange={(e) => setSelectedClassId(e.target.value)} className="w-full rounded-lg border-slate-300 py-2 text-sm">
                                         <option value="">{t('cBTManagementScreen.selectClass')}</option>
                                         {teacherClasses.map(c => (

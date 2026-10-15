@@ -182,6 +182,63 @@ html.glass .bg-white.rounded-\[2rem\]:not(.liquid-glass):not(.liquid-glass-solid
   }
 }
 
+/* --- Reduce Motion, chosen by the user -------------------------------------
+   The same effect as the system preference above, but switched on from the
+   Accessibility Settings screen for a person whose device is not set that way
+   (a shared staffroom computer, for instance). Kept beside the system rule so
+   the two can never drift apart. */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.reduce-motion .animate-pulse,
+html.reduce-motion .animate-bounce,
+html.reduce-motion .animate-ping,
+html.reduce-motion .animate-slide-in-up {
+  animation: none !important;
+}
+
+html.reduce-motion .animate-spin {
+  animation: spin 1.6s linear infinite !important;
+}
+
+/* --- High Contrast, chosen by the user -------------------------------------
+   Strengthen the contrast of the things that carry meaning — text, borders
+   and focus — without inverting the palette or replacing the school's colours,
+   which would make the app unrecognisable to the staff who use it daily. */
+html.high-contrast *,
+html.high-contrast *::before,
+html.high-contrast *::after {
+  border-color: #0f172a !important;
+}
+
+/* Muted greys are the usual culprit for "I cannot read that"; push the
+   lightest text steps darker while leaving coloured text alone. */
+html.high-contrast .text-gray-400,
+html.high-contrast .text-slate-400,
+html.high-contrast .text-gray-500,
+html.high-contrast .text-slate-500 {
+  color: #1f2937 !important;
+}
+
+/* Placeholders and disabled fields must stay readable rather than fade out. */
+html.high-contrast input::placeholder,
+html.high-contrast textarea::placeholder {
+  color: #374151 !important;
+  opacity: 1 !important;
+}
+
+/* Focus must be unmistakable. */
+html.high-contrast :focus-visible {
+  outline: 3px solid #1d4ed8 !important;
+  outline-offset: 2px !important;
+}
+
 /* --- Reduce Transparency ---------------------------------------------------
    Blur costs legibility, and some users cannot tolerate it. Frost the glass
    to near-solid and drop the backdrop filter; the surface keeps its shape,

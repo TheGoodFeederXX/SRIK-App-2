@@ -45,11 +45,11 @@ const CodeChallengeLobbyScreen: React.FC<CodeChallengeLobbyScreenProps> = ({ nav
             <div className="grid grid-cols-2 gap-4 w-full max-w-sm mt-8 mb-8">
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
                     <div className="text-3xl font-black text-purple-500 mb-1">10</div>
-                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Levels</div>
+                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('common.levels')}</div>
                 </div>
                 <div className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm text-center">
-                    <div className="text-3xl font-black text-indigo-500 mb-1">Logic</div>
-                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">Skill</div>
+                    <div className="text-3xl font-black text-indigo-500 mb-1">{t('common.logic')}</div>
+                    <div className="text-xs text-gray-400 font-bold uppercase tracking-wider">{t('common.skill')}</div>
                 </div>
             </div>
 

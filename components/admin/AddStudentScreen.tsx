@@ -309,7 +309,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     />
                     <InputField
                         id="fullName"
-                        label="Student's full name"
+                        label={t('addStudentScreen.studentFullName')}
                         value={fullName}
                         onChange={setFullName}
                         icon={<User size={18} />}
@@ -326,8 +326,8 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                             className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="">{t('addStudentScreen.notStated')}</option>
-                            <option value="MALE">Male</option>
-                            <option value="FEMALE">Female</option>
+                            <option value="MALE">{t('common.male')}</option>
+                            <option value="FEMALE">{t('common.female')}</option>
                         </select>
                     </div>
 
@@ -424,7 +424,7 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                     </p>
                     <InputField
                         id="guardianName"
-                        label="Guardian's name"
+                        label={t('addStudentScreen.guardianName')}
                         value={guardianName}
                         onChange={setGuardianName}
                         icon={<User size={18} />}
@@ -440,8 +440,8 @@ const AddStudentScreen: React.FC<AddStudentScreenProps> = ({
                             onChange={e => setGuardianRelationship(e.target.value)}
                             className="w-full px-3 py-3 text-gray-700 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
                         >
-                            <option value="Bapa">Father</option>
-                            <option value="Ibu">Mother</option>
+                            <option value="Bapa">{t('common.father')}</option>
+                            <option value="Ibu">{t('common.mother')}</option>
                             <option value="Penjaga">{t('addStudentScreen.guardian')}</option>
                         </select>
                     </div>

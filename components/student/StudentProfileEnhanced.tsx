@@ -275,8 +275,8 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                     <table style="border-collapse:collapse;width:100%;font-size:13px">
                         <thead><tr style="background:#fff7ed">
                             <th style="border:1px solid #ddd;padding:6px;text-align:left">${t('studentProfileEnhanced.subject')}</th>
-                            <th style="border:1px solid #ddd;padding:6px">Score</th>
-                            <th style="border:1px solid #ddd;padding:6px">Grade</th>
+                            <th style="border:1px solid #ddd;padding:6px">${t('common.score')}</th>
+                            <th style="border:1px solid #ddd;padding:6px">${t('common.grade')}</th>
                         </tr></thead>
                         <tbody>${rows || `<tr><td colspan="3" style="border:1px solid #ddd;padding:10px;text-align:center;color:#6b7280">${t('studentProfileEnhanced.noPublishedResultsYet')}</td></tr>`}</tbody>
                     </table>
@@ -631,7 +631,7 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                     {/* Quick Stats */}
                                     <Card className="border-slate-200 shadow-sm bg-gradient-to-br from-orange-50 to-red-50">
                                         <CardHeader>
-                                            <CardTitle className="text-lg">Stats</CardTitle>
+                                            <CardTitle className="text-lg">{t('common.stats')}</CardTitle>
                                         </CardHeader>
                                         <CardContent className="space-y-4">
                                             <QuickStat icon={<CheckCircle />} label={t('studentProfileEnhanced.classesAttended')} value={`${stats.attendanceRate}%`} color="emerald" />
@@ -695,8 +695,8 @@ export default function StudentProfileEnhanced({ studentId, student: initialStud
                                                 <tr>
                                                     <th className="sticky left-0 z-10 bg-slate-50 px-6 py-4 shadow-[2px_0_4px_-2px_rgba(0,0,0,0.06)]">{t('studentProfileEnhanced.subject')}</th>
                                                     <th className="px-6 py-4">{t('studentProfileEnhanced.assessment')}</th>
-                                                    <th className="px-6 py-4">Score</th>
-                                                    <th className="px-6 py-4">Grade</th>
+                                                    <th className="px-6 py-4">{t('common.score')}</th>
+                                                    <th className="px-6 py-4">{t('common.grade')}</th>
                                                     <th className="px-6 py-4">{t('studentProfileEnhanced.status')}</th>
                                                 </tr>
                                             </thead>

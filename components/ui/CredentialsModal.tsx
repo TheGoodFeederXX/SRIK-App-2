@@ -113,7 +113,7 @@ Visit: https://your-school-app.com/login
       {/* Login Credentials */}
       <div className="space-y-2 sm:space-y-3">
         <p className="text-sm sm:text-base font-semibold text-gray-700">{t('credentialsModal.loginCredentials')}</p>
-        <p className="text-xs text-gray-500 italic">{t('credentialsModal.youCanLoginUsingEitherYour')} <strong>Email</strong> or <strong>{t('credentialsModal.username')}</strong>.</p>
+        <p className="text-xs text-gray-500 italic">{t('credentialsModal.youCanLoginUsingEitherYour')} <strong>{t('common.email')}</strong> or <strong>{t('credentialsModal.username')}</strong>.</p>
 
         {/* Username Field */}
         <div className="relative">

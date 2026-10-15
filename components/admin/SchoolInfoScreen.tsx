@@ -131,7 +131,7 @@ const SchoolInfoScreen: React.FC = () => {
                                         onChange={e => setInfo({ ...info, logo_url: e.target.value })}
                                     />
                                     <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200 flex-shrink-0 overflow-hidden">
-                                        {info.logo_url ? <img src={info.logo_url} alt="Logo" className="w-full h-full object-cover" /> : <SchoolLogoIcon className="text-gray-400" />}
+                                        {info.logo_url ? <img src={info.logo_url} alt={t('schoolInfoScreen.logo')} className="w-full h-full object-cover" /> : <SchoolLogoIcon className="text-gray-400" />}
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +150,7 @@ const SchoolInfoScreen: React.FC = () => {
                                     <AnimatePresence>
                                     {info.hero_image_url && (
                                         <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 192 }} exit={{ opacity: 0, height: 0 }} className="w-full bg-gray-100 rounded-xl border border-gray-200 overflow-hidden relative">
-                                            <img src={info.hero_image_url} alt="Hero" className="w-full h-full object-cover" />
+                                            <img src={info.hero_image_url} alt={t('schoolInfoScreen.hero')} className="w-full h-full object-cover" />
                                         </motion.div>
                                     )}
                                     </AnimatePresence>

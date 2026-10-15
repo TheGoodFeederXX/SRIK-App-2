@@ -243,14 +243,14 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                         />
                                     </div>
                                     <div>
-                                        <label className="label text-xs sm:text-sm">Gender</label>
+                                        <label className="label text-xs sm:text-sm">{t('common.gender')}</label>
                                         <select
                                             className="input-field"
                                             value={formData.studentGender}
                                             onChange={e => handleChange('studentGender', e.target.value)}
                                         >
-                                            <option>Male</option>
-                                            <option>Female</option>
+                                            <option>{t('common.male')}</option>
+                                            <option>{t('common.female')}</option>
                                         </select>
                                     </div>
                                     <div className="sm:col-span-2">
@@ -347,8 +347,8 @@ const StudentEnrollmentPage: React.FC<EnrollmentPageProps> = ({ onComplete, hand
                                 </h3>
                                 <div className="grid grid-cols-1 sm:grid-cols-1 gap-3 sm:gap-4 overflow-x-auto pb-1 hide-scrollbar">
                                     <SelectCard value="KSSR" title="KSSR" desc={t('studentEnrollmentPage.kssrDescription')} icon={BookOpenIcon} />
-                                    <SelectCard value="BRITISH" title={t('studentEnrollmentPage.british')} desc="Cambridge/Edexcel. IGCSE." icon={BookOpenIcon} />
-                                    <SelectCard value="DUAL" title="Dual" desc="Hybrid Intensive Program." icon={AcademicCapIcon} />
+                                    <SelectCard value="BRITISH" title={t('studentEnrollmentPage.british')} desc={t('studentEnrollmentPage.cambridgeEdexcelIgcse')} icon={BookOpenIcon} />
+                                    <SelectCard value="DUAL" title={t('studentEnrollmentPage.dual')} desc={t('studentEnrollmentPage.hybridIntensiveProgram')} icon={AcademicCapIcon} />
                                 </div>
                                 {formData.curriculum === 'DUAL' && (
                                     <div className="mt-4 p-3 bg-indigo-50 border border-indigo-100 rounded-lg text-xs text-indigo-800">

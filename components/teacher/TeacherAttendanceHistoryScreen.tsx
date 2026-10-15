@@ -215,7 +215,7 @@ const TeacherAttendanceHistoryScreen: React.FC<TeacherAttendanceHistoryScreenPro
                         </div>
                         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 text-center group hover:border-red-100 transition-colors">
                             <p className="font-black text-3xl text-red-500 mb-1 leading-none">{stats.absent}</p>
-                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Absent</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-widest">{t('common.absent')}</p>
                         </div>
                         <div className="bg-white p-5 rounded-3xl shadow-sm border border-gray-50 text-center group hover:border-amber-100 transition-colors">
                             <p className="font-black text-3xl text-amber-500 mb-1 leading-none">{stats.leave}</p>

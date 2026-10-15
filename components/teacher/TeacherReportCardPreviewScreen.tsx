@@ -139,7 +139,7 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                     <SectionHeader title={t('teacherReportCardPreviewScreen.academicPerformance')} />
                     <div className="overflow-x-auto text-xs">
                         <table className="min-w-full border">
-                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">{t('teacherReportCardPreviewScreen.subject')}</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">{t('teacherReportCardPreviewScreen.total')}</th><th className="p-2 border w-12 text-center">Grade</th><th className="p-2 border">Remark</th></tr></thead>
+                            <thead className="bg-gray-50"><tr className="text-left text-gray-600"><th className="p-2 border">{t('teacherReportCardPreviewScreen.subject')}</th><th className="p-2 border w-14 text-center">CA</th><th className="p-2 border w-14 text-center">Exam</th><th className="p-2 border w-14 text-center">{t('teacherReportCardPreviewScreen.total')}</th><th className="p-2 border w-12 text-center">{t('common.grade')}</th><th className="p-2 border">{t('common.remark')}</th></tr></thead>
                             <tbody>
                                 {filteredRecords.length > 0 ? (
                                     filteredRecords.map((record, index) => (
@@ -165,8 +165,8 @@ const TeacherReportCardPreviewScreen: React.FC<TeacherReportCardPreviewScreenPro
                             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-center">
                                 <div><p className="text-xs text-gray-500">{t('teacherReportCardPreviewScreen.totalDays')}</p><p className="font-bold text-lg">{report.attendance?.total || 0}</p></div>
                                 <div><p className="text-xs text-gray-500">{t('teacherReportCardPreviewScreen.present')}</p><p className="font-bold text-lg">{report.attendance?.present || 0}</p></div>
-                                <div><p className="text-xs text-gray-500">Absent</p><p className="font-bold text-lg">{report.attendance?.absent || 0}</p></div>
-                                <div><p className="text-xs text-gray-500">Late</p><p className="font-bold text-lg">{report.attendance?.late || 0}</p></div>
+                                <div><p className="text-xs text-gray-500">{t('common.absent')}</p><p className="font-bold text-lg">{report.attendance?.absent || 0}</p></div>
+                                <div><p className="text-xs text-gray-500">{t('common.late')}</p><p className="font-bold text-lg">{report.attendance?.late || 0}</p></div>
                             </div>
 
                             <div className="mt-6 space-y-4">

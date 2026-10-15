@@ -264,7 +264,7 @@ function Composer({
                 </h2>
 
                 <div className="space-y-4">
-                    <Field label="Tajuk">
+                    <Field label={t('announcementsScreen.tajuk')}>
                         <input
                             type="text"
                             value={title}

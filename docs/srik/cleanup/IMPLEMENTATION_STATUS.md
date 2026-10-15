@@ -125,7 +125,58 @@ bukan dilaksanakan secara separa.
 3. Buang bahagian Prisma daripada `postinstall`.
 4. Kemudian ulang penilaian gate §7.1 sebelum menyentuh `backend/`.
 
-## 8. Penyingkiran AI penuh (0.8.33)
+## 9. Terjemahan menyeluruh: teks yang masih belum diterjemah (0.8.34)
+
+Skop yang dipersetujui pemilik: **Melayu + Inggeris sahaja**, dan kerja itu ialah
+**memburu teks yang masih Inggeris**, bukan menulis semula ayat Melayu.
+
+Kaedahnya bukan "cari perkataan AI" tetapi satu pengimbas tiga lapis ke atas kod
+yang benar-benar boleh dicapai dari `App.tsx`:
+
+1. teks JSX antara `>` dan `<`;
+2. nilai atribut yang dipaparkan (`placeholder`, `title`, `label`, `alt`,
+   `emptyText`, `desc`, `explanation`);
+3. ayat Melayu keras (yang akan muncul juga kepada pembaca bahasa Inggeris).
+
+**Penemuan penting — mengapa jumlahnya kecil, bukan nol:** graf kebolehan-capai
+memisahkan 72 teks sebenar daripada 153 teks dalam **kod mati**. Fail mati
+(`lib/invoice-generator.ts`, `lib/receipt-generator.ts`, `lib/emailTemplates.ts`
+dan lima belas lagi) mempunyai teks Inggeris keras, tetapi tiada skrin pernah
+memaparkannya — kerana `lib/auth.ts` dan penyuntik dokumen itu sendiri tiada
+pengimport. Menterjemahnya hanya menambah kunci yang tidak pernah dibaca. Ia
+dicatatkan sebagai baki, bukan "dibaiki" secara palsu.
+
+**Dibetulkan:** 72 teks yang benar-benar dipaparkan, termasuk kepala jadual
+markah ("Grade", "Remark", "Absent"), pilihan borang ("Male", "Female",
+"Father", "Mother", "Other"), menu tepi ("Home", "Exams"), label audit
+("User", "Action", "Risk"), dan mesej ralat. Semua melalui `common.*` jika
+dikongsi, atau namespace skrin jika khusus — supaya satu pilihan diterjemah
+sekali sahaja.
+
+**Pepijat sebenar yang ditemui apabila memeriksa skrin:** `components/shared/ChatScreen.tsx`
+menghantar `title="Chat"` sebagai nilai tetapi `explanation` ditulis dengan
+`t(...)` — satu daripada dua, bukan kedua-duanya. Dibetulkan kepada corak
+`titleKey`/`explanationKey` yang sedia ada pada `ComingSoonScreen`.
+
+**Kecacatan kebolehcapaian yang ditemui dan DIPERBAIKI (dengan kelulusan pemilik):**
+skrin "Tetapan Kebolehcapaian" menyimpan pilihan tetapi **tidak pernah membacanya
+semula** — `applySettings` berjalan hanya semasa skrin itu dibuka, jadi saiz teks
+pilihan pengguna hilang sebaik sahaja dia berpindah skrin. Dua daripada tiga suis
+menambah kelas CSS (`high-contrast`, `reduce-motion`) yang **tidak wujud di mana-mana
+stylesheet**, jadi ia tidak berkesan walaupun pada skrin itu sendiri. Pilihan bahasa
+pula menawarkan Yoruba, Igbo dan Hausa — bahasa yang apl ini tidak ada.
+
+Pembaikan: satu modul `src/lib/accessibility.ts` (baca, simpan, guna) yang dibaca
+di peringkat apl; kelas CSS sebenar ditambah pada `index.css`; pemilih bahasa mati
+dan suis teks-ke-ucapan mati (yang juga tiada kesan) dibuang. Diuji oleh
+`src/lib/__tests__/accessibility-prefs.test.ts` — **12 ujian, disahkan songsang**:
+mengembalikan pepijat `applySavedAccessibilitySettings` sebagai no-op → gagal;
+membuang blok CSS → gagal.
+
+Pengiraan: `tsc` 0, `tsc` backend 0, **531 ujian lulus** (74 fail),
+`vite build` keluar 0, pariti locale **3367 = 3367**, `supabase/` tidak disentuh.
+
+## 10. Penyingkiran AI penuh (0.8.33)
 
 Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.
 
@@ -159,7 +210,7 @@ Pengiraan **tiada** ujian hijau tanpa asas: `tsc` frontend 0 ralat, `tsc` backen
 **519 ujian frontend lulus** (73 fail), `vite build` keluar 0, pariti locale
 **3286 = 3286** kunci, tiada perubahan pada `supabase/`.
 
-## 9. Rollback
+## 11. Rollback
 
 Setiap fasa ialah commit berasingan dan boleh dibalikkan secara berasingan:
 
