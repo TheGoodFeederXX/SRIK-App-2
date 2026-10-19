@@ -7,7 +7,6 @@ import { ChartBarIcon, ReceiptIcon, BriefcaseIcon, TrendingUpIcon, UsersIcon, Re
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { visibleItems, hiddenCount, enrollmentPoints, dayLabels, type EnrollmentPoint } from './analyticsChartData';
 import DonutChart from '../ui/DonutChart';
-import { api } from '../../lib/api';
 import { fetchAnalyticsMetrics } from '../../lib/database';
 import { useAutoSync } from '../../hooks/useAutoSync';
 
