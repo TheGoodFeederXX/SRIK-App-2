@@ -374,6 +374,67 @@ istilah `British`, `IGCSE`, `Cambridge`, `Edexcel`, `Common Core`, `Nigerian`,
 `Yoruba` dan `JSS`/`SSS` kesemuanya **0 kemunculan**; `Kurikulum KSSR` hadir.
 `supabase/`, `AGENTS.md`, `CLAUDE.md`, `.github/` tidak disentuh.
 
+### 9d. Penyingkiran mengikut skop: rujukan, kes SOP, portal pelajar (0.8.38–0.8.41)
+
+Pemilik memberi empat keputusan: portal ibu bapa **hidup** (hanya untuk mengurus
+anak), pelajar **tidak perlu portal**, kegagalan senyap **dibetulkan**, dan ciri
+luar skop **dibuang terus** — bukan diganti. Keutamaan: guru → ibu bapa.
+
+**PENEMUAN YANG MENGUBAH GAMBARAN: pelayan lama tiada dalam produksi.**
+`API_BASE_URL` ialah `/api` (asal yang sama). Deploy Vercel ialah frontend
+sahaja — tiada folder `api/`. Membuka `/api/health` dan `/api/versions` pada
+laman hidup memulangkan **HTML aplikasi**, bukan data. Jadi setiap panggilan
+melalui klien lama menemui sesuatu yang tidak wujud.
+
+**44 fail, tiada satu pun kod mati.** Graf ketercapaian (punca: `index.tsx`,
+`App.tsx`, dan **setiap fail ujian**) mendapati kesemua 44 boleh dicapai. Membuang
+mana-mana satu bermakna menggantinya, bukan memadamnya.
+
+**Kelas pepijat yang menyamar.** `api.from('table').select(...)` **kelihatan**
+seperti panggilan Supabase. Ia bukan. `apiCore.from` di `lib/api/core.ts:537`
+membina laluan HTTP (`/${table}`) ke pelayan lama. Dua fail menggunakan bentuk ini
+(ReferralSystem, LeaveBalanceTracker), dan pembaca kod akan menyangka ia sudah
+migrasi.
+
+**Yang dibuang (0.8.39, 0.8.40, 0.8.41):**
+
+| Peringkat | Dibuang | Nota |
+|---|---|---|
+| Rujukan + kes SOP | 7 fail | Rujukan keluarga menulis ke `family_referrals` melalui pembalut palsu-Supabase; SOP ialah aliran tadbir urus korporat |
+| Notis "belum dibina" luar skop | 4 fail | Alumni, biasiswa, tajaan, tadbir urus — serta kategori menu `Governance & Ministry` sepenuhnya |
+| Portal pelajar + permainan | 56 fail | Dashboard pelajar, 23 skrin khusus pelajar, 29 fail permainan |
+
+**DUA SKRIN PELAJAR DIKEKALKAN, dan ini bukan keputusan kecil.**
+`AttendanceScreen` dan `StudentProfileEnhanced` berada dalam folder pelajar tetapi
+dipakai oleh **ibu bapa dan admin**. Membuang folder mengikut nama akan
+menghilangkan kehadiran dan profil anak daripada portal ibu bapa. Ia disemak satu
+fail demi satu.
+
+**189 skrin notis "belum dibina" — semuanya boleh dicapai.** Selepas pembuangan,
+graf ketercapaian menunjukkan **tiada satu pun** daripada 189 itu kod mati: setiap
+satu didaftarkan dalam peta halaman dashboard. Jadi ini **keputusan skop, bukan
+pembersihan** — dan ia belum dibuat. Ini keadaan sebenar projek: kebanyakan ciri
+ialah pemegang tempat yang jujur.
+
+**Kegagalan senyap belum dibetulkan.** Keputusan pemilik ialah membetulkannya,
+tetapi ia belum dilaksanakan. Yang tinggal termasuk `UpdatePrompt` (gagal dengan
+selamat — cuma tidak memaparkan versi) dan `App.tsx` (memanggil `getAppVersions`).
+
+**Pengawal ujian menangkap setiap pembuangan.** Lapan kegagalan sepanjang tiga
+peringkat, semuanya betul: senarai fail dalam `no-legacy-api.test.ts`,
+`family.test.ts` dan `password-change.test.ts` merujuk fail yang dipadam;
+`governanceAndMinistry` masih digunakan selepas kuncinya dibuang. Rujukan kepada
+fail yang **benar-benar** dipadam dibuang; tiada semakan dilonggarkan.
+
+**Kunci terjemahan:** 20 kunci rujukan, semua namespace SOP, empat namespace
+skrin, dan **71 namespace yatim** dibuang daripada kedua-dua bahasa. Setiap satu
+disemak tidak dirujuk oleh kod mahupun ujian; `terms` dikecualikan kerana ia
+sepadan dengan nama pemboleh ubah, bukan kunci.
+
+Pengiraan: `tsc` 0, `tsc` backend 0, **545 ujian lulus** (73 fail), `vite build` 0,
+pariti locale **3242 = 3242**, 4,900+ baris kod dibuang. Fail terlindung
+(`CalendarManager`, `AlertsScreen`, `paymentGateways`) tidak disentuh.
+
 ## 10. Penyingkiran AI penuh (0.8.33)
 
 Atas permintaan pemilik, **semua** fungsi AI dibuang — paparan dan kod.
