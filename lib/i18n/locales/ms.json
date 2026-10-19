@@ -1733,7 +1733,11 @@
     "calendar": "Kalendar"
   },
   "childRiskBanner": {
-    "dismiss": "Tutup"
+    "dismiss": "Tutup",
+    "weCouldNotCheckYourChildsNotes": "We could not check the notes about your child just now.",
+    "thisDoesNotMeanThereIsNothingToKnowItMeansWeCouldNotLook": "This does not mean there is nothing to know. It means we could not look. Please reload the page later.",
+    "weCouldNotCheckTheNotesAboutYourChild": "Kami tidak dapat menyemak nota berkaitan anak anda sebentar tadi.",
+    "thisDoesNotMeanThereIsNothingToKnow": "Ini tidak bermakna tiada apa-apa yang perlu diketahui — ia bermakna kami tidak dapat menyemaknya. Sila muat semula halaman kemudian."
   },
   "communityResourceDirectory": {
     "findSupportServicesNearYouHealthFoodTrainingMo": "Cari perkhidmatan sokongan berhampiran anda - kesihatan, makanan, latihan & banyak lagi",
@@ -1824,7 +1828,9 @@
     "quizzes": "Kuiz",
     "noticeboard": "Papan Notis",
     "submissions": "Penyerahan",
-    "searchInDashboard": "Cari dalam papan pemuka {{dashboard}}..."
+    "searchInDashboard": "Cari dalam papan pemuka {{dashboard}}...",
+    "weCouldNotRunTheSearch": "Kami tidak dapat menjalankan carian sebentar tadi.",
+    "thisIsNotTheSameAsNoResults": "Ini bukan bermakna tiada yang sepadan — ia bermakna carian tidak sampai ke sana. Cuba lagi sebentar."
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Paparan Sumber Hab Pembelajaran"
@@ -2053,7 +2059,9 @@
     "returnDate": "Tarikh Pulang",
     "issuedBy": "Dikeluarkan Oleh",
     "conditionsForReturn": "Syarat Pemulangan",
-    "dismiss": "Tutup"
+    "dismiss": "Tutup",
+    "weCouldNotCheckForSuspensionNotices": "Kami tidak dapat menyemak notis penggantungan.",
+    "pleaseCheckWithTheSchoolOffice": "Ini tidak bermakna tiada notis — sila hubungi pejabat sekolah untuk memastikan."
   },
   "versionStatusCard": {
     "systemVersion": "Versi Sistem",

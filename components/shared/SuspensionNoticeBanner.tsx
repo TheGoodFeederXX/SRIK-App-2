@@ -35,20 +35,41 @@ const SuspensionNoticeBanner: React.FC<SuspensionNoticeBannerProps> = ({ mode })
     const [suspensions, setSuspensions] = useState<Suspension[]>([]);
     const [open, setOpen] = useState<Suspension | null>(null);
     const [dismissedIds, setDismissedIds] = useState<string[]>([]);
+    // Set when the request failed. Absence of a suspension notice is reassuring, so a
+    // silent failure here reassures a family that nothing arrived. That is the wrong
+    // way round for a notice about a child being suspended.
+    const [failed, setFailed] = useState(false);
 
     const fetchSuspensions = useCallback(async () => {
         try {
             const endpoint = mode === 'student' ? '/suspensions/mine/student' : '/suspensions/mine/children';
             const data = await api.get<Suspension[]>(endpoint);
             setSuspensions(Array.isArray(data) ? data : []);
+            setFailed(false);
         } catch (err) {
+            // See the note on the state above: silence here reads as 'nothing to worry
+            // about', which is a claim this component is not entitled to make.
             console.error('Error fetching suspension notices:', err);
+            setFailed(true);
         }
     }, [mode]);
 
     useEffect(() => { fetchSuspensions(); }, [fetchSuspensions]);
 
     const active = suspensions.filter(s => s.status === 'active' && !dismissedIds.includes(s.id));
+
+    if (failed && active.length === 0 && !open) {
+        return (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex items-start gap-3">
+                <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5 shrink-0" />
+                <div className="flex-1 min-w-0">
+                    <p className="font-bold text-amber-900">{t('suspensionNoticeBanner.weCouldNotCheckForSuspensionNotices')}</p>
+                    <p className="text-sm text-amber-700 mt-0.5">{t('suspensionNoticeBanner.pleaseCheckWithTheSchoolOffice')}</p>
+                </div>
+            </div>
+        );
+    }
+
     if (active.length === 0 && !open) return null;
 
     return (

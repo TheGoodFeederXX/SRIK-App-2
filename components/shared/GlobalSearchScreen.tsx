@@ -54,6 +54,9 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
     const { currentBranchId } = useAuth();
     const [searchTerm, setSearchTerm] = useState('');
     const [results, setResults] = useState<SearchResult[]>([]);
+    // Set when the search request itself failed, so the screen can say that instead
+    // of claiming there were no matches.
+    const [searchFailed, setSearchFailed] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
 
     useEffect(() => {
@@ -73,6 +76,7 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
         if (!schoolId) return;
 
         setIsSearching(true);
+        setSearchFailed(false);
         const newResults: SearchResult[] = [];
 
         try {
@@ -187,7 +191,15 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
             });
 
         } catch (error) {
+            // AN EMPTY RESULT AND A FAILED SEARCH LOOK IDENTICAL, AND MEAN OPPOSITE THINGS.
+            //
+            // The catch left `newResults` empty, so the screen said 'No results found
+            // for "..."' — a statement about the school: that nothing matches. It was
+            // in fact a statement about the request: that it never arrived. A teacher
+            // searching for a child by name would be told the child is not in the
+            // system, when the search simply did not run.
             console.error('Global search error:', error);
+            setSearchFailed(true);
         } finally {
             setIsSearching(false);
         }
@@ -242,7 +254,14 @@ const GlobalSearchScreen: React.FC<GlobalSearchScreenProps> = ({ dashboardType, 
                 </div>
             </motion.div>
             <div className="flex-grow overflow-y-auto p-4">
-                {searchTerm.trim().length > 1 && results.length === 0 && (
+                {/* A failed search must not be dressed as an empty one. */}
+                {searchFailed && (
+                    <div className="text-center py-16">
+                        <p className="font-semibold text-gray-700">{t('globalSearchScreen.weCouldNotRunTheSearch')}</p>
+                        <p className="text-sm text-gray-500 mt-1">{t('globalSearchScreen.thisIsNotTheSameAsNoResults')}</p>
+                    </div>
+                )}
+                {!searchFailed && searchTerm.trim().length > 1 && results.length === 0 && (
                     <div className="text-center py-16">
                         <p className="font-semibold text-gray-700">No results found for "{searchTerm}"</p>
                         <p className="text-sm text-gray-500 mt-1">{t('globalSearchScreen.trySearchingForSomethingElse')}</p>

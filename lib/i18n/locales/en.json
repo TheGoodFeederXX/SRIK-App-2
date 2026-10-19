@@ -1733,7 +1733,11 @@
     "calendar": "Calendar"
   },
   "childRiskBanner": {
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "weCouldNotCheckYourChildsNotes": "We could not check the notes about your child just now.",
+    "thisDoesNotMeanThereIsNothingToKnowItMeansWeCouldNotLook": "This does not mean there is nothing to know. It means we could not look. Please reload the page later.",
+    "weCouldNotCheckTheNotesAboutYourChild": "We could not check the notes about your child just now.",
+    "thisDoesNotMeanThereIsNothingToKnow": "This does not mean there is nothing to know. It means we could not look. Please reload the page later."
   },
   "communityResourceDirectory": {
     "findSupportServicesNearYouHealthFoodTrainingMo": "Find support services near you - health, food, training & more",
@@ -1824,7 +1828,9 @@
     "quizzes": "Quizzes",
     "noticeboard": "Noticeboard",
     "submissions": "Submissions",
-    "searchInDashboard": "Search in {{dashboard}} Dashboard..."
+    "searchInDashboard": "Search in {{dashboard}} Dashboard...",
+    "weCouldNotRunTheSearch": "We could not run the search just now.",
+    "thisIsNotTheSameAsNoResults": "This is not the same as no matches. It means the search did not get through. Please try again shortly."
   },
   "learningHubResourceViewer": {
     "learningHubResourceViewer": "Learning Hub Resource Viewer"
@@ -2053,7 +2059,9 @@
     "returnDate": "Return Date",
     "issuedBy": "Issued By",
     "conditionsForReturn": "Conditions for Return",
-    "dismiss": "Dismiss"
+    "dismiss": "Dismiss",
+    "weCouldNotCheckForSuspensionNotices": "We could not check for suspension notices.",
+    "pleaseCheckWithTheSchoolOffice": "This does not mean there are none. Please check with the school office."
   },
   "versionStatusCard": {
     "systemVersion": "System Version",
