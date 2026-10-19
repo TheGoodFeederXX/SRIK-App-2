@@ -414,7 +414,6 @@
     "communicationAndSystem": "Komunikasi & Sistem",
     "communicationHub": "Hab Komunikasi",
     "complianceAndPrivacy": "Pematuhan & Privasi",
-    "complianceDashboard": "Papan Pemuka Pematuhan",
     "consentForms": "Borang Keizinan",
     "contentManagement": "Pengurusan Kandungan",
     "curriculum": "Kurikulum",
@@ -440,12 +439,9 @@
     "facilityRegister": "Daftar Kemudahan",
     "feeManagement": "Pengurusan Yuran",
     "gatePassApprovals": "Kelulusan Pas Keluar",
-    "governanceAndMinistry": "Tadbir Urus & Kementerian",
-    "governanceHub": "Hab Tadbir Urus",
     "healthAndIncidents": "Kesihatan & Insiden",
     "healthLog": "Log Kesihatan",
     "infrastructureAndFacilities": "Infrastruktur & Kemudahan",
-    "inspectionHub": "Hab Pemeriksaan",
     "kanbanProjectBoards": "Papan Projek Kanban",
     "lateArrivalConfig": "Tetapan Ketibaan Lewat",
     "lateArrivals": "Ketibaan Lewat",
@@ -454,7 +450,6 @@
     "leaveApprovals": "Kelulusan Cuti",
     "lessonNotes": "Nota Pelajaran",
     "lessonNotesReview": "Semakan Nota Pelajaran",
-    "liveCompliance": "Pematuhan Langsung",
     "manageClasses": "Urus Kelas",
     "manageGuardians": "Urus Penjaga",
     "manageLearningResources": "Urus Sumber Pembelajaran",
@@ -463,7 +458,6 @@
     "manageStudents": "Urus Murid",
     "manageTeachers": "Urus Guru",
     "manageVolunteering": "Urus Kerelawanan",
-    "ministryReports": "Laporan Kementerian",
     "newStudentEnrollment": "Pendaftaran Murid Baharu",
     "notificationDigest": "Ringkasan Pemberitahuan",
     "notificationSettings": "Tetapan Pemberitahuan",
@@ -477,7 +471,6 @@
     "projectBoards": "Papan Projek",
     "promotion": "Kenaikan",
     "publishReports": "Terbitkan Laporan",
-    "qualityAssurance": "Jaminan Kualiti",
     "registerExams": "Daftar Peperiksaan",
     "resultsEntry": "Kemasukan Keputusan",
     "safeguarding": "Perlindungan",
@@ -494,15 +487,12 @@
     "studentGate": "Pintu Murid",
     "substituteCoverage": "Ganti Guru",
     "systemAndData": "Sistem & Data",
-    "systemValidation": "Pengesahan Sistem",
     "teacherAssignments": "Tugasan Guru",
     "teacherAttendance": "Kehadiran Guru",
     "timetable": "Jadual Waktu",
     "timetableManagement": "Pengurusan Jadual Waktu",
     "trackAttendance": "Jejak Kehadiran",
-    "unifiedGovernance": "Tadbir Urus Bersepadu",
     "userAccounts": "Akaun Pengguna",
-    "validationConsole": "Konsol Pengesahan",
     "volunteering": "Kerelawanan",
     "todayTimetable": "Jadual Waktu Hari Ini",
     "noClassesScheduled": "Tiada kelas dijadualkan hari ini.",
@@ -2813,9 +2803,6 @@
     "musicDance": "Muzik & Tarian",
     "sportsParticipation": "Penyertaan Sukan"
   },
-  "alumniHistoryScreen": {
-    "alumniHistory": "Sejarah Alumni"
-  },
   "analyticsAdminTools": {
     "advancedAnalyticsBudgetingAndSystemIntegration": "Analitik lanjutan, belanjawan, dan integrasi sistem",
     "attendanceHeatmap": "Peta Haba Kehadiran",
@@ -3591,9 +3578,6 @@
   "scanAssetScreen": {
     "scanAsset": "Imbas Aset"
   },
-  "scholarshipManagement": {
-    "scholarship": "Biasiswa"
-  },
   "schoolInfoScreen": {
     "schoolInformation": "Maklumat Sekolah",
     "manageSchoolAnthemPledgeAndBrandingAssets": "Urus lagu sekolah, ikrar, dan aset jenama.",
@@ -3638,9 +3622,6 @@
   },
   "sessionPromotionScreen": {
     "naikKelas": "Naik Kelas"
-  },
-  "sponsorshipMatching": {
-    "sponsorship": "Penajaan"
   },
   "studentApprovalScreen": {
     "studentApproval": "Kelulusan Murid"
@@ -3978,9 +3959,6 @@
     "aUSSDShortcodeFromMTNAirtelGloOr9mobile": "Kod pendek USSD daripada MTN, Airtel, Glo, atau 9mobile",
     "aUSSDGatewayProviderAfricaSTalkingRecommended": "Penyedia gerbang USSD (Africa's Talking disyorkan)",
     "apiCredentialsConfiguredInYourSchoolSettings": "Bukti kelayakan API dikonfigurasi dalam tetapan sekolah anda"
-  },
-  "unifiedGovernanceHub": {
-    "unifiedGovernance": "Tadbir Urus Bersepadu"
   },
   "userAccountsScreen": {
     "userAccounts": "Akaun Pengguna"

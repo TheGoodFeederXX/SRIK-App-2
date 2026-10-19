@@ -38,7 +38,6 @@ const TeacherAssignmentsScreen = lazyWithRetry(() => import('./TeacherAssignment
 const SuspendStudentScreen = lazyWithRetry(() => import('./SuspendStudentScreen'));
 const MarkStudentExitScreen = lazyWithRetry(() => import('./MarkStudentExitScreen'));
 const PastStudentsScreen = lazyWithRetry(() => import('./PastStudentsScreen'));
-const AlumniHistoryScreen = lazyWithRetry(() => import('./AlumniHistoryScreen'));
 const ClassVerificationScreen = lazyWithRetry(() => import('./ClassVerificationScreen'));
 const TeacherAttendanceApproval = lazyWithRetry(() => import('./TeacherAttendanceApproval'));
 const ExamManagement = lazyWithRetry(() => import('./ExamManagement'));
@@ -106,8 +105,6 @@ const SMSLessonManager = lazyWithRetry(() => import('./SMSLessonManager'));
 const USSDWorkflow = lazyWithRetry(() => import('./USSDWorkflow'));
 const RadioContentScheduler = lazyWithRetry(() => import('./RadioContentScheduler'));
 const IVRLessonRecorder = lazyWithRetry(() => import('./IVRLessonRecorder'));
-const ScholarshipManagement = lazyWithRetry(() => import('./ScholarshipManagement'));
-const SponsorshipMatching = lazyWithRetry(() => import('./SponsorshipMatching'));
 const ConferenceScheduling = lazyWithRetry(() => import('../shared/ConferenceScheduling'));
 const AttendanceHeatmap = lazyWithRetry(() => import('./AttendanceHeatmap'));
 const AcademicAnalytics = lazyWithRetry(() => import('./AcademicAnalytics'));
@@ -132,7 +129,6 @@ const ComplianceChecklist = lazyWithRetry(() => import('./ComplianceChecklist'))
 const MaintenanceTickets = lazyWithRetry(() => import('./MaintenanceTickets'));
 const MasterReportingHub = lazyWithRetry(() => import('./MasterReportingHub'));
 const ValidationConsole = lazyWithRetry(() => import('./ValidationConsole'));
-const UnifiedGovernanceHub = lazyWithRetry(() => import('./UnifiedGovernanceHub'));
 const EnhancedEnrollmentPage = lazyWithRetry(() => import('./EnhancedEnrollmentPage'));
 const StudentProfileEnhanced = lazyWithRetry(() => import('../student/StudentProfileEnhanced'));
 const TeacherProfileEnhanced = lazyWithRetry(() => import('../teacher/TeacherProfileEnhanced'));
@@ -339,7 +335,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         suspendStudent: SuspendStudentScreen,
         markStudentExit: MarkStudentExitScreen,
         pastStudents: PastStudentsScreen,
-        alumniHistory: AlumniHistoryScreen,
         examManagement: ExamManagement,
         addExam: AddExamScreen,
         reportCardPublishing: ReportCardPublishing,
@@ -407,8 +402,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         ussdWorkflow: USSDWorkflow,
         radioContentScheduler: RadioContentScheduler,
         ivrLessonRecorder: IVRLessonRecorder,
-        scholarshipManagement: ScholarshipManagement,
-        sponsorshipMatching: SponsorshipMatching,
         conferenceScheduling: ConferenceScheduling,
         attendanceHeatmap: AttendanceHeatmap,
         academicAnalytics: AcademicAnalytics,
@@ -434,7 +427,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         maintenanceTickets: MaintenanceTickets,
         masterReports: MasterReportingHub,
         validationConsole: ValidationConsole,
-        governanceHub: UnifiedGovernanceHub,
         enhancedEnrollment: EnhancedEnrollmentPage,
         studentProfile: StudentProfileEnhanced,
         teacherProfile: TeacherProfileEnhanced,
@@ -449,7 +441,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         chat: ChatScreen,
         attendanceTracker: AttendanceOverviewScreen,
         emergencyAlert: EmergencyAlert,
-        inspectionHub: UnifiedGovernanceHub,
         staffManagement: TeacherListScreen,
         inviteStaff: InviteStaffScreen,
         idCardManagement: StudentIDCardDashboard,

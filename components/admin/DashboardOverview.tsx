@@ -573,15 +573,6 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                 { label: t('dashboardOverview.safeguarding'), icon: <ShieldCheck />, onClick: () => navigateTo('safetyHealthLogs', t('dashboardOverview.safetyAndHealth')), color: 'bg-indigo-600' },
             ]
         },
-        {
-            id: 'governanceMinistry', name: t('dashboardOverview.governanceAndMinistry'), items: [
-                { label: t('dashboardOverview.qualityAssurance'), icon: <Shield className="animate-pulse" />, onClick: () => navigateTo('inspectionHub', t('dashboardOverview.inspectionHub')), color: 'bg-slate-800' },
-                { label: t('dashboardOverview.ministryReports'), icon: <FileText />, onClick: () => navigateTo('inspectionHub', t('dashboardOverview.inspectionHub')), color: 'bg-slate-700' },
-                { label: t('dashboardOverview.liveCompliance'), icon: <Activity className="text-emerald-400" />, onClick: () => navigateTo('complianceDashboard', t('dashboardOverview.complianceDashboard')), color: 'bg-slate-900 shadow-xl shadow-slate-200' },
-                { label: t('dashboardOverview.governanceHub'), icon: <Shield className="text-yellow-400" />, onClick: () => navigateTo('governanceHub', t('dashboardOverview.unifiedGovernance')), color: 'bg-black shadow-xl' },
-                { label: t('dashboardOverview.systemValidation'), icon: <Beaker />, onClick: () => navigateTo('validationConsole', t('dashboardOverview.validationConsole')), color: 'bg-indigo-900' },
-            ]
-        },
     ];
 
     return (

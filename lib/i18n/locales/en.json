@@ -414,7 +414,6 @@
     "communicationAndSystem": "Communication & System",
     "communicationHub": "Communication Hub",
     "complianceAndPrivacy": "Compliance & Privacy",
-    "complianceDashboard": "Compliance Dashboard",
     "consentForms": "Consent Forms",
     "contentManagement": "Content Management",
     "curriculum": "Curriculum",
@@ -440,12 +439,9 @@
     "facilityRegister": "Facility Register",
     "feeManagement": "Fee Management",
     "gatePassApprovals": "Gate Pass Approvals",
-    "governanceAndMinistry": "Governance & Ministry",
-    "governanceHub": "Governance Hub",
     "healthAndIncidents": "Health & Incidents",
     "healthLog": "Health Log",
     "infrastructureAndFacilities": "Infrastructure & Facilities",
-    "inspectionHub": "Inspection Hub",
     "kanbanProjectBoards": "Kanban Project Boards",
     "lateArrivalConfig": "Late Arrival Config",
     "lateArrivals": "Late Arrivals",
@@ -454,7 +450,6 @@
     "leaveApprovals": "Leave Approvals",
     "lessonNotes": "Lesson Notes",
     "lessonNotesReview": "Lesson Notes Review",
-    "liveCompliance": "Live Compliance",
     "manageClasses": "Manage Classes",
     "manageGuardians": "Manage Guardians",
     "manageLearningResources": "Manage Learning Resources",
@@ -463,7 +458,6 @@
     "manageStudents": "Manage Students",
     "manageTeachers": "Manage Teachers",
     "manageVolunteering": "Manage Volunteering",
-    "ministryReports": "Ministry Reports",
     "newStudentEnrollment": "New Student Enrollment",
     "notificationDigest": "Notification Digest",
     "notificationSettings": "Notification Settings",
@@ -477,7 +471,6 @@
     "projectBoards": "Project Boards",
     "promotion": "Promotion",
     "publishReports": "Publish Reports",
-    "qualityAssurance": "Quality Assurance",
     "registerExams": "Register Exams",
     "resultsEntry": "Results Entry",
     "safeguarding": "Safeguarding",
@@ -494,15 +487,12 @@
     "studentGate": "Student Gate",
     "substituteCoverage": "Substitute Coverage",
     "systemAndData": "System & Data",
-    "systemValidation": "System Validation",
     "teacherAssignments": "Teacher Assignments",
     "teacherAttendance": "Teacher Attendance",
     "timetable": "Timetable",
     "timetableManagement": "Timetable Management",
     "trackAttendance": "Track Attendance",
-    "unifiedGovernance": "Unified Governance",
     "userAccounts": "User Accounts",
-    "validationConsole": "Validation Console",
     "volunteering": "Volunteering",
     "todayTimetable": "Today's Timetable",
     "noClassesScheduled": "No classes scheduled for today.",
@@ -2813,9 +2803,6 @@
     "musicDance": "Music & Dance",
     "sportsParticipation": "Sports Participation"
   },
-  "alumniHistoryScreen": {
-    "alumniHistory": "Alumni History"
-  },
   "analyticsAdminTools": {
     "advancedAnalyticsBudgetingAndSystemIntegration": "Advanced analytics, budgeting, and system integrations",
     "attendanceHeatmap": "Attendance Heatmap",
@@ -3591,9 +3578,6 @@
   "scanAssetScreen": {
     "scanAsset": "Scan Asset"
   },
-  "scholarshipManagement": {
-    "scholarship": "Scholarship"
-  },
   "schoolInfoScreen": {
     "schoolInformation": "School Information",
     "manageSchoolAnthemPledgeAndBrandingAssets": "Manage school anthem, pledge, and branding assets.",
@@ -3638,9 +3622,6 @@
   },
   "sessionPromotionScreen": {
     "naikKelas": "Year Promotion"
-  },
-  "sponsorshipMatching": {
-    "sponsorship": "Sponsorship"
   },
   "studentApprovalScreen": {
     "studentApproval": "Student Approval"
@@ -3978,9 +3959,6 @@
     "aUSSDShortcodeFromMTNAirtelGloOr9mobile": "A USSD shortcode from MTN, Airtel, Glo, or 9mobile",
     "aUSSDGatewayProviderAfricaSTalkingRecommended": "A USSD gateway provider (Africa's Talking recommended)",
     "apiCredentialsConfiguredInYourSchoolSettings": "API credentials configured in your school settings"
-  },
-  "unifiedGovernanceHub": {
-    "unifiedGovernance": "Unified Governance"
   },
   "userAccountsScreen": {
     "userAccounts": "User Accounts"
