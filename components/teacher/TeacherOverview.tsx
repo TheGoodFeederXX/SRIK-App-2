@@ -341,7 +341,6 @@ const TeacherOverview: React.FC<TeacherOverviewProps> = ({ navigateTo, currentUs
         // its own tile above; E-Learning Library and Educational Games are now
         // quick-links inside the Learning Hub screen instead of a separate hub.
         { label: t('teacherOverview.learningHub'), icon: <ElearningIcon className="h-7 w-7" />, action: () => navigateTo('learningHub', t('teacherOverview.learningHub'), { teacherId, schoolId }) },
-        { label: t('teacherOverview.reportIncident'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>, action: () => navigateTo('mySopCases', t('teacherOverview.myReportedCases')) },
         { label: t('teacherOverview.reportAnIssue'), icon: <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>, action: () => navigateTo('reportMaintenanceIssue', t('teacherOverview.reportAnIssue')) },
       ],
     },

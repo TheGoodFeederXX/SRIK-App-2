@@ -235,7 +235,6 @@ const MIGRATED = [
     'components/teacher/GradeEntryScreen.tsx',
     // Not built yet. Each needed records this school does not keep, so the screen
     // now says so rather than failing a request.
-    'components/teacher/MySOPCasesScreen.tsx',
     'components/teacher/MyObservations.tsx',
     'components/teacher/TeacherAppointmentsScreen.tsx',
     'components/teacher/SubstituteAssignment.tsx',
@@ -317,7 +316,6 @@ describe('F27: reachable screens do not depend on the undeployed API', () => {
  */
 describe('F27: screens for features this school does not have', () => {
     const NOT_BUILT = [
-        'components/teacher/MySOPCasesScreen.tsx',
         'components/teacher/MyObservations.tsx',
         'components/teacher/TeacherAppointmentsScreen.tsx',
         'components/teacher/SubstituteAssignment.tsx',

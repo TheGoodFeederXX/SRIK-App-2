@@ -407,7 +407,6 @@
     "boardingAndTransport": "Boarding & Transport",
     "busDutyRoster": "Bus Duty Roster",
     "busRoster": "Bus Roster",
-    "caseManagement": "Case Management",
     "classVerification": "Class Verification",
     "classroomObservation": "Classroom Observation",
     "classroomsAndQr": "Classrooms & QR",
@@ -481,7 +480,6 @@
     "qualityAssurance": "Quality Assurance",
     "registerExams": "Register Exams",
     "resultsEntry": "Results Entry",
-    "sopCases": "SOP Cases",
     "safeguarding": "Safeguarding",
     "safetyAndHealth": "Safety & Health",
     "safetyAndWellbeing": "Safety & Wellbeing",
@@ -1150,10 +1148,6 @@
   "myPDCourses": {
     "myPDCourses": "My PDCourses"
   },
-  "mySOPCasesScreen": {
-    "myReportedCases": "My Reported Cases",
-    "dashboard": "Dashboard"
-  },
   "newChatScreen": {
     "newChat": "New Chat"
   },
@@ -1240,9 +1234,6 @@
   },
   "resultsEntryEnhanced": {
     "kemasukanMarkah": "Mark Entry"
-  },
-  "sOPCaseDetailScreen": {
-    "noCaseSelected": "No case selected."
   },
   "scanClassroomScreen": {
     "scanClassroom": "Scan Classroom",
@@ -2333,77 +2324,8 @@
     "liveUpdatesUnavailableReconnecting": "Live updates unavailable — reconnecting…",
     "dismiss": "Dismiss"
   },
-  "referralSystem": {
-    "getConnectedToCommunitySupportServices": "Get connected to community support services",
-    "confidentialSupport": "Confidential Support:",
-    "newReferralRequest": "New Referral Request",
-    "selectStudent": "Select Student*",
-    "typeOfNeed": "Type of Need*",
-    "shelter": "Shelter",
-    "counseling": "Counseling",
-    "financial": "Financial",
-    "urgencyLevel": "Urgency Level*",
-    "critical": "Critical",
-    "describeTheNeed": "Describe the Need*",
-    "beAsDetailedAsPossibleToHelpUsMatchYouWithTheR": "Be as detailed as possible to help us match you with the right resources",
-    "noReferralsSubmittedYet": "No referrals submitted yet",
-    "clickSubmitNewReferralToGetStarted": "Click \"Submit New Referral\" to get started",
-    "matchedWith": "Matched with:",
-    "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Please describe the situation and what support is needed...",
-    "referralSubmittedSuccessfullyASocialWorkerWill": "Referral submitted successfully! A social worker will review it soon.",
-    "pleaseSelectAStudentAndDescribeTheNeed": "Please select a student and describe the need",
-    "failedToSubmitReferral": "Failed to submit referral",
-    "familyReferralSystem": "🤝 Family Referral System"
-  },
   "reportIncidentScreen": {
     "laporInsiden": "Report Incident"
-  },
-  "sOPCaseDetailView": {
-    "caseNotFound": "Case not found.",
-    "aCriticalAlertWasSentWhenThisCaseWasReported": "A critical alert was sent when this case was reported.",
-    "workflow": "Workflow",
-    "evidence": "Evidence",
-    "noEvidenceUploadedYet": "No evidence uploaded yet.",
-    "decisions": "Decisions",
-    "noDecisionsRecordedYet": "No decisions recorded yet.",
-    "letters": "Letters",
-    "noLettersGeneratedYet": "No letters generated yet.",
-    "recordDecision": "+ Record Decision",
-    "outcome": "Outcome",
-    "noAction": "No Action",
-    "warning": "Warning",
-    "suspension": "Suspension",
-    "expulsion": "Expulsion",
-    "decisionDetails": "Decision Details",
-    "generateLetter": "+ Generate Letter",
-    "recipientType": "Recipient Type",
-    "student": "Student",
-    "teacher": "Teacher",
-    "recipientUserID": "Recipient User ID",
-    "letterTextEditable": "Letter Text (editable)",
-    "notesForThisStageOptional": "Notes for this stage (optional)",
-    "loadingCase": "Loading case...",
-    "evidenceUploaded": "Evidence uploaded",
-    "stageCompleted": "Stage completed",
-    "decisionRecorded": "Decision recorded",
-    "letterDraftedReviewAndSendWhenReady": "Letter drafted — review and send when ready",
-    "letterSent": "Letter sent",
-    "pleaseDescribeTheDecision": "Please describe the decision",
-    "sendThisLetterNowItCannotBeEditedAfterward": "Send this letter now? It cannot be edited afterward.",
-    "uploading": "Uploading...",
-    "upload": "Upload",
-    "drafting": "Drafting...",
-    "autoDraftLetter": "Auto-Draft Letter",
-    "document": "Document",
-    "failedToLoadCase": "Failed to load case",
-    "failedToUploadEvidence": "Failed to upload evidence",
-    "failedToAdvanceTheCase": "Failed to advance the case",
-    "failedToRecordDecision": "Failed to record decision",
-    "failedToDraftLetter": "Failed to draft letter",
-    "failedToSendLetter": "Failed to send letter",
-    "needsEvidence": "(needs evidence)",
-    "needsDecision": "(needs decision)",
-    "pasteRecipientUserId": "Paste recipient's user ID"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Select a student first.",
@@ -3663,12 +3585,6 @@
     "globalEnterpriseMessaging": "global, enterprise messaging",
     "regionalProviderCheckMalaysiaCoverageBeforeUse": "regional provider; check Malaysia coverage before use"
   },
-  "sOPCaseManagementScreen": {
-    "sopcaseManagement": "SOPCase Management"
-  },
-  "sOPSettingsScreen": {
-    "sopsettings": "SOPSettings"
-  },
   "safetyHealthLogs": {
     "logKeselamatanKesihatan": "Safety & Health Log"
   },
@@ -4152,10 +4068,6 @@
     "clickTheInstallIconInTheAddressBar": "Click the install icon in the address bar,",
     "orBrowserMenuInstallSchoolApp": "or browser menu → 'Install School App'."
   },
-  "sopCaseDetail": {
-    "needsEvidence": "(needs evidence)",
-    "needsDecision": "(needs decision)"
-  },
   "aiChatScreen": {
     "deepThinker": "Deep Thinker",
     "webSearch": "Web Search"
@@ -4241,9 +4153,6 @@
   },
   "adminMessagesScreen": {
     "manageParentChatAccess": "Manage Parent Chat Access"
-  },
-  "sopCaseDetailView": {
-    "sendLetter": "Send Letter"
   },
   "adventureHomeScreen": {
     "uploadFile": "Upload File"

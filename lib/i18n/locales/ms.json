@@ -407,7 +407,6 @@
     "boardingAndTransport": "Asrama & Pengangkutan",
     "busDutyRoster": "Jadual Tugas Bas",
     "busRoster": "Senarai Bas",
-    "caseManagement": "Pengurusan Kes",
     "classVerification": "Pengesahan Kelas",
     "classroomObservation": "Pemerhatian Kelas",
     "classroomsAndQr": "Bilik Darjah & Kod QR",
@@ -481,7 +480,6 @@
     "qualityAssurance": "Jaminan Kualiti",
     "registerExams": "Daftar Peperiksaan",
     "resultsEntry": "Kemasukan Keputusan",
-    "sopCases": "Kes SOP",
     "safeguarding": "Perlindungan",
     "safetyAndHealth": "Keselamatan & Kesihatan",
     "safetyAndWellbeing": "Keselamatan & Kesejahteraan",
@@ -1150,10 +1148,6 @@
   "myPDCourses": {
     "myPDCourses": "Kursus PD Saya"
   },
-  "mySOPCasesScreen": {
-    "myReportedCases": "Kes Dilaporkan Saya",
-    "dashboard": "Papan Pemuka"
-  },
   "newChatScreen": {
     "newChat": "Sembang Baharu"
   },
@@ -1240,9 +1234,6 @@
   },
   "resultsEntryEnhanced": {
     "kemasukanMarkah": "Kemasukan Markah"
-  },
-  "sOPCaseDetailScreen": {
-    "noCaseSelected": "Tiada kes dipilih."
   },
   "scanClassroomScreen": {
     "scanClassroom": "Imbas Kelas",
@@ -2333,77 +2324,8 @@
     "liveUpdatesUnavailableReconnecting": "Kemas kini langsung tidak tersedia — menyambung semula…",
     "dismiss": "Tutup"
   },
-  "referralSystem": {
-    "getConnectedToCommunitySupportServices": "Dapatkan sambungan kepada perkhidmatan sokongan komuniti",
-    "confidentialSupport": "Sokongan Sulit:",
-    "newReferralRequest": "Permohonan Rujukan Baharu",
-    "selectStudent": "Pilih Murid*",
-    "typeOfNeed": "Jenis Keperluan*",
-    "shelter": "Perlindungan",
-    "counseling": "Kaunseling",
-    "financial": "Kewangan",
-    "urgencyLevel": "Tahap Keterdesakan*",
-    "critical": "Kritikal",
-    "describeTheNeed": "Terangkan Keperluan*",
-    "beAsDetailedAsPossibleToHelpUsMatchYouWithTheR": "Berikan seberapa terperinci untuk membantu kami padankan anda dengan sumber yang betul",
-    "noReferralsSubmittedYet": "Belum ada rujukan dihantar",
-    "clickSubmitNewReferralToGetStarted": "Klik \"Hantar Rujukan Baharu\" untuk bermula",
-    "matchedWith": "Dipadankan dengan:",
-    "pleaseDescribeTheSituationAndWhatSupportIsNeed": "Sila terangkan keadaan dan sokongan yang diperlukan...",
-    "referralSubmittedSuccessfullyASocialWorkerWill": "Rujukan berjaya dihantar! Pekerja sosial akan menyemaknya tidak lama lagi.",
-    "pleaseSelectAStudentAndDescribeTheNeed": "Sila pilih murid dan terangkan keperluan",
-    "failedToSubmitReferral": "Gagal menghantar rujukan",
-    "familyReferralSystem": "🤝 Sistem Rujukan Keluarga"
-  },
   "reportIncidentScreen": {
     "laporInsiden": "Lapor Insiden"
-  },
-  "sOPCaseDetailView": {
-    "caseNotFound": "Kes tidak dijumpai.",
-    "aCriticalAlertWasSentWhenThisCaseWasReported": "Makluman kritikal dihantar apabila kes ini dilaporkan.",
-    "workflow": "Aliran Kerja",
-    "evidence": "Bukti",
-    "noEvidenceUploadedYet": "Belum ada bukti dimuat naik.",
-    "decisions": "Keputusan",
-    "noDecisionsRecordedYet": "Belum ada keputusan direkodkan.",
-    "letters": "Surat",
-    "noLettersGeneratedYet": "Belum ada surat dijana.",
-    "recordDecision": "+ Rekod Keputusan",
-    "outcome": "Hasil",
-    "noAction": "Tiada Tindakan",
-    "warning": "Amaran",
-    "suspension": "Penggantungan",
-    "expulsion": "Buang Sekolah",
-    "decisionDetails": "Butiran Keputusan",
-    "generateLetter": "+ Jana Surat",
-    "recipientType": "Jenis Penerima",
-    "student": "Murid",
-    "teacher": "Guru",
-    "recipientUserID": "ID Pengguna Penerima",
-    "letterTextEditable": "Teks Surat (boleh disunting)",
-    "notesForThisStageOptional": "Nota untuk peringkat ini (pilihan)",
-    "loadingCase": "Memuatkan kes...",
-    "evidenceUploaded": "Bukti dimuat naik",
-    "stageCompleted": "Peringkat selesai",
-    "decisionRecorded": "Keputusan direkodkan",
-    "letterDraftedReviewAndSendWhenReady": "Surat didraf — semak dan hantar apabila sedia",
-    "letterSent": "Surat dihantar",
-    "pleaseDescribeTheDecision": "Sila terangkan keputusan itu",
-    "sendThisLetterNowItCannotBeEditedAfterward": "Hantar surat ini sekarang? Ia tidak boleh disunting selepas ini.",
-    "uploading": "Memuat naik...",
-    "upload": "Muat Naik",
-    "drafting": "Mendraf...",
-    "autoDraftLetter": "Draf Surat Automatik",
-    "document": "Dokumen",
-    "failedToLoadCase": "Gagal memuatkan kes",
-    "failedToUploadEvidence": "Gagal memuat naik bukti",
-    "failedToAdvanceTheCase": "Gagal memajukan kes ini",
-    "failedToRecordDecision": "Gagal merekod keputusan",
-    "failedToDraftLetter": "Gagal mendraf surat",
-    "failedToSendLetter": "Gagal menghantar surat",
-    "needsEvidence": "(perlu bukti)",
-    "needsDecision": "(perlu keputusan)",
-    "pasteRecipientUserId": "Tampal ID pengguna penerima"
   },
   "selectReportTermScreen": {
     "selectAStudentFirst": "Pilih murid dahulu.",
@@ -3663,12 +3585,6 @@
     "globalEnterpriseMessaging": "global, pesanan perusahaan",
     "regionalProviderCheckMalaysiaCoverageBeforeUse": "pembekal serantau; semak liputan Malaysia sebelum guna"
   },
-  "sOPCaseManagementScreen": {
-    "sopcaseManagement": "Pengurusan Kes SOP"
-  },
-  "sOPSettingsScreen": {
-    "sopsettings": "Tetapan SOP"
-  },
   "safetyHealthLogs": {
     "logKeselamatanKesihatan": "Log Keselamatan & Kesihatan"
   },
@@ -4152,10 +4068,6 @@
     "clickTheInstallIconInTheAddressBar": "Klik ikon pasang di bar alamat,",
     "orBrowserMenuInstallSchoolApp": "atau menu pelayar → 'Pasang Aplikasi Sekolah'."
   },
-  "sopCaseDetail": {
-    "needsEvidence": "(perlu bukti)",
-    "needsDecision": "(perlu keputusan)"
-  },
   "aiChatScreen": {
     "deepThinker": "Pemikir Mendalam",
     "webSearch": "Carian Web"
@@ -4241,9 +4153,6 @@
   },
   "adminMessagesScreen": {
     "manageParentChatAccess": "Urus Akses Sembang Ibu Bapa"
-  },
-  "sopCaseDetailView": {
-    "sendLetter": "Hantar Surat"
   },
   "adventureHomeScreen": {
     "uploadFile": "Muat Naik Fail"

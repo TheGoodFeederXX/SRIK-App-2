@@ -60,13 +60,11 @@ import TeacherSelfAttendance from './TeacherSelfAttendance';
 import ScanClassroomScreen from './ScanClassroomScreen';
 import MyPersonnelFileScreen from './MyPersonnelFileScreen';
 import MyClassHubScreen from './MyClassHubScreen';
-import MySOPCasesScreen from './MySOPCasesScreen';
 import SubstituteAssignment from './SubstituteAssignment';
 import MyAtRiskStudents from './MyAtRiskStudents';
 import MyObservations from './MyObservations';
 import ReportMaintenanceIssue from './ReportMaintenanceIssue';
 import StudentGateScreen from '../shared/StudentGateScreen';
-import SOPCaseDetailScreen from './SOPCaseDetailScreen';
 import ReportIncidentScreen from '../shared/ReportIncidentScreen';
 import LessonPlannerScreen from './LessonPlannerScreen';
 import LessonPlanDetailScreen from './LessonPlanDetailScreen';
@@ -259,13 +257,11 @@ const TeacherDashboard: React.FC<TeacherDashboardProps> = ({ onLogout, setIsHome
     scanClassroom: ScanClassroomScreen,
     myPersonnelFile: MyPersonnelFileScreen,
     myClassHub: MyClassHubScreen,
-    mySopCases: MySOPCasesScreen,
     substituteAssignments: SubstituteAssignment,
     myAtRiskStudents: MyAtRiskStudents,
     myObservations: MyObservations,
     reportMaintenanceIssue: ReportMaintenanceIssue,
     studentGate: StudentGateScreen,
-    sopCaseDetail: SOPCaseDetailScreen,
     reportIncident: ReportIncidentScreen,
     attendanceHistory: TeacherAttendanceHistoryScreen,
     library: LibraryScreen,

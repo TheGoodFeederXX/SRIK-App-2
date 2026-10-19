@@ -92,7 +92,6 @@ import ConferenceScheduling from '../shared/ConferenceScheduling';
 import SurveysAndPolls from '../shared/SurveysAndPolls';
 import DonationPortal from '../shared/DonationPortal';
 import CommunityResourceDirectory from '../shared/CommunityResourceDirectory';
-import ReferralSystem from '../shared/ReferralSystem';
 import PanicButton from '../shared/PanicButton';
 import MentalHealthResources from '../shared/MentalHealthResources';
 
@@ -724,7 +723,6 @@ const ParentDashboard: React.FC<ParentDashboardProps> = ({ onLogout, setIsHomePa
         surveysAndPolls: SurveysAndPolls,
         donationPortal: DonationPortal,
         communityResources: CommunityResourceDirectory || (() => null),
-        referralSystem: ReferralSystem || (() => null),
         panicButton: PanicButton || (() => null),
         mentalHealthResources: MentalHealthResources || (() => null),
         attendance: (props: any) => <AttendanceScreen {...props} />,

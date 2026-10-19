@@ -509,7 +509,6 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({ navigateTo, handl
                 { label: t('dashboardOverview.attendance'), icon: <ClockIcon />, onClick: () => navigateTo('teacherAttendance', t('dashboardOverview.teacherAttendance')), color: 'bg-amber-500' },
                 { label: t('dashboardOverview.healthLog'), icon: <HeartIcon />, onClick: () => navigateTo('healthLog', t('dashboardOverview.healthLog')), color: 'bg-red-500' },
                 { label: t('dashboardOverview.busRoster'), icon: <BusVehicleIcon />, onClick: () => navigateTo('busDutyRoster', t('dashboardOverview.busDutyRoster')), color: 'bg-orange-500' },
-                { label: t('dashboardOverview.sopCases'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('sopCaseManagement', t('dashboardOverview.caseManagement')), color: 'bg-rose-600' },
                 { label: t('dashboardOverview.substituteCoverage'), icon: <Repeat className="w-6 h-6" />, onClick: () => navigateTo('substituteCoverage', t('dashboardOverview.substituteCoverage')), color: 'bg-teal-600' },
                 { label: t('dashboardOverview.leaveApprovals'), icon: <ClipboardCheck className="w-6 h-6" />, onClick: () => navigateTo('leaveApproval', t('dashboardOverview.leaveApprovals')), color: 'bg-lime-700' },
                 { label: t('dashboardOverview.atRiskStudents'), icon: <ShieldAlert className="w-6 h-6" />, onClick: () => navigateTo('atRiskStudents', t('dashboardOverview.atRiskStudents')), color: 'bg-red-700' },

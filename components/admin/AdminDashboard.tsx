@@ -30,9 +30,6 @@ const TeacherPerformanceScreen = lazyWithRetry(() => import('./TeacherPerformanc
 const TeacherAttendanceScreen = lazyWithRetry(() => import('./TeacherAttendanceScreen'));
 const ClassroomManagementScreen = lazyWithRetry(() => import('./ClassroomManagementScreen'));
 const TeacherPersonnelFileScreen = lazyWithRetry(() => import('./TeacherPersonnelFileScreen'));
-const SOPSettingsScreen = lazyWithRetry(() => import('./SOPSettingsScreen'));
-const SOPCaseManagementScreen = lazyWithRetry(() => import('./SOPCaseManagementScreen'));
-const SOPCaseDetailScreen = lazyWithRetry(() => import('./SOPCaseDetailScreen'));
 const ReportIncidentScreen = lazyWithRetry(() => import('../shared/ReportIncidentScreen'));
 const SubstituteCoverageScreen = lazyWithRetry(() => import('./SubstituteCoverageScreen'));
 const AtRiskStudentsScreen = lazyWithRetry(() => import('./AtRiskStudentsScreen'));
@@ -334,9 +331,6 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout, setIsHomePage
         classroomManagement: ClassroomManagementScreen,
         classVerification: ClassVerificationScreen,
         teacherPersonnelFile: TeacherPersonnelFileScreen,
-        sopSettings: SOPSettingsScreen,
-        sopCaseManagement: SOPCaseManagementScreen,
-        sopCaseDetail: SOPCaseDetailScreen,
         reportIncident: ReportIncidentScreen,
         substituteCoverage: SubstituteCoverageScreen,
         atRiskStudents: AtRiskStudentsScreen,
