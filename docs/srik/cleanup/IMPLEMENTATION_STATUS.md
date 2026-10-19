@@ -416,9 +416,35 @@ satu didaftarkan dalam peta halaman dashboard. Jadi ini **keputusan skop, bukan
 pembersihan** — dan ia belum dibuat. Ini keadaan sebenar projek: kebanyakan ciri
 ialah pemegang tempat yang jujur.
 
-**Kegagalan senyap belum dibetulkan.** Keputusan pemilik ialah membetulkannya,
-tetapi ia belum dilaksanakan. Yang tinggal termasuk `UpdatePrompt` (gagal dengan
-selamat — cuma tidak memaparkan versi) dan `App.tsx` (memanggil `getAppVersions`).
+**Kegagalan senyap: DIBETULKAN (0.8.43).** Prinsip yang dipakai: kegagalan yang
+tidak mendakwa apa-apa tidak berbahaya (`UpdatePrompt`, `App.tsx` — ia tidak
+menyebut versi yang tidak diketahui). Yang berbahaya ialah kegagalan yang
+menghasilkan **ketiadaan**, kerana ketiadaan berbunyi seperti jawapan. Tiga
+tempat berbuat begitu dan ketiga-tiganya dibetulkan:
+
+- `ChildRiskBanner` — satu-satunya tempat ibu bapa diberitahu guru ada
+  kebimbangan tentang anak mereka. Gagal bermakna komponen memulangkan `null`,
+  dan tiada sepanduk tidak dapat dibezakan daripada "tiada kebimbangan". Ibu
+  bapa dilegakan oleh mesej yang tidak pernah tiba.
+- `GlobalSearchScreen` — `catch` membiarkan hasil kosong, jadi skrin berkata
+  'No results found'. Guru yang mencari nama murid diberitahu murid itu tiada
+  dalam sistem, sedangkan carian tidak pernah berjalan.
+- `SuspensionNoticeBanner` — ketiadaan notis penggantungan itu melegakan, jadi
+  kegagalan senyap melegakan keluarga tentang perkara yang serius.
+
+`PanicButton` dan `LeaveRequest` sudah memaparkan mesej jujur dengan butang cuba
+lagi; `services/*` membaling ralat kepada pemanggil, yang memang betul untuk
+lapisan data. Tiada satu pun diubah.
+
+**Dua kesilapan dalam ujian baharu, ditemui dengan menyiasat kegagalan.**
+Lima ujian ditulis; tiga lulus, dua gagal. Menyiasatnya (bukan meneka)
+mendedahkan: (a) laluan mock `'../../lib/api'` salah, jadi mock tidak pernah
+berkuat kuasa — **dua ujian yang "lulus" sebenarnya lulus atas sebab yang salah**,
+kerana API sebenar gagal dan bukan mock; (b) suite ini tiada pembersihan DOM
+global, jadi render ujian sebelumnya kekal dan `getByText` memadankan render lama.
+Selepas kedua-duanya dibetulkan, kelima-limanya lulus atas sebab yang betul.
+Disahkan songsang: mematikan paparan kegagalan menjadikan dua ujian gagal tepat
+pada dua yang sepatutnya.
 
 **Pengawal ujian menangkap setiap pembuangan.** Lapan kegagalan sepanjang tiga
 peringkat, semuanya betul: senarai fail dalam `no-legacy-api.test.ts`,
@@ -431,8 +457,8 @@ skrin, dan **71 namespace yatim** dibuang daripada kedua-dua bahasa. Setiap satu
 disemak tidak dirujuk oleh kod mahupun ujian; `terms` dikecualikan kerana ia
 sepadan dengan nama pemboleh ubah, bukan kunci.
 
-Pengiraan: `tsc` 0, `tsc` backend 0, **545 ujian lulus** (73 fail), `vite build` 0,
-pariti locale **3242 = 3242**, 4,900+ baris kod dibuang. Fail terlindung
+Pengiraan: `tsc` 0, `tsc` backend 0, **550 ujian lulus** (74 fail), `vite build` 0,
+pariti locale **3250 = 3250**, 4,900+ baris kod dibuang. Fail terlindung
 (`CalendarManager`, `AlertsScreen`, `paymentGateways`) tidak disentuh.
 
 ## 10. Penyingkiran AI penuh (0.8.33)
