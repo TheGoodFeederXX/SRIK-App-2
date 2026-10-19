@@ -32,7 +32,6 @@ const NotApplicablePage: React.FC = () => {
 
 const AdminDashboard = lazyWithRetry(() => import('./admin/AdminDashboard'));
 const TeacherDashboard = lazyWithRetry(() => import('./teacher/TeacherDashboard'));
-const StudentDashboard = lazyWithRetry(() => import('./student/StudentDashboard'));
 const ParentDashboard = lazyWithRetry(() => import('./parent/ParentDashboard'));
 const ExternalExamsPage = lazyWithRetry(() => import('./admin/ExternalExamsPage'));
 
@@ -101,8 +100,12 @@ const DashboardRouter: React.FC<DashboardRouterProps> = (props) => {
                 return <VerifiedAdminRoute><AdminDashboard {...props} /></VerifiedAdminRoute>;
             case DashboardType.Teacher:
                 return <TeacherDashboard {...props} />;
-            case DashboardType.Student:
-                return <StudentDashboard {...props} />;
+            // A student has no dashboard of their own. The school decided students do
+            // not need to log in: their attendance, marks and profile are seen by their
+            // guardian and their teacher, which is where that information belongs. A
+            // student account that does sign in therefore falls to the refusal below,
+            // which says so, rather than reaching a portal built for a role this school
+            // does not use.
             case DashboardType.Parent:
             case DashboardType.Guardian:
                 return <ParentDashboard {...props} />;

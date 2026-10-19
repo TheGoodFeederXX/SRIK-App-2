@@ -18,7 +18,6 @@ const SCREENS = [
     'components/admin/ChangePasswordScreen.tsx',
     'components/teacher/TeacherChangePasswordScreen.tsx',
     'components/parent/ParentChangePasswordScreen.tsx',
-    'components/student/StudentChangePasswordScreen.tsx',
 ];
 
 describe('changing a password', () => {

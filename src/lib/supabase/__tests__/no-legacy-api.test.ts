@@ -87,9 +87,6 @@ const MIGRATED = [
     'components/admin/ExamCandidateRegistration.tsx',
     'components/admin/SessionPromotionScreen.tsx',
     'components/shared/ConferenceScheduling.tsx',
-    'components/student/ClassroomScreen.tsx',
-    'components/student/QuizzesScreen.tsx',
-    'components/student/cbt/StudentCBTPlayerScreen.tsx',
     'components/teacher/ResultsEntryEnhanced.tsx',
     // A teacher's notice to colleagues. The payload carried `category`, `is_pinned`,
     // `school_id` and `timestamp` — no column by any of those names — and `school_id`
@@ -207,7 +204,6 @@ const MIGRATED = [
     // Screens for features this school keeps no record of: homework and submissions,
     // teaching qualifications and curriculum eligibility.
     'components/teacher/ClassAssignmentsScreen.tsx',
-    'components/student/AssignmentsScreen.tsx',
     'components/teacher/TeacherProfileEnhanced.tsx',
     'components/admin/TeacherAttendanceScreen.tsx',
     'components/admin/TeacherAttendanceDetail.tsx',
@@ -224,7 +220,6 @@ const MIGRATED = [
     'components/admin/ChangePasswordScreen.tsx',
     'components/teacher/TeacherChangePasswordScreen.tsx',
     'components/parent/ParentChangePasswordScreen.tsx',
-    'components/student/StudentChangePasswordScreen.tsx',
     // Report selectors. A class is not a subject, and a school that is one school
     // has no branch to filter by.
     'components/admin/AdminSelectTermForReport.tsx',
@@ -388,7 +383,6 @@ describe('the legacy client is going, not growing', () => {
             'components/teacher/TeacherDashboard.tsx',
             'components/admin/AdminDashboard.tsx',
             'components/parent/ParentDashboard.tsx',
-            'components/student/StudentDashboard.tsx',
         ];
         const reachable = new Set<string>();
 

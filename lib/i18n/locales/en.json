@@ -517,49 +517,12 @@
     "reportsArePendingReview": "reports are pending review",
     "inOverdueFees": "in Overdue Fees"
   },
-  "academicReportScreen": {
-    "loadingReport": "Loading report...",
-    "studentNotFound": "Student not found.",
-    "performanceTrend": "Performance Trend",
-    "noPerformanceDataAvailableYet": "No performance data available yet.",
-    "noRecordsForTheLatestTerm": "No records for the latest term.",
-    "teacherSRemarks": "Teacher's Remarks",
-    "noRemarksRecorded": "No remarks recorded."
-  },
-  "achievementsScreen": {
-    "achievements": "Achievements"
-  },
-  "anonymousReporting": {
-    "anonymousReporting": "Anonymous Reporting"
-  },
-  "assignmentFeedbackScreen": {
-    "assignmentFeedback": "Assignment Feedback"
-  },
-  "assignmentSubmissionScreen": {
-    "assignmentSubmission": "Assignment Submission"
-  },
-  "assignmentsScreen": {
-    "myAssignments": "My Assignments"
-  },
   "attendanceScreen": {
     "present": "Present",
     "termAttendanceTrend": "Term Attendance Trend",
     "schoolDays": "School days",
     "previousMonth": "Previous month",
     "nextMonth": "Next month"
-  },
-  "classroomScreen": {
-    "bilikDarjah": "Classroom",
-    "papanPemuka": "Dashboard"
-  },
-  "discreetReporting": {
-    "discreetReporting": "Discreet Reporting"
-  },
-  "extracurricularsScreen": {
-    "extracurriculars": "Extracurriculars"
-  },
-  "freeLearningResourcesScreen": {
-    "freeLearningResources": "Free Learning Resources"
   },
   "learningHubScreen": {
     "learningHub": "Learning Hub",
@@ -575,50 +538,6 @@
     "selectOneOfYourClassesInTheMonitorTabFirstSoIK": "Select one of your classes in the Monitor tab first, so I know who to recommend this to.",
     "couldNotRecommendThisResource": "Could not recommend this resource",
     "recommendedToStudents": "Recommended to {{count}} student(s)."
-  },
-  "newMessageScreen": {
-    "nameYourGroup": "Name Your Group",
-    "groupName": "Group Name",
-    "selectAPersonToMessage": "Select a person to message",
-    "loadingContacts": "Loading contacts...",
-    "contactsWillAppearBasedOnYourRoleAndSchool": "Contacts will appear based on your role and school.",
-    "selectAtLeastOneMember": "Select at least one member",
-    "searchStudentsTeachers": "Search students & teachers...",
-    "searchByName": "Search by name...",
-    "noStudentsOrTeachersFound": "No students or teachers found",
-    "noContactsAvailable": "No contacts available",
-    "couldNotCreateGroup": "Could not create group",
-    "eGStudyGroup10AScienceProject": "e.g. Study Group 10A, Science Project...",
-    "couldNotLoadContactsPleaseTryAgain": "Could not load contacts. Please try again."
-  },
-  "quizPlayerScreen": {
-    "quizPlayer": "Quiz Player"
-  },
-  "resultsScreen": {
-    "results": "Results",
-    "questComplete": "Quest Complete!",
-    "calculatingYourEpicPerformance": "Calculating your epic performance...",
-    "correct": "Correct",
-    "incorrect": "Incorrect",
-    "xpEarned": "XP Earned",
-    "gemsFound": "Gems Found",
-    "reviewYourAnswers": "Review Your Answers",
-    "yourAnswer": "Your answer:",
-    "correctAnswer": "Correct answer:",
-    "explorerSLog": "Explorer's Log"
-  },
-  "studentChangePasswordScreen": {
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "confirmNewPassword": "Confirm New Password",
-    "passwordUpdatedSuccessfully": "Password updated successfully!",
-    "newPasswordsDoNotMatch": "New passwords do not match.",
-    "hidePassword": "Hide password",
-    "showPassword": "Show password",
-    "updating": "Updating...",
-    "updatePassword": "Update Password",
-    "updatingPassword": "Updating password...",
-    "failedToUpdatePassword": "Failed to update password"
   },
   "studentDashboard": {
     "yourFocus": "Your Focus",
@@ -657,9 +576,6 @@
     "myProfile": "My Profile",
     "assigned": "Assigned",
     "viewAllTasks": "View All Tasks"
-  },
-  "studentFinanceScreen": {
-    "studentFinance": "Student Finance"
   },
   "studentProfileEnhanced": {
     "loadingProfile": "Loading profile...",
@@ -732,179 +648,6 @@
     "shareProfile": "Share Profile",
     "uploadNew": "Upload New",
     "kssrCurriculum": "KSSR Curriculum"
-  },
-  "studyBuddy": {
-    "uploadImage": "Upload image",
-    "typeAMessage": "Type a message...",
-    "userUpload": "User upload",
-    "send": "Send",
-    "noResponseFromAI": "No response from AI."
-  },
-  "subjectsScreen": {
-    "subjects": "Subjects"
-  },
-  "videoLessonScreen": {
-    "videoLesson": "Video Lesson"
-  },
-  "worksheetsEmbedScreen": {
-    "worksheets": "Worksheets",
-    "externalResourceAdaptedmindCom": "External resource · adaptedmind.com",
-    "openInNewTab": "Open in New Tab",
-    "loadingWorksheets": "Loading worksheets...",
-    "backToGamesHub": "Back to Games Hub",
-    "adaptedmindWorksheetsExternalResource": "AdaptedMind Worksheets (external resource)",
-    "gamesHub": "Games Hub"
-  },
-  "adventureQuestHost": {
-    "urlFetchingIsForDemoPurposesOnlyUsingSampleTex": "URL fetching is for demo purposes only. Using sample text."
-  },
-  "homeScreen": {
-    "startYourAdventure": "Start Your Adventure!",
-    "turnAnyLessonIntoAFunQuest": "Turn any lesson into a fun quest.",
-    "challengeLevel": "Challenge Level",
-    "youngExplorer47Years": "Young Explorer (4-7 years)",
-    "braveAdventurer811Years": "Brave Adventurer (8-11 years)",
-    "masterSage1215Years": "Master Sage (12-15 years)",
-    "imageVideoPDFDOCXTXT": "Image, Video, PDF, DOCX, TXT",
-    "pasteAWebLinkHere": "Paste a web link here...",
-    "changeFile": "Change file",
-    "clickToUploadAFile": "Click to upload a file"
-  },
-  "loadingScreen": {
-    "craftingYourAdventure": "Crafting Your Adventure...",
-    "summoningTheAIOracle": "Summoning the AI oracle...",
-    "decodingAncientScrolls": "Decoding ancient scrolls...",
-    "polishingTheQuizQuestions": "Polishing the quiz questions...",
-    "craftingMagicalIllustrations": "Crafting magical illustrations...",
-    "buildingYourQuestMap": "Building your quest map...",
-    "wakingUpTheKnowledgeSprites": "Waking up the knowledge sprites..."
-  },
-  "quizScreen": {
-    "quizIllustration": "Quiz illustration",
-    "nextQuestion": "Next Question",
-    "finishQuest": "Finish Quest"
-  },
-  "studentCBTListScreen": {
-    "studentCBTList": "Student CBTList"
-  },
-  "studentCBTPlayerScreen": {
-    "ujianKomputer": "Computer-Based Test",
-    "explanation": "Computer-based tests are not yet available in this system. For now, student tests are carried out in class using the method set by the school, and the marks are recorded by the teacher through the Assessment menu. Please contact the class teacher about student tests."
-  },
-  "alphabetFishingGame": {
-    "alphabetFishingGame": "Alphabet Fishing Game"
-  },
-  "beanBagTossGame": {
-    "beanBagTossGame": "Bean Bag Toss Game"
-  },
-  "cBTExamGame": {
-    "cbtexamGame": "CBTExam Game"
-  },
-  "classBattleScreen": {
-    "classBattle": "Class Battle"
-  },
-  "codeChallengeGameScreen": {
-    "codeChallengeGame": "Code Challenge Game"
-  },
-  "codeChallengeLobbyScreen": {
-    "codeChallenge": "Code Challenge",
-    "inviteProgrammers": "Invite Programmers",
-    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Sharing is not supported on your browser. You can copy the link manually!"
-  },
-  "countingShapesTapGame": {
-    "countingShapesTapGame": "Counting Shapes Tap Game"
-  },
-  "debateDashGame": {
-    "debateDashGame": "Debate Dash Game"
-  },
-  "gamesHubScreen": {
-    "gamesHub": "Games Hub"
-  },
-  "geoGuesserGameScreen": {
-    "geoGuesserGame": "Geo Guesser Game"
-  },
-  "geoGuesserLobbyScreen": {
-    "geoguesser": "GeoGuesser",
-    "locations": "Locations",
-    "continents": "Continents",
-    "challengeFriends": "Challenge Friends",
-    "geoguesserChallenge": "GeoGuesser Challenge!",
-    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Sharing is not supported on your browser. You can copy the link manually!"
-  },
-  "geometryJeopardyGame": {
-    "geometryJeopardyGame": "Geometry Jeopardy Game"
-  },
-  "historicalHotSeatGame": {
-    "historicalHotSeatGame": "Historical Hot Seat Game"
-  },
-  "mathBattleArenaGame": {
-    "mathBattleArenaGame": "Math Battle Arena Game"
-  },
-  "mathSprintGameScreen": {
-    "mathSprintGame": "Math Sprint Game"
-  },
-  "mathSprintLobbyScreen": {
-    "mathSprint": "Math Sprint",
-    "answerAsManyMathProblemsAsYouCanBeforeTheTimer": "Answer as many math problems as you can before the timer runs out!",
-    "challengeAFriend": "Challenge a Friend",
-    "mathSprintChallenge": "Math Sprint Challenge!",
-    "sharingIsNotSupportedOnYourBrowserYouCanCopyTh": "Sharing is not supported on your browser. You can copy the link manually!",
-    "shareChallengeText": "Think you're faster at math? Challenge me in Math Sprint on the Smart School App!"
-  },
-  "mathSprintResultsScreen": {
-    "gameOver": "Game Over!",
-    "yourScore": "Your Score",
-    "answered": "Answered",
-    "accuracy": "Accuracy",
-    "playAgain": "Play Again",
-    "shareResults": "Share Results",
-    "myMathSprintScore": "My Math Sprint Score!",
-    "sharingIsNotSupportedOnThisBrowser": "Sharing is not supported on this browser.",
-    "mathSprint": "Math Sprint"
-  },
-  "peekabooLettersGame": {
-    "peekabooLettersGame": "Peekaboo Letters Game"
-  },
-  "physicsLabGame": {
-    "physicsLabGame": "Physics Lab Game"
-  },
-  "redLightGreenLightGame": {
-    "redLightGreenLightGame": "Red Light Green Light Game"
-  },
-  "sharkTankGame": {
-    "sharkTankGame": "Shark Tank Game"
-  },
-  "simonSaysGame": {
-    "simonSaysGame": "Simon Says Game"
-  },
-  "simpleMachineScavengerHuntGame": {
-    "simpleMachineScavengerHuntGame": "Simple Machine Scavenger Hunt Game"
-  },
-  "spellingSparkleGame": {
-    "spellingSparkleGame": "Spelling Sparkle Game"
-  },
-  "stockMarketGame": {
-    "stockMarketGame": "Stock Market Game"
-  },
-  "virtualScienceLabGame": {
-    "virtualScienceLabGame": "Virtual Science Lab Game"
-  },
-  "vocabularyAdventureGame": {
-    "vocabularyAdventureGame": "Vocabulary Adventure Game"
-  },
-  "vocabularyNinjaGame": {
-    "vocabularyNinjaGame": "Vocabulary Ninja Game"
-  },
-  "vocabularyPictionaryGame": {
-    "vocabularyPictionaryGame": "Vocabulary Pictionary Game"
-  },
-  "aIPerformanceSummaryScreen": {
-    "analyzingClassPerformance": "Analyzing Class Performance...",
-    "theAIIsCrunchingTheNumbersToProvideYouWithActi": "The AI is crunching the numbers to provide you with actionable insights.",
-    "overallSummary": "Overall Summary",
-    "topPerformers": "Top Performers",
-    "studentsNeedingSupport": "Students Needing Support",
-    "noNotes": "No notes"
   },
   "assessmentsHub": {
     "assessmentsQuizzes": "Assessments & Quizzes",
@@ -1922,27 +1665,6 @@
   "volunteeringScreen": {
     "volunteering": "Volunteering"
   },
-  "aIChatScreen": {
-    "voiceInputNeedsChromeOrEdgePleaseTypeYourQuest": "Voice input needs Chrome or Edge. Please type your question instead.",
-    "couldNotHearYouTryAgain": "Could not hear you — try again.",
-    "couldNotAccessMicrophone": "Could not access microphone.",
-    "readAloudIsNotSupportedInThisBrowser": "Read-aloud is not supported in this browser.",
-    "deepThinker": "Deep Thinker",
-    "webSearch": "Web Search",
-    "smartChat": "Smart Chat",
-    "mySchool": "My School",
-    "liveVoice": "Live Voice",
-    "creativeStudio": "Creative Studio",
-    "askAnything": "Ask anything...",
-    "upload": "Upload",
-    "noResponseGenerated": "No response generated."
-  },
-  "aIChatWidget": {
-    "openAIAssistant": "Open AI Assistant"
-  },
-  "aIInsightsPanel": {
-    "nothingUrgentRightNowAllClear": "Nothing urgent right now — all clear."
-  },
   "accessibilitySettings": {
     "accessibilitySettings": "Accessibility Settings",
     "highContrastMode": "High Contrast Mode",
@@ -2003,12 +1725,6 @@
     "system": "System",
     "language": "Language",
     "languageHint": "the app opens in Malay"
-  },
-  "askAIWidget": {
-    "askAI": "Ask AI",
-    "askAQuestion": "Ask a question...",
-    "failedToGetAnAnswer": "Failed to get an answer",
-    "tryAsking": "Try asking:"
   },
   "busRouteScreen": {
     "busRoute": "Bus Route"
@@ -2122,27 +1838,9 @@
   "libraryScreen": {
     "library": "Library"
   },
-  "liquidGlassControl": {
-    "emerald": "Emerald",
-    "graphite": "Graphite"
-  },
   "mainAdminOnly": {
     "managedByTheMainAdmin": "Managed by the main admin",
     "goBack": "Go back"
-  },
-  "mediaGenerator": {
-    "creatingMagicWithAI": "Creating magic with AI...",
-    "yourCreationWillAppearHere": "Your creation will appear here",
-    "uploadReferenceImage": "Upload Reference Image",
-    "aspectRatio": "Aspect Ratio",
-    "createImage": "Create Image",
-    "createVideo": "Create Video",
-    "editImage": "Edit Image",
-    "animate": "Animate",
-    "generated": "Generated",
-    "pleaseUploadAReferenceImageFirst": "Please upload a reference image first.",
-    "upload": "Upload",
-    "failedToGenerateMediaPleaseTryAgain": "Failed to generate media. Please try again."
   },
   "mentalHealthResources": {
     "mentalHealthResources": "Mental Health Resources"
@@ -3994,11 +3692,6 @@
     "accessDenied": "Access Denied",
     "schoolOwnedNotice": "This system is owned and run by the school. Student fees are settled at the school office, not through this page."
   },
-  "quizzesScreen": {
-    "papanPemuka": "Dashboard",
-    "kuiz": "Quiz",
-    "explanation": "Online quizzes are not available in this system yet. For now, student assessment is carried out by teachers in class using the method the school sets, and the marks are recorded through the Assessment menu. Please contact the class teacher for matters relating to student assessment."
-  },
   "errorBoundary": {
     "tryAgain": "Try Again",
     "somethingWentWrong": "Something went wrong",
@@ -4006,11 +3699,6 @@
   },
   "virtualClassroom": {
     "virtualClassroom": "Virtual Classroom"
-  },
-  "liveSession": {
-    "saySomethingIAmListening": "Say something — I'm listening!",
-    "microphonePermissionDenied": "Microphone permission was denied.",
-    "liveVoice": "Live Voice"
   },
   "updatePrompt": {
     "systemUpdateRequired": "System Update Required",
@@ -4027,10 +3715,6 @@
     "detailedLessonNote": "Detailed Lesson Note",
     "noDetailedNoteContentWasProvidedForThisLesson": "No detailed note content was provided for this lesson."
   },
-  "tt": {
-    "openThisPageInSafari": "Open this page in Safari.",
-    "tapTheBrowserMenu": "Tap the browser menu (⋮)."
-  },
   "installAppButton": {
     "tapAdd": "Tap 'Add'.",
     "tapAddToHomeScreen": "Tap 'Add to Home Screen'.",
@@ -4045,20 +3729,6 @@
     "tapInstallAppAddToHomeScreen": "Tap 'Install app' / 'Add to Home screen'.",
     "clickTheInstallIconInTheAddressBar": "Click the install icon in the address bar,",
     "orBrowserMenuInstallSchoolApp": "or browser menu → 'Install School App'."
-  },
-  "aiChatScreen": {
-    "deepThinker": "Deep Thinker",
-    "webSearch": "Web Search"
-  },
-  "teacherCurriculumBadges": {
-    "noCurriculumSet": "No Curriculum Set Yet",
-    "both": "Both",
-    "assignmentMayNotMeetStandards": "⚠️ This assignment may not meet curriculum standards and could affect examination preparation.",
-    "butClassRequires": "but this class requires",
-    "cannotBeAssignedToClass": "⚠️ Cannot be assigned to a class",
-    "curriculumMismatch": "Curriculum Does Not Match",
-    "noCurriculum": "no curriculum",
-    "qualifiedFor": "is qualified for"
   },
   "finance": {
     "chargeStatusOutstanding": "Unpaid",
@@ -4119,12 +3789,6 @@
     "entityDocuments": "Documents",
     "entityAnnouncements": "Announcements"
   },
-  "nextUpTask": {
-    "nextPriority": "Next Priority",
-    "submitWork": "Submit Work",
-    "startQuiz": "Start Quiz",
-    "viewLesson": "View Lesson"
-  },
   "app": {
     "dashboardError": "Dashboard Error",
     "dashboardErrorMessage": "We encountered a critical error while loading the dashboard."
@@ -4132,26 +3796,9 @@
   "adminMessagesScreen": {
     "manageParentChatAccess": "Manage Parent Chat Access"
   },
-  "adventureHomeScreen": {
-    "uploadFile": "Upload File"
-  },
   "cbtManagementScreen": {
     "uploadQuestionBank": "Upload Question Bank",
     "failedToProcessUpload": "Failed to process upload."
-  },
-  "editTimesModal": {
-    "appliesToAllWeekdays": "Applies to all weekdays (the default).",
-    "customTimesFor": "Custom times for {{day}} only.",
-    "resetDayToDefault": "Reset {{day}} to default"
-  },
-  "noChatSelected": {
-    "schoolAppMessaging": "School App Messaging",
-    "sendAndReceiveHere": "Send and receive messages with teachers, parents, and students right here on your desktop."
-  },
-  "emergencyBroadcast": {
-    "hideHistory": "Hide History",
-    "viewHistoryCount": "View History ({{count}})",
-    "sendCriticalAlertsDescription": "Send critical alerts to all users via push notifications, SMS, and email"
   },
   "notBuiltScreen": {
     "addParent": "Add Parent is not built for this school yet. The service behind it is not running, and no records are kept for it, so nothing here would be real. When it is built, this screen will be replaced.",

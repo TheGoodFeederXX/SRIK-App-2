@@ -16,16 +16,8 @@ const PREFETCHERS: Record<string, Importer[]> = {
         () => import('../components/teacher/LessonNotesUploadScreen'),
         () => import('../components/teacher/TeacherMessagesScreen'),
     ],
-    STUDENT: [
-        () => import('../components/student/ResultsScreen'),
-        () => import('../components/admin/TimetableScreen'),
-        () => import('../components/student/AssignmentsScreen'),
-        () => import('../components/student/AttendanceScreen'),
-        () => import('../components/shared/NotificationsScreen'),
-    ],
     PARENT: [
         () => import('../components/student/AttendanceScreen'),
-        () => import('../components/student/ResultsScreen'),
         () => import('../components/admin/TimetableScreen'),
         () => import('../components/parent/ParentMessagesScreen'),
     ],

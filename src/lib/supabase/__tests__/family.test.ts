@@ -353,9 +353,6 @@ describe('F27: the parent portal reads the family from the session, not a parame
             'components/admin/ExamCandidateRegistration.tsx',
             'components/admin/SessionPromotionScreen.tsx',
             'components/shared/ConferenceScheduling.tsx',
-            'components/student/ClassroomScreen.tsx',
-            'components/student/QuizzesScreen.tsx',
-            'components/student/cbt/StudentCBTPlayerScreen.tsx',
             'components/teacher/ResultsEntryEnhanced.tsx',
         ];
 
